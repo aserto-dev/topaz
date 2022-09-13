@@ -1,0 +1,35 @@
+---
+logging:
+  prod: false
+  log_level: debug
+
+directory_service:
+  path: ""
+
+api:
+  grpc:
+    connection_timeout_seconds: 2
+
+opa:
+  instance_id: 5d7cccc6-1657-11ec-a291-00001df0866c
+  graceful_shutdown_period_seconds: 2
+  local_bundles:
+    paths: []
+    skip_verification: true
+  config:
+    services:
+      acmecorp:
+        url: https://opcr.io/v2/
+        response_header_timeout_seconds: 5
+        headers:
+          Authorization: "basic iDog"
+    bundles:
+      mycars:
+        service: acmecorp
+        resource: "public-test-images/mycars/blobs/sha256:264937b1ae1ec22ce8d7656bcbaa3f34e2974b486aed9d61d63b5138c08818e4"
+        persist: false
+        config:
+          polling:
+            min_delay_seconds: 10
+            max_delay_seconds: 20
+      

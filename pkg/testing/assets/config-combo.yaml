@@ -1,0 +1,34 @@
+---
+logging:
+  prod: false
+  log_level: debug
+
+directory_service:
+  path: ""
+
+api:
+  grpc:
+    connection_timeout_seconds: 2
+
+opa:
+  instance_id: 5d7cccc6-1657-11ec-a291-00001df0866c                                   
+  graceful_shutdown_period_seconds: 2                                                 
+  local_bundles:                                                                      
+    paths: []                                                                         
+    skip_verification: true                                                           
+  config:
+    services:
+      acmecorp:
+        url: https://opcr.io/v2/
+        response_header_timeout_seconds: 5
+        headers:
+          Authorization: "basic iDog"
+    bundles:
+      peoplefinder:
+        service: acmecorp
+        resource: "public-test-images/peoplefinder/blobs/sha256:d7dd4def1a65806e60ee29e5e6d03b9b68b334fbfa977d6216eb4c6fecca6157"
+        persist: false
+        config:
+          polling:
+            min_delay_seconds: 60
+            max_delay_seconds: 120

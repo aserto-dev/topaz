@@ -1,0 +1,46 @@
+---
+logging:
+  prod: true
+  log_level: debug
+
+directory_service:
+  path: /tmp/sidecar.db
+
+api:
+  gateway:
+    allowed_origins:
+    - https://*.aserto.com
+    - https://*aserto-console.netlify.app
+    - https://*aserto-playground.netlify.app
+  grpc:
+    connection_timeout_seconds: 2
+  metrics:
+    zpages: true
+    grpc:
+      counters: true
+      durations: true
+      gateway: true
+
+opa:
+  instance_id: "-"
+  graceful_shutdown_period_seconds: 2
+  local_bundles:
+    paths: []
+    skip_verification: true
+  config:
+    services:
+      acmecorp:
+        url: https://opcr.io/v2/
+        type: "oci"
+        response_header_timeout_seconds: 5
+        headers:
+          Authorization: "basic iDog"
+    bundles:
+      peoplefinder:
+        service: acmecorp
+        resource: "opcr.io/public-test-images/peoplefinder:1.0.0"
+        persist: false
+        config:
+          polling:
+            min_delay_seconds: 60
+            max_delay_seconds: 120

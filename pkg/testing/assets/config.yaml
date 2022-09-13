@@ -1,0 +1,166 @@
+---
+logging:
+  prod: false
+  log_level: debug
+
+directory_service:
+  path: ""
+
+api:
+  grpc:
+    connection_timeout_seconds: 2
+  metrics:
+    zpages: true
+    grpc:
+      counters: true
+      durations: true
+      gateway: true
+
+dynamic_tenant_runtimes: true
+auth:
+  call_config:
+    "/aserto|authorizer|authorizer|v1|Authorizer/DecisionTree":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|authorizer|v1|Authorizer/Is":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|authorizer|v1|Authorizer/Query":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/CreateTenant":
+      needs_tenant: false
+      enable_api_key: true
+      enable_machine_key: false
+      enable_auth0_token: false
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/DeleteTenant":
+      needs_tenant: false
+      enable_api_key: true
+      enable_machine_key: false
+      enable_auth0_token: false
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/ListTenants":
+      needs_tenant: false
+      enable_api_key: true
+      enable_machine_key: false
+      enable_auth0_token: false
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/GetIdentity":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/GetUser":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/ListUsers":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|policy|v1|Policy/ListPolicies":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|policy|v1|Policy/GetPolicies":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|policy|v1|Policy/GetModule":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/CreateUser":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/DeleteUser":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/LoadUsers":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|directory|v1|Directory/UpdateUser":
+      needs_tenant: true
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/aserto|authorizer|system|v1|System/GetRuntime":
+      needs_tenant: false
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: false
+      enable_anonymous: false
+    "/aserto|authorizer|system|v1|System/SetupRuntime":
+      needs_tenant: false
+      enable_api_key: true
+      enable_machine_key: false
+      enable_auth0_token: false
+      enable_anonymous: false
+    "/aserto|authorizer|system|v1|System/TenantConfig":
+      needs_tenant: false
+      enable_api_key: true
+      enable_machine_key: false
+      enable_auth0_token: false
+      enable_anonymous: false
+    "/aserto|authorizer|system|v1|System/SetLogLevel":
+      needs_tenant: false
+      enable_api_key: true
+      enable_machine_key: false
+      enable_auth0_token: false
+      enable_anonymous: false
+    "/aserto|common|info|v1|Info/Config":
+      needs_tenant: false
+      enable_api_key: true
+      enable_machine_key: false
+      enable_auth0_token: false
+      enable_anonymous: false
+    "/aserto|common|info|v1|Info/Info":
+      needs_tenant: false
+      enable_api_key: true
+      enable_machine_key: true
+      enable_auth0_token: true
+      enable_anonymous: false
+    "/grpc|reflection|v1alpha|ServerReflection/ServerReflectionInfo":
+      needs_tenant: false
+      enable_api_key: false
+      enable_machine_key: false
+      enable_auth0_token: false
+      enable_anonymous: true
+
+opa:
+  instance_id: "5d7cccc6-1657-11ec-a291-00001df0866c"
+  graceful_shutdown_period_seconds: 2
+  local_bundles:
+    paths: []
+    skip_verification: true

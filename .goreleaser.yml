@@ -1,0 +1,62 @@
+before:
+  hooks:
+
+builds:
+  - id: topaz
+    main: ./cmd/topaz
+    binary: topaz
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/aserto-dev/topaz/pkg/version.ver={{.Version}}
+      - -X github.com/aserto-dev/topaz/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/aserto-dev/topaz/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+archives:
+  - format: zip
+    builds:
+    - topaz
+    replacements:
+      darwin: darwin
+      linux: linux
+      windows: windows
+      amd64: x86_64
+    files:
+      - LICENSE
+      - README.md
+    name_template: "topaz{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ .Tag }}"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  github:
+    owner: aserto-dev
+    name: topaz
+
+  draft: false
+  prerelease: false
+  name_template: "topaz {{.Tag}}"

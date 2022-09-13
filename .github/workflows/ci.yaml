@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Run tests for any PRs
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Setup caching
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+            .ext
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum', 'Depfile') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Install Tools
+        run: |
+          go run mage.go deps
+      - name: Lint
+        run: |
+          go run mage.go lint
+      - name: Test
+        id: integrationTests 
+        run: |
+          go run mage.go test
+      - name: Upload code coverage
+        uses: shogo82148/actions-goveralls@v1
+        continue-on-error: true
+        with:
+          path-to-profile: cover.out
+      - name: Print logs
+        if: failure() && steps.integrationTests.outcome == 'failure'
+        run: |
+          cat /tmp/*test-log*.log

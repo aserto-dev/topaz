@@ -1,0 +1,39 @@
+---
+bin:
+  minio:
+    url: "https://dl.min.io/server/minio/release/{{ .OS }}-{{.Arch}}/archive/minio.RELEASE.{{.Version}}"
+    version: "2021-08-25T00-41-18Z"
+    sha:
+      linux-amd64: "6ddeabae8cb274929d137734bc7d2827781659a6f4ccbba3072c0880bb32caac"
+      darwin-amd64: "f00dd68817ca6c9001328455c0bb3ff327dd5448cfb921e268e8ba359b1adf74"
+      darwin-arm64: "7495828aa0e74e5c53958eedf7b8b4d44e0133b86e0dff5e71d8a3ff73a9befe"
+  vault:
+    url: "https://releases.hashicorp.com/vault/{{.Version}}/vault_{{.Version}}_{{.OS}}_{{.Arch}}.zip"
+    version: "1.8.12"
+    zipPaths:
+    - "./vault"
+    sha:
+      linux-amd64: "88c280945db62b118435ec1bf0086a719f6b6551cba052e5f8d1e25a80884bca"
+      linux-arm64: "e57e719e1eec9bce9057751e2583907210d3ac99c0a01897479506fbb2af828d"
+      darwin-amd64: "b398481bf33ebf9563cf69d7639014f0d652a2d5e26c0a9a424e2a39bb853354"
+      darwin-arm64: "20aead134ef8e77cb70efcfe047fc2e381793004fba103e7692b7dab00fe5131"
+
+go:
+  goreleaser:
+    importPath: github.com/goreleaser/goreleaser
+    version: "v1.6.3"
+  wire:
+    importPath: "github.com/google/wire/cmd/wire"
+    version: "v0.5.0"
+  sver:
+    importPath: "github.com/aserto-dev/sver/cmd/sver"
+    version: "v1.3.9"
+  gotestsum:
+    importPath: "gotest.tools/gotestsum"
+    version: "v1.7.0"
+  golangci-lint:
+    importPath: "github.com/golangci/golangci-lint/cmd/golangci-lint"
+    version: "v1.46.2"
+  goimports:
+    importPath: "golang.org/x/tools/cmd/goimports"
+    version: "774f453"

@@ -1,0 +1,166 @@
+
+GET https://localhost:8383/api/v1/info HTTP/1.1
+
+GET https://localhost:8383/api/v1/info/config HTTP/1.1
+
+GET https://localhost:8383/api/v1/policy/policies HTTP/1.1
+
+GET https://localhost:8383/api/v1/policy/policies/0d755a12-93d4-11eb-87c6-012310f5c6bf HTTP/1.1
+GET https://localhost:8383/api/v1/policy/modules/MGQ3NTVhMTItOTNkNC0xMWViLTg3YzYtMDEyMzEwZjVjNmJmL3Blb3BsZWZpbmRlci91c2Vycy9wb3N0LnJlZ28= HTTP/1.1
+
+GET https://localhost:8383/api/v1/policy/policies/3708751142 HTTP/1.1
+GET https://localhost:8383/api/v1/policy/modules/cGtnL3Rlc3RpbmcvYXNzZXRzL215Y2Fyc19idW5kbGUvcGtnL3Rlc3RpbmcvYXNzZXRzL215Y2Fyc19idW5kbGUvY2Fycy9fX2lkL2RlbGV0ZS5yZWdv HTTP/1.1
+
+POST https://localhost:8383/api/v1/authz/decisiontree HTTP/1.1
+content-type: application/json
+
+{
+  "identity_context": {
+    "identity": "euang@acmecorp.com",
+    "type": "IDENTITY_TYPE_SUB"
+  },
+  "options": {
+    "path_separator": "PATH_SEPARATOR_DOT"
+  },
+  "policy_context": {
+    "decisions": [
+      "allowed", "visible", "enabled"
+    ],
+    "id": "3708751142",
+    "path": "mycars.GET"
+  }
+}
+
+POST https://localhost:8383/api/v1/authz/decisiontree HTTP/1.1
+content-type: application/json
+
+{
+  "identity_context": {
+    "identity": "euang@acmecorp.com",
+    "type": "IDENTITY_TYPE_SUB"
+  },
+  "options": {
+    "path_separator": "PATH_SEPARATOR_SLASH"
+  },
+  "policy_context": {
+    "decisions": [
+      "allowed", "visible", "enabled"
+    ],
+    "id": "6bf8c156-1657-11ec-b42c-01001df0866c",
+    "path": "peoplefinder/POST"
+  }
+}
+
+POST https://localhost:8383/api/v1/authz/is HTTP/1.1
+content-type: application/json
+
+{
+  "identity_context": {
+    "identity": "euang@acmecorp.com",
+    "type": "IDENTITY_TYPE_SUB"
+  },
+  "policy_context": {
+    "decisions": [
+      "allowed", "visible", "enabled"
+    ],
+    "id": "0d755a12-93d4-11eb-87c6-012310f5c6bf",
+    "path": "peoplefinder.DELETE.api.users.__id"
+  },
+  "resource_context": {
+  }
+}
+
+POST https://localhost:8383/api/v1/authz/query HTTP/1.1
+content-type: application/json
+
+{
+  "identity_context": {
+    "identity": "euang@acmecorp.com",
+    "type": "IDENTITY_TYPE_SUB"
+  },
+  "input": "{}",
+  "options": {
+    "instrument": false,
+    "metrics": false,
+    "trace": "TRACE_LEVEL_FULL",
+    "trace_summary": true
+  },
+  "query": "x = input",
+  "policy_context": {
+    "decisions": [
+      "allowed", "visible", "enabled"
+    ],
+    "id": "0d755a12-93d4-11eb-87c6-012310f5c6bf",
+    "path": "peoplefinder.DELETE.api.users.__id"
+  }, 
+  "resource_context": {
+      "tenant_id": "abd"
+  }
+}
+
+
+POST https://localhost:8383/api/v1/dir/identities HTTP/1.1
+content-type: application/json
+
+{
+     "identity": "euang@acmecorp.com"
+}
+
+GET https://localhost:8383/api/v1/dir/users/dfdadc39-7335-404d-af66-c77cf13a15f8 HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users/dfdadc39-7335-404d-af66-c77cf13a15f8?base=true HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1&base=true HTTP/1.1
+content-type: application/json
+
+
+POST https://localhost:8383/api/v1/authz/decisiontree HTTP/1.1
+content-type: application/json
+
+{
+  "identity_context": {
+    "identity": null,
+    "type": "IDENTITY_TYPE_NONE"
+  },
+  "policy_context": {
+    "decisions": [
+      "allowed", "visible", "enabled"
+    ],
+    "id": "6bf8c156-1657-11ec-b42c-01001df0866c",
+    "path": "peoplefinder"
+  },
+  "query":"x = data",
+  "input":""
+}
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1&fields.mask=id&deleted=true&base=true HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1&fields.mask=id&deleted=false&base=true HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1&fields.mask=id&deleted=true&base=false HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1&fields.mask=id&deleted=false&base=false HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1&deleted=true&base=true HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1&deleted=false&base=true HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1&deleted=true&base=false HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1&deleted=false&base=false HTTP/1.1
+content-type: application/json
+
+GET https://localhost:8383/api/v1/dir/users?page.size=-1 HTTP/1.1
+content-type: application/json

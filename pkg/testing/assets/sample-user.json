@@ -1,0 +1,47 @@
+{
+  "id": "dfdadc39-7335-404d-af66-c77cf13a15f8",
+  "enabled": true,
+  "display_name": "Euan Garden",
+  "email": "euang@acmecorp.com",
+  "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Euan%20Garden.jpg",
+  "identities": {
+    "+1-804-555-3383": {
+      "kind": "IDENTITY_KIND_PHONE",
+      "provider": "",
+      "verified": false
+    },
+    "auth0|dfdadc39-7335-404d-af66-c77cf13a15f8": {
+      "kind": "IDENTITY_KIND_PID",
+      "provider": "auth0",
+      "verified": true
+    },
+    "euang": {
+      "kind": "IDENTITY_KIND_USERNAME",
+      "provider": "",
+      "verified": false
+    },
+    "euang@acmecorp.com": {
+      "kind": "IDENTITY_KIND_EMAIL",
+      "provider": "auth0",
+      "verified": true
+    }
+  }, 
+  "attributes": {
+    "properties": {
+      "department": "Sales Engagement Management",
+      "manager": "2bfaa552-d9a5-41e9-a6c3-5be62b4433c8",
+      "title": "Salesperson"
+    },
+    "roles": [
+      "user",
+      "acmecorp",
+      "sales-engagement-management"
+    ],
+    "permissions": []
+  },
+  "applications": {},
+  "metadata": {
+    "created_at": "2020-12-23T00:47:52.307Z",
+    "updated_at": "2021-02-11T21:39:38.009Z"
+  }
+}
