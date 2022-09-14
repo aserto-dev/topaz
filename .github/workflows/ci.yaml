@@ -33,7 +33,7 @@ jobs:
           go run mage.go deps
       - name: Lint
         run: |
-          go run mage.go lint
+          go run -mod=readonly mage.go lint
       - name: Test
         id: integrationTests 
         run: |
