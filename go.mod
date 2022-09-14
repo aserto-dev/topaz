@@ -13,8 +13,6 @@ replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 require (
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/aserto-grpc v0.0.3
-	github.com/aserto-dev/authorizer v0.9.26
-	github.com/aserto-dev/go-aserto-one-ui v0.8.0
 	github.com/aserto-dev/go-directory v0.0.12
 	github.com/aserto-dev/go-eds v0.8.5
 	github.com/aserto-dev/go-grpc v0.8.51
@@ -53,6 +51,7 @@ require (
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
+	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/allegro/bigcache/v3 v3.0.2 // indirect
@@ -72,6 +71,7 @@ require (
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-metrics v0.0.1 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
+	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
@@ -85,7 +85,6 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
-	github.com/google/go-github/v38 v38.1.0 // indirect
 	github.com/google/go-github/v43 v43.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/subcommands v1.2.0 // indirect

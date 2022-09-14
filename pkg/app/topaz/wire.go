@@ -36,7 +36,6 @@ var (
 		DirectoryResolver,
 		file.New,
 		Middlewares,
-		HTTPRoutes,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),
 		wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"),
