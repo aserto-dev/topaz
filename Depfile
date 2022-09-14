@@ -1,4 +1,16 @@
 ---
+bin:
+  vault:
+    url: "https://releases.hashicorp.com/vault/{{.Version}}/vault_{{.Version}}_{{.OS}}_{{.Arch}}.zip"
+    version: "1.8.12"
+    zipPaths:
+    - "./vault"
+    sha:
+      linux-amd64: "88c280945db62b118435ec1bf0086a719f6b6551cba052e5f8d1e25a80884bca"
+      linux-arm64: "e57e719e1eec9bce9057751e2583907210d3ac99c0a01897479506fbb2af828d"
+      darwin-amd64: "b398481bf33ebf9563cf69d7639014f0d652a2d5e26c0a9a424e2a39bb853354"
+      darwin-arm64: "20aead134ef8e77cb70efcfe047fc2e381793004fba103e7692b7dab00fe5131"
+
 go:
   goreleaser:
     importPath: github.com/goreleaser/goreleaser
