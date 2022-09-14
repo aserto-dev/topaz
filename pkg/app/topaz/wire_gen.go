@@ -74,15 +74,8 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 	}
 	handlerRegistrations := GatewayServerRegistrations()
 	serveMux := server.GatewayMux()
-	httpRouteRegistrations, err := HTTPRoutes(zerologLogger, configConfig, directoryResolver)
-	if err != nil {
-		cleanup3()
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
 	registerer := _wireRegistererValue
-	httpServer, err := server.NewGatewayServer(zerologLogger, common, serveMux, httpRouteRegistrations, registerer)
+	httpServer, err := server.NewGatewayServer(zerologLogger, common, serveMux, registerer)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -175,15 +168,8 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 	}
 	handlerRegistrations := GatewayServerRegistrations()
 	serveMux := server.GatewayMux()
-	httpRouteRegistrations, err := HTTPRoutes(zerologLogger, configConfig, directoryResolver)
-	if err != nil {
-		cleanup3()
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
 	registry := prometheus.NewRegistry()
-	httpServer, err := server.NewGatewayServer(zerologLogger, common, serveMux, httpRouteRegistrations, registry)
+	httpServer, err := server.NewGatewayServer(zerologLogger, common, serveMux, registry)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -225,8 +211,7 @@ var (
 	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, grpcclient.NewDialOptionsProvider, impl.NewAuthorizerServer, impl.NewDirectoryServer, impl.NewPolicyServer, impl.NewInfoServer, GRPCServerRegistrations,
 		GatewayServerRegistrations,
 		RuntimeResolver,
-		DirectoryResolver, file.New, Middlewares,
-		HTTPRoutes, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
+		DirectoryResolver, file.New, Middlewares, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
 	)
 
 	appTestSet = wire.NewSet(

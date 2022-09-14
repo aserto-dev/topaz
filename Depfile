@@ -1,12 +1,5 @@
 ---
 bin:
-  minio:
-    url: "https://dl.min.io/server/minio/release/{{ .OS }}-{{.Arch}}/archive/minio.RELEASE.{{.Version}}"
-    version: "2021-08-25T00-41-18Z"
-    sha:
-      linux-amd64: "6ddeabae8cb274929d137734bc7d2827781659a6f4ccbba3072c0880bb32caac"
-      darwin-amd64: "f00dd68817ca6c9001328455c0bb3ff327dd5448cfb921e268e8ba359b1adf74"
-      darwin-arm64: "7495828aa0e74e5c53958eedf7b8b4d44e0133b86e0dff5e71d8a3ff73a9befe"
   vault:
     url: "https://releases.hashicorp.com/vault/{{.Version}}/vault_{{.Version}}_{{.OS}}_{{.Arch}}.zip"
     version: "1.8.12"

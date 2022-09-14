@@ -1,7 +1,7 @@
 package directory
 
 import (
-	"github.com/aserto-dev/go-eds"
+	eds "github.com/aserto-dev/go-eds"
 )
 
 type Config struct {

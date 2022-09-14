@@ -6,15 +6,26 @@ on:
   # Run tests for any PRs
   pull_request:
 
+env:
+  GO_VERSION: '1.17'
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Read Configuration
+        uses: hashicorp/vault-action@v2.4.1
+        id: vault
+        with:
+          url: https://vault.eng.aserto.com/
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            kv/data/github  "SSH_PRIVATE_KEY"     | SSH_PRIVATE_KEY;
       - uses: actions/checkout@v2
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version: "${{ env.GO_VERSION }}"
       - name: Setup caching
         uses: actions/cache@v2
         with:
@@ -27,6 +38,13 @@ jobs:
             ${{ runner.os }}-go-
       - name: Install Tools
         run: |
+          mkdir -p $HOME/.ssh
+          umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
+          ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+          git config --global url."git@github.com:".insteadOf https://github.com/
+          git config --global user.email "github-bot@aserto.com"
+          git config --global user.name "Aserto Bot"
+
           go run mage.go deps
       - name: Lint
         run: |

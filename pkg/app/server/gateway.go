@@ -41,7 +41,6 @@ func NewGatewayServer(
 	log *zerolog.Logger,
 	cfg *config.Common,
 	gtwMux *runtime.ServeMux,
-	routeRegistrations HTTPRouteRegistrations,
 	registry promclient.Registerer,
 ) (*http.Server, error) {
 	c := cors.New(cors.Options{
@@ -67,7 +66,6 @@ func NewGatewayServer(
 	mux.Handle("/robots.txt", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "User-agent: *\nDisallow: /")
 	}))
-	routeRegistrations(mux)
 
 	gtwServer := &http.Server{
 		ErrorLog: logger.NewSTDLogger(&newLogger),
