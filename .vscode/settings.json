@@ -151,7 +151,6 @@
     "zpages"
   ],
   "gopls": {
-    "build.buildFlags": ["-tags=wireinject,onebox"],
-    "options.directoryFilters": ["-go-lib", "-go-grpc", "-authorizer-extensions"]
+    "build.buildFlags": ["-tags=wireinject"]
   }
 }

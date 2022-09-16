@@ -3,7 +3,7 @@ package plugin
 import (
 	"context"
 
-	dl "github.com/aserto-dev/go-grpc/aserto/decision_logs/v1"
+	api "github.com/aserto-dev/go-authorizer/aserto/api/v2"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 
 	"github.com/open-policy-agent/opa/plugins"
@@ -46,7 +46,7 @@ func (plugin *DecisionLogsPlugin) Reconfigure(ctx context.Context, config interf
 	plugin.cfg = config.(*Config)
 }
 
-func (plugin *DecisionLogsPlugin) Log(ctx context.Context, d *dl.Decision) error {
+func (plugin *DecisionLogsPlugin) Log(ctx context.Context, d *api.Decision) error {
 	if !plugin.cfg.Enabled || plugin.logger == nil {
 		return nil
 	}
