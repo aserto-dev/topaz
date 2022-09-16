@@ -1,10 +1,10 @@
 package decisionlog
 
 import (
-	dl "github.com/aserto-dev/go-grpc/aserto/decision_logs/v1"
+	api "github.com/aserto-dev/go-authorizer/aserto/api/v2"
 )
 
 type DecisionLogger interface {
-	Log(*dl.Decision) error
+	Log(*api.Decision) error
 	Shutdown()
 }

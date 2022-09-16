@@ -13,6 +13,7 @@ replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 require (
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/aserto-grpc v0.0.3
+	github.com/aserto-dev/go-authorizer v0.0.2
 	github.com/aserto-dev/go-directory v0.0.12
 	github.com/aserto-dev/go-eds v0.8.5
 	github.com/aserto-dev/go-grpc v0.8.51

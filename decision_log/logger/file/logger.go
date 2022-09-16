@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	dl "github.com/aserto-dev/go-grpc/aserto/decision_logs/v1"
+	api "github.com/aserto-dev/go-authorizer/aserto/api/v2"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/pkg/errors"
 
@@ -27,7 +27,7 @@ func New(ctx context.Context, cfg *Config, logger *zerolog.Logger) (decisionlog.
 	return (*fileLogger)(&decisionLogger), nil
 }
 
-func (l *fileLogger) Log(d *dl.Decision) error {
+func (l *fileLogger) Log(d *api.Decision) error {
 	bytes, err := json.Marshal(d)
 	if err != nil {
 		return errors.Wrap(err, "error marshaling decision")

@@ -7,10 +7,9 @@ import (
 	"time"
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
+	api_v2 "github.com/aserto-dev/go-authorizer/aserto/api/v2"
 	authz "github.com/aserto-dev/go-grpc-authz/aserto/authorizer/authorizer/v1"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
-	dl "github.com/aserto-dev/go-grpc/aserto/decision_logs/v1"
-	"github.com/aserto-dev/go-lib/ids"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/go-utils/pb"
 	"github.com/aserto-dev/go-utils/protoutil"
@@ -274,15 +273,14 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz.IsRequest) (*authz
 	}
 
 	dplugin := decisionlog_plugin.Lookup(policyRuntime.GetPluginsManager())
-	d := dl.Decision{
+	d := api_v2.Decision{
 		Id:        uuid.NewString(),
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
-		TenantId:  ids.ExtractTenantID(ctx),
 		Path:      req.PolicyContext.Path,
-		Policy: &dl.DecisionPolicy{
+		Policy: &api_v2.DecisionPolicy{
 			Context: req.PolicyContext,
 		},
-		User: &dl.DecisionUser{
+		User: &api_v2.DecisionUser{
 			Context: req.IdentityContext,
 			Id:      getID(input),
 			Email:   getEmail(input),
