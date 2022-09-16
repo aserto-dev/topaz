@@ -11,6 +11,7 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
 require (
+	github.com/aserto-dev/aserto-certs v0.0.1
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/aserto-grpc v0.0.3
 	github.com/aserto-dev/go-authorizer v0.0.2

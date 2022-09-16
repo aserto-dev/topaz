@@ -183,6 +183,8 @@ github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj
 github.com/armon/go-radix v1.0.0/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
 github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a/go.mod h1:lB+ZfQJz7igIIfQNfa7Ml4HSf2uFQQRzpGGRXenZAgY=
+github.com/aserto-dev/aserto-certs v0.0.1 h1:7dtJFlVdvyWLwGvdXj0lvKx9Qq0mQcFXPQHd5vBZiWo=
+github.com/aserto-dev/aserto-certs v0.0.1/go.mod h1:BWZGkv7YEIDFmtDZdrrdTBdLvMR0KacTNyWIMKc02XY=
 github.com/aserto-dev/aserto-go v0.8.11 h1:7X1QspyWQG9T26iX9JBiP+l7dhe7rt1YVZLDp0IwlrY=
 github.com/aserto-dev/aserto-go v0.8.11/go.mod h1:aAkZKA9G4l9H9OCTN8nqVKtuW2T98kh7nFSTqV48ftk=
 github.com/aserto-dev/aserto-grpc v0.0.3 h1:Uk90Ug5JhVioLxpphsnElKZ0oKP6pm0h7RlbaDfrJhQ=

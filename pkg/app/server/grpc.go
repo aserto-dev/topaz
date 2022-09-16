@@ -10,8 +10,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
+	"github.com/aserto-dev/aserto-certs/certs"
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
-	"github.com/aserto-dev/go-utils/certs"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 )
 

@@ -4,7 +4,7 @@
 package cc
 
 import (
-	"github.com/aserto-dev/go-utils/certs"
+	"github.com/aserto-dev/aserto-certs/certs"
 	"github.com/aserto-dev/go-utils/logger"
 	"github.com/google/wire"
 
