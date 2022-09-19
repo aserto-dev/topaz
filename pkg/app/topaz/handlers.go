@@ -16,6 +16,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 
+	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	authz "github.com/aserto-dev/go-grpc-authz/aserto/authorizer/authorizer/v1"
 	dir "github.com/aserto-dev/go-grpc/aserto/authorizer/directory/v1"
 	info "github.com/aserto-dev/go-grpc/aserto/common/info/v1"
@@ -45,7 +46,11 @@ func GRPCServerRegistrations(
 // GatewayServerRegistrations is where we register implementations with the Gateway server
 func GatewayServerRegistrations() server.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-		err := authz.RegisterAuthorizerHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+		err := authz2.RegisterAuthorizerHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+		if err != nil {
+			return errors.Wrap(err, "failed to register authorizer v2 handler with gateway")
+		}
+		err = authz.RegisterAuthorizerHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 		if err != nil {
 			return errors.Wrap(err, "failed to register authorizer handler with the gateway")
 		}

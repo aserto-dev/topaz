@@ -8,7 +8,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 
-	authz "github.com/aserto-dev/go-grpc-authz/aserto/authorizer/authorizer/v1"
+	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	dir "github.com/aserto-dev/go-grpc/aserto/authorizer/directory/v1"
 )
 
