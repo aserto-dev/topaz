@@ -353,9 +353,9 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 	if input == nil {
 		input = make(map[string]interface{})
 	}
-
-	if req.PolicyContext != nil {
-		input[InputPolicy] = req.PolicyContext
+	policyContext := getPolicyInfoFromContext(ctx)
+	if policyContext != nil {
+		input[InputPolicy] = policyContext
 	}
 
 	/*if req.ResourceContext != nil {
@@ -388,8 +388,8 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 	log.Debug().Str("query", req.Query).Interface("input", input).Msg("executing query")
 	var rt *runtime.Runtime
 	var err error
-	if req.PolicyContext != nil {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, req.PolicyContext.GetId(), req.PolicyContext.GetName(), req.PolicyContext.InstanceLabel)
+	if policyContext != nil {
+		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetId(), policyContext.GetName(), policyContext.InstanceLabel)
 		if err != nil {
 			return &authz2.QueryResponse{}, errors.Wrap(err, "failed to procure tenant runtime")
 		}
@@ -494,14 +494,19 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 		}
 	}
 
+	policyContext := getPolicyInfoFromContext(ctx)
+	if policyContext != nil {
+		input[InputPolicy] = policyContext
+	}
+
 	if input == nil {
 		input = make(map[string]interface{})
 	}
 	log.Debug().Str("query", req.Query).Interface("input", input).Msg("executing query")
 	var rt *runtime.Runtime
 	var err error
-	if req.PolicyContext != nil {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, req.PolicyContext.GetId(), req.PolicyContext.GetName(), req.PolicyContext.InstanceLabel)
+	if policyContext != nil {
+		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetId(), policyContext.GetName(), policyContext.InstanceLabel)
 		if err != nil {
 			return &authz2.CompileResponse{}, errors.Wrap(err, "failed to procure tenant runtime")
 		}
@@ -622,6 +627,27 @@ func TranslatePathSeparator(separator authz2.PathSeparator) authz.PathSeparator 
 	default:
 		return authz.PathSeparator_PATH_SEPARATOR_UNKNOWN
 	}
+}
+
+func getPolicyInfoFromContext(ctx context.Context) *api.PolicyContext {
+	result := api.PolicyContext{}
+
+	id := ctx.Value("aserto-policy-id")
+	if id != nil {
+		result.Id = fmt.Sprintf("%s", id)
+	}
+	name := ctx.Value("aserto-policy-name")
+	if name != nil {
+		result.Name = fmt.Sprintf("%s", name)
+	}
+	label := ctx.Value("aserto-instance-label")
+	if label != nil {
+		result.InstanceLabel = fmt.Sprintf("%s", label)
+	}
+	if result.Id == "" || (result.Name == "" && result.InstanceLabel == "") {
+		return nil
+	}
+	return &result
 }
 
 func initDecisionFilter(decisions []string) func(decision string) bool {
