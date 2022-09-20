@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
@@ -64,13 +65,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 
 	resp := &authz2.DecisionTreeResponse{}
 
-	if req.PolicyContext == nil {
-		return resp, cerr.ErrInvalidArgument.Msg("policy context not set")
-	}
-
-	if req.PolicyContext.GetId() == "" {
-		return resp, cerr.ErrInvalidArgument.Msg("policy context id not set")
-	}
+	policyContext := getPolicyInfoFromContext(ctx)
 
 	if req.ResourceContext == nil {
 		req.ResourceContext = &structpb.Struct{Fields: make(map[string]*structpb.Value)}
@@ -99,30 +94,27 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 	input := map[string]interface{}{
 		InputUser:     convert(user),
 		InputIdentity: convert(req.IdentityContext),
-		InputPolicy:   req.PolicyContext,
+		InputPolicy:   policyContext,
 		InputResource: req.ResourceContext,
 	}
 
-	policyRuntime, err := s.runtimeResolver.RuntimeFromContext(ctx, req.PolicyContext.GetId(), req.PolicyContext.GetName(), req.PolicyContext.InstanceLabel)
+	policyRuntime, err := s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetId(), policyContext.GetName(), policyContext.InstanceLabel)
 	if err != nil {
 		return resp, errors.Wrap(err, "failed to procure tenant runtime")
 	}
 
 	policyList, err := policyRuntime.GetPolicyList(
 		ctx,
-		req.PolicyContext.GetId(),
-		policyRuntime.PathFilter(TranslatePathSeparator(req.Options.PathSeparator), req.PolicyContext.Path),
+		policyContext.GetId(),
+		policyRuntime.PathFilter(TranslatePathSeparator(req.Options.PathSeparator), policyContext.Path),
 	)
 	if err != nil {
 		return resp, errors.Wrap(err, "get policy list")
 	}
 
-	decisionFilter := initDecisionFilter(req.PolicyContext.Decisions)
+	decisionFilter := initDecisionFilter(policyContext.Decisions)
 
 	results := make(map[string]interface{})
-
-	policyContext := &api.PolicyContext{}
-	proto.Merge(policyContext, req.PolicyContext)
 
 	for _, policy := range policyList {
 		queryStmt := "x = data." + policy.PackageName
@@ -175,7 +167,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 	}
 
 	resp = &authz2.DecisionTreeResponse{
-		PathRoot: req.PolicyContext.Path,
+		PathRoot: policyContext.Path,
 		Path:     paths,
 	}
 
@@ -190,19 +182,13 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 		Decisions: make([]*authz2.Decision, 0),
 	}
 
-	if req.PolicyContext == nil {
-		return resp, cerr.ErrInvalidArgument.Msg("policy context not set")
+	policyContext := getPolicyInfoFromContext(ctx)
+
+	if policyContext.Path == "" {
+		return resp, cerr.ErrInvalidArgument.Msg("policy context path not set in header aserto-policy-path")
 	}
 
-	if req.PolicyContext.GetId() == "" {
-		return resp, cerr.ErrInvalidArgument.Msg("policy context id not set")
-	}
-
-	if req.PolicyContext.Path == "" {
-		return resp, cerr.ErrInvalidArgument.Msg("policy context path not set")
-	}
-
-	if len(req.PolicyContext.Decisions) == 0 {
+	if len(policyContext.Decisions) == 0 {
 		return resp, cerr.ErrInvalidArgument.Msg("policy context decisions not set")
 	}
 
@@ -227,15 +213,15 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 	input := map[string]interface{}{
 		InputUser:     convert(user),
 		InputIdentity: convert(req.IdentityContext),
-		InputPolicy:   req.PolicyContext,
+		InputPolicy:   policyContext,
 		InputResource: req.ResourceContext,
 	}
 
-	queryStmt := fmt.Sprintf("x = data.%s", req.PolicyContext.Path)
+	queryStmt := fmt.Sprintf("x = data.%s", policyContext.Path)
 
 	log.Debug().Interface("input", input).Msg("calculating is")
 
-	policyRuntime, err := s.runtimeResolver.RuntimeFromContext(ctx, req.PolicyContext.GetId(), req.PolicyContext.GetName(), req.PolicyContext.InstanceLabel)
+	policyRuntime, err := s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetId(), policyContext.GetName(), policyContext.InstanceLabel)
 	if err != nil {
 		return resp, errors.Wrap(err, "failed to procure tenant runtime")
 	}
@@ -261,7 +247,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 	v := results[0].Bindings["x"]
 	outcomes := map[string]bool{}
 
-	for _, d := range req.PolicyContext.Decisions {
+	for _, d := range policyContext.Decisions {
 		decision := authz2.Decision{
 			Decision: d,
 		}
@@ -277,9 +263,9 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 	d := api_v2.Decision{
 		Id:        uuid.NewString(),
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
-		Path:      req.PolicyContext.Path,
+		Path:      policyContext.Path,
 		Policy: &api_v2.DecisionPolicy{
-			Context: req.PolicyContext,
+			Context: policyContext,
 		},
 		User: &api_v2.DecisionUser{
 			Context: req.IdentityContext,
@@ -358,13 +344,16 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 		input[InputPolicy] = policyContext
 	}
 
-	/*if req.ResourceContext != nil {
-		input[InputResource] = req.ResourceContext
-	}*/
-	/*
+	if s.cfg.API.EnableResourceContext {
+		if req.ResourceContext != nil {
+			input[InputResource] = req.ResourceContext
+		}
+	}
+
+	if s.cfg.API.EnableIdentityContext {
 		if req.IdentityContext != nil {
 			if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-				return &authz.QueryResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+				return &authz2.QueryResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 			}
 
 			if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
@@ -379,12 +368,13 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
 				}
 
-				return &authz.QueryResponse{}, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+				return &authz2.QueryResponse{}, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
 			}
 
 			input[InputUser] = convert(user)
 		}
-	*/
+	}
+
 	log.Debug().Str("query", req.Query).Interface("input", input).Msg("executing query")
 	var rt *runtime.Runtime
 	var err error
@@ -494,6 +484,37 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 		}
 	}
 
+	if s.cfg.API.EnableResourceContext {
+		if req.ResourceContext != nil {
+			input[InputResource] = req.ResourceContext
+		}
+	}
+
+	if s.cfg.API.EnableIdentityContext {
+		if req.IdentityContext != nil {
+			if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+				return &authz2.CompileResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+			}
+
+			if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+				input[InputIdentity] = convert(req.IdentityContext)
+			}
+		}
+
+		if req.IdentityContext != nil && req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+			user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
+			if err != nil || user == nil {
+				if err != nil {
+					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
+				}
+
+				return &authz2.CompileResponse{}, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+			}
+
+			input[InputUser] = convert(user)
+		}
+	}
+
 	policyContext := getPolicyInfoFromContext(ctx)
 	if policyContext != nil {
 		input[InputPolicy] = policyContext
@@ -533,6 +554,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 	if err != nil {
 		return resp, err
 	}
+
 	var compileResultMap map[string]interface{}
 	err = json.Unmarshal(compileResultJson, &compileResultMap)
 	if err != nil {
@@ -639,6 +661,14 @@ func getPolicyInfoFromContext(ctx context.Context) *api.PolicyContext {
 	name := ctx.Value("aserto-policy-name")
 	if name != nil {
 		result.Name = fmt.Sprintf("%s", name)
+	}
+	path := ctx.Value("aserto-policy-path")
+	if path != nil {
+		result.Path = fmt.Sprintf("%s", path)
+	}
+	decisions := ctx.Value("aserto-policy-decisions")
+	if decisions != nil {
+		result.Decisions = strings.Split(fmt.Sprintf("%s", path), ",")
 	}
 	label := ctx.Value("aserto-instance-label")
 	if label != nil {
