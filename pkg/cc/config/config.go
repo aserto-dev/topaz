@@ -12,8 +12,8 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 
+	"github.com/aserto-dev/aserto-certs/certs"
 	"github.com/aserto-dev/aserto-grpc/grpcutil/metrics"
-	"github.com/aserto-dev/go-utils/certs"
 	"github.com/aserto-dev/go-utils/debug"
 	logger_util "github.com/aserto-dev/go-utils/logger"
 	runtimeconfig "github.com/aserto-dev/runtime"
