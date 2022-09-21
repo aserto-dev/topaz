@@ -10,8 +10,6 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
-replace github.com/aserto-dev/runtime => ../runtime
-
 replace github.com/aserto-dev/go-authorizer => ../go-authorizer
 
 require (
@@ -27,7 +25,7 @@ require (
 	github.com/aserto-dev/go-utils v0.8.26
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-grpc v0.8.16
-	github.com/aserto-dev/runtime v0.44.0
+	github.com/aserto-dev/runtime v0.44.1
 	github.com/aserto-dev/testutil v0.0.2
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0

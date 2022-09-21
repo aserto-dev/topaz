@@ -90,10 +90,8 @@ github.com/aserto-dev/mage-loot v0.8.9 h1:gwr9zB2CrFPH4gkqtNE/+JmpdeYlUbgI0egFpM
 github.com/aserto-dev/mage-loot v0.8.9/go.mod h1:16Q5Iq1e+W8J0DuCJx2LI0u7Bf7C3Z1r8ywnJZbhBGQ=
 github.com/aserto-dev/openapi-grpc v0.8.16 h1:oA6+TZfPylJmgkfI5VdpopwAgxGEtlId7Hhn2Q+F/tY=
 github.com/aserto-dev/openapi-grpc v0.8.16/go.mod h1:/bc98SsU8GaiyS5rdIksg0B9BRUYDon7ilRllcnVHdM=
-github.com/aserto-dev/runtime v0.44.0 h1:Pu17UFCTlOJ9kCXHueZivcCpGWLqWteBTfYoz9Y8pOE=
-github.com/aserto-dev/runtime v0.44.0/go.mod h1:WEkTQMm6PnwF4eXMIH97SJ6k0kwpUnfEL6Voy16diz0=
-github.com/aserto-dev/testutil v0.0.2 h1:btFk5bE64E4Lf/MD8l3b3g9X+KiNtkmrKH+NGoUJIng=
-github.com/aserto-dev/testutil v0.0.2/go.mod h1:uWC8A5cO9aVlctxgwivbYv8azWBmNu5/xRLWuy44SgY=
+github.com/aserto-dev/runtime v0.44.1 h1:6ni9MB0cKSW7NgUfiAu4TCXGnYZoCVopzKPZgs1Wkdw=
+github.com/aserto-dev/runtime v0.44.1/go.mod h1:nUZsFtOS40YkSvCalvOyF3KfCUA2XfcyKV3JKc82oOg=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
