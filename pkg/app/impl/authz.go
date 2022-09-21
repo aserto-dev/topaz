@@ -12,7 +12,6 @@ import (
 	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/go-utils/pb"
-	"github.com/aserto-dev/go-utils/protoutil"
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -25,6 +24,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -72,7 +72,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz.Decision
 	}
 
 	if req.ResourceContext == nil {
-		req.ResourceContext = pb.NewStruct()
+		req.ResourceContext = &structpb.Struct{Fields: make(map[string]*structpb.Value)}
 	}
 
 	if req.Options == nil {
@@ -168,7 +168,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz.Decision
 		}
 	}
 
-	paths, err := protoutil.NewStruct(results)
+	paths, err := structpb.NewStruct(results)
 	if err != nil {
 		return resp, err
 	}
@@ -413,7 +413,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz.QueryRequest) (
 
 	// results
 	for _, result := range queryResult.Result {
-		structValue, errX := protoutil.NewStruct(result.Bindings.WithoutWildcards())
+		structValue, errX := structpb.NewStruct(result.Bindings.WithoutWildcards())
 		if errX != nil {
 			return resp, errors.Wrap(err, "failed to create result grpc object")
 		}
@@ -423,11 +423,11 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz.QueryRequest) (
 
 	// metrics
 	if queryResult.Metrics != nil {
-		if metricsStruct, errX := protoutil.NewStruct(queryResult.Metrics); errX == nil {
+		if metricsStruct, errX := structpb.NewStruct(queryResult.Metrics); errX == nil {
 			resp.Metrics = metricsStruct
 		}
 	} else {
-		resp.Metrics, _ = protoutil.NewStruct(make(map[string]interface{}))
+		resp.Metrics, _ = structpb.NewStruct(make(map[string]interface{}))
 	}
 
 	// trace (explanation)
@@ -437,7 +437,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz.QueryRequest) (
 			return resp, errors.Wrap(err, "unmarshal json")
 		}
 
-		list, err := protoutil.NewList(v)
+		list, err := structpb.NewList(v)
 		if err != nil {
 			rt.Logger.Error().Err(err).Msg("newList")
 		}

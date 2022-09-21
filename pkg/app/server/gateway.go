@@ -10,7 +10,7 @@ import (
 	"github.com/aserto-dev/aserto-certs/certs"
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	metricsserver "github.com/aserto-dev/aserto-grpc/grpcutil/metrics"
-	"github.com/aserto-dev/go-utils/logger"
+	logger "github.com/aserto-dev/aserto-logger"
 	openapi "github.com/aserto-dev/openapi-grpc/publish/authorizer"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/slok/go-http-metrics/middleware"
