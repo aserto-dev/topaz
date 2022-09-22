@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
-	"github.com/aserto-dev/go-utils/testutil"
+	testutil "github.com/aserto-dev/aserto-testutil"
 	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"

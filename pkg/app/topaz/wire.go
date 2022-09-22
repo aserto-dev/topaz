@@ -9,7 +9,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/aserto-dev/aserto-grpc/grpcclient"
-	"github.com/aserto-dev/go-utils/logger"
+	logger "github.com/aserto-dev/aserto-logger"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
