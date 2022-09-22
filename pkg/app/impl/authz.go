@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
@@ -65,7 +64,9 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 
 	resp := &authz2.DecisionTreeResponse{}
 
-	policyContext := getPolicyInfoFromContext(ctx)
+	if req.PolicyContext == nil {
+		return resp, cerr.ErrInvalidArgument.Msg("policy context not set")
+	}
 
 	if req.ResourceContext == nil {
 		req.ResourceContext = &structpb.Struct{Fields: make(map[string]*structpb.Value)}
@@ -94,33 +95,44 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 	input := map[string]interface{}{
 		InputUser:     convert(user),
 		InputIdentity: convert(req.IdentityContext),
-		InputPolicy:   policyContext,
+		InputPolicy:   req.PolicyContext,
 		InputResource: req.ResourceContext,
 	}
 
-	policyRuntime, err := s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetId(), policyContext.GetName(), policyContext.InstanceLabel)
+	policyRuntime, err := s.getRuntime(ctx, req.PolicyContext)
 	if err != nil {
-		return resp, errors.Wrap(err, "failed to procure tenant runtime")
+		return resp, err
+	}
+
+	bundles, err := policyRuntime.GetBundles(ctx)
+	if err != nil {
+		return resp, errors.Wrap(err, "get bundles")
+	}
+	policyid := ""
+	for i := range bundles {
+		if bundles[i].Name == req.PolicyContext.Name {
+			policyid = bundles[i].Id
+		}
 	}
 
 	policyList, err := policyRuntime.GetPolicyList(
 		ctx,
-		policyContext.GetId(),
-		policyRuntime.PathFilter(TranslatePathSeparator(req.Options.PathSeparator), policyContext.Path),
+		policyid,
+		policyRuntime.PathFilter(TranslatePathSeparator(req.Options.PathSeparator), req.PolicyContext.Path),
 	)
 	if err != nil {
 		return resp, errors.Wrap(err, "get policy list")
 	}
 
-	decisionFilter := initDecisionFilter(policyContext.Decisions)
+	decisionFilter := initDecisionFilter(req.PolicyContext.Decisions)
 
 	results := make(map[string]interface{})
 
 	for _, policy := range policyList {
 		queryStmt := "x = data." + policy.PackageName
 
-		policyContext.Path = policy.PackageName
-		input[InputPolicy] = policyContext
+		req.PolicyContext.Path = policy.PackageName
+		input[InputPolicy] = req.PolicyContext
 
 		qry, err := rego.New(
 			rego.Compiler(policyRuntime.GetPluginsManager().GetCompiler()),
@@ -167,7 +179,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 	}
 
 	resp = &authz2.DecisionTreeResponse{
-		PathRoot: policyContext.Path,
+		PathRoot: req.PolicyContext.Path,
 		Path:     paths,
 	}
 
@@ -182,13 +194,11 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 		Decisions: make([]*authz2.Decision, 0),
 	}
 
-	policyContext := getPolicyInfoFromContext(ctx)
-
-	if policyContext.Path == "" {
+	if req.PolicyContext.Path == "" {
 		return resp, cerr.ErrInvalidArgument.Msg("policy context path not set in header aserto-policy-path")
 	}
 
-	if len(policyContext.Decisions) == 0 {
+	if len(req.PolicyContext.Decisions) == 0 {
 		return resp, cerr.ErrInvalidArgument.Msg("policy context decisions not set")
 	}
 
@@ -213,17 +223,17 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 	input := map[string]interface{}{
 		InputUser:     convert(user),
 		InputIdentity: convert(req.IdentityContext),
-		InputPolicy:   policyContext,
+		InputPolicy:   req.PolicyContext,
 		InputResource: req.ResourceContext,
 	}
 
-	queryStmt := fmt.Sprintf("x = data.%s", policyContext.Path)
+	queryStmt := fmt.Sprintf("x = data.%s", req.PolicyContext.Path)
 
 	log.Debug().Interface("input", input).Msg("calculating is")
 
-	policyRuntime, err := s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetId(), policyContext.GetName(), policyContext.InstanceLabel)
+	policyRuntime, err := s.getRuntime(ctx, req.PolicyContext)
 	if err != nil {
-		return resp, errors.Wrap(err, "failed to procure tenant runtime")
+		return resp, err
 	}
 
 	query, err := rego.New(
@@ -247,7 +257,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 	v := results[0].Bindings["x"]
 	outcomes := map[string]bool{}
 
-	for _, d := range policyContext.Decisions {
+	for _, d := range req.PolicyContext.Decisions {
 		decision := authz2.Decision{
 			Decision: d,
 		}
@@ -263,9 +273,9 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 	d := api_v2.Decision{
 		Id:        uuid.NewString(),
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
-		Path:      policyContext.Path,
+		Path:      req.PolicyContext.Path,
 		Policy: &api_v2.DecisionPolicy{
-			Context: policyContext,
+			Context: req.PolicyContext,
 		},
 		User: &api_v2.DecisionUser{
 			Context: req.IdentityContext,
@@ -339,9 +349,9 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 	if input == nil {
 		input = make(map[string]interface{})
 	}
-	policyContext := getPolicyInfoFromContext(ctx)
-	if policyContext != nil {
-		input[InputPolicy] = policyContext
+
+	if req.PolicyContext != nil {
+		input[InputPolicy] = req.PolicyContext
 	}
 
 	if s.cfg.API.EnableResourceContext {
@@ -376,18 +386,10 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 	}
 
 	log.Debug().Str("query", req.Query).Interface("input", input).Msg("executing query")
-	var rt *runtime.Runtime
-	var err error
-	if policyContext != nil {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetId(), policyContext.GetName(), policyContext.InstanceLabel)
-		if err != nil {
-			return &authz2.QueryResponse{}, errors.Wrap(err, "failed to procure tenant runtime")
-		}
-	} else {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, "", "", "")
-		if err != nil {
-			return &authz2.QueryResponse{}, cerr.ErrInvalidPolicyID.Msg("undefined policy context")
-		}
+
+	rt, err := s.getRuntime(ctx, req.PolicyContext)
+	if err != nil {
+		return &authz2.QueryResponse{}, err
 	}
 
 	queryResult, err := rt.Query(
@@ -416,7 +418,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 	}
 	respMap := make(map[string]interface{})
 	respMap["result"] = queryResultMap
-	resp.Response, err = protoutil.NewStruct(respMap)
+	resp.Response, err = structpb.NewStruct(respMap)
 	if err != nil {
 		return resp, err
 	}
@@ -454,6 +456,23 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 	}
 
 	return resp, nil
+}
+
+func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *api_v2.PolicyContext) (*runtime.Runtime, error) {
+	var rt *runtime.Runtime
+	var err error
+	if policyContext != nil {
+		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, "", policyContext.GetName(), policyContext.InstanceLabel)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to procure tenant runtime")
+		}
+	} else {
+		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, "", "", "")
+		if err != nil {
+			return nil, cerr.ErrInvalidPolicyID.Msg("undefined policy context")
+		}
+	}
+	return rt, err
 }
 
 func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileRequest) (*authz2.CompileResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
@@ -515,27 +534,17 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 		}
 	}
 
-	policyContext := getPolicyInfoFromContext(ctx)
-	if policyContext != nil {
-		input[InputPolicy] = policyContext
+	if req.PolicyContext != nil {
+		input[InputPolicy] = req.PolicyContext
 	}
 
 	if input == nil {
 		input = make(map[string]interface{})
 	}
-	log.Debug().Str("query", req.Query).Interface("input", input).Msg("executing query")
-	var rt *runtime.Runtime
-	var err error
-	if policyContext != nil {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetId(), policyContext.GetName(), policyContext.InstanceLabel)
-		if err != nil {
-			return &authz2.CompileResponse{}, errors.Wrap(err, "failed to procure tenant runtime")
-		}
-	} else {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, "", "", "")
-		if err != nil {
-			return &authz2.CompileResponse{}, cerr.ErrInvalidPolicyID.Msg("undefined policy context")
-		}
+	log.Debug().Str("compile", req.Query).Interface("input", input).Msg("executing compile")
+	rt, err := s.getRuntime(ctx, req.PolicyContext)
+	if err != nil {
+		return &authz2.CompileResponse{}, err
 	}
 
 	compileResult, err := rt.Compile(ctx, req.Query,
@@ -560,17 +569,17 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 	if err != nil {
 		return resp, err
 	}
-	resp.Response, err = protoutil.NewStruct(compileResultMap)
+	resp.Response, err = structpb.NewStruct(compileResultMap)
 	if err != nil {
 		return resp, err
 	}
 	// metrics
 	if compileResult.Metrics != nil {
-		if metricsStruct, errX := protoutil.NewStruct(compileResult.Metrics); errX == nil {
+		if metricsStruct, errX := structpb.NewStruct(compileResult.Metrics); errX == nil {
 			resp.Metrics = metricsStruct
 		}
 	} else {
-		resp.Metrics, _ = protoutil.NewStruct(make(map[string]interface{}))
+		resp.Metrics, _ = structpb.NewStruct(make(map[string]interface{}))
 	}
 
 	// trace (explanation)
@@ -580,7 +589,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 			return resp, errors.Wrap(err, "unmarshal json")
 		}
 
-		list, err := protoutil.NewList(v)
+		list, err := structpb.NewList(v)
 		if err != nil {
 			rt.Logger.Error().Err(err).Msg("newList")
 		}
@@ -649,35 +658,6 @@ func TranslatePathSeparator(separator authz2.PathSeparator) authz.PathSeparator 
 	default:
 		return authz.PathSeparator_PATH_SEPARATOR_UNKNOWN
 	}
-}
-
-func getPolicyInfoFromContext(ctx context.Context) *api.PolicyContext {
-	result := api.PolicyContext{}
-
-	id := ctx.Value("aserto-policy-id")
-	if id != nil {
-		result.Id = fmt.Sprintf("%s", id)
-	}
-	name := ctx.Value("aserto-policy-name")
-	if name != nil {
-		result.Name = fmt.Sprintf("%s", name)
-	}
-	path := ctx.Value("aserto-policy-path")
-	if path != nil {
-		result.Path = fmt.Sprintf("%s", path)
-	}
-	decisions := ctx.Value("aserto-policy-decisions")
-	if decisions != nil {
-		result.Decisions = strings.Split(fmt.Sprintf("%s", path), ",")
-	}
-	label := ctx.Value("aserto-instance-label")
-	if label != nil {
-		result.InstanceLabel = fmt.Sprintf("%s", label)
-	}
-	if result.Id == "" || (result.Name == "" && result.InstanceLabel == "") {
-		return nil
-	}
-	return &result
 }
 
 func initDecisionFilter(decisions []string) func(decision string) bool {
