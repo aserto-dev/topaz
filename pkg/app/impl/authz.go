@@ -23,6 +23,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -104,15 +105,13 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 		return resp, err
 	}
 
-	bundles, err := policyRuntime.GetBundles(ctx)
-	if err != nil {
-		return resp, errors.Wrap(err, "get bundles")
-	}
-	policyid := ""
-	for i := range bundles {
-		if bundles[i].Name == req.PolicyContext.Name {
-			policyid = bundles[i].Id
+	policyid := getPolicyIDFromContext(ctx)
+	if policyid == "" {
+		bundles, err := policyRuntime.GetBundles(ctx)
+		if err != nil {
+			return resp, errors.Wrap(err, "get bundles")
 		}
+		policyid = bundles[0].Id // only 1 bundle per runtime allowed
 	}
 
 	policyList, err := policyRuntime.GetPolicyList(
@@ -462,7 +461,8 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *api_v2
 	var rt *runtime.Runtime
 	var err error
 	if policyContext != nil {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, "", policyContext.GetName(), policyContext.InstanceLabel)
+		policyID := getPolicyIDFromContext(ctx)
+		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, policyID, policyContext.GetName(), policyContext.InstanceLabel)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to procure tenant runtime")
 		}
@@ -696,6 +696,16 @@ func getEmail(v map[string]interface{}) string {
 			if e, ok := p["email"].(string); ok {
 				return e
 			}
+		}
+	}
+	return ""
+}
+
+func getPolicyIDFromContext(ctx context.Context) string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		if policyid, ok := md["aserto-policy-id"]; ok {
+			return policyid[0]
 		}
 	}
 	return ""
