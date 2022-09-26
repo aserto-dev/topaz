@@ -68,6 +68,8 @@ github.com/aserto-dev/certs v0.0.2 h1:IFF+my4pu3BoUDDg31uLYb/JdoIESktecq153QYVxY
 github.com/aserto-dev/certs v0.0.2/go.mod h1:9mFvZ1NR92aEGj4ce6QleZGPXJuDZKTv+CWIOX28Xj8=
 github.com/aserto-dev/clui v0.8.1 h1:5IW9OnFZoIWjvnmTE4FNTXrjP1wnMzd39qKAcRnRHt8=
 github.com/aserto-dev/clui v0.8.1/go.mod h1:XpJxwNzSQaGN6rqXONZJEaeez4MUaCPikM2lKSngrXM=
+github.com/aserto-dev/go-authorizer v0.0.3-0.20220923140804-1a6f4728e4ef h1:AjlUzBu1f75+XbC5Txz1TV8wpg4bNyTMA6ORR3KgNEo=
+github.com/aserto-dev/go-authorizer v0.0.3-0.20220923140804-1a6f4728e4ef/go.mod h1:oIK2JT/iDsnyaEjFAR4IeneRYw3xwUyOr9W+C0Ysk8U=
 github.com/aserto-dev/go-directory v0.0.12 h1:DJDu8IOjksvZOLkNGq0GmxT/1YCdlCsTI0YSGb0UxN4=
 github.com/aserto-dev/go-directory v0.0.12/go.mod h1:Ftqol7NDOsa2RNNMg7ACOxyE2/T+F7xjWWz4uGncZ+o=
 github.com/aserto-dev/go-eds v0.8.5 h1:bJxqkftRaBddWFU4SmksdGxof3ncnY1dHM3ly/uBan4=
