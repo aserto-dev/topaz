@@ -8,6 +8,7 @@ import (
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	api_v2 "github.com/aserto-dev/go-authorizer/aserto/api/v2"
+	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/api/v2"
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	authz "github.com/aserto-dev/go-grpc-authz/aserto/authorizer/authorizer/v1"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
@@ -457,7 +458,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 	return resp, nil
 }
 
-func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *api_v2.PolicyContext) (*runtime.Runtime, error) {
+func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *authz_api_v2.PolicyContext) (*runtime.Runtime, error) {
 	var rt *runtime.Runtime
 	var err error
 	if policyContext != nil {

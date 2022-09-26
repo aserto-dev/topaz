@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	api_v2 "github.com/aserto-dev/go-authorizer/aserto/api/v2"
+	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/api/v2"
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-eds/pkg/pb"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
@@ -50,7 +50,7 @@ func TestWithMissingIdentity(t *testing.T) {
 func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient, policyID string) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := client.DecisionTree(ctx, &authz2.DecisionTreeRequest{
-			PolicyContext: &api_v2.PolicyContext{
+			PolicyContext: &authz_api_v2.PolicyContext{
 				Path:      "",
 				Decisions: []string{},
 			},
@@ -78,7 +78,7 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.Authoriz
 func IsWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient, policyID string) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := client.Is(ctx, &authz2.IsRequest{
-			PolicyContext: &api_v2.PolicyContext{
+			PolicyContext: &authz_api_v2.PolicyContext{
 				Path:      "peoplefinder.POST.api.users.__id",
 				Decisions: []string{"allowed"},
 			},
@@ -117,7 +117,7 @@ func QueryWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClien
 				Trace:        authz2.TraceLevel_TRACE_LEVEL_OFF,
 				TraceSummary: false,
 			},
-			PolicyContext: &api_v2.PolicyContext{
+			PolicyContext: &authz_api_v2.PolicyContext{
 				Path:      "",
 				Decisions: []string{},
 			},
