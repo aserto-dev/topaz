@@ -405,13 +405,13 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 	}
 
 	resp := &authz2.QueryResponse{}
-	queryResultJson, err := json.Marshal(queryResult.Result)
+	queryResultJSON, err := json.Marshal(queryResult.Result)
 	if err != nil {
 		return resp, err
 	}
 
 	var queryResultMap []interface{}
-	err = json.Unmarshal(queryResultJson, &queryResultMap)
+	err = json.Unmarshal(queryResultJSON, &queryResultMap)
 	if err != nil {
 		return resp, err
 	}
@@ -559,13 +559,13 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 	if err != nil {
 		return resp, err
 	}
-	compileResultJson, err := json.Marshal(compileResult.Result)
+	compileResultJSON, err := json.Marshal(compileResult.Result)
 	if err != nil {
 		return resp, err
 	}
 
 	var compileResultMap map[string]interface{}
-	err = json.Unmarshal(compileResultJson, &compileResultMap)
+	err = json.Unmarshal(compileResultJSON, &compileResultMap)
 	if err != nil {
 		return resp, err
 	}

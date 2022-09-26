@@ -12,7 +12,10 @@ import (
 
 	"github.com/aserto-dev/aserto-grpc/grpcclient"
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
+	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-lib/grpc-clients/authorizer"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 // CreateClient creates a new http client that can talk to the API
@@ -78,6 +81,30 @@ func (h *EngineHarness) CreateGRPCClient() *authorizer.Client {
 	}
 
 	return grpcClient
+}
+
+func (h *EngineHarness) CreateGRPCClientV2() authz2.AuthorizerClient {
+	var opts []grpc.DialOption
+	var tlsConf tls.Config
+	certPool := x509.NewCertPool()
+	caCertBytes, err := os.ReadFile(h.Engine.Configuration.API.GRPC.Certs.TLSCACertPath)
+	if err != nil {
+		h.t.Fatal(err)
+	}
+
+	if !certPool.AppendCertsFromPEM(caCertBytes) {
+		h.t.Fatal(err)
+	}
+	tlsConf.RootCAs = certPool
+	tlsConf.MinVersion = tls.VersionTLS12
+
+	opts = append(opts, grpc.WithTransportCredentials(credentials.NewTLS(&tlsConf)))
+
+	conn, err := grpc.Dial("127.0.0.1:8282", opts...)
+	if err != nil {
+		h.t.Fatal(err)
+	}
+	return authz2.NewAuthorizerClient(conn)
 }
 
 func (h *EngineHarness) CreateGRPCDirectoryClient() *authorizer.DirectoryClient {
