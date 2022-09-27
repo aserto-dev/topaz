@@ -21,7 +21,6 @@ require (
 	github.com/aserto-dev/go-directory v0.0.12
 	github.com/aserto-dev/go-eds v0.8.5
 	github.com/aserto-dev/go-grpc v0.8.51
-	github.com/aserto-dev/go-grpc-authz v0.8.0
 	github.com/aserto-dev/go-lib v0.8.46
 	github.com/aserto-dev/go-utils v0.8.26
 	github.com/aserto-dev/logger v0.0.2
@@ -63,6 +62,7 @@ require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/allegro/bigcache/v3 v3.0.2 // indirect
 	github.com/aserto-dev/clui v0.8.1 // indirect
+	github.com/aserto-dev/go-grpc-authz v0.8.0 // indirect
 	github.com/aserto-dev/go-grpc-internal v0.8.13 // indirect
 	github.com/aserto-dev/mage-loot v0.8.9 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect

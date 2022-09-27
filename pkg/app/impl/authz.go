@@ -4,13 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	api_v2 "github.com/aserto-dev/go-authorizer/aserto/api/v2"
 	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/api/v2"
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	authz "github.com/aserto-dev/go-grpc-authz/aserto/authorizer/authorizer/v1"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/go-utils/pb"
 	runtime "github.com/aserto-dev/runtime"
@@ -117,7 +117,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 	policyList, err := policyRuntime.GetPolicyList(
 		ctx,
 		policyid,
-		policyRuntime.PathFilter(TranslatePathSeparator(req.Options.PathSeparator), req.PolicyContext.Path),
+		pathFilter(req.Options.PathSeparator, req.PolicyContext.Path),
 	)
 	if err != nil {
 		return resp, errors.Wrap(err, "get policy list")
@@ -144,7 +144,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 			return resp, cerr.ErrBadQuery.Err(err).Str("query", queryStmt)
 		}
 
-		packageName := policy.Package(TranslatePathSeparator(req.Options.PathSeparator))
+		packageName := getPackageName(policy, req.Options.PathSeparator)
 
 		queryResults, err := qry.Eval(ctx, rego.EvalInput(input))
 
@@ -607,6 +607,23 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 	return resp, nil
 }
 
+func TraceLevelToExplainModeV2(t authz2.TraceLevel) types.ExplainModeV1 {
+	switch t {
+	case authz2.TraceLevel_TRACE_LEVEL_UNKNOWN:
+		return types.ExplainOffV1
+	case authz2.TraceLevel_TRACE_LEVEL_OFF:
+		return types.ExplainOffV1
+	case authz2.TraceLevel_TRACE_LEVEL_FULL:
+		return types.ExplainFullV1
+	case authz2.TraceLevel_TRACE_LEVEL_NOTES:
+		return types.ExplainNotesV1
+	case authz2.TraceLevel_TRACE_LEVEL_FAILS:
+		return types.ExplainFailsV1
+	default:
+		return types.ExplainOffV1
+	}
+}
+
 // convert, explicitly convert from proto message interface{} in order
 // to preserve enum values as strings when marshaled to JSON
 func convert(msg proto.Message) interface{} {
@@ -630,33 +647,33 @@ func convert(msg proto.Message) interface{} {
 	return v
 }
 
-func TraceLevelToExplainModeV2(t authz2.TraceLevel) types.ExplainModeV1 {
-	switch t {
-	case authz2.TraceLevel_TRACE_LEVEL_UNKNOWN:
-		return types.ExplainOffV1
-	case authz2.TraceLevel_TRACE_LEVEL_OFF:
-		return types.ExplainOffV1
-	case authz2.TraceLevel_TRACE_LEVEL_FULL:
-		return types.ExplainFullV1
-	case authz2.TraceLevel_TRACE_LEVEL_NOTES:
-		return types.ExplainNotesV1
-	case authz2.TraceLevel_TRACE_LEVEL_FAILS:
-		return types.ExplainFailsV1
+func pathFilter(sep authz2.PathSeparator, path string) runtime.PathFilterFn {
+	switch sep {
+	case authz2.PathSeparator_PATH_SEPARATOR_SLASH:
+		return func(packageName string) bool {
+			if path != "" {
+				return strings.HasPrefix(strings.ReplaceAll(packageName, ".", "/"), path)
+			}
+			return true
+		}
 	default:
-		return types.ExplainOffV1
+		return func(packageName string) bool {
+			if path != "" {
+				return strings.HasPrefix(packageName, path)
+			}
+			return true
+		}
 	}
 }
 
-// TranslatePathSeparator is a helper function that transforms from the v2 format to v1 format
-// Should be removed when deprecating v1
-func TranslatePathSeparator(separator authz2.PathSeparator) authz.PathSeparator {
-	switch separator {
-	case authz2.PathSeparator_PATH_SEPARATOR_SLASH:
-		return authz.PathSeparator_PATH_SEPARATOR_SLASH
+func getPackageName(policy runtime.Policy, sep authz2.PathSeparator) string {
+	switch sep {
 	case authz2.PathSeparator_PATH_SEPARATOR_DOT:
-		return authz.PathSeparator_PATH_SEPARATOR_DOT
+		return policy.PackageName
+	case authz2.PathSeparator_PATH_SEPARATOR_SLASH:
+		return strings.ReplaceAll(policy.PackageName, ".", "/")
 	default:
-		return authz.PathSeparator_PATH_SEPARATOR_UNKNOWN
+		return policy.PackageName
 	}
 }
 
