@@ -14,7 +14,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 )
 
-func newGRPCServer(cfg *config.Common, logger *zerolog.Logger, registrations GRPCRegistrations, serverOptions ...grpc.ServerOption) (*grpc.Server, error) {
+func newGRPCServer(cfg *config.Common, logger *zerolog.Logger, registrations GRPCRegistrations, additionalServerOptions ...grpc.ServerOption) (*grpc.Server, error) {
 	grpc.EnableTracing = true
 
 	if err := view.Register(ocgrpc.DefaultServerViews...); err != nil {
@@ -29,14 +29,15 @@ func newGRPCServer(cfg *config.Common, logger *zerolog.Logger, registrations GRP
 
 	tlsAuth := grpc.Creds(tlsCreds)
 
-	// unaryMiddlewares, streamMiddlewares := middlewares.AsGRPCOptions()
-
-	server := grpc.NewServer(
+	serverOptions := []grpc.ServerOption{
 		tlsAuth,
 		grpc.ConnectionTimeout(connectionTimeout),
 		grpc.StatsHandler(&ocgrpc.ServerHandler{}),
-		//TODO: add serverOptions
-	)
+	}
+
+	serverOptions = append(serverOptions, additionalServerOptions...)
+
+	server := grpc.NewServer(serverOptions...)
 
 	reflection.Register(server)
 
