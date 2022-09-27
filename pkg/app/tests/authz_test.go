@@ -7,7 +7,6 @@ import (
 	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/api/v2"
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-eds/pkg/pb"
-	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
 	policy "github.com/aserto-dev/go-grpc/aserto/authorizer/policy/v1"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	atesting "github.com/aserto-dev/topaz/pkg/testing"
@@ -54,9 +53,9 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.Authoriz
 				Path:      "",
 				Decisions: []string{},
 			},
-			IdentityContext: &api.IdentityContext{
+			IdentityContext: &authz_api_v2.IdentityContext{
 				Identity: "noexisting-user@acmecorp.com",
-				Type:     api.IdentityType_IDENTITY_TYPE_SUB,
+				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
 			},
 			Options:         &authz2.DecisionTreeOptions{},
 			ResourceContext: pb.NewStruct(),
@@ -82,9 +81,9 @@ func IsWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient, 
 				Path:      "peoplefinder.POST.api.users.__id",
 				Decisions: []string{"allowed"},
 			},
-			IdentityContext: &api.IdentityContext{
+			IdentityContext: &authz_api_v2.IdentityContext{
 				Identity: "noexisting-user@acmecorp.com",
-				Type:     api.IdentityType_IDENTITY_TYPE_SUB,
+				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
 			},
 			ResourceContext: pb.NewStruct(),
 		})
@@ -105,9 +104,9 @@ func IsWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient, 
 func QueryWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient, policyID string) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := client.Query(ctx, &authz2.QueryRequest{
-			IdentityContext: &api.IdentityContext{
+			IdentityContext: &authz_api_v2.IdentityContext{
 				Identity: "noexisting-user@acmecorp.com",
-				Type:     api.IdentityType_IDENTITY_TYPE_SUB,
+				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
 			},
 			Query: "x = true",
 			Input: "",

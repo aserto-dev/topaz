@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
+	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/api/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
-	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/lestrrat-go/jwx/jwk"
@@ -132,16 +132,16 @@ func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.UR
 }
 
 // getUserFromIdentityContext .
-func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, identityContext *api.IdentityContext) (proto.Message, error) {
+func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, identityContext *authz_api_v2.IdentityContext) (proto.Message, error) {
 	if identityContext == nil {
 		return nil, cerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
 	switch identityContext.Type {
-	case api.IdentityType_IDENTITY_TYPE_NONE:
+	case authz_api_v2.IdentityType_IDENTITY_TYPE_NONE:
 		return nil, nil
 
-	case api.IdentityType_IDENTITY_TYPE_SUB:
+	case authz_api_v2.IdentityType_IDENTITY_TYPE_SUB:
 		if identityContext.Identity == "" {
 			return nil, fmt.Errorf("identity value not set (type: %s)", identityContext.Type.String())
 		}
@@ -152,7 +152,7 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 		}
 
 		return user, nil
-	case api.IdentityType_IDENTITY_TYPE_JWT:
+	case authz_api_v2.IdentityType_IDENTITY_TYPE_JWT:
 		if identityContext.Identity == "" {
 			return nil, fmt.Errorf("identity value not set (type: %s)", identityContext.Type.String())
 		}

@@ -11,7 +11,6 @@ import (
 	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/api/v2"
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	authz "github.com/aserto-dev/go-grpc-authz/aserto/authorizer/authorizer/v1"
-	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/go-utils/pb"
 	runtime "github.com/aserto-dev/runtime"
@@ -84,7 +83,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 		return resp, cerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
-	if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+	if req.IdentityContext.Type == authz_api_v2.IdentityType_IDENTITY_TYPE_UNKNOWN {
 		return resp, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 	}
 
@@ -210,7 +209,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 		return resp, cerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
-	if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+	if req.IdentityContext.Type == authz_api_v2.IdentityType_IDENTITY_TYPE_UNKNOWN {
 		return resp, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 	}
 
@@ -362,16 +361,16 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 
 	if s.cfg.API.EnableIdentityContext {
 		if req.IdentityContext != nil {
-			if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+			if req.IdentityContext.Type == authz_api_v2.IdentityType_IDENTITY_TYPE_UNKNOWN {
 				return &authz2.QueryResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 			}
 
-			if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+			if req.IdentityContext.Type != authz_api_v2.IdentityType_IDENTITY_TYPE_NONE {
 				input[InputIdentity] = convert(req.IdentityContext)
 			}
 		}
 
-		if req.IdentityContext != nil && req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+		if req.IdentityContext != nil && req.IdentityContext.Type != authz_api_v2.IdentityType_IDENTITY_TYPE_NONE {
 			user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
 			if err != nil || user == nil {
 				if err != nil {
@@ -512,16 +511,16 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 
 	if s.cfg.API.EnableIdentityContext {
 		if req.IdentityContext != nil {
-			if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+			if req.IdentityContext.Type == authz_api_v2.IdentityType_IDENTITY_TYPE_UNKNOWN {
 				return &authz2.CompileResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 			}
 
-			if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+			if req.IdentityContext.Type != authz_api_v2.IdentityType_IDENTITY_TYPE_NONE {
 				input[InputIdentity] = convert(req.IdentityContext)
 			}
 		}
 
-		if req.IdentityContext != nil && req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+		if req.IdentityContext != nil && req.IdentityContext.Type != authz_api_v2.IdentityType_IDENTITY_TYPE_NONE {
 			user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
 			if err != nil || user == nil {
 				if err != nil {
