@@ -8,7 +8,7 @@ package topaz
 
 import (
 	"github.com/aserto-dev/aserto-grpc/grpcclient"
-	logger "github.com/aserto-dev/aserto-logger"
+	"github.com/aserto-dev/aserto-logger"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
@@ -82,14 +82,7 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		cleanup()
 		return nil, nil, err
 	}
-	middlewares, err := Middlewares(context, zerologLogger, configConfig, authorizerServer, directoryServer, dialOptionsProvider)
-	if err != nil {
-		cleanup3()
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
-	serverServer, cleanup4, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, middlewares, runtimeResolver)
+	serverServer, cleanup4, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -176,14 +169,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		cleanup()
 		return nil, nil, err
 	}
-	middlewares, err := Middlewares(context, zerologLogger, configConfig, authorizerServer, directoryServer, dialOptionsProvider)
-	if err != nil {
-		cleanup3()
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
-	serverServer, cleanup4, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, middlewares, runtimeResolver)
+	serverServer, cleanup4, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -211,7 +197,7 @@ var (
 	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, grpcclient.NewDialOptionsProvider, impl.NewAuthorizerServer, impl.NewDirectoryServer, impl.NewPolicyServer, impl.NewInfoServer, GRPCServerRegistrations,
 		GatewayServerRegistrations,
 		RuntimeResolver,
-		DirectoryResolver, file.New, Middlewares, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
+		DirectoryResolver, file.New, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
 	)
 
 	appTestSet = wire.NewSet(

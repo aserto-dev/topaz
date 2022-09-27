@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/aserto-dev/aserto-certs/certs"
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/aserto-grpc/grpcutil/metrics"
 	"github.com/aserto-dev/go-utils/debug"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -52,20 +51,27 @@ func NewServer(
 	handlerRegistrations HandlerRegistrations,
 	gtwServer *http.Server,
 	gtwMux *runtime.ServeMux,
-	middlewares grpcutil.Middlewares,
+	// unaryInterceptors []grpc.UnaryServerInterceptor,
+	// streamInterceptors []grpc.StreamServerInterceptor,
 	runtimeResolver resolvers.RuntimeResolver,
 ) (*Server, func(), error) {
 
 	newLogger := logger.With().Str("component", "api.edge-server").Logger()
 
-	grpcServer, err := newGRPCServer(cfg, logger, grpcRegistrations, middlewares)
+	// var unaryIntServerOptions grpc.ServerOption
+	// for _, uInterceptor := range unaryInterceptors {
+	// TODO: add the ability to register unary and stream server options
+	//unaryServerOptions := grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(unaryInterceptors...))
+	//streamServerOptions := grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(streamInterceptors...))
+	// 	unaryInterceptors := grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(uInterceptor))
+	// }
+
+	grpcServer, err := newGRPCServer(cfg, logger, grpcRegistrations) //, unaryServerOptions, streamServerOptions)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	healthServer := newGRPCHealthServer()
-
-	metricsServer := metrics.NewServer(&cfg.API.Metrics, logger)
 
 	server := &Server{
 		ctx:                  ctx,
@@ -75,7 +81,6 @@ func NewServer(
 		runtimeResolver:      runtimeResolver,
 		grpcServer:           grpcServer,
 		gtwServer:            gtwServer,
-		metricsServer:        metricsServer,
 		healthServer:         healthServer,
 		gtwMux:               gtwMux,
 		errGroup:             errGroup,

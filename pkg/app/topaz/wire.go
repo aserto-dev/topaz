@@ -35,7 +35,6 @@ var (
 		RuntimeResolver,
 		DirectoryResolver,
 		file.New,
-		Middlewares,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),
 		wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"),

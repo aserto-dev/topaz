@@ -11,11 +11,10 @@ import (
 	"google.golang.org/grpc/reflection"
 
 	"github.com/aserto-dev/aserto-certs/certs"
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 )
 
-func newGRPCServer(cfg *config.Common, logger *zerolog.Logger, registrations GRPCRegistrations, middlewares grpcutil.Middlewares) (*grpc.Server, error) {
+func newGRPCServer(cfg *config.Common, logger *zerolog.Logger, registrations GRPCRegistrations, serverOptions ...grpc.ServerOption) (*grpc.Server, error) {
 	grpc.EnableTracing = true
 
 	if err := view.Register(ocgrpc.DefaultServerViews...); err != nil {
@@ -30,14 +29,13 @@ func newGRPCServer(cfg *config.Common, logger *zerolog.Logger, registrations GRP
 
 	tlsAuth := grpc.Creds(tlsCreds)
 
-	unaryMiddlewares, streamMiddlewares := middlewares.AsGRPCOptions()
+	// unaryMiddlewares, streamMiddlewares := middlewares.AsGRPCOptions()
 
 	server := grpc.NewServer(
 		tlsAuth,
 		grpc.ConnectionTimeout(connectionTimeout),
 		grpc.StatsHandler(&ocgrpc.ServerHandler{}),
-		unaryMiddlewares,
-		streamMiddlewares,
+		//TODO: add serverOptions
 	)
 
 	reflection.Register(server)
