@@ -9,6 +9,7 @@ import (
 
 	"github.com/aserto-dev/aserto-certs/certs"
 	"github.com/aserto-dev/go-utils/debug"
+	"github.com/aserto-dev/topaz/pkg/app/middleware"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -59,11 +60,14 @@ func NewServer(
 	gtwServer *http.Server,
 	gtwMux *runtime.ServeMux,
 	runtimeResolver resolvers.RuntimeResolver,
+	instanceMiddleware *middleware.InstanceIDMiddleware,
 ) (*Server, func(), error) {
 
 	newLogger := logger.With().Str("component", "api.edge-server").Logger()
 
 	healthServer := newGRPCHealthServer()
+
+	instanceMiddlewareServerOptions := instanceMiddleware.AsGRPCOptions()
 
 	server := &Server{
 		ctx:                  ctx,
@@ -72,6 +76,7 @@ func NewServer(
 		handlerRegistrations: handlerRegistrations,
 		runtimeResolver:      runtimeResolver,
 		grpcRegistrations:    grpcRegistrations,
+		grpcServerOptions:    instanceMiddlewareServerOptions,
 		gtwServer:            gtwServer,
 		healthServer:         healthServer,
 		gtwMux:               gtwMux,

@@ -13,6 +13,7 @@ import (
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
+	"github.com/aserto-dev/topaz/pkg/app/middleware"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -35,6 +36,8 @@ var (
 		RuntimeResolver,
 		DirectoryResolver,
 		file.New,
+
+		middleware.NewInstanceIDMiddleware,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),
 		wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"),

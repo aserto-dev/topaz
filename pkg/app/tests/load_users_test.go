@@ -20,13 +20,13 @@ import (
 	"google.golang.org/protobuf/proto"
 
 	"github.com/pkg/errors"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestTenant(t *testing.T) {
 	tmpDir, err := os.MkdirTemp("", "tests")
-	assert.NoErrorf(t, err, "TempDir")
+	assert := require.New(t)
+	assert.NoErrorf(err, "TempDir")
 
 	harness := atesting.SetupOffline(t, func(cfg *config.Config) {
 		cfg.Directory.Path = filepath.Join(tmpDir, "test.db")
@@ -56,50 +56,53 @@ func TestTenant(t *testing.T) {
 func CreateDeleteTenantWithID(ctx context.Context, client dir.DirectoryClient) func(t *testing.T) {
 	return func(t *testing.T) {
 		tid, err := ids.NewTenantID()
-		assert.NoErrorf(t, err, "NewTenantID")
+		assert := require.New(t)
+		assert.NoErrorf(err, "NewTenantID")
 
 		resp, err := client.CreateTenant(ctx, &dir.CreateTenantRequest{Id: tid})
-		assert.NoErrorf(t, err, "CreateTenant")
-		assert.NotNil(t, resp)
-		assert.NotNil(t, resp.Id)
-		assert.NotEmpty(t, resp.Id)
-		assert.Equal(t, tid, resp.Id)
+		assert.NoErrorf(err, "CreateTenant")
+		assert.NotNil(resp)
+		assert.NotNil(resp.Id)
+		assert.NotEmpty(resp.Id)
+		assert.Equal(tid, resp.Id)
 
 		resp2, err := client.DeleteTenant(ctx, &dir.DeleteTenantRequest{Id: tid})
 
-		assert.NoErrorf(t, err, "DeleteTenant")
-		assert.NotNil(t, resp2)
+		assert.NoErrorf(err, "DeleteTenant")
+		assert.NotNil(resp2)
 	}
 }
 
 func CreateDeleteTenantNoID(ctx context.Context, client dir.DirectoryClient) func(t *testing.T) {
 	return func(t *testing.T) {
 		resp, err := client.CreateTenant(ctx, &dir.CreateTenantRequest{})
-		assert.NoErrorf(t, err, "CreateTenant")
-		assert.NotNil(t, resp)
-		assert.NotNil(t, resp.Id)
-		assert.NotEmpty(t, resp.Id)
+		assert := require.New(t)
+		assert.NoErrorf(err, "CreateTenant")
+		assert.NotNil(resp)
+		assert.NotNil(resp.Id)
+		assert.NotEmpty(resp.Id)
 
 		resp2, err := client.DeleteTenant(ctx, &dir.DeleteTenantRequest{
 			Id: resp.Id,
 		})
 
-		assert.NoErrorf(t, err, "DeleteTenant")
-		assert.NotNil(t, resp2)
+		assert.NoErrorf(err, "DeleteTenant")
+		assert.NotNil(resp2)
 	}
 }
 
 func ListTenants(ctx context.Context, client dir.DirectoryClient) func(t *testing.T) {
 	return func(t *testing.T) {
 		resp, err := client.ListTenants(ctx, &dir.ListTenantsRequest{})
-		assert.NoErrorf(t, err, "ListTenants")
-		assert.NotNil(t, resp)
-		assert.NotNil(t, resp.Results)
-		assert.NotEmpty(t, resp.Results)
+		assert := require.New(t)
+		assert.NoErrorf(err, "ListTenants")
+		assert.NotNil(resp)
+		assert.NotNil(resp.Results)
+		assert.NotEmpty(resp.Results)
 
 		for _, tenantID := range resp.Results {
 			err := ids.CheckTenantID(tenantID)
-			assert.NoErrorf(t, err, "parse tenant id")
+			assert.NoErrorf(err, "parse tenant id")
 		}
 	}
 }
@@ -240,14 +243,20 @@ func downloadAcmeCorpJSON() (io.Reader, error) {
 }
 
 func TestLoadUsersWithExt(t *testing.T) {
+	assert := require.New(t)
 	r, err := downloadAcmeCorpJSON()
-	require.NoError(t, err)
+	if err != nil {
+		assert.FailNow("failed to download acmecorm json", err)
+	}
 
 	tmpDir, err := os.MkdirTemp("", "tests")
-	require.NoError(t, err)
+	if err != nil {
+		assert.FailNow("failed to create temp dir", err)
+	}
 
 	harness := atesting.SetupOffline(t, func(cfg *config.Config) {
 		cfg.Directory.Path = filepath.Join(tmpDir, "test.db")
+		cfg.OPA.InstanceID = "d5640da0-e4e3-11eb-8822-005aac8d2d94"
 		t.Logf("dbpath %s", cfg.Directory.Path)
 	})
 	defer harness.Cleanup()
@@ -265,12 +274,16 @@ func TestLoadUsersWithExt(t *testing.T) {
 	defer cancel()
 
 	stream, err := client.LoadUsers(ctx)
-	require.NoErrorf(t, err, "creating load user stream client")
+	if err != nil {
+		assert.FailNow("failed to create load user stream client", err)
+	}
 
 	dec := json.NewDecoder(r)
 
 	_, err = dec.Token()
-	require.NoError(t, err)
+	if err != nil {
+		assert.FailNow("failed to get token", err)
+	}
 
 	fnUser := func(stream dir.Directory_LoadUsersClient, user *api.User) error {
 		req := &dir.LoadUsersRequest{
@@ -294,7 +307,7 @@ func TestLoadUsersWithExt(t *testing.T) {
 		user := api.User{}
 
 		if err := pb.UnmarshalNext(dec, &user); err != nil {
-			assert.NoError(t, err)
+			assert.FailNow("failed to unmarshal user", err)
 		}
 
 		clonedAttributes := proto.Clone(user.Attributes)
@@ -315,7 +328,7 @@ func TestLoadUsersWithExt(t *testing.T) {
 				break
 			}
 		}
-		assert.NotEmpty(t, pid)
+		assert.NotEmpty(pid)
 
 		userExt := api.UserExt{
 			Id:           pid,
@@ -324,20 +337,35 @@ func TestLoadUsersWithExt(t *testing.T) {
 		}
 
 		if err := fnUser(stream, &user); err != nil {
-			assert.NoError(t, err)
+			if err == io.EOF {
+				break
+			}
+			assert.FailNow("failed to get user", err)
 		}
 
 		if err := fnUserExt(stream, &userExt); err != nil {
-			assert.NoError(t, err)
+			if err == io.EOF {
+				break
+			}
+			assert.FailNow("failed to get user extensions", err)
 		}
 
 	}
+	resp, err := client.ListTenants(ctx, &dir.ListTenantsRequest{})
+
+	assert.NoErrorf(err, "ListTenants")
+	fmt.Println(resp.Results)
 
 	res, err := stream.CloseAndRecv()
-	assert.NoError(t, err)
+	if err != nil {
+		assert.FailNow("failed to receive users", err)
+	}
+	assert.NoError(err)
 
 	_, err = dec.Token()
-	require.NoError(t, err)
+	if err != nil {
+		assert.FailNow("failed get token", err)
+	}
 
 	assert.Equal(t, int32(554), res.Received)
 	assert.Equal(t, int32(277), res.Created)
