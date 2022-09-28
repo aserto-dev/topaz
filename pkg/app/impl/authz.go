@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
-	api_v2 "github.com/aserto-dev/go-authorizer/aserto/api/v2"
+	"github.com/aserto-dev/go-authorizer/aserto/api/v2"
 	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/api/v2"
-	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/go-utils/pb"
 	runtime "github.com/aserto-dev/runtime"
@@ -60,10 +60,10 @@ func NewAuthorizerServer(
 	}
 }
 
-func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.DecisionTreeRequest) (*authz2.DecisionTreeResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
+func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.DecisionTreeRequest) (*authorizer.DecisionTreeResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
 	log := grpcutil.CompleteLogger(ctx, s.logger)
 
-	resp := &authz2.DecisionTreeResponse{}
+	resp := &authorizer.DecisionTreeResponse{}
 
 	if req.PolicyContext == nil {
 		return resp, cerr.ErrInvalidArgument.Msg("policy context not set")
@@ -74,8 +74,8 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 	}
 
 	if req.Options == nil {
-		req.Options = &authz2.DecisionTreeOptions{
-			PathSeparator: authz2.PathSeparator_PATH_SEPARATOR_DOT,
+		req.Options = &authorizer.DecisionTreeOptions{
+			PathSeparator: authorizer.PathSeparator_PATH_SEPARATOR_DOT,
 		}
 	}
 
@@ -177,7 +177,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 		return resp, err
 	}
 
-	resp = &authz2.DecisionTreeResponse{
+	resp = &authorizer.DecisionTreeResponse{
 		PathRoot: req.PolicyContext.Path,
 		Path:     paths,
 	}
@@ -186,11 +186,11 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authz2.Decisio
 }
 
 // Is decision eval function.
-func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*authz2.IsResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
+func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*authorizer.IsResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
 	log := grpcutil.CompleteLogger(ctx, s.logger)
 
-	resp := &authz2.IsResponse{
-		Decisions: make([]*authz2.Decision, 0),
+	resp := &authorizer.IsResponse{
+		Decisions: make([]*authorizer.Decision, 0),
 	}
 
 	if req.PolicyContext.Path == "" {
@@ -257,7 +257,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 	outcomes := map[string]bool{}
 
 	for _, d := range req.PolicyContext.Decisions {
-		decision := authz2.Decision{
+		decision := authorizer.Decision{
 			Decision: d,
 		}
 		decision.Is, err = is(v, d)
@@ -269,14 +269,14 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authz2.IsRequest) (*auth
 	}
 
 	dplugin := decisionlog_plugin.Lookup(policyRuntime.GetPluginsManager())
-	d := api_v2.Decision{
+	d := api.Decision{
 		Id:        uuid.NewString(),
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
 		Path:      req.PolicyContext.Path,
-		Policy: &api_v2.DecisionPolicy{
+		Policy: &api.DecisionPolicy{
 			Context: req.PolicyContext,
 		},
-		User: &api_v2.DecisionUser{
+		User: &api.DecisionUser{
 			Context: req.IdentityContext,
 			Id:      getID(input),
 			Email:   getEmail(input),
@@ -317,31 +317,31 @@ func is(v interface{}, decision string) (bool, error) {
 	}
 }
 
-func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) (*authz2.QueryResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
+func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryRequest) (*authorizer.QueryResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
 	log := grpcutil.CompleteLogger(ctx, s.logger)
 
 	if req.Query == "" {
-		return &authz2.QueryResponse{}, cerr.ErrInvalidArgument.Msg("query not set")
+		return &authorizer.QueryResponse{}, cerr.ErrInvalidArgument.Msg("query not set")
 	}
 
 	if req.Options == nil {
-		req.Options = &authz2.QueryOptions{
+		req.Options = &authorizer.QueryOptions{
 			Metrics:      false,
 			Instrument:   false,
-			Trace:        authz2.TraceLevel_TRACE_LEVEL_OFF,
+			Trace:        authorizer.TraceLevel_TRACE_LEVEL_OFF,
 			TraceSummary: false,
 		}
 	}
 
-	if req.Options.Trace == authz2.TraceLevel_TRACE_LEVEL_UNKNOWN {
-		req.Options.Trace = authz2.TraceLevel_TRACE_LEVEL_OFF
+	if req.Options.Trace == authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN {
+		req.Options.Trace = authorizer.TraceLevel_TRACE_LEVEL_OFF
 	}
 
 	var input map[string]interface{}
 
 	if req.Input != "" {
 		if err := json.Unmarshal([]byte(req.Input), &input); err != nil {
-			return &authz2.QueryResponse{}, errors.Wrap(err, "failed to unmarshal input - make sure it's a valid JSON object")
+			return &authorizer.QueryResponse{}, errors.Wrap(err, "failed to unmarshal input - make sure it's a valid JSON object")
 		}
 	}
 
@@ -362,7 +362,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 	if s.cfg.API.EnableIdentityContext {
 		if req.IdentityContext != nil {
 			if req.IdentityContext.Type == authz_api_v2.IdentityType_IDENTITY_TYPE_UNKNOWN {
-				return &authz2.QueryResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+				return &authorizer.QueryResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 			}
 
 			if req.IdentityContext.Type != authz_api_v2.IdentityType_IDENTITY_TYPE_NONE {
@@ -377,7 +377,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
 				}
 
-				return &authz2.QueryResponse{}, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+				return &authorizer.QueryResponse{}, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
 			}
 
 			input[InputUser] = convert(user)
@@ -388,7 +388,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 
 	rt, err := s.getRuntime(ctx, req.PolicyContext)
 	if err != nil {
-		return &authz2.QueryResponse{}, err
+		return &authorizer.QueryResponse{}, err
 	}
 
 	queryResult, err := rt.Query(
@@ -401,10 +401,10 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authz2.QueryRequest) 
 		TraceLevelToExplainModeV2(req.Options.Trace),
 	)
 	if err != nil {
-		return &authz2.QueryResponse{}, err
+		return &authorizer.QueryResponse{}, err
 	}
 
-	resp := &authz2.QueryResponse{}
+	resp := &authorizer.QueryResponse{}
 	queryResultJSON, err := json.Marshal(queryResult.Result)
 	if err != nil {
 		return resp, err
@@ -475,31 +475,31 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *authz_
 	return rt, err
 }
 
-func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileRequest) (*authz2.CompileResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
+func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileRequest) (*authorizer.CompileResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
 	log := grpcutil.CompleteLogger(ctx, s.logger)
 
 	if req.Query == "" {
-		return &authz2.CompileResponse{}, cerr.ErrInvalidArgument.Msg("query not set")
+		return &authorizer.CompileResponse{}, cerr.ErrInvalidArgument.Msg("query not set")
 	}
 
 	if req.Options == nil {
-		req.Options = &authz2.QueryOptions{
+		req.Options = &authorizer.QueryOptions{
 			Metrics:      false,
 			Instrument:   false,
-			Trace:        authz2.TraceLevel_TRACE_LEVEL_OFF,
+			Trace:        authorizer.TraceLevel_TRACE_LEVEL_OFF,
 			TraceSummary: false,
 		}
 	}
 
-	if req.Options.Trace == authz2.TraceLevel_TRACE_LEVEL_UNKNOWN {
-		req.Options.Trace = authz2.TraceLevel_TRACE_LEVEL_OFF
+	if req.Options.Trace == authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN {
+		req.Options.Trace = authorizer.TraceLevel_TRACE_LEVEL_OFF
 	}
 
 	var input map[string]interface{}
 
 	if req.Input != "" {
 		if err := json.Unmarshal([]byte(req.Input), &input); err != nil {
-			return &authz2.CompileResponse{}, errors.Wrap(err, "failed to unmarshal input - make sure it's a valid JSON object")
+			return &authorizer.CompileResponse{}, errors.Wrap(err, "failed to unmarshal input - make sure it's a valid JSON object")
 		}
 	}
 
@@ -512,7 +512,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 	if s.cfg.API.EnableIdentityContext {
 		if req.IdentityContext != nil {
 			if req.IdentityContext.Type == authz_api_v2.IdentityType_IDENTITY_TYPE_UNKNOWN {
-				return &authz2.CompileResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+				return &authorizer.CompileResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 			}
 
 			if req.IdentityContext.Type != authz_api_v2.IdentityType_IDENTITY_TYPE_NONE {
@@ -527,7 +527,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
 				}
 
-				return &authz2.CompileResponse{}, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+				return &authorizer.CompileResponse{}, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
 			}
 
 			input[InputUser] = convert(user)
@@ -544,7 +544,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 	log.Debug().Str("compile", req.Query).Interface("input", input).Msg("executing compile")
 	rt, err := s.getRuntime(ctx, req.PolicyContext)
 	if err != nil {
-		return &authz2.CompileResponse{}, err
+		return &authorizer.CompileResponse{}, err
 	}
 
 	compileResult, err := rt.Compile(ctx, req.Query,
@@ -555,7 +555,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 		req.Options.Metrics,
 		req.Options.Instrument,
 		TraceLevelToExplainModeV2(req.Options.Trace))
-	resp := &authz2.CompileResponse{}
+	resp := &authorizer.CompileResponse{}
 	if err != nil {
 		return resp, err
 	}
@@ -607,17 +607,17 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authz2.CompileReque
 	return resp, nil
 }
 
-func TraceLevelToExplainModeV2(t authz2.TraceLevel) types.ExplainModeV1 {
+func TraceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
 	switch t {
-	case authz2.TraceLevel_TRACE_LEVEL_UNKNOWN:
+	case authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN:
 		return types.ExplainOffV1
-	case authz2.TraceLevel_TRACE_LEVEL_OFF:
+	case authorizer.TraceLevel_TRACE_LEVEL_OFF:
 		return types.ExplainOffV1
-	case authz2.TraceLevel_TRACE_LEVEL_FULL:
+	case authorizer.TraceLevel_TRACE_LEVEL_FULL:
 		return types.ExplainFullV1
-	case authz2.TraceLevel_TRACE_LEVEL_NOTES:
+	case authorizer.TraceLevel_TRACE_LEVEL_NOTES:
 		return types.ExplainNotesV1
-	case authz2.TraceLevel_TRACE_LEVEL_FAILS:
+	case authorizer.TraceLevel_TRACE_LEVEL_FAILS:
 		return types.ExplainFailsV1
 	default:
 		return types.ExplainOffV1
@@ -647,9 +647,9 @@ func convert(msg proto.Message) interface{} {
 	return v
 }
 
-func pathFilter(sep authz2.PathSeparator, path string) runtime.PathFilterFn {
+func pathFilter(sep authorizer.PathSeparator, path string) runtime.PathFilterFn {
 	switch sep {
-	case authz2.PathSeparator_PATH_SEPARATOR_SLASH:
+	case authorizer.PathSeparator_PATH_SEPARATOR_SLASH:
 		return func(packageName string) bool {
 			if path != "" {
 				return strings.HasPrefix(strings.ReplaceAll(packageName, ".", "/"), path)
@@ -666,11 +666,11 @@ func pathFilter(sep authz2.PathSeparator, path string) runtime.PathFilterFn {
 	}
 }
 
-func getPackageName(policy runtime.Policy, sep authz2.PathSeparator) string {
+func getPackageName(policy runtime.Policy, sep authorizer.PathSeparator) string {
 	switch sep {
-	case authz2.PathSeparator_PATH_SEPARATOR_DOT:
+	case authorizer.PathSeparator_PATH_SEPARATOR_DOT:
 		return policy.PackageName
-	case authz2.PathSeparator_PATH_SEPARATOR_SLASH:
+	case authorizer.PathSeparator_PATH_SEPARATOR_SLASH:
 		return strings.ReplaceAll(policy.PackageName, ".", "/")
 	default:
 		return policy.PackageName
