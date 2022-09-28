@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/api/v2"
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-eds/pkg/pb"
 	policy "github.com/aserto-dev/go-grpc/aserto/authorizer/policy/v1"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
