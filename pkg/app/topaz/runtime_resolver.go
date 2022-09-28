@@ -2,8 +2,10 @@ package topaz
 
 import (
 	"context"
+	"errors"
 	"time"
 
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	runtime "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/builtins/edge/dir"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
@@ -70,7 +72,10 @@ func RuntimeResolver(
 
 	err = sidecarRuntime.WaitForPlugins(ctx, time.Duration(cfg.OPA.MaxPluginWaitTimeSeconds)*time.Second)
 	if err != nil {
-		return nil, cleanupRuntime, err
+		if errors.Is(err, context.DeadlineExceeded) {
+			return nil, cleanupRuntime, aerr.ErrRuntimeLoading.Err(err).Msg("timeout while waiting for runtime to load")
+		}
+		return nil, cleanupRuntime, aerr.ErrBadRuntime.Err(err)
 	}
 
 	return &RuntimeResolverSidecar{

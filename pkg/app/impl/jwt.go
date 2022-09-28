@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
-	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/lestrrat-go/jwx/jwk"
@@ -22,11 +22,11 @@ import (
 
 var (
 	// ErrMissingMetadata - metadata element missing
-	ErrMissingMetadata = cerr.ErrInvalidArgument.Msg("missing metadata")
+	ErrMissingMetadata = aerr.ErrInvalidArgument.Msg("missing metadata")
 	// ErrMissingToken - token missing from metadata
-	ErrMissingToken = cerr.ErrInvalidArgument.Msg("missing token")
+	ErrMissingToken = aerr.ErrInvalidArgument.Msg("missing token")
 	// ErrInvalidToken - token not valid
-	ErrInvalidToken = cerr.ErrAuthenticationFailed.Msg("invalid token")
+	ErrInvalidToken = aerr.ErrAuthenticationFailed.Msg("invalid token")
 )
 
 // getUserFromJWT
@@ -134,7 +134,7 @@ func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.UR
 // getUserFromIdentityContext .
 func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, identityContext *api.IdentityContext) (proto.Message, error) {
 	if identityContext == nil {
-		return nil, cerr.ErrInvalidArgument.Msg("identity context not set")
+		return nil, aerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
 	switch identityContext.Type {
@@ -191,7 +191,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 func (s *AuthorizerServer) getUserFromIdentityV2(ctx context.Context, identity string) (proto.Message, error) {
 	uid, err := s.getIdentityV2(ctx, identity)
 	switch {
-	case errors.Is(err, cerr.ErrDirectoryObjectNotFound):
+	case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
 		if !ds.IsValidID(identity) {
 			return nil, err
 		}
@@ -232,7 +232,7 @@ func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (
 	}
 
 	if len(identityResp.Results) != 1 {
-		return "", cerr.ErrDirectoryObjectNotFound
+		return "", aerr.ErrDirectoryObjectNotFound
 	}
 
 	iid := identityResp.Results[0].Id
@@ -249,7 +249,7 @@ func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (
 	}
 
 	if len(relResp.Results) != 1 {
-		return "", cerr.ErrDirectoryObjectNotFound
+		return "", aerr.ErrDirectoryObjectNotFound
 	}
 
 	uid := relResp.Results[0].SubjectId
@@ -275,7 +275,7 @@ func (s *AuthorizerServer) getUserV2(ctx context.Context, uid string) (*ds2.Obje
 	}
 
 	if len(userResp.Results) != 1 {
-		return nil, cerr.ErrDirectoryObjectNotFound
+		return nil, aerr.ErrDirectoryObjectNotFound
 	}
 
 	return userResp.Results[0], nil
