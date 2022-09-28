@@ -256,7 +256,6 @@ func TestLoadUsersWithExt(t *testing.T) {
 
 	harness := atesting.SetupOffline(t, func(cfg *config.Config) {
 		cfg.Directory.Path = filepath.Join(tmpDir, "test.db")
-		cfg.OPA.InstanceID = "d5640da0-e4e3-11eb-8822-005aac8d2d94"
 		t.Logf("dbpath %s", cfg.Directory.Path)
 	})
 	defer harness.Cleanup()
@@ -367,8 +366,8 @@ func TestLoadUsersWithExt(t *testing.T) {
 		assert.FailNow("failed get token", err)
 	}
 
-	assert.Equal(t, int32(554), res.Received)
-	assert.Equal(t, int32(277), res.Created)
-	assert.Equal(t, int32(277), res.Updated)
-	assert.Equal(t, int32(0), res.Errors)
+	assert.Equal(int32(554), res.Received)
+	assert.Equal(int32(277), res.Created)
+	assert.Equal(int32(277), res.Updated)
+	assert.Equal(int32(0), res.Errors)
 }

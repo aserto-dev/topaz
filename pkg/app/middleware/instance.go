@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"context"
-	"net/textproto"
 
+	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
@@ -13,7 +13,7 @@ type CtxKey string
 
 var (
 	// TODO: figure out what the directory needs as a tenant ID.
-	InstanceIDHeader = CtxKey(textproto.CanonicalMIMEHeaderKey("Aserto-Tenant-Id"))
+	InstanceIDHeader = grpcutil.HeaderAsertoTenantID
 )
 
 type InstanceIDMiddleware struct {
