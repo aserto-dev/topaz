@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/aserto-dev/aserto-certs/certs"
+	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/go-utils/debug"
 	"github.com/aserto-dev/topaz/pkg/app/middleware"
 	"github.com/aserto-dev/topaz/pkg/cc/config"

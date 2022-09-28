@@ -12,10 +12,10 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 
-	"github.com/aserto-dev/aserto-certs/certs"
 	"github.com/aserto-dev/aserto-grpc/grpcutil/metrics"
-	logger_util "github.com/aserto-dev/aserto-logger"
+	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/go-utils/debug"
+	"github.com/aserto-dev/logger"
 	runtimeconfig "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/directory"
 )
@@ -93,9 +93,9 @@ type Path string
 type Overrider func(*Config)
 
 // NewConfig creates the configuration by reading env & files
-func NewConfig(configPath Path, logger *zerolog.Logger, overrides Overrider, certsGenerator *certs.Generator) (*Config, error) { // nolint:funlen // default list of values can be long
-	newLogger := logger.With().Str("component", "config").Logger()
-	logger = &newLogger
+func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsGenerator *certs.Generator) (*Config, error) { // nolint:funlen // default list of values can be long
+	newLogger := log.With().Str("component", "config").Logger()
+	log = &newLogger
 	v := viper.New()
 
 	file := "config.yaml"
@@ -190,7 +190,7 @@ func NewConfig(configPath Path, logger *zerolog.Logger, overrides Overrider, cer
 	}
 
 	if certsGenerator != nil {
-		err = cfg.setupCerts(logger, certsGenerator)
+		err = cfg.setupCerts(log, certsGenerator)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to setup certs")
 		}
@@ -200,7 +200,7 @@ func NewConfig(configPath Path, logger *zerolog.Logger, overrides Overrider, cer
 }
 
 // NewLoggerConfig creates a new LoggerConfig
-func NewLoggerConfig(configPath Path, overrides Overrider) (*logger_util.Config, error) {
+func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, error) {
 	discardLogger := zerolog.New(io.Discard)
 
 	cfg, err := NewConfig(configPath, &discardLogger, overrides, nil)
@@ -208,7 +208,7 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger_util.Config,
 		return nil, errors.Wrap(err, "failed to create new config")
 	}
 
-	lCfg := logger_util.Config{
+	lCfg := logger.Config{
 		Prod:           cfg.Logging.Prod,
 		LogLevel:       cfg.Logging.LogLevel,
 		LogLevelParsed: cfg.Logging.LogLevelParsed,
