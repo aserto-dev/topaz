@@ -8,9 +8,8 @@ import (
 	"time"
 
 	"github.com/aserto-dev/aserto-certs/certs"
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
-	"github.com/aserto-dev/aserto-grpc/grpcutil/metrics"
 	"github.com/aserto-dev/go-utils/debug"
+	"github.com/aserto-dev/topaz/pkg/app/middleware"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -26,21 +25,29 @@ const (
 	svcName = "authorizer"
 )
 
+type registeredServer struct {
+	name        string
+	start, stop func(ctx context.Context) error
+}
+
 type Server struct {
 	ctx      context.Context
 	cfg      *config.Common
 	errGroup *errgroup.Group
 	logger   *zerolog.Logger
 
-	grpcServer    *grpc.Server
-	gtwServer     *http.Server
-	metricsServer *metrics.Server
-	healthServer  *HealthServer
-	debugServer   *debug.Server
+	grpcServer        *grpc.Server
+	grpcServerOptions []grpc.ServerOption
+	grpcRegistrations GRPCRegistrations
+	gtwServer         *http.Server
+	healthServer      *HealthServer
+	debugServer       *debug.Server
 
 	gtwMux               *runtime.ServeMux
 	handlerRegistrations HandlerRegistrations
 	runtimeResolver      resolvers.RuntimeResolver
+
+	registeredServers []registeredServer
 }
 
 func NewServer(
@@ -52,20 +59,15 @@ func NewServer(
 	handlerRegistrations HandlerRegistrations,
 	gtwServer *http.Server,
 	gtwMux *runtime.ServeMux,
-	middlewares grpcutil.Middlewares,
 	runtimeResolver resolvers.RuntimeResolver,
+	instanceMiddleware *middleware.InstanceIDMiddleware,
 ) (*Server, func(), error) {
 
 	newLogger := logger.With().Str("component", "api.edge-server").Logger()
 
-	grpcServer, err := newGRPCServer(cfg, logger, grpcRegistrations, middlewares)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	healthServer := newGRPCHealthServer()
 
-	metricsServer := metrics.NewServer(&cfg.API.Metrics, logger)
+	instanceMiddlewareServerOptions := instanceMiddleware.AsGRPCOptions()
 
 	server := &Server{
 		ctx:                  ctx,
@@ -73,9 +75,9 @@ func NewServer(
 		logger:               &newLogger,
 		handlerRegistrations: handlerRegistrations,
 		runtimeResolver:      runtimeResolver,
-		grpcServer:           grpcServer,
+		grpcRegistrations:    grpcRegistrations,
+		grpcServerOptions:    instanceMiddlewareServerOptions,
 		gtwServer:            gtwServer,
-		metricsServer:        metricsServer,
 		healthServer:         healthServer,
 		gtwMux:               gtwMux,
 		errGroup:             errGroup,
@@ -89,6 +91,20 @@ func NewServer(
 	}
 
 	return server, stopFunc, nil
+}
+
+// Adds Server Options to the GRPC server, for example GRPC Unary and Stream middlewares
+func (s *Server) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
+	s.grpcServerOptions = append(s.grpcServerOptions, grpcOptions...)
+}
+
+// Registers additional servers to the app, for example, metrics server.
+func (s *Server) RegisterServer(name string, start, stop func(ctx context.Context) error) {
+	s.registeredServers = append(s.registeredServers, registeredServer{
+		name:  name,
+		start: start,
+		stop:  stop,
+	})
 }
 
 func (s *Server) Start(ctx context.Context) error {
@@ -111,13 +127,12 @@ func (s *Server) Start(ctx context.Context) error {
 		return err
 	}
 
-	// Metrics HTTP Server.
-	if s.metricsServer != nil {
-		if err := s.startMetricsServer(); err != nil {
-			return err
+	// Start additional servers.
+	for _, registeredServer := range s.registeredServers {
+		err := registeredServer.start(ctx)
+		if err != nil {
+			return errors.Wrapf(err, "failed to start [%s]", registeredServer.name)
 		}
-	} else {
-		s.logger.Info().Msg("metrics server disabled")
 	}
 
 	s.healthServer.Server.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", svcName), healthpb.HealthCheckResponse_SERVING)
@@ -147,14 +162,11 @@ func (s *Server) Stop() error {
 		}
 	}
 
-	if s.metricsServer != nil {
-		err := s.metricsServer.HTTP().Shutdown(ctx)
+	// Stop additional servers.
+	for _, registeredServer := range s.registeredServers {
+		err := registeredServer.stop(ctx)
 		if err != nil {
-			if err == context.Canceled {
-				s.logger.Info().Msg("server context was canceled - shutting down")
-			} else {
-				result = multierror.Append(result, errors.Wrap(err, "failed to stop metrics server"))
-			}
+			return errors.Wrapf(err, "failed to stop server [%s]", registeredServer.name)
 		}
 	}
 
@@ -230,6 +242,12 @@ func (s *Server) startGRPCServer() error {
 		return errors.Wrap(err, "grpc socket failed to listen")
 	}
 
+	grpcServer, err := newGRPCServer(s.cfg, s.logger, s.grpcRegistrations, s.grpcServerOptions...)
+	if err != nil {
+		return err
+	}
+	s.grpcServer = grpcServer
+
 	s.errGroup.Go(func() error {
 		err := s.grpcServer.Serve(grpcListener)
 		if err != nil {
@@ -254,15 +272,6 @@ func (s *Server) startGatewayServer() error {
 		}
 		s.logger.Info().Str("address", "https://"+s.cfg.API.Gateway.ListenAddress).Msg("gRPC-Gateway endpoint starting")
 		return s.gtwServer.ListenAndServeTLS("", "")
-	})
-
-	return nil
-}
-
-func (s *Server) startMetricsServer() error {
-	s.logger.Info().Str("address", s.cfg.API.Metrics.ListenAddress).Msg("Metrics server starting")
-	s.errGroup.Go(func() error {
-		return s.metricsServer.HTTP().ListenAndServe()
 	})
 
 	return nil

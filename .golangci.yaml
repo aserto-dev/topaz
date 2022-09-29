@@ -120,6 +120,6 @@ issues:
         - typecheck
 
 run:
-  timeout: 2m
+  timeout: 5m
   skip-dirs:
     - pkg/testharness/testdata
