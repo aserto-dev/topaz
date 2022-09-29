@@ -5,7 +5,6 @@ import (
 
 	grpcc "github.com/aserto-dev/aserto-go/client"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
-	"github.com/aserto-dev/go-utils/cerr"
 
 	eds "github.com/aserto-dev/go-eds"
 	"github.com/aserto-dev/go-lib/ids"
@@ -54,6 +53,7 @@ func connect(logger *zerolog.Logger, cfg *directory.Config) (*grpcc.Connection, 
 	conn, err := grpcc.NewConnection(ctx,
 		grpcc.WithAddr(cfg.Remote.Addr),
 		grpcc.WithAPIKeyAuth(cfg.Remote.Key),
+		grpcc.WithTenantID(cfg.Remote.TenantID),
 		grpcc.WithInsecure(cfg.Remote.Insecure),
 	)
 	if err != nil {
@@ -65,11 +65,6 @@ func connect(logger *zerolog.Logger, cfg *directory.Config) (*grpcc.Connection, 
 // GetDS - simple
 //
 func (r *Resolver) GetDS(ctx context.Context) (ds2.DirectoryClient, error) {
-	tenantID := ids.ExtractTenantID(ctx)
-	if tenantID == "" {
-		return nil, cerr.ErrNoTenantID
-	}
-	r.dirConn.TenantID = tenantID
 	return ds2.NewDirectoryClient(r.dirConn.Conn), nil
 }
 
