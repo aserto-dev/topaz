@@ -4,8 +4,8 @@
 package cc
 
 import (
-	"github.com/aserto-dev/aserto-certs/certs"
-	logger "github.com/aserto-dev/aserto-logger"
+	"github.com/aserto-dev/certs"
+	"github.com/aserto-dev/logger"
 	"github.com/google/wire"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"

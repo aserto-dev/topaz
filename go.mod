@@ -11,11 +11,9 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
 require (
-	github.com/aserto-dev/aserto-certs v0.0.1
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/aserto-grpc v0.0.3
-	github.com/aserto-dev/aserto-logger v0.0.1
-	github.com/aserto-dev/aserto-testutil v0.0.1
+	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/go-authorizer v0.0.2
 	github.com/aserto-dev/go-directory v0.0.12
 	github.com/aserto-dev/go-eds v0.8.5
@@ -23,8 +21,10 @@ require (
 	github.com/aserto-dev/go-grpc-authz v0.8.0
 	github.com/aserto-dev/go-lib v0.8.46
 	github.com/aserto-dev/go-utils v0.8.26
+	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-grpc v0.8.16
 	github.com/aserto-dev/runtime v0.44.0
+	github.com/aserto-dev/testutil v0.0.2
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
