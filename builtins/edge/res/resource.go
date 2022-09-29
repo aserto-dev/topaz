@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/go-eds/pkg/pb"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -23,14 +23,14 @@ func RegisterResList(logger *zerolog.Logger, fnName string, dr resolvers.Directo
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, _ []*ast.Term) (*ast.Term, error) {
-			tenantID := grpcutil.ExtractTenantID(bctx.Context)
+			instanceID := instance.ExtractID(bctx.Context)
 
-			ds, err := dr.GetDirectory(bctx.Context, tenantID)
+			ds, err := dr.GetDirectory(bctx.Context, instanceID)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to get directory")
 			}
 
-			keyList, _, _, err := ds.ListResources(tenantID, "", -1) // HACK
+			keyList, _, _, err := ds.ListResources(instanceID, "", -1) // HACK
 			if err != nil {
 				return nil, errors.Wrapf(err, "list resources")
 			}
@@ -65,19 +65,19 @@ func RegisterResGet(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, a *ast.Term) (*ast.Term, error) {
-			tenantID := grpcutil.ExtractTenantID(bctx.Context)
+			instanceID := instance.ExtractID(bctx.Context)
 
 			var key string
 			if err := ast.As(a.Value, &key); err != nil {
 				return nil, err
 			}
 
-			ds, err := dr.GetDirectory(bctx.Context, tenantID)
+			ds, err := dr.GetDirectory(bctx.Context, instanceID)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to get directory")
 			}
 
-			value, err := ds.GetResource(tenantID, key)
+			value, err := ds.GetResource(instanceID, key)
 			if err != nil {
 				return nil, errors.Wrapf(err, "get resource [%s]", key)
 			}

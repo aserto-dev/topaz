@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/topaz/directory"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -24,20 +24,20 @@ func RegisterManagementChain(logger *zerolog.Logger, fnName string, dr resolvers
 		},
 		func(bctx rego.BuiltinContext, a *ast.Term) (*ast.Term, error) {
 			var (
-				tenantID = grpcutil.ExtractTenantID(bctx.Context)
-				identity string
+				instanceID = instance.ExtractID(bctx.Context)
+				identity   string
 			)
 
 			if err := ast.As(a.Value, &identity); err != nil {
 				return nil, err
 			}
 
-			ds, err := dr.GetDirectory(bctx.Context, tenantID)
+			ds, err := dr.GetDirectory(bctx.Context, instanceID)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to get directory")
 			}
 
-			uidChain := managementChain(logger, ds, tenantID, identity)
+			uidChain := managementChain(logger, ds, instanceID, identity)
 
 			result := struct {
 				Chain []string `json:"chain"`

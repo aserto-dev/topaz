@@ -7,13 +7,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	api_v2 "github.com/aserto-dev/go-authorizer/aserto/api/v2"
+	authz "github.com/aserto-dev/go-grpc-authz/aserto/authorizer/authorizer/v1"
+	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/go-utils/pb"
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/google/uuid"
@@ -60,7 +61,7 @@ func NewAuthorizerServer(
 }
 
 func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.DecisionTreeRequest) (*authorizer.DecisionTreeResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := grpcutil.CompleteLogger(ctx, s.logger)
+	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	resp := &authorizer.DecisionTreeResponse{}
 
@@ -189,7 +190,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 // Is decision eval function.
 func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*authorizer.IsResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := grpcutil.CompleteLogger(ctx, s.logger)
+	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	resp := &authorizer.IsResponse{
 		Decisions: make([]*authorizer.Decision, 0),
@@ -320,7 +321,7 @@ func is(v interface{}, decision string) (bool, error) {
 }
 
 func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryRequest) (*authorizer.QueryResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := grpcutil.CompleteLogger(ctx, s.logger)
+	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	if req.Query == "" {
 		return &authorizer.QueryResponse{}, cerr.ErrInvalidArgument.Msg("query not set")

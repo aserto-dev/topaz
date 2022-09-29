@@ -7,10 +7,10 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/testutil"
 	"github.com/aserto-dev/topaz/pkg/app"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 )
@@ -54,7 +54,7 @@ func (h *EngineHarness) Runtime() *runtime.Runtime {
 }
 
 func (h *EngineHarness) ContextWithTenant() context.Context {
-	return context.WithValue(context.Background(), grpcutil.HeaderAsertoTenantID, h.Engine.Configuration.OPA.InstanceID)
+	return context.WithValue(context.Background(), instance.InstanceIDHeader, h.Engine.Configuration.OPA.InstanceID)
 }
 
 // SetupOffline sets up an engine that uses a runtime that loads offline bundles,

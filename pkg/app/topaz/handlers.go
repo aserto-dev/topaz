@@ -9,7 +9,6 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/aserto-dev/aserto-grpc/grpcclient"
-	"github.com/aserto-dev/aserto-grpc/grpcutil/metrics"
 	pol "github.com/aserto-dev/go-grpc/aserto/authorizer/policy/v1"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/app/server"
@@ -38,7 +37,6 @@ func GRPCServerRegistrations(
 		server.CoreServiceRegistrations(implAuthorizerServer, implDirectoryServer)(srv)
 		info.RegisterInfoServer(srv, implInfo)
 		pol.RegisterPolicyServer(srv, implPolicyServer)
-		metrics.RegisterPrometheusIfEnabled(&cfg.API.Metrics, srv)
 	}, nil
 }
 

@@ -1,8 +1,8 @@
 package dir
 
 import (
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/topaz/directory"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -21,9 +21,9 @@ func RegisterIsSameUser(logger *zerolog.Logger, fnName string, dr resolvers.Dire
 		},
 		func(bctx rego.BuiltinContext, a, b *ast.Term) (*ast.Term, error) {
 			var (
-				tenantID = grpcutil.ExtractTenantID(bctx.Context)
-				id1      string
-				id2      string
+				instanceID = instance.ExtractID(bctx.Context)
+				id1        string
+				id2        string
 			)
 
 			if err := ast.As(a.Value, &id1); err != nil {
@@ -34,12 +34,12 @@ func RegisterIsSameUser(logger *zerolog.Logger, fnName string, dr resolvers.Dire
 				return nil, err
 			}
 
-			ds, err := dr.GetDirectory(bctx.Context, tenantID)
+			ds, err := dr.GetDirectory(bctx.Context, instanceID)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to get directory")
 			}
 
-			isSameUser := isSameUser(logger, ds, tenantID, id1, id2)
+			isSameUser := isSameUser(logger, ds, instanceID, id1, id2)
 
 			return ast.BooleanTerm(isSameUser), nil
 		}

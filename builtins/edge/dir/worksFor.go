@@ -1,8 +1,8 @@
 package dir
 
 import (
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/topaz/directory"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -22,9 +22,9 @@ func RegisterWorksFor(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		},
 		func(bctx rego.BuiltinContext, a, b *ast.Term) (*ast.Term, error) {
 			var (
-				tenantID = grpcutil.ExtractTenantID(bctx.Context)
-				emp      string
-				mgr      string
+				instanceID = instance.ExtractID(bctx.Context)
+				emp        string
+				mgr        string
 			)
 
 			if err := ast.As(a.Value, &emp); err != nil {
@@ -35,12 +35,12 @@ func RegisterWorksFor(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return nil, err
 			}
 
-			ds, err := dr.GetDirectory(bctx.Context, tenantID)
+			ds, err := dr.GetDirectory(bctx.Context, instanceID)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to get directory")
 			}
 
-			worksFor := worksFor(logger, ds, tenantID, emp, mgr)
+			worksFor := worksFor(logger, ds, instanceID, emp, mgr)
 
 			return ast.BooleanTerm(worksFor), nil
 		}

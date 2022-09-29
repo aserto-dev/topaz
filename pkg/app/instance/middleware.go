@@ -1,4 +1,4 @@
-package middleware
+package instance
 
 import (
 	"context"

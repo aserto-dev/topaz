@@ -11,11 +11,12 @@ import (
 	"os"
 
 	"github.com/aserto-dev/aserto-grpc/grpcclient"
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
+
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-lib/grpc-clients/authorizer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 )
 
 // CreateClient creates a new http client that can talk to the API
@@ -46,7 +47,7 @@ func (h *EngineHarness) Req(verb, path, tenantID, body string) (string, int) {
 	req.Header.Set("Content-Type", "application/json")
 	// TODO: use an API key
 
-	req.Header.Set(string(grpcutil.HeaderAsertoTenantID), tenantID)
+	req.Header.Set(string(instance.InstanceIDHeader), tenantID)
 
 	resp, err := httpClient.Do(req)
 	if err != nil {

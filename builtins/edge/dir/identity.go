@@ -1,7 +1,7 @@
 package dir
 
 import (
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
 
@@ -20,20 +20,20 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		},
 		func(bctx rego.BuiltinContext, a *ast.Term) (*ast.Term, error) {
 			var (
-				tenantID = grpcutil.ExtractTenantID(bctx.Context)
-				ident    string
+				instanceID = instance.ExtractID(bctx.Context)
+				ident      string
 			)
 
 			if err := ast.As(a.Value, &ident); err != nil {
 				return nil, err
 			}
 
-			ds, err := dr.GetDirectory(bctx.Context, tenantID)
+			ds, err := dr.GetDirectory(bctx.Context, instanceID)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to get directory")
 			}
 
-			uid, err := ds.GetIdentity(tenantID, ident)
+			uid, err := ds.GetIdentity(instanceID, ident)
 			if err != nil {
 				return nil, errors.Wrapf(err, "identity not found %s", ident)
 			}

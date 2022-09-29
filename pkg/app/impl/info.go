@@ -4,8 +4,8 @@ import (
 	"context"
 	"runtime"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	info "github.com/aserto-dev/go-grpc/aserto/common/info/v1"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -37,8 +37,8 @@ func (s *InfoServer) Info(ctx context.Context, req *info.InfoRequest) (*info.Inf
 
 	buildVersion := version.GetInfo()
 
-	tenantID := grpcutil.ExtractTenantID(ctx)
-	if tenantID != "" {
+	instanceID := instance.ExtractID(ctx)
+	if instanceID != "" {
 		eds, err := s.directoryResolver.DirectoryFromContext(ctx)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to get resolve directory")

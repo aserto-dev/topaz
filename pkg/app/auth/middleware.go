@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
-	"github.com/aserto-dev/aserto-grpc/authn"
 	"github.com/aserto-dev/aserto-grpc/authn/apikey"
 	authn_config "github.com/aserto-dev/aserto-grpc/authn/config"
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/go-utils/cerr"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	"github.com/rs/zerolog"
@@ -19,12 +19,14 @@ import (
 type APIKeyAuthMiddleware struct {
 	apiAuth *apikey.Authenticator
 
+	// TODO: figure out what we want to do with the config.
 	cfg    *authn_config.Config
 	logger *zerolog.Logger
 }
 
 func NewAPIKeyAuthMiddleware(
 	ctx context.Context,
+	// TODO: figure out what we want to do with the config.
 	cfg *authn_config.Config,
 	logger *zerolog.Logger,
 ) (*APIKeyAuthMiddleware, error) {
@@ -72,7 +74,6 @@ func (a *APIKeyAuthMiddleware) Handler(next http.Handler) http.Handler {
 			r.Context(),
 			r.URL.Path,
 			httpAuthHeader(r),
-			httpAccountIDHeader(r),
 		)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("%q", err.Error()), http.StatusUnauthorized)
@@ -85,53 +86,63 @@ func (a *APIKeyAuthMiddleware) Handler(next http.Handler) http.Handler {
 
 func (a *APIKeyAuthMiddleware) authenticate(
 	ctx context.Context,
-	path, authHeader, accountIDOverride string,
+	path, authHeader string,
 ) (context.Context, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	instanceID := instance.ExtractID(ctx)
 
 	options := a.cfg.Options.ForPath(path)
-	if options.NeedsTenant && tenantID == "" {
+	if options.NeedsTenant && instanceID == "" {
+		// TODO: once we have errors, this needs to be a topaz specific error
 		return ctx, cerr.ErrNoTenantID
-	}
-
-	basicAPIKey, err := authn.ParseAuthHeader(authHeader, "basic")
-	if err != nil {
-		a.logger.Trace().Err(err).Str("auth_header", authHeader).Msg("failed to parse basic auth header")
-	}
-
-	if basicAPIKey != "" {
-		if options.EnableAPIKey {
-			if accountID, err := a.apiAuth.Authenticate(basicAPIKey, accountIDOverride); err == nil {
-				return context.WithValue(ctx, grpcutil.HeaderAsertoAccountID, accountID), nil
-			}
-			a.logger.Debug().AnErr("error", err).Str("api_key", basicAPIKey).Msg("authentication failed")
-		}
 	}
 
 	if options.EnableAnonymous {
 		return ctx, nil
 	}
 
+	// if no API keys are defined, allow the request
+	if len(a.cfg.APIKeys) == 0 {
+		return ctx, nil
+	}
+
+	// allow if the request does not require an API key
+	if !options.EnableAPIKey {
+		return ctx, nil
+	}
+
+	basicAPIKey, err := parseAuthHeader(authHeader, "basic")
+	if err != nil {
+		a.logger.Trace().Err(err).Str("auth_header", authHeader).Msg("failed to parse basic auth header")
+	}
+
+	// allow the request if the API key is present in the config
+	if _, ok := a.cfg.APIKeys[basicAPIKey]; !ok {
+		return ctx, nil
+	}
+	// TODO: once we have errors, this needs to be a topaz specific error
 	return ctx, cerr.ErrAuthenticationFailed
 }
 
 func (a *APIKeyAuthMiddleware) grpcAuthenticate(ctx context.Context) (context.Context, error) {
 	method, _ := grpc.Method(ctx)
-	return a.authenticate(ctx, method, grpcAuthHeader(ctx), grpcAccountIDHeader(ctx))
+	return a.authenticate(ctx, method, grpcAuthHeader(ctx))
 }
 
 func grpcAuthHeader(ctx context.Context) string {
 	return metautils.ExtractIncoming(ctx).Get("Authorization")
 }
 
-func grpcAccountIDHeader(ctx context.Context) string {
-	return metautils.ExtractIncoming(ctx).Get(string(grpcutil.HeaderAsertoAccountID))
-}
-
 func httpAuthHeader(r *http.Request) string {
 	return r.Header.Get("Authorization")
 }
 
-func httpAccountIDHeader(r *http.Request) string {
-	return r.Header.Get(string(grpcutil.HeaderAsertoAccountID))
+func parseAuthHeader(val, expectedScheme string) (string, error) {
+	splits := strings.SplitN(val, " ", 2)
+	if len(splits) < 2 {
+		return "", cerr.ErrAuthenticationFailed.Msg("Bad authorization string")
+	}
+	if !strings.EqualFold(splits[0], expectedScheme) {
+		return "", cerr.ErrAuthenticationFailed.Str("expected-scheme", expectedScheme).Msg("Request unauthenticated with expected scheme")
+	}
+	return splits[1], nil
 }

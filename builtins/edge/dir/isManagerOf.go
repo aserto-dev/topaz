@@ -1,9 +1,9 @@
 package dir
 
 import (
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/topaz/directory"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -22,9 +22,9 @@ func RegisterIsManagerOf(logger *zerolog.Logger, fnName string, dr resolvers.Dir
 		},
 		func(bctx rego.BuiltinContext, a, b *ast.Term) (*ast.Term, error) {
 			var (
-				tenantID = grpcutil.ExtractTenantID(bctx.Context)
-				mgr      string
-				emp      string
+				instanceID = instance.ExtractID(bctx.Context)
+				mgr        string
+				emp        string
 			)
 
 			if err := ast.As(a.Value, &mgr); err != nil {
@@ -35,12 +35,12 @@ func RegisterIsManagerOf(logger *zerolog.Logger, fnName string, dr resolvers.Dir
 				return nil, err
 			}
 
-			ds, err := dr.GetDirectory(bctx.Context, tenantID)
+			ds, err := dr.GetDirectory(bctx.Context, instanceID)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to get directory")
 			}
 
-			isManagerOf := isManagerOf(logger, ds, tenantID, mgr, emp)
+			isManagerOf := isManagerOf(logger, ds, instanceID, mgr, emp)
 
 			return ast.BooleanTerm(isManagerOf), nil
 		}
