@@ -60,7 +60,7 @@ func NewServer(
 	gtwServer *http.Server,
 	gtwMux *runtime.ServeMux,
 	runtimeResolver resolvers.RuntimeResolver,
-	instanceMiddleware *instance.InstanceIDMiddleware,
+	instanceMiddleware *instance.IDMiddleware,
 ) (*Server, func(), error) {
 
 	newLogger := logger.With().Str("component", "api.edge-server").Logger()

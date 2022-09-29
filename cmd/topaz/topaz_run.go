@@ -47,10 +47,6 @@ It exposes GRPC and OpenAPI endpoints.`,
 			return err
 		}
 
-		// Add instanceID middleware
-		// instanceIDMiddleware := middleware.NewInstanceIDMiddleware(&app.Configuration.OPA)
-		// app.Server.AddGRPCServerOptions(instanceIDMiddleware.AsGRPCOptions()...)
-
 		err = app.Start()
 		if err != nil {
 			return err
