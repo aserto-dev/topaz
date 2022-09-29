@@ -568,7 +568,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 	if err != nil {
 		return resp, err
 	}
-	resp.Response, err = structpb.NewStruct(compileResultMap)
+	resp.Result, err = structpb.NewStruct(compileResultMap)
 	if err != nil {
 		return resp, err
 	}

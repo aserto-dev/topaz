@@ -10,14 +10,13 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
-// replace github.com/aserto-dev/go-authorizer => ../go-authorizer
+//replace github.com/aserto-dev/go-authorizer => ../go-authorizer
 
 require (
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/aserto-grpc v0.0.3
-	github.com/aserto-dev/aserto-logger v0.0.1
-	github.com/aserto-dev/aserto-testutil v0.0.1
-	github.com/aserto-dev/go-authorizer v0.0.3-0.20220928153045-2c685f230570
+	github.com/aserto-dev/certs v0.0.2
+	github.com/aserto-dev/go-authorizer v0.0.3-0.20220929132621-1ac8e2e3b1ad
 	github.com/aserto-dev/go-directory v0.0.12
 	github.com/aserto-dev/go-eds v0.8.5
 	github.com/aserto-dev/go-grpc v0.8.51
