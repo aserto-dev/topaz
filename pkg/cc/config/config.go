@@ -12,7 +12,6 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil/metrics"
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/go-utils/debug"
 	"github.com/aserto-dev/logger"
@@ -66,7 +65,6 @@ type Common struct {
 		Health struct {
 			ListenAddress string `json:"listen_address"`
 		} `json:"health"`
-		Metrics               metrics.Config `json:"metrics"`
 		EnableIdentityContext bool           `json:"enable_identity_context"`
 		EnableResourceContext bool           `json:"enable_resource_context"`
 	} `json:"api"`
@@ -132,12 +130,6 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 	v.SetDefault("api.gateway.listen_address", "0.0.0.0:8383")
 	v.SetDefault("api.gateway.http", false)
 	v.SetDefault("api.health.listen_address", "0.0.0.0:8484")
-	v.SetDefault("api.metrics.listen_address", "0.0.0.0:8585")
-	v.SetDefault("api.metrics.zpages", false)
-	v.SetDefault("api.metrics.http", false)
-	v.SetDefault("api.metrics.grpc.counters", false)
-	v.SetDefault("api.metrics.grpc.durations", false)
-	v.SetDefault("api.metrics.grpc.gateway", false)
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
 
 	defaults(v)

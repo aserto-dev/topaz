@@ -5,15 +5,12 @@ import (
 	"net/http"
 
 	promclient "github.com/prometheus/client_golang/prometheus"
-	"github.com/slok/go-http-metrics/metrics/prometheus"
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
-	metricsserver "github.com/aserto-dev/aserto-grpc/grpcutil/metrics"
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/logger"
 	openapi "github.com/aserto-dev/openapi-grpc/publish/authorizer"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/slok/go-http-metrics/middleware"
 	"github.com/slok/go-http-metrics/middleware/grpc"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -55,10 +52,7 @@ func NewGatewayServer(
 
 	newLogger := log.With().Str("source", "http-gateway").Logger()
 
-	metricsmw := metricsMiddleware(&cfg.API.Metrics, registry)
-
 	mux := http.NewServeMux()
-	mux.Handle("/api/", metricsmw(fieldsMaskHandler(gtwMux)))
 	mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
 		http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
@@ -85,18 +79,6 @@ func NewGatewayServer(
 	gtwServer.TLSConfig = tlsServerConfig
 
 	return gtwServer, nil
-}
-
-func metricsMiddleware(cfg *metricsserver.Config, registry promclient.Registerer) func(http.Handler) http.Handler {
-	if !cfg.GRPC.Gateway {
-		return func(h http.Handler) http.Handler { return h }
-	}
-
-	return grpc.GatewayMuxMetricsMiddleware(
-		middleware.New(middleware.Config{
-			Recorder: prometheus.NewRecorder(prometheus.Config{Registry: registry}),
-		}),
-	)
 }
 
 // fieldsMaskHandler if a fields.mask query parameter is present and set,
