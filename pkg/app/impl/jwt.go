@@ -9,11 +9,11 @@ import (
 	"path"
 	"time"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/pkg/errors"
@@ -48,7 +48,7 @@ func (s *AuthorizerServer) getUserFromJWT(ctx context.Context, bearerJWT string)
 
 // getIdentityFromJWT
 func (s *AuthorizerServer) getIdentityFromJWT(ctx context.Context, bearerJWT string) (string, error) {
-	log := grpcutil.CompleteLogger(ctx, s.logger)
+	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	jwtTemp, err := jwt.ParseString(bearerJWT, jwt.WithValidate(false))
 	if err != nil {
@@ -186,7 +186,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 }
 
 func (s *AuthorizerServer) getUserFromIdentityV1(ctx context.Context, identity string) (proto.Message, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	directory, err := s.directoryResolver.DirectoryFromContext(ctx)
 	if err != nil {
