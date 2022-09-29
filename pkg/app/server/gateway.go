@@ -81,19 +81,6 @@ func NewGatewayServer(
 	return gtwServer, nil
 }
 
-// fieldsMaskHandler if a fields.mask query parameter is present and set,
-// the handler will set the Content-Type to "application/json+masked", which
-// will signal the marshaler to not emit unpopulated types, which is needed to
-// serialize the masked result set.
-func fieldsMaskHandler(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if p, ok := r.URL.Query()["fields.mask"]; ok && len(p) > 0 && len(p[0]) > 0 {
-			r.Header.Set("Content-Type", "application/json+masked")
-		}
-		h.ServeHTTP(w, r)
-	})
-}
-
 // customHeaderMatcher so that HTTP clients do not have to prefix the header key with Grpc-Metadata-
 // see https://grpc-ecosystem.github.io/grpc-gateway/docs/mapping/customizing_your_gateway/#mapping-from-http-request-headers-to-grpc-client-metadata
 func customHeaderMatcher(key string) (string, bool) {

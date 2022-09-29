@@ -14,12 +14,6 @@ api:
     - https://*aserto-playground.netlify.app
   grpc:
     connection_timeout_seconds: 2
-  metrics:
-    zpages: true
-    grpc:
-      counters: true
-      durations: true
-      gateway: true
 
 opa:
   instance_id: "-"
