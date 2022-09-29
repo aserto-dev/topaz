@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/aserto-dev/aserto-grpc/authn/apikey"
 	authn_config "github.com/aserto-dev/aserto-grpc/authn/config"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
@@ -17,7 +16,7 @@ import (
 )
 
 type APIKeyAuthMiddleware struct {
-	apiAuth *apikey.Authenticator
+	apiAuth map[string]string
 
 	// TODO: figure out what we want to do with the config.
 	cfg    *authn_config.Config
@@ -31,10 +30,8 @@ func NewAPIKeyAuthMiddleware(
 	logger *zerolog.Logger,
 ) (*APIKeyAuthMiddleware, error) {
 
-	apiAuth := apikey.New(cfg.APIKeys)
-
 	return &APIKeyAuthMiddleware{
-		apiAuth: apiAuth,
+		apiAuth: cfg.APIKeys,
 		cfg:     cfg,
 		logger:  logger,
 	}, nil
