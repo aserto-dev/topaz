@@ -68,8 +68,6 @@ github.com/aserto-dev/certs v0.0.2 h1:IFF+my4pu3BoUDDg31uLYb/JdoIESktecq153QYVxY
 github.com/aserto-dev/certs v0.0.2/go.mod h1:9mFvZ1NR92aEGj4ce6QleZGPXJuDZKTv+CWIOX28Xj8=
 github.com/aserto-dev/clui v0.8.1 h1:5IW9OnFZoIWjvnmTE4FNTXrjP1wnMzd39qKAcRnRHt8=
 github.com/aserto-dev/clui v0.8.1/go.mod h1:XpJxwNzSQaGN6rqXONZJEaeez4MUaCPikM2lKSngrXM=
-github.com/aserto-dev/go-authorizer v0.0.3-0.20220929132621-1ac8e2e3b1ad h1:JMzo7smQo/q43YDv+8SBexUjCUjS6msrlMSlAlTMcCU=
-github.com/aserto-dev/go-authorizer v0.0.3-0.20220929132621-1ac8e2e3b1ad/go.mod h1:oIK2JT/iDsnyaEjFAR4IeneRYw3xwUyOr9W+C0Ysk8U=
 github.com/aserto-dev/go-authorizer v0.0.3 h1:ZiL4qhwqCIQfhM3hBeuKviLaHyOrmHnMUJEoxeriWPw=
 github.com/aserto-dev/go-authorizer v0.0.3/go.mod h1:oIK2JT/iDsnyaEjFAR4IeneRYw3xwUyOr9W+C0Ysk8U=
 github.com/aserto-dev/go-directory v0.0.12 h1:DJDu8IOjksvZOLkNGq0GmxT/1YCdlCsTI0YSGb0UxN4=
@@ -80,8 +78,6 @@ github.com/aserto-dev/go-grpc v0.8.51 h1:mRyj9Dn4debqZ2RyV/++Lzy5nUIisZbmcH5w7T1
 github.com/aserto-dev/go-grpc v0.8.51/go.mod h1:ZHKobEadfjzb39dKhc/iy8JyQDRuB/IsSwVa8YuWkQY=
 github.com/aserto-dev/go-grpc-authz v0.8.0 h1:D/D/DJAWdshIIF6BYFKT9ILh0/ClAGrb64zpsGP8vuQ=
 github.com/aserto-dev/go-grpc-authz v0.8.0/go.mod h1:ssdQrzxQf+IZ+jy8ATz9S6Ys+nqsTMZyKmPpdj0kwHo=
-github.com/aserto-dev/go-grpc-internal v0.8.13 h1:qriBzZQjoTNgqOrvPEjISjvL4hA7AkpQ7JEwhYW4O48=
-github.com/aserto-dev/go-grpc-internal v0.8.13/go.mod h1:4NCHVoi+dfgGKED+aIsVkic8JXnTW//KzJOtLG4DO5c=
 github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53 h1:2lU+szJhwZXDigE+ldDDm7a/3RC2rJCBfwVPZm6TKLs=
 github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53/go.mod h1:BkUPSrUNol4J/0axIT9nEacokJ+AKTLfnsJrBsnkUTQ=
 github.com/aserto-dev/go-lib v0.8.46 h1:4+z+4D5J1wPNJBE1CwtKzkrGREi5SBtUbnXRJUq30Zo=
@@ -303,7 +299,6 @@ github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brv
 github.com/hashicorp/errwrap v1.1.0 h1:OxrOeh75EUXMY8TBjag2fzXGZ40LB6IKw45YeGUDY2I=
 github.com/hashicorp/errwrap v1.1.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
 github.com/hashicorp/go-hclog v1.3.0 h1:G0ACM8Z2WilWgPv3Vdzwm3V0BQu/kSmrkVtpe1fy9do=
-github.com/hashicorp/go-hclog v1.3.0/go.mod h1:W4Qnvbt70Wk/zYJryRzDRU/4r0kIg0PVHBcfoyhpF5M=
 github.com/hashicorp/go-multierror v1.1.1 h1:H5DkEtf6CXdFp0N0Em5UCwQpXMWke8IA0+lD48awMYo=
 github.com/hashicorp/go-multierror v1.1.1/go.mod h1:iw975J/qwKPdAO1clOe2L8331t/9/fmwbPZ6JB6eMoM=
 github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
@@ -499,7 +494,6 @@ github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
-github.com/stretchr/testify v1.7.2/go.mod h1:R6va5+xMeoiuVRoj+gSkQ7d3FALtqAAGI1FQKckRals=
 github.com/stretchr/testify v1.8.0 h1:pSgiaMZlXftHpm5L7V1+rVB+AZJydKsMxsQBIJw4PKk=
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
 github.com/subosito/gotenv v1.4.1 h1:jyEFiXpy21Wm81FBN71l9VoMMV8H8jG+qIK3GCpY6Qs=
@@ -723,7 +717,6 @@ golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220412211240-33da011f77ad/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab h1:2QkjZIsXupsJbJIdSjjUOgWK3aEtzyuh2mPt3l/CkeU=
 golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

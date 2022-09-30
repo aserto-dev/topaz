@@ -34,7 +34,7 @@ func TestTenant(t *testing.T) {
 	})
 	defer harness.Cleanup()
 
-	client := harness.CreateGRPCDirectoryClient().Directory
+	client := harness.CreateGRPCDirectoryClient()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -187,7 +187,7 @@ func producer(s chan<- *api.User, errc chan<- error) {
 }
 
 func subscriber(harness *atesting.EngineHarness, s <-chan *api.User, done chan<- bool, errc chan<- error) {
-	client := harness.CreateGRPCDirectoryClient().Directory
+	client := harness.CreateGRPCDirectoryClient()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -267,7 +267,7 @@ func TestLoadUsersWithExt(t *testing.T) {
 		os.Remove(dbpath)
 	}()
 
-	client := harness.CreateGRPCDirectoryClient().Directory
+	client := harness.CreateGRPCDirectoryClient()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

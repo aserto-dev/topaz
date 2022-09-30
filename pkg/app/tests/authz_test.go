@@ -27,7 +27,7 @@ func TestWithMissingIdentity(t *testing.T) {
 	policyID, err := getPolicyID(harness, "peoplefinder")
 	require.NoError(t, err, "getPolicyID")
 
-	client := harness.CreateGRPCClientV2()
+	client := harness.CreateGRPCClient()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -137,7 +137,7 @@ func QueryWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClien
 }
 
 func getPolicyID(harness *atesting.EngineHarness, name string) (string, error) {
-	client := harness.CreateGRPCClient().Policy
+	client := harness.CreateGRPCPolicyClient()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

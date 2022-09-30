@@ -70,7 +70,7 @@ func TestGetRolesNoUserError(t *testing.T) {
 	defer teardownSuite()
 	assert := require.New(t)
 
-	client := harness.CreateGRPCDirectoryClient().Directory
+	client := harness.CreateGRPCDirectoryClient()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

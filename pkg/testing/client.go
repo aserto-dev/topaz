@@ -10,10 +10,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/aserto-dev/aserto-grpc/grpcclient"
+	"github.com/aserto-dev/aserto-go/client"
+	authorizerClient "github.com/aserto-dev/aserto-go/client/authorizer"
+	"github.com/aserto-dev/go-grpc/aserto/authorizer/directory/v1"
+	"github.com/aserto-dev/go-grpc/aserto/authorizer/policy/v1"
 
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-lib/grpc-clients/authorizer"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -62,29 +64,7 @@ func (h *EngineHarness) Req(verb, path, tenantID, body string) (string, int) {
 	return string(responseBody), resp.StatusCode
 }
 
-func (h *EngineHarness) CreateGRPCClient() *authorizer.Client {
-	grpcClient, err := authorizer.NewAuthorizerClient(
-		h.Engine.Context,
-		h.Engine.Logger,
-		grpcclient.NewDialOptionsProvider(),
-		&authorizer.ClientConfig{
-			Config: grpcclient.Config{
-				Address:    "127.0.0.1:8282",
-				CACertPath: h.Engine.Configuration.API.GRPC.Certs.TLSCACertPath,
-				// TODO: use an API key
-				// https://github.com/aserto-dev/aserto-authorizer/blob/abd6625aacdea08e65a7796f03deb79c07486517/pkg/testing/client.go
-			},
-		},
-	)
-
-	if err != nil {
-		h.t.Fatal(err)
-	}
-
-	return grpcClient
-}
-
-func (h *EngineHarness) CreateGRPCClientV2() authz2.AuthorizerClient {
+func (h *EngineHarness) CreateGRPCClient() authz2.AuthorizerClient {
 	var opts []grpc.DialOption
 	var tlsConf tls.Config
 	certPool := x509.NewCertPool()
@@ -108,24 +88,30 @@ func (h *EngineHarness) CreateGRPCClientV2() authz2.AuthorizerClient {
 	return authz2.NewAuthorizerClient(conn)
 }
 
-func (h *EngineHarness) CreateGRPCDirectoryClient() *authorizer.DirectoryClient {
-	grpcClient, err := authorizer.NewDirectoryClient(
-		h.Engine.Context,
-		h.Engine.Logger,
-		grpcclient.NewDialOptionsProvider(),
-		&authorizer.ClientConfig{
-			Config: grpcclient.Config{
-				Address:    "127.0.0.1:8282",
-				CACertPath: h.Engine.Configuration.API.GRPC.Certs.TLSCACertPath,
-				// TODO: use an API key
-				// https://github.com/aserto-dev/aserto-authorizer/blob/abd6625aacdea08e65a7796f03deb79c07486517/pkg/testing/client.go
-			},
-		},
-	)
+func (h *EngineHarness) CreateGRPCDirectoryClient() directory.DirectoryClient {
+	options := []client.ConnectionOption{
+		client.WithAddr("127.0.0.1:8282"),
+		client.WithCACertPath(h.Engine.Configuration.API.GRPC.Certs.TLSCACertPath),
+	}
 
+	authorizerService, err := authorizerClient.New(h.Engine.Context, options...)
 	if err != nil {
 		h.t.Fatal(err)
 	}
 
-	return grpcClient
+	return authorizerService.Directory
+}
+
+func (h *EngineHarness) CreateGRPCPolicyClient() policy.PolicyClient {
+	options := []client.ConnectionOption{
+		client.WithAddr("127.0.0.1:8282"),
+		client.WithCACertPath(h.Engine.Configuration.API.GRPC.Certs.TLSCACertPath),
+	}
+
+	authorizerService, err := authorizerClient.New(h.Engine.Context, options...)
+	if err != nil {
+		h.t.Fatal(err)
+	}
+
+	return authorizerService.Policy
 }
