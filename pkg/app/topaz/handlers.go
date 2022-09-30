@@ -8,7 +8,6 @@ import (
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 
-	"github.com/aserto-dev/aserto-grpc/grpcclient"
 	pol "github.com/aserto-dev/go-grpc/aserto/authorizer/policy/v1"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/app/server"
@@ -25,7 +24,6 @@ func GRPCServerRegistrations(
 	ctx context.Context,
 	logger *zerolog.Logger,
 	cfg *config.Config,
-	dop grpcclient.DialOptionsProvider,
 	runtimeResolver resolvers.RuntimeResolver,
 
 	implAuthorizerServer *impl.AuthorizerServer,

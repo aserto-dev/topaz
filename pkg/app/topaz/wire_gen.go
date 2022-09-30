@@ -33,7 +33,6 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 	configConfig := ccCC.Config
 	common := &configConfig.Common
 	group := ccCC.ErrGroup
-	dialOptionsProvider := grpcclient.NewDialOptionsProvider()
 	fileConfig := &configConfig.DecisionLogger
 	decisionLogger, err := file.New(context, fileConfig, zerologLogger)
 	if err != nil {
@@ -67,7 +66,7 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		cleanup()
 		return nil, nil, err
 	}
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, dialOptionsProvider, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -121,7 +120,6 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 	configConfig := ccCC.Config
 	common := &configConfig.Common
 	group := ccCC.ErrGroup
-	dialOptionsProvider := grpcclient.NewDialOptionsProvider()
 	fileConfig := &configConfig.DecisionLogger
 	decisionLogger, err := file.New(context, fileConfig, zerologLogger)
 	if err != nil {
@@ -155,7 +153,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		cleanup()
 		return nil, nil, err
 	}
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, dialOptionsProvider, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
 	if err != nil {
 		cleanup3()
 		cleanup2()
