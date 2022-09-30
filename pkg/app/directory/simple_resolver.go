@@ -7,8 +7,8 @@ import (
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 
 	eds "github.com/aserto-dev/go-eds"
-	"github.com/aserto-dev/go-lib/ids"
 	"github.com/aserto-dev/topaz/directory"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -69,7 +69,7 @@ func (r *Resolver) GetDS(ctx context.Context) (ds2.DirectoryClient, error) {
 }
 
 func (r *Resolver) DirectoryFromContext(ctx context.Context) (directory.Directory, error) {
-	tenantID := ids.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 	return r.GetDirectory(ctx, tenantID)
 }
 
