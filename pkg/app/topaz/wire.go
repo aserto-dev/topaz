@@ -36,7 +36,7 @@ var (
 		DirectoryResolver,
 		file.New,
 
-		instance.NewInstanceIDMiddleware,
+		instance.NewIDMiddleware,
 		auth.NewAPIKeyAuthMiddleware,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),

@@ -91,13 +91,8 @@ func (a *APIKeyAuthMiddleware) authenticate(
 		return ctx, nil
 	}
 
-	// if no API keys are defined, allow the request
-	if len(a.cfg.APIKeys) == 0 {
-		return ctx, nil
-	}
-
-	// allow if the request does not require an API key
-	if !options.EnableAPIKey {
+	// if no API keys are defined or EnableAPIKey is not set, allow the request
+	if (len(a.cfg.APIKeys) == 0) || !options.EnableAPIKey {
 		return ctx, nil
 	}
 

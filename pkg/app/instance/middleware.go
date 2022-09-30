@@ -20,7 +20,7 @@ type IDMiddleware struct {
 	instanceID string
 }
 
-func NewInstanceIDMiddleware(cfg *config.Common) *IDMiddleware {
+func NewIDMiddleware(cfg *config.Common) *IDMiddleware {
 	return &IDMiddleware{
 		instanceID: cfg.OPA.InstanceID,
 	}
