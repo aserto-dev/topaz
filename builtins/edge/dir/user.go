@@ -3,8 +3,8 @@ package dir
 import (
 	"bytes"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/go-eds/pkg/pb"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -23,20 +23,20 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 		},
 		func(bctx rego.BuiltinContext, a *ast.Term) (*ast.Term, error) {
 			var (
-				tenantID = grpcutil.ExtractTenantID(bctx.Context)
-				uid      string
+				instanceID = instance.ExtractID(bctx.Context)
+				uid        string
 			)
 
 			if err := ast.As(a.Value, &uid); err != nil {
 				return nil, err
 			}
 
-			ds, err := dr.GetDirectory(bctx.Context, tenantID)
+			ds, err := dr.GetDirectory(bctx.Context, instanceID)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to get directory")
 			}
 
-			user, err := ds.GetUserFromIdentity(tenantID, uid)
+			user, err := ds.GetUserFromIdentity(instanceID, uid)
 			if err != nil {
 				return nil, errors.Wrapf(err, "user not found [%s]", uid)
 			}

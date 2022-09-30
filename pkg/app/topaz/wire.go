@@ -8,12 +8,12 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 
-	"github.com/aserto-dev/aserto-grpc/grpcclient"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
+	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
-	"github.com/aserto-dev/topaz/pkg/app/middleware"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -24,7 +24,6 @@ var (
 		server.NewServer,
 		server.NewGatewayServer,
 		server.GatewayMux,
-		grpcclient.NewDialOptionsProvider,
 
 		impl.NewAuthorizerServer,
 		impl.NewDirectoryServer,
@@ -37,7 +36,8 @@ var (
 		DirectoryResolver,
 		file.New,
 
-		middleware.NewInstanceIDMiddleware,
+		instance.NewIDMiddleware,
+		auth.NewAPIKeyAuthMiddleware,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),
 		wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"),

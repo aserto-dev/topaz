@@ -3,16 +3,52 @@ package config
 import (
 	"strings"
 
-	authn_config "github.com/aserto-dev/aserto-grpc/authn/config"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Common         `json:",squash"`    // nolint:staticcheck // squash is used by mapstructure
-	Auth           authn_config.Config `json:"auth"`
-	DecisionLogger file.Config         `json:"decision_logger"`
+	Common         `json:",squash"` // nolint:staticcheck // squash is used by mapstructure
+	Auth           AuthnConfig      `json:"auth"`
+	DecisionLogger file.Config      `json:"decision_logger"`
+}
+
+type AuthnConfig struct {
+	APIKeys map[string]string `json:"api_keys"`
+	Options CallOptions       `json:"options"`
+}
+
+type CallOptions struct {
+	Default   Options           `json:"default"`
+	Overrides []OptionOverrides `json:"overrides"`
+}
+
+type Options struct {
+
+	// API Key for machine-to-machine communication, internal to Aserto
+	EnableAPIKey bool `json:"enable_api_key"`
+	// Allows calls without any form of authentication
+	EnableAnonymous bool `json:"enable_anonymous"`
+}
+
+type OptionOverrides struct {
+	// API paths to override
+	Paths []string `json:"paths"`
+	// Override options
+	Override Options `json:"override"`
+}
+
+func (co *CallOptions) ForPath(path string) *Options {
+	for _, override := range co.Overrides {
+		for _, prefix := range override.Paths {
+			if strings.HasPrefix(path, prefix) {
+				return &override.Override
+			}
+		}
+	}
+
+	return &co.Default
 }
 
 func defaults(v *viper.Viper) {
@@ -39,9 +75,9 @@ func (c *Config) validation() error {
 
 func setDefaultCallsAuthz(cfg *Config) {
 	if len(cfg.Auth.Options.Overrides) == 0 {
-		infoPath := authn_config.OptionOverrides{
+		infoPath := OptionOverrides{
 			Paths:    []string{"/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo"},
-			Override: authn_config.Options{NeedsTenant: false, EnableAPIKey: false, EnableMachineKey: false, EnableAuth0Token: false, EnableAnonymous: true},
+			Override: Options{EnableAPIKey: false, EnableAnonymous: true},
 		}
 		cfg.Auth.Options.Overrides = append(cfg.Auth.Options.Overrides, infoPath)
 	}

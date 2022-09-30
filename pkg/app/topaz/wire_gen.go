@@ -7,12 +7,12 @@
 package topaz
 
 import (
-	"github.com/aserto-dev/aserto-grpc/grpcclient"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
+	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
-	"github.com/aserto-dev/topaz/pkg/app/middleware"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -32,7 +32,6 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 	configConfig := ccCC.Config
 	common := &configConfig.Common
 	group := ccCC.ErrGroup
-	dialOptionsProvider := grpcclient.NewDialOptionsProvider()
 	fileConfig := &configConfig.DecisionLogger
 	decisionLogger, err := file.New(context, fileConfig, zerologLogger)
 	if err != nil {
@@ -66,7 +65,7 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		cleanup()
 		return nil, nil, err
 	}
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, dialOptionsProvider, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -83,8 +82,8 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		cleanup()
 		return nil, nil, err
 	}
-	instanceIDMiddleware := middleware.NewInstanceIDMiddleware(common)
-	serverServer, cleanup4, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver, instanceIDMiddleware)
+	idMiddleware := instance.NewIDMiddleware(common)
+	serverServer, cleanup4, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver, idMiddleware)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -120,7 +119,6 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 	configConfig := ccCC.Config
 	common := &configConfig.Common
 	group := ccCC.ErrGroup
-	dialOptionsProvider := grpcclient.NewDialOptionsProvider()
 	fileConfig := &configConfig.DecisionLogger
 	decisionLogger, err := file.New(context, fileConfig, zerologLogger)
 	if err != nil {
@@ -154,7 +152,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		cleanup()
 		return nil, nil, err
 	}
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, dialOptionsProvider, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -171,8 +169,8 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		cleanup()
 		return nil, nil, err
 	}
-	instanceIDMiddleware := middleware.NewInstanceIDMiddleware(common)
-	serverServer, cleanup4, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver, instanceIDMiddleware)
+	idMiddleware := instance.NewIDMiddleware(common)
+	serverServer, cleanup4, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver, idMiddleware)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -197,10 +195,10 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, grpcclient.NewDialOptionsProvider, impl.NewAuthorizerServer, impl.NewDirectoryServer, impl.NewPolicyServer, impl.NewInfoServer, GRPCServerRegistrations,
+	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, impl.NewAuthorizerServer, impl.NewDirectoryServer, impl.NewPolicyServer, impl.NewInfoServer, GRPCServerRegistrations,
 		GatewayServerRegistrations,
 		RuntimeResolver,
-		DirectoryResolver, file.New, middleware.NewInstanceIDMiddleware, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
+		DirectoryResolver, file.New, instance.NewIDMiddleware, auth.NewAPIKeyAuthMiddleware, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
 	)
 
 	appTestSet = wire.NewSet(

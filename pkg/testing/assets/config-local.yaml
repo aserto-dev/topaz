@@ -9,12 +9,6 @@ directory_service:
 api:
   grpc:
     connection_timeout_seconds: 2
-  metrics:
-    zpages: true
-    grpc:
-      counters: true
-      durations: true
-      gateway: true
 
 opa:
   instance_id: 5d7cccc6-1657-11ec-a291-00001df0866c

@@ -6,7 +6,6 @@ import (
 	"io"
 	"strings"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	xds "github.com/aserto-dev/go-eds"
 	"github.com/aserto-dev/go-eds/pkg/kvs"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
@@ -15,6 +14,7 @@ import (
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/go-utils/opts"
 	"github.com/aserto-dev/topaz/directory"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -51,7 +51,7 @@ func (s *DirectoryServer) eds(ctx context.Context, tenantID string) (directory.D
 		return s.directoryResolver.GetDirectory(ctx, tenantID)
 	}
 
-	ctxTenantID := grpcutil.ExtractTenantID(ctx)
+	ctxTenantID := instance.ExtractID(ctx)
 	if ctxTenantID == "" {
 		return nil, cerr.ErrInvalidTenantID
 	}
@@ -64,7 +64,7 @@ func (s *DirectoryServer) eds(ctx context.Context, tenantID string) (directory.D
 }
 
 func (s *DirectoryServer) ListUsers(ctx context.Context, req *dir.ListUsersRequest) (*dir.ListUsersResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("ListUsers")
 
@@ -129,7 +129,7 @@ func (s *DirectoryServer) ListUsers(ctx context.Context, req *dir.ListUsersReque
 }
 
 func (s *DirectoryServer) GetUser(ctx context.Context, req *dir.GetUserRequest) (*dir.GetUserResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("GetUser")
 
@@ -165,7 +165,7 @@ func (s *DirectoryServer) GetUser(ctx context.Context, req *dir.GetUserRequest) 
 }
 
 func (s *DirectoryServer) CreateUser(ctx context.Context, req *dir.CreateUserRequest) (*dir.CreateUserResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("CreateUser")
 
@@ -188,7 +188,7 @@ func (s *DirectoryServer) CreateUser(ctx context.Context, req *dir.CreateUserReq
 }
 
 func (s *DirectoryServer) UpdateUser(ctx context.Context, req *dir.UpdateUserRequest) (*dir.UpdateUserResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("UpdateUser")
 
@@ -212,7 +212,7 @@ func (s *DirectoryServer) UpdateUser(ctx context.Context, req *dir.UpdateUserReq
 }
 
 func (s *DirectoryServer) DeleteUser(ctx context.Context, req *dir.DeleteUserRequest) (*dir.DeleteUserResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("DeleteUser")
 
@@ -233,7 +233,7 @@ func (s *DirectoryServer) DeleteUser(ctx context.Context, req *dir.DeleteUserReq
 }
 
 func (s *DirectoryServer) GetIdentity(ctx context.Context, req *dir.GetIdentityRequest) (*dir.GetIdentityResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("GetIdentity")
 
@@ -279,7 +279,7 @@ func (s *DirectoryServer) validateMask(mask *fieldmaskpb.FieldMask) []string {
 
 // LoadUsers load user stream into edge directory. (GRPC-only)
 func (s *DirectoryServer) LoadUsers(stream dir.Directory_LoadUsersServer) error {
-	tenantID := grpcutil.ExtractTenantID(stream.Context())
+	tenantID := instance.ExtractID(stream.Context())
 
 	res := &dir.LoadUsersResponse{
 		Received: 0,
@@ -481,7 +481,7 @@ func (s *DirectoryServer) DeleteTenant(ctx context.Context, req *dir.DeleteTenan
 }
 
 func (s *DirectoryServer) ListResources(ctx context.Context, req *dir.ListResourcesRequest) (*dir.ListResourcesResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	// default pagination settings
 	if req.Page == nil {
@@ -523,7 +523,7 @@ func (s *DirectoryServer) ListResources(ctx context.Context, req *dir.ListResour
 }
 
 func (s *DirectoryServer) GetResource(ctx context.Context, req *dir.GetResourceRequest) (*dir.GetResourceResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	resp := dir.GetResourceResponse{}
 
@@ -543,7 +543,7 @@ func (s *DirectoryServer) GetResource(ctx context.Context, req *dir.GetResourceR
 }
 
 func (s *DirectoryServer) SetResource(ctx context.Context, req *dir.SetResourceRequest) (*dir.SetResourceResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	resp := dir.SetResourceResponse{}
 
@@ -560,7 +560,7 @@ func (s *DirectoryServer) SetResource(ctx context.Context, req *dir.SetResourceR
 }
 
 func (s *DirectoryServer) DeleteResource(ctx context.Context, req *dir.DeleteResourceRequest) (*dir.DeleteResourceResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	resp := dir.DeleteResourceResponse{}
 
@@ -599,7 +599,7 @@ const NoAppl = ""
 func (s *DirectoryServer) GetUserProperties(
 	ctx context.Context,
 	req *dir.GetUserPropertiesRequest) (*dir.GetUserPropertiesResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -620,7 +620,7 @@ func (s *DirectoryServer) SetUserProperties(
 	ctx context.Context,
 	req *dir.SetUserPropertiesRequest) (*dir.SetUserPropertiesResponse, error) {
 
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -634,7 +634,7 @@ func (s *DirectoryServer) SetUserProperty(
 	ctx context.Context,
 	req *dir.SetUserPropertyRequest) (*dir.SetUserPropertyResponse, error) {
 
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -647,7 +647,7 @@ func (s *DirectoryServer) SetUserProperty(
 func (s *DirectoryServer) DeleteUserProperty(
 	ctx context.Context,
 	req *dir.DeleteUserPropertyRequest) (*dir.DeleteUserPropertyResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -658,7 +658,7 @@ func (s *DirectoryServer) DeleteUserProperty(
 }
 
 func (s *DirectoryServer) GetUserRoles(ctx context.Context, req *dir.GetUserRolesRequest) (*dir.GetUserRolesResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -676,7 +676,7 @@ func (s *DirectoryServer) GetUserRoles(ctx context.Context, req *dir.GetUserRole
 }
 
 func (s *DirectoryServer) SetUserRoles(ctx context.Context, req *dir.SetUserRolesRequest) (*dir.SetUserRolesResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -687,7 +687,7 @@ func (s *DirectoryServer) SetUserRoles(ctx context.Context, req *dir.SetUserRole
 }
 
 func (s *DirectoryServer) SetUserRole(ctx context.Context, req *dir.SetUserRoleRequest) (*dir.SetUserRoleResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -701,7 +701,7 @@ func (s *DirectoryServer) DeleteUserRole(
 	ctx context.Context,
 	req *dir.DeleteUserRoleRequest) (*dir.DeleteUserRoleResponse, error) {
 
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -715,7 +715,7 @@ func (s *DirectoryServer) GetUserPermissions(
 	ctx context.Context,
 	req *dir.GetUserPermissionsRequest) (*dir.GetUserPermissionsResponse, error) {
 
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -736,7 +736,7 @@ func (s *DirectoryServer) SetUserPermissions(
 	ctx context.Context,
 	req *dir.SetUserPermissionsRequest) (*dir.SetUserPermissionsResponse, error) {
 
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -750,7 +750,7 @@ func (s *DirectoryServer) SetUserPermission(
 	ctx context.Context,
 	req *dir.SetUserPermissionRequest) (*dir.SetUserPermissionResponse, error) {
 
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -764,7 +764,7 @@ func (s *DirectoryServer) DeleteUserPermission(
 	ctx context.Context,
 	req *dir.DeleteUserPermissionRequest) (*dir.DeleteUserPermissionResponse, error) {
 
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -778,7 +778,7 @@ func (s *DirectoryServer) ListUserApplications(
 	ctx context.Context,
 	req *dir.ListUserApplicationsRequest) (*dir.ListUserApplicationsResponse, error) {
 
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -796,7 +796,7 @@ func (s *DirectoryServer) ListUserApplications(
 }
 
 func (s *DirectoryServer) DeleteUserApplication(ctx context.Context, req *dir.DeleteUserApplicationRequest) (*dir.DeleteUserApplicationResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -807,7 +807,7 @@ func (s *DirectoryServer) DeleteUserApplication(ctx context.Context, req *dir.De
 }
 
 func (s *DirectoryServer) GetApplProperties(ctx context.Context, req *dir.GetApplPropertiesRequest) (*dir.GetApplPropertiesResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -827,7 +827,7 @@ func (s *DirectoryServer) GetApplProperties(ctx context.Context, req *dir.GetApp
 func (s *DirectoryServer) SetApplProperties(
 	ctx context.Context,
 	req *dir.SetApplPropertiesRequest) (*dir.SetApplPropertiesResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -838,7 +838,7 @@ func (s *DirectoryServer) SetApplProperties(
 }
 
 func (s *DirectoryServer) SetApplProperty(ctx context.Context, req *dir.SetApplPropertyRequest) (*dir.SetApplPropertyResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -849,7 +849,7 @@ func (s *DirectoryServer) SetApplProperty(ctx context.Context, req *dir.SetApplP
 }
 
 func (s *DirectoryServer) DeleteApplProperty(ctx context.Context, req *dir.DeleteApplPropertyRequest) (*dir.DeleteApplPropertyResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -860,7 +860,7 @@ func (s *DirectoryServer) DeleteApplProperty(ctx context.Context, req *dir.Delet
 }
 
 func (s *DirectoryServer) GetApplRoles(ctx context.Context, req *dir.GetApplRolesRequest) (*dir.GetApplRolesResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -881,7 +881,7 @@ func (s *DirectoryServer) GetApplRoles(ctx context.Context, req *dir.GetApplRole
 }
 
 func (s *DirectoryServer) SetApplRoles(ctx context.Context, req *dir.SetApplRolesRequest) (*dir.SetApplRolesResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -892,7 +892,7 @@ func (s *DirectoryServer) SetApplRoles(ctx context.Context, req *dir.SetApplRole
 }
 
 func (s *DirectoryServer) SetApplRole(ctx context.Context, req *dir.SetApplRoleRequest) (*dir.SetApplRoleResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -903,7 +903,7 @@ func (s *DirectoryServer) SetApplRole(ctx context.Context, req *dir.SetApplRoleR
 }
 
 func (s *DirectoryServer) DeleteApplRole(ctx context.Context, req *dir.DeleteApplRoleRequest) (*dir.DeleteApplRoleResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -914,7 +914,7 @@ func (s *DirectoryServer) DeleteApplRole(ctx context.Context, req *dir.DeleteApp
 }
 
 func (s *DirectoryServer) GetApplPermissions(ctx context.Context, req *dir.GetApplPermissionsRequest) (*dir.GetApplPermissionsResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -932,7 +932,7 @@ func (s *DirectoryServer) GetApplPermissions(ctx context.Context, req *dir.GetAp
 }
 
 func (s *DirectoryServer) SetApplPermissions(ctx context.Context, req *dir.SetApplPermissionsRequest) (*dir.SetApplPermissionsResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -943,7 +943,7 @@ func (s *DirectoryServer) SetApplPermissions(ctx context.Context, req *dir.SetAp
 }
 
 func (s *DirectoryServer) SetApplPermission(ctx context.Context, req *dir.SetApplPermissionRequest) (*dir.SetApplPermissionResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {
@@ -954,7 +954,7 @@ func (s *DirectoryServer) SetApplPermission(ctx context.Context, req *dir.SetApp
 }
 
 func (s *DirectoryServer) DeleteApplPermission(ctx context.Context, req *dir.DeleteApplPermissionRequest) (*dir.DeleteApplPermissionResponse, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
+	tenantID := instance.ExtractID(ctx)
 
 	eds, err := s.eds(ctx, "")
 	if err != nil {

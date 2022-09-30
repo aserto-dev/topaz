@@ -4,13 +4,13 @@ import (
 	"context"
 	"time"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	runtime "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/builtins/edge/dir"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/aserto-dev/topaz/builtins/edge/res"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
@@ -79,8 +79,8 @@ func RuntimeResolver(
 }
 
 func (r *RuntimeResolverSidecar) RuntimeFromContext(ctx context.Context, policyID, policyName, instanceLabel string) (*runtime.Runtime, error) {
-	tenantID := grpcutil.ExtractTenantID(ctx)
-	return r.GetRuntime(ctx, tenantID, policyID, policyName, instanceLabel)
+	instanceID := instance.ExtractID(ctx)
+	return r.GetRuntime(ctx, instanceID, policyID, policyName, instanceLabel)
 }
 
 func (r *RuntimeResolverSidecar) GetRuntime(ctx context.Context, tenantID, policyID, policyName, instanceLabel string) (*runtime.Runtime, error) {

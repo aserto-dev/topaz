@@ -1,4 +1,4 @@
-package middleware
+package instance
 
 import (
 	"context"
@@ -16,17 +16,17 @@ var (
 	InstanceIDHeader = grpcutil.HeaderAsertoTenantID
 )
 
-type InstanceIDMiddleware struct {
+type IDMiddleware struct {
 	instanceID string
 }
 
-func NewInstanceIDMiddleware(cfg *config.Common) *InstanceIDMiddleware {
-	return &InstanceIDMiddleware{
+func NewIDMiddleware(cfg *config.Common) *IDMiddleware {
+	return &IDMiddleware{
 		instanceID: cfg.OPA.InstanceID,
 	}
 }
 
-func (m *InstanceIDMiddleware) Unary() grpc.UnaryServerInterceptor {
+func (m *IDMiddleware) Unary() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		newCtx := context.WithValue(ctx, InstanceIDHeader, m.instanceID)
 		result, err := handler(newCtx, req)
@@ -34,7 +34,7 @@ func (m *InstanceIDMiddleware) Unary() grpc.UnaryServerInterceptor {
 	}
 }
 
-func (m *InstanceIDMiddleware) Stream() grpc.StreamServerInterceptor {
+func (m *IDMiddleware) Stream() grpc.StreamServerInterceptor {
 	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
 		newCtx := context.WithValue(ctx, InstanceIDHeader, m.instanceID)
@@ -44,7 +44,7 @@ func (m *InstanceIDMiddleware) Stream() grpc.StreamServerInterceptor {
 	}
 }
 
-func (m *InstanceIDMiddleware) AsGRPCOptions() []grpc.ServerOption {
+func (m *IDMiddleware) AsGRPCOptions() []grpc.ServerOption {
 	return []grpc.ServerOption{
 		grpc.UnaryInterceptor(m.Unary()),
 		grpc.StreamInterceptor(m.Stream()),

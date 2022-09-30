@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/go-eds/pkg/pb"
 	"github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/topaz/directory"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -28,20 +28,20 @@ func RegisterManagerOf(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 		},
 		func(bctx rego.BuiltinContext, a *ast.Term) (*ast.Term, error) {
 			var (
-				tenantID = grpcutil.ExtractTenantID(bctx.Context)
-				identity string
+				instanceID = instance.ExtractID(bctx.Context)
+				identity   string
 			)
 
 			if err := ast.As(a.Value, &identity); err != nil {
 				return nil, err
 			}
 
-			ds, err := dr.GetDirectory(bctx.Context, tenantID)
+			ds, err := dr.GetDirectory(bctx.Context, instanceID)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to get directory")
 			}
 
-			user, ok := managerOf(logger, ds, tenantID, identity)
+			user, ok := managerOf(logger, ds, instanceID, identity)
 			if !ok {
 				return nil, fmt.Errorf("cannot determine manager of %s", identity)
 			}

@@ -7,13 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-utils/cerr"
-	"github.com/aserto-dev/go-utils/pb"
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/google/uuid"
@@ -60,7 +59,7 @@ func NewAuthorizerServer(
 }
 
 func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.DecisionTreeRequest) (*authorizer.DecisionTreeResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := grpcutil.CompleteLogger(ctx, s.logger)
+	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	resp := &authorizer.DecisionTreeResponse{}
 
@@ -189,7 +188,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 // Is decision eval function.
 func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*authorizer.IsResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := grpcutil.CompleteLogger(ctx, s.logger)
+	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	resp := &authorizer.IsResponse{
 		Decisions: make([]*authorizer.Decision, 0),
@@ -204,7 +203,11 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	}
 
 	if req.ResourceContext == nil {
-		req.ResourceContext = pb.NewStruct()
+		var err error
+		req.ResourceContext, err = structpb.NewStruct(make(map[string]interface{}))
+		if err != nil {
+			return resp, err
+		}
 	}
 
 	if req.IdentityContext == nil {
@@ -320,7 +323,7 @@ func is(v interface{}, decision string) (bool, error) {
 }
 
 func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryRequest) (*authorizer.QueryResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := grpcutil.CompleteLogger(ctx, s.logger)
+	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	if req.Query == "" {
 		return &authorizer.QueryResponse{}, cerr.ErrInvalidArgument.Msg("query not set")
@@ -475,7 +478,7 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *api.Po
 }
 
 func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileRequest) (*authorizer.CompileResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := grpcutil.CompleteLogger(ctx, s.logger)
+	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	if req.Query == "" {
 		return &authorizer.CompileResponse{}, cerr.ErrInvalidArgument.Msg("query not set")
