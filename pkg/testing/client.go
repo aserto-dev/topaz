@@ -14,9 +14,9 @@ import (
 
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-lib/grpc-clients/authorizer"
+	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 )
 
 // CreateClient creates a new http client that can talk to the API

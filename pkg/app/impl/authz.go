@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	api_v2 "github.com/aserto-dev/go-authorizer/aserto/api/v2"
-	authz "github.com/aserto-dev/go-grpc-authz/aserto/authorizer/authorizer/v1"
-	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
+	"github.com/aserto-dev/aserto-grpc/grpcutil"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/go-utils/pb"
 	runtime "github.com/aserto-dev/runtime"
