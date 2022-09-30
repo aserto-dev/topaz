@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
-	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/lestrrat-go/jwx/jwk"

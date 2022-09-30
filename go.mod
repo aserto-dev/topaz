@@ -10,20 +10,21 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
+//replace github.com/aserto-dev/go-authorizer => ../go-authorizer
+
 require (
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/aserto-grpc v0.0.3
 	github.com/aserto-dev/certs v0.0.2
-	github.com/aserto-dev/go-authorizer v0.0.2
+	github.com/aserto-dev/go-authorizer v0.0.3
 	github.com/aserto-dev/go-directory v0.0.12
 	github.com/aserto-dev/go-eds v0.8.5
 	github.com/aserto-dev/go-grpc v0.8.51
-	github.com/aserto-dev/go-grpc-authz v0.8.0
 	github.com/aserto-dev/go-lib v0.8.46
 	github.com/aserto-dev/go-utils v0.8.26
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-grpc v0.8.16
-	github.com/aserto-dev/runtime v0.44.0
+	github.com/aserto-dev/runtime v0.44.1
 	github.com/aserto-dev/testutil v0.0.2
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
@@ -60,6 +61,7 @@ require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/allegro/bigcache/v3 v3.0.2 // indirect
 	github.com/aserto-dev/clui v0.8.1 // indirect
+	github.com/aserto-dev/go-grpc-authz v0.8.0 // indirect
 	github.com/aserto-dev/go-grpc-internal v0.8.13 // indirect
 	github.com/aserto-dev/mage-loot v0.8.9 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect

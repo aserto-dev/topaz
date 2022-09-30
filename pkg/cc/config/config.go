@@ -66,7 +66,9 @@ type Common struct {
 		Health struct {
 			ListenAddress string `json:"listen_address"`
 		} `json:"health"`
-		Metrics metrics.Config `json:"metrics"`
+		Metrics               metrics.Config `json:"metrics"`
+		EnableIdentityContext bool           `json:"enable_identity_context"`
+		EnableResourceContext bool           `json:"enable_resource_context"`
 	} `json:"api"`
 
 	JWT struct {

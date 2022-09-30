@@ -120,6 +120,8 @@ func customHeaderMatcher(key string) (string, bool) {
 		return key, true
 	case string(grpcutil.HeaderAsertoTenantID):
 		return key, true
+	case "Aserto-Policy-Id":
+		return key, true
 	default:
 		return runtime.DefaultHeaderMatcher(key)
 	}
