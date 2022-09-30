@@ -12,6 +12,7 @@ import (
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
+	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/app/server"
@@ -38,6 +39,7 @@ var (
 		file.New,
 
 		instance.NewInstanceIDMiddleware,
+		auth.NewAPIKeyAuthMiddleware,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),
 		wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"),

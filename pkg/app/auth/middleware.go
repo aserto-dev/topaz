@@ -6,9 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	authn_config "github.com/aserto-dev/aserto-grpc/authn/config"
 	"github.com/aserto-dev/go-utils/cerr"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
+	"github.com/aserto-dev/topaz/pkg/cc/config"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	"github.com/rs/zerolog"
@@ -19,14 +18,14 @@ type APIKeyAuthMiddleware struct {
 	apiAuth map[string]string
 
 	// TODO: figure out what we want to do with the config.
-	cfg    *authn_config.Config
+	cfg    *config.AuthnConfig
 	logger *zerolog.Logger
 }
 
 func NewAPIKeyAuthMiddleware(
 	ctx context.Context,
 	// TODO: figure out what we want to do with the config.
-	cfg *authn_config.Config,
+	cfg *config.AuthnConfig,
 	logger *zerolog.Logger,
 ) (*APIKeyAuthMiddleware, error) {
 
@@ -85,13 +84,8 @@ func (a *APIKeyAuthMiddleware) authenticate(
 	ctx context.Context,
 	path, authHeader string,
 ) (context.Context, error) {
-	instanceID := instance.ExtractID(ctx)
 
 	options := a.cfg.Options.ForPath(path)
-	if options.NeedsTenant && instanceID == "" {
-		// TODO: once we have errors, this needs to be a topaz specific error
-		return ctx, cerr.ErrNoTenantID
-	}
 
 	if options.EnableAnonymous {
 		return ctx, nil
