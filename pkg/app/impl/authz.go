@@ -647,17 +647,17 @@ func pathFilter(sep authorizer.PathSeparator, path string) runtime.PathFilterFn 
 	switch sep {
 	case authorizer.PathSeparator_PATH_SEPARATOR_SLASH:
 		return func(packageName string) bool {
-			if path != "" {
-				return strings.HasPrefix(strings.ReplaceAll(packageName, ".", "/"), path)
+			if path == "" {
+				return true
 			}
-			return true
+			return strings.HasPrefix(strings.ReplaceAll(packageName, ".", "/"), path)
 		}
 	default:
 		return func(packageName string) bool {
-			if path != "" {
-				return strings.HasPrefix(packageName, path)
+			if path == "" {
+				return true
 			}
-			return true
+			return strings.HasPrefix(packageName, path)
 		}
 	}
 }
