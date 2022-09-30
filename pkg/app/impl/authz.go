@@ -505,9 +505,12 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 		}
 	}
 
+	if input == nil {
+		input = make(map[string]interface{})
+	}
+
 	if s.cfg.API.EnableResourceContext && req.ResourceContext != nil {
 		input[InputResource] = req.ResourceContext
-
 	}
 
 	if s.cfg.API.EnableIdentityContext && req.IdentityContext != nil {
