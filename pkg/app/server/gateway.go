@@ -52,6 +52,7 @@ func NewGatewayServer(
 	newLogger := log.With().Str("source", "http-gateway").Logger()
 
 	mux := http.NewServeMux()
+	mux.Handle("/api/", gtwMux)
 	mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
 		http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
