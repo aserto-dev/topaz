@@ -110,6 +110,9 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		if err != nil {
 			return resp, errors.Wrap(err, "get bundles")
 		}
+		if len(bundles) == 0 {
+			return resp, errors.New("no bundles found")
+		}
 		policyid = bundles[0].Id // only 1 bundle per runtime allowed
 	}
 
@@ -352,24 +355,21 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 		input[InputPolicy] = req.PolicyContext
 	}
 
-	if s.cfg.API.EnableResourceContext {
-		if req.ResourceContext != nil {
-			input[InputResource] = req.ResourceContext
-		}
+	if s.cfg.API.EnableResourceContext && req.ResourceContext != nil {
+		input[InputResource] = req.ResourceContext
 	}
 
-	if s.cfg.API.EnableIdentityContext {
-		if req.IdentityContext != nil {
-			if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-				return &authorizer.QueryResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
-			}
+	if s.cfg.API.EnableIdentityContext && req.IdentityContext != nil {
 
-			if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-				input[InputIdentity] = convert(req.IdentityContext)
-			}
+		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+			return &authorizer.QueryResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 		}
 
-		if req.IdentityContext != nil && req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+			input[InputIdentity] = convert(req.IdentityContext)
+		}
+
+		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
 			user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
 			if err != nil || user == nil {
 				if err != nil {
@@ -502,24 +502,21 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 		}
 	}
 
-	if s.cfg.API.EnableResourceContext {
-		if req.ResourceContext != nil {
-			input[InputResource] = req.ResourceContext
-		}
+	if s.cfg.API.EnableResourceContext && req.ResourceContext != nil {
+		input[InputResource] = req.ResourceContext
+
 	}
 
-	if s.cfg.API.EnableIdentityContext {
-		if req.IdentityContext != nil {
-			if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-				return &authorizer.CompileResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
-			}
-
-			if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-				input[InputIdentity] = convert(req.IdentityContext)
-			}
+	if s.cfg.API.EnableIdentityContext && req.IdentityContext != nil {
+		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+			return &authorizer.CompileResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 		}
 
-		if req.IdentityContext != nil && req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+			input[InputIdentity] = convert(req.IdentityContext)
+		}
+
+		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
 			user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
 			if err != nil || user == nil {
 				if err != nil {
