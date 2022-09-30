@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/aserto-dev/certs"
-	"github.com/aserto-dev/go-utils/debug"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -41,7 +40,6 @@ type Server struct {
 	grpcRegistrations GRPCRegistrations
 	gtwServer         *http.Server
 	healthServer      *HealthServer
-	debugServer       *debug.Server
 
 	gtwMux               *runtime.ServeMux
 	handlerRegistrations HandlerRegistrations
@@ -112,9 +110,6 @@ func (s *Server) Start(ctx context.Context) error {
 
 	grpc.EnableTracing = true
 
-	s.debugServer = debug.NewServer(&s.cfg.Debug, s.logger, s.errGroup)
-	s.debugServer.Start()
-
 	if err := s.startHealthServer(); err != nil {
 		return err
 	}
@@ -145,8 +140,6 @@ func (s *Server) Stop() error {
 	var result error
 
 	s.logger.Info().Msg("Server stopping.")
-
-	s.debugServer.Stop()
 
 	ctx, shutdownCancel := context.WithTimeout(s.ctx, 5*time.Second)
 	defer shutdownCancel()

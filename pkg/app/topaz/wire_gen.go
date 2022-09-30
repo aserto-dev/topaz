@@ -7,7 +7,6 @@
 package topaz
 
 import (
-	"github.com/aserto-dev/aserto-grpc/grpcclient"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
@@ -196,7 +195,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, grpcclient.NewDialOptionsProvider, impl.NewAuthorizerServer, impl.NewDirectoryServer, impl.NewPolicyServer, impl.NewInfoServer, GRPCServerRegistrations,
+	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, impl.NewAuthorizerServer, impl.NewDirectoryServer, impl.NewPolicyServer, impl.NewInfoServer, GRPCServerRegistrations,
 		GatewayServerRegistrations,
 		RuntimeResolver,
 		DirectoryResolver, file.New, instance.NewInstanceIDMiddleware, auth.NewAPIKeyAuthMiddleware, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),

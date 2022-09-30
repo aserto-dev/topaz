@@ -8,7 +8,6 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 
-	"github.com/aserto-dev/aserto-grpc/grpcclient"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
@@ -25,7 +24,6 @@ var (
 		server.NewServer,
 		server.NewGatewayServer,
 		server.GatewayMux,
-		grpcclient.NewDialOptionsProvider,
 
 		impl.NewAuthorizerServer,
 		impl.NewDirectoryServer,

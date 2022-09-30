@@ -13,7 +13,6 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/aserto-dev/certs"
-	"github.com/aserto-dev/go-utils/debug"
 	"github.com/aserto-dev/logger"
 	runtimeconfig "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/directory"
@@ -41,8 +40,6 @@ type Common struct {
 		LogLevel       string        `json:"log_level"`
 		LogLevelParsed zerolog.Level `json:"-"`
 	} `json:"logging"`
-
-	Debug debug.Config `json:"debug"`
 
 	Command struct {
 		Mode CommandMode
