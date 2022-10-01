@@ -55,7 +55,7 @@ changelog:
 release:
   github:
     owner: aserto-dev
-    name: topaz
+    name: topaz-private
 
   draft: false
   prerelease: false
