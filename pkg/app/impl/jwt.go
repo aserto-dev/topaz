@@ -169,37 +169,24 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 }
 
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
-	// if hosted (aona or authorizer) always fallback to EDS based directory
-	// we need a tenant whitelist mechanism to opt in-tenants at the directory resolver level
-	//
-	if s.cfg.Directory.IsHosted {
-		return s.getUserFromIdentityV1(ctx, identity)
-	}
-
-	// if onebox/sidecar with a remote directory configured, use directory v2 for identity context resolution
-	if s.cfg.Directory.Remote.Addr != "" && s.cfg.Directory.Remote.Key != "" {
-		return s.getUserFromIdentityV2(ctx, identity)
-	}
-
-	// always fallback to directory v1
-	return s.getUserFromIdentityV1(ctx, identity)
+	return s.getUserFromIdentityV2(ctx, identity)
 }
 
-func (s *AuthorizerServer) getUserFromIdentityV1(ctx context.Context, identity string) (proto.Message, error) {
-	tenantID := instance.ExtractID(ctx)
+// func (s *AuthorizerServer) getUserFromIdentityV1(ctx context.Context, identity string) (proto.Message, error) {
+// 	tenantID := instance.ExtractID(ctx)
 
-	directory, err := s.directoryResolver.DirectoryFromContext(ctx)
-	if err != nil {
-		return nil, err
-	}
+// 	directory, err := s.directoryResolver.DirectoryFromContext(ctx)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	userV1, err := directory.GetUserFromIdentity(tenantID, identity)
-	if err != nil {
-		return nil, err
-	}
+// 	userV1, err := directory.GetUserFromIdentity(tenantID, identity)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return userV1, nil
-}
+// 	return userV1, nil
+// }
 
 func (s *AuthorizerServer) getUserFromIdentityV2(ctx context.Context, identity string) (proto.Message, error) {
 	uid, err := s.getIdentityV2(ctx, identity)
