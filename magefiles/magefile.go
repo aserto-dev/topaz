@@ -14,6 +14,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+const containerImage string = "topaz"
+
 func init() {
 	// Set go version for docker builds
 	os.Setenv("GO_VERSION", "1.17")
@@ -57,6 +59,33 @@ func DockerImage() error {
 	}
 
 	return common.DockerImage(fmt.Sprintf("topaz:%s", version))
+}
+
+// DockerPush builds the docker image using all tags specified by sver
+// and pushes it to the specified registry
+func DockerPush(registry, org string) error {
+	tags, err := common.DockerTags(registry, fmt.Sprintf("%s/%s", org, containerImage))
+	if err != nil {
+		return err
+	}
+
+	version, err := common.Version()
+	if err != nil {
+		return errors.Wrap(err, "failed to calculate version")
+	}
+
+	for _, tag := range tags {
+		common.UI.Normal().WithStringValue("tag", tag).Msg("pushing tag")
+		err = common.DockerPush(
+			fmt.Sprintf("%s:%s", containerImage, version),
+			fmt.Sprintf("%s/%s/%s:%s", registry, org, containerImage, tag),
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func Deps() {
