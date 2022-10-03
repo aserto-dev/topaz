@@ -358,11 +358,11 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 		input[InputPolicy] = req.PolicyContext
 	}
 
-	if s.cfg.API.EnableResourceContext && req.ResourceContext != nil {
+	if req.ResourceContext != nil {
 		input[InputResource] = req.ResourceContext
 	}
 
-	if s.cfg.API.EnableIdentityContext && req.IdentityContext != nil {
+	if req.IdentityContext != nil {
 
 		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
 			return &authorizer.QueryResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
@@ -509,11 +509,11 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 		input = make(map[string]interface{})
 	}
 
-	if s.cfg.API.EnableResourceContext && req.ResourceContext != nil {
+	if req.ResourceContext != nil {
 		input[InputResource] = req.ResourceContext
 	}
 
-	if s.cfg.API.EnableIdentityContext && req.IdentityContext != nil {
+	if req.IdentityContext != nil {
 		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
 			return &authorizer.CompileResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 		}
