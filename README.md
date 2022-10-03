@@ -22,7 +22,7 @@ Topaz is an open-source authorization service providing fine-grained, real-time,
 
 ## Benefits 
 1. The Authorize lives close to your application. Deploy the authorizer either as a sidecar or a microservice and maintain low latency and high availability.  
-2, Bring user and resource data to the authorizer using easy-to-use APIs and a counterpart CLI. This ensures data used by the authorizer is also localized - which is critical for the decisions to be made as quickly as possible. 
+2. Bring user and resource data to the authorizer using easy-to-use APIs and a counterpart CLI. This ensures data used by the authorizer is also localized - which is critical for the decisions to be made as quickly as possible. 
 3. Combine “Policy-as-Code” and “Policy-as-Data” to build fine-grained authorization models 
 4. Consume decision logs produced by your edge authorizer and process them with your favorite analytics platform
 5. Brings the best of library and a service - ensure highly performant authorization while keeping your authorization logic separate from your code.
