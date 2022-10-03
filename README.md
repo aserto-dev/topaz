@@ -6,7 +6,7 @@ Topaz is an open-source authorization service providing fine-grained, real-time,
 
 ## Purpose-built fine-grained authorization
 
-1.Fine-grained access control is a critical part of every production-ready application. Topaz is a purpose-built fine-grained access control service that is easy to integrate into your existing stack
+1. Fine-grained access control is a critical part of every production-ready application. Topaz is a purpose-built fine-grained access control service that is easy to integrate into your existing stack
 2. Start with a fine-grained authorization model that grows with your application: use RBAC, ABAC and ReBAC interchangeably
 3. Combine “policy-as-code” and “policy-as-data” to enjoy the best of both worlds and complete flexibility
 4. Maintain a clear separation of concerns - extract authorization policy from your application code and into the hands of AppSec
