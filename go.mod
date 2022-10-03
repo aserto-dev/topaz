@@ -10,7 +10,9 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
-//replace github.com/aserto-dev/go-authorizer => ../go-authorizer
+replace github.com/aserto-dev/go-authorizer => ../go-authorizer
+
+replace github.com/aserto-dev/runtime => ../runtime
 
 require (
 	github.com/aserto-dev/aserto-go v0.8.11

@@ -30,3 +30,6 @@ go:
   goimports:
     importPath: "golang.org/x/tools/cmd/goimports"
     version: "774f453"
+  grpcui:
+    importPath: "github.com/fullstorydev/grpcui/cmd/grpcui"
+    version: "v1.3.0"

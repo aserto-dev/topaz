@@ -609,6 +609,39 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 	return resp, nil
 }
 
+func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.ListPoliciesRequest) (*authorizer.ListPoliciesResponse, error) {
+	//log := instance.GetInstanceLogger(ctx, s.logger)
+
+	response := &authorizer.ListPoliciesResponse{}
+
+	rt, err := s.getRuntime(ctx, nil)
+	if err != nil {
+		return response, errors.Wrap(err, "failed to get runtime")
+	}
+
+	policies, err := rt.V2ListPolicies(ctx)
+	if err != nil {
+		return response, err
+	}
+
+	for _, policy := range policies {
+
+		//structpb.NewStringValue()
+		module := api.Module{
+			Id:  policy.ID,
+			Raw: policy.Raw,
+			//Ast: policy.AST.String(),
+		}
+		response.Result = append(response.Result, &module)
+	}
+
+	return response, nil
+}
+
+func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPolicyRequest) (*authorizer.GetPolicyResponse, error) {
+	return nil, nil
+}
+
 func TraceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
 	switch t {
 	case authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN:
