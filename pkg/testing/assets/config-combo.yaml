@@ -7,7 +7,6 @@ directory_service:
   path: ""
 
 api:
-  enable_identity_context: true
   grpc:
     connection_timeout_seconds: 2
 
