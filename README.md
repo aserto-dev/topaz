@@ -2,7 +2,7 @@
 
 Welcome to Topaz!
 
-Topaz presents an opinionated Open Source Authorization solution that combines policy-as-code with policy-as-data. It provides an end-to-end solution for application authorization that is buit on top of the Open Policy Agent (OPA) and influenced by Google Zanzibar.
+Topaz presents an opinionated Open Source Authorization solution that combines policy-as-code with policy-as-data. It provides an end-to-end solution for application authorization that is built on top of the Open Policy Agent (OPA) and influenced by Google Zanzibar.
 
 With Topaz you can scale your authorization model from RBAC to ABAC and ReBAC, while retaining the benefits of policy-as-code, decision logging, and a local deployment model.
 
