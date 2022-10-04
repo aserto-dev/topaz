@@ -16,6 +16,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/google/uuid"
+	"github.com/mennanov/fmutils"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/server/types"
 	"github.com/pkg/errors"
@@ -24,6 +25,8 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -629,6 +632,13 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 		if err != nil {
 			return response, errors.Wrapf(err, "failed to parse policy with ID [%s]", policy.ID)
 		}
+
+		if req.FieldMask != nil {
+			paths := s.validateMask(req.FieldMask, &api.Module{})
+			mask := fmutils.NestedMaskFromPaths(paths)
+			mask.Filter(module)
+		}
+
 		response.Result = append(response.Result, module)
 	}
 
@@ -655,6 +665,13 @@ func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPol
 	if err != nil {
 		return response, errors.Wrap(err, "failed to convert policy to api.module")
 	}
+
+	if req.FieldMask != nil {
+		paths := s.validateMask(req.FieldMask, &api.Module{})
+		mask := fmutils.NestedMaskFromPaths(paths)
+		mask.Filter(module)
+	}
+
 	response.Result = module
 	return response, nil
 }
@@ -680,9 +697,9 @@ func policyToModule(policy types.PolicyV1) (*api.Module, error) {
 		packageName = policy.AST.Package.Path.String()
 	}
 	module := api.Module{
-		Id:          policy.ID,
-		Raw:         policy.Raw,
-		PackagePath: packageName,
+		Id:          &policy.ID,
+		Raw:         &policy.Raw,
+		PackagePath: &packageName,
 		Ast:         astValue,
 	}
 	return &module, nil
@@ -807,4 +824,20 @@ func getPolicyIDFromContext(ctx context.Context) string {
 		}
 	}
 	return ""
+}
+
+// validateMask checks if provided mask is validate.
+func (s *AuthorizerServer) validateMask(mask *fieldmaskpb.FieldMask, protomsg protoreflect.ProtoMessage) []string {
+	if len(mask.Paths) > 0 && mask.Paths[0] == "" {
+		return []string{}
+	}
+
+	mask.Normalize()
+
+	if !mask.IsValid(protomsg) {
+		s.logger.Error().Msgf("field mask invalid %q", mask.Paths)
+		return []string{}
+	}
+
+	return mask.Paths
 }

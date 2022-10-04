@@ -52,7 +52,7 @@ func NewGatewayServer(
 	newLogger := log.With().Str("source", "http-gateway").Logger()
 
 	mux := http.NewServeMux()
-	mux.Handle("/api/", gtwMux)
+	mux.Handle("/api/", fieldsMaskHandler(gtwMux))
 	mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
 		http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
@@ -79,6 +79,19 @@ func NewGatewayServer(
 	gtwServer.TLSConfig = tlsServerConfig
 
 	return gtwServer, nil
+}
+
+// fieldsMaskHandler will set the Content-Type to "application/json+masked", which
+// will signal the marshaler to not emit unpopulated types, which is needed to
+// serialize the masked result set.
+// This happens if a fields.mask query parameter is present and set
+func fieldsMaskHandler(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if p, ok := r.URL.Query()["fields.mask"]; ok && len(p) > 0 && len(p[0]) > 0 {
+			r.Header.Set("Content-Type", "application/json+masked")
+		}
+		h.ServeHTTP(w, r)
+	})
 }
 
 // GatewayMux creates a gateway multiplexer for serving the API as an OpenAPI endpoint.

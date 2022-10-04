@@ -18,7 +18,7 @@ require (
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/aserto-grpc v0.0.3
 	github.com/aserto-dev/certs v0.0.2
-	github.com/aserto-dev/go-authorizer v0.0.4-0.20221004103515-c3a12c9188e3
+	github.com/aserto-dev/go-authorizer v0.0.4-0.20221004153549-86cf5c6af874
 	github.com/aserto-dev/go-directory v0.0.12
 	github.com/aserto-dev/go-eds v0.8.5
 	github.com/aserto-dev/go-grpc v0.8.51
