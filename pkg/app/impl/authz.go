@@ -610,7 +610,6 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 }
 
 func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.ListPoliciesRequest) (*authorizer.ListPoliciesResponse, error) {
-	//log := instance.GetInstanceLogger(ctx, s.logger)
 
 	response := &authorizer.ListPoliciesResponse{}
 
