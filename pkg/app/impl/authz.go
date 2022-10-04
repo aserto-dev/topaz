@@ -619,27 +619,74 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 		return response, errors.Wrap(err, "failed to get runtime")
 	}
 
-	policies, err := rt.V2ListPolicies(ctx)
+	policies, err := rt.ListPolicies(ctx)
 	if err != nil {
 		return response, err
 	}
 
 	for _, policy := range policies {
 
-		//structpb.NewStringValue()
-		module := api.Module{
-			Id:  policy.ID,
-			Raw: policy.Raw,
-			//Ast: policy.AST.String(),
+		module, err := policyToModule(policy)
+		if err != nil {
+			return response, errors.Wrapf(err, "failed to parse policy with ID [%s]", policy.ID)
 		}
-		response.Result = append(response.Result, &module)
+		response.Result = append(response.Result, module)
 	}
 
 	return response, nil
 }
 
 func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPolicyRequest) (*authorizer.GetPolicyResponse, error) {
-	return nil, nil
+	response := &authorizer.GetPolicyResponse{}
+	rt, err := s.getRuntime(ctx, nil)
+	if err != nil {
+		return response, errors.Wrap(err, "failed to get runtime")
+	}
+	policy, err := rt.GetPolicy(ctx, req.Id)
+	if err != nil {
+		return response, errors.Wrapf(err, "failed to get policy with ID [%s]", req.Id)
+	}
+
+	if policy == nil {
+		// TODO: add cerr
+		return response, fmt.Errorf("policy with ID [%s] not found", req.Id)
+	}
+
+	module, err := policyToModule(*policy)
+	if err != nil {
+		return response, errors.Wrap(err, "failed to convert policy to api.module")
+	}
+	response.Result = module
+	return response, nil
+}
+
+func policyToModule(policy types.PolicyV1) (*api.Module, error) {
+	astBts, err := json.Marshal(policy.AST)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to marshal AST")
+	}
+
+	var v interface{}
+	err = json.Unmarshal(astBts, &v)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to determine AST")
+	}
+
+	astValue, err := structpb.NewValue(v)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create astValue")
+	}
+	var packageName string
+	if policy.AST != nil {
+		packageName = policy.AST.Package.Path.String()
+	}
+	module := api.Module{
+		Id:          policy.ID,
+		Raw:         policy.Raw,
+		PackagePath: packageName,
+		Ast:         astValue,
+	}
+	return &module, nil
 }
 
 func TraceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
