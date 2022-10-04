@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/testutil"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
@@ -23,7 +22,7 @@ const (
 // and monitor its logs
 type EngineHarness struct {
 	Engine      *app.Authorizer
-	LogDebugger *testutil.LogDebugger
+	LogDebugger *LogDebugger
 
 	cleanup func()
 	t       *testing.T
@@ -75,7 +74,7 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	var err error
 	h := &EngineHarness{
 		t:           t,
-		LogDebugger: testutil.NewLogDebugger(t, "onebox"),
+		LogDebugger: NewLogDebugger(t, "topaz"),
 	}
 
 	configFile := AssetDefaultConfigLocal()
