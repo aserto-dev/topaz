@@ -10,13 +10,15 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
-//replace github.com/aserto-dev/go-authorizer => ../go-authorizer
+// replace github.com/aserto-dev/go-authorizer => ../go-authorizer
+
+// replace github.com/aserto-dev/runtime => ../runtime
 
 require (
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/aserto-grpc v0.0.3
 	github.com/aserto-dev/certs v0.0.2
-	github.com/aserto-dev/go-authorizer v0.0.3
+	github.com/aserto-dev/go-authorizer v0.0.5
 	github.com/aserto-dev/go-directory v0.0.12
 	github.com/aserto-dev/go-eds v0.8.5
 	github.com/aserto-dev/go-grpc v0.8.51
@@ -24,7 +26,7 @@ require (
 	github.com/aserto-dev/go-utils v0.8.26
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-grpc v0.8.16
-	github.com/aserto-dev/runtime v0.44.1
+	github.com/aserto-dev/runtime v0.44.3
 	github.com/aserto-dev/testutil v0.0.2
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
@@ -33,6 +35,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/lestrrat-go/jwx v1.2.25
 	github.com/magefile/mage v1.14.0
+	github.com/mennanov/fmutils v0.2.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.20.2
@@ -47,7 +50,7 @@ require (
 	github.com/stretchr/testify v1.8.0
 	go.opencensus.io v0.23.0
 	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
-	google.golang.org/genproto v0.0.0-20220909194730-69f6226f97e5
+	google.golang.org/genproto v0.0.0-20220927151529-dcaddaf36704
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
@@ -111,7 +114,6 @@ require (
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
-	github.com/mennanov/fmutils v0.2.0 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/moby/locker v1.0.1 // indirect
@@ -149,7 +151,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.0.0-20220805013720-a33c5aa5df48 // indirect
+	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
 	golang.org/x/oauth2 v0.0.0-20220909003341-f21342109be1 // indirect
 	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
 	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect

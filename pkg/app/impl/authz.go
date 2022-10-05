@@ -16,6 +16,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/google/uuid"
+	"github.com/mennanov/fmutils"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/server/types"
 	"github.com/pkg/errors"
@@ -24,6 +25,8 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -609,6 +612,99 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 	return resp, nil
 }
 
+func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.ListPoliciesRequest) (*authorizer.ListPoliciesResponse, error) {
+
+	response := &authorizer.ListPoliciesResponse{}
+
+	rt, err := s.getRuntime(ctx, nil)
+	if err != nil {
+		return response, errors.Wrap(err, "failed to get runtime")
+	}
+
+	policies, err := rt.ListPolicies(ctx)
+	if err != nil {
+		return response, err
+	}
+
+	for _, policy := range policies {
+
+		module, err := policyToModule(policy)
+		if err != nil {
+			return response, errors.Wrapf(err, "failed to parse policy with ID [%s]", policy.ID)
+		}
+
+		if req.FieldMask != nil {
+			paths := s.validateMask(req.FieldMask, &api.Module{})
+			mask := fmutils.NestedMaskFromPaths(paths)
+			mask.Filter(module)
+		}
+
+		response.Result = append(response.Result, module)
+	}
+
+	return response, nil
+}
+
+func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPolicyRequest) (*authorizer.GetPolicyResponse, error) {
+	response := &authorizer.GetPolicyResponse{}
+	rt, err := s.getRuntime(ctx, nil)
+	if err != nil {
+		return response, errors.Wrap(err, "failed to get runtime")
+	}
+	policy, err := rt.GetPolicy(ctx, req.Id)
+	if err != nil {
+		return response, errors.Wrapf(err, "failed to get policy with ID [%s]", req.Id)
+	}
+
+	if policy == nil {
+		// TODO: add cerr
+		return response, fmt.Errorf("policy with ID [%s] not found", req.Id)
+	}
+
+	module, err := policyToModule(*policy)
+	if err != nil {
+		return response, errors.Wrap(err, "failed to convert policy to api.module")
+	}
+
+	if req.FieldMask != nil {
+		paths := s.validateMask(req.FieldMask, &api.Module{})
+		mask := fmutils.NestedMaskFromPaths(paths)
+		mask.Filter(module)
+	}
+
+	response.Result = module
+	return response, nil
+}
+
+func policyToModule(policy types.PolicyV1) (*api.Module, error) {
+	astBts, err := json.Marshal(policy.AST)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to marshal AST")
+	}
+
+	var v interface{}
+	err = json.Unmarshal(astBts, &v)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to determine AST")
+	}
+
+	astValue, err := structpb.NewValue(v)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create astValue")
+	}
+	var packageName string
+	if policy.AST != nil {
+		packageName = policy.AST.Package.Path.String()
+	}
+	module := api.Module{
+		Id:          &policy.ID,
+		Raw:         &policy.Raw,
+		PackagePath: &packageName,
+		Ast:         astValue,
+	}
+	return &module, nil
+}
+
 func TraceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
 	switch t {
 	case authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN:
@@ -728,4 +824,20 @@ func getPolicyIDFromContext(ctx context.Context) string {
 		}
 	}
 	return ""
+}
+
+// validateMask checks if provided mask is validate.
+func (s *AuthorizerServer) validateMask(mask *fieldmaskpb.FieldMask, protomsg protoreflect.ProtoMessage) []string {
+	if len(mask.Paths) > 0 && mask.Paths[0] == "" {
+		return []string{}
+	}
+
+	mask.Normalize()
+
+	if !mask.IsValid(protomsg) {
+		s.logger.Error().Msgf("field mask invalid %q", mask.Paths)
+		return []string{}
+	}
+
+	return mask.Paths
 }

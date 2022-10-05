@@ -88,6 +88,14 @@ func DockerPush(registry, org string) error {
 	return nil
 }
 
+// Starts GRPC on a local run of Topaz
+func GrpcUI() error {
+	grpcUiApp := deps.GoDep("grpcui")
+	return grpcUiApp(
+		"-insecure",
+		"127.0.0.1:8282")
+}
+
 func Deps() {
 	deps.GetAllDeps()
 }
