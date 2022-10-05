@@ -57,7 +57,6 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		cleanup()
 		return nil, nil, err
 	}
-	policyServer := impl.NewPolicyServer(zerologLogger, runtimeResolver)
 	infoServer, err := impl.NewInfoServer(zerologLogger, configConfig, directoryResolver)
 	if err != nil {
 		cleanup3()
@@ -65,7 +64,7 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		cleanup()
 		return nil, nil, err
 	}
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, directoryServer, infoServer)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -144,7 +143,6 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		cleanup()
 		return nil, nil, err
 	}
-	policyServer := impl.NewPolicyServer(zerologLogger, runtimeResolver)
 	infoServer, err := impl.NewInfoServer(zerologLogger, configConfig, directoryResolver)
 	if err != nil {
 		cleanup3()
@@ -152,7 +150,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		cleanup()
 		return nil, nil, err
 	}
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, directoryServer, policyServer, infoServer)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, directoryServer, infoServer)
 	if err != nil {
 		cleanup3()
 		cleanup2()
@@ -195,7 +193,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, impl.NewAuthorizerServer, impl.NewDirectoryServer, impl.NewPolicyServer, impl.NewInfoServer, GRPCServerRegistrations,
+	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, impl.NewAuthorizerServer, impl.NewDirectoryServer, impl.NewInfoServer, GRPCServerRegistrations,
 		GatewayServerRegistrations,
 		RuntimeResolver,
 		DirectoryResolver, file.New, instance.NewIDMiddleware, auth.NewAPIKeyAuthMiddleware, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
