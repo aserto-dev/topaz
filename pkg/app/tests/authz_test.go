@@ -7,13 +7,10 @@ import (
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-eds/pkg/pb"
-	policy "github.com/aserto-dev/go-grpc/aserto/authorizer/policy/v1"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	atesting "github.com/aserto-dev/topaz/pkg/testing"
 
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -24,9 +21,6 @@ func TestWithMissingIdentity(t *testing.T) {
 	})
 	defer harness.Cleanup()
 
-	policyID, err := getPolicyID(harness, "peoplefinder")
-	require.NoError(t, err, "getPolicyID")
-
 	client := harness.CreateGRPCClient()
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -36,9 +30,9 @@ func TestWithMissingIdentity(t *testing.T) {
 		name string
 		test func(*testing.T)
 	}{
-		{"TestDecisionTreeWithMissingIdentity", DecisionTreeWithMissingIdentity(ctx, client, policyID)},
-		{"TestIsWithMissingIdentity", IsWithMissingIdentity(ctx, client, policyID)},
-		{"TestQueryWithMissingIdentity", QueryWithMissingIdentity(ctx, client, policyID)},
+		{"TestDecisionTreeWithMissingIdentity", DecisionTreeWithMissingIdentity(ctx, client)},
+		{"TestIsWithMissingIdentity", IsWithMissingIdentity(ctx, client)},
+		{"TestQueryWithMissingIdentity", QueryWithMissingIdentity(ctx, client)},
 	}
 
 	for _, testCase := range tests {
@@ -46,7 +40,7 @@ func TestWithMissingIdentity(t *testing.T) {
 	}
 }
 
-func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient, policyID string) func(*testing.T) {
+func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := client.DecisionTree(ctx, &authz2.DecisionTreeRequest{
 			PolicyContext: &authz_api_v2.PolicyContext{
@@ -74,7 +68,7 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.Authoriz
 	}
 }
 
-func IsWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient, policyID string) func(*testing.T) {
+func IsWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := client.Is(ctx, &authz2.IsRequest{
 			PolicyContext: &authz_api_v2.PolicyContext{
@@ -101,7 +95,7 @@ func IsWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient, 
 	}
 }
 
-func QueryWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient, policyID string) func(*testing.T) {
+func QueryWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := client.Query(ctx, &authz2.QueryRequest{
 			IdentityContext: &authz_api_v2.IdentityContext{
@@ -134,24 +128,4 @@ func QueryWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClien
 		}
 		assert.Nil(t, respX, "response object should be nil")
 	}
-}
-
-func getPolicyID(harness *atesting.EngineHarness, name string) (string, error) {
-	client := harness.CreateGRPCPolicyClient()
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	resp, err := client.ListPolicies(ctx, &policy.ListPoliciesRequest{})
-	if err != nil {
-		return "", errors.Wrap(err, "ListPolicies")
-	}
-
-	for _, v := range resp.Results {
-		if v.Name == name {
-			return v.Id, nil
-		}
-	}
-
-	return "", errors.Errorf("policy name not found [%s]", name)
 }

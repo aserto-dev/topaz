@@ -8,7 +8,6 @@ import (
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 
-	pol "github.com/aserto-dev/go-grpc/aserto/authorizer/policy/v1"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -28,13 +27,11 @@ func GRPCServerRegistrations(
 
 	implAuthorizerServer *impl.AuthorizerServer,
 	implDirectoryServer *impl.DirectoryServer,
-	implPolicyServer *impl.PolicyServer,
 	implInfo *impl.InfoServer,
 ) (server.GRPCRegistrations, error) {
 	return func(srv *grpc.Server) {
 		server.CoreServiceRegistrations(implAuthorizerServer, implDirectoryServer)(srv)
 		info.RegisterInfoServer(srv, implInfo)
-		pol.RegisterPolicyServer(srv, implPolicyServer)
 	}, nil
 }
 
@@ -48,10 +45,6 @@ func GatewayServerRegistrations() server.HandlerRegistrations {
 		err = dir.RegisterDirectoryHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 		if err != nil {
 			return errors.Wrap(err, "failed to register directory handler with the gateway")
-		}
-		err = pol.RegisterPolicyHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-		if err != nil {
-			return errors.Wrap(err, "failed to register policy handler with the gateway")
 		}
 		err = info.RegisterInfoHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 		if err != nil {

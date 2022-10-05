@@ -27,7 +27,6 @@ var (
 
 		impl.NewAuthorizerServer,
 		impl.NewDirectoryServer,
-		impl.NewPolicyServer,
 		impl.NewInfoServer,
 
 		GRPCServerRegistrations,
