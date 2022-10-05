@@ -1,6 +1,7 @@
 package ds
 
 import (
+	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/open-policy-agent/opa/ast"
@@ -38,9 +39,9 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
 			type args struct {
-				Subject      ObjectParam       `json:"subject"`
-				RelationType RelationTypeParam `json:"relation"`
-				Object       ObjectParam       `json:"object"`
+				Subject      *v2.ObjectIdentifier       `json:"subject"`
+				RelationType *v2.RelationTypeIdentifier `json:"relation"`
+				Object       *v2.ObjectIdentifier       `json:"object"`
 			}
 
 			var a args
@@ -49,37 +50,30 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 				return nil, err
 			}
 
-			if (args{}) == a {
-				return help(fnName, args{})
-			}
-
 			client, err := dr.GetDS(bctx.Context)
 			if err != nil {
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			subjectParam := a.Subject.Validate()
-			if subjectParam == nil {
+			/* TODO: Enable subject validation
+			if !ValidateObject(a.Subject){
 				return nil, errors.Errorf("invalid subject arguments")
 			}
+			*/
 
-			objectParam := a.Object.Validate()
-			if objectParam == nil {
+			if !ValidateObject(a.Object) {
 				return nil, errors.Errorf("invalid object arguments")
 			}
 
-			relationTypeParam := a.RelationType.Validate()
-			if relationTypeParam == nil {
+			if !ValidateRelationType(a.RelationType) {
 				return nil, errors.Errorf("invalid relation arguments")
 			}
 
-			resp, err := client.Check(bctx.Context, &ds2.CheckRequest{
-				Subject: subjectParam,
-				Check: &ds2.CheckRequest_Relation{
-					Relation: relationTypeParam,
-				},
-				Object: objectParam,
-				Trace:  false,
+			resp, err := client.CheckRelation(bctx.Context, &ds2.CheckRelationRequest{
+				Subject:  a.Subject,
+				Relation: a.RelationType,
+				Object:   a.Object,
+				Trace:    false,
 			})
 			if err != nil {
 				return nil, err
@@ -116,9 +110,9 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 			type args struct {
-				Subject        ObjectParam         `json:"subject"`
-				PermissionType PermissionTypeParam `json:"permission"`
-				Object         ObjectParam         `json:"object"`
+				Subject    *v2.ObjectIdentifier     `json:"subject"`
+				Permission *v2.PermissionIdentifier `json:"permission"`
+				Object     *v2.ObjectIdentifier     `json:"object"`
 			}
 
 			var a args
@@ -131,18 +125,16 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 				return help(fnName, args{})
 			}
 
-			subjectParam := a.Subject.Validate()
-			if subjectParam == nil {
+			/* TODO: Enable subject validation
+			if !ValidateObject(a.Subject) {
 				return nil, errors.Errorf("invalid subject arguments")
 			}
-
-			objectParam := a.Object.Validate()
-			if objectParam == nil {
+			*/
+			if !ValidateObject(a.Object) {
 				return nil, errors.Errorf("invalid object arguments")
 			}
 
-			permissionTypeParam := a.PermissionType.Validate()
-			if permissionTypeParam == nil {
+			if !ValidatePermissionType(a.Permission) {
 				return nil, errors.Errorf("invalid permission arguments")
 			}
 
@@ -151,12 +143,12 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			resp, err := client.Check(bctx.Context, &ds2.CheckRequest{
-				Subject: subjectParam,
-				Check: &ds2.CheckRequest_Permission{
-					Permission: permissionTypeParam,
-				},
-				Object: objectParam,
+			resp, err := client.CheckPermission(bctx.Context, &ds2.CheckPermissionRequest{
+				Subject: a.Subject,
+
+				Permission: a.Permission,
+
+				Object: a.Object,
 				Trace:  false,
 			})
 			if err != nil {

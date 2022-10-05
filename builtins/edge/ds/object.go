@@ -3,6 +3,7 @@ package ds
 import (
 	"bytes"
 
+	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 	"github.com/aserto-dev/go-eds/pkg/pb"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -33,14 +34,10 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			Memoize: false,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var a ObjectParam
+			var a *v2.ObjectIdentifier
 
 			if err := ast.As(op1.Value, &a); err != nil {
 				return nil, err
-			}
-
-			if (ObjectParam{}) == a {
-				return help(fnName, ObjectParam{})
 			}
 
 			client, err := dr.GetDS(bctx.Context)
@@ -48,21 +45,20 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			objectParam := a.Validate()
-			if objectParam == nil {
+			if !ValidateObject(a) {
 				return nil, errors.Errorf("invalid object arguments")
 			}
 
 			resp, err := client.GetObject(bctx.Context, &ds2.GetObjectRequest{
-				Param: objectParam,
+				Param: a,
 			})
 			if err != nil {
 				return nil, err
 			}
 
 			buf := new(bytes.Buffer)
-			if len(resp.Results) == 1 {
-				if err := pb.ProtoToBuf(buf, resp.Results[0]); err != nil {
+			if resp.Result != nil {
+				if err := pb.ProtoToBuf(buf, resp.Result); err != nil {
 					return nil, err
 				}
 			}

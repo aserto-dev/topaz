@@ -3,6 +3,7 @@ package ds
 import (
 	"bytes"
 
+	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 	"github.com/aserto-dev/go-eds/pkg/pb"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -47,10 +48,9 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 			}
 
 			resp, err := client.GetObject(bctx.Context, &ds2.GetObjectRequest{
-				Param: &ds2.ObjectParam{
-					Opt: &ds2.ObjectParam_Id{
-						Id: a.ID,
-					},
+				Param: &v2.ObjectIdentifier{
+
+					Id: &a.ID,
 				},
 			})
 			if err != nil {
@@ -58,8 +58,8 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 			}
 
 			buf := new(bytes.Buffer)
-			if len(resp.Results) == 1 {
-				if err := pb.ProtoToBuf(buf, resp.Results[0]); err != nil {
+			if resp.Result != nil {
+				if err := pb.ProtoToBuf(buf, resp.Result); err != nil {
 					return nil, err
 				}
 			}

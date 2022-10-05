@@ -3,6 +3,7 @@ package ds
 import (
 	"bytes"
 
+	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 	"github.com/aserto-dev/go-eds/pkg/pb"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -46,23 +47,25 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				return nil, err
 			}
 
-			if (args{}) == a {
-				return help(fnName, args{})
-			}
-
 			client, err := dr.GetDS(bctx.Context)
 			if err != nil {
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
 			resp, err := client.GetGraph(bctx.Context, &ds2.GetGraphRequest{
-				AnchorId: a.AnchorID,
-				Param: &ds2.RelationParam{
-					ObjectType:  a.ObjectType,
-					ObjectId:    a.ObjectID,
-					Relation:    a.Relation,
-					SubjectType: a.SubjectType,
-					SubjectId:   a.SubjectID,
+				Anchor: &v2.ObjectIdentifier{
+					Id: &a.AnchorID,
+				},
+				Subject: &v2.ObjectIdentifier{
+					Type: &a.SubjectType,
+					Id:   &a.SubjectID,
+				},
+				Relation: &v2.RelationTypeIdentifier{
+					Name: &a.Relation,
+				},
+				Object: &v2.ObjectIdentifier{
+					Id:   &a.ObjectID,
+					Type: &a.ObjectType,
 				},
 			})
 			if err != nil {

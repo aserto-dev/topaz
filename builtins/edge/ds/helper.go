@@ -1,7 +1,7 @@
 package ds
 
 import (
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
+	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	"github.com/google/uuid"
 	"github.com/open-policy-agent/opa/ast"
 )
@@ -23,90 +23,45 @@ func help(fnName string, args interface{}) (*ast.Term, error) {
 	return ast.NewTerm(val), nil
 }
 
-type ObjectParam struct {
-	ID   string `json:"id"`
-	Type string `json:"type"`
-	Key  string `json:"key"`
-}
-
-func (o *ObjectParam) Validate() *ds2.ObjectParam {
-	if o != nil && o.ID != "" {
-		return &ds2.ObjectParam{
-			Opt: &ds2.ObjectParam_Id{
-				Id: o.ID,
-			},
-		}
+func ValidateObject(o *v2.ObjectIdentifier) bool {
+	if o != nil && o.Id != nil && *o.Id != "" {
+		return true
 	}
 
-	if o != nil && o.Type != "" && o.Key != "" {
-		return &ds2.ObjectParam{
-			Opt: &ds2.ObjectParam_Key{
-				Key: &ds2.ObjectKey{
-					Type: o.Type,
-					Key:  o.Key,
-				},
-			},
-		}
+	if o != nil && o.Type != nil && *o.Type != "" && o.Key != nil && *o.Key != "" {
+		return true
 	}
-	return nil
+	return false
 }
 
-type RelationTypeParam struct {
-	ObjectType string `json:"object_type"`
-	Name       string `json:"name"`
+func ValidateRelationType(o *v2.RelationTypeIdentifier) bool {
+	if o != nil && o.Id != nil {
+		return true
+	}
+
+	if o != nil && o.Name != nil && *o.Name != "" && o.ObjectType != nil && *o.ObjectType != "" {
+		return true
+	}
+	return false
 }
 
-func (r *RelationTypeParam) Validate() *ds2.RelationTypeParam {
-	if r != nil && r.ObjectType != "" && r.Name != "" {
-		return &ds2.RelationTypeParam{
-			Opt: &ds2.RelationTypeParam_Key{
-				Key: &ds2.RelationTypeKey{
-					ObjectType: r.ObjectType,
-					Name:       r.Name,
-				},
-			},
-		}
+func ValidatePermissionType(o *v2.PermissionIdentifier) bool {
+	if o != nil && o.Id != nil && *o.Id != "" {
+		return true
 	}
-	return nil
+	if o != nil && o.Name != nil && *o.Name != "" {
+		return true
+	}
+	return false
 }
 
-type PermissionTypeParam struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+func ValidateRelation(o *v2.RelationIdentifier) bool {
+	if ValidateObject(o.Object) && ValidateRelationType(o.Relation) {
+		return true
+	}
+	return false
 }
 
-func (p *PermissionTypeParam) Validate() *ds2.PermissionParam {
-	if p != nil && p.ID != "" {
-		return &ds2.PermissionParam{
-			Opt: &ds2.PermissionParam_Id{
-				Id: p.ID,
-			},
-		}
-	}
-	if p != nil && p.Name != "" {
-		return &ds2.PermissionParam{
-			Opt: &ds2.PermissionParam_Name{
-				Name: p.Name,
-			},
-		}
-	}
-	return nil
-}
-
-type RelationParam struct {
-	SubjectType string `json:"subject_type"`
-	SubjectID   string `json:"subject_id"`
-	Relation    string `json:"relation"`
-	ObjectType  string `json:"object_type"`
-	ObjectID    string `json:"object_id"`
-}
-
-func (r *RelationParam) Validate() *ds2.RelationParam {
-	if r == nil {
-		return nil
-	}
-	if r.ObjectID != "" || r.ObjectType != "" || r.Relation != "" || r.SubjectID != "" || r.SubjectType != "" {
-		return &ds2.RelationParam{}
-	}
-	return nil
+func StrPrt(input string) *string {
+	return &input
 }

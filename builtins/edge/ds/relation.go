@@ -3,6 +3,7 @@ package ds
 import (
 	"bytes"
 
+	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 	"github.com/aserto-dev/go-eds/pkg/pb"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -32,17 +33,12 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			Memoize: false,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var a RelationParam
+			var a *v2.RelationIdentifier
 			if err := ast.As(op1.Value, &a); err != nil {
 				return nil, err
 			}
 
-			if (RelationParam{}) == a {
-				return help(fnName, RelationParam{})
-			}
-
-			relationParam := a.Validate()
-			if relationParam == nil {
+			if !ValidateRelation(a) {
 				return nil, errors.Errorf("invalid relation arguments")
 			}
 
@@ -52,20 +48,14 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			}
 
 			resp, err := client.GetRelation(bctx.Context, &ds2.GetRelationRequest{
-				Param: &ds2.RelationParam{
-					ObjectType:  a.ObjectType,
-					ObjectId:    a.ObjectID,
-					Relation:    a.Relation,
-					SubjectType: a.SubjectType,
-					SubjectId:   a.SubjectID,
-				},
+				Param: a,
 			})
 			if err != nil {
 				return nil, err
 			}
 
 			buf := new(bytes.Buffer)
-			if len(resp.Results) > 0 {
+			if resp != nil {
 				if err := pb.ProtoToBuf(buf, resp); err != nil {
 					return nil, err
 				}
