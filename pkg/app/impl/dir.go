@@ -6,12 +6,12 @@ import (
 	"io"
 	"strings"
 
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	xds "github.com/aserto-dev/go-eds"
 	"github.com/aserto-dev/go-eds/pkg/kvs"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
 	dir "github.com/aserto-dev/go-grpc/aserto/authorizer/directory/v1"
 	"github.com/aserto-dev/go-lib/ids"
-	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/go-utils/opts"
 	"github.com/aserto-dev/topaz/directory"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
@@ -53,7 +53,7 @@ func (s *DirectoryServer) eds(ctx context.Context, tenantID string) (directory.D
 
 	ctxTenantID := instance.ExtractID(ctx)
 	if ctxTenantID == "" {
-		return nil, cerr.ErrInvalidTenantID
+		return nil, aerr.ErrInvalidTenantID
 	}
 
 	d, err := s.directoryResolver.DirectoryFromContext(ctx)
@@ -134,7 +134,7 @@ func (s *DirectoryServer) GetUser(ctx context.Context, req *dir.GetUserRequest) 
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("GetUser")
 
 	if req.Id == "" {
-		return &dir.GetUserResponse{}, cerr.ErrInvalidArgument.Msg("id not set")
+		return &dir.GetUserResponse{}, aerr.ErrInvalidArgument.Msg("id not set")
 	}
 
 	var (
@@ -154,7 +154,7 @@ func (s *DirectoryServer) GetUser(ctx context.Context, req *dir.GetUserRequest) 
 	}
 	if err != nil {
 		if errors.Is(err, kvs.ErrPathNotFound) || errors.Is(err, kvs.ErrKeyNotFound) {
-			return &dir.GetUserResponse{}, cerr.ErrUserNotFound.Err(err).Str("userid", req.Id)
+			return &dir.GetUserResponse{}, aerr.ErrUserNotFound.Err(err).Str("userid", req.Id)
 		}
 		return &dir.GetUserResponse{}, err
 	}
@@ -177,7 +177,7 @@ func (s *DirectoryServer) CreateUser(ctx context.Context, req *dir.CreateUserReq
 	newUser, err := eds.CreateUser(tenantID, req.User)
 	if err != nil {
 		if errors.Is(err, kvs.ErrKeyExists) {
-			return &dir.CreateUserResponse{}, cerr.ErrUserAlreadyExists.Err(err).Str("user-email", req.User.Email)
+			return &dir.CreateUserResponse{}, aerr.ErrUserAlreadyExists.Err(err).Str("user-email", req.User.Email)
 		}
 		return &dir.CreateUserResponse{}, errors.Wrap(err, "failed to create user")
 	}
@@ -193,7 +193,7 @@ func (s *DirectoryServer) UpdateUser(ctx context.Context, req *dir.UpdateUserReq
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("UpdateUser")
 
 	if req.Id == "" {
-		return &dir.UpdateUserResponse{}, cerr.ErrInvalidArgument.Msg("id not set")
+		return &dir.UpdateUserResponse{}, aerr.ErrInvalidArgument.Msg("id not set")
 	}
 
 	eds, err := s.eds(ctx, "")
@@ -217,7 +217,7 @@ func (s *DirectoryServer) DeleteUser(ctx context.Context, req *dir.DeleteUserReq
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("DeleteUser")
 
 	if req.Id == "" {
-		return &dir.DeleteUserResponse{}, cerr.ErrInvalidArgument.Msg("id not set")
+		return &dir.DeleteUserResponse{}, aerr.ErrInvalidArgument.Msg("id not set")
 	}
 
 	eds, err := s.eds(ctx, "")
@@ -238,7 +238,7 @@ func (s *DirectoryServer) GetIdentity(ctx context.Context, req *dir.GetIdentityR
 	s.logger.Trace().Str("tenantID", tenantID).Interface("req", req).Msg("GetIdentity")
 
 	if req.Identity == "" {
-		return &dir.GetIdentityResponse{}, cerr.ErrInvalidArgument.Msg("identity not set")
+		return &dir.GetIdentityResponse{}, aerr.ErrInvalidArgument.Msg("identity not set")
 	}
 
 	eds, err := s.eds(ctx, "")
@@ -249,7 +249,7 @@ func (s *DirectoryServer) GetIdentity(ctx context.Context, req *dir.GetIdentityR
 	uid, err := eds.GetIdentity(tenantID, req.Identity)
 	if err != nil {
 		if errors.Is(err, kvs.ErrPathNotFound) || errors.Is(err, kvs.ErrKeyNotFound) {
-			return &dir.GetIdentityResponse{}, cerr.ErrUserNotFound.Err(err).Str("identity", req.Identity)
+			return &dir.GetIdentityResponse{}, aerr.ErrUserNotFound.Err(err).Str("identity", req.Identity)
 		}
 		return &dir.GetIdentityResponse{}, err
 	}
@@ -870,7 +870,7 @@ func (s *DirectoryServer) GetApplRoles(ctx context.Context, req *dir.GetApplRole
 	roles, err := eds.GetUserRoles(tenantID, req.Id, req.Name)
 	if err != nil {
 		if errors.Is(err, kvs.ErrKeyNotFound) {
-			return &dir.GetApplRolesResponse{}, cerr.ErrUserNotFound.Err(err).Str("user-id", req.Id).Str("app-name", req.Name)
+			return &dir.GetApplRolesResponse{}, aerr.ErrUserNotFound.Err(err).Str("user-id", req.Id).Str("app-name", req.Name)
 		}
 		return &dir.GetApplRolesResponse{}, errors.Wrap(err, "get roles")
 	}

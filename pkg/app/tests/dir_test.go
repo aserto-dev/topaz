@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	cerr "github.com/aserto-dev/errors"
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/go-grpc/aserto/authorizer/directory/v1"
 	"github.com/aserto-dev/go-lib/ids"
@@ -82,7 +84,7 @@ func TestGetRolesNoUserError(t *testing.T) {
 		Id:   uid,
 		Name: "test",
 	})
-	// TODO: fix once we've got errors resolved
-	// assert.Equal(cerr.ErrUserNotFound, cerr.UnwrapAsertoError(err))
+
 	assert.Error(err)
+	assert.ErrorIs(cerr.UnwrapAsertoError(err), aerr.ErrUserNotFound)
 }

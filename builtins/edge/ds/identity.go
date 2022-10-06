@@ -3,8 +3,8 @@ package ds
 import (
 	"context"
 
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
-	"github.com/aserto-dev/go-utils/cerr"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
 
@@ -50,7 +50,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 
 			uid, err := getIdentityV2(bctx.Context, client, a.Key)
 			switch {
-			case errors.Is(err, cerr.ErrDirectoryObjectNotFound):
+			case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
 				if !IsValidID(a.Key) {
 					return nil, err
 				}
@@ -70,7 +70,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return ast.StringTerm(user.Id), nil
 			}
 
-			return nil, cerr.ErrDirectoryObjectNotFound
+			return nil, aerr.ErrDirectoryObjectNotFound
 		}
 }
 
@@ -91,7 +91,7 @@ func getIdentityV2(ctx context.Context, client ds2.DirectoryClient, identity str
 	}
 
 	if len(identityResp.Results) == 0 {
-		return "", cerr.ErrDirectoryObjectNotFound
+		return "", aerr.ErrDirectoryObjectNotFound
 	}
 
 	iid := identityResp.Results[0].Id
@@ -108,7 +108,7 @@ func getIdentityV2(ctx context.Context, client ds2.DirectoryClient, identity str
 	}
 
 	if len(relResp.Results) == 0 {
-		return "", cerr.ErrDirectoryObjectNotFound
+		return "", aerr.ErrDirectoryObjectNotFound
 	}
 
 	uid := relResp.Results[0].SubjectId
@@ -129,7 +129,7 @@ func getUserV2(ctx context.Context, client ds2.DirectoryClient, uid string) (*ds
 	}
 
 	if len(userResp.Results) == 0 {
-		return nil, cerr.ErrDirectoryObjectNotFound
+		return nil, aerr.ErrDirectoryObjectNotFound
 	}
 
 	return userResp.Results[0], nil

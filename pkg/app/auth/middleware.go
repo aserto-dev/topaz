@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/aserto-dev/go-utils/cerr"
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
@@ -106,7 +106,7 @@ func (a *APIKeyAuthMiddleware) authenticate(
 		return ctx, nil
 	}
 	// TODO: once we have errors, this needs to be a topaz specific error
-	return ctx, cerr.ErrAuthenticationFailed
+	return ctx, aerr.ErrAuthenticationFailed
 }
 
 func (a *APIKeyAuthMiddleware) grpcAuthenticate(ctx context.Context) (context.Context, error) {
@@ -125,10 +125,10 @@ func httpAuthHeader(r *http.Request) string {
 func parseAuthHeader(val, expectedScheme string) (string, error) {
 	splits := strings.SplitN(val, " ", 2)
 	if len(splits) < 2 {
-		return "", cerr.ErrAuthenticationFailed.Msg("Bad authorization string")
+		return "", aerr.ErrAuthenticationFailed.Msg("Bad authorization string")
 	}
 	if !strings.EqualFold(splits[0], expectedScheme) {
-		return "", cerr.ErrAuthenticationFailed.Str("expected-scheme", expectedScheme).Msg("Request unauthenticated with expected scheme")
+		return "", aerr.ErrAuthenticationFailed.Str("expected-scheme", expectedScheme).Msg("Request unauthenticated with expected scheme")
 	}
 	return splits[1], nil
 }

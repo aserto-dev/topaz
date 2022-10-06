@@ -9,7 +9,8 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	"github.com/aserto-dev/go-utils/cerr"
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
@@ -67,7 +68,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 	resp := &authorizer.DecisionTreeResponse{}
 
 	if req.PolicyContext == nil {
-		return resp, cerr.ErrInvalidArgument.Msg("policy context not set")
+		return resp, aerr.ErrInvalidArgument.Msg("policy context not set")
 	}
 
 	if req.ResourceContext == nil {
@@ -81,17 +82,17 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 	}
 
 	if req.IdentityContext == nil {
-		return resp, cerr.ErrInvalidArgument.Msg("identity context not set")
+		return resp, aerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
 	if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-		return resp, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+		return resp, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 	}
 
 	user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
 	if err != nil {
 		log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
-		return resp, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+		return resp, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
 	}
 
 	input := map[string]interface{}{
@@ -145,7 +146,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		).PrepareForEval(ctx)
 
 		if err != nil {
-			return resp, cerr.ErrBadQuery.Err(err).Str("query", queryStmt)
+			return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt)
 		}
 
 		packageName := getPackageName(policy, req.Options.PathSeparator)
@@ -153,9 +154,9 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		queryResults, err := qry.Eval(ctx, rego.EvalInput(input))
 
 		if err != nil {
-			return resp, cerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("query evaluation failed")
+			return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("query evaluation failed")
 		} else if len(queryResults) == 0 {
-			return resp, cerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("undefined results")
+			return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("undefined results")
 		}
 
 		if result, ok := queryResults[0].Bindings["x"].(map[string]interface{}); ok {
@@ -198,11 +199,11 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	}
 
 	if req.PolicyContext.Path == "" {
-		return resp, cerr.ErrInvalidArgument.Msg("policy context path not set in header aserto-policy-path")
+		return resp, aerr.ErrInvalidArgument.Msg("policy context path not set in header aserto-policy-path")
 	}
 
 	if len(req.PolicyContext.Decisions) == 0 {
-		return resp, cerr.ErrInvalidArgument.Msg("policy context decisions not set")
+		return resp, aerr.ErrInvalidArgument.Msg("policy context decisions not set")
 	}
 
 	if req.ResourceContext == nil {
@@ -214,17 +215,17 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	}
 
 	if req.IdentityContext == nil {
-		return resp, cerr.ErrInvalidArgument.Msg("identity context not set")
+		return resp, aerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
 	if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-		return resp, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+		return resp, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 	}
 
 	user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
 	if err != nil {
 		log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
-		return resp, cerr.ErrUserNotFound.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+		return resp, aerr.ErrUserNotFound.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
 	}
 
 	input := map[string]interface{}{
@@ -250,15 +251,15 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	).PrepareForEval(ctx)
 
 	if err != nil {
-		return resp, cerr.ErrBadQuery.Err(err).Str("query", queryStmt)
+		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt)
 	}
 
 	results, err := query.Eval(ctx, rego.EvalInput(input))
 
 	if err != nil {
-		return resp, cerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("query evaluation failed")
+		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("query evaluation failed")
 	} else if len(results) == 0 {
-		return resp, cerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("undefined results")
+		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("undefined results")
 	}
 
 	v := results[0].Bindings["x"]
@@ -313,15 +314,15 @@ func is(v interface{}, decision string) (bool, error) {
 	case map[string]interface{}:
 		m := v.(map[string]interface{})
 		if _, ok := m[decision]; !ok {
-			return false, cerr.ErrInvalidDecision.Msgf("decision element [%s] not found", decision)
+			return false, aerr.ErrInvalidDecision.Msgf("decision element [%s] not found", decision)
 		}
 		outcome, err := is(m[decision], decision)
 		if err != nil {
-			return false, cerr.ErrInvalidDecision.Err(err)
+			return false, aerr.ErrInvalidDecision.Err(err)
 		}
 		return outcome, nil
 	default:
-		return false, cerr.ErrInvalidDecision.Msgf("is unexpected type %T", x)
+		return false, aerr.ErrInvalidDecision.Msgf("is unexpected type %T", x)
 	}
 }
 
@@ -329,7 +330,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	if req.Query == "" {
-		return &authorizer.QueryResponse{}, cerr.ErrInvalidArgument.Msg("query not set")
+		return &authorizer.QueryResponse{}, aerr.ErrInvalidArgument.Msg("query not set")
 	}
 
 	if req.Options == nil {
@@ -366,9 +367,8 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	}
 
 	if req.IdentityContext != nil {
-
 		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-			return &authorizer.QueryResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+			return &authorizer.QueryResponse{}, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 		}
 
 		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
@@ -382,7 +382,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
 				}
 
-				return &authorizer.QueryResponse{}, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+				return &authorizer.QueryResponse{}, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
 			}
 
 			input[InputUser] = convert(user)
@@ -394,6 +394,11 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	rt, err := s.getRuntime(ctx, req.PolicyContext)
 	if err != nil {
 		return &authorizer.QueryResponse{}, err
+	}
+
+	_, err = rt.ValidateQuery(req.Query)
+	if err != nil {
+		return &authorizer.QueryResponse{}, aerr.ErrBadQuery.Err(err)
 	}
 
 	queryResult, err := rt.Query(
@@ -474,7 +479,7 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *api.Po
 	} else {
 		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, "", "", "")
 		if err != nil {
-			return nil, cerr.ErrInvalidPolicyID.Msg("undefined policy context")
+			return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
 		}
 	}
 	return rt, err
@@ -484,7 +489,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 	log := instance.GetInstanceLogger(ctx, s.logger)
 
 	if req.Query == "" {
-		return &authorizer.CompileResponse{}, cerr.ErrInvalidArgument.Msg("query not set")
+		return &authorizer.CompileResponse{}, aerr.ErrInvalidArgument.Msg("query not set")
 	}
 
 	if req.Options == nil {
@@ -518,7 +523,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 
 	if req.IdentityContext != nil {
 		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-			return &authorizer.CompileResponse{}, cerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+			return &authorizer.CompileResponse{}, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 		}
 
 		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
@@ -532,7 +537,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
 				}
 
-				return &authorizer.CompileResponse{}, cerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+				return &authorizer.CompileResponse{}, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
 			}
 
 			input[InputUser] = convert(user)
@@ -550,6 +555,11 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 	rt, err := s.getRuntime(ctx, req.PolicyContext)
 	if err != nil {
 		return &authorizer.CompileResponse{}, err
+	}
+
+	_, err = rt.ValidateQuery(req.Query)
+	if err != nil {
+		return &authorizer.CompileResponse{}, aerr.ErrBadQuery.Err(err)
 	}
 
 	compileResult, err := rt.Compile(ctx, req.Query,
