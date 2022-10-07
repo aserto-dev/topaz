@@ -235,14 +235,22 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		InputResource: req.ResourceContext,
 	}
 
-	queryStmt := fmt.Sprintf("x = data.%s", req.PolicyContext.Path)
-
 	log.Debug().Interface("input", input).Msg("calculating is")
 
 	policyRuntime, err := s.getRuntime(ctx, req.PolicyContext)
 	if err != nil {
 		return resp, err
 	}
+
+	policyRoot, err := policyRuntime.GetPolicyRoot(ctx)
+	if err != nil {
+		return resp, errors.Wrap(err, "failed to determine policy root")
+	}
+	if policyRoot == "" {
+		return resp, aerr.ErrInvalidPolicy.Msg("no policy root was found")
+	}
+
+	queryStmt := fmt.Sprintf("x = data.%s.%s", policyRoot, req.PolicyContext.Path)
 
 	query, err := rego.New(
 		rego.Compiler(policyRuntime.GetPluginsManager().GetCompiler()),
