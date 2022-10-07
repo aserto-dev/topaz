@@ -19,7 +19,7 @@ require (
 	github.com/aserto-dev/aserto-grpc v0.0.3
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/errors v0.0.1
-	github.com/aserto-dev/go-authorizer v0.0.5
+	github.com/aserto-dev/go-authorizer v0.0.6
 	github.com/aserto-dev/go-directory v0.0.12
 	github.com/aserto-dev/go-eds v0.8.5
 	github.com/aserto-dev/go-grpc v0.8.51
@@ -27,7 +27,7 @@ require (
 	github.com/aserto-dev/go-utils v0.8.26
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-grpc v0.8.16
-	github.com/aserto-dev/runtime v0.44.3
+	github.com/aserto-dev/runtime v0.44.4
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
