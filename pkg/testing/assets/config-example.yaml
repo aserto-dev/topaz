@@ -5,7 +5,7 @@ logging:
 
 directory_service:
   edge:
-    db_path: /home/dani/work/dbs/edgeds.db
+    db_path: /tmp/edgeds.db
     seed_metadata: false
   remote:
     address: "localhost:12345"
