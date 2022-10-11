@@ -23,40 +23,40 @@ func help(fnName string, args interface{}) (*ast.Term, error) {
 	return ast.NewTerm(val), nil
 }
 
-func ValidateObject(o *v2.ObjectIdentifier) bool {
-	if o != nil && o.Id != nil && *o.Id != "" {
+func ValidateObject(obj *v2.ObjectIdentifier) bool {
+	if obj != nil && obj.Id != nil && *obj.Id != "" {
 		return true
 	}
 
-	if o != nil && o.Type != nil && *o.Type != "" && o.Key != nil && *o.Key != "" {
+	if obj != nil && obj.Type != nil && *obj.Type != "" && obj.Key != nil && *obj.Key != "" {
 		return true
 	}
 	return false
 }
 
-func ValidateRelationType(o *v2.RelationTypeIdentifier) bool {
-	if o != nil && o.Id != nil {
+func ValidateRelationType(rel *v2.RelationTypeIdentifier) bool {
+	if rel != nil && rel.Id != nil {
 		return true
 	}
 
-	if o != nil && o.Name != nil && *o.Name != "" && o.ObjectType != nil && *o.ObjectType != "" {
+	if rel != nil && rel.Name != nil && *rel.Name != "" && rel.ObjectType != nil && *rel.ObjectType != "" {
 		return true
 	}
 	return false
 }
 
-func ValidatePermissionType(o *v2.PermissionIdentifier) bool {
-	if o != nil && o.Id != nil && *o.Id != "" {
+func ValidatePermissionType(perm *v2.PermissionIdentifier) bool {
+	if perm != nil && perm.Id != nil && *perm.Id != "" {
 		return true
 	}
-	if o != nil && o.Name != nil && *o.Name != "" {
+	if perm != nil && perm.Name != nil && *perm.Name != "" {
 		return true
 	}
 	return false
 }
 
-func ValidateRelation(o *v2.RelationIdentifier) bool {
-	if ValidateObject(o.Object) && ValidateRelationType(o.Relation) {
+func ValidateRelation(relation *v2.RelationIdentifier) bool {
+	if ValidateObject(relation.Object) && ValidateRelationType(relation.Relation) {
 		return true
 	}
 	return false
