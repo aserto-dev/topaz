@@ -12,7 +12,7 @@
             "buildFlags": "",
             "program": "${workspaceFolder}/cmd/topaz",
             "cwd": "${workspaceFolder}",
-            "args": ["-c", "${workspaceFolder}/pkg/testing/assets/config-example.yaml", "run"]
+            "args": ["-c", "${workspaceFolder}/pkg/testing/assets/config-dev.yaml", "run"]
         }
     ]
 }

@@ -26,11 +26,10 @@ func GRPCServerRegistrations(
 	runtimeResolver resolvers.RuntimeResolver,
 
 	implAuthorizerServer *impl.AuthorizerServer,
-	implDirectoryServer *impl.DirectoryServer,
 	implInfo *impl.InfoServer,
 ) (server.GRPCRegistrations, error) {
 	return func(srv *grpc.Server) {
-		server.CoreServiceRegistrations(implAuthorizerServer, implDirectoryServer)(srv)
+		server.CoreServiceRegistrations(implAuthorizerServer)(srv)
 		info.RegisterInfoServer(srv, implInfo)
 	}, nil
 }

@@ -5,7 +5,6 @@ import (
 
 	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
-	"github.com/aserto-dev/go-eds/pkg/pb"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -49,7 +48,6 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 
 			resp, err := client.GetObject(bctx.Context, &ds2.GetObjectRequest{
 				Param: &v2.ObjectIdentifier{
-
 					Id: &a.ID,
 				},
 			})
@@ -59,7 +57,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 
 			buf := new(bytes.Buffer)
 			if resp.Result != nil {
-				if err := pb.ProtoToBuf(buf, resp.Result); err != nil {
+				if err := ProtoToBuf(buf, resp.Result); err != nil {
 					return nil, err
 				}
 			}

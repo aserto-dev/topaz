@@ -74,16 +74,12 @@ github.com/aserto-dev/go-directory v0.0.13-0.20221003210414-868150d355d3 h1:1srd
 github.com/aserto-dev/go-directory v0.0.13-0.20221003210414-868150d355d3/go.mod h1:sIK1oYaGG39+0mjBuE1CIHEy7zyQNf1nVtA3SWUGF9s=
 github.com/aserto-dev/go-edge-ds v0.0.0-20221011161405-9d0f9c4ad69b h1:25yWv0gPKto/nDjOSylPjzWdfbXB4dYACw5/O7QWCuw=
 github.com/aserto-dev/go-edge-ds v0.0.0-20221011161405-9d0f9c4ad69b/go.mod h1:AdWrL0rWU7tTgyazHxLmkPu3FtbxnQ0LE/UP80ctCr4=
-github.com/aserto-dev/go-eds v0.8.6-0.20221010085612-457b48e227ac h1:w8BSmc1TG8tOzVkdPhAGt8qRPpVHvPcHgliJI3p1yjc=
-github.com/aserto-dev/go-eds v0.8.6-0.20221010085612-457b48e227ac/go.mod h1:SkFmmiYn0GhOzyzInc2Juqik1LgT4VqjML+x/P77hd8=
 github.com/aserto-dev/go-grpc v0.8.51 h1:mRyj9Dn4debqZ2RyV/++Lzy5nUIisZbmcH5w7T1xmt0=
 github.com/aserto-dev/go-grpc v0.8.51/go.mod h1:ZHKobEadfjzb39dKhc/iy8JyQDRuB/IsSwVa8YuWkQY=
 github.com/aserto-dev/go-grpc-authz v0.8.0 h1:D/D/DJAWdshIIF6BYFKT9ILh0/ClAGrb64zpsGP8vuQ=
 github.com/aserto-dev/go-grpc-authz v0.8.0/go.mod h1:ssdQrzxQf+IZ+jy8ATz9S6Ys+nqsTMZyKmPpdj0kwHo=
 github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53 h1:2lU+szJhwZXDigE+ldDDm7a/3RC2rJCBfwVPZm6TKLs=
 github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53/go.mod h1:BkUPSrUNol4J/0axIT9nEacokJ+AKTLfnsJrBsnkUTQ=
-github.com/aserto-dev/go-lib v0.8.46 h1:4+z+4D5J1wPNJBE1CwtKzkrGREi5SBtUbnXRJUq30Zo=
-github.com/aserto-dev/go-lib v0.8.46/go.mod h1:bK8fFm/nYov4X3ftoR13MlX3qUttFhOnL+NYQVcS6Eg=
 github.com/aserto-dev/go-utils v0.8.28 h1:QyoF30L0kg3RbkT7j0gqXbAqC/tfwhyrEDSPGmAMQBc=
 github.com/aserto-dev/go-utils v0.8.28/go.mod h1:4x1VUPN9dzmE+ZWrVe/3g9rDmHXtrkt+jjoheaIQTQU=
 github.com/aserto-dev/logger v0.0.2 h1:WTDOgLYmIiA1yadwfjDuU/WJH6ndosldzLyOeztW27w=
@@ -199,8 +195,6 @@ github.com/gobwas/glob v0.2.3/go.mod h1:d3Ez4x06l9bZtSvzIay5+Yzi0fmZzPgnTbPcKjJA
 github.com/goccy/go-json v0.9.7 h1:IcB+Aqpx/iMHu5Yooh7jEzJk1JZ7Pjtmys2ukPr7EeM=
 github.com/goccy/go-json v0.9.7/go.mod h1:6MelG93GURQebXPDq3khkgXZkazVtN9CRI+MGFi0w8I=
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
-github.com/gofrs/uuid v4.2.0+incompatible h1:yyYWMnhkhrKwwr8gAOcOCYxOOscHgDS9yZgBrnJfGa0=
-github.com/gofrs/uuid v4.2.0+incompatible/go.mod h1:b2aQJv3Z4Fp6yNu3cdSllBxTCLRxnplIgP/c0N/04lM=
 github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
 github.com/gogo/protobuf v1.3.2 h1:Ov1cvc58UF3b5XjBnZv7+opcTcQFZebYjWzi34vdm4Q=
 github.com/gogo/protobuf v1.3.2/go.mod h1:P1XiOD3dCwIKUDQYPy72D8LYyHL2YPYrpS2s69NZV8Q=

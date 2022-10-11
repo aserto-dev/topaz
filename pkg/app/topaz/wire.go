@@ -26,7 +26,6 @@ var (
 		server.GatewayMux,
 
 		impl.NewAuthorizerServer,
-		impl.NewDirectoryServer,
 		impl.NewInfoServer,
 
 		GRPCServerRegistrations,

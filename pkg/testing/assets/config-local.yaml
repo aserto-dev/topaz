@@ -4,7 +4,12 @@ logging:
   log_level: debug
 
 directory_service:
-  path: ""
+  edge:
+    db_path: /tmp/edgeds.db
+    seed_metadata: false
+  remote:
+    address: "localhost:12345"
+    insecure: true
 
 api:
   grpc:

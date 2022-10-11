@@ -123,11 +123,15 @@ func (s *Server) Start(ctx context.Context) error {
 	}
 
 	// Start additional servers.
-	for _, registeredServer := range s.registeredServers {
-		err := registeredServer.start(ctx)
-		if err != nil {
-			return errors.Wrapf(err, "failed to start [%s]", registeredServer.name)
-		}
+	for _, regServer := range s.registeredServers {
+		regSrv := regServer
+		s.errGroup.Go(func() error {
+			err := regSrv.start(ctx)
+			if err != nil {
+				return errors.Wrapf(err, "failed to start [%s]", regSrv.name)
+			}
+			return nil
+		})
 	}
 
 	s.healthServer.Server.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", svcName), healthpb.HealthCheckResponse_SERVING)

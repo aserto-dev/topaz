@@ -14,7 +14,8 @@ import (
 
 func TestPolicy(t *testing.T) {
 	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Directory.Path = atesting.AssetAcmeEBBFilePath()
+		cfg.Directory.EdgeConfig.DBPath = atesting.AssetAcmeEBBFilePath()
+		cfg.Directory.Remote.Addr = "localhost:12346"
 	})
 	defer harness.Cleanup()
 
