@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	goruntime "runtime"
 	"strings"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/google/uuid"
 	"github.com/mennanov/fmutils"
@@ -721,6 +723,20 @@ func policyToModule(policy types.PolicyV1) (*api.Module, error) {
 		Ast:         astValue,
 	}
 	return &module, nil
+}
+
+func (s *AuthorizerServer) Info(ctx context.Context, req *authorizer.InfoRequest) (*authorizer.InfoResponse, error) {
+	buildVersion := version.GetInfo()
+
+	res := &authorizer.InfoResponse{
+		Version: buildVersion.Version,
+		Commit:  buildVersion.Commit,
+		Date:    buildVersion.Date,
+		Os:      goruntime.GOOS,
+		Arch:    goruntime.GOARCH,
+	}
+
+	return res, nil
 }
 
 func TraceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {

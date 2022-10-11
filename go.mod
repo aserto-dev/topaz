@@ -22,7 +22,7 @@ require (
 	github.com/aserto-dev/aserto-grpc v0.0.4
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/edge-ds v0.0.0-00010101000000-000000000000
-	github.com/aserto-dev/go-authorizer v0.0.6
+	github.com/aserto-dev/go-authorizer v0.0.7
 	github.com/aserto-dev/go-directory v0.0.13-0.20221003210414-868150d355d3
 	github.com/aserto-dev/go-grpc v0.8.51
 	github.com/aserto-dev/go-utils v0.8.28
