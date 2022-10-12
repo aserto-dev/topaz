@@ -6,18 +6,19 @@ import (
 
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	"github.com/aserto-dev/go-eds/pkg/pb"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	atesting "github.com/aserto-dev/topaz/pkg/testing"
 
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 func TestWithMissingIdentity(t *testing.T) {
 	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Directory.Path = atesting.AssetAcmeEBBFilePath()
+		cfg.Directory.EdgeConfig.DBPath = atesting.AssetAcmeEBBFilePath()
+		cfg.Directory.Remote.Addr = "localhost:12345"
 	})
 	defer harness.Cleanup()
 
@@ -52,7 +53,7 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.Authoriz
 				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
 			},
 			Options:         &authz2.DecisionTreeOptions{},
-			ResourceContext: pb.NewStruct(),
+			ResourceContext: &structpb.Struct{},
 		})
 
 		if errX != nil {
@@ -79,7 +80,7 @@ func IsWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient) 
 				Identity: "noexisting-user@acmecorp.com",
 				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
 			},
-			ResourceContext: pb.NewStruct(),
+			ResourceContext: &structpb.Struct{},
 		})
 
 		if errX != nil {
@@ -114,7 +115,7 @@ func QueryWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClien
 				Path:      "",
 				Decisions: []string{},
 			},
-			ResourceContext: pb.NewStruct(),
+			ResourceContext: &structpb.Struct{},
 		})
 
 		if errX != nil {

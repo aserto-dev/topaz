@@ -9,7 +9,6 @@ import (
 	"google.golang.org/grpc"
 
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	dir "github.com/aserto-dev/go-grpc/aserto/authorizer/directory/v1"
 )
 
 // GRPCRegistrations represents a function that can register API implementations to the GRPC server.
@@ -23,10 +22,8 @@ type HTTPRouteRegistrations func(mux *http.ServeMux)
 
 func CoreServiceRegistrations(
 	implAuthorizerServer *impl.AuthorizerServer,
-	implDirectoryServer *impl.DirectoryServer,
 ) GRPCRegistrations {
 	return func(srv *grpc.Server) {
 		authz.RegisterAuthorizerServer(srv, implAuthorizerServer)
-		dir.RegisterDirectoryServer(srv, implDirectoryServer)
 	}
 }

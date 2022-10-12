@@ -7,9 +7,7 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	runtime "github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/builtins/edge/dir"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
-	"github.com/aserto-dev/topaz/builtins/edge/res"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
 	"github.com/aserto-dev/topaz/pkg/app/instance"
@@ -42,21 +40,6 @@ func RuntimeResolver(
 		// authorization check functions
 		runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, "ds.check_relation", directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, "ds.check_permission", directoryResolver)),
-
-		// directory v1 get functions
-		runtime.WithBuiltin1(dir.RegisterIdentity(logger, "dir.identity", directoryResolver)),
-		runtime.WithBuiltin1(dir.RegisterUser(logger, "dir.user", directoryResolver)),
-
-		// directory v1 hierarchical query functions
-		runtime.WithBuiltin1(dir.RegisterManagerOf(logger, "dir.manager_of", directoryResolver)),
-		runtime.WithBuiltin1(dir.RegisterManagementChain(logger, "dir.management_chain", directoryResolver)),
-		runtime.WithBuiltin2(dir.RegisterIsManagerOf(logger, "dir.is_manager_of", directoryResolver)),
-		runtime.WithBuiltin2(dir.RegisterWorksFor(logger, "dir.works_for", directoryResolver)),
-		runtime.WithBuiltin2(dir.RegisterIsSameUser(logger, "dir.is_same_user", directoryResolver)),
-
-		// directory v1 resource functions
-		runtime.WithBuiltinDyn(res.RegisterResList(logger, "res.list", directoryResolver)),
-		runtime.WithBuiltin1(res.RegisterResGet(logger, "res.get", directoryResolver)),
 
 		// plugins
 		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),

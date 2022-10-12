@@ -13,7 +13,7 @@ replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 //replace github.com/aserto-dev/go-authorizer => ../go-authorizer
 replace github.com/aserto-dev/edge-ds => github.com/aserto-dev/go-edge-ds v0.0.0-20221011161405-9d0f9c4ad69b
 
-//replace github.com/aserto-dev/go-eds => ../go-eds
+//replace github.com/aserto-dev/edge-ds => ../go-edge-ds
 
 //replace github.com/aserto-dev/go-directory => ../go-directory
 
@@ -22,12 +22,9 @@ require (
 	github.com/aserto-dev/aserto-grpc v0.0.4
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/edge-ds v0.0.0-00010101000000-000000000000
-	github.com/aserto-dev/errors v0.0.1
 	github.com/aserto-dev/go-authorizer v0.0.6
 	github.com/aserto-dev/go-directory v0.0.13-0.20221003210414-868150d355d3
-	github.com/aserto-dev/go-eds v0.8.6-0.20221010085612-457b48e227ac
 	github.com/aserto-dev/go-grpc v0.8.51
-	github.com/aserto-dev/go-lib v0.8.46
 	github.com/aserto-dev/go-utils v0.8.28
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-grpc v0.8.16
@@ -54,7 +51,6 @@ require (
 	github.com/stretchr/testify v1.8.0
 	go.opencensus.io v0.23.0
 	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
-	google.golang.org/genproto v0.0.0-20220927151529-dcaddaf36704
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
@@ -67,6 +63,7 @@ require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/aserto-dev/clui v0.8.1 // indirect
+	github.com/aserto-dev/errors v0.0.1 // indirect
 	github.com/aserto-dev/go-grpc-authz v0.8.0 // indirect
 	github.com/aserto-dev/mage-loot v0.8.9 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -90,7 +87,6 @@ require (
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
-	github.com/gofrs/uuid v4.2.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -156,6 +152,7 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	golang.org/x/tools v0.1.12 // indirect
+	google.golang.org/genproto v0.0.0-20220927151529-dcaddaf36704 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

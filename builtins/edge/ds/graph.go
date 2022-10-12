@@ -5,7 +5,6 @@ import (
 
 	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
-	"github.com/aserto-dev/go-eds/pkg/pb"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -74,7 +73,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 
 			buf := new(bytes.Buffer)
 			if len(resp.Results) > 0 {
-				if err := pb.ProtoToBuf(buf, resp); err != nil {
+				if err := ProtoToBuf(buf, resp); err != nil {
 					return nil, err
 				}
 			}

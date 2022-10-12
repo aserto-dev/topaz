@@ -32,7 +32,12 @@ type EngineHarness struct {
 // shuts down servers and runtimes
 func (h *EngineHarness) Cleanup() {
 	assert := require.New(h.t)
-	// Cleanup the app
+
+	err := h.Engine.Server.Stop()
+	if err != nil {
+		h.t.Fatal(err)
+	}
+
 	h.cleanup()
 
 	assert.Eventually(func() bool {

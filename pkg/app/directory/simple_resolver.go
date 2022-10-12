@@ -6,48 +6,24 @@ import (
 	grpcc "github.com/aserto-dev/aserto-go/client"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 
-	eds "github.com/aserto-dev/go-eds"
 	"github.com/aserto-dev/topaz/directory"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/resolvers"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
 type Resolver struct {
-	logger    *zerolog.Logger
-	directory *eds.EdgeDirectory
-	cfg       *directory.Config
-	dirConn   *grpcc.Connection
+	logger  *zerolog.Logger
+	cfg     *directory.Config
+	dirConn *grpcc.Connection
 }
 
 var _ resolvers.DirectoryResolver = &Resolver{}
 
-func NewResolver(logger *zerolog.Logger, cfg *directory.Config) (resolvers.DirectoryResolver, func(), error) {
-	var cleanup func()
-	var dir *eds.EdgeDirectory
-	var err error
-	if len(cfg.Path) > 0 {
-		dir, cleanup, err = eds.NewEdgeDirectory(cfg.EDSPath(), logger)
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "failed to create directory resolver")
-		}
-
-		err = dir.Open()
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "failed to open directory")
-		}
-	}
-
-	// ignore connection error on initial spin-up as the connect method is called on GetDS
-	dirConn, _ := connect(logger, cfg)
-
+func NewResolver(logger *zerolog.Logger, cfg *directory.Config) resolvers.DirectoryResolver {
 	return &Resolver{
-		logger:    logger,
-		directory: dir,
-		cfg:       cfg,
-		dirConn:   dirConn,
-	}, cleanup, nil
+		logger: logger,
+		cfg:    cfg,
+	}
 }
 
 func connect(logger *zerolog.Logger, cfg *directory.Config) (*grpcc.Connection, error) {
@@ -78,25 +54,4 @@ func (r *Resolver) GetDS(ctx context.Context) (ds2.DirectoryClient, error) {
 		r.dirConn = dirConn
 	}
 	return ds2.NewDirectoryClient(r.dirConn.Conn), nil
-}
-
-func (r *Resolver) DirectoryFromContext(ctx context.Context) (directory.Directory, error) {
-	tenantID := instance.ExtractID(ctx)
-	return r.GetDirectory(ctx, tenantID)
-}
-
-func (r *Resolver) GetDirectory(ctx context.Context, instanceID string) (directory.Directory, error) {
-	return r.directory, nil
-}
-
-func (r *Resolver) ReloadDirectory(ctx context.Context, instanceID string) error {
-	return nil
-}
-
-func (r *Resolver) ListDirectories(ctx context.Context) ([]string, error) {
-	return r.directory.ListTenants()
-}
-
-func (r *Resolver) RemoveDirectory(ctx context.Context, instanceID string) error {
-	return nil
 }

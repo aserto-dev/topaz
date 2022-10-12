@@ -108,7 +108,7 @@ func getIdentityV2(ctx context.Context, client ds2.DirectoryClient, identity str
 		return "", aerr.ErrDirectoryObjectNotFound
 	}
 
-	uid := relResp.Result.Relation
+	uid := *relResp.Result.Subject.Id
 
 	return uid, nil
 }
