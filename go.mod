@@ -10,21 +10,25 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
-// replace github.com/aserto-dev/go-authorizer => ../go-authorizer
+//replace github.com/aserto-dev/go-authorizer => ../go-authorizer
+replace github.com/aserto-dev/edge-ds => github.com/aserto-dev/go-edge-ds v0.0.0-20221011161405-9d0f9c4ad69b
 
-// replace github.com/aserto-dev/runtime => ../runtime
+//replace github.com/aserto-dev/go-eds => ../go-eds
+
+//replace github.com/aserto-dev/go-directory => ../go-directory
 
 require (
 	github.com/aserto-dev/aserto-go v0.8.11
-	github.com/aserto-dev/aserto-grpc v0.0.3
+	github.com/aserto-dev/aserto-grpc v0.0.4
 	github.com/aserto-dev/certs v0.0.2
+	github.com/aserto-dev/edge-ds v0.0.0-00010101000000-000000000000
 	github.com/aserto-dev/errors v0.0.1
 	github.com/aserto-dev/go-authorizer v0.0.6
-	github.com/aserto-dev/go-directory v0.0.12
-	github.com/aserto-dev/go-eds v0.8.5
+	github.com/aserto-dev/go-directory v0.0.13-0.20221003210414-868150d355d3
+	github.com/aserto-dev/go-eds v0.8.6-0.20221010085612-457b48e227ac
 	github.com/aserto-dev/go-grpc v0.8.51
 	github.com/aserto-dev/go-lib v0.8.46
-	github.com/aserto-dev/go-utils v0.8.26
+	github.com/aserto-dev/go-utils v0.8.28
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-grpc v0.8.16
 	github.com/aserto-dev/runtime v0.44.4
@@ -111,6 +115,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
+	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/moby/locker v1.0.1 // indirect
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
@@ -146,7 +151,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
-	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
+	golang.org/x/sys v0.0.0-20220907062415-87db552b00fd // indirect
 	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect

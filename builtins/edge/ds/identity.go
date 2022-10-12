@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
@@ -67,7 +68,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			// validate existence of user object directly
 			user, err := getUserV2(bctx.Context, client, uid)
 			if err == nil {
-				return ast.StringTerm(user.Id), nil
+				return ast.StringTerm(user.Result.Id), nil
 			}
 
 			return nil, aerr.ErrDirectoryObjectNotFound
@@ -77,60 +78,54 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 func getIdentityV2(ctx context.Context, client ds2.DirectoryClient, identity string) (string, error) {
 
 	identityResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
-		Param: &ds2.ObjectParam{
-			Opt: &ds2.ObjectParam_Key{
-				Key: &ds2.ObjectKey{
-					Type: "identity",
-					Key:  identity,
-				},
-			},
+		Param: &v2.ObjectIdentifier{
+			Type: StrPrt("identity"),
+			Key:  &identity,
 		},
 	})
 	if err != nil {
 		return "", err
 	}
 
-	if len(identityResp.Results) == 0 {
+	if identityResp.Result == nil {
 		return "", aerr.ErrDirectoryObjectNotFound
 	}
 
-	iid := identityResp.Results[0].Id
+	iid := identityResp.Result.Id
+
 	relResp, err := client.GetRelation(ctx, &ds2.GetRelationRequest{
-		Param: &ds2.RelationParam{
-			ObjectType:  "identity",
-			ObjectId:    iid,
-			Relation:    "identifier",
-			SubjectType: "user",
+		Param: &v2.RelationIdentifier{
+			Object:   &v2.ObjectIdentifier{Type: StrPrt("identity"), Id: &iid},
+			Relation: &v2.RelationTypeIdentifier{Name: StrPrt("identifier"), ObjectType: StrPrt("identity")},
+			Subject:  &v2.ObjectIdentifier{Type: StrPrt("user")},
 		},
 	})
 	if err != nil {
 		return "", err
 	}
 
-	if len(relResp.Results) == 0 {
+	if relResp.Result == nil {
 		return "", aerr.ErrDirectoryObjectNotFound
 	}
 
-	uid := relResp.Results[0].SubjectId
+	uid := relResp.Result.Relation
 
 	return uid, nil
 }
 
-func getUserV2(ctx context.Context, client ds2.DirectoryClient, uid string) (*ds2.Object, error) {
+func getUserV2(ctx context.Context, client ds2.DirectoryClient, uid string) (*ds2.GetObjectResponse, error) {
 	userResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
-		Param: &ds2.ObjectParam{
-			Opt: &ds2.ObjectParam_Id{
-				Id: uid,
-			},
+		Param: &v2.ObjectIdentifier{
+			Id: &uid,
 		},
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	if len(userResp.Results) == 0 {
+	if userResp == nil {
 		return nil, aerr.ErrDirectoryObjectNotFound
 	}
 
-	return userResp.Results[0], nil
+	return userResp, nil
 }

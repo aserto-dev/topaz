@@ -17,30 +17,35 @@ import (
 type Resolver struct {
 	logger    *zerolog.Logger
 	directory *eds.EdgeDirectory
+	cfg       *directory.Config
 	dirConn   *grpcc.Connection
 }
 
 var _ resolvers.DirectoryResolver = &Resolver{}
 
 func NewResolver(logger *zerolog.Logger, cfg *directory.Config) (resolvers.DirectoryResolver, func(), error) {
-	dir, cleanup, err := eds.NewEdgeDirectory(cfg.EDSPath(), logger)
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "failed to create directory resolver")
+	var cleanup func()
+	var dir *eds.EdgeDirectory
+	var err error
+	if len(cfg.Path) > 0 {
+		dir, cleanup, err = eds.NewEdgeDirectory(cfg.EDSPath(), logger)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "failed to create directory resolver")
+		}
+
+		err = dir.Open()
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "failed to open directory")
+		}
 	}
 
-	err = dir.Open()
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "failed to open directory")
-	}
-
-	dirConn, err := connect(logger, cfg)
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "failed create directory client")
-	}
+	// ignore connection error on initial spin-up as the connect method is called on GetDS
+	dirConn, _ := connect(logger, cfg)
 
 	return &Resolver{
 		logger:    logger,
 		directory: dir,
+		cfg:       cfg,
 		dirConn:   dirConn,
 	}, cleanup, nil
 }
@@ -65,6 +70,13 @@ func connect(logger *zerolog.Logger, cfg *directory.Config) (*grpcc.Connection, 
 // GetDS - simple
 //
 func (r *Resolver) GetDS(ctx context.Context) (ds2.DirectoryClient, error) {
+	if r.dirConn == nil {
+		dirConn, err := connect(r.logger, r.cfg)
+		if err != nil {
+			return nil, err
+		}
+		r.dirConn = dirConn
+	}
 	return ds2.NewDirectoryClient(r.dirConn.Conn), nil
 }
 

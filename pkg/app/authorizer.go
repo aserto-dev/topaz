@@ -2,7 +2,10 @@ package app
 
 import (
 	"context"
+	"strconv"
+	"strings"
 
+	edgeServer "github.com/aserto-dev/edge-ds/pkg/server"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -23,6 +26,25 @@ type Authorizer struct {
 
 // Start starts all services required by the Engine
 func (e *Authorizer) Start() error {
+	if strings.Contains(e.Configuration.Directory.Remote.Addr, "localhost") && e.Configuration.Directory.EdgeConfig.DBPath != "" {
+		addr := strings.Split(e.Configuration.Directory.Remote.Addr, ":")
+		if len(addr) != 2 {
+			return errors.Errorf("invalid remote address - should contain <host>:<port>")
+		}
+		port, err := strconv.Atoi(addr[1])
+		if err != nil {
+			return err
+		}
+		edge := edgeServer.NewEdgeServer(
+			e.Configuration.Directory.EdgeConfig,
+			&e.Configuration.API.GRPC.Certs,
+			addr[0],
+			port,
+			e.Logger,
+		)
+
+		e.Server.RegisterServer("edgeDirServer", edge.Start, edge.Stop)
+	}
 	err := e.Server.Start(e.Context)
 	if err != nil {
 		return errors.Wrap(err, "failed to start engine server")
