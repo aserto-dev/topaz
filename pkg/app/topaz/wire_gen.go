@@ -45,13 +45,7 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		return nil, nil, err
 	}
 	authorizerServer := impl.NewAuthorizerServer(zerologLogger, common, runtimeResolver, directoryResolver)
-	infoServer, err := impl.NewInfoServer(zerologLogger, configConfig, directoryResolver)
-	if err != nil {
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, infoServer)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer)
 	if err != nil {
 		cleanup2()
 		cleanup()
@@ -114,13 +108,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		return nil, nil, err
 	}
 	authorizerServer := impl.NewAuthorizerServer(zerologLogger, common, runtimeResolver, directoryResolver)
-	infoServer, err := impl.NewInfoServer(zerologLogger, configConfig, directoryResolver)
-	if err != nil {
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer, infoServer)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer)
 	if err != nil {
 		cleanup2()
 		cleanup()
@@ -159,7 +147,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, impl.NewAuthorizerServer, impl.NewInfoServer, GRPCServerRegistrations,
+	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, impl.NewAuthorizerServer, GRPCServerRegistrations,
 		GatewayServerRegistrations,
 		RuntimeResolver,
 		DirectoryResolver, file.New, instance.NewIDMiddleware, auth.NewAPIKeyAuthMiddleware, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
