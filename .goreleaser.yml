@@ -24,6 +24,28 @@ builds:
       - -X github.com/aserto-dev/topaz/pkg/version.commit={{.ShortCommit}}
       - -X github.com/aserto-dev/topaz/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
+  - id: topaz_cli
+    main: ./cmd/cli
+    binary: topaz_cli
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/aserto-dev/topaz/pkg/version.ver={{.Version}}
+      - -X github.com/aserto-dev/topaz/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/aserto-dev/topaz/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
   - format: zip
