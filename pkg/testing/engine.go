@@ -9,7 +9,6 @@ import (
 
 	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/pkg/app"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 )
@@ -52,13 +51,13 @@ func (h *EngineHarness) Cleanup() {
 }
 
 func (h *EngineHarness) Runtime() *runtime.Runtime {
-	result, err := h.Engine.RuntimeResolver.RuntimeFromContext(h.Engine.Context, h.Engine.Configuration.OPA.InstanceID, "", "")
+	result, err := h.Engine.RuntimeResolver.RuntimeFromContext(h.Engine.Context, "", "")
 	require.NoError(h.t, err)
 	return result
 }
 
-func (h *EngineHarness) ContextWithTenant() context.Context {
-	return context.WithValue(context.Background(), instance.InstanceIDHeader, h.Engine.Configuration.OPA.InstanceID)
+func (h *EngineHarness) Context() context.Context {
+	return context.Background()
 }
 
 // SetupOffline sets up an engine that uses a runtime that loads offline bundles,

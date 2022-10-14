@@ -7,10 +7,10 @@ import (
 )
 
 type RuntimeResolver interface {
-	RuntimeFromContext(ctx context.Context, policyID, policyName, instanceLabel string) (*runtime.Runtime, error)
-	GetRuntime(ctx context.Context, tenantID, policyID, policyName, instanceLabel string) (*runtime.Runtime, error)
-	PeekRuntime(ctx context.Context, tenantID, policyID, policyName, instanceLabel string) (*runtime.Runtime, error)
-	ReloadRuntime(ctx context.Context, tenantID, policyID, policyName, instanceLabel string) error
+	RuntimeFromContext(ctx context.Context, policyName, instanceLabel string) (*runtime.Runtime, error)
+	GetRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) (*runtime.Runtime, error)
+	PeekRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) (*runtime.Runtime, error)
+	ReloadRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) error
 	ListRuntimes(ctx context.Context) (map[string]*runtime.Runtime, error)
-	UnloadRuntime(ctx context.Context, tenantID, policyID, policyName, instanceLabel string)
+	UnloadRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string)
 }

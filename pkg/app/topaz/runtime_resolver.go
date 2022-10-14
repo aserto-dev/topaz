@@ -10,19 +10,18 @@ import (
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
 )
 
-var _ resolvers.RuntimeResolver = (*RuntimeResolverSidecar)(nil)
+var _ resolvers.RuntimeResolver = (*RuntimeResolver)(nil)
 
-type RuntimeResolverSidecar struct {
+type RuntimeResolver struct {
 	runtime *runtime.Runtime
 }
 
-func RuntimeResolver(
+func NewRuntimeResolver(
 	ctx context.Context,
 	logger *zerolog.Logger,
 	cfg *config.Config,
@@ -61,29 +60,28 @@ func RuntimeResolver(
 		return nil, cleanupRuntime, aerr.ErrBadRuntime.Err(err)
 	}
 
-	return &RuntimeResolverSidecar{
+	return &RuntimeResolver{
 		runtime: sidecarRuntime,
 	}, cleanupRuntime, err
 }
 
-func (r *RuntimeResolverSidecar) RuntimeFromContext(ctx context.Context, policyID, policyName, instanceLabel string) (*runtime.Runtime, error) {
-	instanceID := instance.ExtractID(ctx)
-	return r.GetRuntime(ctx, instanceID, policyID, policyName, instanceLabel)
+func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName, instanceLabel string) (*runtime.Runtime, error) {
+	return r.GetRuntime(ctx, "", policyName, instanceLabel)
 }
 
-func (r *RuntimeResolverSidecar) GetRuntime(ctx context.Context, tenantID, policyID, policyName, instanceLabel string) (*runtime.Runtime, error) {
+func (r *RuntimeResolver) GetRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) (*runtime.Runtime, error) {
 	return r.runtime, nil
 }
 
-func (r *RuntimeResolverSidecar) PeekRuntime(ctx context.Context, tenantID, policyID, policyName, instanceLabel string) (*runtime.Runtime, error) {
+func (r *RuntimeResolver) PeekRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) (*runtime.Runtime, error) {
 	return r.runtime, nil
 }
 
-func (r *RuntimeResolverSidecar) ReloadRuntime(ctx context.Context, tenantID, policyID, policyName, instanceLabel string) error {
+func (r *RuntimeResolver) ReloadRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) error {
 	return nil
 }
 
-func (r *RuntimeResolverSidecar) ListRuntimes(ctx context.Context) (map[string]*runtime.Runtime, error) {
+func (r *RuntimeResolver) ListRuntimes(ctx context.Context) (map[string]*runtime.Runtime, error) {
 	if r.runtime == nil {
 		return nil, nil
 	}
@@ -91,5 +89,5 @@ func (r *RuntimeResolverSidecar) ListRuntimes(ctx context.Context) (map[string]*
 	return map[string]*runtime.Runtime{r.runtime.Config.InstanceID: r.runtime}, nil
 }
 
-func (r *RuntimeResolverSidecar) UnloadRuntime(ctx context.Context, tenantID, policyID, policyName, instanceLabel string) {
+func (r *RuntimeResolver) UnloadRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) {
 }

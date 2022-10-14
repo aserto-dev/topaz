@@ -19,13 +19,10 @@ replace github.com/aserto-dev/edge-ds => github.com/aserto-dev/go-edge-ds v0.0.0
 
 require (
 	github.com/aserto-dev/aserto-go v0.8.11
-	github.com/aserto-dev/aserto-grpc v0.0.4
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/edge-ds v0.0.0-00010101000000-000000000000
 	github.com/aserto-dev/go-authorizer v0.0.7
 	github.com/aserto-dev/go-directory v0.0.13-0.20221003210414-868150d355d3
-	github.com/aserto-dev/go-grpc v0.8.51
-	github.com/aserto-dev/go-utils v0.8.28
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-grpc v0.8.16
 	github.com/aserto-dev/runtime v0.44.4
@@ -62,9 +59,12 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
+	github.com/aserto-dev/aserto-grpc v0.0.4 // indirect
 	github.com/aserto-dev/clui v0.8.1 // indirect
 	github.com/aserto-dev/errors v0.0.1 // indirect
+	github.com/aserto-dev/go-grpc v0.8.51 // indirect
 	github.com/aserto-dev/go-grpc-authz v0.8.0 // indirect
+	github.com/aserto-dev/go-utils v0.8.28 // indirect
 	github.com/aserto-dev/mage-loot v0.8.9 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytecodealliance/wasmtime-go v0.36.0 // indirect

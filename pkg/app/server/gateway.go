@@ -6,7 +6,6 @@ import (
 
 	promclient "github.com/prometheus/client_golang/prometheus"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/logger"
 	openapi "github.com/aserto-dev/openapi-grpc/publish/authorizer"
@@ -117,7 +116,7 @@ func GatewayMux() *runtime.ServeMux {
 		),
 
 		// TODO: figure out if we need a custom error handler or not
-		runtime.WithErrorHandler(grpcutil.CustomErrorHandler),
+		// runtime.WithErrorHandler(CustomErrorHandler),
 		runtime.WithMarshalerOption(
 			"application/json+masked",
 			&runtime.JSONPb{
