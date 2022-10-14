@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/aserto-dev/certs"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -58,14 +57,11 @@ func NewServer(
 	gtwServer *http.Server,
 	gtwMux *runtime.ServeMux,
 	runtimeResolver resolvers.RuntimeResolver,
-	instanceMiddleware *instance.IDMiddleware,
 ) (*Server, func(), error) {
 
 	newLogger := logger.With().Str("component", "api.edge-server").Logger()
 
 	healthServer := newGRPCHealthServer()
-
-	instanceMiddlewareServerOptions := instanceMiddleware.AsGRPCOptions()
 
 	server := &Server{
 		ctx:                  ctx,
@@ -74,7 +70,6 @@ func NewServer(
 		handlerRegistrations: handlerRegistrations,
 		runtimeResolver:      runtimeResolver,
 		grpcRegistrations:    grpcRegistrations,
-		grpcServerOptions:    instanceMiddlewareServerOptions,
 		gtwServer:            gtwServer,
 		healthServer:         healthServer,
 		gtwMux:               gtwMux,

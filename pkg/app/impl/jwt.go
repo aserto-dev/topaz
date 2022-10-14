@@ -14,7 +14,6 @@ import (
 	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/pkg/errors"
@@ -49,7 +48,7 @@ func (s *AuthorizerServer) getUserFromJWT(ctx context.Context, bearerJWT string)
 
 // getIdentityFromJWT
 func (s *AuthorizerServer) getIdentityFromJWT(ctx context.Context, bearerJWT string) (string, error) {
-	log := instance.GetInstanceLogger(ctx, s.logger)
+	log := s.logger
 
 	jwtTemp, err := jwt.ParseString(bearerJWT, jwt.WithValidate(false))
 	if err != nil {
@@ -172,22 +171,6 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
 	return s.getUserFromIdentityV2(ctx, identity)
 }
-
-// func (s *AuthorizerServer) getUserFromIdentityV1(ctx context.Context, identity string) (proto.Message, error) {
-// 	tenantID := instance.ExtractID(ctx)
-
-// 	directory, err := s.directoryResolver.DirectoryFromContext(ctx)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	userV1, err := directory.GetUserFromIdentity(tenantID, identity)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return userV1, nil
-// }
 
 func (s *AuthorizerServer) getUserFromIdentityV2(ctx context.Context, identity string) (proto.Message, error) {
 	uid, err := s.getIdentityV2(ctx, identity)

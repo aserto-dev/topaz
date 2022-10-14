@@ -14,7 +14,6 @@ import (
 
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -65,7 +64,7 @@ func NewAuthorizerServer(
 }
 
 func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.DecisionTreeRequest) (*authorizer.DecisionTreeResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := instance.GetInstanceLogger(ctx, s.logger)
+	log := s.logger.With().Str("api", "decision_tree").Logger()
 
 	resp := &authorizer.DecisionTreeResponse{}
 
@@ -194,7 +193,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 // Is decision eval function.
 func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*authorizer.IsResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := instance.GetInstanceLogger(ctx, s.logger)
+	log := s.logger.With().Str("api", "is").Logger()
 
 	resp := &authorizer.IsResponse{
 		Decisions: make([]*authorizer.Decision, 0),
@@ -337,7 +336,7 @@ func is(v interface{}, decision string) (bool, error) {
 }
 
 func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryRequest) (*authorizer.QueryResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := instance.GetInstanceLogger(ctx, s.logger)
+	log := s.logger.With().Str("api", "query").Logger()
 
 	if req.Query == "" {
 		return &authorizer.QueryResponse{}, aerr.ErrInvalidArgument.Msg("query not set")
@@ -481,13 +480,12 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *api.Po
 	var rt *runtime.Runtime
 	var err error
 	if policyContext != nil {
-		policyID := getPolicyIDFromContext(ctx)
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, policyID, policyContext.GetName(), policyContext.InstanceLabel)
+		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetName(), policyContext.InstanceLabel)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to procure tenant runtime")
 		}
 	} else {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, "", "", "")
+		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, "", "")
 		if err != nil {
 			return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
 		}
@@ -496,7 +494,7 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *api.Po
 }
 
 func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileRequest) (*authorizer.CompileResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
-	log := instance.GetInstanceLogger(ctx, s.logger)
+	log := s.logger.With().Str("api", "compile").Logger()
 
 	if req.Query == "" {
 		return &authorizer.CompileResponse{}, aerr.ErrInvalidArgument.Msg("query not set")

@@ -10,13 +10,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/aserto-dev/aserto-go/client"
-	authorizerClient "github.com/aserto-dev/aserto-go/client/authorizer"
-	"github.com/aserto-dev/go-grpc/aserto/authorizer/directory/v1"
-	"github.com/aserto-dev/go-grpc/aserto/authorizer/policy/v1"
-
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -48,8 +42,6 @@ func (h *EngineHarness) Req(verb, path, tenantID, body string) (string, int) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 	// TODO: use an API key
-
-	req.Header.Set(string(instance.InstanceIDHeader), tenantID)
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -86,32 +78,4 @@ func (h *EngineHarness) CreateGRPCClient() authz2.AuthorizerClient {
 		h.t.Fatal(err)
 	}
 	return authz2.NewAuthorizerClient(conn)
-}
-
-func (h *EngineHarness) CreateGRPCDirectoryClient() directory.DirectoryClient {
-	options := []client.ConnectionOption{
-		client.WithAddr("127.0.0.1:8282"),
-		client.WithCACertPath(h.Engine.Configuration.API.GRPC.Certs.TLSCACertPath),
-	}
-
-	authorizerService, err := authorizerClient.New(h.Engine.Context, options...)
-	if err != nil {
-		h.t.Fatal(err)
-	}
-
-	return authorizerService.Directory
-}
-
-func (h *EngineHarness) CreateGRPCPolicyClient() policy.PolicyClient {
-	options := []client.ConnectionOption{
-		client.WithAddr("127.0.0.1:8282"),
-		client.WithCACertPath(h.Engine.Configuration.API.GRPC.Certs.TLSCACertPath),
-	}
-
-	authorizerService, err := authorizerClient.New(h.Engine.Context, options...)
-	if err != nil {
-		h.t.Fatal(err)
-	}
-
-	return authorizerService.Policy
 }

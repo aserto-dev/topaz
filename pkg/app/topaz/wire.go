@@ -13,7 +13,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -29,11 +28,10 @@ var (
 
 		GRPCServerRegistrations,
 		GatewayServerRegistrations,
-		RuntimeResolver,
+		NewRuntimeResolver,
 		DirectoryResolver,
 		file.New,
 
-		instance.NewIDMiddleware,
 		auth.NewAPIKeyAuthMiddleware,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),

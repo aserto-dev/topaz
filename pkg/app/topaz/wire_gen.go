@@ -12,7 +12,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
-	"github.com/aserto-dev/topaz/pkg/app/instance"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -39,7 +38,7 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		return nil, nil, err
 	}
 	directoryResolver := DirectoryResolver(context, zerologLogger, configConfig)
-	runtimeResolver, cleanup2, err := RuntimeResolver(context, zerologLogger, configConfig, decisionLogger, directoryResolver)
+	runtimeResolver, cleanup2, err := NewRuntimeResolver(context, zerologLogger, configConfig, decisionLogger, directoryResolver)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
@@ -60,8 +59,7 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		cleanup()
 		return nil, nil, err
 	}
-	idMiddleware := instance.NewIDMiddleware(common)
-	serverServer, cleanup3, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver, idMiddleware)
+	serverServer, cleanup3, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver)
 	if err != nil {
 		cleanup2()
 		cleanup()
@@ -102,7 +100,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		return nil, nil, err
 	}
 	directoryResolver := DirectoryResolver(context, zerologLogger, configConfig)
-	runtimeResolver, cleanup2, err := RuntimeResolver(context, zerologLogger, configConfig, decisionLogger, directoryResolver)
+	runtimeResolver, cleanup2, err := NewRuntimeResolver(context, zerologLogger, configConfig, decisionLogger, directoryResolver)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
@@ -123,8 +121,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		cleanup()
 		return nil, nil, err
 	}
-	idMiddleware := instance.NewIDMiddleware(common)
-	serverServer, cleanup3, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver, idMiddleware)
+	serverServer, cleanup3, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver)
 	if err != nil {
 		cleanup2()
 		cleanup()
@@ -149,8 +146,8 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 var (
 	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, impl.NewAuthorizerServer, GRPCServerRegistrations,
 		GatewayServerRegistrations,
-		RuntimeResolver,
-		DirectoryResolver, file.New, instance.NewIDMiddleware, auth.NewAPIKeyAuthMiddleware, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
+		NewRuntimeResolver,
+		DirectoryResolver, file.New, auth.NewAPIKeyAuthMiddleware, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
 	)
 
 	appTestSet = wire.NewSet(
