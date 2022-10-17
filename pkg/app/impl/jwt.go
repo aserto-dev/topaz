@@ -12,7 +12,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
+	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
@@ -230,11 +230,11 @@ func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (
 		return "", err
 	}
 
-	if relResp.Result == nil {
+	if relResp.Results == nil {
 		return "", aerr.ErrDirectoryObjectNotFound
 	}
 
-	uid := relResp.Result.Subject.Id
+	uid := relResp.Results[0].Subject.Id
 
 	return *uid, nil
 }

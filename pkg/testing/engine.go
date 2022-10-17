@@ -51,7 +51,7 @@ func (h *EngineHarness) Cleanup() {
 }
 
 func (h *EngineHarness) Runtime() *runtime.Runtime {
-	result, err := h.Engine.RuntimeResolver.RuntimeFromContext(h.Engine.Context, "", "")
+	result, err := h.Engine.RuntimeResolver.RuntimeFromContext(h.Engine.Context, "", "", "")
 	require.NoError(h.t, err)
 	return result
 }

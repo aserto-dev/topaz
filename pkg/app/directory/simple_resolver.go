@@ -4,7 +4,7 @@ import (
 	"context"
 
 	grpcc "github.com/aserto-dev/aserto-go/client"
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
+	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 
 	"github.com/aserto-dev/topaz/directory"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -45,7 +45,7 @@ func connect(logger *zerolog.Logger, cfg *directory.Config) (*grpcc.Connection, 
 
 // GetDS - simple
 //
-func (r *Resolver) GetDS(ctx context.Context) (ds2.DirectoryClient, error) {
+func (r *Resolver) GetDS(ctx context.Context) (ds2.ReaderClient, error) {
 	if r.dirConn == nil {
 		dirConn, err := connect(r.logger, r.cfg)
 		if err != nil {
@@ -53,5 +53,5 @@ func (r *Resolver) GetDS(ctx context.Context) (ds2.DirectoryClient, error) {
 		}
 		r.dirConn = dirConn
 	}
-	return ds2.NewDirectoryClient(r.dirConn.Conn), nil
+	return ds2.NewReaderClient(r.dirConn.Conn), nil
 }

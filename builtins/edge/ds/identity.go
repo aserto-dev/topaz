@@ -5,7 +5,7 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/v2"
+	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
 
@@ -75,7 +75,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		}
 }
 
-func getIdentityV2(ctx context.Context, client ds2.DirectoryClient, identity string) (string, error) {
+func getIdentityV2(ctx context.Context, client ds2.ReaderClient, identity string) (string, error) {
 
 	identityResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
 		Param: &v2.ObjectIdentifier{
@@ -104,16 +104,16 @@ func getIdentityV2(ctx context.Context, client ds2.DirectoryClient, identity str
 		return "", err
 	}
 
-	if relResp.Result == nil {
+	if relResp.Results == nil {
 		return "", aerr.ErrDirectoryObjectNotFound
 	}
 
-	uid := *relResp.Result.Subject.Id
+	uid := *relResp.Results[0].Subject.Id
 
 	return uid, nil
 }
 
-func getUserV2(ctx context.Context, client ds2.DirectoryClient, uid string) (*ds2.GetObjectResponse, error) {
+func getUserV2(ctx context.Context, client ds2.ReaderClient, uid string) (*ds2.GetObjectResponse, error) {
 	userResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
 		Param: &v2.ObjectIdentifier{
 			Id: &uid,
