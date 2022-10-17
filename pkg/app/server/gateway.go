@@ -8,7 +8,7 @@ import (
 
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/logger"
-	openapi "github.com/aserto-dev/openapi-grpc/publish/authorizer"
+	openapi "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/slok/go-http-metrics/middleware/grpc"
 
