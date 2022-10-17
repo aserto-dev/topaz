@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/aserto-dev/clui"
+	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 )
 
 type CommonCtx struct {
@@ -14,5 +15,6 @@ type CommonCtx struct {
 func NewCommonContext() (*CommonCtx, error) {
 	return &CommonCtx{
 		Context: context.Background(),
+		UI:      iostream.NewUI(iostream.DefaultIO()),
 	}, nil
 }
