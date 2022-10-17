@@ -24,7 +24,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.0.7
 	github.com/aserto-dev/go-directory v0.0.13-0.20221003210414-868150d355d3
 	github.com/aserto-dev/logger v0.0.2
-	github.com/aserto-dev/openapi-grpc v0.8.16
+	github.com/aserto-dev/openapi-authorizer v0.0.1
 	github.com/aserto-dev/runtime v0.44.4
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0

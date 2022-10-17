@@ -86,8 +86,8 @@ github.com/aserto-dev/logger v0.0.2 h1:WTDOgLYmIiA1yadwfjDuU/WJH6ndosldzLyOeztW2
 github.com/aserto-dev/logger v0.0.2/go.mod h1:8HIZAwlf+Y0V33YnGILYZOtYh1Eue5mz1YNf1XbqPbI=
 github.com/aserto-dev/mage-loot v0.8.9 h1:gwr9zB2CrFPH4gkqtNE/+JmpdeYlUbgI0egFpMcIUio=
 github.com/aserto-dev/mage-loot v0.8.9/go.mod h1:16Q5Iq1e+W8J0DuCJx2LI0u7Bf7C3Z1r8ywnJZbhBGQ=
-github.com/aserto-dev/openapi-grpc v0.8.16 h1:oA6+TZfPylJmgkfI5VdpopwAgxGEtlId7Hhn2Q+F/tY=
-github.com/aserto-dev/openapi-grpc v0.8.16/go.mod h1:/bc98SsU8GaiyS5rdIksg0B9BRUYDon7ilRllcnVHdM=
+github.com/aserto-dev/openapi-authorizer v0.0.1 h1:ClyOSr1ZX5JWCL3SuBeff68n9zhpvJ3qCQlV9REUnms=
+github.com/aserto-dev/openapi-authorizer v0.0.1/go.mod h1:3kmTs3pjNE5aQXt1Ob71uVdqC2qC61EO9gl6O63md4U=
 github.com/aserto-dev/runtime v0.44.4 h1:g0qmlN1Eo3SJ5kd49IwyUR4RhrJbRoi7d7ypiD3CGLw=
 github.com/aserto-dev/runtime v0.44.4/go.mod h1:9UKAViiqnO/NY4vW939muGB9fY4xmrjm5i2zOeFMO8o=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
