@@ -15,17 +15,11 @@ ENV ROOT_DIR=/src
 ARG VERSION
 ARG COMMIT
 
-COPY go.mod go.sum Depfile mage.go magefiles/* ./
-RUN --mount=type=cache,target=/go/pkg/mod \
-		--mount=type=cache,target=/root/.cache/go-build \
-		--mount=type=ssh \
-		go run mage.go deps
-
 COPY . .
 RUN --mount=type=cache,target=/go/pkg/mod \
     	--mount=type=cache,target=/root/.cache/go-build \
     	--mount=type=ssh \
-    	go run mage.go build
+    	go run mage.go deps build
 
 FROM alpine
 ARG VERSION
