@@ -11,7 +11,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/resolvers"
 
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 )
@@ -21,7 +20,6 @@ func GRPCServerRegistrations(
 	ctx context.Context,
 	logger *zerolog.Logger,
 	cfg *config.Config,
-	runtimeResolver resolvers.RuntimeResolver,
 
 	implAuthorizerServer *impl.AuthorizerServer,
 ) (server.GRPCRegistrations, error) {

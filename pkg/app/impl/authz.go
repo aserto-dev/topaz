@@ -14,6 +14,7 @@ import (
 
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
+
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -44,22 +45,20 @@ type AuthorizerServer struct {
 	cfg    *config.Common
 	logger *zerolog.Logger
 
-	runtimeResolver   resolvers.RuntimeResolver
-	directoryResolver resolvers.DirectoryResolver
+	resolver *resolvers.Resolvers
 }
 
 func NewAuthorizerServer(
 	logger *zerolog.Logger,
 	cfg *config.Common,
-	runtimeResolver resolvers.RuntimeResolver,
-	directoryResolver resolvers.DirectoryResolver) *AuthorizerServer {
-
+	rf *resolvers.Resolvers,
+) *AuthorizerServer {
 	newLogger := logger.With().Str("component", "api.grpc").Logger()
+
 	return &AuthorizerServer{
-		cfg:               cfg,
-		runtimeResolver:   runtimeResolver,
-		logger:            &newLogger,
-		directoryResolver: directoryResolver,
+		cfg:      cfg,
+		logger:   &newLogger,
+		resolver: rf,
 	}
 }
 
@@ -472,12 +471,12 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *api.Po
 	var rt *runtime.Runtime
 	var err error
 	if policyContext != nil {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, policyContext.GetName(), policyContext.InstanceLabel)
+		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyContext.GetName(), policyContext.InstanceLabel)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to procure tenant runtime")
 		}
 	} else {
-		rt, err = s.runtimeResolver.RuntimeFromContext(ctx, "", "")
+		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, "", "")
 		if err != nil {
 			return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
 		}

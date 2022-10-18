@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/spf13/cobra"
@@ -46,7 +47,17 @@ It exposes GRPC and OpenAPI endpoints.`,
 		if err != nil {
 			return err
 		}
-
+		directory := topaz.DirectoryResolver(app.Context, app.Logger, app.Configuration)
+		decisionlog, err := file.New(app.Context, &app.Configuration.DecisionLogger, app.Logger)
+		if err != nil {
+			return err
+		}
+		runtime, _, err := topaz.NewRuntimeResolver(app.Context, app.Logger, app.Configuration, decisionlog, directory)
+		if err != nil {
+			return err
+		}
+		app.Resolver.SetRuntimeResolver(runtime)
+		app.Resolver.SetDirectoryResolver(directory)
 		err = app.Start()
 		if err != nil {
 			return err
