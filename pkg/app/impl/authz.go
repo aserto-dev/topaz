@@ -116,7 +116,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		if len(bundles) == 0 {
 			return resp, errors.New("no bundles found")
 		}
-		policyid = bundles[0].Id // only 1 bundle per runtime allowed
+		policyid = bundles[0].ID // only 1 bundle per runtime allowed
 	}
 
 	policyList, err := policyRuntime.GetPolicyList(
