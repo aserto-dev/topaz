@@ -104,7 +104,7 @@ func getIdentityV2(ctx context.Context, client ds2.ReaderClient, identity string
 		return "", err
 	}
 
-	if relResp.Results == nil {
+	if relResp.Results == nil || len(relResp.Results) == 0 {
 		return "", aerr.ErrDirectoryObjectNotFound
 	}
 

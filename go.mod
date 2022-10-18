@@ -11,18 +11,16 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
 //replace github.com/aserto-dev/go-authorizer => ../go-authorizer
-replace github.com/aserto-dev/edge-ds => github.com/aserto-dev/go-edge-ds v0.0.0-20221017043046-542e0dc81cbb
+replace github.com/aserto-dev/edge-ds => github.com/aserto-dev/go-edge-ds v0.0.0-20221018111939-9ed97f872277
 
 //replace github.com/aserto-dev/edge-ds => ../go-edge-ds
-
-replace github.com/aserto-dev/go-directory => github.com/aserto-dev/go-directory v0.0.13-0.20221016220617-c95aa98d66ff
 
 require (
 	github.com/aserto-dev/aserto-go v0.8.11
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/edge-ds v0.0.0-00010101000000-000000000000
 	github.com/aserto-dev/go-authorizer v0.0.7
-	github.com/aserto-dev/go-directory v0.0.13
+	github.com/aserto-dev/go-directory v0.0.14
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
 	github.com/aserto-dev/runtime v0.44.4
@@ -48,7 +46,7 @@ require (
 	github.com/stretchr/testify v1.8.0
 	go.opencensus.io v0.23.0
 	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
-	google.golang.org/grpc v1.49.0
+	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	sigs.k8s.io/controller-runtime v0.13.0
@@ -59,12 +57,10 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/aserto-dev/aserto-grpc v0.0.4 // indirect
 	github.com/aserto-dev/clui v0.8.1 // indirect
 	github.com/aserto-dev/errors v0.0.1 // indirect
 	github.com/aserto-dev/go-grpc v0.8.51 // indirect
 	github.com/aserto-dev/go-grpc-authz v0.8.0 // indirect
-	github.com/aserto-dev/go-utils v0.8.28 // indirect
 	github.com/aserto-dev/mage-loot v0.8.9 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytecodealliance/wasmtime-go v0.36.0 // indirect
@@ -93,7 +89,6 @@ require (
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
