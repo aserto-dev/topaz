@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -51,7 +52,7 @@ func (h *EngineHarness) Cleanup() {
 }
 
 func (h *EngineHarness) Runtime() *runtime.Runtime {
-	result, err := h.Engine.RuntimeResolver.RuntimeFromContext(h.Engine.Context, "", "", "")
+	result, err := h.Engine.Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "", "")
 	require.NoError(h.t, err)
 	return result
 }
@@ -92,7 +93,13 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 		configOverrides,
 	)
 	assert.NoError(err)
-
+	directory := topaz.DirectoryResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration)
+	decisionlog, err := file.New(h.Engine.Context, &h.Engine.Configuration.DecisionLogger, h.Engine.Logger)
+	assert.NoError(err)
+	runtime, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, decisionlog, directory)
+	assert.NoError(err)
+	h.Engine.Resolver.SetRuntimeResolver(runtime)
+	h.Engine.Resolver.SetDirectoryResolver(directory)
 	err = h.Engine.Start()
 	assert.NoError(err)
 

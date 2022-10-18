@@ -65,19 +65,19 @@ func NewRuntimeResolver(
 	}, cleanupRuntime, err
 }
 
-func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyID, policyName, instanceLabel string) (*runtime.Runtime, error) {
-	return r.GetRuntime(ctx, "", "", policyName, instanceLabel)
+func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName, instanceLabel string) (*runtime.Runtime, error) {
+	return r.GetRuntime(ctx, "", policyName, instanceLabel)
 }
 
-func (r *RuntimeResolver) GetRuntime(ctx context.Context, opaInstanceID, policyID, policyName, instanceLabel string) (*runtime.Runtime, error) {
+func (r *RuntimeResolver) GetRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) (*runtime.Runtime, error) {
 	return r.runtime, nil
 }
 
-func (r *RuntimeResolver) PeekRuntime(ctx context.Context, opaInstanceID, policyID, policyName, instanceLabel string) (*runtime.Runtime, error) {
+func (r *RuntimeResolver) PeekRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) (*runtime.Runtime, error) {
 	return r.runtime, nil
 }
 
-func (r *RuntimeResolver) ReloadRuntime(ctx context.Context, opaInstanceID, policyID, policyName, instanceLabel string) error {
+func (r *RuntimeResolver) ReloadRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) error {
 	return nil
 }
 
@@ -89,5 +89,5 @@ func (r *RuntimeResolver) ListRuntimes(ctx context.Context) (map[string]*runtime
 	return map[string]*runtime.Runtime{r.runtime.Config.InstanceID: r.runtime}, nil
 }
 
-func (r *RuntimeResolver) UnloadRuntime(ctx context.Context, opaInstanceID, policyID, policyName, instanceLabel string) {
+func (r *RuntimeResolver) UnloadRuntime(ctx context.Context, opaInstanceID, policyName, instanceLabel string) {
 }

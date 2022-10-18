@@ -17,11 +17,11 @@ import (
 // It's responsible with managing the Aserto Edge API, the User Directory
 // and the OPA plugins
 type Authorizer struct {
-	Context         context.Context
-	Logger          *zerolog.Logger
-	Configuration   *config.Common
-	Server          *server.Server
-	RuntimeResolver resolvers.RuntimeResolver
+	Context       context.Context
+	Logger        *zerolog.Logger
+	Configuration *config.Config
+	Server        *server.Server
+	Resolver      *resolvers.Resolvers
 }
 
 // Start starts all services required by the Engine

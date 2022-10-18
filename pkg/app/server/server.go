@@ -9,7 +9,6 @@ import (
 
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
@@ -42,7 +41,6 @@ type Server struct {
 
 	gtwMux               *runtime.ServeMux
 	handlerRegistrations HandlerRegistrations
-	runtimeResolver      resolvers.RuntimeResolver
 
 	registeredServers []registeredServer
 }
@@ -56,7 +54,7 @@ func NewServer(
 	handlerRegistrations HandlerRegistrations,
 	gtwServer *http.Server,
 	gtwMux *runtime.ServeMux,
-	runtimeResolver resolvers.RuntimeResolver,
+
 ) (*Server, func(), error) {
 
 	newLogger := logger.With().Str("component", "api.edge-server").Logger()
@@ -68,7 +66,6 @@ func NewServer(
 		cfg:                  cfg,
 		logger:               &newLogger,
 		handlerRegistrations: handlerRegistrations,
-		runtimeResolver:      runtimeResolver,
 		grpcRegistrations:    grpcRegistrations,
 		gtwServer:            gtwServer,
 		healthServer:         healthServer,

@@ -9,13 +9,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/aserto-dev/logger"
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/resolvers"
 )
 
 var (
@@ -24,13 +24,11 @@ var (
 		server.NewGatewayServer,
 		server.GatewayMux,
 
+		resolvers.New,
 		impl.NewAuthorizerServer,
 
 		GRPCServerRegistrations,
 		GatewayServerRegistrations,
-		NewRuntimeResolver,
-		DirectoryResolver,
-		file.New,
 
 		auth.NewAPIKeyAuthMiddleware,
 

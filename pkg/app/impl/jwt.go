@@ -196,7 +196,7 @@ func (s *AuthorizerServer) getUserFromIdentityV2(ctx context.Context, identity s
 }
 
 func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (string, error) {
-	client, err := s.directoryResolver.GetDS(ctx)
+	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
 	if err != nil {
 		return "", err
 	}
@@ -240,7 +240,7 @@ func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (
 }
 
 func (s *AuthorizerServer) getUserV2(ctx context.Context, uid string) (*v2.Object, error) {
-	client, err := s.directoryResolver.GetDS(ctx)
+	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
 	if err != nil {
 		return nil, err
 	}

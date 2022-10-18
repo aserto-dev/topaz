@@ -8,13 +8,13 @@ package topaz
 
 import (
 	"github.com/aserto-dev/logger"
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/google/wire"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -31,22 +31,10 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 	configConfig := ccCC.Config
 	common := &configConfig.Common
 	group := ccCC.ErrGroup
-	fileConfig := &configConfig.DecisionLogger
-	decisionLogger, err := file.New(context, fileConfig, zerologLogger)
+	resolversResolvers := resolvers.New()
+	authorizerServer := impl.NewAuthorizerServer(zerologLogger, common, resolversResolvers)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, authorizerServer)
 	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	directoryResolver := DirectoryResolver(context, zerologLogger, configConfig)
-	runtimeResolver, cleanup2, err := NewRuntimeResolver(context, zerologLogger, configConfig, decisionLogger, directoryResolver)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	authorizerServer := impl.NewAuthorizerServer(zerologLogger, common, runtimeResolver, directoryResolver)
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer)
-	if err != nil {
-		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
@@ -55,25 +43,22 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 	registerer := _wireRegistererValue
 	httpServer, err := server.NewGatewayServer(zerologLogger, common, serveMux, registerer)
 	if err != nil {
-		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
-	serverServer, cleanup3, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver)
+	serverServer, cleanup2, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux)
 	if err != nil {
-		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	authorizer := &app.Authorizer{
-		Context:         context,
-		Logger:          zerologLogger,
-		Configuration:   common,
-		Server:          serverServer,
-		RuntimeResolver: runtimeResolver,
+		Context:       context,
+		Logger:        zerologLogger,
+		Configuration: configConfig,
+		Server:        serverServer,
+		Resolver:      resolversResolvers,
 	}
 	return authorizer, func() {
-		cleanup3()
 		cleanup2()
 		cleanup()
 	}, nil
@@ -93,22 +78,10 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 	configConfig := ccCC.Config
 	common := &configConfig.Common
 	group := ccCC.ErrGroup
-	fileConfig := &configConfig.DecisionLogger
-	decisionLogger, err := file.New(context, fileConfig, zerologLogger)
+	resolversResolvers := resolvers.New()
+	authorizerServer := impl.NewAuthorizerServer(zerologLogger, common, resolversResolvers)
+	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, authorizerServer)
 	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	directoryResolver := DirectoryResolver(context, zerologLogger, configConfig)
-	runtimeResolver, cleanup2, err := NewRuntimeResolver(context, zerologLogger, configConfig, decisionLogger, directoryResolver)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	authorizerServer := impl.NewAuthorizerServer(zerologLogger, common, runtimeResolver, directoryResolver)
-	grpcRegistrations, err := GRPCServerRegistrations(context, zerologLogger, configConfig, runtimeResolver, authorizerServer)
-	if err != nil {
-		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
@@ -117,25 +90,22 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 	registry := prometheus.NewRegistry()
 	httpServer, err := server.NewGatewayServer(zerologLogger, common, serveMux, registry)
 	if err != nil {
-		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
-	serverServer, cleanup3, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux, runtimeResolver)
+	serverServer, cleanup2, err := server.NewServer(context, zerologLogger, common, group, grpcRegistrations, handlerRegistrations, httpServer, serveMux)
 	if err != nil {
-		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	authorizer := &app.Authorizer{
-		Context:         context,
-		Logger:          zerologLogger,
-		Configuration:   common,
-		Server:          serverServer,
-		RuntimeResolver: runtimeResolver,
+		Context:       context,
+		Logger:        zerologLogger,
+		Configuration: configConfig,
+		Server:        serverServer,
+		Resolver:      resolversResolvers,
 	}
 	return authorizer, func() {
-		cleanup3()
 		cleanup2()
 		cleanup()
 	}, nil
@@ -144,10 +114,8 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, impl.NewAuthorizerServer, GRPCServerRegistrations,
-		GatewayServerRegistrations,
-		NewRuntimeResolver,
-		DirectoryResolver, file.New, auth.NewAPIKeyAuthMiddleware, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
+	commonSet = wire.NewSet(server.NewServer, server.NewGatewayServer, server.GatewayMux, resolvers.New, impl.NewAuthorizerServer, GRPCServerRegistrations,
+		GatewayServerRegistrations, auth.NewAPIKeyAuthMiddleware, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
 	)
 
 	appTestSet = wire.NewSet(
