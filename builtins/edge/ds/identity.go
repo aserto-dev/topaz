@@ -4,10 +4,11 @@ import (
 	"context"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
+	"google.golang.org/protobuf/proto"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -20,7 +21,7 @@ import (
 // get user id for identity
 //
 // ds.identity({
-//     "key": ""
+// 	"key": ""
 // })
 //
 func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
@@ -75,11 +76,11 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		}
 }
 
-func getIdentityV2(ctx context.Context, client ds2.ReaderClient, identity string) (string, error) {
+func getIdentityV2(ctx context.Context, client dsr.ReaderClient, identity string) (string, error) {
 
-	identityResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
-		Param: &v2.ObjectIdentifier{
-			Type: StrPrt("identity"),
+	identityResp, err := client.GetObject(ctx, &dsr.GetObjectRequest{
+		Param: &dsc.ObjectIdentifier{
+			Type: proto.String("identity"),
 			Key:  &identity,
 		},
 	})
@@ -93,11 +94,11 @@ func getIdentityV2(ctx context.Context, client ds2.ReaderClient, identity string
 
 	iid := identityResp.Result.Id
 
-	relResp, err := client.GetRelation(ctx, &ds2.GetRelationRequest{
-		Param: &v2.RelationIdentifier{
-			Object:   &v2.ObjectIdentifier{Type: StrPrt("identity"), Id: &iid},
-			Relation: &v2.RelationTypeIdentifier{Name: StrPrt("identifier"), ObjectType: StrPrt("identity")},
-			Subject:  &v2.ObjectIdentifier{Type: StrPrt("user")},
+	relResp, err := client.GetRelation(ctx, &dsr.GetRelationRequest{
+		Param: &dsc.RelationIdentifier{
+			Object:   &dsc.ObjectIdentifier{Type: proto.String("identity"), Id: &iid},
+			Relation: &dsc.RelationTypeIdentifier{Name: proto.String("identifier"), ObjectType: proto.String("identity")},
+			Subject:  &dsc.ObjectIdentifier{Type: proto.String("user")},
 		},
 	})
 	if err != nil {
@@ -113,9 +114,9 @@ func getIdentityV2(ctx context.Context, client ds2.ReaderClient, identity string
 	return uid, nil
 }
 
-func getUserV2(ctx context.Context, client ds2.ReaderClient, uid string) (*ds2.GetObjectResponse, error) {
-	userResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
-		Param: &v2.ObjectIdentifier{
+func getUserV2(ctx context.Context, client dsr.ReaderClient, uid string) (*dsr.GetObjectResponse, error) {
+	userResp, err := client.GetObject(ctx, &dsr.GetObjectRequest{
+		Param: &dsc.ObjectIdentifier{
 			Id: &uid,
 		},
 	})

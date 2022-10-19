@@ -3,8 +3,8 @@ package ds
 import (
 	"bytes"
 
-	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -17,7 +17,7 @@ import (
 // RegisterUser - ds.user
 //
 // ds.user({
-//     "id": ""
+// 	"id": ""
 // })
 //
 func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
@@ -46,8 +46,8 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			resp, err := client.GetObject(bctx.Context, &ds2.GetObjectRequest{
-				Param: &v2.ObjectIdentifier{
+			resp, err := client.GetObject(bctx.Context, &dsr.GetObjectRequest{
+				Param: &dsc.ObjectIdentifier{
 					Id: &a.ID,
 				},
 			})

@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	edgeServer "github.com/aserto-dev/edge-ds/pkg/server"
+	edgeServer "github.com/aserto-dev/go-edge-ds/pkg/server"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
