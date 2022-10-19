@@ -3,9 +3,10 @@ package ds
 import (
 	"bytes"
 
-	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
+	"google.golang.org/protobuf/proto"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -18,13 +19,10 @@ import (
 // RegisterObject - ds.object
 //
 // ds.object({
-//     "id": ""
-//   })
-//
-// ds.object({
-//     "key": "",
-//     "type": ""
-//   })
+// 	"id": "",
+// 	"key": "",
+// 	"type": ""
+// })
 //
 func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
@@ -33,10 +31,19 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			Memoize: false,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var a *v2.ObjectIdentifier
+			var a *dsc.ObjectIdentifier
 
 			if err := ast.As(op1.Value, &a); err != nil {
 				return nil, err
+			}
+
+			if a.Id == nil && a.Type == nil && a.Key == nil {
+				a = &dsc.ObjectIdentifier{
+					Id:   proto.String(""),
+					Type: proto.String(""),
+					Key:  proto.String(""),
+				}
+				return help(fnName, a)
 			}
 
 			client, err := dr.GetDS(bctx.Context)
@@ -44,11 +51,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			if !ValidateObject(a) {
-				return nil, errors.Errorf("invalid object arguments")
-			}
-
-			resp, err := client.GetObject(bctx.Context, &ds2.GetObjectRequest{
+			resp, err := client.GetObject(bctx.Context, &dsr.GetObjectRequest{
 				Param: a,
 			})
 			if err != nil {
