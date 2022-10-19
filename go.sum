@@ -291,10 +291,10 @@ github.com/aserto-dev/go-authorizer v0.0.8 h1:pSy70EiK1Q1CcBfd7wq5wBniQXIhJ65Hza
 github.com/aserto-dev/go-authorizer v0.0.8/go.mod h1:RTpBixDT2WIPOkXcewCXG3NxOWDt22yiXMb+qvdxucM=
 github.com/aserto-dev/go-directory v0.0.14 h1:5BmniHkmtRrJJ368i8mkzp0sqMbz+kFeu2D9zyGG7vA=
 github.com/aserto-dev/go-directory v0.0.14/go.mod h1:3faN0G4B+tXQI0UcGOWV8VoznCuK2R9+JkU1S77L0rs=
-github.com/aserto-dev/go-edge-ds v0.0.0-20221019185327-0a74743584e9 h1:FOCTeFgjhCQQxevddqk3scKsHgCKuz7M+X81G008s3k=
-github.com/aserto-dev/go-edge-ds v0.0.0-20221019185327-0a74743584e9/go.mod h1:ehJokN2eNzMnewrXg0JzQwzkQTjE+8YtpyudrpJmx/I=
-github.com/aserto-dev/go-edge-ds v0.0.0-20221019211101-6f44dc48fdd9 h1:bglq1+joc2G5COi7nuCiPo3BiEjbmhGFTP8ym77ylKI=
-github.com/aserto-dev/go-edge-ds v0.0.0-20221019211101-6f44dc48fdd9/go.mod h1:ehJokN2eNzMnewrXg0JzQwzkQTjE+8YtpyudrpJmx/I=
+github.com/aserto-dev/go-edge-ds v0.0.0-20221019221636-323287ea1174 h1:rjkq+o4xYEjH3XrjQ+oj+01EVpc86FMm5CxVy4Ttn2U=
+github.com/aserto-dev/go-edge-ds v0.0.0-20221019221636-323287ea1174/go.mod h1:ehJokN2eNzMnewrXg0JzQwzkQTjE+8YtpyudrpJmx/I=
+github.com/aserto-dev/go-edge-ds v0.0.0-20221019224200-ffaa57926b69 h1:tuzpoAuXhlENop0RXpe2QLWkR5DPN/LS2G6hOJLoqq4=
+github.com/aserto-dev/go-edge-ds v0.0.0-20221019224200-ffaa57926b69/go.mod h1:ehJokN2eNzMnewrXg0JzQwzkQTjE+8YtpyudrpJmx/I=
 github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53 h1:2lU+szJhwZXDigE+ldDDm7a/3RC2rJCBfwVPZm6TKLs=
 github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53/go.mod h1:BkUPSrUNol4J/0axIT9nEacokJ+AKTLfnsJrBsnkUTQ=
 github.com/aserto-dev/logger v0.0.2 h1:WTDOgLYmIiA1yadwfjDuU/WJH6ndosldzLyOeztW27w=

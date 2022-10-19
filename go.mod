@@ -11,7 +11,7 @@ replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8
 replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
 
 // replace github.com/aserto-dev/go-authorizer => ../go-authorizer
-// replace github.com/aserto-dev/edge-ds => github.com/aserto-dev/go-edge-ds v0.0.0-20221018111939-9ed97f872277
+
 // replace github.com/aserto-dev/edge-ds => ../go-edge-ds
 
 require (
@@ -19,7 +19,7 @@ require (
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/go-authorizer v0.0.8
 	github.com/aserto-dev/go-directory v0.0.14
-	github.com/aserto-dev/go-edge-ds v0.0.0-20221019211101-6f44dc48fdd9
+	github.com/aserto-dev/go-edge-ds v0.0.0-20221019224200-ffaa57926b69
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
 	github.com/aserto-dev/runtime v0.44.5-0.20221017130809-d4139bec84b4

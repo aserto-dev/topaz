@@ -5,7 +5,7 @@ logging:
 
 directory_service:
   edge:
-    db_path: /Users/gertd/workspace/src/github.com/aserto-dev/topaz-private/pkg/testing/assets/eds-acmecorp.db
+    db_path: .dev/db/eds-citadel.db
     seed_metadata: false
   remote:
     address: "localhost:9292"
