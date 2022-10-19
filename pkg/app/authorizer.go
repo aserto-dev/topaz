@@ -26,7 +26,8 @@ type Authorizer struct {
 
 // Start starts all services required by the Engine
 func (e *Authorizer) Start() error {
-	if strings.Contains(e.Configuration.Directory.Remote.Addr, "localhost") && e.Configuration.Directory.EdgeConfig.DBPath != "" {
+	if (strings.Contains(e.Configuration.Directory.Remote.Addr, "localhost") || strings.Contains(e.Configuration.Directory.Remote.Addr, "0.0.0.0")) &&
+		e.Configuration.Directory.EdgeConfig.DBPath != "" {
 		addr := strings.Split(e.Configuration.Directory.Remote.Addr, ":")
 		if len(addr) != 2 {
 			return errors.Errorf("invalid remote address - should contain <host>:<port>")

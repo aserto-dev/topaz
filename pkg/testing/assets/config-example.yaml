@@ -8,7 +8,7 @@ directory_service:
     db_path: /Users/gertd/workspace/src/github.com/aserto-dev/topaz-private/pkg/testing/assets/eds-acmecorp.db
     seed_metadata: false
   remote:
-    address: "localhost:12345"
+    address: "localhost:9292"
     insecure: true
 
 api:
