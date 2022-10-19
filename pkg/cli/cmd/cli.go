@@ -12,6 +12,7 @@ type CLI struct {
 	Backup    BackupCmd    `cmd:"" help:"backup directory data"`
 	Configure ConfigureCmd `cmd:"" help:"configure topaz service"`
 	Export    ExportCmd    `cmd:"" help:"export directory objects"`
+	Install   InstallCmd   `cmd:"" help:"install topaz"`
 	Import    ImportCmd    `cmd:"" help:"import directory objects"`
 	Load      LoadCmd      `cmd:"" help:"load a manifest file"`
 	Restore   RestoreCmd   `cmd:"" help:"restore directory data"`
@@ -21,6 +22,7 @@ type CLI struct {
 	Status    StatusCmd    `cmd:"" help:"display topaz instance status"`
 	Stop      StopCmd      `cmd:"" help:"stop topaz instance"`
 	Version   VersionCmd   `cmd:"" help:"version information"`
+	Uninstall UninstallCmd `cmd:"" help:"uninstall topaz, removes all locally installed artifacts"`
 }
 
 type VersionCmd struct{}
