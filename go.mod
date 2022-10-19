@@ -19,7 +19,7 @@ require (
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/go-authorizer v0.0.8
 	github.com/aserto-dev/go-directory v0.0.14
-	github.com/aserto-dev/go-edge-ds v0.0.0-20221019025639-6c1d3d66391b
+	github.com/aserto-dev/go-edge-ds v0.0.0-20221019185327-0a74743584e9
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
 	github.com/aserto-dev/runtime v0.44.5-0.20221017130809-d4139bec84b4
@@ -127,7 +127,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.0.0-20221017152216-f25eb7ecb193 // indirect
+	golang.org/x/net v0.1.0 // indirect
 	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
