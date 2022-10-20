@@ -33,7 +33,7 @@ LABEL org.opencontainers.image.url=https://aserto.com
 
 RUN apk add --no-cache bash tzdata
 WORKDIR /app
-COPY --from=build-dev /src/dist/topaz_linux_amd64/topaz /app/
+COPY --from=build-dev /src/dist/topazd_linux_amd64/topazd /app/
 
 EXPOSE 8282
 EXPOSE 8383
@@ -41,4 +41,4 @@ EXPOSE 8484
 EXPOSE 8585
 EXPOSE 9292
 
-ENTRYPOINT ["./topaz"]
+ENTRYPOINT ["./topazd"]

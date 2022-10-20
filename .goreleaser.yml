@@ -2,9 +2,9 @@ before:
   hooks:
 
 builds:
-  - id: topaz
-    main: ./cmd/topaz
-    binary: topaz
+  - id: topazd
+    main: ./cmd/topazd
+    binary: topazd
     goos:
       - darwin
       - linux
@@ -24,9 +24,9 @@ builds:
       - -X github.com/aserto-dev/topaz/pkg/version.commit={{.ShortCommit}}
       - -X github.com/aserto-dev/topaz/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
-  - id: topaz_cli
-    main: ./cmd/cli
-    binary: topaz_cli
+  - id: topaz
+    main: ./cmd/topaz
+    binary: topaz
     goos:
       - darwin
       - linux
@@ -51,6 +51,7 @@ archives:
   - format: zip
     builds:
     - topaz
+    - topazd
     replacements:
       darwin: darwin
       linux: linux
