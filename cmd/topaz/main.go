@@ -2,33 +2,38 @@ package main
 
 import (
 	"fmt"
+	"os"
 
-	"log"
-
-	"github.com/aserto-dev/topaz/pkg/version"
-	"github.com/spf13/cobra"
+	"github.com/alecthomas/kong"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
-var rootCmd = &cobra.Command{
-	Use:           "authorizer [flags]",
-	SilenceErrors: true,
-	SilenceUsage:  true,
-}
-
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print version and exit",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Aserto Authorizer %s\n", version.GetInfo().Version)
-	},
-}
-
 func main() {
-	rootCmd.AddCommand(
-		versionCmd,
+	cli := cmd.CLI{}
+	kongCtx := kong.Parse(&cli,
+		kong.Name(x.AppName),
+		kong.Description(x.AppDescription),
+		kong.UsageOnError(),
+		kong.ConfigureHelp(kong.HelpOptions{
+			NoAppSummary:        false,
+			Summary:             false,
+			Compact:             true,
+			Tree:                false,
+			FlagsLast:           true,
+			Indenter:            kong.SpaceIndenter,
+			NoExpandSubcommands: false,
+		}),
 	)
 
-	if err := rootCmd.Execute(); err != nil {
-		log.Fatal(err.Error())
+	ctx, err := cc.NewCommonContext()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+
+	if err := kongCtx.Run(ctx); err != nil {
+		kongCtx.FatalIfErrorf(err)
 	}
 }

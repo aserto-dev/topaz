@@ -2,6 +2,28 @@ before:
   hooks:
 
 builds:
+  - id: topazd
+    main: ./cmd/topazd
+    binary: topazd
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/aserto-dev/topaz/pkg/version.ver={{.Version}}
+      - -X github.com/aserto-dev/topaz/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/aserto-dev/topaz/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
   - id: topaz
     main: ./cmd/topaz
     binary: topaz
@@ -29,6 +51,7 @@ archives:
   - format: zip
     builds:
     - topaz
+    - topazd
     replacements:
       darwin: darwin
       linux: linux
