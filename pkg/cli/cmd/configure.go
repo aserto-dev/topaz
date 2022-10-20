@@ -14,7 +14,8 @@ type ConfigureCmd struct {
 	PolicyName    string `arg:"" required:"" help:"policy name"`
 	Resource      string `short:"r" required:"" help:"resource url"`
 	Stdout        bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
-	EdgeDirectory bool   `short:"d" help:"enable edge directory"`
+	EdgeDirectory bool   `short:"d" help:"enable edge directory" default:"false"`
+	SeedMetadata  bool   `short:"s" help:"enable seed metadata" default:"false"`
 }
 
 func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
@@ -29,6 +30,7 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		PolicyName:    cmd.PolicyName,
 		Resource:      cmd.Resource,
 		EdgeDirectory: cmd.EdgeDirectory,
+		SeedMetadata:  cmd.SeedMetadata,
 	}
 
 	fmt.Fprintf(c.UI.Err(), "policy name: %s\n", params.PolicyName)
