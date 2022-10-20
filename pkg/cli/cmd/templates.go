@@ -4,6 +4,8 @@ type templateParams struct {
 	PolicyName    string
 	Resource      string
 	Authorization string
+	EdgeDirectory bool
+	SeedMetadata  bool
 }
 
 const configTemplate = templatePreamble + `
@@ -40,7 +42,12 @@ logging:
 directory_service:
   edge:
     db_path: /app/db/directory.db
-
+    seed_metadata: {{ .SeedMetadata }}
+    {{if .EdgeDirectory}}
+  remote:
+    address: "0.0.0.0:9292"
+    insecure: true
+    {{end}}
 api:
   grpc:
     connection_timeout_seconds: 2
