@@ -11,9 +11,10 @@ import (
 )
 
 type ConfigureCmd struct {
-	PolicyName string `arg:"" required:"" help:"policy name"`
-	Resource   string `short:"r" required:"" help:"resource url"`
-	Stdout     bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
+	PolicyName    string `arg:"" required:"" help:"policy name"`
+	Resource      string `short:"r" required:"" help:"resource url"`
+	Stdout        bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
+	EdgeDirectory bool   `short:"d" help:"enable edge directory"`
 }
 
 func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
@@ -25,8 +26,9 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	params := templateParams{
-		PolicyName: cmd.PolicyName,
-		Resource:   cmd.Resource,
+		PolicyName:    cmd.PolicyName,
+		Resource:      cmd.Resource,
+		EdgeDirectory: cmd.EdgeDirectory,
 	}
 
 	fmt.Fprintf(c.UI.Err(), "policy name: %s\n", params.PolicyName)
