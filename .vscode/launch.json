@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "buildFlags": "",
-            "program": "${workspaceFolder}/cmd/topaz",
+            "program": "${workspaceFolder}/cmd/topazd",
             "cwd": "${workspaceFolder}",
             "args": ["-c", "${workspaceFolder}/pkg/testing/assets/config-example.yaml", "run"]
         }

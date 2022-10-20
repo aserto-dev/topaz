@@ -102,7 +102,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		InputResource: req.ResourceContext,
 	}
 
-	policyRuntime, err := s.getRuntime(ctx, req.PolicyContext)
+	policyRuntime, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return resp, err
 	}
@@ -237,7 +237,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 	log.Debug().Interface("input", input).Msg("calculating is")
 
-	policyRuntime, err := s.getRuntime(ctx, req.PolicyContext)
+	policyRuntime, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return resp, err
 	}
@@ -391,7 +391,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 
 	log.Debug().Str("query", req.Query).Interface("input", input).Msg("executing query")
 
-	rt, err := s.getRuntime(ctx, req.PolicyContext)
+	rt, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return &authorizer.QueryResponse{}, err
 	}
@@ -467,11 +467,11 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	return resp, nil
 }
 
-func (s *AuthorizerServer) getRuntime(ctx context.Context, policyContext *api.PolicyContext) (*runtime.Runtime, error) {
+func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.PolicyInstance) (*runtime.Runtime, error) {
 	var rt *runtime.Runtime
 	var err error
-	if policyContext != nil {
-		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyContext.GetName(), policyContext.InstanceLabel)
+	if policyInstance != nil {
+		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyInstance.Name, policyInstance.InstanceLabel)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to procure tenant runtime")
 		}
@@ -551,7 +551,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 		input = make(map[string]interface{})
 	}
 	log.Debug().Str("compile", req.Query).Interface("input", input).Msg("executing compile")
-	rt, err := s.getRuntime(ctx, req.PolicyContext)
+	rt, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return &authorizer.CompileResponse{}, err
 	}
@@ -625,7 +625,7 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 
 	response := &authorizer.ListPoliciesResponse{}
 
-	rt, err := s.getRuntime(ctx, nil)
+	rt, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return response, errors.Wrap(err, "failed to get runtime")
 	}
@@ -656,10 +656,11 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 
 func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPolicyRequest) (*authorizer.GetPolicyResponse, error) {
 	response := &authorizer.GetPolicyResponse{}
-	rt, err := s.getRuntime(ctx, nil)
+	rt, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return response, errors.Wrap(err, "failed to get runtime")
 	}
+
 	policy, err := rt.GetPolicy(ctx, req.Id)
 	if err != nil {
 		return response, errors.Wrapf(err, "failed to get policy with ID [%s]", req.Id)
