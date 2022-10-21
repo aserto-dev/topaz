@@ -21,6 +21,7 @@ require (
 	github.com/aserto-dev/clui v0.8.1
 	github.com/aserto-dev/go-authorizer v0.0.9
 	github.com/aserto-dev/go-directory v0.0.15
+	github.com/aserto-dev/go-directory-cli v0.0.1
 	github.com/aserto-dev/go-edge-ds v0.0.0-20221021043521-51d07b67864b
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
@@ -117,7 +118,6 @@ require (
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
-	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
