@@ -6,7 +6,7 @@ import (
 	"path"
 
 	asertogoClient "github.com/aserto-dev/aserto-go/client"
-	"github.com/aserto-dev/go-edge-ds/pkg/client"
+	"github.com/aserto-dev/go-directory-cli/client"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/fatih/color"
