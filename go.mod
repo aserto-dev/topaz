@@ -20,8 +20,8 @@ require (
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/clui v0.8.1
 	github.com/aserto-dev/go-authorizer v0.0.9
-	github.com/aserto-dev/go-directory v0.0.14
-	github.com/aserto-dev/go-edge-ds v0.0.0-20221019224200-ffaa57926b69
+	github.com/aserto-dev/go-directory v0.0.15
+	github.com/aserto-dev/go-edge-ds v0.0.0-20221021043521-51d07b67864b
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
 	github.com/aserto-dev/runtime v0.44.5-0.20221017130809-d4139bec84b4
@@ -59,7 +59,7 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/aserto-dev/errors v0.0.1 // indirect
+	github.com/aserto-dev/errors v0.0.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytecodealliance/wasmtime-go v0.36.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
