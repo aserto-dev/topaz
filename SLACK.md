@@ -16,8 +16,8 @@ projects. Please do not use the Slack to advertise proprietary vendor products, 
 
 ## Reporting a Problem
 
-Please report issues to Vlad Iovanov (vlad@aserto.com or @viovanov) or Gert 
-Drapers (gert@aserto.com).
+Please report issues to Vlad Iovanov (dani@aserto.com or @carabasdaniel) or Gert 
+Drapers (gert@aserto.com or @gertd).
 
 ## Consequences of Unacceptable Behavior
 
