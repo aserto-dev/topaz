@@ -98,8 +98,8 @@ brews:
 
     tap:
       owner: aserto-dev
-      name: aserto-tap
-      token: "{{ .Env.ASERTO_TAP }}"
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP }}"
 
     url_template: "https://storage.googleapis.com/topaz-cli/topaz/{{ .Version }}/{{ .ArtifactName }}"
 
