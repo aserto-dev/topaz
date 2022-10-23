@@ -19,7 +19,7 @@ Authorization policies can leverage user attributes, group membership, applicati
 
 ## Documentation and support
 
-Read more at [topaz.sh](https://www.topaz.sh) and the [docs](https://www.topaz.sh/docs).
+Read more at [topaz.sh](https://www.topaz.sh) and the [docs](https://www.topaz.sh/docs/intro).
 
 Join the community [Slack channel](https://www.aserto.com/slack) for questions and help!
 
@@ -218,7 +218,7 @@ To interact with the directory endpoint, use `localhost:9292`:
 grpcui localhost:9292
 ```
 
-For more information on APIs, see the [docs](https://www.topaz.sh/docs).
+For more information on APIs, see the [docs](https://www.topaz.sh/docs/intro).
 
 ## Credits
 
