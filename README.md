@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/aserto-dev/topaz)](https://goreportcard.com/report/github.com/aserto-dev/topaz)
 [![ci](https://github.com/aserto-dev/topaz/actions/workflows/ci.yaml/badge.svg)](https://github.com/aserto-dev/topaz/actions/workflows/ci.yaml)
 ![Apache 2.0](https://img.shields.io/github/license/aserto-dev/topaz)
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/aserto-dev/topaz)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/tag/aserto-dev/topaz)
 [<img src="https://img.shields.io/badge/slack-@asertocommunity-yellow.svg?logo=slack">](https://www.aserto.com/slack)
 [<img src="https://img.shields.io/badge/docs-%F0%9F%95%B6-blue">](https://www.topaz.sh/docs/intro)
 <a href="https://twitter.com/intent/follow?screen_name=aserto_com"><img src="https://img.shields.io/badge/Follow-aserto__com-blue?style=flat&logo=twitter"></a>
