@@ -203,7 +203,7 @@ jobs:
         name: Release
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.READ_WRITE_TOKEN }}
-          ASERTO_TAP: ${{ steps.vault.outputs.ASERTO_TAP }}
+          HOMEBREW_TAP: ${{ steps.vault.outputs.ASERTO_TAP }}
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         run: |
           mkdir -p $HOME/.ssh
