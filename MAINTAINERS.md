@@ -1,8 +1,8 @@
 # Maintainers
 
-The following table lists Open Policy Registry (OPCR) project maintainers and areas of expertise in alphabetical order:
+The following table lists Topaz project maintainers and areas of expertise in alphabetical order:
 
 | Name | GitHub | Email | Organization | Repositories/Area of Expertise | Added/Renewed On |
 | --- | --- | --- | --- | --- | --- |
-| Gert Drapers | @gertd | gert@aserto.com | Aserto | all repositories | 2021-09-28 |
-| Vlad Iovanov | @viovanov | vlad@aserto.com | Aserto | all repositories | 2021-09-28 |
+| Gert Drapers | @gertd | gert@aserto.com | Aserto | all repositories | 2022-10-23 |
+| Dani Carabas | @carabasdaniel | dani@aserto.com | Aserto | all repositories | 2022-10-23 |
