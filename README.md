@@ -2,7 +2,7 @@
 
 # Topaz - cloud-native authorization for modern applications and APIs
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/aserto-dev/topaz?)](https://goreportcard.com/report/github.com/aserto-dev/topaz)
+[![Go Report Card](https://goreportcard.com/badge/github.com/aserto-dev/topaz)](https://goreportcard.com/report/github.com/aserto-dev/topaz)
 [![ci](https://github.com/aserto-dev/topaz/actions/workflows/ci.yaml/badge.svg)](https://github.com/aserto-dev/topaz/actions/workflows/ci.yaml)
 ![Apache 2.0](https://img.shields.io/github/license/aserto-dev/topaz)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/aserto-dev/topaz)
