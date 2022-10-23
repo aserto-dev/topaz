@@ -1,0 +1,123 @@
+before:
+  hooks:
+
+builds:
+  - id: topazd
+    main: ./cmd/topazd
+    binary: topazd
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/aserto-dev/topaz/pkg/version.ver={{.Version}}
+      - -X github.com/aserto-dev/topaz/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/aserto-dev/topaz/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+  - id: topaz
+    main: ./cmd/topaz
+    binary: topaz
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/aserto-dev/topaz/pkg/version.ver={{.Version}}
+      - -X github.com/aserto-dev/topaz/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/aserto-dev/topaz/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+archives:
+  - format: zip
+    builds:
+    - topaz
+    - topazd
+    replacements:
+      darwin: darwin
+      linux: linux
+      windows: windows
+      amd64: x86_64
+    files:
+      - LICENSE
+      - README.md
+    name_template: "topaz_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ .Tag }}"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  disable: true
+
+blobs:
+  -
+    provider: gs
+    bucket: topaz-cli
+    folder: "topaz/{{ .Version }}"
+    extra_files:
+      - glob: VERSION.txt
+  -
+    provider: gs
+    bucket: topaz-cli
+    folder: "topaz/latest"
+    extra_files:
+      - glob: VERSION.txt
+
+brews:
+  -
+    name: topaz
+
+    tap:
+      owner: aserto-dev
+      name: aserto-tap
+      token: "{{ .Env.ASERTO_TAP }}"
+
+    url_template: "https://storage.googleapis.com/topaz-cli/topaz/{{ .Version }}/{{ .ArtifactName }}"
+
+    download_strategy: CurlDownloadStrategy
+
+    commit_author:
+      name: Aserto Bot
+      email: github-bot@aserto.com
+
+    homepage: "https://www.topaz.sh/docs/"
+
+    description: "Topaz CLI"
+
+    license: "MIT"
+
+    skip_upload: false
+
+    test: |
+      system "#{bin}/topaz version"
+    install: |
+      bin.install "topaz"
