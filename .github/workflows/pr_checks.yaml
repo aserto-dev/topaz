@@ -1,0 +1,13 @@
+name: pr_checks
+on:
+  pull_request:
+
+jobs:
+  check-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: gitleaks-check
+        uses: aserto-dev/gitleaks-action@master
