@@ -41,7 +41,7 @@ Join the community [Slack channel](https://www.aserto.com/slack) for questions a
     - [Building from source](#building-from-source)
     - [Running with Docker](#running-with-docker)
 - [Quickstart](#quickstart)
-    - [Install container image](#install-topaz-container-image)
+    - [Install container image](#install-topaz-authorizer-container-image)
     - [Create config for Todo policy](#create-a-configuration)
     - [Start in interactive mode](#start-topaz-in-interative-mode)
     - [Import sample data](#import-sample-data)
@@ -170,9 +170,9 @@ curl -k -X POST 'https://localhost:8383/api/v2/authz/is' \
 
 ### Run the sample application
 
-To run the sample Todo app in the language of your choice, and see how Topaz is used to authorize requests, refer to the [docs](https://www.topaz.sh/docs/getting-started).
+To run the sample Todo app in the language of your choice, and see how Topaz is used to authorize requests, refer to the [docs](https://www.topaz.sh/docs/getting-started/samples).
 
-To create an interactive session with the Topaz endpoints, see the [gRPC endpoints](#grpc-endpoints) section.
+To start an interactive session with the Topaz endpoints, see the [gRPC endpoints](#grpc-endpoints) section.
 
 ## Command line options
 
@@ -209,13 +209,13 @@ Run "topaz <command> --help" for more information on a command.
 To interact with the authorizer endpoint, install `grpcui` or `grpcurl` and point them to `localhost:8282`:
 
 ```shell
-grpcui localhost:8282
+grpcui --insecure localhost:8282
 ```
 
 To interact with the directory endpoint, use `localhost:9292`:
 
 ```shell
-grpcui localhost:9292
+grpcui --insecure localhost:9292
 ```
 
 For more information on APIs, see the [docs](https://www.topaz.sh/docs/intro).
