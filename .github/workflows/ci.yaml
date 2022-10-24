@@ -79,6 +79,7 @@ jobs:
           url: https://vault.eng.aserto.com/
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
+            kv/data/github "SSH_PRIVATE_KEY"      | SSH_PRIVATE_KEY;
             kv/data/github  "USERNAME"            | DOCKER_USERNAME;
             kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
             kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
@@ -148,6 +149,7 @@ jobs:
           url: https://vault.eng.aserto.com/
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
+            kv/data/github "SSH_PRIVATE_KEY"                          | SSH_PRIVATE_KEY;
             kv/data/github  "READ_WRITE_TOKEN"                        | READ_WRITE_TOKEN;
             kv/data/github  "ASERTO_TAP"                              | ASERTO_TAP;
             kv/data/gcp     "SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE"  | SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE;
