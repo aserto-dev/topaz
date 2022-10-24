@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - 
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - 
         name: Setup Go
         uses: actions/setup-go@v3
@@ -163,7 +163,7 @@ jobs:
             kv/data/github  "ASERTO_TAP"                              | ASERTO_TAP;
             kv/data/gcp     "SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE"  | SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE;
       - 
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - 
