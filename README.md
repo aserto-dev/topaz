@@ -11,9 +11,9 @@
 <a href="https://twitter.com/intent/follow?screen_name=aserto_com"><img src="https://img.shields.io/badge/Follow-aserto__com-blue?style=flat&logo=twitter"></a>
 
 
-Topaz is an open-source authorization service providing fine-grained, real-time, policy-based access control for applications and APIs. 
+Topaz is an open-source authorization service providing fine-grained, real-time, policy-based access control for applications and APIs.
 
-It uses the [Open Policy Agent](https://www.openpolicyagent.org/) (OPA) as its decision engine, and provides a built-in directory that is inspired by the Google [Zanzibar](https://research.google/pubs/pub48190/) data model. 
+It uses the [Open Policy Agent](https://www.openpolicyagent.org/) (OPA) as its decision engine, and provides a built-in directory that is inspired by the Google [Zanzibar](https://research.google/pubs/pub48190/) data model.
 
 Authorization policies can leverage user attributes, group membership, application resources, and relationships between them. All data used for authorization is modeled and stored locally in an embedded database, so authorization decisions can be evaluated quickly and efficiently.
 
@@ -23,7 +23,7 @@ Read more at [topaz.sh](https://www.topaz.sh) and the [docs](https://www.topaz.s
 
 Join the community [Slack channel](https://www.aserto.com/slack) for questions and help!
 
-## Benefits 
+## Benefits
 
 * **Authorization in one place**: a single authorization service, instead of spreading authorization logic everywhere.
 * **Fine-grained**: following the Principle of Least Privilege, assign the smallest set of fine-grained permissions to each user or group.
@@ -95,14 +95,14 @@ Join the community [Slack channel](https://www.aserto.com/slack) for questions a
 
 ## Quickstart
 
-These instructions help you get Topaz up and running as the authorizer for a sample Todo app. 
+These instructions help you get Topaz up and running as the authorizer for a sample Todo app.
 
 ### Install Topaz authorizer container image
 
 The Topaz authorizer is packaged as a Docker container. You can get the latest image using the following command:
 
 ```shell
-topaz install 
+topaz install
 ```
 
 ### Create a configuration
@@ -156,7 +156,7 @@ Issue a query using the `is` REST API to verify that the user Rick is allowed to
 ```shell
 curl -k -X POST 'https://localhost:8383/api/v2/authz/is' \
 -H 'Content-Type: application/json' \
--d '{ 
+-d '{
      "identity_context": {
           "type": "IDENTITY_TYPE_SUB",
           "identity": "rick@the-citadel.com"
@@ -219,6 +219,9 @@ grpcui --insecure localhost:9292
 ```
 
 For more information on APIs, see the [docs](https://www.topaz.sh/docs/intro).
+
+## Demo
+![demo](./assets/topaz.gif)
 
 ## Credits
 
