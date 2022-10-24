@@ -2,13 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.17
 
-replace github.com/slok/go-http-metrics => github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53
-
-replace github.com/rivo/uniseg => github.com/rivo/uniseg v0.2.0
-
-replace github.com/zricethezav/gitleaks/v8 => github.com/zricethezav/gitleaks/v8 v8.3.0
-
-replace github.com/gitleaks/go-gitdiff => github.com/gitleaks/go-gitdiff v0.7.4
+// replace github.com/slok/go-http-metrics => github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53
 
 require (
 	github.com/alecthomas/kong v0.6.1
@@ -20,6 +14,7 @@ require (
 	github.com/aserto-dev/go-directory v0.20.1
 	github.com/aserto-dev/go-directory-cli v0.20.1
 	github.com/aserto-dev/go-edge-ds v0.20.1
+	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
 	github.com/aserto-dev/runtime v0.44.5-0.20221017130809-d4139bec84b4
@@ -40,7 +35,6 @@ require (
 	github.com/prometheus/client_golang v1.13.0
 	github.com/rs/cors v1.8.2
 	github.com/rs/zerolog v1.28.0
-	github.com/slok/go-http-metrics v0.10.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.13.0
 	github.com/stretchr/testify v1.8.0

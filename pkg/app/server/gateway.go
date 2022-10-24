@@ -7,10 +7,10 @@ import (
 	promclient "github.com/prometheus/client_golang/prometheus"
 
 	"github.com/aserto-dev/certs"
+	"github.com/aserto-dev/go-http-metrics/middleware/grpc"
 	"github.com/aserto-dev/logger"
 	openapi "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/slok/go-http-metrics/middleware/grpc"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"

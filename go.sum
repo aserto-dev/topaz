@@ -316,8 +316,8 @@ github.com/aserto-dev/go-edge-ds v0.20.1/go.mod h1:AFn7Tt4ShTV+RDPPGGB3LLtUZwB5M
 github.com/aserto-dev/go-grpc v0.8.0/go.mod h1:hog+zu5jE3+Y6t7m5PIBlavosmbd2qdF0BGZ9ueWK74=
 github.com/aserto-dev/go-grpc v0.8.43/go.mod h1:ZHKobEadfjzb39dKhc/iy8JyQDRuB/IsSwVa8YuWkQY=
 github.com/aserto-dev/go-grpc-authz v0.8.0/go.mod h1:ssdQrzxQf+IZ+jy8ATz9S6Ys+nqsTMZyKmPpdj0kwHo=
-github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53 h1:2lU+szJhwZXDigE+ldDDm7a/3RC2rJCBfwVPZm6TKLs=
-github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53/go.mod h1:BkUPSrUNol4J/0axIT9nEacokJ+AKTLfnsJrBsnkUTQ=
+github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
+github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1/go.mod h1:QnWF5/X2U/kmbu7GEw+zupvqX2hIthDjyXlRTwt2zEI=
 github.com/aserto-dev/go-utils v0.8.25/go.mod h1:s5XhjJMG1UCarMpI4E01cgW35zls+E+eGqiPmGssXsU=
 github.com/aserto-dev/logger v0.0.2 h1:WTDOgLYmIiA1yadwfjDuU/WJH6ndosldzLyOeztW27w=
 github.com/aserto-dev/logger v0.0.2/go.mod h1:8HIZAwlf+Y0V33YnGILYZOtYh1Eue5mz1YNf1XbqPbI=
