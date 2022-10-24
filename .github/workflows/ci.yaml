@@ -79,7 +79,7 @@ jobs:
           url: https://vault.eng.aserto.com/
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
-            kv/data/github "SSH_PRIVATE_KEY"      | SSH_PRIVATE_KEY;
+            kv/data/github  "SSH_PRIVATE_KEY"     | SSH_PRIVATE_KEY;
             kv/data/github  "USERNAME"            | DOCKER_USERNAME;
             kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
             kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
@@ -116,6 +116,15 @@ jobs:
       - 
         name: Build Images
         run: |
+          mkdir -p $HOME/.ssh
+          umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
+          ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+          git config --global url."git@github.com:".insteadOf https://github.com/
+          git config --global user.email "github-bot@aserto.com"
+          git config --global user.name "Aserto Bot"
+          eval `ssh-agent`
+          ssh-add $HOME/.ssh/id_rsa
+
           go run mage.go deps dockerImage
       - 
         name: Wait for tests to succeed
@@ -149,7 +158,7 @@ jobs:
           url: https://vault.eng.aserto.com/
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
-            kv/data/github "SSH_PRIVATE_KEY"                          | SSH_PRIVATE_KEY;
+            kv/data/github  "SSH_PRIVATE_KEY"                         | SSH_PRIVATE_KEY;
             kv/data/github  "READ_WRITE_TOKEN"                        | READ_WRITE_TOKEN;
             kv/data/github  "ASERTO_TAP"                              | ASERTO_TAP;
             kv/data/gcp     "SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE"  | SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE;
@@ -180,6 +189,14 @@ jobs:
           HOMEBREW_TAP: ${{ steps.vault.outputs.ASERTO_TAP }}
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         run: |
+          mkdir -p $HOME/.ssh
+          umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
+          ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+          git config --global url."git@github.com:".insteadOf https://github.com/
+          git config --global user.email "github-bot@aserto.com"
+          git config --global user.name "Aserto Bot"
+          eval `ssh-agent`
+          
           echo "${SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE}" > /tmp/gs.json
           
           go run mage.go deps release
