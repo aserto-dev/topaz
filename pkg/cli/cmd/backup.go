@@ -12,11 +12,12 @@ import (
 
 type BackupCmd struct {
 	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to make backup to"`
+	clients.Config
 }
 
 const defaultFileName = "backup.tar.gz"
 
-func (cmd BackupCmd) Run(c *cc.CommonCtx) error {
+func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
 	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
 		if err != nil {
 			return err
@@ -25,7 +26,7 @@ func (cmd BackupCmd) Run(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, "")
+	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}

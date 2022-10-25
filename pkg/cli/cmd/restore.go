@@ -12,9 +12,10 @@ import (
 
 type RestoreCmd struct {
 	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
+	clients.Config
 }
 
-func (cmd RestoreCmd) Run(c *cc.CommonCtx) error {
+func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
 		if err != nil {
 			return err
@@ -23,7 +24,7 @@ func (cmd RestoreCmd) Run(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, "")
+	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}

@@ -12,9 +12,10 @@ import (
 
 type ImportCmd struct {
 	Directory string `short:"d" required:"" help:"directory containing .json data"`
+	clients.Config
 }
 
-func (cmd ImportCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
 		if err != nil {
 			return err
@@ -29,7 +30,7 @@ func (cmd ImportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, "")
+	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
