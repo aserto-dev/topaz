@@ -8,6 +8,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/fatih/color"
+	"github.com/google/uuid"
 )
 
 type ImportCmd struct {
@@ -30,6 +31,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
+	cmd.Config.SessionID = uuid.NewString()
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
