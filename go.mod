@@ -2,8 +2,6 @@ module github.com/aserto-dev/topaz
 
 go 1.17
 
-replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
-
 require (
 	github.com/alecthomas/kong v0.6.1
 	github.com/aserto-dev/aserto-go v0.8.14-0.20221018123009-a56db85a7ed3
