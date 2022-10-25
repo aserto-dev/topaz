@@ -76,7 +76,13 @@ changelog:
       - "^test:"
 
 release:
-  disable: true
+  github:
+    owner: aserto-dev
+    name: topaz
+
+  draft: false
+  prerelease: false
+  name_template: "topaz {{.Tag}}"
 
 blobs:
   -
