@@ -2,8 +2,6 @@ module github.com/aserto-dev/topaz
 
 go 1.17
 
-// replace github.com/slok/go-http-metrics => github.com/aserto-dev/go-http-metrics v0.10.1-0.20220201161800-936358c78a53
-
 require (
 	github.com/alecthomas/kong v0.6.1
 	github.com/aserto-dev/aserto-go v0.8.14-0.20221018123009-a56db85a7ed3
@@ -12,7 +10,7 @@ require (
 	github.com/aserto-dev/errors v0.0.2
 	github.com/aserto-dev/go-authorizer v0.20.1
 	github.com/aserto-dev/go-directory v0.20.1
-	github.com/aserto-dev/go-directory-cli v0.20.1
+	github.com/aserto-dev/go-directory-cli v0.20.3
 	github.com/aserto-dev/go-edge-ds v0.20.1
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2

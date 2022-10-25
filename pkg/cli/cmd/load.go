@@ -12,11 +12,12 @@ import (
 
 type LoadCmd struct {
 	File string `arg:""  default:"manifest.yaml" help:"absolute path to manifest file"`
+	clients.Config
 }
 
 var defaultManifestName = "manifest.yaml"
 
-func (cmd LoadCmd) Run(c *cc.CommonCtx) error {
+func (cmd *LoadCmd) Run(c *cc.CommonCtx) error {
 	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
 		if err != nil {
 			return err
@@ -25,7 +26,7 @@ func (cmd LoadCmd) Run(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, "")
+	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
