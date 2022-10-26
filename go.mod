@@ -64,6 +64,7 @@ require (
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
+	github.com/fullstorydev/grpcurl v1.8.7 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
@@ -77,6 +78,7 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/jhump/protoreflect v1.12.0 // indirect
 	github.com/klauspost/compress v1.14.4 // indirect
 	github.com/kyokomi/emoji v2.2.4+incompatible // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
