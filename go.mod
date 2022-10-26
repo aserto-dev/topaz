@@ -10,13 +10,14 @@ require (
 	github.com/aserto-dev/errors v0.0.2
 	github.com/aserto-dev/go-authorizer v0.20.1
 	github.com/aserto-dev/go-directory v0.20.1
-	github.com/aserto-dev/go-directory-cli v0.20.4
+	github.com/aserto-dev/go-directory-cli v0.20.5
 	github.com/aserto-dev/go-edge-ds v0.20.1
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
 	github.com/aserto-dev/runtime v0.44.5-0.20221017130809-d4139bec84b4
 	github.com/fatih/color v1.13.0
+	github.com/fullstorydev/grpcurl v1.8.7
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
@@ -64,7 +65,6 @@ require (
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/docker/libtrust v0.0.0-20160708172513-aabc10ec26b7 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
-	github.com/fullstorydev/grpcurl v1.8.7 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
