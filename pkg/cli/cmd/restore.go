@@ -40,6 +40,6 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, "backup.tar.gz")
 	}
 
-	color.Green(">>> starting restoring from backup...")
+	color.Green(">>> restore from %s", cmd.File)
 	return dirClient.Restore(c.Context, cmd.File)
 }
