@@ -1,13 +1,15 @@
 module github.com/aserto-dev/topaz
 
+replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
+
 go 1.17
 
 require (
 	github.com/alecthomas/kong v0.6.1
-	github.com/aserto-dev/aserto-go v0.8.14-0.20221018123009-a56db85a7ed3
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/clui v0.8.1
 	github.com/aserto-dev/errors v0.0.2
+	github.com/aserto-dev/go-aserto v0.0.0-20221031013933-55298bdbda15
 	github.com/aserto-dev/go-authorizer v0.20.1
 	github.com/aserto-dev/go-directory v0.20.1
 	github.com/aserto-dev/go-directory-cli v0.20.6
@@ -36,7 +38,7 @@ require (
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.13.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	go.opencensus.io v0.23.0
 	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
 	google.golang.org/grpc v1.50.1
