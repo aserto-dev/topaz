@@ -302,8 +302,8 @@ github.com/aserto-dev/clui v0.8.1/go.mod h1:XpJxwNzSQaGN6rqXONZJEaeez4MUaCPikM2l
 github.com/aserto-dev/errors v0.0.1/go.mod h1:TBlc5z9t1ClYehyJT614pJ0jknkCFWo7sdyAFkFEndY=
 github.com/aserto-dev/errors v0.0.2 h1:e7LRqs+WMkOl90MFe3lekfd55PJjRI1oIWRnpYsCfzk=
 github.com/aserto-dev/errors v0.0.2/go.mod h1:TBlc5z9t1ClYehyJT614pJ0jknkCFWo7sdyAFkFEndY=
-github.com/aserto-dev/go-aserto v0.0.0-20221031013933-55298bdbda15 h1:D4UXTVo5UsKICu6m9euB+h+iLY0iq/pKjSo+woLPTfg=
-github.com/aserto-dev/go-aserto v0.0.0-20221031013933-55298bdbda15/go.mod h1:3xhxKkQmMrzADCZL+5WtA+SuC+syvQMMmDp8GnPRmHc=
+github.com/aserto-dev/go-aserto v0.0.3 h1:Bkcg2nea4IPcEjg2ZOT7Or5MC9KlHpPkUOL84qnZZ0g=
+github.com/aserto-dev/go-aserto v0.0.3/go.mod h1:3xhxKkQmMrzADCZL+5WtA+SuC+syvQMMmDp8GnPRmHc=
 github.com/aserto-dev/go-authorizer v0.20.1 h1:01ry1AmhOhhGVeWyyvTVTnoCG6lYjmY5uHpzFb9tMOE=
 github.com/aserto-dev/go-authorizer v0.20.1/go.mod h1:RTpBixDT2WIPOkXcewCXG3NxOWDt22yiXMb+qvdxucM=
 github.com/aserto-dev/go-directory v0.20.1 h1:tOoZPUeNqtiuy/kd/24oju0aTTug2tt6dx4qnLFxbJA=

@@ -9,10 +9,10 @@ require (
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/clui v0.8.1
 	github.com/aserto-dev/errors v0.0.2
-	github.com/aserto-dev/go-aserto v0.0.0-20221031013933-55298bdbda15
+	github.com/aserto-dev/go-aserto v0.0.3
 	github.com/aserto-dev/go-authorizer v0.20.1
 	github.com/aserto-dev/go-directory v0.20.1
-	github.com/aserto-dev/go-directory-cli v0.20.6
+	github.com/aserto-dev/go-directory-cli v0.20.7-0.20221031052550-fcdc2fdf5266
 	github.com/aserto-dev/go-edge-ds v0.20.1
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2
