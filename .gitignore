@@ -42,8 +42,8 @@ bundle.tar.gz
 *ds.db
 
 # allow test assets
-!pkg/testing/assets/eds.db
-!pkg/testing/assets/config.yaml
+!pkg/testing/assets/*.db
+!pkg/testing/assets/config*.yaml
 
 # config file you can use for local development
 config-dev*.yaml
