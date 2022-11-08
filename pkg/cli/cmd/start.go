@@ -1,8 +1,12 @@
 package cmd
 
 import (
+	"os"
+	"path"
+
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/pkg/errors"
 
 	"github.com/fatih/color"
 )
@@ -33,12 +37,24 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 
 	args = append(args, cmdArgs...)
 
-	path, err := dockerx.DefaultRoots()
+	rootPath, err := dockerx.DefaultRoots()
 	if err != nil {
 		return err
 	}
 
-	return dockerx.DockerWith(cmd.env(path), args...)
+	if _, err := os.Stat(path.Join(rootPath, "cfg", "config.yaml")); errors.Is(err, os.ErrNotExist) {
+		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(rootPath, "cfg", "config.yaml"))
+	}
+
+	if _, err := CreateCertsDir(); err != nil {
+		return err
+	}
+
+	if _, err := CreateDataDir(); err != nil {
+		return err
+	}
+
+	return dockerx.DockerWith(cmd.env(rootPath), args...)
 }
 
 var (
@@ -84,11 +100,11 @@ func (cmd *StartCmd) dockerArgs() []string {
 	return append(args, containerName...)
 }
 
-func (cmd *StartCmd) env(path string) map[string]string {
+func (cmd *StartCmd) env(rootPath string) map[string]string {
 	return map[string]string{
-		"TOPAZ_CERTS_DIR":    path,
-		"TOPAZ_CFG_DIR":      path,
-		"TOPAZ_EDS_DIR":      path,
+		"TOPAZ_CERTS_DIR":    rootPath,
+		"TOPAZ_CFG_DIR":      rootPath,
+		"TOPAZ_EDS_DIR":      rootPath,
 		"CONTAINER_NAME":     cmd.ContainerName,
 		"CONTAINER_VERSION":  cmd.ContainerVersion,
 		"CONTAINER_HOSTNAME": cmd.Hostname,

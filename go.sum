@@ -275,7 +275,6 @@ github.com/alexflint/go-filemutex v1.1.0/go.mod h1:7P4iRhttt/nUvUOrYIhcpMzv2G6CY
 github.com/allegro/bigcache v1.2.1/go.mod h1:Cb/ax3seSYIx7SuZdm2G2xzfwmv3TPSk2ucNfQESPXM=
 github.com/allegro/bigcache/v3 v3.0.1/go.mod h1:aPyh7jEvrog9zAwx5N7+JUQX5dZTSGpxF1LAR4dr35I=
 github.com/allegro/bigcache/v3 v3.0.2/go.mod h1:aPyh7jEvrog9zAwx5N7+JUQX5dZTSGpxF1LAR4dr35I=
-github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883 h1:bvNMNQO63//z+xNgfBlViaCIJKLlCJ6/fmUseuG0wVQ=
 github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883/go.mod h1:rCTlJbsFo29Kk6CurOXKm700vrz8f0KW0JNfpkRJY/8=
 github.com/andybalholm/brotli v1.0.2/go.mod h1:loMXtMfwqflxFJPmdbJO0a3KNoPuLBgiu3qAvBg8x/Y=
 github.com/andybalholm/brotli v1.0.4/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
@@ -292,6 +291,7 @@ github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj
 github.com/armon/go-radix v1.0.0/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
 github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a/go.mod h1:lB+ZfQJz7igIIfQNfa7Ml4HSf2uFQQRzpGGRXenZAgY=
+github.com/aserto-dev/aserto-go v0.8.13 h1:IkD2nB8dmZ2ws0j1U0wwFBVnHwDkFnekTpsDQKyP4E8=
 github.com/aserto-dev/aserto-go v0.8.13/go.mod h1:OFVnSJeMxsnzNuBmsY9yeVo9lTtwSGkv9Kr7YRC2ndM=
 github.com/aserto-dev/certs v0.0.2 h1:IFF+my4pu3BoUDDg31uLYb/JdoIESktecq153QYVxYE=
 github.com/aserto-dev/certs v0.0.2/go.mod h1:9mFvZ1NR92aEGj4ce6QleZGPXJuDZKTv+CWIOX28Xj8=
@@ -308,8 +308,12 @@ github.com/aserto-dev/go-authorizer v0.20.1 h1:01ry1AmhOhhGVeWyyvTVTnoCG6lYjmY5u
 github.com/aserto-dev/go-authorizer v0.20.1/go.mod h1:RTpBixDT2WIPOkXcewCXG3NxOWDt22yiXMb+qvdxucM=
 github.com/aserto-dev/go-directory v0.20.1 h1:tOoZPUeNqtiuy/kd/24oju0aTTug2tt6dx4qnLFxbJA=
 github.com/aserto-dev/go-directory v0.20.1/go.mod h1:gjg6wZezLGXJj1LBEXaJUS9kpOnaDWeFUYhDG1TAkTY=
-github.com/aserto-dev/go-edge-ds v0.20.1 h1:lc0E5tBb2Rm/3pa6PQc7RBmBhQktrdyo8ZTLxD2mi0Y=
-github.com/aserto-dev/go-edge-ds v0.20.1/go.mod h1:AFn7Tt4ShTV+RDPPGGB3LLtUZwB5MVR8IPCFxXYj4+k=
+github.com/aserto-dev/go-directory-cli v0.20.8 h1:Ko4c5CR1EoiUo3IaAIZ1HBbOdzeTTFMcYejtl8LuOeI=
+github.com/aserto-dev/go-directory-cli v0.20.8/go.mod h1:mBef3fu/mrWCpoKMB8BU1BLwhqHMF52ypEzObR5qj2Q=
+github.com/aserto-dev/go-directory-cli v0.20.9-0.20221108034829-c21113f5975a h1:TvrwhEq8+MxE2bQLcL7o45AvbEplVRX5bOH/z4Jsabk=
+github.com/aserto-dev/go-directory-cli v0.20.9-0.20221108034829-c21113f5975a/go.mod h1:l53YF6JRVS68AtV+kFzLqzdP8o1ULKwRoglwCuqRnAo=
+github.com/aserto-dev/go-edge-ds v0.20.2 h1:ZtVB3KK2FtutcXdvW9nNi4zgxdBztPGdS6LKMOEUhHs=
+github.com/aserto-dev/go-edge-ds v0.20.2/go.mod h1:AFn7Tt4ShTV+RDPPGGB3LLtUZwB5MVR8IPCFxXYj4+k=
 github.com/aserto-dev/go-grpc v0.8.0/go.mod h1:hog+zu5jE3+Y6t7m5PIBlavosmbd2qdF0BGZ9ueWK74=
 github.com/aserto-dev/go-grpc v0.8.43/go.mod h1:ZHKobEadfjzb39dKhc/iy8JyQDRuB/IsSwVa8YuWkQY=
 github.com/aserto-dev/go-grpc-authz v0.8.0/go.mod h1:ssdQrzxQf+IZ+jy8ATz9S6Ys+nqsTMZyKmPpdj0kwHo=
@@ -324,8 +328,8 @@ github.com/aserto-dev/mage-loot v0.8.7/go.mod h1:16Q5Iq1e+W8J0DuCJx2LI0u7Bf7C3Z1
 github.com/aserto-dev/mage-loot v0.8.9/go.mod h1:16Q5Iq1e+W8J0DuCJx2LI0u7Bf7C3Z1r8ywnJZbhBGQ=
 github.com/aserto-dev/openapi-authorizer v0.0.1 h1:ClyOSr1ZX5JWCL3SuBeff68n9zhpvJ3qCQlV9REUnms=
 github.com/aserto-dev/openapi-authorizer v0.0.1/go.mod h1:3kmTs3pjNE5aQXt1Ob71uVdqC2qC61EO9gl6O63md4U=
-github.com/aserto-dev/runtime v0.44.5-0.20221017130809-d4139bec84b4 h1:C/9/12D6baqY0N6Q9nzM45WId/xMyL55lCfZnxg+q7Q=
-github.com/aserto-dev/runtime v0.44.5-0.20221017130809-d4139bec84b4/go.mod h1:4SLehzX2WTQMXb1Nlqgn1EBHhrGRn8bF72bx8FaPbNI=
+github.com/aserto-dev/runtime v0.45.0 h1:zY8CFFsWbM7Pu8l9aJZ98QlnHE4stqpohn+lQF5krBA=
+github.com/aserto-dev/runtime v0.45.0/go.mod h1:G7kuuSZnOyFceoL0p4Dy4YvkfEt8zCDwkgq2XUG8hMs=
 github.com/aws/aws-sdk-go v1.15.11/go.mod h1:mFuSZ37Z9YOHbQEwBWztmVzqXrEkub65tZoCYDt7FT0=
 github.com/aws/aws-sdk-go v1.43.16/go.mod h1:y4AeaBuwd2Lk+GepC1E9v0qOiTws0MIWAX4oIKwKHZo=
 github.com/aymerick/douceur v0.2.0/go.mod h1:wlT5vV2O3h55X9m7iVYN0TBM0NH/MmbLnd30/FjWUq4=
@@ -359,8 +363,9 @@ github.com/bugsnag/osext v0.0.0-20130617224835-0dd3f918b21b h1:otBG+dV+YK+Soembj
 github.com/bugsnag/osext v0.0.0-20130617224835-0dd3f918b21b/go.mod h1:obH5gd0BsqsP2LwDJ9aOkm/6J86V6lyAXCoQWGw3K50=
 github.com/bugsnag/panicwrap v0.0.0-20151223152923-e2c28503fcd0 h1:nvj0OLI3YqYXer/kZD8Ri1aaunCxIEsOst1BVJswV0o=
 github.com/bugsnag/panicwrap v0.0.0-20151223152923-e2c28503fcd0/go.mod h1:D/8v3kj0zr8ZAKg1AQ6crr+5VwKN5eIywRkfhyM/+dE=
-github.com/bytecodealliance/wasmtime-go v0.36.0 h1:B6thr7RMM9xQmouBtUqm1RpkJjuLS37m6nxX+iwsQSc=
 github.com/bytecodealliance/wasmtime-go v0.36.0/go.mod h1:q320gUxqyI8yB+ZqRuaJOEnGkAnHh6WtJjMaT2CW4wI=
+github.com/bytecodealliance/wasmtime-go v1.0.0 h1:9u9gqaUiaJeN5IoD1L7egD8atOnTGyJcNp8BhkL9cUU=
+github.com/bytecodealliance/wasmtime-go v1.0.0/go.mod h1:jjlqQbWUfVSbehpErw3UoWFndBXRRMvfikYH6KsCwOg=
 github.com/cenkalti/backoff/v4 v4.1.0/go.mod h1:scbssz8iZGpm3xbr14ovlUdkxfGXNInqkPWOWmG2CLw=
 github.com/cenkalti/backoff/v4 v4.1.1/go.mod h1:scbssz8iZGpm3xbr14ovlUdkxfGXNInqkPWOWmG2CLw=
 github.com/cenkalti/backoff/v4 v4.1.2/go.mod h1:scbssz8iZGpm3xbr14ovlUdkxfGXNInqkPWOWmG2CLw=
@@ -1220,8 +1225,8 @@ github.com/onsi/gomega v1.20.1/go.mod h1:DtrZpjmvpn2mPm4YWQa0/ALMDj9v4YxLgojwPeR
 github.com/onsi/gomega v1.20.2 h1:8uQq0zMgLEfa0vRrrBgaJF2gyW9Da9BmfGV+OyUzfkY=
 github.com/onsi/gomega v1.20.2/go.mod h1:iYAIXgPSaDHak0LCMA+AWBpIKBr8WZicMxnE8luStNc=
 github.com/open-policy-agent/opa v0.42.2/go.mod h1:MrmoTi/BsKWT58kXlVayBb+rYVeaMwuBm3nYAN3923s=
-github.com/open-policy-agent/opa v0.44.0 h1:sEZthsrWBqIN+ShTMJ0Hcz6a3GkYsY4FaB2S/ou2hZk=
-github.com/open-policy-agent/opa v0.44.0/go.mod h1:YpJaFIk5pq89n/k72c1lVvfvR5uopdJft2tMg1CW/yU=
+github.com/open-policy-agent/opa v0.45.0 h1:P5nuhVRtR+e58fk3CMMbiqr6ZFyWQPNOC3otsorGsFs=
+github.com/open-policy-agent/opa v0.45.0/go.mod h1:/OnsYljNEWJ6DXeFOOnoGn8CvwZGMUS4iRqzYdJvmBI=
 github.com/opencontainers/go-digest v0.0.0-20170106003457-a6d0ee40d420/go.mod h1:cMLVZDEM3+U2I4VmLI6N8jQYUd2OVphdqWwCJHrFt2s=
 github.com/opencontainers/go-digest v0.0.0-20180430190053-c9281466c8b2/go.mod h1:cMLVZDEM3+U2I4VmLI6N8jQYUd2OVphdqWwCJHrFt2s=
 github.com/opencontainers/go-digest v1.0.0-rc1/go.mod h1:cMLVZDEM3+U2I4VmLI6N8jQYUd2OVphdqWwCJHrFt2s=
@@ -1376,7 +1381,6 @@ github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529/go.mod h1:DxrIzT+xaE7yg
 github.com/seccomp/libseccomp-golang v0.9.1/go.mod h1:GbW5+tmTXfcxTToHLXlScSlAvWlF4P2Ca7zGrPiEpWo=
 github.com/seccomp/libseccomp-golang v0.9.2-0.20210429002308-3879420cc921/go.mod h1:JA8cRccbGaA1s33RQf7Y1+q9gHmZX1yB/z9WDN1C6fg=
 github.com/sergi/go-diff v1.1.0/go.mod h1:STckp+ISIX8hZLjrqAeVduY0gWCT9IjLuqbuNXdaHfM=
-github.com/sergi/go-diff v1.2.0 h1:XU+rvMAioB0UC3q1MFrIQy4Vo5/4VsRDQQXHsEya6xQ=
 github.com/sergi/go-diff v1.2.0/go.mod h1:STckp+ISIX8hZLjrqAeVduY0gWCT9IjLuqbuNXdaHfM=
 github.com/shurcooL/go v0.0.0-20200502201357-93f07166e636/go.mod h1:TDJrrUr11Vxrven61rcy3hJMUqaf/CLWYhHNPmT14Lk=
 github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749/go.mod h1:ZY1cvUeJuFPAdZ/B6v7RHavJWZn2YPVFQ1OSXhCGOkg=

@@ -22,7 +22,7 @@ import (
 type CommandMode int
 
 var (
-	DefaultTLSGenDir = os.ExpandEnv("$HOME/.config/aserto/authorizer/certs")
+	DefaultTLSGenDir = os.ExpandEnv("$HOME/.config/topaz/certs")
 	CertificateSets  = []string{"grpc", "gateway"}
 )
 

@@ -1,7 +1,5 @@
 module github.com/aserto-dev/topaz
 
-replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
-
 go 1.17
 
 require (
@@ -12,12 +10,12 @@ require (
 	github.com/aserto-dev/go-aserto v0.0.3
 	github.com/aserto-dev/go-authorizer v0.20.1
 	github.com/aserto-dev/go-directory v0.20.1
-	github.com/aserto-dev/go-directory-cli v0.20.7-0.20221031052550-fcdc2fdf5266
-	github.com/aserto-dev/go-edge-ds v0.20.1
+	github.com/aserto-dev/go-directory-cli v0.20.9-0.20221108034829-c21113f5975a
+	github.com/aserto-dev/go-edge-ds v0.20.2
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
-	github.com/aserto-dev/runtime v0.44.5-0.20221017130809-d4139bec84b4
+	github.com/aserto-dev/runtime v0.45.0
 	github.com/fatih/color v1.13.0
 	github.com/fullstorydev/grpcurl v1.8.7
 	github.com/google/uuid v1.3.0
@@ -31,7 +29,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.20.2
-	github.com/open-policy-agent/opa v0.44.0
+	github.com/open-policy-agent/opa v0.45.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.13.0
 	github.com/rs/cors v1.8.2
@@ -52,8 +50,9 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
+	github.com/aserto-dev/aserto-go v0.8.13 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/bytecodealliance/wasmtime-go v0.36.0 // indirect
+	github.com/bytecodealliance/wasmtime-go v1.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/containerd/containerd v1.6.8 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
