@@ -26,6 +26,14 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
+	if _, err := CreateCertsDir(); err != nil {
+		return err
+	}
+
+	if _, err := CreateDataDir(); err != nil {
+		return err
+	}
+
 	params := templateParams{
 		PolicyName:    cmd.PolicyName,
 		Resource:      cmd.Resource,
@@ -61,6 +69,34 @@ func CreateConfigDir() (string, error) {
 	}
 
 	return configDir, os.MkdirAll(configDir, 0700)
+}
+
+func CreateCertsDir() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	certsDir := path.Join(home, "/.config/topaz/certs")
+	if fi, err := os.Stat(certsDir); err == nil && fi.IsDir() {
+		return certsDir, nil
+	}
+
+	return certsDir, os.MkdirAll(certsDir, 0700)
+}
+
+func CreateDataDir() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	dataDir := path.Join(home, "/.config/topaz/db")
+	if fi, err := os.Stat(dataDir); err == nil && fi.IsDir() {
+		return dataDir, nil
+	}
+
+	return dataDir, os.MkdirAll(dataDir, 0700)
 }
 
 func WriteConfig(w io.Writer, templ string, params *templateParams) error {
