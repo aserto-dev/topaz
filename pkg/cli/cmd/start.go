@@ -1,8 +1,12 @@
 package cmd
 
 import (
+	"os"
+	"path"
+
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/pkg/errors"
 
 	"github.com/fatih/color"
 )
@@ -33,12 +37,24 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 
 	args = append(args, cmdArgs...)
 
-	path, err := dockerx.DefaultRoots()
+	rootPath, err := dockerx.DefaultRoots()
 	if err != nil {
 		return err
 	}
 
-	return dockerx.DockerWith(cmd.env(path), args...)
+	if _, err := os.Stat(path.Join(rootPath, "cfg", "config.yaml")); errors.Is(err, os.ErrNotExist) {
+		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(rootPath, "cfg", "config.yaml"))
+	}
+
+	if _, err := CreateCertsDir(); err != nil {
+		return err
+	}
+
+	if _, err := CreateDataDir(); err != nil {
+		return err
+	}
+
+	return dockerx.DockerWith(cmd.env(rootPath), args...)
 }
 
 var (
