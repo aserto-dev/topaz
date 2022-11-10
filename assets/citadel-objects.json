@@ -1,0 +1,394 @@
+{
+  "objects": [
+    {
+      "id": "02413666-e4b6-4252-b159-bda1237e8605",
+      "key": "son",
+      "type": "group",
+      "displayName": "son-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.822538Z",
+      "updatedAt": "2022-08-16T01:40:00.822538Z",
+      "hash": "6288928913882501605"
+    },
+    {
+      "id": "11313c73-20ed-40de-bca8-dba0c6228b4d",
+      "key": "grandson",
+      "type": "group",
+      "displayName": "grandson-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.807157Z",
+      "updatedAt": "2022-08-16T01:40:00.807157Z",
+      "hash": "3706240744748239269"
+    },
+    {
+      "id": "159cb08f-f053-4b39-a2e5-510e4496b584",
+      "key": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.506114Z",
+      "updatedAt": "2022-09-22T20:27:18.779087Z",
+      "hash": "14794701420750924447"
+    },
+    {
+      "id": "24eea568-3f92-460d-98d5-e244ff5caa3a",
+      "key": "sideckick",
+      "type": "group",
+      "displayName": "sideckick-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.815258Z",
+      "updatedAt": "2022-08-16T01:40:00.815258Z",
+      "hash": "16067010568483411777"
+    },
+    {
+      "id": "30004736-4f22-4586-a33b-aa6166722277",
+      "key": "admin",
+      "type": "group",
+      "displayName": "admin-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.754761Z",
+      "updatedAt": "2022-08-16T01:40:00.754761Z",
+      "hash": "12281804642046024123"
+    },
+    {
+      "id": "306cb90a-1668-4cc2-b059-48ac09aab48b",
+      "key": "sister",
+      "type": "group",
+      "displayName": "sister-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.864530Z",
+      "updatedAt": "2022-08-16T01:40:00.864530Z",
+      "hash": "1803172163862510081"
+    },
+    {
+      "id": "3371a855-f95c-4341-9947-7974ffdba55f",
+      "key": "squanch",
+      "type": "group",
+      "displayName": "squanch-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.766796Z",
+      "updatedAt": "2022-08-16T01:40:00.766796Z",
+      "hash": "12357154632452340447"
+    },
+    {
+      "id": "3ad81a9a-7d5a-4847-b9bf-c36bf9626f00",
+      "key": "looser",
+      "type": "group",
+      "displayName": "looser-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.940168Z",
+      "updatedAt": "2022-08-16T01:40:00.940168Z",
+      "hash": "14925407559164434985"
+    },
+    {
+      "id": "40a3f000-523c-47b3-a35e-2e23686fe4f3",
+      "key": "little_helper",
+      "type": "group",
+      "displayName": "little_helper-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.811296Z",
+      "updatedAt": "2022-08-16T01:40:00.811296Z",
+      "hash": "194265659644214395"
+    },
+    {
+      "id": "4a927759-4b82-4626-bb3f-460e12a84fc5",
+      "key": "daughter",
+      "type": "group",
+      "displayName": "daughter-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.848415Z",
+      "updatedAt": "2022-08-16T01:40:00.848415Z",
+      "hash": "8917608138779707489"
+    },
+    {
+      "id": "4f21420f-d58e-4963-9d19-4796f0dbe668",
+      "key": "summer@the-smiths.com",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.408670Z",
+      "updatedAt": "2022-09-22T20:27:18.747259Z",
+      "hash": "9232948493285528602"
+    },
+    {
+      "id": "5656ed9d-7570-4837-9b2a-09c3d9074dd2",
+      "key": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.273376Z",
+      "updatedAt": "2022-09-22T20:27:18.709644Z",
+      "hash": "14198950188700989561"
+    },
+    {
+      "id": "5fb2efb0-1fcd-41b4-b007-649f0835f5d9",
+      "key": "clone",
+      "type": "group",
+      "displayName": "clone-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.896693Z",
+      "updatedAt": "2022-08-16T01:40:00.896693Z",
+      "hash": "1227307795273372287"
+    },
+    {
+      "id": "6beda8ad-e909-44df-b7cf-a56c2a1b109e",
+      "key": "grandpa",
+      "type": "group",
+      "displayName": "grandpa-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.763188Z",
+      "updatedAt": "2022-08-16T01:40:00.763188Z",
+      "hash": "6911103132217431939"
+    },
+    {
+      "id": "6c93650b-1823-4b9d-82e4-221b8bdd634c",
+      "key": "mom",
+      "type": "group",
+      "displayName": "mom-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.903932Z",
+      "updatedAt": "2022-08-16T01:40:00.903932Z",
+      "hash": "15860240549074363663"
+    },
+    {
+      "id": "6ce1b908-4ddc-4a26-92fa-1c470ff3e851",
+      "key": "evil_genius",
+      "type": "group",
+      "displayName": "evil_genius-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.759526Z",
+      "updatedAt": "2022-08-16T01:40:00.759526Z",
+      "hash": "11036505888555615265"
+    },
+    {
+      "id": "8a82775b-27d9-4635-b006-7ef5553656d1",
+      "key": "rick@the-citadel.com",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.319532Z",
+      "updatedAt": "2022-09-22T20:27:18.723743Z",
+      "hash": "16155176043135015095"
+    },
+    {
+      "id": "908041cd-b33b-41f9-b2f1-6fdae89110b8",
+      "key": "viewer",
+      "type": "group",
+      "displayName": "viewer-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.907379Z",
+      "updatedAt": "2022-08-16T01:40:00.907379Z",
+      "hash": "4195410253752275865"
+    },
+    {
+      "id": "9ee93ac7-9917-4e71-8e4f-3757b63421b5",
+      "key": "granddaughter",
+      "type": "group",
+      "displayName": "granddaughter-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.855600Z",
+      "updatedAt": "2022-08-16T01:40:00.855600Z",
+      "hash": "13591967038724083041"
+    },
+    {
+      "id": "a81e1157-b75e-45fe-b2fc-1e6fed52fe4e",
+      "key": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.415782Z",
+      "updatedAt": "2022-09-22T20:27:18.743122Z",
+      "hash": "11656202753415638982"
+    },
+    {
+      "id": "af1a6f35-ab05-4f2f-86dc-ef7f808f3e8a",
+      "key": "morty@the-citadel.com",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.267067Z",
+      "updatedAt": "2022-09-22T20:27:18.704941Z",
+      "hash": "2996288001330813220"
+    },
+    {
+      "id": "af8f33ad-c891-44cb-b2f0-f4811a67a432",
+      "key": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.466006Z",
+      "updatedAt": "2022-09-22T20:27:18.765513Z",
+      "hash": "5105893942507759315"
+    },
+    {
+      "id": "afdcac01-a763-4873-b1ee-3b82e05d55b3",
+      "key": "dad",
+      "type": "group",
+      "displayName": "dad-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.936351Z",
+      "updatedAt": "2022-08-16T01:40:00.936351Z",
+      "hash": "3161815676707525147"
+    },
+    {
+      "id": "b4facddd-44b3-40e4-b7a0-0fbae7d91b51",
+      "key": "brother",
+      "type": "group",
+      "displayName": "brother-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.798790Z",
+      "updatedAt": "2022-08-16T01:40:00.798790Z",
+      "hash": "17401397119882303529"
+    },
+    {
+      "id": "c9ed5437-2d63-477c-b6e5-64ff635238cd",
+      "key": "beth@the-smiths.com",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.456216Z",
+      "updatedAt": "2022-09-22T20:27:18.761898Z",
+      "hash": "12048369080553157111"
+    },
+    {
+      "id": "d36649ff-0256-4f5d-871b-8a66352c89d5",
+      "key": "jerry@the-smiths.com",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.515121Z",
+      "updatedAt": "2022-09-22T20:27:18.782909Z",
+      "hash": "10074104911675099504"
+    },
+    {
+      "id": "d6a9b146-a419-473d-b25b-962a3562bd49",
+      "key": "editor",
+      "type": "group",
+      "displayName": "editor-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.803541Z",
+      "updatedAt": "2022-08-16T01:40:00.803541Z",
+      "hash": "8551884661867706901"
+    },
+    {
+      "id": "df7a7f9d-98e3-4d47-b5da-b4d06b1d05c2",
+      "key": "sidekick",
+      "type": "group",
+      "displayName": "sidekick-group",
+      "properties": {},
+      "createdAt": "2022-08-16T01:40:00.818574Z",
+      "updatedAt": "2022-08-16T01:40:00.818574Z",
+      "hash": "8575396143000946749"
+    },
+    {
+      "id": "e100a8e3-736d-4c48-aeb5-c6cc26518911",
+      "key": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      },
+      "createdAt": "2022-08-16T01:25:08.332055Z",
+      "updatedAt": "2022-09-22T20:27:18.728314Z",
+      "hash": "10222949466222654206"
+    },
+    {
+      "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d",
+      "key": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "user",
+      "displayName": "Rick Sanchez",
+      "properties": {
+        "email": "rick@the-citadel.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Rick%20Sanchez.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      },
+      "createdAt": "2022-08-16T01:25:08.304443Z",
+      "updatedAt": "2022-08-16T02:24:11.394532Z",
+      "hash": "10065368177668594774"
+    },
+    {
+      "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d",
+      "key": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "user",
+      "displayName": "Morty Smith",
+      "properties": {
+        "email": "morty@the-citadel.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Morty%20Smith.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      },
+      "createdAt": "2022-08-16T01:25:08.260759Z",
+      "updatedAt": "2022-08-16T02:24:11.351912Z",
+      "hash": "4913211615296145478"
+    },
+    {
+      "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d",
+      "key": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "user",
+      "displayName": "Summer Smith",
+      "properties": {
+        "email": "summer@the-smiths.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Summer%20Smith.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      },
+      "createdAt": "2022-08-16T01:25:08.391083Z",
+      "updatedAt": "2022-08-16T02:24:11.425964Z",
+      "hash": "11706883370547532627"
+    },
+    {
+      "id": "fd3614d3-c39a-4781-b7bd-8b96f5a5100d",
+      "key": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "user",
+      "displayName": "Beth Smith",
+      "properties": {
+        "email": "beth@the-smiths.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Beth%20Smith.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      },
+      "createdAt": "2022-08-16T01:25:08.450787Z",
+      "updatedAt": "2022-08-16T02:24:11.458Z",
+      "hash": "5653972538397425367"
+    },
+    {
+      "id": "fd4614d3-c39a-4781-b7bd-8b96f5a5100d",
+      "key": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "type": "user",
+      "displayName": "Jerry Smith",
+      "properties": {
+        "email": "jerry@the-smiths.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Jerry%20Smith.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      },
+      "createdAt": "2022-08-16T01:25:08.500805Z",
+      "updatedAt": "2022-08-16T02:24:11.486116Z",
+      "hash": "18371383546643677154"
+    }
+  ]
+}

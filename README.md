@@ -129,10 +129,11 @@ topaz run
 
 ### Import sample data
 
-Retrieve the "Citadel" json file, placing it in the current directory:
+Retrieve the "Citadel" json files, placing them in the current directory:
 
 ```shell
-curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel.json >./citadel.json
+curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel-objects.json >./citadel-objects.json
+curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel-relations.json >./citadel-relations.json
 ```
 
 Import the contents of the file into Topaz directory. This creates the sample users (Rick, Morty, and friends); groups; and relations.
