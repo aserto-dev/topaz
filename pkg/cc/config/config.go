@@ -14,7 +14,7 @@ import (
 
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/logger"
-	runtimeconfig "github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/directory"
 )
 
@@ -74,7 +74,7 @@ type Common struct {
 	Directory directory.Config `json:"directory_service"`
 
 	// Default OPA configuration
-	OPA runtimeconfig.Config `json:"opa"`
+	OPA runtime.Config `json:"opa"`
 }
 
 // LoggerConfig is a basic Config copy that gets loaded before everything else,
