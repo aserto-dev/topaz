@@ -107,8 +107,8 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		return resp, err
 	}
 
-	policyid := getPolicyIDFromContext(ctx)
-	if policyid == "" {
+	policyID := getPolicyIDFromContext(ctx)
+	if policyID == "" {
 		bundles, err := policyRuntime.GetBundles(ctx)
 		if err != nil {
 			return resp, errors.Wrap(err, "get bundles")
@@ -116,12 +116,12 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		if len(bundles) == 0 {
 			return resp, errors.New("no bundles found")
 		}
-		policyid = bundles[0].ID // only 1 bundle per runtime allowed
+		policyID = bundles[0].ID // only 1 bundle per runtime allowed
 	}
 
 	policyList, err := policyRuntime.GetPolicyList(
 		ctx,
-		policyid,
+		policyID,
 		pathFilter(req.Options.PathSeparator, req.PolicyContext.Path),
 	)
 	if err != nil {
@@ -277,7 +277,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		outcomes[decision.Decision] = decision.Is
 	}
 
-	dplugin := decisionlog_plugin.Lookup(policyRuntime.GetPluginsManager())
+	dlPlugin := decisionlog_plugin.Lookup(policyRuntime.GetPluginsManager())
 	d := api.Decision{
 		Id:        uuid.NewString(),
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
@@ -294,11 +294,11 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		Outcomes: outcomes,
 	}
 
-	if dplugin == nil {
+	if dlPlugin == nil {
 		return resp, err
 	}
 
-	err = dplugin.Log(ctx, &d)
+	err = dlPlugin.Log(ctx, &d)
 	if err != nil {
 		return resp, err
 	}
@@ -843,8 +843,8 @@ func getEmail(v map[string]interface{}) string {
 func getPolicyIDFromContext(ctx context.Context) string {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
-		if policyid, ok := md["aserto-policy-id"]; ok {
-			return policyid[0]
+		if policyID, ok := md["aserto-policy-id"]; ok {
+			return policyID[0]
 		}
 	}
 	return ""
