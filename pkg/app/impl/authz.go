@@ -132,11 +132,13 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 	results := make(map[string]interface{})
 
+	policyContext := proto.Clone(req.PolicyContext).(*api.PolicyContext)
+
 	for _, policy := range policyList {
 		queryStmt := "x = data." + policy.PackageName
 
-		req.PolicyContext.Path = policy.PackageName
-		input[InputPolicy] = req.PolicyContext
+		policyContext.Path = policy.PackageName
+		input[InputPolicy] = policyContext
 
 		qry, err := rego.New(
 			rego.Compiler(policyRuntime.GetPluginsManager().GetCompiler()),
