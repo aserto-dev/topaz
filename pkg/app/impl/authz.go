@@ -107,8 +107,8 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		return resp, err
 	}
 
-	policyid := getPolicyIDFromContext(ctx)
-	if policyid == "" {
+	policyID := getPolicyIDFromContext(ctx)
+	if policyID == "" {
 		bundles, err := policyRuntime.GetBundles(ctx)
 		if err != nil {
 			return resp, errors.Wrap(err, "get bundles")
@@ -116,12 +116,12 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		if len(bundles) == 0 {
 			return resp, errors.New("no bundles found")
 		}
-		policyid = bundles[0].ID // only 1 bundle per runtime allowed
+		policyID = bundles[0].ID // only 1 bundle per runtime allowed
 	}
 
 	policyList, err := policyRuntime.GetPolicyList(
 		ctx,
-		policyid,
+		policyID,
 		pathFilter(req.Options.PathSeparator, req.PolicyContext.Path),
 	)
 	if err != nil {
@@ -132,11 +132,13 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 	results := make(map[string]interface{})
 
+	policyContext := proto.Clone(req.PolicyContext).(*api.PolicyContext)
+
 	for _, policy := range policyList {
 		queryStmt := "x = data." + policy.PackageName
 
-		req.PolicyContext.Path = policy.PackageName
-		input[InputPolicy] = req.PolicyContext
+		policyContext.Path = policy.PackageName
+		input[InputPolicy] = policyContext
 
 		qry, err := rego.New(
 			rego.Compiler(policyRuntime.GetPluginsManager().GetCompiler()),
