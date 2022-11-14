@@ -17,7 +17,7 @@ require (
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
-	github.com/aserto-dev/runtime v0.46.2-0.20221114014809-86c1db72aa15
+	github.com/aserto-dev/runtime v0.46.2
 	github.com/fatih/color v1.13.0
 	github.com/fullstorydev/grpcurl v1.8.7
 	github.com/google/uuid v1.3.0
