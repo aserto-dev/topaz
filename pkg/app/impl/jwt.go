@@ -16,6 +16,7 @@ import (
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
+	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/pkg/errors"
@@ -171,10 +172,6 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 }
 
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
-	return s.getUserFromIdentityV2(ctx, identity)
-}
-
-func (s *AuthorizerServer) getUserFromIdentityV2(ctx context.Context, identity string) (proto.Message, error) {
 	uid, err := s.getIdentityV2(ctx, identity)
 	switch {
 	case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
@@ -203,28 +200,17 @@ func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (
 		return "", err
 	}
 	identityString := "identity"
-	identityResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
-		Param: &v2.ObjectIdentifier{
-			Type: &identityString,
-			Key:  &identity,
-		},
-	})
-	switch {
-	case cerr.Equals(err, derr.ErrNotFound):
-		return "", aerr.ErrDirectoryObjectNotFound
-	case err != nil:
-		return "", err
-	case identityResp.Result == nil:
-		return "", aerr.ErrDirectoryObjectNotFound
+	obj := v2.ObjectIdentifier{Type: &identityString, Key: &identity}
+	_, err = uuid.Parse(identity)
+	if err == nil {
+		obj = v2.ObjectIdentifier{Id: &identity}
 	}
-
-	iid := identityResp.Result.Id
 	relationString := "identifier"
 	subjectType := "user"
 
 	relResp, err := client.GetRelation(ctx, &ds2.GetRelationRequest{
 		Param: &v2.RelationIdentifier{
-			Object:   &v2.ObjectIdentifier{Type: &identityString, Id: &iid},
+			Object:   &obj,
 			Relation: &v2.RelationTypeIdentifier{Name: &relationString, ObjectType: &identityString},
 			Subject:  &v2.ObjectIdentifier{Type: &subjectType},
 		},
