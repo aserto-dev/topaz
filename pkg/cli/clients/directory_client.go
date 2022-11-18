@@ -3,7 +3,7 @@ package clients
 import (
 	"context"
 
-	grpcClient "github.com/aserto-dev/aserto-go/client"
+	grpcClient "github.com/aserto-dev/go-aserto/client"
 	"github.com/aserto-dev/go-directory-cli/client"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/fullstorydev/grpcurl"

@@ -3,7 +3,7 @@ package directory
 import (
 	"context"
 
-	grpcc "github.com/aserto-dev/aserto-go/client"
+	grpcc "github.com/aserto-dev/go-aserto/client"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 
 	"github.com/aserto-dev/topaz/directory"

@@ -5,14 +5,14 @@ go 1.17
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
 require (
-	github.com/alecthomas/kong v0.6.1
-	github.com/aserto-dev/aserto-go v0.8.14-0.20221018123009-a56db85a7ed3
+	github.com/alecthomas/kong v0.7.1
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/clui v0.8.1
 	github.com/aserto-dev/errors v0.0.2
+	github.com/aserto-dev/go-aserto v0.20.0
 	github.com/aserto-dev/go-authorizer v0.20.1
-	github.com/aserto-dev/go-directory v0.20.1
-	github.com/aserto-dev/go-directory-cli v0.20.8
+	github.com/aserto-dev/go-directory v0.20.3
+	github.com/aserto-dev/go-directory-cli v0.20.9
 	github.com/aserto-dev/go-edge-ds v0.20.4
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2
@@ -23,7 +23,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.12.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.14.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/lestrrat-go/jwx v1.2.25
 	github.com/magefile/mage v1.14.0
@@ -38,13 +38,13 @@ require (
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.13.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	go.opencensus.io v0.23.0
-	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
-	google.golang.org/grpc v1.50.1
+	golang.org/x/sync v0.1.0
+	google.golang.org/grpc v1.51.0
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
-	sigs.k8s.io/controller-runtime v0.13.0
+	sigs.k8s.io/controller-runtime v0.13.1
 )
 
 require (
@@ -129,13 +129,13 @@ require (
 	go.opentelemetry.io/otel/trace v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.1.0 // indirect
-	golang.org/x/sys v0.1.0 // indirect
-	golang.org/x/term v0.1.0 // indirect
+	golang.org/x/net v0.2.0 // indirect
+	golang.org/x/sys v0.2.0 // indirect
+	golang.org/x/term v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	golang.org/x/tools v0.1.12 // indirect
-	google.golang.org/genproto v0.0.0-20221018160656-63c7b68cfc55 // indirect
+	google.golang.org/genproto v0.0.0-20221114212237-e4508ebdbee1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
