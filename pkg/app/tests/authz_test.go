@@ -130,3 +130,52 @@ func QueryWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClien
 		assert.Nil(t, respX, "response object should be nil")
 	}
 }
+
+func TestGHCRwithPublicPolicyContainer(t *testing.T) {
+	harness := atesting.SetupGHCR(t, func(cfg *config.Config) {
+		cfg.Directory.EdgeConfig.DBPath = atesting.AssetAcmeEBBFilePath()
+		cfg.Directory.Remote.Addr = "localhost:12345"
+	})
+	defer harness.Cleanup()
+
+	client := harness.CreateGRPCClient()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	tests := []struct {
+		name string
+		test func(*testing.T)
+	}{
+		{"TestQuery", SimpleQuery(ctx, client)},
+	}
+
+	for _, testCase := range tests {
+		t.Run(testCase.name, testCase.test)
+	}
+}
+
+func SimpleQuery(ctx context.Context, client authz2.AuthorizerClient) func(*testing.T) {
+	return func(t *testing.T) {
+		respX, errX := client.Query(ctx, &authz2.QueryRequest{
+			IdentityContext: &authz_api_v2.IdentityContext{
+				Type: authz_api_v2.IdentityType_IDENTITY_TYPE_NONE,
+			},
+			Query: "x = data.peoplefinder",
+			Input: "",
+			Options: &authz2.QueryOptions{
+				Metrics:      false,
+				Instrument:   false,
+				Trace:        authz2.TraceLevel_TRACE_LEVEL_OFF,
+				TraceSummary: false,
+			},
+			PolicyContext: &authz_api_v2.PolicyContext{
+				Path:      "",
+				Decisions: []string{},
+			},
+			ResourceContext: &structpb.Struct{},
+		})
+		assert.NoError(t, errX)
+		assert.NotNil(t, respX)
+	}
+}

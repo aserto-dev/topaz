@@ -64,16 +64,21 @@ func (h *EngineHarness) Context() context.Context {
 // SetupOffline sets up an engine that uses a runtime that loads offline bundles,
 // from the assets directory
 func SetupOffline(t *testing.T, configOverrides func(*config.Config)) *EngineHarness {
-	return setup(t, configOverrides, false)
+	return setup(t, configOverrides, "")
 }
 
-// SetupOnline sets up an engine that uses a runtime that loads online bundles,
+// SetupOnline sets up an engine that uses a runtime that loads an online bundle,
 // from the online aserto registry service
 func SetupOnline(t *testing.T, configOverrides func(*config.Config)) *EngineHarness {
-	return setup(t, configOverrides, true)
+	return setup(t, configOverrides, "online")
 }
 
-func setup(t *testing.T, configOverrides func(*config.Config), online bool) *EngineHarness {
+// SetupGHCR sets up an engine that uses a runtime that loads an online public bundle from GHCR
+func SetupGHCR(t *testing.T, configOverrides func(*config.Config)) *EngineHarness {
+	return setup(t, configOverrides, "ghcr")
+}
+
+func setup(t *testing.T, configOverrides func(*config.Config), setupType string) *EngineHarness {
 	assert := require.New(t)
 
 	var err error
@@ -81,11 +86,16 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 		t:           t,
 		LogDebugger: NewLogDebugger(t, "topaz"),
 	}
-
-	configFile := AssetDefaultConfigLocal()
-	if online {
+	var configFile config.Path
+	switch setupType {
+	case "ghcr":
+		configFile = AssetDefaultGHCRConfigOnline()
+	case "online":
 		configFile = AssetDefaultConfigOnline()
+	default:
+		configFile = AssetDefaultConfigLocal()
 	}
+
 	h.Engine, h.cleanup, err = topaz.BuildTestApp(
 		h.LogDebugger,
 		h.LogDebugger,
@@ -103,7 +113,7 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	err = h.Engine.Start()
 	assert.NoError(err)
 
-	if online {
+	if setupType != "" {
 		for i := 0; i < 2; i++ {
 			assert.Eventually(func() bool {
 				return h.LogDebugger.Contains("Bundle loaded and activated successfully")

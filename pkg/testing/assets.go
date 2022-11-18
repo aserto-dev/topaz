@@ -34,3 +34,8 @@ func AssetDefaultConfigLocal() config.Path {
 func AssetLocalBundle() string {
 	return filepath.Join(AssetsDir(), "mycars_bundle")
 }
+
+// AssetDefaultGHCRConfigOnline returns the path of the default yaml config file that uses an online bundle
+func AssetDefaultGHCRConfigOnline() config.Path {
+	return config.Path(filepath.Join(AssetsDir(), "config-ghcr.yaml"))
+}
