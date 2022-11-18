@@ -68,7 +68,7 @@ func SetupOffline(t *testing.T, configOverrides func(*config.Config)) *EngineHar
 }
 
 // SetupOnline sets up an engine that uses a runtime that loads online bundles,
-// from the online aserto registry service.
+// from the online policy registry service.
 func SetupOnline(t *testing.T, configOverrides func(*config.Config)) *EngineHarness {
 	return setup(t, configOverrides, true)
 }

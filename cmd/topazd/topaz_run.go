@@ -18,10 +18,8 @@ var (
 
 var cmdRun = &cobra.Command{
 	Use:   "run [args]",
-	Short: "Run the Aserto Authorizer server",
-	Long: `The Aserto Authorizer server allows consumes policies, data and 
-input and makes decisions about authorization for your app.
-It exposes GRPC and OpenAPI endpoints.`,
+	Short: "Start Topaz authorization service",
+	Long:  `Start instance of the Topaz authorization service.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		configPath := config.Path(flagRunConfigFile)
 		app, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, func(cfg *config.Config) {
