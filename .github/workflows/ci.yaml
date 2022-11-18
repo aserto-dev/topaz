@@ -73,7 +73,7 @@ jobs:
     steps:
       - 
         name: Read Configuration
-        uses: hashicorp/vault-action@v2.4.2
+        uses: hashicorp/vault-action@v2.4.3
         id: vault
         with:
           url: https://vault.eng.aserto.com/
@@ -84,7 +84,7 @@ jobs:
             kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
             kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
       - 
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - 
@@ -104,11 +104,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - 
-        uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-      - 
         name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: https://ghcr.io
           username: ${{ env.DOCKER_USERNAME }}
@@ -128,7 +125,7 @@ jobs:
           go run mage.go deps dockerImage
       - 
         name: Wait for tests to succeed
-        uses: fountainhead/action-wait-for-check@v1.0.0
+        uses: fountainhead/action-wait-for-check@v1.1.0
         id: wait-for-tests
         with:
           token: ${{ env.READ_WRITE_TOKEN }}
@@ -142,7 +139,7 @@ jobs:
         name: Push image to GitHub Container Registry
         run: |
           go run mage.go dockerPush ghcr.io "aserto-dev"
-          echo "::set-output name=IMAGE_VERSION::$(./.ext/gobin/sver-v*/sver)"
+          echo "IMAGE_VERSION=$(./.ext/gobin/sver-v*/sver)" >> $GITHUB_OUTPUT
 
   release:
     needs: [test, push]
@@ -152,7 +149,7 @@ jobs:
     steps:
       - 
         name: Read Configuration
-        uses: hashicorp/vault-action@v2.4.2
+        uses: hashicorp/vault-action@v2.4.3
         id: vault
         with:
           url: https://vault.eng.aserto.com/
@@ -210,7 +207,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Read Configuration
-        uses: hashicorp/vault-action@v2.4.2
+        uses: hashicorp/vault-action@v2.4.3
         id: vault
         with:
           url: ${{ env.VAULT_ADDR }}
@@ -222,7 +219,7 @@ jobs:
         shell: bash
         run: |
           hub release download "${GITHUB_REF#refs/tags/}" -i '*windows_x86_64*.zip'
-          printf "::set-output name=zip::%s\n" *.zip
+          printf "zip=%s\n" *.zip >> $GITHUB_OUTPUT
           unzip -o *.zip && rm -v *.zip
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.ROOT_TOKEN }}
@@ -241,7 +238,7 @@ jobs:
         run: |
           mkdir -p build
           msi="$(basename "$ZIP_FILE" ".zip").msi"
-          printf "::set-output name=msi::%s\n" "$msi"
+          printf "msi=${msi}" >> $GITHUB_OUTPUT
           go-msi make --arch amd64 --msi "$PWD/$msi" --out "$PWD/build" --version "${GITHUB_REF#refs/tags/}"
       - name: Upload MSI
         shell: bash
