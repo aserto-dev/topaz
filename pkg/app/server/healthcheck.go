@@ -6,7 +6,7 @@ import (
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
-// HealthServer contains everything we need to be able to serve a health status endpoint
+// HealthServer contains everything we need to be able to serve a health status endpoint.
 type HealthServer struct {
 	Server     *health.Server
 	GRPCServer *grpc.Server

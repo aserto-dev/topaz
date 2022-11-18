@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
@@ -18,7 +19,7 @@ import (
 	"github.com/aserto-dev/topaz/directory"
 )
 
-// CommandMode -- enum type
+// CommandMode -- enum type.
 type CommandMode int
 
 var (
@@ -26,7 +27,7 @@ var (
 	CertificateSets  = []string{"grpc", "gateway"}
 )
 
-// CommandMode -- enum constants
+// CommandMode -- enum constants.
 const (
 	CommandModeUnknown CommandMode = 0 + iota
 	CommandModeRun
@@ -54,10 +55,14 @@ type Common struct {
 			Certs                    certs.TLSCredsConfig `json:"certs"`
 		} `json:"grpc"`
 		Gateway struct {
-			ListenAddress  string               `json:"listen_address"`
-			AllowedOrigins []string             `json:"allowed_origins"`
-			Certs          certs.TLSCredsConfig `json:"certs"`
-			HTTP           bool                 `json:"http"`
+			ListenAddress     string               `json:"listen_address"`
+			AllowedOrigins    []string             `json:"allowed_origins"`
+			Certs             certs.TLSCredsConfig `json:"certs"`
+			HTTP              bool                 `json:"http"`
+			ReadTimeout       time.Duration        `json:"read_timeout"`
+			ReadHeaderTimeout time.Duration        `json:"read_header_timeout"`
+			WriteTimeout      time.Duration        `json:"write_timeout"`
+			IdleTimeout       time.Duration        `json:"idle_timeout"`
 		} `json:"gateway"`
 		Health struct {
 			ListenAddress string `json:"listen_address"`
@@ -78,16 +83,16 @@ type Common struct {
 }
 
 // LoggerConfig is a basic Config copy that gets loaded before everything else,
-// so we can log during resolving configuration
+// so we can log during resolving configuration.
 type LoggerConfig Config
 
-// Path represents the path to a configuration file
+// Path represents the path to a configuration file.
 type Path string
 
-// Overrider is a func that mutates configuration
+// Overrider is a func that mutates configuration.
 type Overrider func(*Config)
 
-// NewConfig creates the configuration by reading env & files
+// NewConfig creates the configuration by reading env & files.
 func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsGenerator *certs.Generator) (*Config, error) { // nolint:funlen // default list of values can be long
 	newLogger := log.With().Str("component", "config").Logger()
 	log = &newLogger
@@ -122,9 +127,16 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 	}
 	v.SetDefault("api.grpc.connection_timeout_seconds", 120)
 	v.SetDefault("api.grpc.listen_address", "0.0.0.0:8282")
+
 	v.SetDefault("api.gateway.listen_address", "0.0.0.0:8383")
 	v.SetDefault("api.gateway.http", false)
+	v.SetDefault("api.gateway.read_timeout", 2*time.Second)
+	v.SetDefault("api.gateway.read_header_timeout", 2*time.Second)
+	v.SetDefault("api.gateway.write_timeout", 2*time.Second)
+	v.SetDefault("api.gateway.idle_timeout", 30*time.Second)
+
 	v.SetDefault("api.health.listen_address", "0.0.0.0:8484")
+
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
 
 	defaults(v)
@@ -154,7 +166,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		overrides(cfg)
 	}
 
-	// This is where validation of config happens
+	// This is where validation of config happens.
 	err = func() error {
 		var err error
 
@@ -188,7 +200,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 	return cfg, nil
 }
 
-// NewLoggerConfig creates a new LoggerConfig
+// NewLoggerConfig creates a new LoggerConfig.
 func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, error) {
 	discardLogger := zerolog.New(io.Discard)
 

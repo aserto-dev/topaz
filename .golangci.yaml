@@ -14,7 +14,7 @@ linters-settings:
     threshold: 100
   funlen:
     lines: 100
-    statements: 50
+    statements: 80
   gci:
     local-prefixes: github.com/golangci/golangci-lint
   goconst:
@@ -31,9 +31,10 @@ linters-settings:
       - dupImport # https://github.com/go-critic/go-critic/issues/845
       - ifElseChain
       - octalLiteral
+      - whyNoLint
       - wrapperFunc
   gocyclo:
-    min-complexity: 20
+    min-complexity: 18
   goimports:
     local-prefixes: github.com/golangci/golangci-lint
   golint:
@@ -42,7 +43,11 @@ linters-settings:
     settings:
       mnd:
         # don't include the "operation" and "assign"
-        checks: ["argument", "case", "condition", "return"]
+        checks: 
+          - argument
+          - case
+          - condition
+          - return
   govet:
     check-shadowing: true
     settings:
@@ -57,7 +62,6 @@ linters-settings:
   misspell:
     locale: US
   nolintlint:
-    allow-leading-space: true # don't require machine-readable nolint directives (i.e. with no leading space)
     allow-unused: false # report any unused nolint directives
     require-explanation: false # don't require an explanation for nolint directives
     require-specific: false # don't require nolint directives to be specific about which linter is being skipped
@@ -67,32 +71,52 @@ linters:
   # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
   disable-all: true
   enable:
+    - asciicheck
     - bodyclose
-    - deadcode
     - depguard
+    - dogsled
     - errcheck
+    - exportloopref
+    - exhaustive
     - funlen
+    - gochecknoinits
     - goconst
     - gocritic
     - gocyclo
+    - godot
+    # - goerr113 # temporary disabled
     - gofmt
     - goimports
-    - revive
+    - goprintffuncname
     - gosec
     - gosimple
     - govet
     - ineffassign
     - misspell
     - nakedret
-    - exportloopref
+    - noctx
+    - rowserrcheck
     - staticcheck
-    - structcheck
     - stylecheck
+    - testpackage
     - typecheck
     - unconvert
     - unparam
     - unused
-    - varcheck
+
+  # don't enable:
+    # - dupl
+    # - gochecknoglobals
+    # - gocognit
+    # - godox
+    # - gomnd
+    # - lll
+    # - nestif
+    # - nolintlint # conflict with 1.19 gofmt changes
+    # - prealloc
+    # - revive
+    # - wsl
+    # - whitespace
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
@@ -100,26 +124,37 @@ issues:
   # it can be disabled by `exclude-use-default: false`. To list all
   # excluded by default patterns execute `golangci-lint run --help`
   exclude:
-    - declaration of "(err|ctx)" shadows declaration at
-    - shadow of imported from 'github.com/stretchr/testify/assert' package 'assert'
+  - declaration of "(err|ctx)" shadows declaration at
+  - shadow of imported from 'github.com/stretchr/testify/assert' package 'assert'
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:
     - path: _test\.go
       linters:
-        - gomnd
-        - funlen
+      - gomnd
     # https://github.com/go-critic/go-critic/issues/926
     - text: "unnecessaryDefer:"
       linters:
-        - gocritic
+      - gocritic
     - text: "unnamedResult:"
       linters:
-        - gocritic
-    - path: wire_gen
+      - gocritic
+    - path: \.resolvers\.go
+      text: "typeDefFirst:"
       linters:
-        - typecheck
+      - gocritic
+    - path: \.resolvers\.go
+      text: "paramTypeCombine:"
+      linters:
+      - gocritic
+    - path: \.resolvers\.go
+      text: "hugeParam:"
+      linters:
+      - gocritic
+    - text: "G404"
+      linters:
+      - gosec
 
 run:
   timeout: 5m
   skip-dirs:
-    - pkg/testharness/testdata
+  - pkg/testharness/testdata

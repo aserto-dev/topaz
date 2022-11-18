@@ -13,9 +13,8 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// Authorizer is an Aserto Edge Authorizer instance
-// It's responsible with managing the Aserto Edge API, the User Directory
-// and the OPA plugins
+// Authorizer is an authorizer service instance, responsible for managing
+// the authorizer API, user directory instance and the OPA plugins.
 type Authorizer struct {
 	Context       context.Context
 	Logger        *zerolog.Logger
@@ -24,7 +23,7 @@ type Authorizer struct {
 	Resolver      *resolvers.Resolvers
 }
 
-// Start starts all services required by the Engine
+// Start starts all services required by the engine.
 func (e *Authorizer) Start() error {
 	if (strings.Contains(e.Configuration.Directory.Remote.Addr, "localhost") || strings.Contains(e.Configuration.Directory.Remote.Addr, "0.0.0.0")) &&
 		e.Configuration.Directory.EdgeConfig.DBPath != "" {

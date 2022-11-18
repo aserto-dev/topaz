@@ -6,7 +6,7 @@ import (
 )
 
 // PortOpen returns true if there's a socket listening on
-// the specified listenAddress
+// the specified listenAddress.
 func PortOpen(listenAddress string) bool {
 	timeout := time.Second
 	conn, err := net.DialTimeout("tcp", listenAddress, timeout)

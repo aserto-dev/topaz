@@ -19,7 +19,7 @@ const (
 )
 
 // EngineHarness wraps an Aserto Runtime Engine so we can set it up easily
-// and monitor its logs
+// and monitor its logs.
 type EngineHarness struct {
 	Engine      *app.Authorizer
 	LogDebugger *LogDebugger
@@ -29,7 +29,7 @@ type EngineHarness struct {
 }
 
 // Cleanup releases all resources the harness uses and
-// shuts down servers and runtimes
+// shuts down servers and runtimes.
 func (h *EngineHarness) Cleanup() {
 	assert := require.New(h.t)
 
@@ -62,13 +62,13 @@ func (h *EngineHarness) Context() context.Context {
 }
 
 // SetupOffline sets up an engine that uses a runtime that loads offline bundles,
-// from the assets directory
+// from the assets directory.
 func SetupOffline(t *testing.T, configOverrides func(*config.Config)) *EngineHarness {
 	return setup(t, configOverrides, false)
 }
 
 // SetupOnline sets up an engine that uses a runtime that loads online bundles,
-// from the online aserto registry service
+// from the online policy registry service.
 func SetupOnline(t *testing.T, configOverrides func(*config.Config)) *EngineHarness {
 	return setup(t, configOverrides, true)
 }

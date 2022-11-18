@@ -83,7 +83,7 @@ func NewServer(
 	return server, stopFunc, nil
 }
 
-// Adds Server Options to the GRPC server, for example GRPC Unary and Stream middlewares
+// Adds Server Options to the GRPC server, for example GRPC Unary and Stream middlewares.
 func (s *Server) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
 	s.grpcServerOptions = append(s.grpcServerOptions, grpcOptions...)
 }
@@ -182,7 +182,7 @@ func (s *Server) Stop() error {
 	return result
 }
 
-// registerGateway registers the gateway server with a _running_ GRPC server
+// registerGateway registers the gateway server with a _running_ gRPC server.
 func (s *Server) registerGateway() error {
 	_, port, err := net.SplitHostPort(s.cfg.API.GRPC.ListenAddress)
 	if err != nil {

@@ -15,7 +15,7 @@ import (
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 )
 
-// GRPCServerRegistrations is where we register implementations with the GRPC server
+// GRPCServerRegistrations is where we register implementations with the gRPC server.
 func GRPCServerRegistrations(
 	ctx context.Context,
 	logger *zerolog.Logger,
@@ -28,7 +28,7 @@ func GRPCServerRegistrations(
 	}, nil
 }
 
-// GatewayServerRegistrations is where we register implementations with the Gateway server
+// GatewayServerRegistrations is where we register implementations with the Gateway server.
 func GatewayServerRegistrations() server.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		err := authz2.RegisterAuthorizerHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)

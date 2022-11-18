@@ -24,15 +24,15 @@ import (
 )
 
 var (
-	// ErrMissingMetadata - metadata element missing
+	// ErrMissingMetadata - metadata element missing.
 	ErrMissingMetadata = aerr.ErrInvalidArgument.Msg("missing metadata")
-	// ErrMissingToken - token missing from metadata
+	// ErrMissingToken - token missing from metadata.
 	ErrMissingToken = aerr.ErrInvalidArgument.Msg("missing token")
-	// ErrInvalidToken - token not valid
+	// ErrInvalidToken - token not valid.
 	ErrInvalidToken = aerr.ErrAuthenticationFailed.Msg("invalid token")
 )
 
-// getUserFromJWT
+// getUserFromJWT.
 func (s *AuthorizerServer) getUserFromJWT(ctx context.Context, bearerJWT string) (proto.Message, error) {
 	resp := v2.Object{}
 
@@ -49,7 +49,7 @@ func (s *AuthorizerServer) getUserFromJWT(ctx context.Context, bearerJWT string)
 	return user, nil
 }
 
-// getIdentityFromJWT
+// getIdentityFromJWT.
 func (s *AuthorizerServer) getIdentityFromJWT(ctx context.Context, bearerJWT string) (string, error) {
 	log := s.logger
 
@@ -90,7 +90,7 @@ func (s *AuthorizerServer) getIdentityFromJWT(ctx context.Context, bearerJWT str
 	return ident, nil
 }
 
-// jwksURL
+// jwksURL.
 func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.URL, error) {
 	const (
 		wellknownConfig = `.well-known/openid-configuration`
@@ -134,12 +134,13 @@ func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.UR
 	return u, nil
 }
 
-// getUserFromIdentityContext .
+// getUserFromIdentityContext.
 func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, identityContext *api.IdentityContext) (proto.Message, error) {
 	if identityContext == nil {
 		return nil, aerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
+	// nolint: exhaustive
 	switch identityContext.Type {
 	case api.IdentityType_IDENTITY_TYPE_NONE:
 		return nil, nil

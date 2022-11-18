@@ -18,9 +18,7 @@ import (
 const containerImage string = "topaz"
 
 func init() {
-	// Set go version for docker builds
-	os.Setenv("GO_VERSION", "1.17")
-	// Enable docker buildkit capabilities
+	os.Setenv("GO_VERSION", "1.19")
 	os.Setenv("DOCKER_BUILDKIT", "1")
 }
 
