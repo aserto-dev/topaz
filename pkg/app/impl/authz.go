@@ -748,8 +748,8 @@ func TraceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
 	}
 }
 
-// convert, explicitly convert from proto message interface{} in order
-// to preserve enum values as strings when marshaled to JSON
+// convert, explicitly converts from proto message interface{} in order
+// to preserve enum values as strings when marshaled to JSON.
 func convert(msg proto.Message) interface{} {
 	b, err := protojson.MarshalOptions{
 		Multiline:       false,
@@ -771,6 +771,7 @@ func convert(msg proto.Message) interface{} {
 	return v
 }
 
+// nolint: exhaustive
 func pathFilter(sep authorizer.PathSeparator, path string) runtime.PathFilterFn {
 	switch sep {
 	case authorizer.PathSeparator_PATH_SEPARATOR_SLASH:
@@ -790,6 +791,7 @@ func pathFilter(sep authorizer.PathSeparator, path string) runtime.PathFilterFn 
 	}
 }
 
+// nolint: exhaustive
 func getPackageName(policy runtime.Policy, sep authorizer.PathSeparator) string {
 	switch sep {
 	case authorizer.PathSeparator_PATH_SEPARATOR_DOT:

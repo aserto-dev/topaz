@@ -61,9 +61,13 @@ func NewGatewayServer(
 	}))
 
 	gtwServer := &http.Server{
-		ErrorLog: logger.NewSTDLogger(&newLogger),
-		Addr:     cfg.API.Gateway.ListenAddress,
-		Handler:  c.Handler(mux),
+		ErrorLog:          logger.NewSTDLogger(&newLogger),
+		Addr:              cfg.API.Gateway.ListenAddress,
+		Handler:           c.Handler(mux),
+		ReadTimeout:       cfg.API.Gateway.ReadTimeout,
+		ReadHeaderTimeout: cfg.API.Gateway.ReadHeaderTimeout,
+		WriteTimeout:      cfg.API.Gateway.WriteTimeout,
+		IdleTimeout:       cfg.API.Gateway.IdleTimeout,
 	}
 
 	if cfg.API.Gateway.HTTP {
@@ -83,7 +87,7 @@ func NewGatewayServer(
 // fieldsMaskHandler will set the Content-Type to "application/json+masked", which
 // will signal the marshaler to not emit unpopulated types, which is needed to
 // serialize the masked result set.
-// This happens if a fields.mask query parameter is present and set
+// This happens if a fields.mask query parameter is present and set.
 func fieldsMaskHandler(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if p, ok := r.URL.Query()["fields.mask"]; ok && len(p) > 0 && len(p[0]) > 0 {

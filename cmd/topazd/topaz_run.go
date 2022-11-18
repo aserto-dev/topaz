@@ -69,6 +69,7 @@ It exposes GRPC and OpenAPI endpoints.`,
 	},
 }
 
+// nolint: gochecknoinits
 func init() {
 	cmdRun.Flags().StringVarP(
 		&flagRunConfigFile,

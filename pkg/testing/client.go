@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
-// CreateClient creates a new http client that can talk to the API
+// CreateClient creates a new http client that can talk to the API.
 func (h *EngineHarness) CreateClient() *http.Client {
 	caCert, err := os.ReadFile(h.Engine.Configuration.API.Gateway.Certs.TLSCACertPath)
 	if err != nil {
