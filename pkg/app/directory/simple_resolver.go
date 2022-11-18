@@ -44,7 +44,6 @@ func connect(logger *zerolog.Logger, cfg *directory.Config) (*grpcc.Connection, 
 }
 
 // GetDS - simple
-//
 func (r *Resolver) GetDS(ctx context.Context) (ds2.ReaderClient, error) {
 	if r.dirConn == nil {
 		dirConn, err := connect(r.logger, r.cfg)
