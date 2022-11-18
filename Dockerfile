@@ -1,4 +1,5 @@
-FROM golang:1.17-alpine AS build-dev
+ARG GO_VERSION
+FROM golang:$GO_VERSION-alpine AS build-dev
 RUN apk add --no-cache bash build-base git tree curl protobuf openssh
 WORKDIR /src
 
