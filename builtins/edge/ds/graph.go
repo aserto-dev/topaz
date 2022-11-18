@@ -16,28 +16,27 @@ import (
 
 // RegisterGraph - ds.graph
 //
-// ds.graph({
-// 	"anchor": {
-// 	  "id": "",
-// 	  "key": "",
-// 	  "type": ""
-// 	},
-// 	"object": {
-// 	  "id": "",
-// 	  "key": "",
-// 	  "type": ""
-// 	},
-// 	"relation": {
-// 	  "name": "",
-// 	  "object_type": ""
-// 	},
-// 	"subject": {
-// 	  "id": "",
-// 	  "key": "",
-// 	  "type": ""
-// 	}
-// })
-//
+//	ds.graph({
+//		"anchor": {
+//		  "id": "",
+//		  "key": "",
+//		  "type": ""
+//		},
+//		"object": {
+//		  "id": "",
+//		  "key": "",
+//		  "type": ""
+//		},
+//		"relation": {
+//		  "name": "",
+//		  "object_type": ""
+//		},
+//		"subject": {
+//		  "id": "",
+//		  "key": "",
+//		  "type": ""
+//		}
+//	})
 func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,

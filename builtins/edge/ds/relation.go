@@ -18,23 +18,22 @@ import (
 
 // RegisterRelation - ds.relation
 //
-// ds.relation({
-// 	"object": {
-// 	  "id": "",
-// 	  "key": "",
-// 	  "type": ""
-// 	},
-// 	"relation": {
-// 	  "name": "",
-// 	  "object_type": ""
-// 	},
-// 	"subject": {
-// 	  "id": "",
-// 	  "key": "",
-// 	  "type": ""
-// 	}
-// })
-//
+//	ds.relation({
+//		"object": {
+//		  "id": "",
+//		  "key": "",
+//		  "type": ""
+//		},
+//		"relation": {
+//		  "name": "",
+//		  "object_type": ""
+//		},
+//		"subject": {
+//		  "id": "",
+//		  "key": "",
+//		  "type": ""
+//		}
+//	})
 func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,

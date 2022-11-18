@@ -16,10 +16,9 @@ import (
 
 // RegisterUser - ds.user
 //
-// ds.user({
-// 	"id": ""
-// })
-//
+//	ds.user({
+//		"id": ""
+//	})
 func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,

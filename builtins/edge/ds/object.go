@@ -18,12 +18,11 @@ import (
 
 // RegisterObject - ds.object
 //
-// ds.object({
-// 	"id": "",
-// 	"key": "",
-// 	"type": ""
-// })
-//
+//	ds.object({
+//		"id": "",
+//		"key": "",
+//		"type": ""
+//	})
 func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,

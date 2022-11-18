@@ -20,10 +20,9 @@ import (
 //
 // get user id for identity
 //
-// ds.identity({
-// 	"key": ""
-// })
-//
+//	ds.identity({
+//		"key": ""
+//	})
 func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,

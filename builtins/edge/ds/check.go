@@ -14,23 +14,22 @@ import (
 
 // RegisterCheckRelation - ds.check_relation
 //
-// ds.check_relation({
-//   "object": {
-//     "id": "",
-//     "key": "",
-//     "type": ""
-//   },
-//   "relation": {
-//     "name": "",
-//     "object_type": ""
-//   },
-//   "subject": {
-//     "id": "",
-//     "key": "",
-//     "type": ""
-//   }
-// })
-//
+//	ds.check_relation({
+//	  "object": {
+//	    "id": "",
+//	    "key": "",
+//	    "type": ""
+//	  },
+//	  "relation": {
+//	    "name": "",
+//	    "object_type": ""
+//	  },
+//	  "subject": {
+//	    "id": "",
+//	    "key": "",
+//	    "type": ""
+//	  }
+//	})
 func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -92,23 +91,22 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 
 // RegisterCheckPermission - ds.check_permission
 //
-// ds.check_permission({
-// 	"object": {
-// 	  "id": "",
-// 	  "key": "",
-// 	  "type": ""
-// 	},
-// 	"permission": {
-// 	  "id": "",
-// 	  "name": ""
-// 	},
-// 	"subject": {
-// 	  "id": "",
-// 	  "key": "",
-// 	  "type": ""
-// 	}
-// })
-//
+//	ds.check_permission({
+//		"object": {
+//		  "id": "",
+//		  "key": "",
+//		  "type": ""
+//		},
+//		"permission": {
+//		  "id": "",
+//		  "name": ""
+//		},
+//		"subject": {
+//		  "id": "",
+//		  "key": "",
+//		  "type": ""
+//		}
+//	})
 func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
