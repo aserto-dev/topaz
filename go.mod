@@ -13,7 +13,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.1
 	github.com/aserto-dev/go-directory v0.20.3
 	github.com/aserto-dev/go-directory-cli v0.20.9
-	github.com/aserto-dev/go-edge-ds v0.20.4
+	github.com/aserto-dev/go-edge-ds v0.20.5
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1

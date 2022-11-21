@@ -9,12 +9,10 @@ import (
 	"path"
 	"time"
 
-	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
-	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/jwk"
@@ -173,32 +171,25 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 }
 
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
-	uid, err := s.getIdentityV2(ctx, identity)
+	user, err := s.getIdentityV2(ctx, identity)
 	switch {
 	case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
 		if !ds.IsValidID(identity) {
 			return nil, err
 		}
-		uid = identity
-
 	case err != nil:
 		return nil, err
 
 	default:
 	}
 
-	user, err := s.getUserV2(ctx, uid)
-	if err != nil {
-		return nil, err
-	}
-
 	return user, nil
 }
 
-func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (string, error) {
+func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (*v2.Object, error) {
 	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	identityString := "identity"
 	obj := v2.ObjectIdentifier{Type: &identityString, Key: &identity}
@@ -208,6 +199,7 @@ func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (
 	}
 	relationString := "identifier"
 	subjectType := "user"
+	withObjects := true
 
 	relResp, err := client.GetRelation(ctx, &ds2.GetRelationRequest{
 		Param: &v2.RelationIdentifier{
@@ -215,39 +207,19 @@ func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (
 			Relation: &v2.RelationTypeIdentifier{Name: &relationString, ObjectType: &identityString},
 			Subject:  &v2.ObjectIdentifier{Type: &subjectType},
 		},
+		WithObjects: &withObjects,
 	})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if relResp.Results == nil {
-		return "", aerr.ErrDirectoryObjectNotFound
-	}
-
-	uid := relResp.Results[0].Subject.Id
-
-	return *uid, nil
-}
-
-func (s *AuthorizerServer) getUserV2(ctx context.Context, uid string) (*v2.Object, error) {
-	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	userResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
-		Param: &v2.ObjectIdentifier{
-			Id: &uid,
-		},
-	})
-	switch {
-	case cerr.Equals(err, derr.ErrNotFound):
-		return nil, aerr.ErrDirectoryObjectNotFound
-	case err != nil:
-		return nil, err
-	case userResp.Result == nil:
 		return nil, aerr.ErrDirectoryObjectNotFound
 	}
 
-	return userResp.Result, nil
+	if len(relResp.Objects) == 0 {
+		return nil, aerr.ErrDirectoryObjectNotFound.Msg("no objects found in relation")
+	}
+
+	return relResp.Objects[*relResp.Results[0].Subject.Id], nil
 }
