@@ -21,8 +21,10 @@ opa:
         url: https://opcr.io/v2/
         type: "oci"
         response_header_timeout_seconds: 5
-        headers:
-          Authorization: "basic iDog"
+        credentials:
+          bearer:
+            token: "iDog"
+            scheme: "basic"
     bundles:
       {{ .PolicyName }}:
         service: opcr
