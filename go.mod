@@ -1,6 +1,6 @@
 module github.com/aserto-dev/topaz
 
-go 1.17
+go 1.19
 
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
@@ -8,7 +8,6 @@ require (
 	github.com/alecthomas/kong v0.7.1
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/clui v0.8.1
-	github.com/aserto-dev/errors v0.0.2
 	github.com/aserto-dev/go-aserto v0.20.0
 	github.com/aserto-dev/go-authorizer v0.20.1
 	github.com/aserto-dev/go-directory v0.20.3
@@ -52,6 +51,7 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
+	github.com/aserto-dev/errors v0.0.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytecodealliance/wasmtime-go v1.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
