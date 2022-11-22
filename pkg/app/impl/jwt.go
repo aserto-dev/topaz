@@ -12,13 +12,13 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
-	"github.com/google/uuid"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
+
+	"github.com/aserto-dev/topaz/directory"
 )
 
 var (
@@ -171,7 +171,11 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 }
 
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
-	user, err := s.getIdentityV2(ctx, identity)
+	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
+	if err != nil {
+		return nil, err
+	}
+	user, err := directory.GetIdentityV2(client, ctx, identity)
 	switch {
 	case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
 		if !ds.IsValidID(identity) {
@@ -184,42 +188,4 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	}
 
 	return user, nil
-}
-
-func (s *AuthorizerServer) getIdentityV2(ctx context.Context, identity string) (*v2.Object, error) {
-	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
-	if err != nil {
-		return nil, err
-	}
-	identityString := "identity"
-	obj := v2.ObjectIdentifier{Type: &identityString, Key: &identity}
-	_, err = uuid.Parse(identity)
-	if err == nil {
-		obj = v2.ObjectIdentifier{Id: &identity}
-	}
-	relationString := "identifier"
-	subjectType := "user"
-	withObjects := true
-
-	relResp, err := client.GetRelation(ctx, &ds2.GetRelationRequest{
-		Param: &v2.RelationIdentifier{
-			Object:   &obj,
-			Relation: &v2.RelationTypeIdentifier{Name: &relationString, ObjectType: &identityString},
-			Subject:  &v2.ObjectIdentifier{Type: &subjectType},
-		},
-		WithObjects: &withObjects,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	if relResp.Results == nil {
-		return nil, aerr.ErrDirectoryObjectNotFound
-	}
-
-	if len(relResp.Objects) == 0 {
-		return nil, aerr.ErrDirectoryObjectNotFound.Msg("no objects found in relation")
-	}
-
-	return relResp.Objects[*relResp.Results[0].Subject.Id], nil
 }
