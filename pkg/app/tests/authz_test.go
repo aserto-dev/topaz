@@ -32,6 +32,7 @@ func TestWithMissingIdentity(t *testing.T) {
 		test func(*testing.T)
 	}{
 		{"TestDecisionTreeWithMissingIdentity", DecisionTreeWithMissingIdentity(ctx, client)},
+		{"TestDecisionTreeWithUserID", DecisionTreeWithUserID(ctx, client)},
 		{"TestIsWithMissingIdentity", IsWithMissingIdentity(ctx, client)},
 		{"TestQueryWithMissingIdentity", QueryWithMissingIdentity(ctx, client)},
 	}
@@ -66,6 +67,34 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.Authoriz
 			assert.Equal(t, s.Code(), codes.NotFound)
 		}
 		assert.Nil(t, respX, "response object should be nil")
+	}
+}
+
+func DecisionTreeWithUserID(ctx context.Context, client authz2.AuthorizerClient) func(*testing.T) {
+	return func(t *testing.T) {
+		respX, errX := client.DecisionTree(ctx, &authz2.DecisionTreeRequest{
+			PolicyContext: &authz_api_v2.PolicyContext{
+				Path:      "peoplefinder.GET",
+				Decisions: []string{"allowed"},
+			},
+			IdentityContext: &authz_api_v2.IdentityContext{
+				Identity: "2bfaa552-d9a5-41e9-a6c3-5be62b4433c8", // April Stewart
+				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
+			},
+			Options:         &authz2.DecisionTreeOptions{},
+			ResourceContext: &structpb.Struct{},
+		})
+
+		if errX != nil {
+			t.Logf("ERR >>> %s\n", errX)
+		}
+
+		assert.NoError(t, errX)
+		assert.NotNil(t, respX, "response object should not be nil")
+		assert.Equal(t, "peoplefinder.GET", respX.PathRoot)
+
+		path := respX.Path.AsMap()
+		assert.Len(t, path, 2)
 	}
 }
 

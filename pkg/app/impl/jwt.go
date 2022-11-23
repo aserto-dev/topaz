@@ -12,6 +12,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
@@ -187,5 +188,25 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	default:
 	}
 
+	if user == nil {
+		return s.getObject(ctx, identity)
+	}
+
 	return user, nil
+}
+
+func (s *AuthorizerServer) getObject(ctx context.Context, id string) (proto.Message, error) {
+	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	objResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
+		Param: &v2.ObjectIdentifier{Id: &id},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return objResp.Result, nil
 }
