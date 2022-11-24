@@ -95,7 +95,7 @@ linters:
     - misspell
     - nakedret
     - noctx
-    - rowserrcheck
+    # - rowserrcheck # disable https://github.com/golangci/golangci-lint/issues/2649.
     - staticcheck
     - stylecheck
     - testpackage
