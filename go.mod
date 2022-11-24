@@ -16,7 +16,7 @@ require (
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
-	github.com/aserto-dev/runtime v0.46.3
+	github.com/aserto-dev/runtime v0.46.4
 	github.com/fatih/color v1.13.0
 	github.com/fullstorydev/grpcurl v1.8.7
 	github.com/google/uuid v1.3.0
@@ -29,16 +29,16 @@ require (
 	github.com/mennanov/fmutils v0.2.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.20.2
+	github.com/onsi/gomega v1.24.1
 	github.com/open-policy-agent/opa v0.46.2-0.20221118100140-667015d797bc
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.14.0
 	github.com/rs/cors v1.8.2
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/cobra v1.6.1
-	github.com/spf13/viper v1.13.0
+	github.com/spf13/viper v1.14.0
 	github.com/stretchr/testify v1.8.1
-	go.opencensus.io v0.23.0
+	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.1.0
 	google.golang.org/grpc v1.51.0
 	google.golang.org/protobuf v1.28.1
