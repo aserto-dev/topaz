@@ -289,7 +289,8 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
 		Path:      req.PolicyContext.Path,
 		Policy: &api.DecisionPolicy{
-			Context: req.PolicyContext,
+			Context:        req.PolicyContext,
+			PolicyInstance: req.PolicyInstance,
 		},
 		User: &api.DecisionUser{
 			Context: req.IdentityContext,
