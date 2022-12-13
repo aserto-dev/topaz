@@ -5,18 +5,16 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 
 # generate & build
 ENV VERSION 0.20.16
-ARG COMMIT
 
-WORKDIR /usr/src/app
-
-RUN Invoke-WebRequest ('https://github.com/aserto-dev/topaz/releases/download/v${0}/topaz_windows_x86_64.msi' -f $env:VERSION) -OutFile 'topaz_windows_x86_64.msi' -UseBasicParsing ; `
-    Start-Process msiexec.exe -Wait -ArgumentList '/I topaz_windows_x86_64.msi /quiet' ; `
-    Remove-Item -Path topaz_windows_x86_64.msi
+RUN Invoke-WebRequest ('https://github.com/aserto-dev/topaz/releases/download/v${0}/topaz_windows_x86_64.zip' -f $env:VERSION) -OutFile 'topaz_windows_x86_64.zip' -UseBasicParsing ; `
+    mkdir C:\Topaz ; `
+    Expand-Archive topaz_windows_x86_64.zip -DestinationPath C:\Topaz ; `
+    Remove-Item -Path topaz_windows_x86_64.zip
 
 LABEL org.opencontainers.image.version=$VERSION
 LABEL org.opencontainers.image.source=https://github.com/aserto-dev/topaz
 LABEL org.opencontainers.image.title="Topaz"
-LABEL org.opencontainers.image.revision=$COMMIT
+#LABEL org.opencontainers.image.revision=$COMMIT
 LABEL org.opencontainers.image.url=https://aserto.com
 
 EXPOSE 8282
@@ -25,4 +23,4 @@ EXPOSE 8484
 EXPOSE 8585
 EXPOSE 9292
 
-CMD [ "C:\\Program Files\\Topaz\\topazd.exe" ]
+CMD [ "C:\\Topaz\\topazd.exe" ]
