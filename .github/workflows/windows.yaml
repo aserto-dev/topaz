@@ -9,7 +9,7 @@ jobs:
   startup:
     runs-on: ubuntu-latest
     outputs:
-      myVar: ${{ steps.init.outputs.ref_name }}
+      ref_name: ${{ steps.init.outputs.ref_name }}
     steps:
       - name: Environment variables to output
         id: init
