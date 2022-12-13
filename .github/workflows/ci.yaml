@@ -198,7 +198,7 @@ jobs:
           
           echo "${SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE}" > /tmp/gs.json
           
-          release_version=$(echo '${{ github.ref_name }}' | sed 's|refs/tags/v||g')
+          release_version=$(echo '${{ github.ref }}' | sed 's|refs/tags/v||g')
           echo "RELEASE_VERSION=${release_version}" >> $GITHUB_OUTPUT
           
           go run mage.go deps release
@@ -261,7 +261,7 @@ jobs:
     needs: release
     runs-on: ${{ matrix.os }}
     strategy:
-      max-parallel: 3
+      max-parallel: 2
       matrix:
         os: [ windows-2019 ]
         include:
@@ -273,8 +273,8 @@ jobs:
           - os: windows-2022
             file: Dockerfile.windows
             base: ltsc2022
-            tag: aserto-dev/topaz:${{ needs.release.outputs.release_version }}-windows-ltsc2019
-            latest: aserto-dev/topaz:latest-windows-ltsc2019
+            tag: aserto-dev/topaz:${{ needs.release.outputs.release_version }}-windows-ltsc2022
+            latest: aserto-dev/topaz:latest-windows-ltsc2022
     steps:
       - name: Checkout
         uses: actions/checkout@v3
