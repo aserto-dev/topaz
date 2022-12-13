@@ -49,7 +49,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -t ${{ matrix.tag }} -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} --build-arg VERSION="${{ env.ref_name }}" --build-arg COMMIT="${{ github.sha }}"
+          docker build . -t ${{ matrix.tag }} -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} --build-arg VERSION="${{ env.ref_name }}" --build-arg COMMIT="${{ github.sha }}"
       - name: Docker push
         run: |
           docker tag ${{ matrix.tag }} ${{ matrix.latest }}
