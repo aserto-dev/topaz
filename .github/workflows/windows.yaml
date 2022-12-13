@@ -3,13 +3,42 @@ on:
   push:
 
 jobs:
-  build-containers:
-    name: Build Containers
-    runs-on: windows-2019
-
+  docker-windows:
+    runs-on: ${{ matrix.os }}
+    env:
+      ref_name: v0.20.16
+    strategy:
+      max-parallel: 3
+      matrix:
+        os: [ windows-2019 ]
+        include:
+          - os: windows-2019
+            file: Dockerfile.windows
+            base: ltsc2019
+            tag: aserto-dev/topaz:${{ env.ref_name }}-windows-ltsc2019
+            latest: aserto-dev/topaz:latest-windows-ltsc2019
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Read Configuration
+        uses: hashicorp/vault-action@v2.4.3
+        id: vault
+        with:
+          url: https://vault.eng.aserto.com/
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            kv/data/github  "USERNAME"            | DOCKER_USERNAME;
+            kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
+
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: https://ghcr.io
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
       - name: Docker Build
         run: |
-          docker build -f Dockerfile.windows .
+          docker build -t ${{ matrix.tag }} -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} VERSION="${{ env.ref_name }}}" COMMIT="${{ github.sha }}"
+      - name: Docker push
+        run: |
+          docker tag ${{ matrix.tag }} ${{ matrix.latest }}
+          docker push ${{ matrix.tag }} ${{ matrix.latest }}

@@ -1,10 +1,11 @@
 # escape=`
-FROM mcr.microsoft.com/windows/servercore:ltsc2019
+ARG BASE
+ARG VERSION
+ARG COMMIT
+
+FROM mcr.microsoft.com/windows/servercore:$BASE
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
-
-# generate & build
-ENV VERSION 0.20.16
 
 RUN Invoke-WebRequest ('https://github.com/aserto-dev/topaz/releases/download/v{0}/topaz_windows_x86_64.zip' -f $env:VERSION) -OutFile 'topaz_windows_x86_64.zip' -UseBasicParsing ; `
     mkdir C:\Topaz ; `
@@ -14,7 +15,7 @@ RUN Invoke-WebRequest ('https://github.com/aserto-dev/topaz/releases/download/v{
 LABEL org.opencontainers.image.version=$VERSION
 LABEL org.opencontainers.image.source=https://github.com/aserto-dev/topaz
 LABEL org.opencontainers.image.title="Topaz"
-#LABEL org.opencontainers.image.revision=$COMMIT
+LABEL org.opencontainers.image.revision=$COMMIT
 LABEL org.opencontainers.image.url=https://aserto.com
 
 EXPOSE 8282
