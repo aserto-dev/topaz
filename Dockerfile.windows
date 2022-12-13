@@ -1,19 +1,17 @@
-FROM winamd64/golang:1.19 AS build-dev
+# escape=`
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 # generate & build
-ARG VERSION
+ENV VERSION 0.20.16
 ARG COMMIT
 
 WORKDIR /usr/src/app
 
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
-COPY . .
-RUN --mount=type=ssh \
-    go run mage.go deps build
-
-FROM winamd64/golang:1.19
-ARG VERSION
-ARG COMMIT
+RUN Invoke-WebRequest ('https://github.com/aserto-dev/topaz/releases/download/v${0}/topaz_windows_x86_64.msi' -f $env:VERSION) -OutFile 'topaz_windows_x86_64.msi' -UseBasicParsing ; `
+    Start-Process msiexec.exe -Wait -ArgumentList '/I topaz_windows_x86_64.msi /quiet' ; `
+    Remove-Item -Path topaz_windows_x86_64.msi
 
 LABEL org.opencontainers.image.version=$VERSION
 LABEL org.opencontainers.image.source=https://github.com/aserto-dev/topaz
@@ -21,15 +19,10 @@ LABEL org.opencontainers.image.title="Topaz"
 LABEL org.opencontainers.image.revision=$COMMIT
 LABEL org.opencontainers.image.url=https://aserto.com
 
-RUN mkdir /app
-
-WORKDIR /app
-COPY --from=build-dev /usr/src/app/topazd_windows_amd64_v1/topazd /app/
-
 EXPOSE 8282
 EXPOSE 8383
 EXPOSE 8484
 EXPOSE 8585
 EXPOSE 9292
 
-ENTRYPOINT ["./topazd"]
+CMD [ "C:\\Program Files\\Topaz\\topazd.exe" ]
