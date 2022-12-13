@@ -3,7 +3,7 @@ ARG BASE
 ARG VERSION
 ARG COMMIT
 
-ENV VERSION=${VERSION}
+ENV VERSION=$VERSION
 
 FROM mcr.microsoft.com/windows/servercore:$BASE
 
