@@ -7,10 +7,12 @@ env:
 
 jobs:
   startup:
-    - name: Environment variables to output
-      id: init
-      run: |
-        echo "ref_name=${{ env.ref_name }}" >> $GITHUB_OUTPUT
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment variables to output
+        id: init
+        run: |
+          echo "ref_name=${{ env.ref_name }}" >> $GITHUB_OUTPUT
 
   docker-windows:
     runs-on: ${{ matrix.os }}
