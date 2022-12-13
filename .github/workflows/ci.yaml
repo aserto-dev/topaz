@@ -143,6 +143,8 @@ jobs:
 
   release:
     needs: [test, push]
+    outputs:
+      release_version: RELEASE_VERSION
     runs-on: ubuntu-latest
     # Only release when ref is a tag
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
@@ -196,8 +198,11 @@ jobs:
           
           echo "${SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE}" > /tmp/gs.json
           
-          go run mage.go deps release
+          release_version=$(echo '${{ github.ref_name }}' | sed 's|refs/tags/v||g')
+          echo "RELEASE_VERSION=${release_version}" >> $GITHUB_OUTPUT
           
+          go run mage.go deps release
+
   msi:
     needs: release
     runs-on: windows-latest
@@ -251,3 +256,49 @@ jobs:
         env:
           MSI_FILE: ${{ steps.buildmsi.outputs.msi }}
           GITHUB_TOKEN: ${{ steps.vault.outputs.ROOT_TOKEN }}
+
+  docker-windows:
+    needs: release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 3
+      matrix:
+        os: [ windows-2019 ]
+        include:
+          - os: windows-2019
+            file: Dockerfile.windows
+            base: ltsc2019
+            tag: aserto-dev/topaz:${{ needs.release.outputs.release_version }}-windows-ltsc2019
+            latest: aserto-dev/topaz:latest-windows-ltsc2019
+          - os: windows-2022
+            file: Dockerfile.windows
+            base: ltsc2022
+            tag: aserto-dev/topaz:${{ needs.release.outputs.release_version }}-windows-ltsc2019
+            latest: aserto-dev/topaz:latest-windows-ltsc2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Read Configuration
+        uses: hashicorp/vault-action@v2.4.3
+        id: vault
+        with:
+          url: https://vault.eng.aserto.com/
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            kv/data/github  "USERNAME"            | DOCKER_USERNAME;
+            kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
+
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: https://ghcr.io
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Docker Build
+        run: |
+          docker build . -t ${{ matrix.tag }} -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} --build-arg VERSION="${{ needs.release.outputs.release_version }}" --build-arg COMMIT="${{ github.sha }}"
+      - name: Docker push
+        run: |
+          docker tag ${{ matrix.tag }} ${{ matrix.latest }}
+          docker push ${{ matrix.tag }} ${{ matrix.latest }}
