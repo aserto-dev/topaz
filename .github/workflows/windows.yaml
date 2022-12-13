@@ -15,6 +15,7 @@ jobs:
           echo "ref_name=${{ env.ref_name }}" >> $GITHUB_OUTPUT
 
   docker-windows:
+    needs: startup
     runs-on: ${{ matrix.os }}
     strategy:
       max-parallel: 3
@@ -28,7 +29,6 @@ jobs:
             latest: aserto-dev/topaz:latest-windows-ltsc2019
     steps:
       - name: Read Configuration
-        needs: startup
         uses: hashicorp/vault-action@v2.4.3
         id: vault
         with:
