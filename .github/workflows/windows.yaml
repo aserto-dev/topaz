@@ -30,6 +30,8 @@ jobs:
             tag: aserto-dev/topaz:${{ needs.startup.outputs.ref_name }}-windows-ltsc2019
             latest: aserto-dev/topaz:latest-windows-ltsc2019
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Read Configuration
         uses: hashicorp/vault-action@v2.4.3
         id: vault
