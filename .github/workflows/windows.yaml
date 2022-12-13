@@ -2,11 +2,18 @@ name: Windows CI Workflow
 on:
   push:
 
+env:
+  ref_name: 0.20.16
+
 jobs:
+  startup:
+    - name: Environment variables to output
+      id: init
+      run: |
+        echo "ref_name=${{ env.ref_name }}" >> $GITHUB_OUTPUT
+
   docker-windows:
     runs-on: ${{ matrix.os }}
-    env:
-      ref_name: 0.20.16
     strategy:
       max-parallel: 3
       matrix:
@@ -15,10 +22,11 @@ jobs:
           - os: windows-2019
             file: Dockerfile.windows
             base: ltsc2019
-            tag: aserto-dev/topaz:${{ env.ref_name }}-windows-ltsc2019
+            tag: aserto-dev/topaz:${{ needs.init.outputs.ref_name }}-windows-ltsc2019
             latest: aserto-dev/topaz:latest-windows-ltsc2019
     steps:
       - name: Read Configuration
+        needs: startup
         uses: hashicorp/vault-action@v2.4.3
         id: vault
         with:
