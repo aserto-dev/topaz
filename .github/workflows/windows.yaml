@@ -6,7 +6,7 @@ jobs:
   docker-windows:
     runs-on: ${{ matrix.os }}
     env:
-      ref_name: v0.20.16
+      ref_name: 0.20.16
     strategy:
       max-parallel: 3
       matrix:
@@ -15,7 +15,7 @@ jobs:
           - os: windows-2019
             file: Dockerfile.windows
             base: ltsc2019
-            tag: aserto-dev/topaz:${{ env.ref_name }}-windows-ltsc2019
+            tag: aserto-dev/topaz:0.20.16-windows-ltsc2019
             latest: aserto-dev/topaz:latest-windows-ltsc2019
     steps:
       - name: Read Configuration
@@ -37,7 +37,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -t ${{ matrix.tag }} -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} VERSION="${{ env.ref_name }}}" COMMIT="${{ github.sha }}"
+          docker build -t ${{ matrix.tag }} -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} VERSION="0.20.16" COMMIT="${{ github.sha }}"
       - name: Docker push
         run: |
           docker tag ${{ matrix.tag }} ${{ matrix.latest }}
