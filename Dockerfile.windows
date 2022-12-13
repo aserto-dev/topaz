@@ -6,7 +6,7 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 # generate & build
 ENV VERSION 0.20.16
 
-RUN Invoke-WebRequest ('https://github.com/aserto-dev/topaz/releases/download/v${0}/topaz_windows_x86_64.zip' -f $env:VERSION) -OutFile 'topaz_windows_x86_64.zip' -UseBasicParsing ; `
+RUN Invoke-WebRequest ('https://github.com/aserto-dev/topaz/releases/download/v{0}/topaz_windows_x86_64.zip' -f $env:VERSION) -OutFile 'topaz_windows_x86_64.zip' -UseBasicParsing ; `
     mkdir C:\Topaz ; `
     Expand-Archive topaz_windows_x86_64.zip -DestinationPath C:\Topaz ; `
     Remove-Item -Path topaz_windows_x86_64.zip
