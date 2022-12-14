@@ -14,8 +14,13 @@ type RunCmd struct {
 }
 
 func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if running, err := dockerx.IsRunning(dockerx.Topaz); running || err != nil {
+		if !running {
+			return ErrNotRunning
+		}
+		if err != nil {
+			return err
+		}
 	}
 
 	color.Green(">>> starting topaz...")
