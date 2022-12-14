@@ -12,12 +12,8 @@ type InstallCmd struct {
 }
 
 func (cmd InstallCmd) Run(c *cc.CommonCtx) error {
-	if running, err := dockerx.IsRunning(dockerx.Topaz); running || err != nil {
-		if err != nil {
-			return err
-		}
-		color.Yellow("!!! topaz is already running")
-		return nil
+	if err := CheckRunning(c); err != nil {
+		return err
 	}
 
 	color.Green(">>> installing topaz...")
