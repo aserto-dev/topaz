@@ -10,11 +10,13 @@ import (
 type CommonCtx struct {
 	Context context.Context
 	UI      *clui.UI
+	NoCheck bool
 }
 
-func NewCommonContext() (*CommonCtx, error) {
+func NewCommonContext(noCheck bool) (*CommonCtx, error) {
 	return &CommonCtx{
 		Context: context.Background(),
 		UI:      iostream.NewUI(iostream.DefaultIO()),
+		NoCheck: noCheck,
 	}, nil
 }

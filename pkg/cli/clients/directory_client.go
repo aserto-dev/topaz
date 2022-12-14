@@ -47,7 +47,7 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*client.Client, error) {
 		return nil, err
 	}
 
-	return client.New(conn, c.UI)
+	return client.New(conn.Conn, c.UI)
 }
 
 type Config struct {

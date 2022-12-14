@@ -6,8 +6,6 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/fatih/color"
 )
 
 type SaveCmd struct {
@@ -16,12 +14,8 @@ type SaveCmd struct {
 }
 
 func (cmd *SaveCmd) Run(c *cc.CommonCtx) error {
-	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
-		if err != nil {
-			return err
-		}
-		color.Yellow("!!! topaz is not running")
-		return nil
+	if err := CheckRunning(c); err != nil {
+		return err
 	}
 
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)

@@ -27,7 +27,7 @@ func main() {
 		}),
 	)
 
-	ctx, err := cc.NewCommonContext()
+	ctx, err := cc.NewCommonContext(cli.NoCheck)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
