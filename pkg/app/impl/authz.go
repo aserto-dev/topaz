@@ -200,8 +200,12 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		Decisions: make([]*authorizer.Decision, 0),
 	}
 
+	if req.PolicyContext == nil {
+		return resp, aerr.ErrInvalidArgument.Msg("policy context not set")
+	}
+
 	if req.PolicyContext.Path == "" {
-		return resp, aerr.ErrInvalidArgument.Msg("policy context path not set in header aserto-policy-path")
+		return resp, aerr.ErrInvalidArgument.Msg("policy context path not set")
 	}
 
 	if len(req.PolicyContext.Decisions) == 0 {

@@ -3,12 +3,13 @@ module github.com/aserto-dev/topaz/magefiles
 go 1.17
 
 require (
-	github.com/aserto-dev/mage-loot v0.8.10
+	github.com/aserto-dev/mage-loot v0.8.11
 	github.com/magefile/mage v1.14.0
 	github.com/pkg/errors v0.9.1
 )
 
 require (
+	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/aserto-dev/clui v0.8.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
