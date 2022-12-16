@@ -25,7 +25,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	fmt.Fprintf(c.UI.Err(), ">>> importing data...\n")
+	fmt.Fprintf(c.UI.Output(), ">>> importing data from %s\n", cmd.Directory)
 	files, err := filepath.Glob(filepath.Join(cmd.Directory, "*.json"))
 	if err != nil {
 		return err

@@ -25,7 +25,7 @@ func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	fmt.Fprintf(c.UI.Err(), ">>> exporting data...\n")
+	fmt.Fprintf(c.UI.Output(), ">>> exporting data to %s\n", cmd.Directory)
 	objectsFile := filepath.Join(cmd.Directory, "objects.json")
 	relationsFile := filepath.Join(cmd.Directory, "relations.json")
 

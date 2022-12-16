@@ -2,16 +2,21 @@ module github.com/aserto-dev/topaz
 
 go 1.19
 
-// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
+replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
+
+// replace github.com/aserto-dev/go-aserto => ../go-aserto
 
 require (
 	github.com/alecthomas/kong v0.7.1
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/clui v0.8.1
-	github.com/aserto-dev/go-aserto v0.20.0
-	github.com/aserto-dev/go-authorizer v0.20.1
-	github.com/aserto-dev/go-directory v0.20.3
-	github.com/aserto-dev/go-directory-cli v0.20.9
+	github.com/aserto-dev/errors v0.0.2
+	github.com/aserto-dev/go-aserto v0.20.2
+	github.com/aserto-dev/go-authorizer v0.20.2
+	github.com/aserto-dev/go-directory v0.20.4
+	github.com/aserto-dev/go-directory-cli v0.20.10-0.20221128223054-c7b266a348ad
 	github.com/aserto-dev/go-edge-ds v0.20.5
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2
@@ -51,7 +56,6 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/aserto-dev/errors v0.0.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytecodealliance/wasmtime-go v1.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
