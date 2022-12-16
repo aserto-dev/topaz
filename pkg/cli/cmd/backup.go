@@ -34,6 +34,6 @@ func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, defaultFileName)
 	}
 
-	color.Green(">>> backup to %s\n", cmd.File)
+	color.Green(">>> backup to %s", cmd.File)
 	return dirClient.Backup(c.Context, cmd.File)
 }
