@@ -1,13 +1,13 @@
 package cmd
 
 import (
-	"fmt"
 	"html/template"
 	"io"
 	"os"
 	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/fatih/color"
 )
 
 type ConfigureCmd struct {
@@ -19,7 +19,7 @@ type ConfigureCmd struct {
 }
 
 func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
-	fmt.Fprintf(c.UI.Err(), ">>> configure policy...\n")
+	color.Green(">>> configure policy")
 
 	configDir, err := CreateConfigDir()
 	if err != nil {
@@ -41,7 +41,7 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		SeedMetadata:  cmd.SeedMetadata,
 	}
 
-	fmt.Fprintf(c.UI.Err(), "policy name: %s\n", params.PolicyName)
+	color.Green("policy name: %s", params.PolicyName)
 
 	var w io.Writer
 

@@ -6,8 +6,6 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/fatih/color"
 	"github.com/google/uuid"
 )
 
@@ -17,15 +15,12 @@ type ImportCmd struct {
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
-	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
-		if err != nil {
-			return err
-		}
-		color.Yellow("!!! topaz is not running")
-		return nil
+	if err := CheckRunning(c); err != nil {
+		return err
 	}
 
 	fmt.Fprintf(c.UI.Output(), ">>> importing data from %s\n", cmd.Directory)
+
 	files, err := filepath.Glob(filepath.Join(cmd.Directory, "*.json"))
 	if err != nil {
 		return err
