@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"path"
 
@@ -35,6 +34,6 @@ func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, defaultFileName)
 	}
 
-	fmt.Fprintf(c.UI.Output(), ">>> backup to %s\n", cmd.File)
+	color.Green(">>> backup to %s\n", cmd.File)
 	return dirClient.Backup(c.Context, cmd.File)
 }

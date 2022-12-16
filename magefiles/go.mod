@@ -1,6 +1,6 @@
 module github.com/aserto-dev/topaz/magefiles
 
-go 1.17
+go 1.19
 
 require (
 	github.com/aserto-dev/mage-loot v0.8.11

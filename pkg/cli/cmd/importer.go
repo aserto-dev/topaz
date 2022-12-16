@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/fatih/color"
 	"github.com/google/uuid"
 )
 
@@ -19,7 +19,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	fmt.Fprintf(c.UI.Output(), ">>> importing data from %s\n", cmd.Directory)
+	color.Green(">>> importing data from %s\n", cmd.Directory)
 
 	files, err := filepath.Glob(filepath.Join(cmd.Directory, "*.json"))
 	if err != nil {
