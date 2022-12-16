@@ -19,7 +19,7 @@ func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	color.Green(">>> exporting data to %s\n", cmd.Directory)
+	color.Green(">>> exporting data to %s", cmd.Directory)
 
 	objectsFile := filepath.Join(cmd.Directory, "objects.json")
 	relationsFile := filepath.Join(cmd.Directory, "relations.json")

@@ -32,6 +32,6 @@ func (cmd *SaveCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, defaultManifestName)
 	}
 
-	color.Green(">>> save manifest to %s\n", cmd.File)
+	color.Green(">>> save manifest to %s", cmd.File)
 	return dirClient.Save(c.Context, cmd.File)
 }

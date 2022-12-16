@@ -36,6 +36,6 @@ func (cmd *LoadCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, defaultManifestName)
 	}
 
-	color.Green(">>> load manifest from %s\n", cmd.File)
+	color.Green(">>> load manifest from %s", cmd.File)
 	return dirClient.Load(c.Context, cmd.File)
 }
