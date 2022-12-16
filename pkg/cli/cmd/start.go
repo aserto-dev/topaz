@@ -87,6 +87,10 @@ var (
 	hostname = []string{
 		"--hostname", "$CONTAINER_HOSTNAME",
 	}
+
+	platform = []string{
+		"--platform", "linux/amd64",
+	}
 )
 
 func (cmd *StartCmd) dockerArgs() []string {
