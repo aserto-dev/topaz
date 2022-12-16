@@ -6,6 +6,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/fatih/color"
 	"github.com/google/uuid"
 )
 
@@ -35,5 +36,6 @@ func (cmd *LoadCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, defaultManifestName)
 	}
 
+	color.Green(">>> load manifest from %s", cmd.File)
 	return dirClient.Load(c.Context, cmd.File)
 }

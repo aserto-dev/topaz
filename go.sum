@@ -73,10 +73,8 @@ github.com/aserto-dev/go-authorizer v0.20.2 h1:jDjPeaD3lyJmgWFDL6+B8ebG9nrRsqFyM
 github.com/aserto-dev/go-authorizer v0.20.2/go.mod h1:RTpBixDT2WIPOkXcewCXG3NxOWDt22yiXMb+qvdxucM=
 github.com/aserto-dev/go-directory v0.20.4 h1:vZlgrirt9o/9p20aJSuQ7DZgKWiAJku2Aqy3p0XF6Ho=
 github.com/aserto-dev/go-directory v0.20.4/go.mod h1:gjg6wZezLGXJj1LBEXaJUS9kpOnaDWeFUYhDG1TAkTY=
-github.com/aserto-dev/go-directory-cli v0.20.10 h1:uUAjKW6ebLcj3ntAblPqwrzCrUw1UmlbTl2orMdRvXg=
-github.com/aserto-dev/go-directory-cli v0.20.10/go.mod h1:XbOGPGxHQkF9nEBdJEaED1WA/mrFC+w/BZNkAv/hcRU=
-github.com/aserto-dev/go-edge-ds v0.20.5 h1:JK45ksJDE7SpGwQK88fVp2muNT+ndqWdeSKoqrQig84=
-github.com/aserto-dev/go-edge-ds v0.20.5/go.mod h1:gzmA8zvvfKYYIA2neO6WQBk8d5RYNBR0b2DP2coZ79A=
+github.com/aserto-dev/go-directory-cli v0.20.11 h1:0Q5KDOi5c1eyXjyBSEM50UxXuBPdSti2y57lybnvOgI=
+github.com/aserto-dev/go-directory-cli v0.20.11/go.mod h1:XbOGPGxHQkF9nEBdJEaED1WA/mrFC+w/BZNkAv/hcRU=
 github.com/aserto-dev/go-edge-ds v0.20.6 h1:B9A+0Va1btCMRqxgF4oXVuvpo8gEZ/9l6IPMmw9ySc0=
 github.com/aserto-dev/go-edge-ds v0.20.6/go.mod h1:EDiQCeW24D95dsJvTXrVsxoi4U2VyrDtPgqFA+xo2Gw=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=

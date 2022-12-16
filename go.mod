@@ -3,6 +3,8 @@ module github.com/aserto-dev/topaz
 go 1.19
 
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+// replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
+// replace github.com/aserto-dev/go-aserto => ../go-aserto
 
 require (
 	github.com/alecthomas/kong v0.7.1
@@ -12,7 +14,7 @@ require (
 	github.com/aserto-dev/go-aserto v0.20.2
 	github.com/aserto-dev/go-authorizer v0.20.2
 	github.com/aserto-dev/go-directory v0.20.4
-	github.com/aserto-dev/go-directory-cli v0.20.10
+	github.com/aserto-dev/go-directory-cli v0.20.11
 	github.com/aserto-dev/go-edge-ds v0.20.6
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/logger v0.0.2

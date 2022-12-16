@@ -6,6 +6,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/fatih/color"
 )
 
 type SaveCmd struct {
@@ -31,5 +32,6 @@ func (cmd *SaveCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, defaultManifestName)
 	}
 
+	color.Green(">>> save manifest to %s", cmd.File)
 	return dirClient.Save(c.Context, cmd.File)
 }

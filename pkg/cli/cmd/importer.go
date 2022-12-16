@@ -20,6 +20,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	color.Green(">>> importing data from %s", cmd.Directory)
+
 	files, err := filepath.Glob(filepath.Join(cmd.Directory, "*.json"))
 	if err != nil {
 		return err

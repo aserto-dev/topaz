@@ -15,6 +15,14 @@ import (
 
 const localhostDirectory = "localhost:9292"
 
+type Config struct {
+	Host      string `flag:"host" short:"H" help:"" env:"TOPAZ_DIRECTORY_SVC" default:"localhost:9292"`
+	APIKey    string `flag:"api-key" short:"k" help:"" env:"TOPAZ_DIRECTORY_KEY"`
+	Insecure  bool   `flag:"insecure" short:"i" help:""`
+	SessionID string `flag:"session-id"  help:""`
+	TenantID  string `flag:"tenant-id" help:""`
+}
+
 func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*client.Client, error) {
 
 	if cfg.Host == "" {
@@ -48,14 +56,6 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*client.Client, error) {
 	}
 
 	return client.New(conn.Conn, c.UI)
-}
-
-type Config struct {
-	Host      string `flag:"host" short:"H" help:"" env:"TOPAZ_DIRECTORY_SVC" default:"localhost:9292"`
-	APIKey    string `flag:"api-key" short:"k" help:"" env:"TOPAZ_DIRECTORY_KEY"`
-	Insecure  bool   `flag:"insecure" short:"i" help:""`
-	SessionID string `flag:"session-id"  help:""`
-	TenantID  string `flag:"tenant-id" help:""`
 }
 
 func validate(cfg *Config) error {
