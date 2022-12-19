@@ -284,18 +284,21 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	}
 
 	dlPlugin := decisionlog_plugin.Lookup(policyRuntime.GetPluginsManager())
+	tenantID := getTenantID(ctx)
 	d := api.Decision{
 		Id:        uuid.NewString(),
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
 		Path:      req.PolicyContext.Path,
 		Policy: &api.DecisionPolicy{
-			Context: req.PolicyContext,
+			Context:        req.PolicyContext,
+			PolicyInstance: req.PolicyInstance,
 		},
 		User: &api.DecisionUser{
 			Context: req.IdentityContext,
 			Id:      getID(input),
 			Email:   getEmail(input),
 		},
+		TenantId: tenantID,
 		Resource: req.ResourceContext,
 		Outcomes: outcomes,
 	}
@@ -310,6 +313,15 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	}
 
 	return resp, err
+}
+
+func getTenantID(ctx context.Context) *string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		id := md.Get("Aserto-Tenant-Id")[0]
+		return &id
+	}
+	return nil
 }
 
 func is(v interface{}, decision string) (bool, error) {
