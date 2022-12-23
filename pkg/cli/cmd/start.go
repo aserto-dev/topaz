@@ -12,9 +12,10 @@ import (
 )
 
 type StartCmd struct {
-	ContainerName    string `optional:"" default:"topaz" help:"container name"`
-	ContainerVersion string `optional:"" default:"latest" help:"container version" `
-	Hostname         string `optional:"" help:"hostname for docker to set"`
+	ContainerName    string   `optional:"" default:"topaz" help:"container name"`
+	ContainerVersion string   `optional:"" default:"latest" help:"container version" `
+	Hostname         string   `optional:"" help:"hostname for docker to set"`
+	Env              []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
 }
 
 func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
@@ -97,6 +98,10 @@ func (cmd *StartCmd) dockerArgs() []string {
 	args := append([]string{}, dockerCmd...)
 	args = append(args, dockerArgs...)
 	args = append(args, daemonArgs...)
+
+	for _, env := range cmd.Env {
+		args = append(args, "--env", env)
+	}
 
 	if cmd.Hostname != "" {
 		args = append(args, hostname...)

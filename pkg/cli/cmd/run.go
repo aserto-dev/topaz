@@ -8,9 +8,10 @@ import (
 )
 
 type RunCmd struct {
-	ContainerName    string `optional:"" default:"topaz" help:"container name"`
-	ContainerVersion string `optional:"" default:"latest" help:"container version" `
-	Hostname         string `optional:"" help:"hostname for docker to set"`
+	ContainerName    string   `optional:"" default:"topaz" help:"container name"`
+	ContainerVersion string   `optional:"" default:"latest" help:"container version" `
+	Hostname         string   `optional:"" help:"hostname for docker to set"`
+	Env              []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
 }
 
 func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
@@ -46,6 +47,10 @@ func (cmd *RunCmd) dockerArgs() []string {
 	args := append([]string{}, dockerCmd...)
 	args = append(args, "-ti")
 	args = append(args, dockerArgs...)
+
+	for _, env := range cmd.Env {
+		args = append(args, "--env", env)
+	}
 
 	if cmd.Hostname != "" {
 		args = append(args, hostname...)
