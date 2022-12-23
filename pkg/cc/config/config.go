@@ -1,10 +1,12 @@
 package config
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -147,10 +149,18 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 	}
 
 	if configExists {
-		if err := v.ReadInConfig(); err != nil {
+		buf, err := os.ReadFile(v.ConfigFileUsed())
+		if err != nil {
 			return nil, errors.Wrapf(err, "failed to read config file '%s'", file)
 		}
+		subBuf := subEnvVars(string(buf))
+		r := bytes.NewReader([]byte(subBuf))
+
+		if err := v.ReadConfig(r); err != nil {
+			return nil, errors.Wrapf(err, "failed to parse config file '%s'", file)
+		}
 	}
+
 	v.AutomaticEnv()
 
 	cfg := new(Config)
@@ -280,4 +290,26 @@ func fileExists(path string) (bool, error) {
 	} else {
 		return false, errors.Wrapf(err, "failed to stat file '%s'", path)
 	}
+}
+
+var envRegex = regexp.MustCompile(`(?U:\${.*})`)
+
+// subEnvVars will look for any environment variables in the passed in string
+// with the syntax of ${VAR_NAME} and replace that string with ENV[VAR_NAME].
+func subEnvVars(s string) string {
+	updatedConfig := envRegex.ReplaceAllStringFunc(s, func(s string) string {
+		// Trim off the '${' and '}'
+		if len(s) <= 3 {
+			// This should never happen..
+			return ""
+		}
+		varName := s[2 : len(s)-1]
+
+		// Lookup the variable in the environment. We play by
+		// bash rules.. if its undefined we'll treat it as an
+		// empty string instead of raising an error.
+		return os.Getenv(varName)
+	})
+
+	return updatedConfig
 }
