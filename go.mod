@@ -17,6 +17,7 @@ require (
 	github.com/aserto-dev/go-directory-cli v0.20.11
 	github.com/aserto-dev/go-edge-ds v0.20.6
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
+	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.2
 	github.com/aserto-dev/openapi-authorizer v0.0.1
 	github.com/aserto-dev/runtime v0.48.0
@@ -81,6 +82,7 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
