@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	"github.com/aserto-dev/header"
 
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
@@ -317,8 +317,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 }
 
 func getTenantID(ctx context.Context) *string {
-	md := metautils.ExtractIncoming(ctx)
-	tenantID := md.Get("Aserto-Tenant-Id")
+	tenantID := header.ExtractTenantID(ctx)
 	if tenantID != "" {
 		return &tenantID
 	}
