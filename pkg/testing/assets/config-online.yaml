@@ -23,14 +23,13 @@ opa:
   config:
     services:
       acmecorp:
-        url: https://opcr.io/v2/
+        url: https://ghcr.io/
+        type: "oci"
         response_header_timeout_seconds: 5
-        headers:
-          Authorization: "basic iDog"
     bundles:
       peoplefinder:
         service: acmecorp
-        resource: "public-test-images/peoplefinder/blobs/sha256:d7dd4def1a65806e60ee29e5e6d03b9b68b334fbfa977d6216eb4c6fecca6157"
+        resource: "ghcr.io/aserto-policies/policy-peoplefinder-rbac:latest"
         persist: false
         config:
           polling:
