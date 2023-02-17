@@ -17,17 +17,13 @@ opa:
     skip_verification: true
   config:
     services:
-      opcr:
-        url: https://opcr.io/v2/
+      ghcr:
+        url: https://ghcr.io
         type: "oci"
         response_header_timeout_seconds: 5
-        credentials:
-          bearer:
-            token: "iDog"
-            scheme: "basic"
     bundles:
       {{ .PolicyName }}:
-        service: opcr
+        service: ghcr
         resource: "{{ .Resource }}"
         persist: false
         config:
