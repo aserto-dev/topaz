@@ -109,10 +109,10 @@ topaz install
 
 ### Create a configuration
 
-This command creates a configuration file for the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. The source code for the `ghcr.io/aserto-templates/policy-todo-rebac:latest` policy image can be found [here](https://github.com/aserto-templates/template-policy-todo-rebac/tree/main/content/src/policies).
+This command creates a configuration file for the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. The source code for the `ghcr.io/aserto-policies/policy-todo-rebac:latest` policy image can be found [here](https://github.com/aserto-templates/template-policy-todo-rebac/tree/main/content/src/policies).
 
 ```shell
-topaz configure -d -s -r ghcr.io/aserto-templates/policy-todo-rebac:latest todo
+topaz configure -d -s -r ghcr.io/aserto-policies/policy-todo-rebac:latest todo
 ```
 
 The configuration file is generated in `$(HOME)/.config/topaz/cfg`.
