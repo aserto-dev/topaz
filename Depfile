@@ -8,16 +8,16 @@ go:
     version: "v0.5.0"
   goreleaser:
     importPath: github.com/goreleaser/goreleaser
-    version: "v1.12.3"
+    version: "v1.15.2"
   gotestsum:
     importPath: "gotest.tools/gotestsum"
-    version: "v1.8.2"
+    version: "v1.9.0"
   golangci-lint:
     importPath: "github.com/golangci/golangci-lint/cmd/golangci-lint"
-    version: "v1.50.1"
+    version: "v1.51.2"
   goimports:
     importPath: "golang.org/x/tools/cmd/goimports"
-    version: "774f453"
+    version: "latest"
   grpcui:
     importPath: "github.com/fullstorydev/grpcui/cmd/grpcui"
     version: "v1.3.1"
