@@ -38,7 +38,7 @@ func (c *Container) env(rootPath string) map[string]string {
 	}
 }
 
-func (c *Container) dockerArgs(localBundles []string, mode RunMode) []string {
+func (c *Container) dockerArgs(localBundle string, mode RunMode) []string {
 	args := append([]string{}, dockerCmd...)
 	args = append(args, dockerArgs...)
 	switch mode {
@@ -48,7 +48,7 @@ func (c *Container) dockerArgs(localBundles []string, mode RunMode) []string {
 		args = append(args, "-d")
 	}
 
-	args = append(args, localBundleMounts(localBundles)...)
+	args = append(args, localBundleMountArgs(localBundle)...)
 
 	for _, env := range c.Env {
 		args = append(args, "--env", env)
@@ -77,14 +77,14 @@ func (c *Container) Start(mode RunMode) error {
 	}
 
 	configFile := path.Join(rootPath, "cfg", "config.yaml")
-	localBundles, err := parseLocalBundles(configFile)
+	localBundle, err := parseLocalBundle(configFile)
 	if err != nil {
 		return err
 	}
 
 	color.Green(">>> starting topaz...")
 
-	args := c.dockerArgs(localBundles, mode)
+	args := c.dockerArgs(localBundle, mode)
 
 	cmdArgs := []string{
 		"run",
@@ -136,34 +136,42 @@ type topazConfig struct {
 	} `yaml:"opa"`
 }
 
-func parseLocalBundles(configFile string) ([]string, error) {
-	bundles := []string{}
-
+func parseLocalBundle(configFile string) (string, error) {
 	f, err := os.Open(configFile)
 	switch {
 	case errors.Is(err, os.ErrNotExist):
-		return bundles, errors.Errorf("%s does not exist, please run 'topaz configure'", configFile)
+		return "", errors.Errorf("%s does not exist, please run 'topaz configure'", configFile)
 	case err != nil:
-		return bundles, errors.Wrapf(err, "failed to open %s", configFile)
+		return "", errors.Wrapf(err, "failed to open %s", configFile)
 	}
 
 	b, err := io.ReadAll(f)
 	if err != nil {
-		return bundles, errors.Wrapf(err, "failed to read %s", configFile)
+		return "", errors.Wrapf(err, "failed to read %s", configFile)
 	}
 
 	var cfg topazConfig
 	if err := yaml.Unmarshal(b, &cfg); err != nil {
-		return bundles, errors.Wrapf(err, "failed to parse %s", configFile)
+		return "", errors.Wrapf(err, "failed to parse %s", configFile)
 	}
 
-	return cfg.OPA.LocalBundles.Paths, nil
+	bundlePath := ""
+	if len(cfg.OPA.LocalBundles.Paths) > 1 {
+		return "", errors.Errorf("more than one local bundle path found in %s", configFile)
+	}
+
+	if len(cfg.OPA.LocalBundles.Paths) == 1 {
+		bundlePath = cfg.OPA.LocalBundles.Paths[0]
+	}
+
+	return bundlePath, nil
 }
 
-func localBundleMounts(localBundles []string) []string {
-	mounts := []string{}
-	for _, bundle := range localBundles {
-		mounts = append(mounts, "-v", fmt.Sprintf("%s:%s:ro", bundle, bundle))
+func localBundleMountArgs(localBundle string) []string {
+	mount := []string{}
+	if localBundle != "" {
+		mount = append(mount, "-v", fmt.Sprintf("%[1]s:%[1]s:ro", localBundle))
 	}
-	return mounts
+
+	return mount
 }
