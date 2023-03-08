@@ -17,11 +17,11 @@ func (cmd UpdateCmd) Run(c *cc.CommonCtx) error {
 
 	args := []string{}
 	args = append(args, "pull")
-	args = append(args, platform...)
+	args = append(args, dockerx.Platform...)
 	if cmd.Hostname != "" {
-		args = append(args, hostname...)
+		args = append(args, dockerx.Hostname...)
 	}
-	args = append(args, containerName...)
+	args = append(args, dockerx.ImageName...)
 
 	return dockerx.DockerWith(map[string]string{
 		"CONTAINER_NAME":    cmd.ContainerName,

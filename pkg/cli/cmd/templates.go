@@ -13,8 +13,12 @@ opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2
   local_bundles:
-    paths: []
     skip_verification: true
+{{- if eq .PolicyName "-" }}
+    paths:
+    - {{ .Resource }}
+{{ else }}
+    paths: []
   config:
     services:
       ghcr:
@@ -30,11 +34,12 @@ opa:
           polling:
             min_delay_seconds: 60
             max_delay_seconds: 120
+{{ end }}
 `
 
 const templatePreamble = `---
 logging:
-  prod: true
+  prod: false
   log_level: info
 
 directory_service:

@@ -11,8 +11,8 @@ import (
 )
 
 type ConfigureCmd struct {
-	PolicyName    string `arg:"" required:"" help:"policy name"`
-	Resource      string `short:"r" required:"" help:"resource url"`
+	PolicyName    string `arg:"" required:"" help:"policy name or '-' for running a local policy bundle"`
+	Resource      string `short:"r" required:"" help:"resource url or local policy bundle path"`
 	Stdout        bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
 	EdgeDirectory bool   `short:"d" help:"enable edge directory" default:"false"`
 	SeedMetadata  bool   `short:"s" help:"enable seed metadata" default:"false"`

@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -9,8 +8,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/version"
 )
-
-var ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
 
 type CLI struct {
 	Backup    BackupCmd    `cmd:"" help:"backup directory data"`
@@ -49,7 +46,7 @@ func CheckRunning(c *cc.CommonCtx) error {
 
 	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
 		if !running {
-			return ErrNotRunning
+			return dockerx.ErrNotRunning
 		}
 		if err != nil {
 			return err
