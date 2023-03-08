@@ -32,8 +32,9 @@ import (
 //		  "id": "",
 //		  "key": "",
 //		  "type": ""
-//		}
-//	})
+//		},
+//		"with_objects": false
+//	  })
 type extendedRelation struct {
 	*dsc.RelationIdentifier
 	WithObjects bool `json:"with_objects"`
@@ -51,7 +52,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return nil, err
 			}
 
-			if a == nil {
+			if a == nil || a.RelationIdentifier == nil {
 
 				a = &extendedRelation{
 					RelationIdentifier: &dsc.RelationIdentifier{
