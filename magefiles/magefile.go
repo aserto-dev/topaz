@@ -127,7 +127,7 @@ func Release() error {
 }
 
 func Run() error {
-	return sh.RunV("./dist/topaz"+runtime.GOOS+"_"+runtime.GOARCH+"/topaz", "--config", "./pkg/testharness/testdata/config.yaml", "run")
+	return sh.RunV("./dist/topazd_"+runtime.GOOS+"_"+runtime.GOARCH+"/topazd", "--config-file", "./pkg/testing/assets/config-local.yaml", "run")
 }
 
 func writeVersion() error {

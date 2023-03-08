@@ -61,6 +61,7 @@ archives:
       - LICENSE
       - README.md
     name_template: "topaz_{{ .Os }}_{{ .Arch }}"
+    rlcp: true
 
 checksum:
   name_template: "checksums.txt"

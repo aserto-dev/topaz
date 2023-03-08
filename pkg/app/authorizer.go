@@ -31,20 +31,26 @@ func (e *Authorizer) Start() error {
 		if len(addr) != 2 {
 			return errors.Errorf("invalid remote address - should contain <host>:<port>")
 		}
+
 		port, err := strconv.Atoi(addr[1])
 		if err != nil {
 			return err
 		}
-		edge := edgeServer.NewEdgeServer(
+
+		edge, err := edgeServer.NewEdgeServer(
 			e.Configuration.Directory.EdgeConfig,
 			&e.Configuration.API.GRPC.Certs,
 			addr[0],
 			port,
 			e.Logger,
 		)
+		if err != nil {
+			return errors.Wrap(err, "failed to create edge directory server")
+		}
 
 		e.Server.RegisterServer("edgeDirServer", edge.Start, edge.Stop)
 	}
+
 	err := e.Server.Start(e.Context)
 	if err != nil {
 		return errors.Wrap(err, "failed to start engine server")
