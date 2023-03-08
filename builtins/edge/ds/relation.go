@@ -32,8 +32,9 @@ import (
 //		  "id": "",
 //		  "key": "",
 //		  "type": ""
-//		}
-//	})
+//		},
+//		"with_objects": false
+//	  })
 type extendedRelation struct {
 	*dsc.RelationIdentifier
 	WithObjects bool `json:"with_objects"`
