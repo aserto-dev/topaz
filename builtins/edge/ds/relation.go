@@ -2,6 +2,7 @@ package ds
 
 import (
 	"bytes"
+	"fmt"
 
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/topdown"
 	"github.com/open-policy-agent/opa/types"
 
 	"github.com/rs/zerolog"
@@ -83,6 +85,14 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 
 			resp, err := client.GetRelation(bctx.Context, &reader.GetRelationRequest{Param: a.RelationIdentifier, WithObjects: &a.WithObjects})
 			if err != nil {
+				if bctx.TraceEnabled {
+					if len(bctx.QueryTracers) > 0 {
+						bctx.QueryTracers[0].TraceEvent(topdown.Event{
+							Op:      topdown.FailOp,
+							Message: fmt.Sprintf("DS Relation Error:%s", err.Error()),
+						})
+					}
+				}
 				return nil, err
 			}
 

@@ -1,6 +1,8 @@
 package ds
 
 import (
+	"fmt"
+
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/topaz/directory"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -8,6 +10,7 @@ import (
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/topdown"
 	"github.com/open-policy-agent/opa/types"
 	"github.com/pkg/errors"
 )
@@ -52,6 +55,14 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 					return nil, err
 				}
 			case err != nil:
+				if bctx.TraceEnabled {
+					if len(bctx.QueryTracers) > 0 {
+						bctx.QueryTracers[0].TraceEvent(topdown.Event{
+							Op:      topdown.FailOp,
+							Message: fmt.Sprintf("DS Identity Error:%s", err.Error()),
+						})
+					}
+				}
 				return nil, err
 
 			default:
