@@ -52,7 +52,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 					return nil, err
 				}
 			case err != nil:
-				traceError(bctx, fnName, err)
+				traceError(&bctx, fnName, err)
 				return nil, err
 
 			default:

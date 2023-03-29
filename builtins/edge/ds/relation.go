@@ -83,7 +83,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 
 			resp, err := client.GetRelation(bctx.Context, &reader.GetRelationRequest{Param: a.RelationIdentifier, WithObjects: &a.WithObjects})
 			if err != nil {
-				traceError(bctx, fnName, err)
+				traceError(&bctx, fnName, err)
 				return nil, err
 			}
 

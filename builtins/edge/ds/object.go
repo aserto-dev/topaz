@@ -54,7 +54,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				Param: a,
 			})
 			if err != nil {
-				traceError(bctx, fnName, err)
+				traceError(&bctx, fnName, err)
 				return nil, err
 			}
 

@@ -94,7 +94,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				Object:   a.Object,
 			})
 			if err != nil {
-				traceError(bctx, fnName, err)
+				traceError(&bctx, fnName, err)
 				return nil, err
 			}
 

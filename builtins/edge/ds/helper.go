@@ -63,7 +63,7 @@ func BufToProto(r io.Reader, msg proto.Message) error {
 	}.Unmarshal(buf.Bytes(), msg)
 }
 
-func traceError(bctx topdown.BuiltinContext, fnName string, err error) {
+func traceError(bctx *topdown.BuiltinContext, fnName string, err error) {
 	if bctx.TraceEnabled {
 		if len(bctx.QueryTracers) > 0 {
 			bctx.QueryTracers[0].TraceEvent(topdown.Event{
