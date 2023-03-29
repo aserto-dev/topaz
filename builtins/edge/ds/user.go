@@ -51,6 +51,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				},
 			})
 			if err != nil {
+				traceError(&bctx, fnName, err)
 				return nil, err
 			}
 

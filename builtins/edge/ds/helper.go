@@ -2,10 +2,12 @@ package ds
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 
 	"github.com/google/uuid"
 	"github.com/open-policy-agent/opa/ast"
+	"github.com/open-policy-agent/opa/topdown"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
@@ -59,4 +61,15 @@ func BufToProto(r io.Reader, msg proto.Message) error {
 	return protojson.UnmarshalOptions{
 		DiscardUnknown: true,
 	}.Unmarshal(buf.Bytes(), msg)
+}
+
+func traceError(bctx *topdown.BuiltinContext, fnName string, err error) {
+	if bctx.TraceEnabled {
+		if len(bctx.QueryTracers) > 0 {
+			bctx.QueryTracers[0].TraceEvent(topdown.Event{
+				Op:      topdown.FailOp,
+				Message: fmt.Sprintf("%s error:%s", fnName, err.Error()),
+			})
+		}
+	}
 }

@@ -82,6 +82,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 				Trace:    false,
 			})
 			if err != nil {
+				traceError(&bctx, fnName, err)
 				return nil, err
 			}
 
@@ -161,6 +162,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 				Trace:  false,
 			})
 			if err != nil {
+				traceError(&bctx, fnName, err)
 				return nil, err
 			}
 
