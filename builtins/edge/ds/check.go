@@ -1,14 +1,11 @@
 package ds
 
 import (
-	"fmt"
-
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/topdown"
 	"github.com/open-policy-agent/opa/types"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -85,14 +82,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 				Trace:    false,
 			})
 			if err != nil {
-				if bctx.TraceEnabled {
-					if len(bctx.QueryTracers) > 0 {
-						bctx.QueryTracers[0].TraceEvent(topdown.Event{
-							Op:      topdown.FailOp,
-							Message: fmt.Sprintf("DS Object Error:%s", err.Error()),
-						})
-					}
-				}
+				traceError(bctx, fnName, err)
 				return nil, err
 			}
 
@@ -172,6 +162,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 				Trace:  false,
 			})
 			if err != nil {
+				traceError(bctx, fnName, err)
 				return nil, err
 			}
 

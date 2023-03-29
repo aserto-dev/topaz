@@ -2,7 +2,6 @@ package ds
 
 import (
 	"bytes"
-	"fmt"
 
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
@@ -12,7 +11,6 @@ import (
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/topdown"
 	"github.com/open-policy-agent/opa/types"
 )
 
@@ -53,14 +51,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				},
 			})
 			if err != nil {
-				if bctx.TraceEnabled {
-					if len(bctx.QueryTracers) > 0 {
-						bctx.QueryTracers[0].TraceEvent(topdown.Event{
-							Op:      topdown.FailOp,
-							Message: fmt.Sprintf("DS User Error:%s", err.Error()),
-						})
-					}
-				}
+				traceError(bctx, fnName, err)
 				return nil, err
 			}
 
