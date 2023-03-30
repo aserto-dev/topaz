@@ -1,13 +1,23 @@
 package cmd
 
 type templateParams struct {
-	PolicyName    string
-	Resource      string
-	Authorization string
-	EdgeDirectory bool
-	SeedMetadata  bool
+	LocalPolicyImage string
+	PolicyName       string
+	Resource         string
+	Authorization    string
+	EdgeDirectory    bool
+	SeedMetadata     bool
 }
 
+const localImageTemplate = templatePreamble + `
+opa:
+  instance_id: "-"
+  graceful_shutdown_period_seconds: 2
+  local_bundles:
+    local_policy_image: {{ .LocalPolicyImage }}
+    watch: true
+    skip_verification: true
+`
 const configTemplate = templatePreamble + `
 opa:
   instance_id: "-"
