@@ -38,11 +38,7 @@ const (
 
 // Config holds the configuration for the app.
 type Common struct {
-	Logging struct {
-		Prod           bool          `json:"prod"`
-		LogLevel       string        `json:"log_level"`
-		LogLevelParsed zerolog.Level `json:"-"`
-	} `json:"logging"`
+	Logging logger.Config `json:"logging"`
 
 	Command struct {
 		Mode CommandMode
