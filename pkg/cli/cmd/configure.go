@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"html/template"
 	"io"
 	"os"
@@ -11,14 +12,20 @@ import (
 )
 
 type ConfigureCmd struct {
-	PolicyName    string `arg:"" required:"" help:"policy name"`
-	Resource      string `short:"r" required:"" help:"resource url"`
-	Stdout        bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
-	EdgeDirectory bool   `short:"d" help:"enable edge directory" default:"false"`
-	SeedMetadata  bool   `short:"s" help:"enable seed metadata" default:"false"`
+	PolicyName       string `short:"n" help:"policy name"`
+	LocalPolicyImage string `short:"l" help:"local policy image name"`
+	Resource         string `short:"r" help:"resource url"`
+	Stdout           bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
+	EdgeDirectory    bool   `short:"d" help:"enable edge directory" default:"false"`
+	SeedMetadata     bool   `short:"s" help:"enable seed metadata" default:"false"`
 }
 
 func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
+	if cmd.PolicyName == "" && cmd.Resource == "" {
+		if cmd.LocalPolicyImage == "" {
+			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
+		}
+	}
 	color.Green(">>> configure policy")
 
 	configDir, err := CreateConfigDir()
@@ -34,15 +41,6 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	params := templateParams{
-		PolicyName:    cmd.PolicyName,
-		Resource:      cmd.Resource,
-		EdgeDirectory: cmd.EdgeDirectory,
-		SeedMetadata:  cmd.SeedMetadata,
-	}
-
-	color.Green("policy name: %s", params.PolicyName)
-
 	var w io.Writer
 
 	if cmd.Stdout {
@@ -53,6 +51,19 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 	}
+	params := templateParams{
+		LocalPolicyImage: cmd.LocalPolicyImage,
+		PolicyName:       cmd.PolicyName,
+		Resource:         cmd.Resource,
+		EdgeDirectory:    cmd.EdgeDirectory,
+		SeedMetadata:     cmd.SeedMetadata,
+	}
+	if params.LocalPolicyImage != "" {
+		color.Green("using local policy image: %s", params.LocalPolicyImage)
+		return WriteConfig(w, localImageTemplate, &params)
+	}
+
+	color.Green("policy name: %s", params.PolicyName)
 
 	return WriteConfig(w, configTemplate, &params)
 }
