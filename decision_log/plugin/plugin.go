@@ -13,6 +13,8 @@ const PluginName = "aserto_decision_log"
 
 type PolicyInfo struct {
 	PolicyID        string `json:"policy_id"`
+	PolicyName      string `json:"policy_name"`
+	InstanceLabel   string `json:"instance_label"`
 	RegistryService string `json:"registry_service"`
 	RegistryImage   string `json:"registry_image"`
 	RegistryTag     string `json:"registry_tag"`
