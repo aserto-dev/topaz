@@ -151,7 +151,7 @@ curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel-rela
 Import the contents of the file into Topaz directory. This creates the sample users (Rick, Morty, and friends); groups; and relations.
 
 ```shell
-topaz import -d .
+topaz import -i -d .
 ```
 
 ### Issue an API call
