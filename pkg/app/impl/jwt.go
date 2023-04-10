@@ -189,20 +189,20 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	}
 
 	if user == nil {
-		return s.getObject(ctx, identity)
+		return s.getObject(ctx, "identity", identity)
 	}
 
 	return user, nil
 }
 
-func (s *AuthorizerServer) getObject(ctx context.Context, id string) (proto.Message, error) {
+func (s *AuthorizerServer) getObject(ctx context.Context, objType, key string) (proto.Message, error) {
 	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	objResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
-		Param: &v2.ObjectIdentifier{Id: &id},
+		Param: &v2.ObjectIdentifier{Type: &objType, Key: &key},
 	})
 	if err != nil {
 		return nil, err

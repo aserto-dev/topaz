@@ -56,7 +56,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return nil, err
 
 			default:
-				return ast.StringTerm(user.Id), nil
+				return ast.StringTerm(user.Key), nil
 			}
 
 			return nil, aerr.ErrDirectoryObjectNotFound

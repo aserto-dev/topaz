@@ -18,12 +18,10 @@ import (
 //
 //	ds.graph({
 //		"anchor": {
-//		  "id": "",
 //		  "key": "",
 //		  "type": ""
 //		},
 //		"object": {
-//		  "id": "",
 //		  "key": "",
 //		  "type": ""
 //		},
@@ -32,7 +30,6 @@ import (
 //		  "object_type": ""
 //		},
 //		"subject": {
-//		  "id": "",
 //		  "key": "",
 //		  "type": ""
 //		}
@@ -60,12 +57,10 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			if a.Anchor == nil && a.Subject == nil && a.Relation == nil && a.Object == nil {
 				a = args{
 					Anchor: &dsc.ObjectIdentifier{
-						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
 					Subject: &dsc.ObjectIdentifier{
-						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
@@ -74,7 +69,6 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 						Name:       proto.String(""),
 					},
 					Object: &dsc.ObjectIdentifier{
-						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
