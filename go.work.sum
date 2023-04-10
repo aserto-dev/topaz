@@ -172,8 +172,11 @@ github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj
 github.com/armon/go-radix v1.0.0/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
 github.com/aserto-dev/aserto-go v0.8.14-0.20221018123009-a56db85a7ed3 h1:Kp2Ojrem4ixQEQYaxtUiR2RAW6HnQCastADjO3VOJOQ=
 github.com/aserto-dev/aserto-grpc v0.1.1 h1:iILD2u0yjHdibBsG7CchkiudUmwvNhBmPUN7kNm9cvM=
-github.com/aserto-dev/mage-loot v0.8.13 h1:i8kRhcwnbTd6MB8rDxg/JZ53aWs09srIPQSttO8joJo=
-github.com/aserto-dev/mage-loot v0.8.13/go.mod h1:Oi7gxbSzxC4qlCMUaiNHWLE1DjmcMTk96fzFHNN/bsc=
+github.com/aserto-dev/errors v0.0.2/go.mod h1:TBlc5z9t1ClYehyJT614pJ0jknkCFWo7sdyAFkFEndY=
+github.com/aserto-dev/go-directory v0.20.6 h1:D8ttv2YfYUBFr+stxZ6ZXGaycw66MGb0Ooj2Lk7RH+0=
+github.com/aserto-dev/go-directory v0.20.6/go.mod h1:gjg6wZezLGXJj1LBEXaJUS9kpOnaDWeFUYhDG1TAkTY=
+github.com/aserto-dev/go-directory-cli v0.20.12-0.20230410194201-8ce00c9fa0de h1:Hy851iZab3yhxaKwOoSIrlovpx5G715+Gzk5e6NZq9A=
+github.com/aserto-dev/go-directory-cli v0.20.12-0.20230410194201-8ce00c9fa0de/go.mod h1:aypkQA7ReNQ7ozNOooZeAtLJ31nWH/VUgRm6ShZvleY=
 github.com/aserto-dev/runtime v0.47.3 h1:KEXQ5bFImIWAqUM5uIPDQ94zeHYScalhWziu+GAqRzk=
 github.com/aserto-dev/runtime v0.47.3/go.mod h1:0iis95JxPIOPQvdmS0+zJnhCPLrz3bkinFNzDtbwuak=
 github.com/aserto-dev/runtime v0.51.0 h1:bJPCP5v0nY1NS1t4q3+1TSf6WA+wQorTXRiD8UQP+QY=
@@ -269,6 +272,7 @@ github.com/googleapis/go-type-adapters v1.0.0/go.mod h1:zHW75FOG2aur7gAO2B+MLby+
 github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0/go.mod h1:8NvIoxWQoOIhqOTXgfV/d3M/q6VIi02HzZEHgUlZvzk=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0/go.mod h1:hgWBS7lorOAVIJEQMi4ZsPv9hVvWI6+ch50m39Pf2Ks=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3/go.mod h1:o//XUCC/F+yRGJoPO/VU0GSB0f8Nhgmxx0VIRUvaC0w=
+github.com/grpc-ecosystem/grpc-gateway/v2 v2.14.0/go.mod h1:4OGVnY4qf2+gw+ssiHbW+pq4mo2yko94YxxMmXZ7jCA=
 github.com/hashicorp/consul/api v1.15.3/go.mod h1:/g/qgcoBcEXALCNZgRRisyTW0nY86++L0KbeAMXYCeY=
 github.com/hashicorp/consul/api v1.18.0/go.mod h1:owRRGJ9M5xReDC5nfT8FTJrNAPbT4NM6p/k+d03q2v4=
 github.com/hashicorp/consul/sdk v0.11.0/go.mod h1:yPkX5Q6CsxTFMjQQDJwzeNmUUF5NUGGbrDsv9wTb8cw=
@@ -388,6 +392,7 @@ github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8/go.mod h1:VFNgLljT
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
+go.etcd.io/bbolt v1.3.6 h1:/ecaJf0sk1l4l6V4awd65v2C3ILy7MSj+s/x1ADCIMU=
 go.etcd.io/etcd/api/v3 v3.5.5/go.mod h1:KFtNaxGDw4Yx/BA4iPPwevUTAuqcsPxzyX8PHydchN8=
 go.etcd.io/etcd/api/v3 v3.5.6/go.mod h1:KFtNaxGDw4Yx/BA4iPPwevUTAuqcsPxzyX8PHydchN8=
 go.etcd.io/etcd/client/pkg/v3 v3.5.5/go.mod h1:ggrwbk069qxpKPq8/FKkQ3Xq9y39kbFR4LnKszpRXeQ=
@@ -619,6 +624,7 @@ google.golang.org/genproto v0.0.0-20220920201722-2b89144ce006/go.mod h1:ht8XFiar
 google.golang.org/genproto v0.0.0-20220927151529-dcaddaf36704/go.mod h1:woMGP53BroOrRY3xTxlbr8Y3eB/nzAvvFM83q7kG2OI=
 google.golang.org/genproto v0.0.0-20221024183307-1bc688fe9f3e/go.mod h1:9qHF0xnpdSfF6knlcsnpzUu5y+rpwgbvsyGAZPBMg4s=
 google.golang.org/genproto v0.0.0-20221027153422-115e99e71e1c/go.mod h1:CGI5F/G+E5bKwmfYo09AXuVN4dD894kIKUFmVbP2/Fo=
+google.golang.org/genproto v0.0.0-20221114212237-e4508ebdbee1/go.mod h1:rZS5c/ZVYMaOGBfO68GWtjOw/eLaZM1X6iVtgjZ+EWg=
 google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef/go.mod h1:RGgjbofJ8xD9Sq1VVhDM1Vok1vRONV+rg+CjzG4SZKM=
 google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f/go.mod h1:RGgjbofJ8xD9Sq1VVhDM1Vok1vRONV+rg+CjzG4SZKM=
 google.golang.org/genproto v0.0.0-20230124163310-31e0e69b6fc2/go.mod h1:RGgjbofJ8xD9Sq1VVhDM1Vok1vRONV+rg+CjzG4SZKM=

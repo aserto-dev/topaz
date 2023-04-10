@@ -17,7 +17,7 @@ import (
 // RegisterUser - ds.user
 //
 //	ds.user({
-//		"id": ""
+//		"key": ""
 //	})
 func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
@@ -28,7 +28,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
 			type args struct {
-				ID string `json:"id"`
+				Key string `json:"key"`
 			}
 
 			var a args
@@ -47,7 +47,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 
 			resp, err := client.GetObject(bctx.Context, &dsr.GetObjectRequest{
 				Param: &dsc.ObjectIdentifier{
-					Id: &a.ID,
+					Key: &a.Key,
 				},
 			})
 			if err != nil {

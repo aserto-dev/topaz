@@ -19,7 +19,6 @@ import (
 // RegisterObject - ds.object
 //
 //	ds.object({
-//		"id": "",
 //		"key": "",
 //		"type": ""
 //	})
@@ -36,9 +35,8 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			if a.Id == nil && a.Type == nil && a.Key == nil {
+			if a.Type == nil && a.Key == nil {
 				a = &dsc.ObjectIdentifier{
-					Id:   proto.String(""),
 					Type: proto.String(""),
 					Key:  proto.String(""),
 				}
