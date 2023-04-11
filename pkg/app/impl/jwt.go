@@ -189,7 +189,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	}
 
 	if user == nil {
-		return s.getObject(ctx, "identity", identity)
+		return s.getObject(ctx, "user", identity)
 	}
 
 	return user, nil
