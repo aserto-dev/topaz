@@ -3,34 +3,6 @@
     {
       "subject": {
         "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "02413666-e4b6-4252-b159-bda1237e8605"
-      },
-      "createdAt": "2022-08-16T01:40:00.824473Z",
-      "updatedAt": "2022-08-16T01:40:00.824473Z",
-      "hash": "8053499315999481419"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "11313c73-20ed-40de-bca8-dba0c6228b4d"
-      },
-      "createdAt": "2022-08-16T01:40:00.809294Z",
-      "updatedAt": "2022-08-16T01:40:00.809294Z",
-      "hash": "4655743704993058308"
-    },
-    {
-      "subject": {
-        "type": "user",
         "id": "fd4614d3-c39a-4781-b7bd-8b96f5a5100d"
       },
       "relation": "identifier",
@@ -45,34 +17,6 @@
     {
       "subject": {
         "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "24eea568-3f92-460d-98d5-e244ff5caa3a"
-      },
-      "createdAt": "2022-08-16T01:40:00.816803Z",
-      "updatedAt": "2022-08-16T01:40:00.816803Z",
-      "hash": "8556730136479125385"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "24eea568-3f92-460d-98d5-e244ff5caa3a"
-      },
-      "createdAt": "2022-08-16T01:40:00.860132Z",
-      "updatedAt": "2022-08-16T01:40:00.860132Z",
-      "hash": "10225948017196205242"
-    },
-    {
-      "subject": {
-        "type": "user",
         "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
       },
       "relation": "member",
@@ -83,104 +27,6 @@
       "createdAt": "2022-08-16T01:40:00.757151Z",
       "updatedAt": "2022-08-16T01:40:00.757151Z",
       "hash": "11764758546195978740"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "306cb90a-1668-4cc2-b059-48ac09aab48b"
-      },
-      "createdAt": "2022-08-16T01:40:00.866458Z",
-      "updatedAt": "2022-08-16T01:40:00.866458Z",
-      "hash": "7055539142679996193"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "3371a855-f95c-4341-9947-7974ffdba55f"
-      },
-      "createdAt": "2022-08-16T01:40:00.768726Z",
-      "updatedAt": "2022-08-16T01:40:00.768726Z",
-      "hash": "14574029214709532226"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "3371a855-f95c-4341-9947-7974ffdba55f"
-      },
-      "createdAt": "2022-08-16T01:40:00.869545Z",
-      "updatedAt": "2022-08-16T01:40:00.869545Z",
-      "hash": "13752407861311866060"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd4614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "3ad81a9a-7d5a-4847-b9bf-c36bf9626f00"
-      },
-      "createdAt": "2022-08-16T01:40:00.941866Z",
-      "updatedAt": "2022-08-16T01:40:00.941866Z",
-      "hash": "12227707670778460209"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "40a3f000-523c-47b3-a35e-2e23686fe4f3"
-      },
-      "createdAt": "2022-08-16T01:40:00.813285Z",
-      "updatedAt": "2022-08-16T01:40:00.813285Z",
-      "hash": "9577347592201082401"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "4a927759-4b82-4626-bb3f-460e12a84fc5"
-      },
-      "createdAt": "2022-08-16T01:40:00.850601Z",
-      "updatedAt": "2022-08-16T01:40:00.850601Z",
-      "hash": "16246060454047924157"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd3614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "4a927759-4b82-4626-bb3f-460e12a84fc5"
-      },
-      "createdAt": "2022-08-16T01:40:00.901812Z",
-      "updatedAt": "2022-08-16T01:40:00.901812Z",
-      "hash": "7940233130203938696"
     },
     {
       "subject": {
@@ -209,48 +55,6 @@
       "createdAt": "2022-08-16T01:25:08.276564Z",
       "updatedAt": "2022-08-16T01:25:08.276564Z",
       "hash": "16147799548625896268"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd3614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "5fb2efb0-1fcd-41b4-b007-649f0835f5d9"
-      },
-      "createdAt": "2022-08-16T01:40:00.898651Z",
-      "updatedAt": "2022-08-16T01:40:00.898651Z",
-      "hash": "7173945958202329761"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "6beda8ad-e909-44df-b7cf-a56c2a1b109e"
-      },
-      "createdAt": "2022-08-16T01:40:00.764836Z",
-      "updatedAt": "2022-08-16T01:40:00.764836Z",
-      "hash": "12710272975523219885"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd3614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "6c93650b-1823-4b9d-82e4-221b8bdd634c"
-      },
-      "createdAt": "2022-08-16T01:40:00.905687Z",
-      "updatedAt": "2022-08-16T01:40:00.905687Z",
-      "hash": "11785456543041645571"
     },
     {
       "subject": {
@@ -313,20 +117,6 @@
         "type": "user",
         "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
       },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "9ee93ac7-9917-4e71-8e4f-3757b63421b5"
-      },
-      "createdAt": "2022-08-16T01:40:00.857327Z",
-      "updatedAt": "2022-08-16T01:40:00.857327Z",
-      "hash": "2176646433507279940"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
       "relation": "identifier",
       "object": {
         "type": "identity",
@@ -363,34 +153,6 @@
       "createdAt": "2022-08-16T01:25:08.468638Z",
       "updatedAt": "2022-08-16T01:25:08.468638Z",
       "hash": "11757822623391030144"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd4614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "afdcac01-a763-4873-b1ee-3b82e05d55b3"
-      },
-      "createdAt": "2022-08-16T01:40:00.938281Z",
-      "updatedAt": "2022-08-16T01:40:00.938281Z",
-      "hash": "18266491925388311426"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "b4facddd-44b3-40e4-b7a0-0fbae7d91b51"
-      },
-      "createdAt": "2022-08-16T01:40:00.801155Z",
-      "updatedAt": "2022-08-16T01:40:00.801155Z",
-      "hash": "5329278378291993041"
     },
     {
       "subject": {
@@ -451,34 +213,6 @@
     {
       "subject": {
         "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "df7a7f9d-98e3-4d47-b5da-b4d06b1d05c2"
-      },
-      "createdAt": "2022-08-16T01:40:00.820264Z",
-      "updatedAt": "2022-08-16T01:40:00.820264Z",
-      "hash": "2024393049820369929"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "member",
-      "object": {
-        "type": "group",
-        "id": "df7a7f9d-98e3-4d47-b5da-b4d06b1d05c2"
-      },
-      "createdAt": "2022-08-16T01:40:00.862850Z",
-      "updatedAt": "2022-08-16T01:40:00.862850Z",
-      "hash": "3693610930537449786"
-    },
-    {
-      "subject": {
-        "type": "user",
         "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
       },
       "relation": "identifier",
@@ -489,48 +223,6 @@
       "createdAt": "2022-08-16T01:25:08.337276Z",
       "updatedAt": "2022-08-16T01:25:08.337276Z",
       "hash": "16208746058712683486"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "manager",
-      "object": {
-        "type": "user",
-        "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "createdAt": "2022-08-16T01:40:02.159692Z",
-      "updatedAt": "2022-08-16T01:40:02.159692Z",
-      "hash": "1921571884948373516"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "manager",
-      "object": {
-        "type": "user",
-        "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "createdAt": "2022-08-16T01:40:02.036791Z",
-      "updatedAt": "2022-08-16T01:40:02.036791Z",
-      "hash": "10677306548984316223"
-    },
-    {
-      "subject": {
-        "type": "user",
-        "id": "fd4614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "relation": "manager",
-      "object": {
-        "type": "user",
-        "id": "fd3614d3-c39a-4781-b7bd-8b96f5a5100d"
-      },
-      "createdAt": "2022-08-16T01:40:02.100670Z",
-      "updatedAt": "2022-08-16T01:40:02.100670Z",
-      "hash": "11305083013172503214"
     }
   ]
 }
