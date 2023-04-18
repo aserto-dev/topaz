@@ -75,6 +75,7 @@ var (
 		"-v", "$TOPAZ_CERTS_DIR/certs:/certs:rw",
 		"-v", "$TOPAZ_CFG_DIR/cfg:/config:ro",
 		"-v", "$TOPAZ_EDS_DIR/db:/db:rw",
+		"-v", "$HOME/.policy:/root/.policy:ro",
 	}
 
 	daemonArgs = []string{
