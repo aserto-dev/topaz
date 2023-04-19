@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 
@@ -46,6 +49,12 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 func (cmd *RunCmd) dockerArgs() []string {
 	args := append([]string{}, dockerCmd...)
 	args = append(args, "-ti")
+
+	policyRoot := os.Getenv("POLICY_FILE_STORE_ROOT ")
+	if policyRoot == "" {
+		policyRoot = dockerx.DefaultPolicyRoot
+	}
+	dockerArgs = append(dockerArgs, "-v", fmt.Sprintf("%s:/root/.policy:ro", policyRoot))
 	args = append(args, dockerArgs...)
 
 	for _, env := range cmd.Env {
