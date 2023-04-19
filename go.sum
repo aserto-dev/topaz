@@ -78,8 +78,8 @@ github.com/aserto-dev/logger v0.0.3 h1:lBB5LMdOsHCJKfEej2xY7s4OzCWUWCBhkhUU6RJ4L
 github.com/aserto-dev/logger v0.0.3/go.mod h1:8HIZAwlf+Y0V33YnGILYZOtYh1Eue5mz1YNf1XbqPbI=
 github.com/aserto-dev/openapi-authorizer v0.8.81 h1:YDxVLBssBvj71/ecgLFuvC7dkOQu5Jl/A92wA58CcX0=
 github.com/aserto-dev/openapi-authorizer v0.8.81/go.mod h1:3kmTs3pjNE5aQXt1Ob71uVdqC2qC61EO9gl6O63md4U=
-github.com/aserto-dev/runtime v0.51.0 h1:bJPCP5v0nY1NS1t4q3+1TSf6WA+wQorTXRiD8UQP+QY=
-github.com/aserto-dev/runtime v0.51.0/go.mod h1:j2RGQkslP9gsvjhaAhEekMpnMJvvlhy7YhYDK0ZagFk=
+github.com/aserto-dev/runtime v0.51.1 h1:NpX0PoKtQFl2vutcfH5u0eAfIECRs01FeUhiqS0cmk4=
+github.com/aserto-dev/runtime v0.51.1/go.mod h1:j2RGQkslP9gsvjhaAhEekMpnMJvvlhy7YhYDK0ZagFk=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=

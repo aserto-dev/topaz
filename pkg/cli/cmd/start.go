@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path"
 
@@ -96,6 +97,12 @@ var (
 
 func (cmd *StartCmd) dockerArgs() []string {
 	args := append([]string{}, dockerCmd...)
+
+	policyRoot := os.Getenv("POLICY_FILE_STORE_ROOT ")
+	if policyRoot == "" {
+		policyRoot = dockerx.DefaultPolicyRoot
+	}
+	dockerArgs = append(dockerArgs, "-v", fmt.Sprintf("%s:/root/.policy:ro", policyRoot))
 	args = append(args, dockerArgs...)
 	args = append(args, daemonArgs...)
 

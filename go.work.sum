@@ -176,6 +176,10 @@ github.com/aserto-dev/mage-loot v0.8.13 h1:i8kRhcwnbTd6MB8rDxg/JZ53aWs09srIPQStt
 github.com/aserto-dev/mage-loot v0.8.13/go.mod h1:Oi7gxbSzxC4qlCMUaiNHWLE1DjmcMTk96fzFHNN/bsc=
 github.com/aserto-dev/runtime v0.47.3 h1:KEXQ5bFImIWAqUM5uIPDQ94zeHYScalhWziu+GAqRzk=
 github.com/aserto-dev/runtime v0.47.3/go.mod h1:0iis95JxPIOPQvdmS0+zJnhCPLrz3bkinFNzDtbwuak=
+github.com/aserto-dev/runtime v0.51.0 h1:bJPCP5v0nY1NS1t4q3+1TSf6WA+wQorTXRiD8UQP+QY=
+github.com/aserto-dev/runtime v0.51.0/go.mod h1:j2RGQkslP9gsvjhaAhEekMpnMJvvlhy7YhYDK0ZagFk=
+github.com/aserto-dev/runtime v0.51.1 h1:NpX0PoKtQFl2vutcfH5u0eAfIECRs01FeUhiqS0cmk4=
+github.com/aserto-dev/runtime v0.51.1/go.mod h1:j2RGQkslP9gsvjhaAhEekMpnMJvvlhy7YhYDK0ZagFk=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=
 github.com/cenkalti/backoff/v4 v4.1.3/go.mod h1:scbssz8iZGpm3xbr14ovlUdkxfGXNInqkPWOWmG2CLw=

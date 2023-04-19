@@ -21,7 +21,7 @@ require (
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.3
 	github.com/aserto-dev/openapi-authorizer v0.8.81
-	github.com/aserto-dev/runtime v0.51.0
+	github.com/aserto-dev/runtime v0.51.1
 	github.com/fatih/color v1.14.1
 	github.com/fullstorydev/grpcurl v1.8.7
 	github.com/google/uuid v1.3.0

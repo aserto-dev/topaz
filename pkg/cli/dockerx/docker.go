@@ -12,6 +12,7 @@ import (
 const (
 	Topaz             = "topaz"
 	DefaultConfigRoot = ".config/topaz"
+	DefaultPolicyRoot = "$HOME/.policy"
 )
 
 var (
