@@ -14,7 +14,7 @@ import (
 
 // RegisterIdentity - ds.identity
 //
-// get user id for identity
+// get user key for identity
 //
 //	ds.identity({
 //		"key": ""
