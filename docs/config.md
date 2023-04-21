@@ -4,6 +4,10 @@ The main configuration for Topaz can be devided in 3 main sections:
 2. Auth configuration - optional
 3. Decision logger configuration - optional
 
+---
+> The topaz service configuration is built using the [spf13/viper](https://github.com/spf13/viper) library so all configuration parameters can be passed to the topazd service as environment variable with the **TOPAZ_** prefix. 
+---
+
 ## 1. Common configuration
 
 ### a. Logging
@@ -101,7 +105,7 @@ The OPA configuration section represent the [runtime configuration](https://gith
 - *flags* - runtime.Flags - currently only the boolean *enable_status_plugin* is available. When set to true the runtime status is affected by the OPA status plugin 
 - *config* - runtime.OPAConfig - the details of the [OPA configuration](https://www.openpolicyagent.org/docs/latest/configuration/)
 
-For more details regarding the OPA configuration see [config-examples.md](config-examples.md)
+For more details regarding the OPA configuration see **examples folder**
 
 ### e. JWT
 
