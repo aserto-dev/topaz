@@ -10,8 +10,8 @@ logging:
 directory_service:
   remote:
     address: "directory.prod.aserto.com:8443"
-    api_key: <your Aserto Directory access key>
-    tenant_id: <your Aserto tenant ID>
+    api_key: <Your Aserto Directory Access Key>
+    tenant_id: <Your Aserto Tenant ID>
 
 api:
   gateway:

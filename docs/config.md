@@ -86,12 +86,10 @@ Topaz is able to communicate with a directory service based on the [pb-directory
 Example:
 ```
 directory_service:
-  edge:
-    db_path: /app/dbs/eds-acmecorp.db
-    seed_metadata: false
   remote:
-    address: "localhost:12345"
-    insecure: true
+    address: "directory.prod.aserto.com:8443"
+    api_key: <Your Aserto Directory Access Key>
+    tenant_id: <Your Aserto Tenant ID>
 ```
 
 ### d. OPA
@@ -105,7 +103,7 @@ The OPA configuration section represent the [runtime configuration](https://gith
 - *flags* - runtime.Flags - currently only the boolean *enable_status_plugin* is available. When set to true the runtime status is affected by the OPA status plugin 
 - *config* - runtime.OPAConfig - the details of the [OPA configuration](https://www.openpolicyagent.org/docs/latest/configuration/)
 
-For more details regarding the OPA configuration see **examples folder**
+For more details regarding the OPA configuration see [examples folder](/docs/examples/)
 
 ### e. JWT
 

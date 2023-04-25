@@ -9,7 +9,7 @@ logging:
 
 directory_service:
   edge:
-    db_path: ./pkg/testing/assets/eds-citadel.db
+    db_path: ${TOPAZ_DIR}/db/directory.db
     seed_metadata: false
   remote:
     address: "localhost:9292"
