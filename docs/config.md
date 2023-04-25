@@ -81,9 +81,14 @@ status: SERVING
 
 ### c. Directory Service
 
-Topaz is able to communicate with a directory service based on the [pb-directory proto](https://github.com/aserto-dev/pb-directory) definitions. When the remote address is configured to localhost, topaz is able to spin-up a grpc [edge directory service](https://github.com/aserto-dev/go-edge-ds) based on [bbolt](https://pkg.go.dev/go.etcd.io/bbolt)
+Topaz is able to communicate with a directory service based on the [pb-directory proto](https://github.com/aserto-dev/pb-directory) definitions. When the remote address is configured to localhost, topaz is able to spin-up a grpc [edge directory service](https://github.com/aserto-dev/go-edge-ds) based on [bbolt](https://pkg.go.dev/go.etcd.io/bbolt).
 
-Example:
+The remote address can also be configured to a service that implements the proto definitions (for example, the Postgres-based Aserto directory service). In this case, Topaz will NOT spin-up a local edge directory service, and instead send all directory requests to this remote service.
+- *address* - string - address:port of the remote directory service
+- *api_key* - string - API key for the directory
+- *tenant_id* - string - the directory tenant ID 
+
+Example (using the hosted Aserto directory):
 ```
 directory_service:
   remote:
