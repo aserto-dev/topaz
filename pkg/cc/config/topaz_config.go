@@ -42,7 +42,7 @@ type OptionOverrides struct {
 func (co *CallOptions) ForPath(path string) *Options {
 	for _, override := range co.Overrides {
 		for _, prefix := range override.Paths {
-			if strings.HasPrefix(path, prefix) {
+			if strings.HasPrefix(strings.ToLower(path), prefix) {
 				return &override.Override
 			}
 		}

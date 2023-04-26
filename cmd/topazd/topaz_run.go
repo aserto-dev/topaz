@@ -4,9 +4,11 @@ import (
 	"os"
 
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
+	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/spf13/cobra"
+	"google.golang.org/grpc"
 )
 
 var (
@@ -56,6 +58,15 @@ var cmdRun = &cobra.Command{
 		}
 		app.Resolver.SetRuntimeResolver(runtime)
 		app.Resolver.SetDirectoryResolver(directory)
+
+		if len(app.Configuration.Auth.APIKeys) > 0 {
+			authmiddleware, err := auth.NewAPIKeyAuthMiddleware(app.Context, &app.Configuration.Auth, app.Logger)
+			if err != nil {
+				return err
+			}
+			app.Server.AddGRPCServerOptions(grpc.UnaryInterceptor(authmiddleware.Unary()), grpc.StreamInterceptor(authmiddleware.Stream()))
+		}
+
 		err = app.Start()
 		if err != nil {
 			return err
