@@ -6,11 +6,13 @@ import (
 	"strings"
 
 	edgeServer "github.com/aserto-dev/go-edge-ds/pkg/server"
+	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"google.golang.org/grpc"
 )
 
 // Authorizer is an authorizer service instance, responsible for managing
@@ -25,6 +27,15 @@ type Authorizer struct {
 
 // Start starts all services required by the engine.
 func (e *Authorizer) Start() error {
+
+	if len(e.Configuration.Auth.APIKeys) > 0 {
+		authmiddleware, err := auth.NewAPIKeyAuthMiddleware(e.Context, &e.Configuration.Auth, e.Logger)
+		if err != nil {
+			return err
+		}
+		e.Server.AddGRPCServerOptions(grpc.UnaryInterceptor(authmiddleware.Unary()), grpc.StreamInterceptor(authmiddleware.Stream()))
+	}
+
 	if (strings.Contains(e.Configuration.Directory.Remote.Addr, "localhost") || strings.Contains(e.Configuration.Directory.Remote.Addr, "0.0.0.0")) &&
 		e.Configuration.Directory.EdgeConfig.DBPath != "" {
 		addr := strings.Split(e.Configuration.Directory.Remote.Addr, ":")
