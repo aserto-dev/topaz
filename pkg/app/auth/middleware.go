@@ -102,10 +102,10 @@ func (a *APIKeyAuthMiddleware) authenticate(
 	}
 
 	// allow the request if the API key is present in the config
-	if _, ok := a.cfg.APIKeys[basicAPIKey]; !ok {
+	if _, ok := a.cfg.APIKeys[basicAPIKey]; ok {
 		return ctx, nil
 	}
-	// TODO: once we have errors, this needs to be a topaz specific error
+
 	return ctx, aerr.ErrAuthenticationFailed
 }
 
