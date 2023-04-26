@@ -4,9 +4,20 @@ The main configuration for Topaz can be devided in 3 main sections:
 2. Auth configuration - optional
 3. Decision logger configuration - optional
 
+## Topaz configuration environment variables
+
 ---
 > The topaz service configuration is built using the [spf13/viper](https://github.com/spf13/viper) library so all configuration parameters can be passed to the topazd service as environment variable with the **TOPAZ_** prefix. 
 ---
+
+If you use topaz CLI to generate your configuration file by default it will add the TOPAZ_DIR environment variable to the path configurations. By default this is empty and considered an NOP addition, but it can easily allow you to specify the desired value to the run/start topaz CLI command with the `-e` flag. 
+
+By default if you run/start the topaz container using the topaz CLI the following environment variables will be set in your topaz container:
+- TOPAZ_CERTS_DIR - default $HOME/.config/topaz - the directory where topaz will load/generate the certs
+- TOPAZ_CFG_DIR - default $HOME/.config/topaz - the directory from where topaz will load the configuration file
+- TOPAZ_EDS_DIR - default $HOME/.config/topaz - the directory where topaz will store the edge directory DB
+
+Both run and start topaz CLI commands allow passing optional environment variables to your running container using the -e flag. This will allow you to use any desired environment variable in your configuration file as long as you pass it to the container. 
 
 ## 1. Common configuration
 
@@ -81,7 +92,7 @@ status: SERVING
 
 ### c. Directory Service
 
-Topaz is able to communicate with a directory service based on the [pb-directory proto](https://github.com/aserto-dev/pb-directory) definitions. When the remote address is configured to localhost, topaz is able to spin-up a grpc [edge directory service](https://github.com/aserto-dev/go-edge-ds) based on [bbolt](https://pkg.go.dev/go.etcd.io/bbolt).
+Topaz is able to communicate with a directory service based on the [pb-directory proto](https://github.com/aserto-dev/pb-directory) definitions. When the remote address is configured to localhost, topaz is able to spin-up a grpc [edge directory service](https://github.com/aserto-dev/go-edge-ds) based on [bbolt](https://pkg.go.dev/go.etcd.io/bbolt)
 
 The remote address can also be configured to a service that implements the proto definitions (for example, the Postgres-based Aserto directory service). In this case, Topaz will NOT spin-up a local edge directory service, and instead send all directory requests to this remote service.
 - *address* - string - address:port of the remote directory service
@@ -124,14 +135,14 @@ Example:
 ```
 auth:
   api_keys:
-    - dc8a1524dec311eda1ff8bd042196110:myuser@email.com
+    dc8a1524dec311eda1ff8bd042196110: myuser@email.com
   options:
-    defaults:
+    default:
       enable_api_key: true
       enable_anonymous: false
     overrides:
       paths:
-      - /aserto.authorizer.v2.Authorizer/Info
+        - /aserto.authorizer.v2.Authorizer/Info
       override:
         enable_anonymous: true
         enable_api_key: false
