@@ -3,7 +3,6 @@ package directory
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
@@ -14,16 +13,13 @@ import (
 )
 
 func GetIdentityV2(client ds2.ReaderClient, ctx context.Context, identity string) (*v2.Object, error) {
-	identityString := "identity"
-	subjectType := "user"
-
-	obj := v2.ObjectIdentifier{Type: &identityString, Key: &identity}
+	obj := v2.ObjectIdentifier{Type: proto.String("identity"), Key: &identity}
 
 	relResp, err := client.GetRelation(ctx, &ds2.GetRelationRequest{
 		Param: &v2.RelationIdentifier{
 			Object:   &obj,
-			Relation: &v2.RelationTypeIdentifier{Name: proto.String("identifier"), ObjectType: &identityString},
-			Subject:  &v2.ObjectIdentifier{Type: &subjectType},
+			Relation: &v2.RelationTypeIdentifier{Name: proto.String("identifier"), ObjectType: proto.String("identity")},
+			Subject:  &v2.ObjectIdentifier{Type: proto.String("user")},
 		},
 		WithObjects: proto.Bool(true),
 	})
@@ -40,5 +36,5 @@ func GetIdentityV2(client ds2.ReaderClient, ctx context.Context, identity string
 		return nil, aerr.ErrDirectoryObjectNotFound.Msg("no objects found in relation")
 	}
 
-	return relResp.Objects[fmt.Sprintf("%s:%s", subjectType, *relResp.Results[0].Subject.Key)], nil
+	return relResp.Objects[*relResp.Results[0].Subject.Id], nil
 }

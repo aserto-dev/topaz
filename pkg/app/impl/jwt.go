@@ -189,21 +189,37 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	}
 
 	if user == nil {
-		return s.getObject(ctx, "user", identity)
+		return s.findUser(ctx, identity)
 	}
 
 	return user, nil
 }
 
-func (s *AuthorizerServer) getObject(ctx context.Context, objType, key string) (proto.Message, error) {
+func (s *AuthorizerServer) findUser(ctx context.Context, keyOrID string) (proto.Message, error) {
+	user, err := s.getObjectByID(ctx, keyOrID)
+	if err == nil {
+		return user, nil
+	}
+	s.logger.Debug().Err(err).Msg("failed to find user by ID. attempting to find by key")
+
+	return s.getObjectByKey(ctx, "user", keyOrID)
+}
+
+func (s *AuthorizerServer) getObjectByKey(ctx context.Context, objType, key string) (proto.Message, error) {
+	return s.getObject(ctx, &v2.ObjectIdentifier{Type: &objType, Key: &key})
+}
+
+func (s *AuthorizerServer) getObjectByID(ctx context.Context, id string) (proto.Message, error) {
+	return s.getObject(ctx, &v2.ObjectIdentifier{Id: &id})
+}
+
+func (s *AuthorizerServer) getObject(ctx context.Context, obj *v2.ObjectIdentifier) (proto.Message, error) {
 	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	objResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{
-		Param: &v2.ObjectIdentifier{Type: &objType, Key: &key},
-	})
+	objResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{Param: obj})
 	if err != nil {
 		return nil, err
 	}

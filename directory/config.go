@@ -1,14 +1,12 @@
 package directory
 
-import "time"
+import (
+	"github.com/aserto-dev/go-edge-ds/pkg/directory"
+)
 
 type Config struct {
-	EdgeConfig struct {
-		DBPath         string        `json:"db_path"`
-		RequestTimeout time.Duration `json:"request_timeout"`
-		Seed           bool          `json:"seed_metadata"`
-	} `json:"edge"`
-	Remote struct {
+	EdgeConfig directory.Config `json:"edge"`
+	Remote     struct {
 		Addr     string `json:"address"`
 		Key      string `json:"api_key"`
 		Insecure bool   `json:"insecure"`

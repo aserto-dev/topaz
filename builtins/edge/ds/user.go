@@ -8,6 +8,7 @@ import (
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"google.golang.org/protobuf/proto"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -17,6 +18,7 @@ import (
 // RegisterUser - ds.user
 //
 //	ds.user({
+//		"id": "",
 //		"key": ""
 //	})
 func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
@@ -28,6 +30,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
 			type args struct {
+				ID  string `json:"id"`
 				Key string `json:"key"`
 			}
 
@@ -47,7 +50,9 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 
 			resp, err := client.GetObject(bctx.Context, &dsr.GetObjectRequest{
 				Param: &dsc.ObjectIdentifier{
-					Key: &a.Key,
+					Id:   &a.ID,
+					Key:  &a.Key,
+					Type: proto.String("user"),
 				},
 			})
 			if err != nil {

@@ -20,6 +20,7 @@ import (
 //
 //	ds.relation({
 //		"object": {
+//		  "id": "",
 //		  "key": "",
 //		  "type": ""
 //		},
@@ -28,6 +29,7 @@ import (
 //		  "object_type": ""
 //		},
 //		"subject": {
+//		  "id": "",
 //		  "key": "",
 //		  "type": ""
 //		},
@@ -55,6 +57,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				a = &extendedRelation{
 					RelationIdentifier: &dsc.RelationIdentifier{
 						Subject: &dsc.ObjectIdentifier{
+							Id:   proto.String(""),
 							Type: proto.String(""),
 							Key:  proto.String(""),
 						},
@@ -63,6 +66,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 							Name:       proto.String(""),
 						},
 						Object: &dsc.ObjectIdentifier{
+							Id:   proto.String(""),
 							Type: proto.String(""),
 							Key:  proto.String(""),
 						},

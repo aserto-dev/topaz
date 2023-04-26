@@ -14,7 +14,7 @@ import (
 
 // RegisterIdentity - ds.identity
 //
-// get user key for identity
+// get user id for identity
 //
 //	ds.identity({
 //		"key": ""
@@ -56,7 +56,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return nil, err
 
 			default:
-				return ast.StringTerm(user.Key), nil
+				return ast.StringTerm(user.Id), nil
 			}
 
 			return nil, aerr.ErrDirectoryObjectNotFound

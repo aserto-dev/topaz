@@ -16,6 +16,7 @@ import (
 //
 //	ds.check_relation({
 //	  "object": {
+//	    "id": "",
 //	    "key": "",
 //	    "type": ""
 //	  },
@@ -24,6 +25,7 @@ import (
 //	    "object_type": ""
 //	  },
 //	  "subject": {
+//	    "id": "",
 //	    "key": "",
 //	    "type": ""
 //	  }
@@ -51,6 +53,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 			if a.Subject == nil && a.RelationType == nil && a.Object == nil {
 				a = args{
 					Subject: &dsc.ObjectIdentifier{
+						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
@@ -59,6 +62,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 						Name:       proto.String(""),
 					},
 					Object: &dsc.ObjectIdentifier{
+						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
@@ -90,13 +94,16 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 //
 //	ds.check_permission({
 //		"object": {
+//		  "id": "",
 //		  "key": "",
 //		  "type": ""
 //		},
 //		"permission": {
+//		  "id": "",
 //		  "name": ""
 //		},
 //		"subject": {
+//		  "id": "",
 //		  "key": "",
 //		  "type": ""
 //		}
@@ -124,13 +131,16 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 			if a.Subject == nil && a.Permission == nil && a.Object == nil {
 				a = args{
 					Subject: &dsc.ObjectIdentifier{
+						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
 					Permission: &dsc.PermissionIdentifier{
+						Id:   proto.String(""),
 						Name: proto.String(""),
 					},
 					Object: &dsc.ObjectIdentifier{
+						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},

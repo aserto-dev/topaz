@@ -64,10 +64,12 @@ github.com/aserto-dev/go-aserto v0.20.3 h1:yUhMIENFIdKA6TxE36E+99N3baEIuzfj7Y+on
 github.com/aserto-dev/go-aserto v0.20.3/go.mod h1:6e5FdSQNvVvaRVIVrAqlQk9uh5k3jtIcDIXciQtN+GQ=
 github.com/aserto-dev/go-authorizer v0.20.2 h1:jDjPeaD3lyJmgWFDL6+B8ebG9nrRsqFyMP16HVdNhj4=
 github.com/aserto-dev/go-authorizer v0.20.2/go.mod h1:RTpBixDT2WIPOkXcewCXG3NxOWDt22yiXMb+qvdxucM=
-github.com/aserto-dev/go-directory v0.20.7-0.20230322222720-bd21a6431aad h1:Ay40WBmZW8AR3U1JVj6un4szszu3XIxgwhH5Ew6OYkE=
-github.com/aserto-dev/go-directory v0.20.7-0.20230322222720-bd21a6431aad/go.mod h1:gjg6wZezLGXJj1LBEXaJUS9kpOnaDWeFUYhDG1TAkTY=
-github.com/aserto-dev/go-directory-cli v0.20.12-0.20230410194201-8ce00c9fa0de h1:Hy851iZab3yhxaKwOoSIrlovpx5G715+Gzk5e6NZq9A=
-github.com/aserto-dev/go-directory-cli v0.20.12-0.20230410194201-8ce00c9fa0de/go.mod h1:aypkQA7ReNQ7ozNOooZeAtLJ31nWH/VUgRm6ShZvleY=
+github.com/aserto-dev/go-directory v0.20.6 h1:D8ttv2YfYUBFr+stxZ6ZXGaycw66MGb0Ooj2Lk7RH+0=
+github.com/aserto-dev/go-directory v0.20.6/go.mod h1:gjg6wZezLGXJj1LBEXaJUS9kpOnaDWeFUYhDG1TAkTY=
+github.com/aserto-dev/go-directory-cli v0.20.11 h1:0Q5KDOi5c1eyXjyBSEM50UxXuBPdSti2y57lybnvOgI=
+github.com/aserto-dev/go-directory-cli v0.20.11/go.mod h1:XbOGPGxHQkF9nEBdJEaED1WA/mrFC+w/BZNkAv/hcRU=
+github.com/aserto-dev/go-edge-ds v0.20.7 h1:e05AiQGGbPv8H8F+8a4oO2o9WRDZEYCV0h5gFhQoHKs=
+github.com/aserto-dev/go-edge-ds v0.20.7/go.mod h1:6ZJxuMpNGYE5WKhPsroOXaEqxoXY1mqFWxAFfA+VPPA=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1/go.mod h1:QnWF5/X2U/kmbu7GEw+zupvqX2hIthDjyXlRTwt2zEI=
 github.com/aserto-dev/header v0.0.5 h1:nEvYNgBoIwomxuvo14JuQ/ZqGGHU67NKuZyNdW4n4FU=
@@ -335,6 +337,8 @@ github.com/mennanov/fmutils v0.2.0/go.mod h1:DE+qeI9Xy5s1GA4trgq8H26jr5DgJ4a9+0D
 github.com/miekg/dns v1.1.43 h1:JKfpVSCB84vrAmHzyrsxB5NAr5kLoMXZArPSw7Qlgyg=
 github.com/mitchellh/copystructure v1.2.0 h1:vpKXTN4ewci03Vljg/q9QvCGUDttBOGBIa15WveJJGw=
 github.com/mitchellh/copystructure v1.2.0/go.mod h1:qLl+cE2AmVv+CoeAwDPye/v+N2HKCj9FbZEVFJRxO9s=
+github.com/mitchellh/hashstructure/v2 v2.0.2 h1:vGKWl0YJqUNxE8d+h8f6NJLcCJrgbhC4NcD46KavDd4=
+github.com/mitchellh/hashstructure/v2 v2.0.2/go.mod h1:MG3aRVU/N29oo/V/IhBX8GR/zz4kQkprJgF2EVszyDE=
 github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mitchellh/reflectwalk v1.0.2 h1:G2LzWKi524PWgd3mLHV8Y5k7s6XUvT0Gef6zxSIeXaQ=
@@ -411,7 +415,6 @@ github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJ
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZVejAe8=
-github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/rs/cors v1.8.3 h1:O+qNyWn7Z+F9M0ILBHgMVPuB1xTOucVd5gtaYyXBpRo=
 github.com/rs/cors v1.8.3/go.mod h1:XyqrcTp5zjWr1wsJ8PIRZssZ8b/WMcMf71DJnit4EMU=
 github.com/rs/xid v1.4.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=
@@ -465,6 +468,8 @@ github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9de
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
+go.etcd.io/bbolt v1.3.7 h1:j+zJOnnEjF/kyHlDDgGnVL/AIqIJPq8UoB2GSNfkUfQ=
+go.etcd.io/bbolt v1.3.7/go.mod h1:N9Mkw9X8x5fupy0IKsmuqVtoGDyxsaDlbk4Rd05IAQw=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
 go.opencensus.io v0.22.2/go.mod h1:yxeiOL68Rb0Xd1ddK5vPZ/oVn4vY4Ynel7k9FzqtOIw=
