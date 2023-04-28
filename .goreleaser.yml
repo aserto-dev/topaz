@@ -52,15 +52,12 @@ archives:
     builds:
     - topaz
     - topazd
-    replacements:
-      darwin: darwin
-      linux: linux
-      windows: windows
-      amd64: x86_64
     files:
       - LICENSE
       - README.md
-    name_template: "topaz_{{ .Os }}_{{ .Arch }}"
+    name_template: >-
+      topaz_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
+    
     rlcp: true
 
 checksum:
