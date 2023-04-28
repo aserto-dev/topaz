@@ -18,7 +18,7 @@ directory_service:
 api:
   gateway:
     allowed_origins:
-    - https://locahost
+    - https://localhost
   grpc:
     connection_timeout_seconds: 2
 
