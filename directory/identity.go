@@ -3,6 +3,7 @@ package directory
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
@@ -36,5 +37,9 @@ func GetIdentityV2(client ds2.ReaderClient, ctx context.Context, identity string
 		return nil, aerr.ErrDirectoryObjectNotFound.Msg("no objects found in relation")
 	}
 
-	return relResp.Objects[*relResp.Results[0].Subject.Id], nil
+	subj := relResp.Results[0].Subject
+	if subj.Id == nil {
+		return relResp.Objects[fmt.Sprintf("%s:%s", *subj.Type, *subj.Key)], nil
+	}
+	return relResp.Objects[*subj.Id], nil
 }
