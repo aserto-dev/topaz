@@ -49,6 +49,7 @@ builds:
 
 archives:
   - format: zip
+    rlcp: true
     builds:
     - topaz
     - topazd
@@ -58,8 +59,6 @@ archives:
     name_template: >-
       topaz_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
     
-    rlcp: true
-
 checksum:
   name_template: "checksums.txt"
 
