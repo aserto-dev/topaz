@@ -11,7 +11,6 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-
 func help(fnName string, args interface{}) (*ast.Term, error) {
 	m := map[string]interface{}{fnName: args}
 	val, err := ast.InterfaceToValue(m)
