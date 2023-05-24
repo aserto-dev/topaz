@@ -13,7 +13,6 @@ import (
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
-	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/pkg/errors"
@@ -179,9 +178,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	user, err := directory.GetIdentityV2(client, ctx, identity)
 	switch {
 	case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
-		if !ds.IsValidID(identity) {
-			return nil, err
-		}
+		return nil, err
 	case err != nil:
 		return nil, err
 
@@ -196,21 +193,11 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 }
 
 func (s *AuthorizerServer) findUser(ctx context.Context, keyOrID string) (proto.Message, error) {
-	user, err := s.getObjectByID(ctx, keyOrID)
-	if err == nil {
-		return user, nil
-	}
-	s.logger.Debug().Err(err).Msg("failed to find user by ID. attempting to find by key")
-
 	return s.getObjectByKey(ctx, "user", keyOrID)
 }
 
 func (s *AuthorizerServer) getObjectByKey(ctx context.Context, objType, key string) (proto.Message, error) {
 	return s.getObject(ctx, &v2.ObjectIdentifier{Type: &objType, Key: &key})
-}
-
-func (s *AuthorizerServer) getObjectByID(ctx context.Context, id string) (proto.Message, error) {
-	return s.getObject(ctx, &v2.ObjectIdentifier{Id: &id})
 }
 
 func (s *AuthorizerServer) getObject(ctx context.Context, obj *v2.ObjectIdentifier) (proto.Message, error) {

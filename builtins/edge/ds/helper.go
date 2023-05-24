@@ -5,20 +5,19 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/google/uuid"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/topdown"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
 
-func IsValidID(id string) bool {
-	if len(id) != 36 {
-		return false
-	}
-	_, err := uuid.Parse(id)
-	return err == nil
-}
+// func IsValidID(id string) bool {
+// 	if len(id) != 36 {
+// 		return false
+// 	}
+// 	_, err := uuid.Parse(id)
+// 	return err == nil
+// }
 
 func help(fnName string, args interface{}) (*ast.Term, error) {
 	m := map[string]interface{}{fnName: args}

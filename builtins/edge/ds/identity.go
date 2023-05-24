@@ -48,17 +48,12 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			user, err := directory.GetIdentityV2(client, bctx.Context, a.Key)
 			switch {
 			case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
-				if !IsValidID(a.Key) {
-					return nil, err
-				}
+				return nil, err
 			case err != nil:
 				traceError(&bctx, fnName, err)
 				return nil, err
-
 			default:
-				return ast.StringTerm(user.Id), nil
+				return ast.StringTerm(user.Key), nil
 			}
-
-			return nil, aerr.ErrDirectoryObjectNotFound
 		}
 }

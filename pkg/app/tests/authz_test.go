@@ -78,7 +78,7 @@ func DecisionTreeWithUserID(ctx context.Context, client authz2.AuthorizerClient)
 				Decisions: []string{"allowed"},
 			},
 			IdentityContext: &authz_api_v2.IdentityContext{
-				Identity: "2bfaa552-d9a5-41e9-a6c3-5be62b4433c8", // April Stewart
+				Identity: "CiQyYmZhYTU1Mi1kOWE1LTQxZTktYTZjMy01YmU2MmI0NDMzYzgSBWxvY2Fs", // April Stewart
 				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
 			},
 			Options:         &authz2.DecisionTreeOptions{},

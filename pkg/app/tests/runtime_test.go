@@ -53,7 +53,7 @@ var _ = Describe("Engine Runtime", func() {
 					// We have to retry getting users until it works
 					// There seems to be a time delay for registering builtin functions
 					Eventually(func() (interface{}, error) {
-						result, err := h.Runtime().Query(h.Context(), `x = ds.user({"id":"7cee8e85-e3cf-4b6f-84ec-fac89107e957"})`, nil, true, true, true, "full")
+						result, err := h.Runtime().Query(h.Context(), `x = ds.user({"key":"CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs"})`, nil, true, true, true, "full")
 						if err != nil {
 							return nil, err
 						}
@@ -61,11 +61,11 @@ var _ = Describe("Engine Runtime", func() {
 						Expect(len(result.Result)).To(BeNumerically(">", 0))
 						Expect(result.Result[0].Bindings).To(HaveKey("x"))
 						return result.Result[0].Bindings["x"], nil
-					}).Should(HaveKeyWithValue("id", "7cee8e85-e3cf-4b6f-84ec-fac89107e957"))
+					}).Should(HaveKeyWithValue("key", "CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs"))
 				})
 
 				It("loads eds plugin and its data", func() {
-					result, err := h.Runtime().Query(h.Context(), `x = ds.user({"id":"7cee8e85-e3cf-4b6f-84ec-fac89107e957"})`, nil, true, true, true, "full")
+					result, err := h.Runtime().Query(h.Context(), `x = ds.user({"id":"CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs"})`, nil, true, true, true, "full")
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
@@ -73,7 +73,7 @@ var _ = Describe("Engine Runtime", func() {
 				})
 
 				It("loads local bundles", func() {
-					result, err := h.Runtime().Query(h.Context(), `x = ds.user({"id":"7cee8e85-e3cf-4b6f-84ec-fac89107e957"})`, nil, true, true, true, "full")
+					result, err := h.Runtime().Query(h.Context(), `x = ds.user({"id":"CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs"})`, nil, true, true, true, "full")
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
@@ -85,7 +85,7 @@ var _ = Describe("Engine Runtime", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
-					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "dfdadc39-7335-404d-af66-c77cf13a15f8"))
+					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs"))
 				})
 			})
 
@@ -95,7 +95,7 @@ var _ = Describe("Engine Runtime", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
-					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "dfdadc39-7335-404d-af66-c77cf13a15f8"))
+					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs"))
 					Expect(len(result.Metrics)).To(BeNumerically(">", 0))
 				})
 
@@ -104,7 +104,7 @@ var _ = Describe("Engine Runtime", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
-					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "dfdadc39-7335-404d-af66-c77cf13a15f8"))
+					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs"))
 					Expect(len(result.Metrics)).To(Equal(0))
 				})
 
@@ -116,7 +116,7 @@ var _ = Describe("Engine Runtime", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
-					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "dfdadc39-7335-404d-af66-c77cf13a15f8"))
+					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs"))
 					Expect(string(json)).ToNot(Equal("[]"))
 					Expect(string(json)).To(ContainSubstring("euang@acmecorp.com"))
 					// It shouldn't be pretty-printed
@@ -132,7 +132,7 @@ var _ = Describe("Engine Runtime", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
-					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "dfdadc39-7335-404d-af66-c77cf13a15f8"))
+					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs"))
 					Expect(string(json)).ToNot(Equal("[]"))
 					Expect(string(json)).To(ContainSubstring("euang@acmecorp.com"))
 					// It should be pretty-printed
@@ -180,7 +180,7 @@ var _ = Describe("Engine Runtime", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
-					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "dfdadc39-7335-404d-af66-c77cf13a15f8"))
+					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs"))
 					Expect(string(json)).To(BeEmpty())
 				})
 
@@ -189,7 +189,7 @@ var _ = Describe("Engine Runtime", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
-					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "dfdadc39-7335-404d-af66-c77cf13a15f8"))
+					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs"))
 					Expect(len(result.Metrics)).To(BeNumerically(">", 0))
 				})
 			})
