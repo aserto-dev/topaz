@@ -39,26 +39,28 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-            .ext
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum', 'Depfile') }}
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
       - 
-        name: Install Tools
-        run: |
-          go run mage.go deps
-      - 
         name: Build
         run: |
-          go run mage.go build
+          go build -o ./bin/topaz ./cmd/topaz/
+          go build -o ./bin/topazd ./cmd/topazd/
       - 
         name: Lint
-        run: |
-          go run mage.go lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.52.2
+      - 
+        name: Test Setup
+        uses: autero1/action-gotestsum@v2.0.0
+        with:
+          gotestsum_version: 1.10.0
       - 
         name: Test
         run: |
-          go run mage.go test
+          gotestsum --format short-verbose -- -count=1 -v -timeout=240s -coverprofile=cover.out -coverpkg=./... ./...
       - 
         name: Upload code coverage
         uses: shogo82148/actions-goveralls@v1
@@ -99,8 +101,7 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-            .ext
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum', 'Depfile') }}
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
       - 
@@ -111,7 +112,7 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
       - 
-        name: Build Images
+        name: Docker SSH Setup
         run: |
           mkdir -p $HOME/.ssh
           umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
@@ -121,8 +122,6 @@ jobs:
           git config --global user.name "Aserto Bot"
           eval `ssh-agent`
           ssh-add $HOME/.ssh/id_rsa
-
-          go run mage.go deps dockerImage
       - 
         name: Wait for tests to succeed
         uses: fountainhead/action-wait-for-check@v1.1.0
@@ -137,9 +136,13 @@ jobs:
         run: exit 1
       - 
         name: Push image to GitHub Container Registry
-        run: |
-          go run mage.go dockerPush ghcr.io "aserto-dev"
-          echo "IMAGE_VERSION=$(./.ext/gobin/sver-v*/sver)" >> $GITHUB_OUTPUT
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          distribution: goreleaser
+          version: v1.18.2
+          args: release --clean --snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
 
   release:
     needs: [test, push]
@@ -175,15 +178,12 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-            .ext
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum', 'Depfile') }}
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
       - 
-        name: Release
+        name: Docker SSH Setup
         env:
-          GITHUB_TOKEN: ${{ steps.vault.outputs.READ_WRITE_TOKEN }}
-          HOMEBREW_TAP: ${{ steps.vault.outputs.ASERTO_TAP }}
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         run: |
           mkdir -p $HOME/.ssh
@@ -195,8 +195,16 @@ jobs:
           eval `ssh-agent`
           
           echo "${SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE}" > /tmp/gs.json
-          
-          go run mage.go deps release
+      - 
+        name: Release
+        uses: goreleaser/goreleaser-action@v4
+        env:
+          GITHUB_TOKEN: ${{ steps.vault.outputs.READ_WRITE_TOKEN }}
+          HOMEBREW_TAP: ${{ steps.vault.outputs.ASERTO_TAP }}
+        with:
+          distribution: goreleaser
+          version: v1.18.2
+          args: release --clean
           
   msi:
     needs: release
