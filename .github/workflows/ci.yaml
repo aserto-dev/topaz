@@ -104,6 +104,9 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+      -
+        name: Setup QEMU
+        uses: docker/setup-qemu-action@v2          
       - 
         name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@v2
@@ -181,7 +184,10 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - 
+      -
+        name: Setup QEMU
+        uses: docker/setup-qemu-action@v2          
+      -
         name: Docker SSH Setup
         env:
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
@@ -193,7 +199,8 @@ jobs:
           git config --global user.email "github-bot@aserto.com"
           git config --global user.name "Aserto Bot"
           eval `ssh-agent`
-          
+          ssh-add $HOME/.ssh/id_rsa
+	  
           echo "${SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE}" > /tmp/gs.json
       - 
         name: Release
