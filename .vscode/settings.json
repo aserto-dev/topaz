@@ -73,6 +73,7 @@
     "golangci",
     "gomega",
     "gomnd",
+    "goreleaser",
     "goruntime",
     "gosdk",
     "gosec",

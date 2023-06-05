@@ -1,7 +1,16 @@
+project_name: topaz
+
+env:
+  - REGISTRY=ghcr.io
+  - ORG=aserto-dev
+  - REPO=topaz
+
 before:
+  # https://goreleaser.com/customization/hooks/
   hooks:
 
 builds:
+  # https://goreleaser.com/customization/build/
   - id: topazd
     main: ./cmd/topazd
     binary: topazd
@@ -48,6 +57,7 @@ builds:
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
+  # https://goreleaser.com/customization/archive/
   - format: zip
     rlcp: true
     builds:
@@ -60,12 +70,19 @@ archives:
       topaz_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
     
 checksum:
+  # https://goreleaser.com/customization/checksum/
   name_template: "checksums.txt"
 
 snapshot:
+  # https://goreleaser.com/customization/snapshots/
   name_template: "{{ .Tag }}"
 
+source:
+  # https://goreleaser.com/customization/source/
+  enabled: false
+
 changelog:
+  # https://goreleaser.com/customization/changelog/
   sort: asc
   filters:
     exclude:
@@ -73,6 +90,7 @@ changelog:
       - "^test:"
 
 release:
+  # https://goreleaser.com/customization/release/
   github:
     owner: aserto-dev
     name: topaz
@@ -82,6 +100,7 @@ release:
   name_template: "topaz {{.Tag}}"
 
 blobs:
+  # https://goreleaser.com/customization/blob/
   -
     provider: gs
     bucket: topaz-cli
@@ -96,6 +115,7 @@ blobs:
       - glob: VERSION.txt
 
 brews:
+  # https://goreleaser.com/customization/homebrew/
   -
     name: topaz
 
@@ -124,3 +144,44 @@ brews:
       system "#{bin}/topaz version"
     install: |
       bin.install "topaz"
+
+dockers:
+  # https://goreleaser.com/customization/docker/
+  - use: buildx
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-amd64"
+    skip_push: false
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+  
+  - use: buildx
+    goos: linux
+    goarch: arm64
+    image_templates:
+      - &arm64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-arm64"
+    skip_push: false
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+
+docker_manifests:
+  # https://goreleaser.com/customization/docker_manifest/
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:latest"
+    image_templates: [*amd64-image, *arm64-image]
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}"
+    image_templates: [*amd64-image, *arm64-image]
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}"
+    image_templates: [*amd64-image, *arm64-image]
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+    image_templates: [*amd64-image, *arm64-image]
