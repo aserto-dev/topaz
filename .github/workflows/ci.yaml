@@ -189,10 +189,7 @@ jobs:
         uses: docker/setup-qemu-action@v2          
       -
         name: Docker SSH Setup
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         run: |
-          echo "${SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE}" > /tmp/gs.json
           mkdir -p $HOME/.ssh
           umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
           ssh-keyscan github.com >> $HOME/.ssh/known_hosts
@@ -201,12 +198,17 @@ jobs:
           git config --global user.name "Aserto Bot"
           eval `ssh-agent`
           ssh-add $HOME/.ssh/id_rsa
+      -
+        name: GCS Application Credentials
+        run: |
+          echo "${SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE}" > /tmp/gs.json
       - 
         name: Release
         uses: goreleaser/goreleaser-action@v4
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.READ_WRITE_TOKEN }}
           HOMEBREW_TAP: ${{ steps.vault.outputs.ASERTO_TAP }}
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         with:
           distribution: goreleaser
           version: v1.18.2
