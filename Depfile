@@ -2,7 +2,7 @@
 go:
   sver:
     importPath: "github.com/aserto-dev/sver/cmd/sver"
-    version: "v1.3.13"
+    version: "v1.3.11"
   wire:
     importPath: "github.com/google/wire/cmd/wire"
     version: "v0.5.0"
