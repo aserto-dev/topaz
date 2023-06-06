@@ -202,6 +202,10 @@ jobs:
         name: GCS Application Credentials
         run: |
           echo "${SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE}" > /tmp/gs.json
+      -
+        name: Write Version Info
+        run: |
+          git describe --tags > VERSION.txt
       - 
         name: Release
         uses: goreleaser/goreleaser-action@v4
