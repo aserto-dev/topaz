@@ -210,8 +210,8 @@ jobs:
         name: Release
         uses: goreleaser/goreleaser-action@v4
         env:
-          GITHUB_TOKEN: ${{ steps.vault.outputs.READ_WRITE_TOKEN }}
-          HOMEBREW_TAP: ${{ steps.vault.outputs.ASERTO_TAP }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP: ${{ secrets.GITHUB_TOKEN }}
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         with:
           distribution: goreleaser
