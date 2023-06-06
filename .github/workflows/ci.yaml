@@ -162,6 +162,8 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/github  "SSH_PRIVATE_KEY"                         | SSH_PRIVATE_KEY;
+            kv/data/github  "USERNAME"                                | DOCKER_USERNAME;
+            kv/data/github  "DOCKER_PUSH_TOKEN"                       | DOCKER_PASSWORD;
             kv/data/github  "READ_WRITE_TOKEN"                        | READ_WRITE_TOKEN;
             kv/data/github  "ASERTO_TAP"                              | ASERTO_TAP;
             kv/data/gcp     "SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE"  | SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE;
@@ -187,6 +189,13 @@ jobs:
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v2          
+      - 
+        name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: https://ghcr.io
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
       -
         name: Docker SSH Setup
         run: |
@@ -211,7 +220,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HOMEBREW_TAP: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP: ${{ secrets.ASERTO_TAP }}
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         with:
           distribution: goreleaser
