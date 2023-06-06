@@ -122,7 +122,7 @@ brews:
     tap:
       owner: aserto-dev
       name: homebrew-tap
-      token: "{{ .Env.GITHUB_TOKEN }}"
+      token: "{{ .Env.ASERTO_TAP }}"
 
     url_template: "https://storage.googleapis.com/topaz-cli/topaz/{{ .Version }}/{{ .ArtifactName }}"
 
