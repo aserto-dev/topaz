@@ -11,7 +11,7 @@ require (
 	github.com/alecthomas/kong v0.7.1
 	github.com/aserto-dev/certs v0.0.2
 	github.com/aserto-dev/clui v0.8.1
-	github.com/aserto-dev/errors v0.0.4
+	github.com/aserto-dev/errors v0.0.5
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.2
 	github.com/aserto-dev/go-directory v0.20.6

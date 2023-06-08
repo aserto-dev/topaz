@@ -295,6 +295,8 @@ github.com/armon/go-radix v1.0.0/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgI
 github.com/aserto-dev/aserto-go v0.8.14-0.20221018123009-a56db85a7ed3 h1:Kp2Ojrem4ixQEQYaxtUiR2RAW6HnQCastADjO3VOJOQ=
 github.com/aserto-dev/aserto-grpc v0.1.1 h1:iILD2u0yjHdibBsG7CchkiudUmwvNhBmPUN7kNm9cvM=
 github.com/aserto-dev/errors v0.0.2/go.mod h1:TBlc5z9t1ClYehyJT614pJ0jknkCFWo7sdyAFkFEndY=
+github.com/aserto-dev/errors v0.0.5 h1:9sSeCKZbPEs8CKBj9SzKLoyxsmhimlKuygZd3cRX2zY=
+github.com/aserto-dev/errors v0.0.5/go.mod h1:kenI1gamsemaR2wS+M2un0kXIJ9exTrmeRT/fCFwlWc=
 github.com/aserto-dev/go-directory-cli v0.20.12 h1:HQX8RNGXvwG1nGkRZYvzl/BOsA/nTb5Bupx1Oe9n/8k=
 github.com/aserto-dev/go-directory-cli v0.20.12/go.mod h1:wZUFVIF2gYZ7GfelEwy4ND5RX38kYqjVKEMvfo8A+xo=
 github.com/aserto-dev/runtime v0.47.3 h1:KEXQ5bFImIWAqUM5uIPDQ94zeHYScalhWziu+GAqRzk=
