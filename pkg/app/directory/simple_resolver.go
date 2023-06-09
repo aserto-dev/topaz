@@ -6,36 +6,35 @@ import (
 	grpcc "github.com/aserto-dev/go-aserto/client"
 	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 
-	"github.com/aserto-dev/topaz/directory"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
 )
 
 type Resolver struct {
 	logger  *zerolog.Logger
-	cfg     *directory.Config
+	cfg     *grpcc.Config
 	dirConn *grpcc.Connection
 }
 
 var _ resolvers.DirectoryResolver = &Resolver{}
 
-func NewResolver(logger *zerolog.Logger, cfg *directory.Config) resolvers.DirectoryResolver {
+func NewResolver(logger *zerolog.Logger, cfg *grpcc.Config) resolvers.DirectoryResolver {
 	return &Resolver{
 		logger: logger,
 		cfg:    cfg,
 	}
 }
 
-func connect(logger *zerolog.Logger, cfg *directory.Config) (*grpcc.Connection, error) {
-	logger.Debug().Str("tenant-id", cfg.Remote.TenantID).Str("addr", cfg.Remote.Addr).Str("apiKey", cfg.Remote.Key).Bool("insecure", cfg.Remote.Insecure).Msg("GetDS")
+func connect(logger *zerolog.Logger, cfg *grpcc.Config) (*grpcc.Connection, error) {
+	logger.Debug().Str("tenant-id", cfg.TenantID).Str("addr", cfg.Address).Str("apiKey", cfg.APIKey).Bool("insecure", cfg.Insecure).Msg("GetDS")
 
 	ctx := context.Background()
 
 	conn, err := grpcc.NewConnection(ctx,
-		grpcc.WithAddr(cfg.Remote.Addr),
-		grpcc.WithAPIKeyAuth(cfg.Remote.Key),
-		grpcc.WithTenantID(cfg.Remote.TenantID),
-		grpcc.WithInsecure(cfg.Remote.Insecure),
+		grpcc.WithAddr(cfg.Address),
+		grpcc.WithAPIKeyAuth(cfg.APIKey),
+		grpcc.WithTenantID(cfg.TenantID),
+		grpcc.WithInsecure(cfg.Insecure),
 	)
 	if err != nil {
 		return nil, err

@@ -25,9 +25,17 @@ type Authorizer struct {
 
 // Start starts all services required by the engine.
 func (e *Authorizer) Start() error {
-	if (strings.Contains(e.Configuration.Directory.Remote.Addr, "localhost") || strings.Contains(e.Configuration.Directory.Remote.Addr, "0.0.0.0")) &&
-		e.Configuration.Directory.EdgeConfig.DBPath != "" {
-		addr := strings.Split(e.Configuration.Directory.Remote.Addr, ":")
+	remoteConfig, err := e.Configuration.Directory.ToRemoteConfig()
+	if err != nil {
+		return err
+	}
+	edgeConfig, err := e.Configuration.Directory.ToEdgeConfig()
+	if err != nil {
+		return err
+	}
+	if (strings.Contains(remoteConfig.Address, "localhost") || strings.Contains(remoteConfig.Address, "0.0.0.0")) &&
+		edgeConfig.DBPath != "" {
+		addr := strings.Split(remoteConfig.Address, ":")
 		if len(addr) != 2 {
 			return errors.Errorf("invalid remote address - should contain <host>:<port>")
 		}
@@ -38,7 +46,7 @@ func (e *Authorizer) Start() error {
 		}
 
 		edge, err := edgeServer.NewEdgeServer(
-			e.Configuration.Directory.EdgeConfig,
+			*edgeConfig,
 			&e.Configuration.API.GRPC.Certs,
 			addr[0],
 			port,
@@ -51,7 +59,7 @@ func (e *Authorizer) Start() error {
 		e.Server.RegisterServer("edgeDirServer", edge.Start, edge.Stop)
 	}
 
-	err := e.Server.Start(e.Context)
+	err = e.Server.Start(e.Context)
 	if err != nil {
 		return errors.Wrap(err, "failed to start engine server")
 	}

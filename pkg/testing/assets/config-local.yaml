@@ -4,10 +4,9 @@ logging:
   log_level: debug
 
 directory_service:
-  edge:
+  config:
     db_path: /tmp/edgeds.db
     seed_metadata: false
-  remote:
     address: "localhost:9292"
     insecure: true
 
