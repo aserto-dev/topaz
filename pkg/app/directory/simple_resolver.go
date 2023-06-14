@@ -18,6 +18,7 @@ type Resolver struct {
 
 var _ resolvers.DirectoryResolver = &Resolver{}
 
+// The simple directory resolver returns a simple directory reader client.
 func NewResolver(logger *zerolog.Logger, cfg *grpcc.Config) resolvers.DirectoryResolver {
 	return &Resolver{
 		logger: logger,
@@ -42,7 +43,7 @@ func connect(logger *zerolog.Logger, cfg *grpcc.Config) (*grpcc.Connection, erro
 	return conn, nil
 }
 
-// GetDS - simple.
+// GetDS - returns a directory reader service client.
 func (r *Resolver) GetDS(ctx context.Context) (ds2.ReaderClient, error) {
 	if r.dirConn == nil {
 		dirConn, err := connect(r.logger, r.cfg)

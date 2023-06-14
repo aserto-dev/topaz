@@ -102,6 +102,18 @@ func (s *Server) Start(ctx context.Context) error {
 
 	grpc.EnableTracing = true
 
+	// Start additional servers first.
+	for _, regServer := range s.registeredServers {
+		regSrv := regServer
+		s.errGroup.Go(func() error {
+			err := regSrv.start(ctx)
+			if err != nil {
+				return errors.Wrapf(err, "failed to start [%s]", regSrv.name)
+			}
+			return nil
+		})
+	}
+
 	if err := s.startHealthServer(); err != nil {
 		return err
 	}
@@ -112,18 +124,6 @@ func (s *Server) Start(ctx context.Context) error {
 
 	if err := s.startGatewayServer(); err != nil {
 		return err
-	}
-
-	// Start additional servers.
-	for _, regServer := range s.registeredServers {
-		regSrv := regServer
-		s.errGroup.Go(func() error {
-			err := regSrv.start(ctx)
-			if err != nil {
-				return errors.Wrapf(err, "failed to start [%s]", regSrv.name)
-			}
-			return nil
-		})
 	}
 
 	s.healthServer.Server.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", svcName), healthpb.HealthCheckResponse_SERVING)
