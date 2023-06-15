@@ -29,9 +29,9 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X github.com/aserto-dev/topaz/pkg/version.ver={{.Version}}
-      - -X github.com/aserto-dev/topaz/pkg/version.commit={{.ShortCommit}}
-      - -X github.com/aserto-dev/topaz/pkg/version.date={{.Date}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
   - id: topaz
     main: ./cmd/topaz
@@ -51,9 +51,9 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X github.com/aserto-dev/topaz/pkg/version.ver={{.Version}}
-      - -X github.com/aserto-dev/topaz/pkg/version.commit={{.ShortCommit}}
-      - -X github.com/aserto-dev/topaz/pkg/version.date={{.Date}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
@@ -92,7 +92,7 @@ changelog:
 release:
   # https://goreleaser.com/customization/release/
   github:
-    owner: aserto-dev
+    owner: "{{ .Env.ORG }}"
     name: topaz
 
   draft: false
@@ -120,7 +120,7 @@ brews:
     name: topaz
 
     tap:
-      owner: aserto-dev
+      owner: "{{ .Env.ORG }}"
       name: homebrew-tap
       token: "{{ .Env.ASERTO_TAP }}"
 
