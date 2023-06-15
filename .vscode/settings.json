@@ -147,6 +147,7 @@
     "repos",
     "ringbuf",
     "runtimes",
+    "samber",
     "sirupsen",
     "statefulset",
     "staticcheck",

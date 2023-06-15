@@ -2,7 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.19
 
-// replace github.com/aserto-dev/go-edge-ds => /Users/gertd/workspace/src/github.com/aserto-dev/go-edge-ds
+// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/go-directory-cli => /Users/gertd/workspace/src/github.com/aserto-dev/go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
 // replace github.com/aserto-dev/runtime => ../runtime
@@ -16,7 +16,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.2
 	github.com/aserto-dev/go-directory v0.21.0
 	github.com/aserto-dev/go-directory-cli v0.20.13
-	github.com/aserto-dev/go-edge-ds v0.20.8-0.20230524203740-a40e9876217d
+	github.com/aserto-dev/go-edge-ds v0.20.8-0.20230615155414-de941c646464
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.3
@@ -106,6 +106,7 @@ require (
 	github.com/prometheus/procfs v0.9.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/samber/lo v1.38.1 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
@@ -121,6 +122,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.14.0 // indirect
 	go.opentelemetry.io/otel/trace v1.14.0 // indirect
 	golang.org/x/crypto v0.9.0 // indirect
+	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
