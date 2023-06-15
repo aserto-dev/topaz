@@ -148,6 +148,7 @@
     "ringbuf",
     "rlcp",
     "runtimes",
+    "samber",
     "sirupsen",
     "statefulset",
     "staticcheck",

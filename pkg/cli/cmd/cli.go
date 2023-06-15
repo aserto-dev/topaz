@@ -28,7 +28,7 @@ type CLI struct {
 	Update    UpdateCmd    `cmd:"" help:"update topaz container version"`
 	Version   VersionCmd   `cmd:"" help:"version information"`
 	Uninstall UninstallCmd `cmd:"" help:"uninstall topaz, removes all locally installed artifacts"`
-	NoCheck   bool         `name:"no-check" hidden:"" env:"TOPAZ_NO_CHECK" help:"disable running check"`
+	NoCheck   bool         `name:"no-check" env:"TOPAZ_NO_CHECK" help:"disable local container running check"`
 }
 
 type VersionCmd struct{}

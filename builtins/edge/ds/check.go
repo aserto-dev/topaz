@@ -16,18 +16,15 @@ import (
 //
 //	ds.check_relation({
 //	  "object": {
-//	    "id": "",
-//	    "key": "",
 //	    "type": ""
+//	    "key": "",
 //	  },
 //	  "relation": {
 //	    "name": "",
-//	    "object_type": ""
 //	  },
 //	  "subject": {
-//	    "id": "",
-//	    "key": "",
 //	    "type": ""
+//	    "key": "",
 //	  }
 //	})
 func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
@@ -53,16 +50,13 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 			if a.Subject == nil && a.RelationType == nil && a.Object == nil {
 				a = args{
 					Subject: &dsc.ObjectIdentifier{
-						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
 					RelationType: &dsc.RelationTypeIdentifier{
-						ObjectType: proto.String(""),
-						Name:       proto.String(""),
+						Name: proto.String(""),
 					},
 					Object: &dsc.ObjectIdentifier{
-						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
@@ -94,18 +88,15 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 //
 //	ds.check_permission({
 //		"object": {
-//		  "id": "",
-//		  "key": "",
 //		  "type": ""
+//		  "key": "",
 //		},
 //		"permission": {
-//		  "id": "",
 //		  "name": ""
 //		},
 //		"subject": {
-//		  "id": "",
-//		  "key": "",
 //		  "type": ""
+//		  "key": "",
 //		}
 //	})
 func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
@@ -131,16 +122,13 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 			if a.Subject == nil && a.Permission == nil && a.Object == nil {
 				a = args{
 					Subject: &dsc.ObjectIdentifier{
-						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
 					Permission: &dsc.PermissionIdentifier{
-						Id:   proto.String(""),
 						Name: proto.String(""),
 					},
 					Object: &dsc.ObjectIdentifier{
-						Id:   proto.String(""),
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
