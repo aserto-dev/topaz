@@ -146,6 +146,7 @@
     "rego",
     "repos",
     "ringbuf",
+    "rlcp",
     "runtimes",
     "samber",
     "sirupsen",

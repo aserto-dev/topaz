@@ -104,6 +104,9 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+      -
+        name: Setup QEMU
+        uses: docker/setup-qemu-action@v2          
       - 
         name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@v2
@@ -159,6 +162,8 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/github  "SSH_PRIVATE_KEY"                         | SSH_PRIVATE_KEY;
+            kv/data/github  "USERNAME"                                | DOCKER_USERNAME;
+            kv/data/github  "DOCKER_PUSH_TOKEN"                       | DOCKER_PASSWORD;
             kv/data/github  "READ_WRITE_TOKEN"                        | READ_WRITE_TOKEN;
             kv/data/github  "ASERTO_TAP"                              | ASERTO_TAP;
             kv/data/gcp     "SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE"  | SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE;
@@ -181,10 +186,18 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+      -
+        name: Setup QEMU
+        uses: docker/setup-qemu-action@v2          
       - 
+        name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: https://ghcr.io
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+      -
         name: Docker SSH Setup
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         run: |
           mkdir -p $HOME/.ssh
           umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
@@ -193,14 +206,22 @@ jobs:
           git config --global user.email "github-bot@aserto.com"
           git config --global user.name "Aserto Bot"
           eval `ssh-agent`
-          
+          ssh-add $HOME/.ssh/id_rsa
+      -
+        name: GCS Application Credentials
+        run: |
           echo "${SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE}" > /tmp/gs.json
+      -
+        name: Write Version Info
+        run: |
+          git describe --tags > VERSION.txt
       - 
         name: Release
         uses: goreleaser/goreleaser-action@v4
         env:
-          GITHUB_TOKEN: ${{ steps.vault.outputs.READ_WRITE_TOKEN }}
-          HOMEBREW_TAP: ${{ steps.vault.outputs.ASERTO_TAP }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP: ${{ secrets.GITHUB_TOKEN }}
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         with:
           distribution: goreleaser
           version: v1.18.2

@@ -122,7 +122,7 @@ brews:
     tap:
       owner: aserto-dev
       name: homebrew-tap
-      token: "{{ .Env.HOMEBREW_TAP }}"
+      token: "{{ .Env.ASERTO_TAP }}"
 
     url_template: "https://storage.googleapis.com/topaz-cli/topaz/{{ .Version }}/{{ .ArtifactName }}"
 
@@ -161,6 +161,8 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      - "--label=org.opencontainers.image.description=Topaz Authorizer"
+      - "--label=org.opencontainers.image.licenses=Apache-2.0"
   
   - use: buildx
     goos: linux
@@ -176,6 +178,8 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      - "--label=org.opencontainers.image.description=Topaz Authorizer"
+      - "--label=org.opencontainers.image.licenses=Apache-2.0"
 
 docker_manifests:
   # https://goreleaser.com/customization/docker_manifest/
