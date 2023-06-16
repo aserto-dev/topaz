@@ -93,11 +93,11 @@ release:
   # https://goreleaser.com/customization/release/
   github:
     owner: "{{ .Env.ORG }}"
-    name: topaz
+    name: "{{ .Env.REPO }}"
 
   draft: false
   prerelease: false
-  name_template: "topaz {{.Tag}}"
+  name_template: "{{.ProjectName}} {{.Tag}}"
 
 blobs:
   # https://goreleaser.com/customization/blob/
