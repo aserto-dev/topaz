@@ -23,7 +23,7 @@ func GetIdentityV2(client ds2.ReaderClient, ctx context.Context, identity string
 	relResp, err := client.GetRelation(ctx, &ds2.GetRelationRequest{
 		Param: &v2.RelationIdentifier{
 			Object:   &obj,
-			Relation: &v2.RelationTypeIdentifier{Name: &relationString},
+			Relation: &v2.RelationTypeIdentifier{Name: &relationString, ObjectType: &identityString},
 			Subject:  &v2.ObjectIdentifier{Type: &subjectType},
 		},
 		WithObjects: &withObjects,
