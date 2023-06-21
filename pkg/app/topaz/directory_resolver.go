@@ -14,9 +14,5 @@ func DirectoryResolver(
 	logger *zerolog.Logger,
 	cfg *config.Config) resolvers.DirectoryResolver {
 
-	dirCfg, err := cfg.Directory.ToRemoteConfig()
-	if err != nil {
-		logger.Error().Err(err).Msg("cannot configure directory resolver")
-	}
-	return directory.NewResolver(logger, dirCfg)
+	return directory.NewResolver(logger, &cfg.DirectoryResolver)
 }

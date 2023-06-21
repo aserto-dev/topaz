@@ -184,14 +184,18 @@ func (s *Server) Stop() error {
 
 // registerGateway registers the gateway server with a _running_ gRPC server.
 func (s *Server) registerGateway() error {
-	_, port, err := net.SplitHostPort(s.cfg.API.GRPC.ListenAddress)
+	authorizerAPIConfig, ok := s.cfg.Services["authorizer"]
+	if !ok {
+		return errors.New("invalid authorizer configuration")
+	}
+	_, port, err := net.SplitHostPort(authorizerAPIConfig.GRPC.ListenAddress)
 	if err != nil {
 		return errors.Wrap(err, "failed to determine port from configured GRPC listen address")
 	}
 
 	dialAddr := fmt.Sprintf("dns:///127.0.0.1:%s", port)
 
-	tlsCreds, err := certs.GatewayAsClientTLSCreds(s.cfg.API.GRPC.Certs)
+	tlsCreds, err := certs.GatewayAsClientTLSCreds(authorizerAPIConfig.GRPC.Certs)
 	if err != nil {
 		return errors.Wrap(err, "failed to calculate tls config for gateway service")
 	}
@@ -210,13 +214,17 @@ func (s *Server) registerGateway() error {
 }
 
 func (s *Server) startHealthServer() error {
-	healthListener, err := net.Listen("tcp", s.cfg.API.Health.ListenAddress)
+	authorizerAPIConfig, ok := s.cfg.Services["authorizer"]
+	if !ok {
+		return errors.New("invalid authorizer configuration")
+	}
+	healthListener, err := net.Listen("tcp", authorizerAPIConfig.Health.ListenAddress)
 	if err != nil {
-		s.logger.Error().Err(err).Str("address", s.cfg.API.Health.ListenAddress).Msg("grpc health socket failed to listen")
+		s.logger.Error().Err(err).Str("address", authorizerAPIConfig.Health.ListenAddress).Msg("grpc health socket failed to listen")
 		return errors.Wrap(err, "grpc health socket failed to listen")
 	}
 
-	s.logger.Info().Str("address", s.cfg.API.Health.ListenAddress).Msg("GRPC Health Server starting")
+	s.logger.Info().Str("address", authorizerAPIConfig.Health.ListenAddress).Msg("GRPC Health Server starting")
 	s.errGroup.Go(func() error {
 		return s.healthServer.GRPCServer.Serve(healthListener)
 	})
@@ -225,8 +233,12 @@ func (s *Server) startHealthServer() error {
 }
 
 func (s *Server) startGRPCServer() error {
-	s.logger.Info().Str("address", s.cfg.API.GRPC.ListenAddress).Msg("GRPC Server starting")
-	grpcListener, err := net.Listen("tcp", s.cfg.API.GRPC.ListenAddress)
+	authorizerAPIConfig, ok := s.cfg.Services["authorizer"]
+	if !ok {
+		return errors.New("invalid authorizer configuration")
+	}
+	s.logger.Info().Str("address", authorizerAPIConfig.GRPC.ListenAddress).Msg("GRPC Server starting")
+	grpcListener, err := net.Listen("tcp", authorizerAPIConfig.GRPC.ListenAddress)
 	if err != nil {
 		return errors.Wrap(err, "grpc socket failed to listen")
 	}
@@ -240,7 +252,7 @@ func (s *Server) startGRPCServer() error {
 	s.errGroup.Go(func() error {
 		err := s.grpcServer.Serve(grpcListener)
 		if err != nil {
-			s.logger.Error().Err(err).Str("address", s.cfg.API.GRPC.ListenAddress).Msg("GRPC Server failed to listen")
+			s.logger.Error().Err(err).Str("address", authorizerAPIConfig.GRPC.ListenAddress).Msg("GRPC Server failed to listen")
 		}
 		return errors.Wrap(err, "grpc server failed to listen")
 	})
@@ -249,17 +261,21 @@ func (s *Server) startGRPCServer() error {
 }
 
 func (s *Server) startGatewayServer() error {
+	authorizerAPIConfig, ok := s.cfg.Services["authorizer"]
+	if !ok {
+		return errors.New("invalid authorizer configuration")
+	}
 	s.logger.Info().Msg("Registering gRPC-Gateway handlers")
 	if err := s.registerGateway(); err != nil {
 		return errors.Wrap(err, "failed to register grpc gateway handlers")
 	}
 
 	s.errGroup.Go(func() error {
-		if s.cfg.API.Gateway.HTTP {
-			s.logger.Info().Str("address", "http://"+s.cfg.API.Gateway.ListenAddress).Msg("gRPC-Gateway endpoint starting")
+		if authorizerAPIConfig.Gateway.HTTP {
+			s.logger.Info().Str("address", "http://"+authorizerAPIConfig.Gateway.ListenAddress).Msg("gRPC-Gateway endpoint starting")
 			return s.gtwServer.ListenAndServe()
 		}
-		s.logger.Info().Str("address", "https://"+s.cfg.API.Gateway.ListenAddress).Msg("gRPC-Gateway endpoint starting")
+		s.logger.Info().Str("address", "https://"+authorizerAPIConfig.Gateway.ListenAddress).Msg("gRPC-Gateway endpoint starting")
 		return s.gtwServer.ListenAndServeTLS("", "")
 	})
 

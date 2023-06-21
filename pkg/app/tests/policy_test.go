@@ -14,7 +14,7 @@ import (
 
 func TestPolicy(t *testing.T) {
 	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Directory.Config["db_path"] = atesting.AssetAcmeEBBFilePath()
+		cfg.Edge.DBPath = atesting.AssetAcmeEBBFilePath()
 	})
 	defer harness.Cleanup()
 

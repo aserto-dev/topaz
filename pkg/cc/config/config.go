@@ -16,9 +16,10 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/aserto-dev/certs"
+	"github.com/aserto-dev/go-aserto/client"
+	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/directory"
 )
 
 // CommandMode -- enum type.
@@ -44,28 +45,7 @@ type Common struct {
 		Mode CommandMode
 	} `json:"-"`
 
-	API struct {
-		GRPC struct {
-			ListenAddress string `json:"listen_address"`
-			// Default connection timeout is 120 seconds
-			// https://godoc.org/google.golang.org/grpc#ConnectionTimeout
-			ConnectionTimeoutSeconds uint32               `json:"connection_timeout_seconds"`
-			Certs                    certs.TLSCredsConfig `json:"certs"`
-		} `json:"grpc"`
-		Gateway struct {
-			ListenAddress     string               `json:"listen_address"`
-			AllowedOrigins    []string             `json:"allowed_origins"`
-			Certs             certs.TLSCredsConfig `json:"certs"`
-			HTTP              bool                 `json:"http"`
-			ReadTimeout       time.Duration        `json:"read_timeout"`
-			ReadHeaderTimeout time.Duration        `json:"read_header_timeout"`
-			WriteTimeout      time.Duration        `json:"write_timeout"`
-			IdleTimeout       time.Duration        `json:"idle_timeout"`
-		} `json:"gateway"`
-		Health struct {
-			ListenAddress string `json:"listen_address"`
-		} `json:"health"`
-	} `json:"api"`
+	Services map[string]*directory.API `json:"api"`
 
 	JWT struct {
 		// Specifies the duration in which exp (Expiry) and nbf (Not Before)
@@ -74,7 +54,10 @@ type Common struct {
 	} `json:"jwt"`
 
 	// Directory configuration
-	Directory directory.Config `json:"directory_service"`
+	Edge directory.Config `json:"directory"`
+
+	// Authorizer directory resolver configuration
+	DirectoryResolver client.Config `json:"directory_resolver"`
 
 	// Default OPA configuration
 	OPA runtime.Config `json:"opa"`
@@ -119,21 +102,21 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 	// Set defaults
 	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
 	for _, svc := range CertificateSets {
-		v.SetDefault(fmt.Sprintf("api.%s.certs.tls_key_path", svc), filepath.Join(DefaultTLSGenDir, svc+".key"))
-		v.SetDefault(fmt.Sprintf("api.%s.certs.tls_cert_path", svc), filepath.Join(DefaultTLSGenDir, svc+".crt"))
-		v.SetDefault(fmt.Sprintf("api.%s.certs.tls_ca_cert_path", svc), filepath.Join(DefaultTLSGenDir, svc+"-ca.crt"))
+		v.SetDefault(fmt.Sprintf("api.authorizer.%s.certs.tls_key_path", svc), filepath.Join(DefaultTLSGenDir, svc+".key"))
+		v.SetDefault(fmt.Sprintf("api.authorizer.%s.certs.tls_cert_path", svc), filepath.Join(DefaultTLSGenDir, svc+".crt"))
+		v.SetDefault(fmt.Sprintf("api.authorizer.%s.certs.tls_ca_cert_path", svc), filepath.Join(DefaultTLSGenDir, svc+"-ca.crt"))
 	}
-	v.SetDefault("api.grpc.connection_timeout_seconds", 120)
-	v.SetDefault("api.grpc.listen_address", "0.0.0.0:8282")
+	v.SetDefault("api.authorizer.grpc.connection_timeout_seconds", 120)
+	v.SetDefault("api.authorizer.grpc.listen_address", "0.0.0.0:8282")
 
-	v.SetDefault("api.gateway.listen_address", "0.0.0.0:8383")
-	v.SetDefault("api.gateway.http", false)
-	v.SetDefault("api.gateway.read_timeout", 2*time.Second)
-	v.SetDefault("api.gateway.read_header_timeout", 2*time.Second)
-	v.SetDefault("api.gateway.write_timeout", 2*time.Second)
-	v.SetDefault("api.gateway.idle_timeout", 30*time.Second)
+	v.SetDefault("api.authorizer.gateway.listen_address", "0.0.0.0:8383")
+	v.SetDefault("api.authorizer.gateway.http", false)
+	v.SetDefault("api.authorizer.gateway.read_timeout", 2*time.Second)
+	v.SetDefault("api.authorizer.gateway.read_header_timeout", 2*time.Second)
+	v.SetDefault("api.authorizer.gateway.write_timeout", 2*time.Second)
+	v.SetDefault("api.authorizer.gateway.idle_timeout", 30*time.Second)
 
-	v.SetDefault("api.health.listen_address", "0.0.0.0:8484")
+	v.SetDefault("api.authorizer.health.listen_address", "0.0.0.0:8484")
 
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
 
@@ -225,13 +208,17 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, erro
 
 func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator) error {
 	existingFiles := []string{}
+	authorizerConfig, ok := c.Services[authorizer.String()]
+	if !ok {
+		return errors.New("invalid authorizer configuration")
+	}
 	for _, file := range []string{
-		c.API.GRPC.Certs.TLSCACertPath,
-		c.API.GRPC.Certs.TLSCertPath,
-		c.API.GRPC.Certs.TLSKeyPath,
-		c.API.Gateway.Certs.TLSCACertPath,
-		c.API.Gateway.Certs.TLSCertPath,
-		c.API.Gateway.Certs.TLSKeyPath,
+		authorizerConfig.GRPC.Certs.TLSCACertPath,
+		authorizerConfig.GRPC.Certs.TLSCertPath,
+		authorizerConfig.GRPC.Certs.TLSKeyPath,
+		authorizerConfig.Gateway.Certs.TLSCACertPath,
+		authorizerConfig.Gateway.Certs.TLSCertPath,
+		authorizerConfig.Gateway.Certs.TLSKeyPath,
 	} {
 		exists, err := fileExists(file)
 		if err != nil {
@@ -248,9 +235,9 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 	if len(existingFiles) == 0 {
 		err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
 			CommonName:       "authorizer-grpc",
-			CertKeyPath:      c.API.GRPC.Certs.TLSKeyPath,
-			CertPath:         c.API.GRPC.Certs.TLSCertPath,
-			CACertPath:       c.API.GRPC.Certs.TLSCACertPath,
+			CertKeyPath:      authorizerConfig.GRPC.Certs.TLSKeyPath,
+			CertPath:         authorizerConfig.GRPC.Certs.TLSCertPath,
+			CACertPath:       authorizerConfig.GRPC.Certs.TLSCACertPath,
 			DefaultTLSGenDir: DefaultTLSGenDir,
 		})
 		if err != nil {
@@ -259,9 +246,9 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 
 		err = certsGenerator.MakeDevCert(&certs.CertGenConfig{
 			CommonName:       "authorizer-gateway",
-			CertKeyPath:      c.API.Gateway.Certs.TLSKeyPath,
-			CertPath:         c.API.Gateway.Certs.TLSCertPath,
-			CACertPath:       c.API.Gateway.Certs.TLSCACertPath,
+			CertKeyPath:      authorizerConfig.Gateway.Certs.TLSKeyPath,
+			CertPath:         authorizerConfig.Gateway.Certs.TLSCertPath,
+			CACertPath:       authorizerConfig.Gateway.Certs.TLSCACertPath,
 			DefaultTLSGenDir: DefaultTLSGenDir,
 		})
 		if err != nil {

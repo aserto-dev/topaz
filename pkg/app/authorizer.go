@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	edge "github.com/aserto-dev/go-edge-ds/pkg/server"
 	"github.com/aserto-dev/topaz/pkg/app/server"
@@ -41,17 +42,37 @@ func (e *Authorizer) Start() error {
 }
 
 func (e *Authorizer) configEdge() error {
-	remoteConfig, err := e.Configuration.Directory.ToRemoteConfig()
-	if err != nil {
-		return err
+	// Directory client configuration.
+	remoteConfig := e.Configuration.DirectoryResolver
+
+	// Edge configuration
+	edgeConfig := &e.Configuration.Edge
+	if edgeConfig.Services == nil {
+		edgeConfig.Services = make(map[string]*directory.API)
 	}
-	edgeConfig, err := e.Configuration.Directory.ToEdgeConfig()
-	if err != nil {
-		return err
+
+	authorizerAPIConfig, ok := e.Configuration.Services["authorizer"]
+	if !ok {
+		return errors.New("invalid authorizer configuration")
 	}
+
 	if remoteConfig.Address == "" {
-		e.setEdgeDefaults(edgeConfig, "")
-		edgeServer, err := edge.NewEdgeServer(*edgeConfig, &e.Configuration.API.GRPC.Certs, e.Logger)
+		e.Configuration.DirectoryResolver.Address = authorizerAPIConfig.GRPC.ListenAddress
+		for key, config := range e.Configuration.Services {
+			if key != "authorizer" {
+				edgeConfig.Services[key] = config
+			}
+		}
+		e.setEdgeDefaults(edgeConfig, authorizerAPIConfig.GRPC.Certs, "0.0.0.0:8282")
+		if _, ok := edgeConfig.Services["reader"]; !ok {
+			return errors.New("reader service must be configured")
+		}
+		if _, ok := edgeConfig.Services["reader"]; ok {
+			if e.Configuration.DirectoryResolver.Address != edgeConfig.Services["reader"].GRPC.ListenAddress {
+				return errors.New("remote address must match reader configuration address for the topaz directory resolver")
+			}
+		}
+		edgeServer, err := edge.NewEdgeServer(*edgeConfig, &authorizerAPIConfig.GRPC.Certs, e.Logger)
 		if err != nil {
 			return err
 		}
@@ -72,17 +93,30 @@ func (e *Authorizer) configEdge() error {
 			}
 			return nil
 		}
+		if len(edgeServer.Servers) > 0 {
+			for name, edgeServer := range edgeServer.Servers {
+				e.Server.RegisterServer(name, edgeServer.Start, edgeServer.Stop)
+			}
+		}
 		return nil
 	}
 
-	if _, ok := edgeConfig.Services["reader"]; ok {
-		if remoteConfig.Address != edgeConfig.Services["reader"].GRPC.ListenAddress {
-			return errors.New("remote address must match reader configuration address for the topaz directory resolver")
-		}
-	}
 	if (strings.Contains(remoteConfig.Address, "localhost") || strings.Contains(remoteConfig.Address, "0.0.0.0")) && edgeConfig.DBPath != "" {
-		e.setEdgeDefaults(edgeConfig, remoteConfig.Address)
-		edgeServer, err := edge.NewEdgeServer(*edgeConfig, &e.Configuration.API.GRPC.Certs, e.Logger)
+		for key, config := range e.Configuration.Services {
+			if key != "authorizer" {
+				edgeConfig.Services[key] = config
+			}
+		}
+		e.setEdgeDefaults(edgeConfig, authorizerAPIConfig.GRPC.Certs, remoteConfig.Address)
+		if _, ok := edgeConfig.Services["reader"]; !ok {
+			return errors.New("reader service must be configured")
+		}
+		if _, ok := edgeConfig.Services["reader"]; ok {
+			if e.Configuration.DirectoryResolver.Address != edgeConfig.Services["reader"].GRPC.ListenAddress {
+				return errors.New("remote address must match reader configuration address for the topaz directory resolver")
+			}
+		}
+		edgeServer, err := edge.NewEdgeServer(*edgeConfig, &authorizerAPIConfig.GRPC.Certs, e.Logger)
 		if err != nil {
 			return err
 		}
@@ -91,13 +125,12 @@ func (e *Authorizer) configEdge() error {
 	return nil
 }
 
-func (e *Authorizer) setEdgeDefaults(edgeConfig *directory.Config, defaultRemoteAddress string) {
+func (e *Authorizer) setEdgeDefaults(edgeConfig *directory.Config, defaultCerts certs.TLSCredsConfig, defaultRemoteAddress string) {
 	if len(edgeConfig.Services) == 0 {
 		// set defaults if not configred.
 		defaultAPI := directory.API{}
-		defaultAPI.GRPC.Certs = e.Configuration.API.GRPC.Certs
+		defaultAPI.GRPC.Certs = defaultCerts
 		defaultAPI.GRPC.ListenAddress = defaultRemoteAddress // will only be used if remote address is specified.
-		defaultAPI.GRPC.ConnectionTimeoutSeconds = e.Configuration.API.GRPC.ConnectionTimeoutSeconds
 
 		edgeConfig.Services = map[string]*directory.API{
 			"reader":   &defaultAPI,
@@ -109,7 +142,7 @@ func (e *Authorizer) setEdgeDefaults(edgeConfig *directory.Config, defaultRemote
 	// attach certs if not configured separately for the exposed services.
 	for k, v := range edgeConfig.Services {
 		if edgeConfig.Services[k].GRPC.Certs.TLSCACertPath == "" {
-			v.GRPC.Certs = e.Configuration.API.GRPC.Certs
+			v.GRPC.Certs = defaultCerts
 			edgeConfig.Services[k] = v
 		}
 	}

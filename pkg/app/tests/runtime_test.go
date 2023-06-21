@@ -17,7 +17,7 @@ var _ = Describe("Engine Runtime", func() {
 
 		BeforeEach(func() {
 			h = testing.SetupOffline(ginkgoT, func(cfg *config.Config) {
-				cfg.Directory.Config["db_path"] = testing.AssetAcmeEBBFilePath()
+				cfg.Edge.DBPath = testing.AssetAcmeEBBFilePath()
 				cfg.OPA.LocalBundles.Paths = []string{testing.AssetLocalBundle()}
 			})
 		})

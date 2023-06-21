@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
@@ -60,6 +61,12 @@ func (c *Config) validation() error {
 	}
 	if len(c.OPA.Config.Bundles) > 1 {
 		return errors.New("opa.config.bundles - too many bundles")
+	}
+
+	for key, _ := range c.Services {
+		if _, ok := ServiceTypeMap()[key]; !ok {
+			return errors.New(fmt.Sprintf("unknown service type configuration %s", key))
+		}
 	}
 
 	setDefaultCallsAuthz(c)

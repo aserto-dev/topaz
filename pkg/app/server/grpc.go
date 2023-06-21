@@ -17,12 +17,17 @@ import (
 func newGRPCServer(cfg *config.Common, logger *zerolog.Logger, registrations GRPCRegistrations, additionalServerOptions ...grpc.ServerOption) (*grpc.Server, error) {
 	grpc.EnableTracing = true
 
+	authorizerAPIConfig, ok := cfg.Services["authorizer"]
+	if !ok {
+		return nil, errors.New("invalid authorizer configuration")
+	}
+
 	if err := view.Register(ocgrpc.DefaultServerViews...); err != nil {
 		logger.Error().Err(err).Msg("failed to register ocgrpc server views")
 	}
 
-	connectionTimeout := time.Duration(cfg.API.GRPC.ConnectionTimeoutSeconds) * time.Second
-	tlsCreds, err := certs.GRPCServerTLSCreds(cfg.API.GRPC.Certs)
+	connectionTimeout := time.Duration(authorizerAPIConfig.GRPC.ConnectionTimeoutSeconds) * time.Second
+	tlsCreds, err := certs.GRPCServerTLSCreds(authorizerAPIConfig.GRPC.Certs)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to calculate tls config")
 	}

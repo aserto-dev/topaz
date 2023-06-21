@@ -39,9 +39,13 @@ func NewGatewayServer(
 	gtwMux *runtime.ServeMux,
 	registry promclient.Registerer,
 ) (*http.Server, error) {
+	authorizerAPIConfig, ok := cfg.Services["authorizer"]
+	if !ok {
+		return nil, errors.New("invalid authorizer configuration")
+	}
 	c := cors.New(cors.Options{
 		AllowedHeaders: []string{"Authorization", "Content-Type", "Depth"},
-		AllowedOrigins: append(allowedOrigins, cfg.API.Gateway.AllowedOrigins...),
+		AllowedOrigins: append(allowedOrigins, authorizerAPIConfig.Gateway.AllowedOrigins...),
 		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodHead, http.MethodDelete, http.MethodPut,
 			http.MethodPatch, "PROPFIND", "MKCOL", "COPY", "MOVE"},
 		Debug: cfg.Logging.LogLevelParsed <= zerolog.DebugLevel,
@@ -63,19 +67,19 @@ func NewGatewayServer(
 
 	gtwServer := &http.Server{
 		ErrorLog:          logger.NewSTDLogger(&newLogger),
-		Addr:              cfg.API.Gateway.ListenAddress,
+		Addr:              authorizerAPIConfig.Gateway.ListenAddress,
 		Handler:           c.Handler(mux),
-		ReadTimeout:       cfg.API.Gateway.ReadTimeout,
-		ReadHeaderTimeout: cfg.API.Gateway.ReadHeaderTimeout,
-		WriteTimeout:      cfg.API.Gateway.WriteTimeout,
-		IdleTimeout:       cfg.API.Gateway.IdleTimeout,
+		ReadTimeout:       authorizerAPIConfig.Gateway.ReadTimeout,
+		ReadHeaderTimeout: authorizerAPIConfig.Gateway.ReadHeaderTimeout,
+		WriteTimeout:      authorizerAPIConfig.Gateway.WriteTimeout,
+		IdleTimeout:       authorizerAPIConfig.Gateway.IdleTimeout,
 	}
 
-	if cfg.API.Gateway.HTTP {
+	if authorizerAPIConfig.Gateway.HTTP {
 		return gtwServer, nil
 	}
 
-	tlsServerConfig, err := certs.GatewayServerTLSConfig(cfg.API.Gateway.Certs)
+	tlsServerConfig, err := certs.GatewayServerTLSConfig(authorizerAPIConfig.Gateway.Certs)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to calculate gateway server tls creds")
 	}
