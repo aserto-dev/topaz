@@ -35,12 +35,12 @@ type Server struct {
 
 	grpcServer        *grpc.Server
 	grpcServerOptions []grpc.ServerOption
-	grpcRegistrations GRPCRegistrations
+	GRPCRegistrations GRPCRegistrations
 	gtwServer         *http.Server
 	healthServer      *HealthServer
 
 	gtwMux               *runtime.ServeMux
-	handlerRegistrations HandlerRegistrations
+	HandlerRegistrations HandlerRegistrations
 
 	registeredServers []registeredServer
 }
@@ -65,8 +65,8 @@ func NewServer(
 		ctx:                  ctx,
 		cfg:                  cfg,
 		logger:               &newLogger,
-		handlerRegistrations: handlerRegistrations,
-		grpcRegistrations:    grpcRegistrations,
+		HandlerRegistrations: handlerRegistrations,
+		GRPCRegistrations:    grpcRegistrations,
 		gtwServer:            gtwServer,
 		healthServer:         healthServer,
 		gtwMux:               gtwMux,
@@ -201,7 +201,7 @@ func (s *Server) registerGateway() error {
 		grpc.WithBlock(),
 	}
 
-	err = s.handlerRegistrations(s.ctx, s.gtwMux, dialAddr, opts)
+	err = s.HandlerRegistrations(s.ctx, s.gtwMux, dialAddr, opts)
 	if err != nil {
 		return errors.Wrap(err, "failed to register handlers with the gateway")
 	}
@@ -231,7 +231,7 @@ func (s *Server) startGRPCServer() error {
 		return errors.Wrap(err, "grpc socket failed to listen")
 	}
 
-	grpcServer, err := newGRPCServer(s.cfg, s.logger, s.grpcRegistrations, s.grpcServerOptions...)
+	grpcServer, err := newGRPCServer(s.cfg, s.logger, s.GRPCRegistrations, s.grpcServerOptions...)
 	if err != nil {
 		return err
 	}

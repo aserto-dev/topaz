@@ -9,8 +9,10 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"google.golang.org/grpc"
 )
 
 // Authorizer is an authorizer service instance, responsible for managing
@@ -47,6 +49,31 @@ func (e *Authorizer) configEdge() error {
 	if err != nil {
 		return err
 	}
+	if remoteConfig.Address == "" {
+		e.setEdgeDefaults(edgeConfig, "")
+		edgeServer, err := edge.NewEdgeServer(*edgeConfig, &e.Configuration.API.GRPC.Certs, e.Logger)
+		if err != nil {
+			return err
+		}
+		registeredGRPC := e.Server.GRPCRegistrations
+		e.Server.GRPCRegistrations = func(server *grpc.Server) {
+			edgeServer.GetGRPCRegistrations()(server)
+			registeredGRPC(server)
+		}
+		registeredGateway := e.Server.HandlerRegistrations
+		e.Server.HandlerRegistrations = func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
+			err := registeredGateway(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+			err = edgeServer.GetGatewayRegistrations()(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+		return nil
+	}
 
 	if _, ok := edgeConfig.Services["reader"]; ok {
 		if remoteConfig.Address != edgeConfig.Services["reader"].GRPC.ListenAddress {
@@ -54,31 +81,7 @@ func (e *Authorizer) configEdge() error {
 		}
 	}
 	if (strings.Contains(remoteConfig.Address, "localhost") || strings.Contains(remoteConfig.Address, "0.0.0.0")) && edgeConfig.DBPath != "" {
-
-		if len(edgeConfig.Services) == 0 {
-			//set defaults
-			defaultAPI := directory.API{}
-			defaultAPI.GRPC.Certs = e.Configuration.API.GRPC.Certs
-			defaultAPI.GRPC.ListenAddress = "localhost:9292"
-			defaultAPI.GRPC.ConnectionTimeoutSeconds = e.Configuration.API.GRPC.ConnectionTimeoutSeconds
-			defaultAPI.Gateway.AllowedOrigins = e.Configuration.API.Gateway.AllowedOrigins
-			defaultAPI.Gateway.Certs = e.Configuration.API.Gateway.Certs
-			defaultAPI.Gateway.ListenAddress = "localhost:9293"
-
-			edgeConfig.Services = map[string]*directory.API{
-				"reader":   &defaultAPI,
-				"writer":   &defaultAPI,
-				"exporter": &defaultAPI,
-				"importer": &defaultAPI,
-			}
-		}
-		//attach certs if not configured separately for the exposed services
-		for k, v := range edgeConfig.Services {
-			if edgeConfig.Services[k].GRPC.Certs.TLSCACertPath == "" {
-				v.GRPC.Certs = e.Configuration.API.GRPC.Certs
-				edgeConfig.Services[k] = v
-			}
-		}
+		e.setEdgeDefaults(edgeConfig, remoteConfig.Address)
 		edgeServer, err := edge.NewEdgeServer(*edgeConfig, &e.Configuration.API.GRPC.Certs, e.Logger)
 		if err != nil {
 			return err
@@ -86,4 +89,28 @@ func (e *Authorizer) configEdge() error {
 		e.Server.RegisterServer("edgeServer", edgeServer.Start, edgeServer.Stop)
 	}
 	return nil
+}
+
+func (e *Authorizer) setEdgeDefaults(edgeConfig *directory.Config, defaultRemoteAddress string) {
+	if len(edgeConfig.Services) == 0 {
+		// set defaults if not configred.
+		defaultAPI := directory.API{}
+		defaultAPI.GRPC.Certs = e.Configuration.API.GRPC.Certs
+		defaultAPI.GRPC.ListenAddress = defaultRemoteAddress // will only be used if remote address is specified.
+		defaultAPI.GRPC.ConnectionTimeoutSeconds = e.Configuration.API.GRPC.ConnectionTimeoutSeconds
+
+		edgeConfig.Services = map[string]*directory.API{
+			"reader":   &defaultAPI,
+			"writer":   &defaultAPI,
+			"exporter": &defaultAPI,
+			"importer": &defaultAPI,
+		}
+	}
+	// attach certs if not configured separately for the exposed services.
+	for k, v := range edgeConfig.Services {
+		if edgeConfig.Services[k].GRPC.Certs.TLSCACertPath == "" {
+			v.GRPC.Certs = e.Configuration.API.GRPC.Certs
+			edgeConfig.Services[k] = v
+		}
+	}
 }

@@ -7,6 +7,7 @@ directory_service:
   config:
     db_path: /tmp/edgeds.db
     seed_metadata: false
+    address: localhost:9292
     insecure: true
 
 api:

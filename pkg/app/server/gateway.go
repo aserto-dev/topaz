@@ -51,6 +51,7 @@ func NewGatewayServer(
 	newLogger := log.With().Str("source", "http-gateway").Logger()
 
 	mux := http.NewServeMux()
+	mux.Handle("/", gtwMux) // handler for edge directory calls
 	mux.Handle("/api/", fieldsMaskHandler(gtwMux))
 	mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
