@@ -3,226 +3,178 @@
     {
       "subject": {
         "type": "user",
-        "id": "fd4614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "jerry@the-smiths.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "159cb08f-f053-4b39-a2e5-510e4496b584"
-      },
-      "createdAt": "2022-08-16T01:25:08.508974Z",
-      "updatedAt": "2022-08-16T01:25:08.508974Z",
-      "hash": "3856766793436499859"
+        "key": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "rick@the-citadel.com"
       },
       "relation": "member",
       "object": {
         "type": "group",
-        "id": "30004736-4f22-4586-a33b-aa6166722277"
-      },
-      "createdAt": "2022-08-16T01:40:00.757151Z",
-      "updatedAt": "2022-08-16T01:40:00.757151Z",
-      "hash": "11764758546195978740"
+        "key": "admin"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "summer@the-smiths.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "4f21420f-d58e-4963-9d19-4796f0dbe668"
-      },
-      "createdAt": "2022-08-16T01:25:08.413382Z",
-      "updatedAt": "2022-08-16T01:25:08.413382Z",
-      "hash": "15394806279190789958"
+        "key": "summer@the-smiths.com"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "morty@the-citadel.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "5656ed9d-7570-4837-9b2a-09c3d9074dd2"
-      },
-      "createdAt": "2022-08-16T01:25:08.276564Z",
-      "updatedAt": "2022-08-16T01:25:08.276564Z",
-      "hash": "16147799548625896268"
+        "key": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "rick@the-citadel.com"
       },
       "relation": "member",
       "object": {
         "type": "group",
-        "id": "6ce1b908-4ddc-4a26-92fa-1c470ff3e851"
-      },
-      "createdAt": "2022-08-16T01:40:00.761330Z",
-      "updatedAt": "2022-08-16T01:40:00.761330Z",
-      "hash": "14008831386283220106"
+        "key": "evil_genius"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "rick@the-citadel.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "8a82775b-27d9-4635-b006-7ef5553656d1"
-      },
-      "createdAt": "2022-08-16T01:25:08.325356Z",
-      "updatedAt": "2022-08-16T01:25:08.325356Z",
-      "hash": "6117940310389789961"
+        "key": "rick@the-citadel.com"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd3614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "beth@the-smiths.com"
       },
       "relation": "member",
       "object": {
         "type": "group",
-        "id": "908041cd-b33b-41f9-b2f1-6fdae89110b8"
-      },
-      "createdAt": "2022-08-16T01:40:00.909175Z",
-      "updatedAt": "2022-08-16T01:40:00.909175Z",
-      "hash": "2436335386638153369"
+        "key": "viewer"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd4614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "jerry@the-smiths.com"
       },
       "relation": "member",
       "object": {
         "type": "group",
-        "id": "908041cd-b33b-41f9-b2f1-6fdae89110b8"
-      },
-      "createdAt": "2022-08-16T01:40:00.944986Z",
-      "updatedAt": "2022-08-16T01:40:00.944986Z",
-      "hash": "4547318602874300406"
+        "key": "viewer"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "summer@the-smiths.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "a81e1157-b75e-45fe-b2fc-1e6fed52fe4e"
-      },
-      "createdAt": "2022-08-16T01:25:08.418023Z",
-      "updatedAt": "2022-08-16T01:25:08.418023Z",
-      "hash": "287977704414994744"
+        "key": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "morty@the-citadel.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "af1a6f35-ab05-4f2f-86dc-ef7f808f3e8a"
-      },
-      "createdAt": "2022-08-16T01:25:08.269377Z",
-      "updatedAt": "2022-08-16T01:25:08.269377Z",
-      "hash": "14481500444319708257"
+        "key": "morty@the-citadel.com"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd3614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "beth@the-smiths.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "af8f33ad-c891-44cb-b2f0-f4811a67a432"
-      },
-      "createdAt": "2022-08-16T01:25:08.468638Z",
-      "updatedAt": "2022-08-16T01:25:08.468638Z",
-      "hash": "11757822623391030144"
+        "key": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd3614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "beth@the-smiths.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "c9ed5437-2d63-477c-b6e5-64ff635238cd"
-      },
-      "createdAt": "2022-08-16T01:25:08.461859Z",
-      "updatedAt": "2022-08-16T01:25:08.461859Z",
-      "hash": "7337355472973117152"
+        "key": "beth@the-smiths.com"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd4614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "jerry@the-smiths.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "d36649ff-0256-4f5d-871b-8a66352c89d5"
-      },
-      "createdAt": "2022-08-16T01:25:08.518685Z",
-      "updatedAt": "2022-08-16T01:25:08.518685Z",
-      "hash": "14224458622478928161"
+        "key": "jerry@the-smiths.com"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd1614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "morty@the-citadel.com"
       },
       "relation": "member",
       "object": {
         "type": "group",
-        "id": "d6a9b146-a419-473d-b25b-962a3562bd49"
-      },
-      "createdAt": "2022-08-16T01:40:00.805433Z",
-      "updatedAt": "2022-08-16T01:40:00.805433Z",
-      "hash": "11075189165282687072"
+        "key": "editor"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd2614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "summer@the-smiths.com"
       },
       "relation": "member",
       "object": {
         "type": "group",
-        "id": "d6a9b146-a419-473d-b25b-962a3562bd49"
-      },
-      "createdAt": "2022-08-16T01:40:00.853702Z",
-      "updatedAt": "2022-08-16T01:40:00.853702Z",
-      "hash": "5844694301608912115"
+        "key": "editor"
+      }
     },
     {
       "subject": {
         "type": "user",
-        "id": "fd0614d3-c39a-4781-b7bd-8b96f5a5100d"
+        "key": "rick@the-citadel.com"
       },
       "relation": "identifier",
       "object": {
         "type": "identity",
-        "id": "e100a8e3-736d-4c48-aeb5-c6cc26518911"
-      },
-      "createdAt": "2022-08-16T01:25:08.337276Z",
-      "updatedAt": "2022-08-16T01:25:08.337276Z",
-      "hash": "16208746058712683486"
+        "key": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
     }
   ]
 }
