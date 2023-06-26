@@ -2,7 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.19
 
-replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
@@ -17,7 +17,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.2
 	github.com/aserto-dev/go-directory v0.21.0
 	github.com/aserto-dev/go-directory-cli v0.20.13
-	github.com/aserto-dev/go-edge-ds v0.21.1-0.20230621175217-386d792c0bb8
+	github.com/aserto-dev/go-edge-ds v0.21.1-0.20230626091139-efbd83d24240
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
@@ -29,7 +29,6 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0
-	github.com/hashicorp/go-multierror v1.1.1
 	github.com/lestrrat-go/jwx v1.2.26
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.2.0
@@ -80,6 +79,7 @@ require (
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jhump/protoreflect v1.15.1 // indirect

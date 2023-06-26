@@ -2,11 +2,10 @@ package builder
 
 import (
 	"context"
+	"net"
 
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
-	"google.golang.org/grpc"
 )
 
 type ServiceManager struct {
@@ -14,28 +13,26 @@ type ServiceManager struct {
 	logger   *zerolog.Logger
 	errGroup *errgroup.Group
 
-	GRPCServers map[string]*Server
+	Servers map[string]*Server
 }
-
-type HandlerRegistrations func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error
 
 func NewServiceManager(logger *zerolog.Logger) *ServiceManager {
 	errGroup, ctx := errgroup.WithContext(context.Background())
 	return &ServiceManager{
-		Context:     ctx,
-		logger:      logger,
-		GRPCServers: make(map[string]*Server),
-		errGroup:    errGroup,
+		Context:  ctx,
+		logger:   logger,
+		Servers:  make(map[string]*Server),
+		errGroup: errGroup,
 	}
 }
 
 func (s *ServiceManager) AddGRPCServer(server *Server) error {
-	s.GRPCServers[server.Config.GRPC.ListenAddress] = server
+	s.Servers[server.Config.GRPC.ListenAddress] = server
 	return nil
 }
 
-func (s *ServiceManager) StartServers(context context.Context) error {
-	for address, value := range s.GRPCServers {
+func (s *ServiceManager) StartServers(ctx context.Context) error {
+	for address, value := range s.Servers {
 		grpcServer := value.Server
 		listener := value.Listener
 		s.logger.Info().Msgf("Starting %s GRPC server", address)
@@ -62,13 +59,33 @@ func (s *ServiceManager) StartServers(context context.Context) error {
 				return nil
 			})
 		}
+		if value.Health != nil {
+			healthServer := value.Health
+			healthListener, err := net.Listen("tcp", value.Config.Health.ListenAddress)
+			s.logger.Info().Msgf("Starting %s Health server", value.Config.Health.ListenAddress)
+			if err != nil {
+				return err
+			}
+			s.errGroup.Go(func() error {
+				return healthServer.GRPCServer.Serve(healthListener)
+			})
+		}
 	}
 	return nil
 }
 
-func (s *ServiceManager) StopServers(context context.Context) {
-	for address, value := range s.GRPCServers {
+func (s *ServiceManager) StopServers(ctx context.Context) {
+	for address, value := range s.Servers {
 		s.logger.Info().Msgf("Stopping %s GRPC server", address)
 		value.Server.GracefulStop()
+		if value.Gateway.Server != nil {
+			err := value.Gateway.Server.Shutdown(ctx)
+			if err != nil {
+				s.logger.Err(err).Msgf("failed to shutdown gateway for %s", address)
+			}
+		}
+		if value.Health != nil && value.Health.GRPCServer != nil {
+			value.Health.GRPCServer.GracefulStop()
+		}
 	}
 }

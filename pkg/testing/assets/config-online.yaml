@@ -3,10 +3,6 @@ logging:
   prod: false
   log_level: debug
 
-directory_resolver:
-  address: localhost:9292
-  insecure: true
-    
 api:
   authorizer:
     grpc:

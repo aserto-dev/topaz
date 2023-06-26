@@ -64,7 +64,7 @@ var cmdRun = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			app.Server.AddGRPCServerOptions(grpc.UnaryInterceptor(authmiddleware.Unary()), grpc.StreamInterceptor(authmiddleware.Stream()))
+			app.AddGRPCServerOptions(grpc.UnaryInterceptor(authmiddleware.Unary()), grpc.StreamInterceptor(authmiddleware.Stream()))
 		}
 
 		err = app.Start()

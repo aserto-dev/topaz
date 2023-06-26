@@ -107,18 +107,21 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		v.SetDefault(fmt.Sprintf("api.authorizer.%s.certs.tls_ca_cert_path", svc), filepath.Join(DefaultTLSGenDir, svc+"-ca.crt"))
 	}
 	v.SetDefault("api.authorizer.grpc.connection_timeout_seconds", 120)
-	v.SetDefault("api.authorizer.grpc.listen_address", "0.0.0.0:8282")
+	v.SetDefault("api.authorizer.grpc.listen_address", "127.0.0.1:8282")
 
-	v.SetDefault("api.authorizer.gateway.listen_address", "0.0.0.0:8383")
+	v.SetDefault("api.authorizer.gateway.listen_address", "127.0.0.1:8383")
 	v.SetDefault("api.authorizer.gateway.http", false)
 	v.SetDefault("api.authorizer.gateway.read_timeout", 2*time.Second)
 	v.SetDefault("api.authorizer.gateway.read_header_timeout", 2*time.Second)
 	v.SetDefault("api.authorizer.gateway.write_timeout", 2*time.Second)
 	v.SetDefault("api.authorizer.gateway.idle_timeout", 30*time.Second)
 
-	v.SetDefault("api.authorizer.health.listen_address", "0.0.0.0:8484")
+	v.SetDefault("api.authorizer.health.listen_address", "127.0.0.1:8484")
 
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
+
+	v.SetDefault("directory_resolver.address", "127.0.0.1:9292")
+	v.SetDefault("directory_resolver.insecure", "true")
 
 	defaults(v)
 

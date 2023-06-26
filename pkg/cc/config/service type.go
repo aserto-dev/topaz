@@ -24,8 +24,11 @@ func (s ServiceType) String() string {
 		return "importer"
 	case exporter:
 		return "exporter"
+	case unknown:
+		return "unknown"
 	}
-	return "unknown"
+
+	return ""
 }
 
 var ServiceTypeMap = func() map[string]ServiceType {
