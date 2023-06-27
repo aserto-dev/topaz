@@ -28,6 +28,8 @@ import (
 
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	openapi "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
+
+	diropenapi "github.com/aserto-dev/openapi-directory/publish/directory"
 )
 
 var locker edge.EdgeDirLock
@@ -153,6 +155,12 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
+	}))
+
 	return server, nil
 }
 
@@ -209,6 +217,16 @@ func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error)
 		if err != nil {
 			return nil, err
 		}
+		// Add optional handlers.
+		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Content-Type", "application/json")
+			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
+		}))
+
+		server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Content-Type", "application/json")
+			http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
+		}))
 	} else {
 		server, err = e.ServiceBuilder.CreateService(cfg, authorizerOpts,
 			e.getAuthorizerRegistration(),
@@ -217,13 +235,12 @@ func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error)
 			return nil, err
 		}
 
+		// Add optional handlers.
+		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Content-Type", "application/json")
+			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
+		}))
 	}
-
-	// Add optional handler for authorizer gateway.
-	server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Content-Type", "application/json")
-		http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
-	}))
 
 	server.Gateway.Mux.Handle("/robots.txt", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "User-agent: *\nDisallow: /")
