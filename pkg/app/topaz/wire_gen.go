@@ -9,7 +9,6 @@ package topaz
 import (
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/pkg/app"
-	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/builder"
 	"github.com/aserto-dev/topaz/pkg/cc"
@@ -83,7 +82,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(resolvers.New, impl.NewAuthorizerServer, auth.NewAPIKeyAuthMiddleware, builder.NewServiceFactory, builder.NewServiceManager, DefaultGRPCOptions, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"))
+	commonSet = wire.NewSet(resolvers.New, impl.NewAuthorizerServer, builder.NewServiceFactory, builder.NewServiceManager, DefaultGRPCOptions, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"))
 
 	appTestSet = wire.NewSet(
 		commonSet, cc.NewTestCC, prometheus.NewRegistry, wire.Bind(new(prometheus.Registerer), new(*prometheus.Registry)),

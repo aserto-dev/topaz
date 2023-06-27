@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
@@ -31,6 +32,17 @@ import (
 
 var locker edge.EdgeDirLock
 
+var allowedOrigins = []string{
+	"http://localhost",
+	"http://localhost:*",
+	"https://localhost",
+	"https://localhost:*",
+	"http://127.0.0.1",
+	"http://127.0.0.1:*",
+	"https://127.0.0.1",
+	"https://127.0.0.1:*",
+}
+
 // Authorizer is an authorizer service instance, responsible for managing
 // the authorizer API, user directory instance and the OPA plugins.
 type Authorizer struct {
@@ -54,6 +66,7 @@ func (e *Authorizer) Start() error {
 	if err != nil {
 		return err
 	}
+
 	err = e.Manager.StartServers(e.Context)
 	if err != nil {
 		return errors.Wrap(err, "failed to start engine server")
@@ -66,6 +79,8 @@ func (e *Authorizer) configServices() error {
 	serviceMap := mapToGRPCPorts(e.Configuration.Services)
 
 	if cfg, ok := e.Configuration.Services["authorizer"]; ok {
+		// attach default allowed origins to gateway.
+		cfg.Gateway.AllowedOrigins = append(cfg.Gateway.AllowedOrigins, allowedOrigins...)
 		server, err := e.configAuthorizer(cfg)
 		if err != nil {
 			return err
@@ -76,8 +91,10 @@ func (e *Authorizer) configServices() error {
 			return err
 		}
 	}
-	if len(serviceMap) == 1 && e.Configuration.DirectoryResolver.Address != e.Configuration.Services["authorizer"].GRPC.ListenAddress {
-		defaultAPI := directory.API{}
+	if len(serviceMap) == 1 &&
+		e.Configuration.DirectoryResolver.Address != e.Configuration.Services["authorizer"].GRPC.ListenAddress &&
+		strings.Contains(e.Configuration.DirectoryResolver.Address, "localhost") {
+		defaultAPI := builder.API{}
 		defaultAPI.GRPC.ListenAddress = e.Configuration.DirectoryResolver.Address
 		defaultAPI.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
 		serviceMap[e.Configuration.DirectoryResolver.Address] = services{
@@ -111,6 +128,14 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 	if cfg.API.Gateway.Certs.TLSCACertPath == "" {
 		cfg.API.Gateway.HTTP = true
 	}
+	if cfg.API.Needs != "" {
+		if dependencyConfig, ok := e.Configuration.Services[cfg.API.Needs]; ok {
+			e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress] = dependencyConfig.GRPC.ListenAddress
+		}
+	}
+
+	// attach default allowed origins to gateway.
+	cfg.API.Gateway.AllowedOrigins = append(cfg.API.Gateway.AllowedOrigins, allowedOrigins...)
 
 	sessionMiddleware := session.HeaderMiddleware{DisableValidation: false}
 
@@ -131,7 +156,7 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 	return server, nil
 }
 
-func (e *Authorizer) configAuthorizer(cfg *directory.API) (*builder.Server, error) {
+func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error) {
 	authorizerOpts := e.ServerOptions
 
 	if cfg.GRPC.Certs.TLSCertPath != "" {
@@ -142,6 +167,11 @@ func (e *Authorizer) configAuthorizer(cfg *directory.API) (*builder.Server, erro
 
 		tlsAuth := grpc.Creds(tlsCreds)
 		authorizerOpts = append(authorizerOpts, tlsAuth)
+	}
+	if cfg.Needs != "" {
+		if dependencyConfig, ok := e.Configuration.Services[cfg.Needs]; ok {
+			e.Manager.DependencyMap[cfg.GRPC.ListenAddress] = dependencyConfig.GRPC.ListenAddress
+		}
 	}
 	// TODO: debug this - having issues with gateway connectivity when connection timeout is set
 	// authorizerOpts = append(authorizerOpts, grpc.ConnectionTimeout(time.Duration(config.GRPC.ConnectionTimeoutSeconds)))
@@ -203,10 +233,10 @@ func (e *Authorizer) configAuthorizer(cfg *directory.API) (*builder.Server, erro
 
 type services struct {
 	registeredServices []string
-	API                *directory.API
+	API                *builder.API
 }
 
-func mapToGRPCPorts(api map[string]*directory.API) map[string]services {
+func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 	portMap := make(map[string]services)
 	for key, config := range api {
 		serv := services{}

@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/aserto-dev/certs"
-	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	metrics "github.com/aserto-dev/go-http-metrics/middleware/grpc"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
@@ -23,7 +22,7 @@ func NewServiceFactory() *ServiceFactory {
 	return &ServiceFactory{}
 }
 
-func (f *ServiceFactory) CreateService(config *directory.API, opts []grpc.ServerOption, registrations GRPCRegistrations,
+func (f *ServiceFactory) CreateService(config *API, opts []grpc.ServerOption, registrations GRPCRegistrations,
 	handlerRegistrations HandlerRegistrations,
 	withGateway bool) (*Server, error) {
 	grpcServer, err := prepareGrpcServer(&config.GRPC.Certs, opts)
@@ -57,24 +56,14 @@ func (f *ServiceFactory) CreateService(config *directory.API, opts []grpc.Server
 		Registrations: registrations,
 		Gateway:       gate,
 		Health:        health,
+		Started:       make(chan bool),
 	}, nil
 }
 
-var allowedOrigins = []string{
-	"http://localhost",
-	"http://localhost:*",
-	"https://localhost",
-	"https://localhost:*",
-	"http://127.0.0.1",
-	"http://127.0.0.1:*",
-	"https://127.0.0.1",
-	"https://127.0.0.1:*",
-}
-
-func prepareGateway(config *directory.API, registrations HandlerRegistrations) (Gateway, error) {
+func prepareGateway(config *API, registrations HandlerRegistrations) (Gateway, error) {
 	c := cors.New(cors.Options{
 		AllowedHeaders: []string{"Authorization", "Content-Type", "Depth"},
-		AllowedOrigins: append(allowedOrigins, config.Gateway.AllowedOrigins...),
+		AllowedOrigins: config.Gateway.AllowedOrigins,
 		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodHead, http.MethodDelete, http.MethodPut,
 			http.MethodPatch, "PROPFIND", "MKCOL", "COPY", "MOVE"},
 		Debug: true,

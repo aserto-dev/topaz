@@ -11,7 +11,6 @@ import (
 
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/pkg/app"
-	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/builder"
 	"github.com/aserto-dev/topaz/pkg/cc"
@@ -24,7 +23,6 @@ var (
 		resolvers.New,
 		impl.NewAuthorizerServer,
 
-		auth.NewAPIKeyAuthMiddleware,
 		builder.NewServiceFactory,
 		builder.NewServiceManager,
 

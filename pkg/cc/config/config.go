@@ -20,6 +20,7 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/pkg/builder"
 )
 
 // CommandMode -- enum type.
@@ -45,7 +46,7 @@ type Common struct {
 		Mode CommandMode
 	} `json:"-"`
 
-	Services map[string]*directory.API `json:"api"`
+	Services map[string]*builder.API `json:"api"`
 
 	JWT struct {
 		// Specifies the duration in which exp (Expiry) and nbf (Not Before)
@@ -120,7 +121,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
 
-	v.SetDefault("directory_resolver.address", "127.0.0.1:9292")
+	v.SetDefault("directory_resolver.address", "127.0.0.1:8282")
 	v.SetDefault("directory_resolver.insecure", "true")
 
 	defaults(v)
