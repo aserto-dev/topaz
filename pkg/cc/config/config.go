@@ -58,7 +58,7 @@ type Common struct {
 	Edge directory.Config `json:"directory"`
 
 	// Authorizer directory resolver configuration
-	DirectoryResolver client.Config `json:"directory_resolver"`
+	DirectoryResolver client.Config `json:"remote_directory"`
 
 	// Default OPA configuration
 	OPA runtime.Config `json:"opa"`
@@ -121,8 +121,8 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
 
-	v.SetDefault("directory_resolver.address", "127.0.0.1:8282")
-	v.SetDefault("directory_resolver.insecure", "true")
+	v.SetDefault("remote_directory.address", "127.0.0.1:8282")
+	v.SetDefault("remote_directory.insecure", "true")
 
 	defaults(v)
 
