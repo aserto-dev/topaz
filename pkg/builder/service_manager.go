@@ -15,7 +15,7 @@ type ServiceManager struct {
 	errGroup *errgroup.Group
 
 	Servers       map[string]*Server
-	DependencyMap map[string]string
+	DependencyMap map[string][]string
 }
 
 func NewServiceManager(logger *zerolog.Logger) *ServiceManager {
@@ -26,7 +26,7 @@ func NewServiceManager(logger *zerolog.Logger) *ServiceManager {
 		Context:       ctx,
 		logger:        &serviceLogger,
 		Servers:       make(map[string]*Server),
-		DependencyMap: make(map[string]string),
+		DependencyMap: make(map[string][]string),
 		errGroup:      errGroup,
 	}
 }
@@ -47,9 +47,11 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 		s.logDetails(address, &serverDetails.Config.Health)
 
 		s.errGroup.Go(func() error {
-			if dependesOn, ok := s.DependencyMap[address]; ok {
-				s.logger.Info().Msgf("%s waiting for %s", address, dependesOn)
-				<-s.Servers[dependesOn].Started // wait for started from the dependenent service.
+			if dependesOnArray, ok := s.DependencyMap[address]; ok {
+				for _, dependesOn := range dependesOnArray {
+					s.logger.Info().Msgf("%s waiting for %s", address, dependesOn)
+					<-s.Servers[dependesOn].Started // wait for started from the dependenent service.
+				}
 			}
 			grpcServer := serverDetails.Server
 			listener := serverDetails.Listener

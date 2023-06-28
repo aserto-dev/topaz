@@ -7,20 +7,17 @@ logging:
   prod: true
   log_level: debug
 
-directory_service:
-  edge:
-    db_path: ${TOPAZ_DIR}/db/directory.db
-    seed_metadata: false
-  remote:
-    address: "localhost:9292"
-    insecure: true
+directory:
+  db_path: ${TOPAZ_DIR}/db/directory.db
+  seed_metadata: false
 
 api:
-  gateway:
-    allowed_origins:
-    - https://localhost
-  grpc:
-    connection_timeout_seconds: 2
+  authorizer:
+    gateway:
+      allowed_origins:
+      - https://localhost
+    grpc:
+      connection_timeout_seconds: 2
 
 opa:
   instance_id: "-"

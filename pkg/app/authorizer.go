@@ -92,16 +92,17 @@ func (e *Authorizer) configServices() error {
 		if err != nil {
 			return err
 		}
-	}
-	if len(serviceMap) == 1 &&
-		e.Configuration.DirectoryResolver.Address != e.Configuration.Services["authorizer"].GRPC.ListenAddress &&
-		strings.Contains(e.Configuration.DirectoryResolver.Address, "localhost") {
-		defaultAPI := builder.API{}
-		defaultAPI.GRPC.ListenAddress = e.Configuration.DirectoryResolver.Address
-		defaultAPI.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
-		serviceMap[e.Configuration.DirectoryResolver.Address] = services{
-			registeredServices: []string{"reader", "writer", "importer", "exporter"},
-			API:                &defaultAPI,
+
+		if len(serviceMap) == 1 &&
+			e.Configuration.DirectoryResolver.Address != e.Configuration.Services["authorizer"].GRPC.ListenAddress &&
+			strings.Contains(e.Configuration.DirectoryResolver.Address, "localhost") {
+			defaultAPI := builder.API{}
+			defaultAPI.GRPC.ListenAddress = e.Configuration.DirectoryResolver.Address
+			defaultAPI.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
+			serviceMap[e.Configuration.DirectoryResolver.Address] = services{
+				registeredServices: []string{"reader", "writer", "importer", "exporter"},
+				API:                &defaultAPI,
+			}
 		}
 	}
 
@@ -130,9 +131,13 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 	if cfg.API.Gateway.Certs.TLSCACertPath == "" {
 		cfg.API.Gateway.HTTP = true
 	}
-	if cfg.API.Needs != "" {
-		if dependencyConfig, ok := e.Configuration.Services[cfg.API.Needs]; ok {
-			e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress] = dependencyConfig.GRPC.ListenAddress
+	if len(cfg.API.Needs) > 0 {
+		for _, name := range cfg.API.Needs {
+			if dependencyConfig, ok := e.Configuration.Services[name]; ok {
+				if !contains(e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) {
+					e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
+				}
+			}
 		}
 	}
 
@@ -156,10 +161,13 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 		return nil, err
 	}
 
-	server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Content-Type", "application/json")
-		http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
-	}))
+	// attach handler for directory openapi spec.
+	if server.Gateway.Mux != nil {
+		server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Content-Type", "application/json")
+			http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
+		}))
+	}
 
 	return server, nil
 }
@@ -176,9 +184,13 @@ func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error)
 		tlsAuth := grpc.Creds(tlsCreds)
 		authorizerOpts = append(authorizerOpts, tlsAuth)
 	}
-	if cfg.Needs != "" {
-		if dependencyConfig, ok := e.Configuration.Services[cfg.Needs]; ok {
-			e.Manager.DependencyMap[cfg.GRPC.ListenAddress] = dependencyConfig.GRPC.ListenAddress
+	if len(cfg.Needs) > 0 {
+		for _, name := range cfg.Needs {
+			if dependencyConfig, ok := e.Configuration.Services[name]; ok {
+				if !contains(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) {
+					e.Manager.DependencyMap[cfg.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
+				}
+			}
 		}
 	}
 	// TODO: debug this - having issues with gateway connectivity when connection timeout is set
@@ -217,16 +229,19 @@ func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error)
 		if err != nil {
 			return nil, err
 		}
-		// Add optional handlers.
-		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
-		}))
+		if server.Gateway.Mux != nil {
+			// Add optional handlers.
+			server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Add("Content-Type", "application/json")
+				http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
+			}))
 
-		server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
-		}))
+			// attach handler for directory openapi spec when to same service as the authorizer.
+			server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Add("Content-Type", "application/json")
+				http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
+			}))
+		}
 	} else {
 		server, err = e.ServiceBuilder.CreateService(cfg, authorizerOpts,
 			e.getAuthorizerRegistration(),
@@ -235,16 +250,20 @@ func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error)
 			return nil, err
 		}
 
-		// Add optional handlers.
-		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
-		}))
+		if server.Gateway.Mux != nil {
+			// Add optional handlers.
+			server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Add("Content-Type", "application/json")
+				http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
+			}))
+		}
 	}
 
-	server.Gateway.Mux.Handle("/robots.txt", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "User-agent: *\nDisallow: /")
-	}))
+	if server.Gateway.Mux != nil {
+		server.Gateway.Mux.Handle("/robots.txt", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			fmt.Fprintln(w, "User-agent: *\nDisallow: /")
+		}))
+	}
 	return server, nil
 }
 
@@ -269,7 +288,7 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 	return portMap
 }
 
-func contains(slice []string, item string) bool {
+func contains[T comparable](slice []T, item T) bool {
 	for i := range slice {
 		if slice[i] == item {
 			return true

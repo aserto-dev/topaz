@@ -37,7 +37,7 @@ type Gateway struct {
 }
 
 type API struct {
-	Needs string `json:"needs"`
+	Needs []string `json:"needs"`
 	GRPC  struct {
 		ListenAddress string `json:"listen_address"`
 		// Default connection timeout is 120 seconds
