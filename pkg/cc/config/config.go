@@ -20,7 +20,7 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/pkg/builder"
+	builder "github.com/aserto-dev/service-host"
 )
 
 // CommandMode -- enum type.

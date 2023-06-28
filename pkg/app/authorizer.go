@@ -14,7 +14,7 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/go-edge-ds/pkg/session"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
-	"github.com/aserto-dev/topaz/pkg/builder"
+
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -30,6 +30,7 @@ import (
 	openapi "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
 
 	diropenapi "github.com/aserto-dev/openapi-directory/publish/directory"
+	builder "github.com/aserto-dev/service-host"
 )
 
 var locker edge.EdgeDirLock
@@ -131,6 +132,7 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 	if cfg.API.Gateway.Certs.TLSCACertPath == "" {
 		cfg.API.Gateway.HTTP = true
 	}
+
 	if len(cfg.API.Needs) > 0 {
 		for _, name := range cfg.API.Needs {
 			if dependencyConfig, ok := e.Configuration.Services[name]; ok {
