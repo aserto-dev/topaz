@@ -50,3 +50,7 @@ config-dev*.yaml
 
 # release version file, generated at release
 VERSION.txt
+
+# https://github.com/golang/go/issues/53502
+# go.work.sum is machine specific and should not be checked in
+go.work.sum
