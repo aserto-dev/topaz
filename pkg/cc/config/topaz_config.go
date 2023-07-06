@@ -63,6 +63,10 @@ func (c *Config) validation() error {
 		return errors.New("opa.config.bundles - too many bundles")
 	}
 
+	if len(c.Services) == 0 {
+		return errors.New("no api services configured")
+	}
+
 	for key := range c.Services {
 		if _, ok := ServiceTypeMap()[key]; !ok {
 			return errors.New(fmt.Sprintf("unknown service type configuration %s", key))

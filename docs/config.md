@@ -129,7 +129,7 @@ The remote address can also be configured to a service that implements the proto
 
 Example (using the hosted Aserto directory):
 ```
-remote:
+remote_directory:
   address: "directory.prod.aserto.com:8443"
   api_key: <Your Aserto Directory Access Key>
   tenant_id: <Your Aserto Tenant ID>

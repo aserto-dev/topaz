@@ -54,7 +54,7 @@ require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/aserto-dev/go-edge-ds v0.21.4-0.20230705094420-ad8e171dc8ca // indirect
+	github.com/aserto-dev/go-edge-ds v0.21.4-0.20230706084508-64e42aa0b364 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/aserto-dev/openapi-directory v0.0.0-20230626235808-99854b7d0d18 // indirect
 	github.com/aserto-dev/service-host v0.0.0-20230628152900-8ff4fe495414 // indirect

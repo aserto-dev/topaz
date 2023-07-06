@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
@@ -102,22 +101,6 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 
 	// Set defaults
 	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
-	for _, svc := range CertificateSets {
-		v.SetDefault(fmt.Sprintf("api.authorizer.%s.certs.tls_key_path", svc), filepath.Join(DefaultTLSGenDir, svc+".key"))
-		v.SetDefault(fmt.Sprintf("api.authorizer.%s.certs.tls_cert_path", svc), filepath.Join(DefaultTLSGenDir, svc+".crt"))
-		v.SetDefault(fmt.Sprintf("api.authorizer.%s.certs.tls_ca_cert_path", svc), filepath.Join(DefaultTLSGenDir, svc+"-ca.crt"))
-	}
-	v.SetDefault("api.authorizer.grpc.connection_timeout_seconds", 120)
-	v.SetDefault("api.authorizer.grpc.listen_address", "127.0.0.1:8282")
-
-	v.SetDefault("api.authorizer.gateway.listen_address", "127.0.0.1:8383")
-	v.SetDefault("api.authorizer.gateway.http", false)
-	v.SetDefault("api.authorizer.gateway.read_timeout", 2*time.Second)
-	v.SetDefault("api.authorizer.gateway.read_header_timeout", 2*time.Second)
-	v.SetDefault("api.authorizer.gateway.write_timeout", 2*time.Second)
-	v.SetDefault("api.authorizer.gateway.idle_timeout", 30*time.Second)
-
-	v.SetDefault("api.authorizer.health.listen_address", "127.0.0.1:8484")
 
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
 
@@ -183,6 +166,11 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		return nil, errors.Wrap(err, "failed to validate config file")
 	}
 
+	err = setDefaultCerts(cfg)
+	if err != nil {
+		return nil, err
+	}
+
 	if certsGenerator != nil {
 		err = cfg.setupCerts(log, certsGenerator)
 		if err != nil {
@@ -212,60 +200,58 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, erro
 
 func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator) error {
 	existingFiles := []string{}
-	authorizerConfig, ok := c.Services[authorizer.String()]
-	if !ok {
-		return errors.New("invalid authorizer configuration")
+	for serviceName, config := range c.Services {
+		log.Info().Msgf("setting up certs for %s", serviceName)
+		for _, file := range []string{
+			config.GRPC.Certs.TLSCACertPath,
+			config.GRPC.Certs.TLSCertPath,
+			config.GRPC.Certs.TLSKeyPath,
+			config.Gateway.Certs.TLSCACertPath,
+			config.Gateway.Certs.TLSCertPath,
+			config.Gateway.Certs.TLSKeyPath,
+		} {
+			exists, err := fileExists(file)
+			if err != nil {
+				return errors.Wrapf(err, "failed to determine if file '%s' exists", file)
+			}
+
+			if !exists {
+				continue
+			}
+
+			existingFiles = append(existingFiles, file)
+		}
+
+		if len(existingFiles) == 0 {
+			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:       fmt.Sprintf("%s-grpc", serviceName),
+				CertKeyPath:      config.GRPC.Certs.TLSKeyPath,
+				CertPath:         config.GRPC.Certs.TLSCertPath,
+				CACertPath:       config.GRPC.Certs.TLSCACertPath,
+				DefaultTLSGenDir: DefaultTLSGenDir,
+			})
+			if err != nil {
+				return errors.Wrap(err, "failed to generate grpc certs")
+			}
+
+			err = certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:       fmt.Sprintf("%s-gateway", serviceName),
+				CertKeyPath:      config.Gateway.Certs.TLSKeyPath,
+				CertPath:         config.Gateway.Certs.TLSCertPath,
+				CACertPath:       config.Gateway.Certs.TLSCACertPath,
+				DefaultTLSGenDir: DefaultTLSGenDir,
+			})
+			if err != nil {
+				return errors.Wrap(err, "failed to generate gateway certs")
+			}
+		} else {
+			msg := zerolog.Arr()
+			for _, f := range existingFiles {
+				msg.Str(f)
+			}
+			log.Info().Array("existing-files", msg).Msg("some cert files already exist, skipping generation")
+		}
 	}
-	for _, file := range []string{
-		authorizerConfig.GRPC.Certs.TLSCACertPath,
-		authorizerConfig.GRPC.Certs.TLSCertPath,
-		authorizerConfig.GRPC.Certs.TLSKeyPath,
-		authorizerConfig.Gateway.Certs.TLSCACertPath,
-		authorizerConfig.Gateway.Certs.TLSCertPath,
-		authorizerConfig.Gateway.Certs.TLSKeyPath,
-	} {
-		exists, err := fileExists(file)
-		if err != nil {
-			return errors.Wrapf(err, "failed to determine if file '%s' exists", file)
-		}
-
-		if !exists {
-			continue
-		}
-
-		existingFiles = append(existingFiles, file)
-	}
-
-	if len(existingFiles) == 0 {
-		err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-			CommonName:       "authorizer-grpc",
-			CertKeyPath:      authorizerConfig.GRPC.Certs.TLSKeyPath,
-			CertPath:         authorizerConfig.GRPC.Certs.TLSCertPath,
-			CACertPath:       authorizerConfig.GRPC.Certs.TLSCACertPath,
-			DefaultTLSGenDir: DefaultTLSGenDir,
-		})
-		if err != nil {
-			return errors.Wrap(err, "failed to generate grpc certs")
-		}
-
-		err = certsGenerator.MakeDevCert(&certs.CertGenConfig{
-			CommonName:       "authorizer-gateway",
-			CertKeyPath:      authorizerConfig.Gateway.Certs.TLSKeyPath,
-			CertPath:         authorizerConfig.Gateway.Certs.TLSCertPath,
-			CACertPath:       authorizerConfig.Gateway.Certs.TLSCACertPath,
-			DefaultTLSGenDir: DefaultTLSGenDir,
-		})
-		if err != nil {
-			return errors.Wrap(err, "failed to generate gateway certs")
-		}
-	} else {
-		msg := zerolog.Arr()
-		for _, f := range existingFiles {
-			msg.Str(f)
-		}
-		log.Info().Array("existing-files", msg).Msg("some cert files already exist, skipping generation")
-	}
-
 	return nil
 }
 
@@ -299,4 +285,23 @@ func subEnvVars(s string) string {
 	})
 
 	return updatedConfig
+}
+
+func setDefaultCerts(cfg *Config) error {
+	for srvName, config := range cfg.Services {
+		if config.GRPC.ListenAddress == "" || config.Gateway.ListenAddress == "" {
+			return errors.New(fmt.Sprintf("%s must have a grpc and gateway listen address specified", srvName))
+		}
+		if config.GRPC.Certs.TLSCACertPath == "" || config.GRPC.Certs.TLSCertPath == "" || config.GRPC.Certs.TLSKeyPath == "" {
+			config.GRPC.Certs.TLSKeyPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc.key", srvName))
+			config.GRPC.Certs.TLSCertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc.crt", srvName))
+			config.GRPC.Certs.TLSCACertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc-ca.crt", srvName))
+		}
+		if config.Gateway.Certs.TLSCACertPath == "" || config.Gateway.Certs.TLSCertPath == "" || config.Gateway.Certs.TLSKeyPath == "" {
+			config.Gateway.Certs.TLSKeyPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_gateway.key", srvName))
+			config.Gateway.Certs.TLSCertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_gateway.crt", srvName))
+			config.Gateway.Certs.TLSCACertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_gateway-ca.crt", srvName))
+		}
+	}
+	return nil
 }

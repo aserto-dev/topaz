@@ -9,8 +9,13 @@ directory:
 
 api:
   authorizer:
+    gateway:
+      listen_address: "127.0.0.1:8383"
     grpc:
-      connection_timeout_seconds: 2
+      listen_address: "127.0.0.1:8282"
+      connection_timeout_seconds: 120
+    health:
+      listen_address: "127.0.0.1:8484"
 
 opa:
   instance_id: 5d7cccc6-1657-11ec-a291-00001df0866c

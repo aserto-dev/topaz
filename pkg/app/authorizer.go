@@ -79,6 +79,11 @@ func (e *Authorizer) Start() error {
 }
 
 func (e *Authorizer) configServices() error {
+	if readerConfig, ok := e.Configuration.Services["reader"]; ok {
+		if readerConfig.GRPC.ListenAddress != e.Configuration.DirectoryResolver.Address {
+			return errors.New("remote directory resolver address is different from reader grpc address")
+		}
+	}
 	serviceMap := mapToGRPCPorts(e.Configuration.Services)
 
 	if cfg, ok := e.Configuration.Services["authorizer"]; ok {
@@ -127,7 +132,11 @@ func (e *Authorizer) configServices() error {
 
 func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 	if cfg.API.GRPC.Certs.TLSCACertPath == "" {
-		cfg.API.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
+		if _, ok := e.Configuration.Services["authorizer"]; ok {
+			cfg.API.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
+		} else {
+			return nil, errors.New("GRPC certificates required for edge services")
+		}
 	}
 	if cfg.API.Gateway.Certs.TLSCACertPath == "" {
 		cfg.API.Gateway.HTTP = true
@@ -207,57 +216,14 @@ func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error)
 	var err error
 
 	if e.Configuration.DirectoryResolver.Address == e.Configuration.Services["authorizer"].GRPC.ListenAddress {
-		edgeDir, err := locker.New(&e.Configuration.Edge, e.Logger)
+		server, err = e.createAuhtorizerWithEdgeRegistrations(cfg, authorizerOpts)
 		if err != nil {
 			return nil, err
-		}
-		server, err = e.ServiceBuilder.CreateService(cfg, authorizerOpts,
-			func(server *grpc.Server) {
-				e.getAuthorizerRegistration()(server)
-				e.getEdgeRegistrations([]string{"reader", "writer", "importer", "exporter"}, edgeDir)(server)
-			},
-			func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-				err := e.getAuthorizerGatewayRegistrations()(ctx, mux, grpcEndpoint, opts)
-				if err != nil {
-					return err
-				}
-				err = e.getEdgeGatewayRegistration([]string{"reader", "writer", "importer", "exporter"})(ctx, mux, grpcEndpoint, opts)
-				if err != nil {
-					return err
-				}
-				return nil
-			},
-			true)
-		if err != nil {
-			return nil, err
-		}
-		if server.Gateway.Mux != nil {
-			// Add optional handlers.
-			server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				w.Header().Add("Content-Type", "application/json")
-				http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
-			}))
-
-			// attach handler for directory openapi spec when to same service as the authorizer.
-			server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				w.Header().Add("Content-Type", "application/json")
-				http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
-			}))
 		}
 	} else {
-		server, err = e.ServiceBuilder.CreateService(cfg, authorizerOpts,
-			e.getAuthorizerRegistration(),
-			e.getAuthorizerGatewayRegistrations(), true)
+		server, err = e.createAuthorizer(cfg, authorizerOpts)
 		if err != nil {
 			return nil, err
-		}
-
-		if server.Gateway.Mux != nil {
-			// Add optional handlers.
-			server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				w.Header().Add("Content-Type", "application/json")
-				http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
-			}))
 		}
 	}
 
@@ -354,4 +320,63 @@ func (e *Authorizer) getEdgeGatewayRegistration(registeredServices []string) bui
 		}
 		return nil
 	}
+}
+
+func (e *Authorizer) createAuhtorizerWithEdgeRegistrations(cfg *builder.API, authorizerOpts []grpc.ServerOption) (*builder.Server, error) {
+	edgeDir, err := locker.New(&e.Configuration.Edge, e.Logger)
+	if err != nil {
+		return nil, err
+	}
+	server, err := e.ServiceBuilder.CreateService(cfg, authorizerOpts,
+		func(server *grpc.Server) {
+			e.getAuthorizerRegistration()(server)
+			e.getEdgeRegistrations([]string{"reader", "writer", "importer", "exporter"}, edgeDir)(server)
+		},
+		func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
+			err := e.getAuthorizerGatewayRegistrations()(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+			err = e.getEdgeGatewayRegistration([]string{"reader", "writer", "importer", "exporter"})(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+			return nil
+		},
+		true)
+	if err != nil {
+		return nil, err
+	}
+	if server.Gateway.Mux != nil {
+		// Add optional handlers.
+		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Content-Type", "application/json")
+			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
+		}))
+
+		// attach handler for directory openapi spec when to same service as the authorizer.
+		server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Content-Type", "application/json")
+			http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
+		}))
+	}
+	return server, nil
+}
+
+func (e *Authorizer) createAuthorizer(cfg *builder.API, authorizerOpts []grpc.ServerOption) (*builder.Server, error) {
+	server, err := e.ServiceBuilder.CreateService(cfg, authorizerOpts,
+		e.getAuthorizerRegistration(),
+		e.getAuthorizerGatewayRegistrations(), true)
+	if err != nil {
+		return nil, err
+	}
+
+	if server.Gateway.Mux != nil {
+		// Add optional handlers.
+		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Content-Type", "application/json")
+			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
+		}))
+	}
+	return server, nil
 }
