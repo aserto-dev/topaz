@@ -18,10 +18,13 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.2
 	github.com/aserto-dev/go-directory v0.21.0
 	github.com/aserto-dev/go-directory-cli v0.20.13
+	github.com/aserto-dev/go-edge-ds v0.21.4
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.8.81
+	github.com/aserto-dev/openapi-directory v0.0.0-20230626235808-99854b7d0d18
 	github.com/aserto-dev/runtime v0.54.0
+	github.com/aserto-dev/service-host v0.0.1
 	github.com/fatih/color v1.15.0
 	github.com/fullstorydev/grpcurl v1.8.7
 	github.com/google/uuid v1.3.0
@@ -54,10 +57,7 @@ require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/aserto-dev/go-edge-ds v0.21.4-0.20230706084508-64e42aa0b364 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
-	github.com/aserto-dev/openapi-directory v0.0.0-20230626235808-99854b7d0d18 // indirect
-	github.com/aserto-dev/service-host v0.0.0-20230628152900-8ff4fe495414 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.5.1 // indirect
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
