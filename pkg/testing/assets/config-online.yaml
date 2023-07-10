@@ -3,16 +3,13 @@ logging:
   prod: false
   log_level: debug
 
-directory_service:
-  edge:
-    db_path: /tmp/edgeds.db
-    seed_metadata: false
-  remote:
-    insecure: true
-
 api:
-  grpc:
-    connection_timeout_seconds: 2
+  authorizer:
+    gateway:
+      listen_address: "localhost:8383"
+    grpc:
+      listen_address: "localhost:8282"
+      connection_timeout_seconds: 2
 
 opa:
   instance_id: 5d7cccc6-1657-11ec-a291-00001df0866c                                   

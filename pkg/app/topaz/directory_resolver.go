@@ -14,5 +14,5 @@ func DirectoryResolver(
 	logger *zerolog.Logger,
 	cfg *config.Config) resolvers.DirectoryResolver {
 
-	return directory.NewResolver(logger, &cfg.Directory)
+	return directory.NewResolver(logger, &cfg.DirectoryResolver)
 }

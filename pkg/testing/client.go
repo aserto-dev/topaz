@@ -17,7 +17,11 @@ import (
 
 // CreateClient creates a new http client that can talk to the API.
 func (h *EngineHarness) CreateClient() *http.Client {
-	caCert, err := os.ReadFile(h.Engine.Configuration.API.Gateway.Certs.TLSCACertPath)
+	authorizerAPIConfig, ok := h.Engine.Configuration.Services["authorizer"]
+	if !ok {
+		log.Fatal("no authorizer configuration found")
+	}
+	caCert, err := os.ReadFile(authorizerAPIConfig.Gateway.Certs.TLSCACertPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,10 +61,14 @@ func (h *EngineHarness) Req(verb, path, tenantID, body string) (string, int) {
 }
 
 func (h *EngineHarness) CreateGRPCClient() authz2.AuthorizerClient {
+	authorizerAPIConfig, ok := h.Engine.Configuration.Services["authorizer"]
+	if !ok {
+		log.Fatal("no authorizer configuration found")
+	}
 	var opts []grpc.DialOption
 	var tlsConf tls.Config
 	certPool := x509.NewCertPool()
-	caCertBytes, err := os.ReadFile(h.Engine.Configuration.API.GRPC.Certs.TLSCACertPath)
+	caCertBytes, err := os.ReadFile(authorizerAPIConfig.GRPC.Certs.TLSCACertPath)
 	if err != nil {
 		h.t.Fatal(err)
 	}

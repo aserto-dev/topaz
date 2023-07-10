@@ -7,18 +7,19 @@ logging:
   prod: true
   log_level: debug
 
-directory_service:
-  remote:
-    address: "directory.prod.aserto.com:8443"
-    api_key: <Your Aserto Directory Access Key>
-    tenant_id: <Your Aserto Tenant ID>
+
+remote_directory:
+  address: "directory.prod.aserto.com:8443"
+  api_key: <Your Aserto Directory Access Key>
+  tenant_id: <Your Aserto Tenant ID>
 
 api:
-  gateway:
-    allowed_origins:
-    - https://localhost
-  grpc:
-    connection_timeout_seconds: 2
+  authorizer:
+    gateway:
+      allowed_origins:
+      - https://localhost
+    grpc:
+      connection_timeout_seconds: 2
 
 opa:
   instance_id: "-"

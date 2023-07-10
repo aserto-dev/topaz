@@ -34,7 +34,7 @@ logging:
 ```
 
 ### b. API
-The API configuration is divided in 3 sections:
+The API section is a map that defines the API configuration for each of the possible services that topaz is able to spin up:["reader","writer","importer","exporter","authorizer"]
 #### 1. grpc
 The grpc section allows configuring the listen address, the connection timeout and the certificates. 
 - *listen_address* - string - allows the topaz GRPC server to spin up on the requested port (default: "0.0.0.0:8282")
@@ -90,7 +90,35 @@ grpc-health-probe --addr=localhost:8484
 status: SERVING
 ```
 
-### c. Directory Service
+#### 4. needs
+The `needs` section allows adding a dependency between the services started. For example when using an edge directory with a reader service it is recommended to set the authorizer services to be dependent on the reader spin-up to be able to resolve the identity for the authorization calls.
+
+Example:
+```
+api:
+  reader:
+    gateway:
+      listen_address: localhost:9393  
+    grpc:
+      listen_address: localhost:9595
+  authorizer:
+    needs: reader
+    gateway:
+      allowed_origins:
+      - https://*.aserto.com
+      - https://*aserto-console.netlify.app
+      - https://*aserto-playground.netlify.app
+    grpc:
+      connection_timeout_seconds: 2
+```
+
+### c. Directory
+The directory section allows setting the configuration for the topaz [local edge directory](https://github.com/aserto-dev/go-edge-ds).
+ - *db_path* - string - path to the bbolt database file
+ - *request_timeout* - time.Duration - request timeout setting for the bbolt database connection
+ - *seed_metadata* - bool - if set to true the bbolt database will be seeded with default metadata
+
+### d. Remote
 
 Topaz is able to communicate with a directory service based on the [pb-directory proto](https://github.com/aserto-dev/pb-directory) definitions. When the remote address is configured to localhost, topaz is able to spin-up a grpc [edge directory service](https://github.com/aserto-dev/go-edge-ds) based on [bbolt](https://pkg.go.dev/go.etcd.io/bbolt)
 
@@ -101,14 +129,13 @@ The remote address can also be configured to a service that implements the proto
 
 Example (using the hosted Aserto directory):
 ```
-directory_service:
-  remote:
-    address: "directory.prod.aserto.com:8443"
-    api_key: <Your Aserto Directory Access Key>
-    tenant_id: <Your Aserto Tenant ID>
+remote_directory:
+  address: "directory.prod.aserto.com:8443"
+  api_key: <Your Aserto Directory Access Key>
+  tenant_id: <Your Aserto Tenant ID>
 ```
 
-### d. OPA
+### e. OPA
 
 The OPA configuration section represent the [runtime configuration](https://github.com/aserto-dev/runtime/blob/main/config.go). The main elements of the runtime configuration are:
 - *local_bundles* - runtime.LocalBundlesConfig - allows the runtime to run with a local bundle (local path or local policy OCI image)
@@ -121,7 +148,7 @@ The OPA configuration section represent the [runtime configuration](https://gith
 
 For more details regarding the OPA configuration see [examples folder](/docs/examples/)
 
-### e. JWT
+### f. JWT
 
 The JWT section allows setting a custom *acceptable_time_skew_seconds* - int - this specifies the duration in which exp (Expiry) and nbf (Not Before) claims may differ by (default: 5).
 

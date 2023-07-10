@@ -17,8 +17,7 @@ var _ = Describe("Engine GRPC Server", func() {
 
 		BeforeEach(func() {
 			h = testing.SetupOffline(ginkgoT, func(cfg *config.Config) {
-				cfg.Directory.EdgeConfig.DBPath = testing.AssetAcmeEBBFilePath()
-				cfg.OPA.LocalBundles.Paths = []string{testing.AssetLocalBundle()}
+				cfg.Edge.DBPath = testing.AssetAcmeEBBFilePath()
 			})
 		})
 

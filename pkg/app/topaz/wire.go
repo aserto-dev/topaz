@@ -5,14 +5,14 @@ package topaz
 
 import (
 	"github.com/google/wire"
+	"google.golang.org/grpc"
 
 	"github.com/prometheus/client_golang/prometheus"
 
 	"github.com/aserto-dev/logger"
+	builder "github.com/aserto-dev/service-host"
 	"github.com/aserto-dev/topaz/pkg/app"
-	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
-	"github.com/aserto-dev/topaz/pkg/app/server"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -20,17 +20,13 @@ import (
 
 var (
 	commonSet = wire.NewSet(
-		server.NewServer,
-		server.NewGatewayServer,
-		server.GatewayMux,
-
 		resolvers.New,
 		impl.NewAuthorizerServer,
 
-		GRPCServerRegistrations,
-		GatewayServerRegistrations,
+		builder.NewServiceFactory,
+		builder.NewServiceManager,
 
-		auth.NewAPIKeyAuthMiddleware,
+		DefaultGRPCOptions,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),
 		wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"),
@@ -59,4 +55,8 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Authorizer, func(), error) {
 	wire.Build(appTestSet)
 	return &app.Authorizer{}, func() {}, nil
+}
+
+func DefaultGRPCOptions() []grpc.ServerOption {
+	return nil
 }

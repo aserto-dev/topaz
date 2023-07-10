@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/pkg/errors"
@@ -16,9 +15,11 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/aserto-dev/certs"
+	"github.com/aserto-dev/go-aserto/client"
+	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/directory"
+	builder "github.com/aserto-dev/service-host"
 )
 
 // CommandMode -- enum type.
@@ -44,28 +45,7 @@ type Common struct {
 		Mode CommandMode
 	} `json:"-"`
 
-	API struct {
-		GRPC struct {
-			ListenAddress string `json:"listen_address"`
-			// Default connection timeout is 120 seconds
-			// https://godoc.org/google.golang.org/grpc#ConnectionTimeout
-			ConnectionTimeoutSeconds uint32               `json:"connection_timeout_seconds"`
-			Certs                    certs.TLSCredsConfig `json:"certs"`
-		} `json:"grpc"`
-		Gateway struct {
-			ListenAddress     string               `json:"listen_address"`
-			AllowedOrigins    []string             `json:"allowed_origins"`
-			Certs             certs.TLSCredsConfig `json:"certs"`
-			HTTP              bool                 `json:"http"`
-			ReadTimeout       time.Duration        `json:"read_timeout"`
-			ReadHeaderTimeout time.Duration        `json:"read_header_timeout"`
-			WriteTimeout      time.Duration        `json:"write_timeout"`
-			IdleTimeout       time.Duration        `json:"idle_timeout"`
-		} `json:"gateway"`
-		Health struct {
-			ListenAddress string `json:"listen_address"`
-		} `json:"health"`
-	} `json:"api"`
+	Services map[string]*builder.API `json:"api"`
 
 	JWT struct {
 		// Specifies the duration in which exp (Expiry) and nbf (Not Before)
@@ -74,7 +54,10 @@ type Common struct {
 	} `json:"jwt"`
 
 	// Directory configuration
-	Directory directory.Config `json:"directory_service"`
+	Edge directory.Config `json:"directory"`
+
+	// Authorizer directory resolver configuration
+	DirectoryResolver client.Config `json:"remote_directory"`
 
 	// Default OPA configuration
 	OPA runtime.Config `json:"opa"`
@@ -118,24 +101,11 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 
 	// Set defaults
 	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
-	for _, svc := range CertificateSets {
-		v.SetDefault(fmt.Sprintf("api.%s.certs.tls_key_path", svc), filepath.Join(DefaultTLSGenDir, svc+".key"))
-		v.SetDefault(fmt.Sprintf("api.%s.certs.tls_cert_path", svc), filepath.Join(DefaultTLSGenDir, svc+".crt"))
-		v.SetDefault(fmt.Sprintf("api.%s.certs.tls_ca_cert_path", svc), filepath.Join(DefaultTLSGenDir, svc+"-ca.crt"))
-	}
-	v.SetDefault("api.grpc.connection_timeout_seconds", 120)
-	v.SetDefault("api.grpc.listen_address", "0.0.0.0:8282")
-
-	v.SetDefault("api.gateway.listen_address", "0.0.0.0:8383")
-	v.SetDefault("api.gateway.http", false)
-	v.SetDefault("api.gateway.read_timeout", 2*time.Second)
-	v.SetDefault("api.gateway.read_header_timeout", 2*time.Second)
-	v.SetDefault("api.gateway.write_timeout", 2*time.Second)
-	v.SetDefault("api.gateway.idle_timeout", 30*time.Second)
-
-	v.SetDefault("api.health.listen_address", "0.0.0.0:8484")
 
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
+
+	v.SetDefault("remote_directory.address", "127.0.0.1:8282")
+	v.SetDefault("remote_directory.insecure", "true")
 
 	defaults(v)
 
@@ -196,6 +166,11 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		return nil, errors.Wrap(err, "failed to validate config file")
 	}
 
+	err = setDefaultCerts(cfg)
+	if err != nil {
+		return nil, err
+	}
+
 	if certsGenerator != nil {
 		err = cfg.setupCerts(log, certsGenerator)
 		if err != nil {
@@ -225,56 +200,58 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, erro
 
 func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator) error {
 	existingFiles := []string{}
-	for _, file := range []string{
-		c.API.GRPC.Certs.TLSCACertPath,
-		c.API.GRPC.Certs.TLSCertPath,
-		c.API.GRPC.Certs.TLSKeyPath,
-		c.API.Gateway.Certs.TLSCACertPath,
-		c.API.Gateway.Certs.TLSCertPath,
-		c.API.Gateway.Certs.TLSKeyPath,
-	} {
-		exists, err := fileExists(file)
-		if err != nil {
-			return errors.Wrapf(err, "failed to determine if file '%s' exists", file)
+	for serviceName, config := range c.Services {
+		log.Info().Msgf("setting up certs for %s", serviceName)
+		for _, file := range []string{
+			config.GRPC.Certs.TLSCACertPath,
+			config.GRPC.Certs.TLSCertPath,
+			config.GRPC.Certs.TLSKeyPath,
+			config.Gateway.Certs.TLSCACertPath,
+			config.Gateway.Certs.TLSCertPath,
+			config.Gateway.Certs.TLSKeyPath,
+		} {
+			exists, err := fileExists(file)
+			if err != nil {
+				return errors.Wrapf(err, "failed to determine if file '%s' exists", file)
+			}
+
+			if !exists {
+				continue
+			}
+
+			existingFiles = append(existingFiles, file)
 		}
 
-		if !exists {
-			continue
-		}
+		if len(existingFiles) == 0 {
+			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:       fmt.Sprintf("%s-grpc", serviceName),
+				CertKeyPath:      config.GRPC.Certs.TLSKeyPath,
+				CertPath:         config.GRPC.Certs.TLSCertPath,
+				CACertPath:       config.GRPC.Certs.TLSCACertPath,
+				DefaultTLSGenDir: DefaultTLSGenDir,
+			})
+			if err != nil {
+				return errors.Wrap(err, "failed to generate grpc certs")
+			}
 
-		existingFiles = append(existingFiles, file)
+			err = certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:       fmt.Sprintf("%s-gateway", serviceName),
+				CertKeyPath:      config.Gateway.Certs.TLSKeyPath,
+				CertPath:         config.Gateway.Certs.TLSCertPath,
+				CACertPath:       config.Gateway.Certs.TLSCACertPath,
+				DefaultTLSGenDir: DefaultTLSGenDir,
+			})
+			if err != nil {
+				return errors.Wrap(err, "failed to generate gateway certs")
+			}
+		} else {
+			msg := zerolog.Arr()
+			for _, f := range existingFiles {
+				msg.Str(f)
+			}
+			log.Info().Array("existing-files", msg).Msg("some cert files already exist, skipping generation")
+		}
 	}
-
-	if len(existingFiles) == 0 {
-		err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-			CommonName:       "authorizer-grpc",
-			CertKeyPath:      c.API.GRPC.Certs.TLSKeyPath,
-			CertPath:         c.API.GRPC.Certs.TLSCertPath,
-			CACertPath:       c.API.GRPC.Certs.TLSCACertPath,
-			DefaultTLSGenDir: DefaultTLSGenDir,
-		})
-		if err != nil {
-			return errors.Wrap(err, "failed to generate grpc certs")
-		}
-
-		err = certsGenerator.MakeDevCert(&certs.CertGenConfig{
-			CommonName:       "authorizer-gateway",
-			CertKeyPath:      c.API.Gateway.Certs.TLSKeyPath,
-			CertPath:         c.API.Gateway.Certs.TLSCertPath,
-			CACertPath:       c.API.Gateway.Certs.TLSCACertPath,
-			DefaultTLSGenDir: DefaultTLSGenDir,
-		})
-		if err != nil {
-			return errors.Wrap(err, "failed to generate gateway certs")
-		}
-	} else {
-		msg := zerolog.Arr()
-		for _, f := range existingFiles {
-			msg.Str(f)
-		}
-		log.Info().Array("existing-files", msg).Msg("some cert files already exist, skipping generation")
-	}
-
 	return nil
 }
 
@@ -308,4 +285,23 @@ func subEnvVars(s string) string {
 	})
 
 	return updatedConfig
+}
+
+func setDefaultCerts(cfg *Config) error {
+	for srvName, config := range cfg.Services {
+		if config.GRPC.ListenAddress == "" || config.Gateway.ListenAddress == "" {
+			return errors.New(fmt.Sprintf("%s must have a grpc and gateway listen address specified", srvName))
+		}
+		if config.GRPC.Certs.TLSCACertPath == "" || config.GRPC.Certs.TLSCertPath == "" || config.GRPC.Certs.TLSKeyPath == "" {
+			config.GRPC.Certs.TLSKeyPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc.key", srvName))
+			config.GRPC.Certs.TLSCertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc.crt", srvName))
+			config.GRPC.Certs.TLSCACertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc-ca.crt", srvName))
+		}
+		if config.Gateway.Certs.TLSCACertPath == "" || config.Gateway.Certs.TLSCertPath == "" || config.Gateway.Certs.TLSKeyPath == "" {
+			config.Gateway.Certs.TLSKeyPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_gateway.key", srvName))
+			config.Gateway.Certs.TLSCertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_gateway.crt", srvName))
+			config.Gateway.Certs.TLSCACertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_gateway-ca.crt", srvName))
+		}
+	}
+	return nil
 }

@@ -33,10 +33,7 @@ type EngineHarness struct {
 func (h *EngineHarness) Cleanup() {
 	assert := require.New(h.t)
 
-	err := h.Engine.Server.Stop()
-	if err != nil {
-		h.t.Fatal(err)
-	}
+	h.Engine.Manager.StopServers(h.Context())
 
 	h.cleanup()
 
