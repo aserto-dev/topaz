@@ -55,13 +55,13 @@ api:
   authorizer:
     grpc:
       connection_timeout_seconds: 2
-      listen_address: "127.0.0.1:8282"
+      listen_address: "0.0.0.0:8282"
       certs:
         tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
         tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     gateway:
-      listen_address: "127.0.0.1:8383"
+      listen_address: "0.0.0.0:8383"
       allowed_origins:
       - https://*.aserto.com
       - https://*aserto-console.netlify.app
@@ -70,5 +70,5 @@ api:
         tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
     health:
-      listen_address: "127.0.0.1:8484"
+      listen_address: "0.0.0.0:8484"
 `

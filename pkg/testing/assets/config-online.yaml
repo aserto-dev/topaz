@@ -6,9 +6,9 @@ logging:
 api:
   authorizer:
     gateway:
-      listen_address: "localhost:8383"
+      listen_address: "0.0.0.0:8383"
     grpc:
-      listen_address: "localhost:8282"
+      listen_address: "0.0.0.0:8282"
       connection_timeout_seconds: 2
 
 opa:

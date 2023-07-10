@@ -101,7 +101,7 @@ func (e *Authorizer) configServices() error {
 
 		if len(serviceMap) == 1 &&
 			e.Configuration.DirectoryResolver.Address != e.Configuration.Services["authorizer"].GRPC.ListenAddress &&
-			strings.Contains(e.Configuration.DirectoryResolver.Address, "localhost") {
+			isLocalDirectory(e.Configuration.DirectoryResolver.Address) {
 			defaultAPI := builder.API{}
 			defaultAPI.GRPC.ListenAddress = e.Configuration.DirectoryResolver.Address
 			defaultAPI.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
@@ -379,4 +379,10 @@ func (e *Authorizer) createAuthorizer(cfg *builder.API, authorizerOpts []grpc.Se
 		}))
 	}
 	return server, nil
+}
+
+func isLocalDirectory(address string) bool {
+	return strings.Contains(address, "localhost") ||
+		strings.Contains(address, "127.0.0.1") ||
+		strings.Contains(address, "0.0.0.0")
 }
