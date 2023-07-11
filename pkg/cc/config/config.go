@@ -104,7 +104,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
 
-	v.SetDefault("remote_directory.address", "127.0.0.1:8282")
+	v.SetDefault("remote_directory.address", "0.0.0.0:9292")
 	v.SetDefault("remote_directory.insecure", "true")
 
 	defaults(v)

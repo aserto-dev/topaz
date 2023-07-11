@@ -57,6 +57,10 @@ github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0 h1:jfIu9sQUG6Ig
 github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0/go.mod h1:t2tdKJDJF9BV14lnkjHmOQgcvEKgtqs5a1N3LNdJhGE=
 github.com/aserto-dev/certs v0.0.2 h1:IFF+my4pu3BoUDDg31uLYb/JdoIESktecq153QYVxYE=
 github.com/aserto-dev/certs v0.0.2/go.mod h1:9mFvZ1NR92aEGj4ce6QleZGPXJuDZKTv+CWIOX28Xj8=
+github.com/aserto-dev/certs v0.0.3-0.20230710174333-609f06a55db9 h1:SHi8q8y33t8fYeV+PYxJR/sihlhAB6dDZJkyYmGoHNw=
+github.com/aserto-dev/certs v0.0.3-0.20230710174333-609f06a55db9/go.mod h1:9mFvZ1NR92aEGj4ce6QleZGPXJuDZKTv+CWIOX28Xj8=
+github.com/aserto-dev/certs v0.0.3 h1:FiCJwh3nMHm/g1hRzKng1ZghLhNJgbMFxQd6ppJSVEE=
+github.com/aserto-dev/certs v0.0.3/go.mod h1:9mFvZ1NR92aEGj4ce6QleZGPXJuDZKTv+CWIOX28Xj8=
 github.com/aserto-dev/clui v0.8.1 h1:5IW9OnFZoIWjvnmTE4FNTXrjP1wnMzd39qKAcRnRHt8=
 github.com/aserto-dev/clui v0.8.1/go.mod h1:XpJxwNzSQaGN6rqXONZJEaeez4MUaCPikM2lKSngrXM=
 github.com/aserto-dev/errors v0.0.5 h1:9sSeCKZbPEs8CKBj9SzKLoyxsmhimlKuygZd3cRX2zY=
