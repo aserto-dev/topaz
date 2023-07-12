@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -91,7 +90,7 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	)
 	assert.NoError(err)
 	directory := topaz.DirectoryResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration)
-	decisionlog, err := file.New(h.Engine.Context, &h.Engine.Configuration.DecisionLogger, h.Engine.Logger)
+	decisionlog, err := h.Engine.GetDecisionLogger(h.Engine.Configuration.DecisionLogger)
 	assert.NoError(err)
 	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, decisionlog, directory)
 	assert.NoError(err)

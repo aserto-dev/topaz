@@ -7,12 +7,17 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/certs"
+	"github.com/aserto-dev/go-aserto/client"
 	"github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
 	"github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/go-edge-ds/pkg/session"
+	"github.com/aserto-dev/self-decision-logger/logger/self"
+	decisionlog "github.com/aserto-dev/topaz/decision_log"
+	"github.com/aserto-dev/topaz/decision_log/logger/file"
+	"github.com/aserto-dev/topaz/decision_log/logger/nop"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -386,4 +391,43 @@ func isLocalDirectory(address string) bool {
 	return strings.Contains(address, "localhost") ||
 		strings.Contains(address, "127.0.0.1") ||
 		strings.Contains(address, "0.0.0.0")
+}
+
+func (e *Authorizer) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
+	var decisionlogger decisionlog.DecisionLogger
+	var err error
+
+	switch cfg.Type {
+	case "self":
+		decisionlogger, err = self.New(e.Context, cfg.Config, e.Logger, client.NewDialOptionsProvider())
+		if err != nil {
+			return nil, err
+		}
+
+	case "file":
+		maxsize := 0
+		maxfiles := 0
+
+		logpath := cfg.Config["log_file_path"]
+		maxsize, _ = cfg.Config["max_file_size_mb"].(int)
+		maxfiles, _ = cfg.Config["max_file_count"].(int)
+
+		decisionlogger, err = file.New(e.Context, &file.Config{
+			LogFilePath:   fmt.Sprintf("%v", logpath),
+			MaxFileSizeMB: maxsize,
+			MaxFileCount:  maxfiles,
+		}, e.Logger)
+		if err != nil {
+			return nil, err
+		}
+
+	default:
+		decisionlogger, err = nop.New(e.Context, e.Logger)
+		if err != nil {
+			return nil, err
+		}
+
+	}
+
+	return decisionlogger, err
 }

@@ -10,6 +10,7 @@ go 1.19
 
 require (
 	github.com/alecthomas/kong v0.7.1
+	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/certs v0.0.3
 	github.com/aserto-dev/clui v0.8.1
 	github.com/aserto-dev/errors v0.0.5
@@ -56,7 +57,8 @@ require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/aserto-dev/aserto-grpc v0.2.2 // indirect
+	github.com/aserto-dev/go-aserto-net v0.8.5 // indirect
+	github.com/aserto-dev/go-grpc v0.8.56 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.5.1 // indirect
@@ -100,10 +102,16 @@ require (
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
+	github.com/minio/highwayhash v1.0.2 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/moby/locker v1.0.1 // indirect
+	github.com/nats-io/jwt/v2 v2.3.0 // indirect
+	github.com/nats-io/nats-server/v2 v2.9.11 // indirect
+	github.com/nats-io/nats.go v1.22.1 // indirect
+	github.com/nats-io/nkeys v0.3.0 // indirect
+	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect

@@ -3,12 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
-	"github.com/aserto-dev/topaz/pkg/app/auth"
+	"github.com/aserto-dev/topaz/pkg/app/middlewares"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
 )
 
 var (
@@ -48,7 +46,7 @@ var cmdRun = &cobra.Command{
 			return err
 		}
 		directory := topaz.DirectoryResolver(app.Context, app.Logger, app.Configuration)
-		decisionlog, err := file.New(app.Context, &app.Configuration.DecisionLogger, app.Logger)
+		decisionlog, err := app.GetDecisionLogger(app.Configuration.DecisionLogger)
 		if err != nil {
 			return err
 		}
@@ -59,12 +57,9 @@ var cmdRun = &cobra.Command{
 		app.Resolver.SetRuntimeResolver(runtime)
 		app.Resolver.SetDirectoryResolver(directory)
 
-		if len(app.Configuration.Auth.APIKeys) > 0 {
-			authmiddleware, err := auth.NewAPIKeyAuthMiddleware(app.Context, &app.Configuration.Auth, app.Logger)
-			if err != nil {
-				return err
-			}
-			app.AddGRPCServerOptions(grpc.UnaryInterceptor(authmiddleware.Unary()), grpc.StreamInterceptor(authmiddleware.Stream()))
+		err = middlewares.AttachMiddlewares(app)
+		if err != nil {
+			return err
 		}
 
 		err = app.Start()

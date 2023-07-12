@@ -4,15 +4,21 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
+	"github.com/aserto-dev/aserto-grpc/grpcutil/metrics"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Common         `json:",squash"` // nolint:staticcheck // squash is used by mapstructure
-	Auth           AuthnConfig      `json:"auth"`
-	DecisionLogger file.Config      `json:"decision_logger"`
+	Common         `json:",squash"`  // nolint:staticcheck // squash is used by mapstructure
+	Auth           AuthnConfig       `json:"auth"`
+	DecisionLogger DecisionLogConfig `json:"decision_logger"`
+	Metrics        metrics.Config    `json:"metrics"`
+}
+
+type DecisionLogConfig struct {
+	Type   string                 `json:"type"`
+	Config map[string]interface{} `json:"config"`
 }
 
 type AuthnConfig struct {
