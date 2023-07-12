@@ -254,24 +254,38 @@ func (s *Sync) subscriber() error {
 
 func (s *Sync) getTopazDirectoryClient() (*directoryClient, error) {
 	host := localHost
-	if s.topazConfig.Directory.Remote.Addr != "" {
-		host = s.topazConfig.Directory.Remote.Addr
+	if s.topazConfig.DirectoryResolver.Address != "" {
+		host = s.topazConfig.DirectoryResolver.Address
+	}
+
+	caCertPath := ""
+	// when reader registered to same port as authorizer.
+	if conf, ok := s.topazConfig.Common.Services["authorizer"]; ok {
+		if conf.GRPC.ListenAddress == s.topazConfig.DirectoryResolver.Address {
+			caCertPath = conf.GRPC.Certs.TLSCACertPath
+			host = conf.GRPC.ListenAddress
+		}
+	}
+	// if reader api configured separately.
+	if conf, ok := s.topazConfig.Common.Services["writer"]; ok {
+		host = conf.GRPC.ListenAddress
+		caCertPath = conf.GRPC.Certs.TLSCACertPath
 	}
 
 	opts := []dsClient.ConnectionOption{
 		dsClient.WithAddr(host),
-		dsClient.WithInsecure(s.topazConfig.Directory.Remote.Insecure),
-		dsClient.WithCACertPath(s.topazConfig.Common.API.GRPC.Certs.TLSCACertPath),
+		dsClient.WithInsecure(s.topazConfig.DirectoryResolver.Insecure),
+		dsClient.WithCACertPath(caCertPath),
 	}
 
-	if s.topazConfig.Directory.Remote.Key != "" {
-		opts = append(opts, dsClient.WithAPIKeyAuth(s.topazConfig.Directory.Remote.Key))
+	if s.topazConfig.DirectoryResolver.APIKey != "" {
+		opts = append(opts, dsClient.WithAPIKeyAuth(s.topazConfig.DirectoryResolver.APIKey))
 	}
 
 	opts = append(opts, dsClient.WithSessionID(s.cfg.SessionID))
 
-	if s.topazConfig.Directory.Remote.TenantID != "" {
-		opts = append(opts, dsClient.WithTenantID(s.topazConfig.Directory.Remote.TenantID))
+	if s.topazConfig.DirectoryResolver.TenantID != "" {
+		opts = append(opts, dsClient.WithTenantID(s.topazConfig.DirectoryResolver.TenantID))
 	}
 
 	conn, err := dsClient.NewConnection(s.ctx, opts...)

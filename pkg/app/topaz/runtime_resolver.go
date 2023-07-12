@@ -11,6 +11,7 @@ import (
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/plugins/edge"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
 )
@@ -42,6 +43,7 @@ func NewRuntimeResolver(
 
 		// plugins
 		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),
+		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
 	)
 	if err != nil {
 		return nil, cleanupRuntime, err

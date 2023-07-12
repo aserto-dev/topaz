@@ -39,7 +39,6 @@ type Plugin struct {
 func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Config, manager *plugins.Manager) *Plugin {
 	newLogger := logger.With().Str("component", "edge.plugin").Logger()
 
-	cfg.TenantID = strings.Split(manager.ID, "/")[0]
 	cfg.SessionID = uuid.NewString()
 
 	syncContext, cancel := context.WithCancel(context.Background())
