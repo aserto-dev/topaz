@@ -294,30 +294,31 @@ func (e *Authorizer) getEdgeRegistrations(registeredServices []string, edgeDir *
 
 func (e *Authorizer) getEdgeGatewayRegistration(registeredServices []string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-		if contains(registeredServices, "reader") {
-			err := reader.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-		}
-		if contains(registeredServices, "writer") {
-			err := writer.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-		}
-		if contains(registeredServices, "importer") {
-			err := importer.RegisterImporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-		}
-		if contains(registeredServices, "exporter") {
-			err := exporter.RegisterExporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-		}
+		// nolint: gocritic temporary disabled until 0.30 schema release/integration.
+		// if contains(registeredServices, "reader") {
+		// 	err := reader.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+		// 	if err != nil {
+		// 		return err
+		// 	}
+		// }
+		// if contains(registeredServices, "writer") {
+		// 	err := writer.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+		// 	if err != nil {
+		// 		return err
+		// 	}
+		// }
+		// if contains(registeredServices, "importer") {
+		// 	err := importer.RegisterImporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+		// 	if err != nil {
+		// 		return err
+		// 	}
+		// }
+		// if contains(registeredServices, "exporter") {
+		// 	err := exporter.RegisterExporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+		// 	if err != nil {
+		// 		return err
+		// 	}
+		// }
 		return nil
 	}
 }

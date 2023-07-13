@@ -4,7 +4,6 @@ go 1.19
 
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/service-host => ../service-host
-
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
 // replace github.com/aserto-dev/certs => ../certs
@@ -16,13 +15,13 @@ require (
 	github.com/aserto-dev/errors v0.0.5
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.2
-	github.com/aserto-dev/go-directory v0.21.0
+	github.com/aserto-dev/go-directory v0.21.4
 	github.com/aserto-dev/go-directory-cli v0.20.13
-	github.com/aserto-dev/go-edge-ds v0.21.4
+	github.com/aserto-dev/go-edge-ds v0.21.5
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.8.81
-	github.com/aserto-dev/openapi-directory v0.0.0-20230626235808-99854b7d0d18
+	github.com/aserto-dev/openapi-directory v0.21.4
 	github.com/aserto-dev/runtime v0.54.0
 	github.com/aserto-dev/service-host v0.0.1
 	github.com/fatih/color v1.15.0
@@ -46,7 +45,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.3.0
-	google.golang.org/grpc v1.56.1
+	google.golang.org/grpc v1.56.2
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	sigs.k8s.io/controller-runtime v0.14.6
@@ -129,18 +128,18 @@ require (
 	go.opentelemetry.io/otel/metric v1.16.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.16.0 // indirect
 	go.opentelemetry.io/otel/trace v1.16.0 // indirect
-	golang.org/x/crypto v0.10.0 // indirect
-	golang.org/x/exp v0.0.0-20230626212559-97b1e661b5df // indirect
-	golang.org/x/mod v0.11.0 // indirect
-	golang.org/x/net v0.11.0 // indirect
-	golang.org/x/sys v0.9.0 // indirect
-	golang.org/x/term v0.9.0 // indirect
-	golang.org/x/text v0.10.0 // indirect
+	golang.org/x/crypto v0.11.0 // indirect
+	golang.org/x/exp v0.0.0-20230711153332-06a737ee72cb // indirect
+	golang.org/x/mod v0.12.0 // indirect
+	golang.org/x/net v0.12.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
+	golang.org/x/term v0.10.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
-	golang.org/x/tools v0.10.0 // indirect
-	google.golang.org/genproto v0.0.0-20230629202037-9506855d4529 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20230629202037-9506855d4529 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230629202037-9506855d4529 // indirect
+	golang.org/x/tools v0.11.0 // indirect
+	google.golang.org/genproto v0.0.0-20230711160842-782d3b101e98 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20230711160842-782d3b101e98 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230711160842-782d3b101e98 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
