@@ -7,8 +7,6 @@ import (
 	"github.com/google/wire"
 	"google.golang.org/grpc"
 
-	"github.com/prometheus/client_golang/prometheus"
-
 	"github.com/aserto-dev/logger"
 	builder "github.com/aserto-dev/service-host"
 	"github.com/aserto-dev/topaz/pkg/app"
@@ -36,14 +34,11 @@ var (
 	appTestSet = wire.NewSet(
 		commonSet,
 		cc.NewTestCC,
-		prometheus.NewRegistry,
-		wire.Bind(new(prometheus.Registerer), new(*prometheus.Registry)),
 	)
 
 	appSet = wire.NewSet(
 		commonSet,
 		cc.NewCC,
-		wire.InterfaceValue(new(prometheus.Registerer), prometheus.DefaultRegisterer),
 	)
 )
 

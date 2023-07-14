@@ -13,12 +13,12 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
-	"github.com/aserto-dev/go-edge-ds/pkg/session"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
+	"github.com/aserto-dev/topaz/pkg/app/middlewares"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -89,11 +89,20 @@ func (e *Authorizer) configServices() error {
 			return errors.New("remote directory resolver address is different from reader grpc address")
 		}
 	}
+
 	serviceMap := mapToGRPCPorts(e.Configuration.Services)
 
 	if cfg, ok := e.Configuration.Services["authorizer"]; ok {
 		// attach default allowed origins to gateway.
 		cfg.Gateway.AllowedOrigins = append(cfg.Gateway.AllowedOrigins, allowedOrigins...)
+
+		middlewareList, err := middlewares.GetMiddlewaresForService("authorizer", e.Context, e.Configuration, e.Logger)
+		if err != nil {
+			return err
+		}
+
+		e.AddGRPCServerOptions(middlewareList.AsGRPCOptions())
+
 		server, err := e.configAuthorizer(cfg)
 		if err != nil {
 			return err
@@ -122,10 +131,21 @@ func (e *Authorizer) configServices() error {
 			continue
 		}
 		serviceConfig := config
-		server, err := e.configEdgeDir(&serviceConfig)
+
+		// get middlewares for edge services.
+		middlewareList, err := middlewares.GetMiddlewaresForService(config.registeredServices[0], e.Context, e.Configuration, e.Logger)
 		if err != nil {
 			return err
 		}
+		var opts []grpc.ServerOption
+		unary, streeam := middlewareList.AsGRPCOptions()
+		opts = append(opts, unary)
+		opts = append(opts, streeam)
+		server, err := e.configEdgeDir(&serviceConfig, opts)
+		if err != nil {
+			return err
+		}
+
 		err = e.Manager.AddGRPCServer(server)
 		if err != nil {
 			return err
@@ -135,7 +155,7 @@ func (e *Authorizer) configServices() error {
 	return nil
 }
 
-func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
+func (e *Authorizer) configEdgeDir(cfg *services, edgeOpts []grpc.ServerOption) (*builder.Server, error) {
 	if cfg.API.GRPC.Certs.TLSCACertPath == "" {
 		if _, ok := e.Configuration.Services["authorizer"]; ok {
 			cfg.API.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
@@ -160,17 +180,11 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 	// attach default allowed origins to gateway.
 	cfg.API.Gateway.AllowedOrigins = append(cfg.API.Gateway.AllowedOrigins, allowedOrigins...)
 
-	sessionMiddleware := session.HeaderMiddleware{DisableValidation: false}
-
-	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(sessionMiddleware.Unary()),
-		grpc.StreamInterceptor(sessionMiddleware.Stream()),
-	}
 	edgeDir, err := locker.New(&e.Configuration.Edge, e.Logger)
 	if err != nil {
 		return nil, err
 	}
-	server, err := e.ServiceBuilder.CreateService(cfg.API, opts,
+	server, err := e.ServiceBuilder.CreateService(cfg.API, edgeOpts,
 		e.getEdgeRegistrations(cfg.registeredServices, edgeDir),
 		e.getEdgeGatewayRegistration(cfg.registeredServices), true)
 	if err != nil {

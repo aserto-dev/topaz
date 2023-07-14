@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 
-	"github.com/aserto-dev/topaz/pkg/app/middlewares"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/spf13/cobra"
@@ -56,11 +55,6 @@ var cmdRun = &cobra.Command{
 		}
 		app.Resolver.SetRuntimeResolver(runtime)
 		app.Resolver.SetDirectoryResolver(directory)
-
-		err = middlewares.AttachMiddlewares(app)
-		if err != nil {
-			return err
-		}
 
 		err = app.Start()
 		if err != nil {

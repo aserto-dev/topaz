@@ -15,7 +15,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/google/wire"
-	"github.com/prometheus/client_golang/prometheus"
 	"google.golang.org/grpc"
 )
 
@@ -85,11 +84,11 @@ var (
 	commonSet = wire.NewSet(resolvers.New, impl.NewAuthorizerServer, builder.NewServiceFactory, builder.NewServiceManager, DefaultGRPCOptions, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"))
 
 	appTestSet = wire.NewSet(
-		commonSet, cc.NewTestCC, prometheus.NewRegistry, wire.Bind(new(prometheus.Registerer), new(*prometheus.Registry)),
+		commonSet, cc.NewTestCC,
 	)
 
 	appSet = wire.NewSet(
-		commonSet, cc.NewCC, wire.InterfaceValue(new(prometheus.Registerer), prometheus.DefaultRegisterer),
+		commonSet, cc.NewCC,
 	)
 )
 

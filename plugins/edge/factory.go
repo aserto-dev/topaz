@@ -3,6 +3,7 @@ package edge
 import (
 	"bytes"
 	"context"
+	"strings"
 
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/plugins/dummy"
@@ -30,8 +31,9 @@ func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Lo
 
 func (f PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugin {
 	cfg := config.(*Config)
-	// cfg.TenantID = strings.Split(m.ID, "/")[0]
-
+	if cfg.TenantID == "" {
+		cfg.TenantID = strings.Split(m.ID, "/")[0]
+	}
 	if !cfg.Enabled {
 		return &dummy.Dummy{
 			Manager: m,
