@@ -26,7 +26,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -108,76 +107,76 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		return resp, err
 	}
 
-	policyID := getPolicyIDFromContext(ctx)
-	if policyID == "" {
-		bundles, err := policyRuntime.GetBundles(ctx)
-		if err != nil {
-			return resp, errors.Wrap(err, "get bundles")
-		}
-		if len(bundles) == 0 {
-			return resp, errors.New("no bundles found")
-		}
-		policyID = bundles[0].ID // only 1 bundle per runtime allowed
-	}
-
-	policyList, err := policyRuntime.GetPolicyList(
-		ctx,
-		policyID,
-		pathFilter(req.Options.PathSeparator, req.PolicyContext.Path),
-	)
+	listPolicies, err := policyRuntime.ListPolicies(ctx)
 	if err != nil {
 		return resp, errors.Wrap(err, "get policy list")
 	}
 
 	decisionFilter := initDecisionFilter(req.PolicyContext.Decisions)
 
+	queryStmt := strings.Builder{}
+	r := 0
+	for i := 0; i < len(listPolicies); i++ {
+		for _, rule := range listPolicies[i].AST.Rules {
+			if !strings.HasPrefix(listPolicies[i].AST.Package.Path.String(), "data."+req.PolicyContext.Path) {
+				continue
+			}
+
+			if !decisionFilter(rule.Head.Name.String()) {
+				continue
+			}
+
+			queryStmt.WriteString(fmt.Sprintf("r%d = %s\n", i, listPolicies[i].AST.Package.Path))
+			r++
+			break
+		}
+	}
+
+	if queryStmt.Len() == 0 {
+		return resp, aerr.ErrInvalidArgument.Msg("no decisions specified")
+	}
+
 	results := make(map[string]interface{})
 
-	policyContext := proto.Clone(req.PolicyContext).(*api.PolicyContext)
+	qry, err := rego.New(
+		rego.Compiler(policyRuntime.GetPluginsManager().GetCompiler()),
+		rego.Store(policyRuntime.GetPluginsManager().Store),
+		rego.Input(input),
+		rego.Query(queryStmt.String()),
+	).PrepareForEval(ctx)
 
-	for _, policy := range policyList {
-		queryStmt := "x = data." + policy.PackageName
+	if err != nil {
+		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt.String())
+	}
 
-		policyContext.Path = policy.PackageName
-		input[InputPolicy] = policyContext
+	queryResults, err := qry.Eval(ctx, rego.EvalInput(input))
+	if err != nil {
+		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt.String()).Msg("query evaluation failed")
+	} else if len(queryResults) == 0 {
+		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt.String()).Msg("undefined results")
+	}
 
-		qry, err := rego.New(
-			rego.Compiler(policyRuntime.GetPluginsManager().GetCompiler()),
-			rego.Store(policyRuntime.GetPluginsManager().Store),
-			rego.Input(input),
-			rego.Query(queryStmt),
-		).PrepareForEval(ctx)
-
-		if err != nil {
-			return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt)
+	for _, expression := range queryResults[0].Expressions {
+		expr := strings.Split(expression.Text, "=")
+		rule := strings.TrimSpace(expr[0])
+		path := strings.TrimPrefix(strings.TrimSpace(expr[1]), "data.")
+		if req.Options.PathSeparator == authorizer.PathSeparator_PATH_SEPARATOR_SLASH {
+			path = strings.ReplaceAll(path, ".", "/")
 		}
 
-		packageName := getPackageName(policy, req.Options.PathSeparator)
-
-		queryResults, err := qry.Eval(ctx, rego.EvalInput(input))
-
-		if err != nil {
-			return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("query evaluation failed")
-		} else if len(queryResults) == 0 {
-			return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("undefined results")
+		binding, ok := queryResults[0].Bindings[rule].(map[string]interface{})
+		if !ok {
+			continue
 		}
 
-		if result, ok := queryResults[0].Bindings["x"].(map[string]interface{}); ok {
-			for k, v := range result {
-				if !decisionFilter(k) {
-					continue
-				}
-				if _, ok := v.(bool); !ok {
-					continue
-				}
-				if results[packageName] == nil {
-					results[packageName] = make(map[string]interface{})
-				}
-				if r, ok := results[packageName].(map[string]interface{}); ok {
-					r[k] = v
-				}
+		outcomes := make(map[string]interface{})
+		for _, decision := range req.PolicyContext.Decisions {
+			if r, ok := binding[decision].(bool); ok {
+				outcomes[decision] = r
 			}
 		}
+
+		results[path] = outcomes
 	}
 
 	paths, err := structpb.NewStruct(results)
@@ -788,38 +787,6 @@ func convert(msg proto.Message) interface{} {
 	return v
 }
 
-// nolint: exhaustive
-func pathFilter(sep authorizer.PathSeparator, path string) runtime.PathFilterFn {
-	switch sep {
-	case authorizer.PathSeparator_PATH_SEPARATOR_SLASH:
-		return func(packageName string) bool {
-			if path == "" {
-				return true
-			}
-			return strings.HasPrefix(strings.ReplaceAll(packageName, ".", "/"), path)
-		}
-	default:
-		return func(packageName string) bool {
-			if path == "" {
-				return true
-			}
-			return strings.HasPrefix(packageName, path)
-		}
-	}
-}
-
-// nolint: exhaustive
-func getPackageName(policy runtime.Policy, sep authorizer.PathSeparator) string {
-	switch sep {
-	case authorizer.PathSeparator_PATH_SEPARATOR_DOT:
-		return policy.PackageName
-	case authorizer.PathSeparator_PATH_SEPARATOR_SLASH:
-		return strings.ReplaceAll(policy.PackageName, ".", "/")
-	default:
-		return policy.PackageName
-	}
-}
-
 func initDecisionFilter(decisions []string) func(decision string) bool {
 	if len(decisions) == 1 && decisions[0] == "*" {
 		return func(s string) bool {
@@ -856,16 +823,6 @@ func getEmail(v map[string]interface{}) string {
 			if e, ok := p["email"].(string); ok {
 				return e
 			}
-		}
-	}
-	return ""
-}
-
-func getPolicyIDFromContext(ctx context.Context) string {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if ok {
-		if policyID, ok := md["aserto-policy-id"]; ok {
-			return policyID[0]
 		}
 	}
 	return ""
