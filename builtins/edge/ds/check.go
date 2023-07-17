@@ -31,7 +31,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.B),
-			Memoize: false,
+			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
@@ -103,7 +103,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.B),
-			Memoize: false,
+			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
