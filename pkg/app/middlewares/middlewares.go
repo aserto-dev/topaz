@@ -6,7 +6,6 @@ import (
 
 	"github.com/aserto-dev/aserto-grpc/grpcutil"
 	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/gerr"
-	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/metrics"
 	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/request"
 	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/tracing"
 	"github.com/aserto-dev/go-edge-ds/pkg/session"
@@ -42,8 +41,6 @@ func GetMiddlewaresForService(serviceName string, ctx context.Context, cfg *conf
 	middlewareList = append(middlewareList, NewTenantIDMiddleware(cfg))
 	middlewareList = append(middlewareList, tracing.NewTracingMiddleware(logger))
 	middlewareList = append(middlewareList, gerr.NewErrorMiddleware())
-	if cfg.Services[serviceName].Metrics.ListenAddress != "" {
-		middlewareList = metrics.NewMiddlewares(cfg.Services[serviceName].Metrics, middlewareList...)
-	}
+
 	return middlewareList, nil
 }

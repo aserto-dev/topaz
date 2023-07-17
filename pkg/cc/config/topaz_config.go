@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aserto-dev/aserto-management/controller"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Common         `json:",squash"`  // nolint:staticcheck // squash is used by mapstructure
-	Auth           AuthnConfig       `json:"auth"`
-	DecisionLogger DecisionLogConfig `json:"decision_logger"`
+	Common           `json:",squash"`   // nolint:staticcheck // squash is used by mapstructure
+	Auth             AuthnConfig        `json:"auth"`
+	DecisionLogger   DecisionLogConfig  `json:"decision_logger"`
+	ControllerConfig *controller.Config `json:"controller"`
 }
 
 type DecisionLogConfig struct {

@@ -11,6 +11,7 @@ go 1.19
 require (
 	github.com/alecthomas/kong v0.7.1
 	github.com/aserto-dev/aserto-grpc v0.2.2
+	github.com/aserto-dev/aserto-management v0.9.2
 	github.com/aserto-dev/certs v0.0.3
 	github.com/aserto-dev/clui v0.8.1
 	github.com/aserto-dev/errors v0.0.5
@@ -39,7 +40,6 @@ require (
 	github.com/onsi/gomega v1.27.8
 	github.com/open-policy-agent/opa v0.54.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.16.0
 	github.com/rs/zerolog v1.29.1
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.15.0
@@ -58,7 +58,6 @@ require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/aserto-dev/go-aserto-net v0.8.5 // indirect
-	github.com/aserto-dev/go-grpc v0.8.56 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.5.1 // indirect
@@ -118,6 +117,7 @@ require (
 	github.com/opencontainers/image-spec v1.1.0-rc3 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/prometheus/client_golang v1.16.0 // indirect
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.11.0 // indirect

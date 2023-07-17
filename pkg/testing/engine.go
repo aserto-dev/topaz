@@ -92,7 +92,7 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	directory := topaz.DirectoryResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration)
 	decisionlog, err := h.Engine.GetDecisionLogger(h.Engine.Configuration.DecisionLogger)
 	assert.NoError(err)
-	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, decisionlog, directory)
+	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, nil, decisionlog, directory)
 	assert.NoError(err)
 	h.Engine.Resolver.SetRuntimeResolver(rt)
 	h.Engine.Resolver.SetDirectoryResolver(directory)
