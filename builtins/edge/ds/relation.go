@@ -41,7 +41,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
-			Memoize: false,
+			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 			var a *extendedRelation

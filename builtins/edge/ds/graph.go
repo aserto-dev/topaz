@@ -37,7 +37,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
-			Memoize: false,
+			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
