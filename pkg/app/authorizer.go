@@ -278,16 +278,16 @@ func (e *Authorizer) getAuthorizerGatewayRegistrations() builder.HandlerRegistra
 func (e *Authorizer) getEdgeRegistrations(registeredServices []string, edgeDir *directory.Directory) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
 		if contains(registeredServices, "reader") {
-			reader.RegisterReaderServer(server, edgeDir)
+			reader.RegisterReaderServer(server, edgeDir.Reader2())
 		}
 		if contains(registeredServices, "writer") {
-			writer.RegisterWriterServer(server, edgeDir)
+			writer.RegisterWriterServer(server, edgeDir.Writer2())
 		}
 		if contains(registeredServices, "importer") {
-			importer.RegisterImporterServer(server, edgeDir)
+			importer.RegisterImporterServer(server, edgeDir.Importer2())
 		}
 		if contains(registeredServices, "exporter") {
-			exporter.RegisterExporterServer(server, edgeDir)
+			exporter.RegisterExporterServer(server, edgeDir.Exporter2())
 		}
 	}
 }
