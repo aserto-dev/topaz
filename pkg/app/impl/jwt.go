@@ -178,35 +178,22 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	user, err := directory.GetIdentityV2(client, ctx, identity)
 	switch {
 	case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
-		return nil, err
+		// Try to find a user with key == identity
+		return s.getObject(ctx, "user", identity)
 	case err != nil:
 		return nil, err
-
 	default:
+		return user, nil
 	}
-
-	if user == nil {
-		return s.findUser(ctx, identity)
-	}
-
-	return user, nil
 }
 
-func (s *AuthorizerServer) findUser(ctx context.Context, keyOrID string) (proto.Message, error) {
-	return s.getObjectByKey(ctx, "user", keyOrID)
-}
-
-func (s *AuthorizerServer) getObjectByKey(ctx context.Context, objType, key string) (proto.Message, error) {
-	return s.getObject(ctx, &v2.ObjectIdentifier{Type: &objType, Key: &key})
-}
-
-func (s *AuthorizerServer) getObject(ctx context.Context, obj *v2.ObjectIdentifier) (proto.Message, error) {
+func (s *AuthorizerServer) getObject(ctx context.Context, objType, key string) (proto.Message, error) {
 	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	objResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{Param: obj})
+	objResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{Param: &v2.ObjectIdentifier{Type: &objType, Key: &key}})
 	if err != nil {
 		return nil, err
 	}
