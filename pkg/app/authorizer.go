@@ -7,30 +7,31 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/certs"
-	"github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
+	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	dse2 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
+	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsi2 "github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
+	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsw2 "github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
+	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
+	edge "github.com/aserto-dev/go-edge-ds/pkg/server"
 	"github.com/aserto-dev/go-edge-ds/pkg/session"
+	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
+	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
+	builder "github.com/aserto-dev/service-host"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
-
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/stats/view"
 	"google.golang.org/grpc"
-
-	edge "github.com/aserto-dev/go-edge-ds/pkg/server"
-
-	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	openapi "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
-
-	diropenapi "github.com/aserto-dev/openapi-directory/publish/directory"
-	builder "github.com/aserto-dev/service-host"
 )
 
 var locker edge.EdgeDirLock
@@ -174,9 +175,9 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 
 	// attach handler for directory openapi spec.
 	if server.Gateway.Mux != nil {
-		server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		server.Gateway.Mux.Handle("/api/v3/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
+			http.FileServer(http.FS(dsOpenAPI.Static())).ServeHTTP(w, r)
 		}))
 	}
 
@@ -216,7 +217,7 @@ func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error)
 	var err error
 
 	if e.Configuration.DirectoryResolver.Address == e.Configuration.Services["authorizer"].GRPC.ListenAddress {
-		server, err = e.createAuhtorizerWithEdgeRegistrations(cfg, authorizerOpts)
+		server, err = e.createAuthorizerWithEdgeRegistrations(cfg, authorizerOpts)
 		if err != nil {
 			return nil, err
 		}
@@ -278,52 +279,55 @@ func (e *Authorizer) getAuthorizerGatewayRegistrations() builder.HandlerRegistra
 func (e *Authorizer) getEdgeRegistrations(registeredServices []string, edgeDir *directory.Directory) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
 		if contains(registeredServices, "reader") {
-			reader.RegisterReaderServer(server, edgeDir.Reader2())
+			dsr2.RegisterReaderServer(server, edgeDir.Reader2())
+			dsr3.RegisterReaderServer(server, edgeDir.Reader3())
 		}
 		if contains(registeredServices, "writer") {
-			writer.RegisterWriterServer(server, edgeDir.Writer2())
+			dsw2.RegisterWriterServer(server, edgeDir.Writer2())
+			dsw3.RegisterWriterServer(server, edgeDir.Writer3())
 		}
 		if contains(registeredServices, "importer") {
-			importer.RegisterImporterServer(server, edgeDir.Importer2())
+			dsi2.RegisterImporterServer(server, edgeDir.Importer2())
+			dsi3.RegisterImporterServer(server, edgeDir.Importer3())
 		}
 		if contains(registeredServices, "exporter") {
-			exporter.RegisterExporterServer(server, edgeDir.Exporter2())
+			dse2.RegisterExporterServer(server, edgeDir.Exporter2())
+			dse3.RegisterExporterServer(server, edgeDir.Exporter3())
 		}
 	}
 }
 
 func (e *Authorizer) getEdgeGatewayRegistration(registeredServices []string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-		// nolint: gocritic temporary disabled until 0.30 schema release/integration.
-		// if contains(registeredServices, "reader") {
-		// 	err := reader.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// }
-		// if contains(registeredServices, "writer") {
-		// 	err := writer.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// }
-		// if contains(registeredServices, "importer") {
-		// 	err := importer.RegisterImporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// }
-		// if contains(registeredServices, "exporter") {
-		// 	err := exporter.RegisterExporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// }
+		if contains(registeredServices, "reader") {
+			err := dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+		}
+		if contains(registeredServices, "writer") {
+			err := dsw3.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+		}
+		if contains(registeredServices, "importer") {
+			err := dsi3.RegisterImporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+		}
+		if contains(registeredServices, "exporter") {
+			err := dse3.RegisterExporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+		}
 		return nil
 	}
 }
 
-func (e *Authorizer) createAuhtorizerWithEdgeRegistrations(cfg *builder.API, authorizerOpts []grpc.ServerOption) (*builder.Server, error) {
+func (e *Authorizer) createAuthorizerWithEdgeRegistrations(cfg *builder.API, authorizerOpts []grpc.ServerOption) (*builder.Server, error) {
 	edgeDir, err := locker.New(&e.Configuration.Edge, e.Logger)
 	if err != nil {
 		return nil, err
@@ -350,15 +354,15 @@ func (e *Authorizer) createAuhtorizerWithEdgeRegistrations(cfg *builder.API, aut
 	}
 	if server.Gateway.Mux != nil {
 		// Add optional handlers.
-		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		server.Gateway.Mux.Handle("/api/v2/authorizer/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
+			http.FileServer(http.FS(azOpenAPI.Static())).ServeHTTP(w, r)
 		}))
 
 		// attach handler for directory openapi spec when to same service as the authorizer.
-		server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		server.Gateway.Mux.Handle("/api/v3/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
+			http.FileServer(http.FS(dsOpenAPI.Static())).ServeHTTP(w, r)
 		}))
 	}
 	return server, nil
@@ -376,7 +380,7 @@ func (e *Authorizer) createAuthorizer(cfg *builder.API, authorizerOpts []grpc.Se
 		// Add optional handlers.
 		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
+			http.FileServer(http.FS(azOpenAPI.Static())).ServeHTTP(w, r)
 		}))
 	}
 	return server, nil

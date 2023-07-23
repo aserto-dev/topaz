@@ -2,7 +2,9 @@ module github.com/aserto-dev/topaz
 
 go 1.19
 
-// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
+// replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
@@ -15,13 +17,13 @@ require (
 	github.com/aserto-dev/errors v0.0.5
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.2
-	github.com/aserto-dev/go-directory v0.21.5
+	github.com/aserto-dev/go-directory v0.21.7-0.20230723043430-5bfeefbb0cb5
 	github.com/aserto-dev/go-directory-cli v0.20.13
-	github.com/aserto-dev/go-edge-ds v0.21.7
+	github.com/aserto-dev/go-edge-ds v0.21.8-0.20230723043850-0ca597a2ac8d
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.8.81
-	github.com/aserto-dev/openapi-directory v0.21.5
+	github.com/aserto-dev/openapi-directory v0.21.6-0.20230723043509-15ddb12b9ca0
 	github.com/aserto-dev/runtime v0.54.1
 	github.com/aserto-dev/service-host v0.0.2
 	github.com/fatih/color v1.15.0
@@ -133,7 +135,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.16.0 // indirect
 	go.opentelemetry.io/otel/trace v1.16.0 // indirect
 	golang.org/x/crypto v0.11.0 // indirect
-	golang.org/x/exp v0.0.0-20230711153332-06a737ee72cb // indirect
+	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1 // indirect
 	golang.org/x/mod v0.12.0 // indirect
 	golang.org/x/net v0.12.0 // indirect
 	golang.org/x/sys v0.10.0 // indirect

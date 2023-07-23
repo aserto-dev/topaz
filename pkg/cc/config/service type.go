@@ -33,7 +33,7 @@ func (s ServiceType) String() string {
 
 var ServiceTypeMap = func() map[string]ServiceType {
 	serviceMap := make(map[string]ServiceType)
-	for i := authorizer; i < exporter; i++ {
+	for i := authorizer; i <= exporter; i++ {
 		serviceMap[i.String()] = i
 	}
 	return serviceMap
