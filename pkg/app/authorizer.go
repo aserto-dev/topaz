@@ -143,15 +143,7 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 		cfg.API.Gateway.HTTP = true
 	}
 
-	if len(cfg.API.Needs) > 0 {
-		for _, name := range cfg.API.Needs {
-			if dependencyConfig, ok := e.Configuration.Services[name]; ok {
-				if !contains(e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) {
-					e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
-				}
-			}
-		}
-	}
+	e.updateDependencyMap(cfg.API)
 
 	// attach default allowed origins to gateway.
 	cfg.API.Gateway.AllowedOrigins = append(cfg.API.Gateway.AllowedOrigins, allowedOrigins...)
@@ -196,15 +188,9 @@ func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error)
 		tlsAuth := grpc.Creds(tlsCreds)
 		authorizerOpts = append(authorizerOpts, tlsAuth)
 	}
-	if len(cfg.Needs) > 0 {
-		for _, name := range cfg.Needs {
-			if dependencyConfig, ok := e.Configuration.Services[name]; ok {
-				if !contains(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) {
-					e.Manager.DependencyMap[cfg.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
-				}
-			}
-		}
-	}
+
+	e.updateDependencyMap(cfg)
+
 	// TODO: debug this - having issues with gateway connectivity when connection timeout is set
 	// authorizerOpts = append(authorizerOpts, grpc.ConnectionTimeout(time.Duration(config.GRPC.ConnectionTimeoutSeconds)))
 
@@ -384,6 +370,19 @@ func (e *Authorizer) createAuthorizer(cfg *builder.API, authorizerOpts []grpc.Se
 		}))
 	}
 	return server, nil
+}
+
+func (e *Authorizer) updateDependencyMap(cfg *builder.API) {
+	if len(cfg.Needs) > 0 {
+		for _, name := range cfg.Needs {
+			if dependencyConfig, ok := e.Configuration.Services[name]; ok {
+				if !contains(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) &&
+					cfg.GRPC.ListenAddress != dependencyConfig.GRPC.ListenAddress {
+					e.Manager.DependencyMap[cfg.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
+				}
+			}
+		}
+	}
 }
 
 func isLocalDirectory(address string) bool {
