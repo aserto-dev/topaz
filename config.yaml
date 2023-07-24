@@ -14,6 +14,7 @@ remote_directory:
 api:
   authorizer:
     needs:
+      - reader
     grpc:
       connection_timeout_seconds: 2
       listen_address: "0.0.0.0:8282"
