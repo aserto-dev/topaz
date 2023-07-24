@@ -7,7 +7,15 @@ directory:
     db_path: .dev/test.db
     seed_metadata: true
 
+remote_directory:
+  address: "0.0.0.0:9292"
+
 api:
+  reader:
+    grpc:
+      listen_address: "0.0.0.0:9292"
+    gateway:
+      listen_address: "0.0.0.0:9393"
   authorizer:
     gateway:
       listen_address: "0.0.0.0:8383"

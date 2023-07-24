@@ -4,12 +4,20 @@ logging:
   log_level: debug
 
 api:
+  reader:
+    grpc:
+      listen_address: "0.0.0.0:9292"
+    gateway:
+      listen_address: "0.0.0.0:9393"
   authorizer:
     gateway:
       listen_address: "0.0.0.0:8383"
     grpc:
       listen_address: "0.0.0.0:8282"
       connection_timeout_seconds: 2
+
+remote_directory:
+  address: "0.0.0.0:9292"
 
 opa:
   instance_id: 5d7cccc6-1657-11ec-a291-00001df0866c                                   
