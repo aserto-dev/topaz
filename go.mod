@@ -4,8 +4,10 @@ go 1.19
 
 replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
-// replace github.com/aserto-dev/go-directory => ../go-directory
-// replace github.com/aserto-dev/service-host => ../service-host
+replace github.com/aserto-dev/go-directory => ../go-directory
+
+replace github.com/aserto-dev/service-host => ../service-host
+
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
 // replace github.com/aserto-dev/certs => ../certs
@@ -17,9 +19,9 @@ require (
 	github.com/aserto-dev/errors v0.0.5
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.2
-	github.com/aserto-dev/go-directory v0.21.7-0.20230723043430-5bfeefbb0cb5
+	github.com/aserto-dev/go-directory v0.21.7-0.20230725182626-60ef07904a4d
 	github.com/aserto-dev/go-directory-cli v0.20.13
-	github.com/aserto-dev/go-edge-ds v0.21.8-0.20230724143605-c2e0412ef956
+	github.com/aserto-dev/go-edge-ds v0.21.8-0.20230725184051-8903516f79ed
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.8.81

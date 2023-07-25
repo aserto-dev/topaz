@@ -167,7 +167,7 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 
 	// attach handler for directory openapi spec.
 	if server.Gateway.Mux != nil {
-		server.Gateway.Mux.Handle("/api/v3/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		server.Gateway.Mux.Handle("/api/v3/directory/openapi", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "application/json")
 			http.FileServer(http.FS(dsOpenAPI.Static())).ServeHTTP(w, r)
 		}))
@@ -340,13 +340,13 @@ func (e *Authorizer) createAuthorizerWithEdgeRegistrations(cfg *builder.API, aut
 	}
 	if server.Gateway.Mux != nil {
 		// Add optional handlers.
-		server.Gateway.Mux.Handle("/api/v2/authorizer/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		server.Gateway.Mux.Handle("/api/v2/authorizer/openapi", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "application/json")
 			http.FileServer(http.FS(azOpenAPI.Static())).ServeHTTP(w, r)
 		}))
 
 		// attach handler for directory openapi spec when to same service as the authorizer.
-		server.Gateway.Mux.Handle("/api/v3/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		server.Gateway.Mux.Handle("/api/v3/directory/openapi", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "application/json")
 			http.FileServer(http.FS(dsOpenAPI.Static())).ServeHTTP(w, r)
 		}))
@@ -364,7 +364,7 @@ func (e *Authorizer) createAuthorizer(cfg *builder.API, authorizerOpts []grpc.Se
 
 	if server.Gateway.Mux != nil {
 		// Add optional handlers.
-		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		server.Gateway.Mux.Handle("/api/v2/authorizer/openapi", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Content-Type", "application/json")
 			http.FileServer(http.FS(azOpenAPI.Static())).ServeHTTP(w, r)
 		}))
