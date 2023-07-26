@@ -3,7 +3,7 @@ module github.com/aserto-dev/topaz
 go 1.19
 
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-// replace github.com/aserto-dev/service-host => ../service-host
+replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
 // replace github.com/aserto-dev/certs => ../certs

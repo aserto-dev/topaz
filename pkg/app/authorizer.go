@@ -3,38 +3,23 @@ package app
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"strings"
 
-	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/go-aserto/client"
-	"github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
-	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
-	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/resolvers"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
-	"go.opencensus.io/plugin/ocgrpc"
-	"go.opencensus.io/stats/view"
 	"google.golang.org/grpc"
 
 	edge "github.com/aserto-dev/go-edge-ds/pkg/server"
 
-	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	openapi "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
-
-	diropenapi "github.com/aserto-dev/openapi-directory/publish/directory"
 	builder "github.com/aserto-dev/service-host"
 )
 
@@ -54,14 +39,20 @@ var allowedOrigins = []string{
 // Authorizer is an authorizer service instance, responsible for managing
 // the authorizer API, user directory instance and the OPA plugins.
 type Authorizer struct {
-	Context          context.Context
-	Logger           *zerolog.Logger
-	ServerOptions    []grpc.ServerOption
-	Configuration    *config.Config
-	ServiceBuilder   *builder.ServiceFactory
-	Manager          *builder.ServiceManager
-	Resolver         *resolvers.Resolvers
-	AuthorizerServer *impl.AuthorizerServer
+	Context        context.Context
+	Logger         *zerolog.Logger
+	ServerOptions  []grpc.ServerOption
+	Configuration  *config.Config
+	ServiceBuilder *builder.ServiceFactory
+	Manager        *builder.ServiceManager
+	Services       map[string]ServiceTypes
+}
+
+type ServiceTypes interface {
+	RegisteredServices() []string
+	GetServerOptions() []grpc.ServerOption
+	GetGRPCRegistrations() builder.GRPCRegistrations
+	GetGatewayRegistration() builder.HandlerRegistrations
 }
 
 func (e *Authorizer) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
@@ -70,12 +61,21 @@ func (e *Authorizer) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
 
 // Start starts all services required by the engine.
 func (e *Authorizer) Start() error {
-	err := e.configServices()
-	if err != nil {
-		return err
+	// build dependencies map.
+	for _, cfg := range e.Configuration.Services {
+		if len(cfg.Needs) > 0 {
+			for _, name := range cfg.Needs {
+				if dependencyConfig, ok := e.Configuration.Services[name]; ok {
+					if !contains(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) &&
+						cfg.GRPC.ListenAddress != dependencyConfig.GRPC.ListenAddress {
+						e.Manager.DependencyMap[cfg.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
+					}
+				}
+			}
+		}
 	}
 
-	err = e.Manager.StartServers(e.Context)
+	err := e.Manager.StartServers(e.Context)
 	if err != nil {
 		return errors.Wrap(err, "failed to start engine server")
 	}
@@ -83,53 +83,23 @@ func (e *Authorizer) Start() error {
 	return nil
 }
 
-func (e *Authorizer) configServices() error {
+func (e *Authorizer) ConfigServices() error {
 	if readerConfig, ok := e.Configuration.Services["reader"]; ok {
 		if readerConfig.GRPC.ListenAddress != e.Configuration.DirectoryResolver.Address {
 			return errors.New("remote directory resolver address is different from reader grpc address")
 		}
 	}
 
-	serviceMap := mapToGRPCPorts(e.Configuration.Services)
-
-	if cfg, ok := e.Configuration.Services["authorizer"]; ok {
-		// attach default allowed origins to gateway.
-		cfg.Gateway.AllowedOrigins = append(cfg.Gateway.AllowedOrigins, allowedOrigins...)
-
-		middlewareList, err := middlewares.GetMiddlewaresForService("authorizer", e.Context, e.Configuration, e.Logger)
-		if err != nil {
-			return err
-		}
-
-		e.AddGRPCServerOptions(middlewareList.AsGRPCOptions())
-
-		server, err := e.configAuthorizer(cfg)
-		if err != nil {
-			return err
-		}
-
-		err = e.Manager.AddGRPCServer(server)
-		if err != nil {
-			return err
-		}
-
-		if len(serviceMap) == 1 &&
-			e.Configuration.DirectoryResolver.Address != e.Configuration.Services["authorizer"].GRPC.ListenAddress &&
-			isLocalDirectory(e.Configuration.DirectoryResolver.Address) {
-			defaultAPI := builder.API{}
-			defaultAPI.GRPC.ListenAddress = e.Configuration.DirectoryResolver.Address
-			defaultAPI.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
-			serviceMap[e.Configuration.DirectoryResolver.Address] = services{
-				registeredServices: []string{"reader", "writer", "importer", "exporter"},
-				API:                &defaultAPI,
-			}
-		}
+	dir, err := locker.New(&e.Configuration.Edge, e.Logger)
+	if err != nil {
+		return err
 	}
 
-	for _, config := range serviceMap {
-		if contains(config.registeredServices, "authorizer") {
-			continue
-		}
+	e.Services = make(map[string]ServiceTypes)
+
+	serviceMap := mapToGRPCPorts(e.Configuration.Services)
+
+	for address, config := range serviceMap {
 		serviceConfig := config
 
 		// get middlewares for edge services.
@@ -137,15 +107,59 @@ func (e *Authorizer) configServices() error {
 		if err != nil {
 			return err
 		}
+
 		var opts []grpc.ServerOption
 		unary, streeam := middlewareList.AsGRPCOptions()
 		opts = append(opts, unary)
 		opts = append(opts, streeam)
-		server, err := e.configEdgeDir(&serviceConfig, opts)
+
+		edge, err := NewEdgeDir(serviceConfig.registeredServices, serviceConfig.API, opts, dir)
 		if err != nil {
 			return err
 		}
+		e.Services["edge_"+address] = edge
+		if contains(serviceConfig.registeredServices, "authorizer") {
+			topaz, err := NewTopaz(serviceConfig.API, &e.Configuration.Common, opts, e.Logger)
+			if err != nil {
+				return err
+			}
+			e.Services["topaz"] = topaz
+		}
 
+		var grpcs []builder.GRPCRegistrations
+		var gateways []builder.HandlerRegistrations
+
+		for _, serv := range e.Services {
+			notAdded := true
+			for _, serviceName := range serv.RegisteredServices() {
+				if contains(serviceConfig.registeredServices, serviceName) && notAdded {
+					opts = append(opts, serv.GetServerOptions()...)
+					grpcs = append(grpcs, serv.GetGRPCRegistrations())
+					gateways = append(gateways, serv.GetGatewayRegistration())
+					notAdded = false
+				}
+			}
+		}
+		server, err := e.ServiceBuilder.CreateService(serviceConfig.API,
+			opts,
+			func(server *grpc.Server) {
+				for _, f := range grpcs {
+					f(server)
+				}
+			},
+			func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
+				for _, f := range gateways {
+					err := f(ctx, mux, grpcEndpoint, opts)
+					if err != nil {
+						return err
+					}
+				}
+				return nil
+			}, true)
+
+		if err != nil {
+			return err
+		}
 		err = e.Manager.AddGRPCServer(server)
 		if err != nil {
 			return err
@@ -153,105 +167,6 @@ func (e *Authorizer) configServices() error {
 	}
 
 	return nil
-}
-
-func (e *Authorizer) configEdgeDir(cfg *services, edgeOpts []grpc.ServerOption) (*builder.Server, error) {
-	if cfg.API.GRPC.Certs.TLSCACertPath == "" {
-		if _, ok := e.Configuration.Services["authorizer"]; ok {
-			cfg.API.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
-		} else {
-			return nil, errors.New("GRPC certificates required for edge services")
-		}
-	}
-	if cfg.API.Gateway.Certs.TLSCACertPath == "" {
-		cfg.API.Gateway.HTTP = true
-	}
-
-	if len(cfg.API.Needs) > 0 {
-		for _, name := range cfg.API.Needs {
-			if dependencyConfig, ok := e.Configuration.Services[name]; ok {
-				if !contains(e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) {
-					e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.API.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
-				}
-			}
-		}
-	}
-
-	// attach default allowed origins to gateway.
-	cfg.API.Gateway.AllowedOrigins = append(cfg.API.Gateway.AllowedOrigins, allowedOrigins...)
-
-	edgeDir, err := locker.New(&e.Configuration.Edge, e.Logger)
-	if err != nil {
-		return nil, err
-	}
-	server, err := e.ServiceBuilder.CreateService(cfg.API, edgeOpts,
-		e.getEdgeRegistrations(cfg.registeredServices, edgeDir),
-		e.getEdgeGatewayRegistration(cfg.registeredServices), true)
-	if err != nil {
-		return nil, err
-	}
-
-	// attach handler for directory openapi spec.
-	if server.Gateway.Mux != nil {
-		server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
-		}))
-	}
-
-	return server, nil
-}
-
-func (e *Authorizer) configAuthorizer(cfg *builder.API) (*builder.Server, error) {
-	authorizerOpts := e.ServerOptions
-
-	if cfg.GRPC.Certs.TLSCertPath != "" {
-		tlsCreds, err := certs.GRPCServerTLSCreds(cfg.GRPC.Certs)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to calculate tls config")
-		}
-
-		tlsAuth := grpc.Creds(tlsCreds)
-		authorizerOpts = append(authorizerOpts, tlsAuth)
-	}
-	if len(cfg.Needs) > 0 {
-		for _, name := range cfg.Needs {
-			if dependencyConfig, ok := e.Configuration.Services[name]; ok {
-				if !contains(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) {
-					e.Manager.DependencyMap[cfg.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
-				}
-			}
-		}
-	}
-	// TODO: debug this - having issues with gateway connectivity when connection timeout is set
-	// authorizerOpts = append(authorizerOpts, grpc.ConnectionTimeout(time.Duration(config.GRPC.ConnectionTimeoutSeconds)))
-
-	if err := view.Register(ocgrpc.DefaultServerViews...); err != nil {
-		return nil, err
-	}
-	authorizerOpts = append(authorizerOpts, grpc.StatsHandler(&ocgrpc.ServerHandler{}))
-
-	var server *builder.Server
-	var err error
-
-	if e.Configuration.DirectoryResolver.Address == e.Configuration.Services["authorizer"].GRPC.ListenAddress {
-		server, err = e.createAuhtorizerWithEdgeRegistrations(cfg, authorizerOpts)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		server, err = e.createAuthorizer(cfg, authorizerOpts)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if server.Gateway.Mux != nil {
-		server.Gateway.Mux.Handle("/robots.txt", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprintln(w, "User-agent: *\nDisallow: /")
-		}))
-	}
-	return server, nil
 }
 
 type services struct {
@@ -282,123 +197,6 @@ func contains[T comparable](slice []T, item T) bool {
 		}
 	}
 	return false
-}
-
-func (e *Authorizer) getAuthorizerRegistration() builder.GRPCRegistrations {
-	return func(server *grpc.Server) {
-		authz.RegisterAuthorizerServer(server, e.AuthorizerServer)
-	}
-}
-
-func (e *Authorizer) getAuthorizerGatewayRegistrations() builder.HandlerRegistrations {
-	return authz.RegisterAuthorizerHandlerFromEndpoint
-}
-
-func (e *Authorizer) getEdgeRegistrations(registeredServices []string, edgeDir *directory.Directory) builder.GRPCRegistrations {
-	return func(server *grpc.Server) {
-		if contains(registeredServices, "reader") {
-			reader.RegisterReaderServer(server, edgeDir.Reader2())
-		}
-		if contains(registeredServices, "writer") {
-			writer.RegisterWriterServer(server, edgeDir.Writer2())
-		}
-		if contains(registeredServices, "importer") {
-			importer.RegisterImporterServer(server, edgeDir.Importer2())
-		}
-		if contains(registeredServices, "exporter") {
-			exporter.RegisterExporterServer(server, edgeDir.Exporter2())
-		}
-	}
-}
-
-func (e *Authorizer) getEdgeGatewayRegistration(registeredServices []string) builder.HandlerRegistrations {
-	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-		// nolint: gocritic temporary disabled until 0.30 schema release/integration.
-		// if contains(registeredServices, "reader") {
-		// 	err := reader.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// }
-		// if contains(registeredServices, "writer") {
-		// 	err := writer.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// }
-		// if contains(registeredServices, "importer") {
-		// 	err := importer.RegisterImporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// }
-		// if contains(registeredServices, "exporter") {
-		// 	err := exporter.RegisterExporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// }
-		return nil
-	}
-}
-
-func (e *Authorizer) createAuhtorizerWithEdgeRegistrations(cfg *builder.API, authorizerOpts []grpc.ServerOption) (*builder.Server, error) {
-	edgeDir, err := locker.New(&e.Configuration.Edge, e.Logger)
-	if err != nil {
-		return nil, err
-	}
-	server, err := e.ServiceBuilder.CreateService(cfg, authorizerOpts,
-		func(server *grpc.Server) {
-			e.getAuthorizerRegistration()(server)
-			e.getEdgeRegistrations([]string{"reader", "writer", "importer", "exporter"}, edgeDir)(server)
-		},
-		func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-			err := e.getAuthorizerGatewayRegistrations()(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-			err = e.getEdgeGatewayRegistration([]string{"reader", "writer", "importer", "exporter"})(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-			return nil
-		},
-		true)
-	if err != nil {
-		return nil, err
-	}
-	if server.Gateway.Mux != nil {
-		// Add optional handlers.
-		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
-		}))
-
-		// attach handler for directory openapi spec when to same service as the authorizer.
-		server.Gateway.Mux.Handle("/api/v2/directory/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(diropenapi.Static())).ServeHTTP(w, r)
-		}))
-	}
-	return server, nil
-}
-
-func (e *Authorizer) createAuthorizer(cfg *builder.API, authorizerOpts []grpc.ServerOption) (*builder.Server, error) {
-	server, err := e.ServiceBuilder.CreateService(cfg, authorizerOpts,
-		e.getAuthorizerRegistration(),
-		e.getAuthorizerGatewayRegistrations(), true)
-	if err != nil {
-		return nil, err
-	}
-
-	if server.Gateway.Mux != nil {
-		// Add optional handlers.
-		server.Gateway.Mux.Handle("/openapi.json", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(openapi.Static())).ServeHTTP(w, r)
-		}))
-	}
-	return server, nil
 }
 
 func isLocalDirectory(address string) bool {

@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/aserto-dev/go-aserto/client"
+	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/controller"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -23,7 +24,7 @@ var cmdRun = &cobra.Command{
 	Long:  `Start instance of the Topaz authorization service.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		configPath := config.Path(flagRunConfigFile)
-		app, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, func(cfg *config.Config) {
+		authorizer, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, func(cfg *config.Config) {
 			cfg.Command.Mode = config.CommandModeRun
 
 			if len(flagRunBundleFiles) > 0 {
@@ -46,27 +47,35 @@ var cmdRun = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		directory := topaz.DirectoryResolver(app.Context, app.Logger, app.Configuration)
-		decisionlog, err := app.GetDecisionLogger(app.Configuration.DecisionLogger)
+		directory := topaz.DirectoryResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration)
+		decisionlog, err := authorizer.GetDecisionLogger(authorizer.Configuration.DecisionLogger)
 		if err != nil {
 			return err
 		}
 
-		controllerFactory := controller.NewControllerFactory(app.Logger, app.Configuration.ControllerConfig, client.NewDialOptionsProvider())
+		controllerFactory := controller.NewControllerFactory(authorizer.Logger, authorizer.Configuration.ControllerConfig, client.NewDialOptionsProvider())
 
-		runtime, _, err := topaz.NewRuntimeResolver(app.Context, app.Logger, app.Configuration, controllerFactory, decisionlog, directory)
-		if err != nil {
-			return err
-		}
-		app.Resolver.SetRuntimeResolver(runtime)
-		app.Resolver.SetDirectoryResolver(directory)
-
-		err = app.Start()
+		runtime, _, err := topaz.NewRuntimeResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration, controllerFactory, decisionlog, directory)
 		if err != nil {
 			return err
 		}
 
-		<-app.Context.Done()
+		err = authorizer.ConfigServices()
+		if err != nil {
+			return err
+		}
+
+		if _, ok := authorizer.Services["topaz"]; ok {
+			authorizer.Services["topaz"].(*app.Topaz).Resolver.SetRuntimeResolver(runtime)
+			authorizer.Services["topaz"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
+		}
+
+		err = authorizer.Start()
+		if err != nil {
+			return err
+		}
+
+		<-authorizer.Context.Done()
 
 		return nil
 	},

@@ -25,6 +25,7 @@ var (
 		builder.NewServiceManager,
 
 		DefaultGRPCOptions,
+		DefaultServices,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),
 		wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"),
@@ -54,4 +55,8 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 
 func DefaultGRPCOptions() []grpc.ServerOption {
 	return nil
+}
+
+func DefaultServices() map[string]app.ServiceTypes {
+	return make(map[string]app.ServiceTypes)
 }

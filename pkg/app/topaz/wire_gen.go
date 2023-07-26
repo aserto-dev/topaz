@@ -31,18 +31,15 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 	configConfig := ccCC.Config
 	serviceFactory := builder.NewServiceFactory()
 	serviceManager := builder.NewServiceManager(zerologLogger)
-	resolversResolvers := resolvers.New()
-	common := &configConfig.Common
-	authorizerServer := impl.NewAuthorizerServer(zerologLogger, common, resolversResolvers)
+	v2 := DefaultServices()
 	authorizer := &app.Authorizer{
-		Context:          context,
-		Logger:           zerologLogger,
-		ServerOptions:    v,
-		Configuration:    configConfig,
-		ServiceBuilder:   serviceFactory,
-		Manager:          serviceManager,
-		Resolver:         resolversResolvers,
-		AuthorizerServer: authorizerServer,
+		Context:        context,
+		Logger:         zerologLogger,
+		ServerOptions:  v,
+		Configuration:  configConfig,
+		ServiceBuilder: serviceFactory,
+		Manager:        serviceManager,
+		Services:       v2,
 	}
 	return authorizer, func() {
 		cleanup()
@@ -60,18 +57,15 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 	configConfig := ccCC.Config
 	serviceFactory := builder.NewServiceFactory()
 	serviceManager := builder.NewServiceManager(zerologLogger)
-	resolversResolvers := resolvers.New()
-	common := &configConfig.Common
-	authorizerServer := impl.NewAuthorizerServer(zerologLogger, common, resolversResolvers)
+	v2 := DefaultServices()
 	authorizer := &app.Authorizer{
-		Context:          context,
-		Logger:           zerologLogger,
-		ServerOptions:    v,
-		Configuration:    configConfig,
-		ServiceBuilder:   serviceFactory,
-		Manager:          serviceManager,
-		Resolver:         resolversResolvers,
-		AuthorizerServer: authorizerServer,
+		Context:        context,
+		Logger:         zerologLogger,
+		ServerOptions:  v,
+		Configuration:  configConfig,
+		ServiceBuilder: serviceFactory,
+		Manager:        serviceManager,
+		Services:       v2,
 	}
 	return authorizer, func() {
 		cleanup()
@@ -81,7 +75,9 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(resolvers.New, impl.NewAuthorizerServer, builder.NewServiceFactory, builder.NewServiceManager, DefaultGRPCOptions, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"))
+	commonSet = wire.NewSet(resolvers.New, impl.NewAuthorizerServer, builder.NewServiceFactory, builder.NewServiceManager, DefaultGRPCOptions,
+		DefaultServices, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
+	)
 
 	appTestSet = wire.NewSet(
 		commonSet, cc.NewTestCC,
@@ -94,4 +90,8 @@ var (
 
 func DefaultGRPCOptions() []grpc.ServerOption {
 	return nil
+}
+
+func DefaultServices() map[string]app.ServiceTypes {
+	return make(map[string]app.ServiceTypes)
 }
