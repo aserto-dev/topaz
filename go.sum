@@ -57,8 +57,6 @@ github.com/alecthomas/repr v0.1.0/go.mod h1:2kn6fqh/zIyPLmm3ugklbEi5hg5wS435eygv
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0 h1:jfIu9sQUG6Ig+0+Ap1h4unLjW6YQJpKZVmUzxsD4E/Q=
 github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0/go.mod h1:t2tdKJDJF9BV14lnkjHmOQgcvEKgtqs5a1N3LNdJhGE=
-github.com/aserto-dev/aserto-go v0.8.14-0.20230712213807-d44012fb6bff h1:KyQLUZkkVTxRH7psNHsd+SkT6Arh8eiOngRYYXVuXmQ=
-github.com/aserto-dev/aserto-go v0.8.14-0.20230712213807-d44012fb6bff/go.mod h1:OFVnSJeMxsnzNuBmsY9yeVo9lTtwSGkv9Kr7YRC2ndM=
 github.com/aserto-dev/aserto-grpc v0.2.2 h1:i6rWdvydyqs7eBqsZHYdPPCC+xVwQve8KrBgAdkjYr8=
 github.com/aserto-dev/aserto-grpc v0.2.2/go.mod h1:uDMB5njLdoCa0Hr+TOg6A4gH85uNqTvufkM5sKtEjcE=
 github.com/aserto-dev/aserto-management v0.9.2 h1:fX0YMEWvE+THKm96A/h6gjDxHtFzKFhmDFCgu/AMs4Y=
@@ -97,8 +95,8 @@ github.com/aserto-dev/runtime v0.54.1 h1:cFUWu3dyE9q5hqG46rwWJUNEd/DdhNpwW6zjPH/
 github.com/aserto-dev/runtime v0.54.1/go.mod h1:KYF4DZo5lIWMvRg4QQioypxdi2mDwZF7DmPggAK+2Dg=
 github.com/aserto-dev/self-decision-logger v0.0.3 h1:8bytl9dDJCg3WjMcFEpFqJ/vWCBvjg/nh+oXBcUqy1U=
 github.com/aserto-dev/self-decision-logger v0.0.3/go.mod h1:fEhOq3rMeeaOrnQ3jUEGujcWwmgdyC33Z6GPEYkMvcY=
-github.com/aserto-dev/service-host v0.0.2 h1:02LUDTXbd2Nf40V3uULxqRiXIm51YC/acnKXP8nwVqM=
-github.com/aserto-dev/service-host v0.0.2/go.mod h1:xkPJgw1WjoML0uth5A2Leu4zwl+OoUTySQ4MraLK5RQ=
+github.com/aserto-dev/service-host v0.0.3-0.20230725063222-42d7f03727c5 h1:8p8/K2Ab6aIWuZHFG6YDkS0HGoTGSdw0EdFAQ/+chx4=
+github.com/aserto-dev/service-host v0.0.3-0.20230725063222-42d7f03727c5/go.mod h1:xkPJgw1WjoML0uth5A2Leu4zwl+OoUTySQ4MraLK5RQ=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=

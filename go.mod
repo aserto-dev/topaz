@@ -12,7 +12,6 @@ go 1.19
 require (
 	github.com/alecthomas/assert/v2 v2.1.0
 	github.com/alecthomas/kong v0.8.0
-	github.com/aserto-dev/aserto-go v0.8.14-0.20230712213807-d44012fb6bff
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.2
 	github.com/aserto-dev/certs v0.0.3
@@ -30,7 +29,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.21.5
 	github.com/aserto-dev/runtime v0.54.1
 	github.com/aserto-dev/self-decision-logger v0.0.3
-	github.com/aserto-dev/service-host v0.0.2
+	github.com/aserto-dev/service-host v0.0.3-0.20230725063222-42d7f03727c5
 	github.com/fatih/color v1.15.0
 	github.com/fullstorydev/grpcurl v1.8.7
 	github.com/google/uuid v1.3.0

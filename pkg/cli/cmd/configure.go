@@ -10,7 +10,6 @@ import (
 	"path"
 	"strings"
 
-	"github.com/aserto-dev/aserto-go/client/tenant"
 	"github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/go-grpc/aserto/tenant/connection/v1"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -66,12 +65,15 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.EdgeAuthorizer && cmd.TenantAddress != "" {
-		client, err := clients.NewTenantClient(c, &clients.TenantConfig{
+
+		clientConfig := clients.TenantConfig{
 			Address:  cmd.TenantAddress,
 			APIKey:   cmd.TenantKey,
 			TenantID: cmd.TenantID,
 			Insecure: true,
-		})
+		}
+
+		client, err := clients.NewTenantConnectionClient(c, &clientConfig)
 		if err != nil {
 			return err
 		}
@@ -170,8 +172,8 @@ func WriteConfig(w io.Writer, templ string, params *templateParams) error {
 	return nil
 }
 
-func getEdgeAuthorizerCerts(ctx context.Context, client *tenant.Client, connectionId, configDir string) (certFile, keyFile string, err error) {
-	resp, err := client.Connections.GetConnection(ctx, &connection.GetConnectionRequest{
+func getEdgeAuthorizerCerts(ctx context.Context, client connection.ConnectionClient, connectionId, configDir string) (certFile, keyFile string, err error) {
+	resp, err := client.GetConnection(ctx, &connection.GetConnectionRequest{
 		Id: connectionId,
 	})
 	if err != nil {
