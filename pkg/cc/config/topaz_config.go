@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/aserto-dev/aserto-management/controller"
@@ -71,12 +70,6 @@ func (c *Config) validation() error {
 
 	if len(c.Services) == 0 {
 		return errors.New("no api services configured")
-	}
-
-	for key := range c.Services {
-		if _, ok := ServiceTypeMap()[key]; !ok {
-			return errors.New(fmt.Sprintf("unknown service type configuration %s", key))
-		}
 	}
 
 	setDefaultCallsAuthz(c)

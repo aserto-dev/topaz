@@ -22,6 +22,7 @@ const localImageTemplate = templatePreamble + `
 opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2
+  # max_plugin_wait_time_seconds: 30 set as default
   local_bundles:
     local_policy_image: {{ .LocalPolicyImage }}
     watch: true
@@ -32,6 +33,7 @@ const configTemplate = templatePreamble + `
 opa:
   instance_id: "{{ .TenantID }}"
   graceful_shutdown_period_seconds: 2
+  # max_plugin_wait_time_seconds: 30 set as default
   config:
     services:
       aserto-discovery:
@@ -49,6 +51,7 @@ opa:
 opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2
+  # max_plugin_wait_time_seconds: 30 set as default
   local_bundles:
     paths: []
     skip_verification: true
@@ -81,22 +84,29 @@ directory:
 
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:
-  address: "0.0.0.0:9292" # same as the reader as we resolve the identity from the local directory service.
+  address: "0.0.0.0:9292" # set as default, it should be the same as the reader as we resolve the identity from the local directory service.
   insecure: true
-  
+
+# default jwt validation configuration
+# jwt:
+#   acceptable_time_skew_seconds: 5
+
 api:
   reader:
     grpc:
       listen_address: "0.0.0.0:9292"
+      # if certs are not specified default certs will be generate with the format reader_grpc.*
       certs:
         tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
         tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     gateway:
       listen_address: "0.0.0.0:9393"
+      # allowed_origins include localhost by default
       allowed_origins:
       - https://*.aserto.com
       - https://*aserto-console.netlify.app
+      # if certs are not specified the gateway will have the http: true flag enabled
       certs:
         tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
         tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
@@ -184,12 +194,14 @@ api:
 decision_logger:
   type: self
   config:
-    store_directory: {{.LogStoreDirectory}}
+    store_directory: "${TOPAZ_DIR}/{{.LogStoreDirectory}}"
     scribe:
       address: {{.EMSAddress}}
-      client_cert_path: {{.EdgeCertFile}}
-      client_key_path: {{.EdgeKeyFile}}
+      client_cert_path: "${TOPAZ_DIR}/cfg/{{.EdgeCertFile}}"
+      client_key_path: "${TOPAZ_DIR}/cfg/{{.EdgeKeyFile}}"
       ack_wait_seconds: 30
+      headers:
+        Aserto-Tenant-Id: {{.TenantID }}
     shipper:
       publish_timeout_seconds: 2
 
@@ -197,7 +209,7 @@ controller:
   enabled: true
   server:
     address: {{.RelayAddress}}
-    client_cert_path: {{.EdgeCertFile}}
-    client_key_path: {{.EdgeKeyFile}}
+    client_cert_path: "${TOPAZ_DIR}/cfg/{{.EdgeCertFile}}"
+    client_key_path: "${TOPAZ_DIR}/cfg/{{.EdgeKeyFile}}"
 {{ end }}  
 `
