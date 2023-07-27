@@ -29,7 +29,8 @@ type ConfigureCmd struct {
 	EdgeAuthorizer    bool   `short:"e" help:"configure topaz to work as an edge authorizer connected to the aserto control plane" default:"false"`
 	TenantAddress     string `help:"aserto tenant service address" default:"tenant.prod.aserto.com:8443"`
 	TenantID          string `help:"your aserto tenant id"`
-	TenantKey         string `help:"API key to connect to the tenant service"`
+	TenantAPIKey      string `help:"root API key to connect to the tenant service"`
+	TenantToken       string `help:"token to connect to the tenant service"`
 	ConnectionID      string `help:"edge authorizer connection id"`
 	DiscoveryURL      string `help:"discovery service url" default:"https://discovery.prod.aserto.com/api/v2/discovery"`
 	DiscoveryKey      string `help:"discovery service api key"`
@@ -69,7 +70,8 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 
 		clientConfig := clients.TenantConfig{
 			Address:  cmd.TenantAddress,
-			APIKey:   cmd.TenantKey,
+			Token:    cmd.TenantToken,
+			APIKey:   cmd.TenantAPIKey,
 			TenantID: cmd.TenantID,
 			Insecure: true,
 		}

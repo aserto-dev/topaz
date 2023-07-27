@@ -11,6 +11,7 @@ import (
 type TenantConfig struct {
 	Address  string
 	APIKey   string
+	Token    string
 	TenantID string
 	Insecure bool
 }
@@ -25,6 +26,9 @@ func NewTenantConnectionClient(c *cc.CommonCtx, cfg *TenantConfig) (connection.C
 		grpcClient.WithInsecure(cfg.Insecure),
 	}
 
+	if cfg.Token != "" {
+		opts = append(opts, grpcClient.WithTokenAuth(cfg.Token))
+	}
 	if cfg.APIKey != "" {
 		opts = append(opts, grpcClient.WithAPIKeyAuth(cfg.APIKey))
 	}
