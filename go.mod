@@ -3,14 +3,17 @@ module github.com/aserto-dev/topaz
 go 1.19
 
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-replace github.com/aserto-dev/service-host => ../service-host
+
+// replace github.com/aserto-dev/service-host => ../service-host
+
+// replace github.com/aserto-dev/self-decision-logger => ../self-decision-logger
+
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
 // replace github.com/aserto-dev/certs => ../certs
 // replace github.com/aserto-dev/aserto-management => ../aserto-management
 
 require (
-	github.com/alecthomas/assert/v2 v2.1.0
 	github.com/alecthomas/kong v0.8.0
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.2
@@ -25,17 +28,15 @@ require (
 	github.com/aserto-dev/go-grpc v0.8.56
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
-	github.com/aserto-dev/openapi-authorizer v0.8.81
-	github.com/aserto-dev/openapi-directory v0.21.5
 	github.com/aserto-dev/runtime v0.54.1
-	github.com/aserto-dev/self-decision-logger v0.0.3
-	github.com/aserto-dev/service-host v0.0.3-0.20230725063222-42d7f03727c5
+	github.com/aserto-dev/self-decision-logger v0.0.4
+	github.com/aserto-dev/service-host v0.0.3
 	github.com/fatih/color v1.15.0
 	github.com/fullstorydev/grpcurl v1.8.7
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.1
 	github.com/lestrrat-go/jwx v1.2.26
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.2.0
@@ -50,7 +51,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.3.0
-	google.golang.org/grpc v1.56.2
+	google.golang.org/grpc v1.57.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	sigs.k8s.io/controller-runtime v0.15.0
@@ -61,8 +62,7 @@ require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/alecthomas/repr v0.1.0 // indirect
-	github.com/aserto-dev/go-aserto-net v0.9.0 // indirect
+	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.5.1 // indirect
@@ -92,7 +92,6 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/hexops/gotextdiff v1.0.3 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jhump/protoreflect v1.15.1 // indirect
 	github.com/klauspost/compress v1.16.7 // indirect
@@ -156,8 +155,8 @@ require (
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.11.0 // indirect
 	google.golang.org/genproto v0.0.0-20230720185612-659f7aaaa771 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20230720185612-659f7aaaa771 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230720185612-659f7aaaa771 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20230724170836-66ad5b6ff146 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230724170836-66ad5b6ff146 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
