@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/aserto-dev/certs"
@@ -24,6 +25,7 @@ import (
 	builder "github.com/aserto-dev/service-host"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/rapidoc"
 	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -46,6 +48,13 @@ var allowedOrigins = []string{
 	"https://127.0.0.1",
 	"https://127.0.0.1:*",
 }
+
+const (
+	authorizerOpenAPISpec string = "/authorizer/openapi.json"
+	authorizerOpenAPIDocs string = "/authorizer/docs"
+	directoryOpenAPISpec  string = "/directory/openapi.json"
+	directoryOpenAPIDocs  string = "/directory/docs"
+)
 
 // Authorizer is an authorizer service instance, responsible for managing
 // the authorizer API, user directory instance and the OPA plugins.
@@ -167,10 +176,8 @@ func (e *Authorizer) configEdgeDir(cfg *services) (*builder.Server, error) {
 
 	// attach handler for directory openapi spec.
 	if server.Gateway.Mux != nil {
-		server.Gateway.Mux.Handle("/api/v3/directory/openapi", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(dsOpenAPI.Static())).ServeHTTP(w, r)
-		}))
+		server.Gateway.Mux.HandleFunc(directoryOpenAPISpec, dsOpenAPIHandler)
+		server.Gateway.Mux.Handle(directoryOpenAPIDocs, dsOpenAPIDocsHandler())
 	}
 
 	return server, nil
@@ -339,17 +346,11 @@ func (e *Authorizer) createAuthorizerWithEdgeRegistrations(cfg *builder.API, aut
 		return nil, err
 	}
 	if server.Gateway.Mux != nil {
-		// Add optional handlers.
-		server.Gateway.Mux.Handle("/api/v2/authorizer/openapi", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(azOpenAPI.Static())).ServeHTTP(w, r)
-		}))
+		server.Gateway.Mux.HandleFunc(authorizerOpenAPISpec, azOpenAPIHandler)
+		server.Gateway.Mux.Handle(authorizerOpenAPIDocs, azOpenAPIDocsHandler())
 
-		// attach handler for directory openapi spec when to same service as the authorizer.
-		server.Gateway.Mux.Handle("/api/v3/directory/openapi", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(dsOpenAPI.Static())).ServeHTTP(w, r)
-		}))
+		server.Gateway.Mux.HandleFunc(directoryOpenAPISpec, dsOpenAPIHandler)
+		server.Gateway.Mux.Handle(directoryOpenAPIDocs, dsOpenAPIDocsHandler())
 	}
 	return server, nil
 }
@@ -364,10 +365,8 @@ func (e *Authorizer) createAuthorizer(cfg *builder.API, authorizerOpts []grpc.Se
 
 	if server.Gateway.Mux != nil {
 		// Add optional handlers.
-		server.Gateway.Mux.Handle("/api/v2/authorizer/openapi", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Add("Content-Type", "application/json")
-			http.FileServer(http.FS(azOpenAPI.Static())).ServeHTTP(w, r)
-		}))
+		server.Gateway.Mux.HandleFunc(authorizerOpenAPISpec, azOpenAPIHandler)
+		server.Gateway.Mux.Handle(authorizerOpenAPIDocs, azOpenAPIDocsHandler())
 	}
 	return server, nil
 }
@@ -389,4 +388,44 @@ func isLocalDirectory(address string) bool {
 	return strings.Contains(address, "localhost") ||
 		strings.Contains(address, "127.0.0.1") ||
 		strings.Contains(address, "0.0.0.0")
+}
+
+func azOpenAPIHandler(w http.ResponseWriter, r *http.Request) {
+	buf, err := azOpenAPI.Static().ReadFile("openapi.json")
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writeFile(buf, w, r)
+}
+
+func azOpenAPIDocsHandler() http.Handler {
+	return rapidoc.Handler(&rapidoc.Opts{
+		Path:    authorizerOpenAPIDocs,
+		SpecURL: authorizerOpenAPISpec,
+		Title:   "Aserto Authorizer HTTP API",
+	}, nil)
+}
+
+func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request) {
+	buf, err := dsOpenAPI.Static().ReadFile("openapi.json")
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writeFile(buf, w, r)
+}
+
+func dsOpenAPIDocsHandler() http.Handler {
+	return rapidoc.Handler(&rapidoc.Opts{
+		Path:    directoryOpenAPIDocs,
+		SpecURL: directoryOpenAPISpec,
+		Title:   "Aserto Directory HTTP API",
+	}, nil)
+}
+
+func writeFile(buf []byte, w http.ResponseWriter, _ *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
+	_, _ = w.Write(buf)
 }
