@@ -2,12 +2,9 @@ module github.com/aserto-dev/topaz
 
 go 1.19
 
-replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
-replace github.com/aserto-dev/go-directory => ../go-directory
-
-replace github.com/aserto-dev/service-host => ../service-host
-
+// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+// replace github.com/aserto-dev/go-directory => ../go-directory
+// replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
 // replace github.com/aserto-dev/certs => ../certs
@@ -19,13 +16,13 @@ require (
 	github.com/aserto-dev/errors v0.0.5
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.2
-	github.com/aserto-dev/go-directory v0.21.7-0.20230725182626-60ef07904a4d
+	github.com/aserto-dev/go-directory v0.21.7-0.20230731175128-38d662e6385f
 	github.com/aserto-dev/go-directory-cli v0.20.13
 	github.com/aserto-dev/go-edge-ds v0.21.8-0.20230725184051-8903516f79ed
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.8.81
-	github.com/aserto-dev/openapi-directory v0.21.6-0.20230723043509-15ddb12b9ca0
+	github.com/aserto-dev/openapi-directory v0.21.6-0.20230731181915-866d614d3b22
 	github.com/aserto-dev/runtime v0.54.1
 	github.com/aserto-dev/service-host v0.0.2
 	github.com/fatih/color v1.15.0

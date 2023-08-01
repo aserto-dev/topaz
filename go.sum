@@ -67,8 +67,11 @@ github.com/aserto-dev/go-aserto v0.20.3 h1:yUhMIENFIdKA6TxE36E+99N3baEIuzfj7Y+on
 github.com/aserto-dev/go-aserto v0.20.3/go.mod h1:6e5FdSQNvVvaRVIVrAqlQk9uh5k3jtIcDIXciQtN+GQ=
 github.com/aserto-dev/go-authorizer v0.20.2 h1:jDjPeaD3lyJmgWFDL6+B8ebG9nrRsqFyMP16HVdNhj4=
 github.com/aserto-dev/go-authorizer v0.20.2/go.mod h1:RTpBixDT2WIPOkXcewCXG3NxOWDt22yiXMb+qvdxucM=
+github.com/aserto-dev/go-directory v0.21.7-0.20230731175128-38d662e6385f h1:w6fllUUeNo5NNaw1hpw3mNBz/s3IkBUgyfq4dd5OStA=
+github.com/aserto-dev/go-directory v0.21.7-0.20230731175128-38d662e6385f/go.mod h1:ZsHSXALiP6F49/+zKDZP6GIcAWyYX95lkSVxM+8Jwno=
 github.com/aserto-dev/go-directory-cli v0.20.13 h1:TepHQflnC8/czC7vhGe2wkP/EKgyJ/Q+S3fT6jrcVz8=
 github.com/aserto-dev/go-directory-cli v0.20.13/go.mod h1:wZUFVIF2gYZ7GfelEwy4ND5RX38kYqjVKEMvfo8A+xo=
+github.com/aserto-dev/go-edge-ds v0.21.8-0.20230725184051-8903516f79ed/go.mod h1:AoWV9tacuqu3bPC4Q9jh0zDukiKlNN8GX1guVvm1nEk=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1/go.mod h1:QnWF5/X2U/kmbu7GEw+zupvqX2hIthDjyXlRTwt2zEI=
 github.com/aserto-dev/header v0.0.5 h1:nEvYNgBoIwomxuvo14JuQ/ZqGGHU67NKuZyNdW4n4FU=
@@ -79,8 +82,11 @@ github.com/aserto-dev/openapi-authorizer v0.8.81 h1:YDxVLBssBvj71/ecgLFuvC7dkOQu
 github.com/aserto-dev/openapi-authorizer v0.8.81/go.mod h1:3kmTs3pjNE5aQXt1Ob71uVdqC2qC61EO9gl6O63md4U=
 github.com/aserto-dev/openapi-directory v0.21.6-0.20230723043509-15ddb12b9ca0 h1:zNicUNcRKFQgP/JbvfjdtXFn8fVpgshZQGPFlCmybJo=
 github.com/aserto-dev/openapi-directory v0.21.6-0.20230723043509-15ddb12b9ca0/go.mod h1:j7VK2dM9ELaI5xI5q53+EpHbvrheHz41yDhZ5rjw+tE=
+github.com/aserto-dev/openapi-directory v0.21.6-0.20230731181915-866d614d3b22 h1:w81Tz3RGqcNjmouF8azwtWysegXr3cn1NCmH7yI1VqY=
+github.com/aserto-dev/openapi-directory v0.21.6-0.20230731181915-866d614d3b22/go.mod h1:j7VK2dM9ELaI5xI5q53+EpHbvrheHz41yDhZ5rjw+tE=
 github.com/aserto-dev/runtime v0.54.1 h1:cFUWu3dyE9q5hqG46rwWJUNEd/DdhNpwW6zjPH/+gT8=
 github.com/aserto-dev/runtime v0.54.1/go.mod h1:KYF4DZo5lIWMvRg4QQioypxdi2mDwZF7DmPggAK+2Dg=
+github.com/aserto-dev/service-host v0.0.2/go.mod h1:xkPJgw1WjoML0uth5A2Leu4zwl+OoUTySQ4MraLK5RQ=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
