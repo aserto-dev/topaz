@@ -20,8 +20,7 @@ type InstanceMiddleware struct {
 }
 
 func NewInstanceMiddleware(cfg *config.Config, logger *zerolog.Logger) *InstanceMiddleware {
-	details := []string{"", ""}
-	details = strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
+	details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
 
 	return &InstanceMiddleware{
 		policyName:    details[0],

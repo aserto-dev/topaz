@@ -65,8 +65,7 @@ func NewRuntimeResolver(
 		if host == "" {
 			host = os.Getenv("HOSTNAME")
 		}
-		details := []string{"", ""}
-		details = strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
+		details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
 		cleanupController, err := ctrlf.OnRuntimeStarted(ctx, cfg.OPA.InstanceID, "", details[0],
 			details[1], host, func(cmdCtx context.Context, cmd *api.Command) error {
 				return management.HandleCommand(cmdCtx, cmd, sidecarRuntime)

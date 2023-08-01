@@ -12,6 +12,7 @@ import (
 
 	"github.com/aserto-dev/go-grpc/aserto/api/v1"
 	"github.com/aserto-dev/go-grpc/aserto/tenant/connection/v1"
+	"github.com/aserto-dev/header"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/fatih/color"
@@ -37,7 +38,7 @@ type ConfigureCmd struct {
 	LogStoreDirectory string `help:"local path to store decision logs" default:"decision-logs"`
 }
 
-func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 	if cmd.PolicyName == "" && cmd.Resource == "" {
 		if cmd.LocalPolicyImage == "" {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
@@ -80,7 +81,9 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
-		tenantIDContext := context.WithValue(c.Context, "aserto-tenant-id", cmd.TenantID)
+
+		tenantIDContext := header.ContextWithTenantID(c.Context, cmd.TenantID)
+
 		certFile, keyFile, err := getEdgeAuthorizerCerts(tenantIDContext, client, cmd.ConnectionID, configDir)
 		if err != nil {
 			return err
@@ -176,9 +179,9 @@ func WriteConfig(w io.Writer, templ string, params *templateParams) error {
 	return nil
 }
 
-func getEdgeAuthorizerCerts(ctx context.Context, client connection.ConnectionClient, connectionId, configDir string) (certFile, keyFile string, err error) {
+func getEdgeAuthorizerCerts(ctx context.Context, client connection.ConnectionClient, connectionID, configDir string) (certFile, keyFile string, err error) {
 	resp, err := client.GetConnection(ctx, &connection.GetConnectionRequest{
-		Id: connectionId,
+		Id: connectionID,
 	})
 	if err != nil {
 		return "", "", err

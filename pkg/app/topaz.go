@@ -37,14 +37,14 @@ func NewTopaz(cfg *builder.API, commonConfig *config.Common, authorizerOpts []gr
 	}
 	authorizerOpts = append(authorizerOpts, grpc.StatsHandler(&ocgrpc.ServerHandler{}))
 
-	resolvers := resolvers.New()
+	authResolvers := resolvers.New()
 
-	authServer := impl.NewAuthorizerServer(logger, commonConfig, resolvers)
+	authServer := impl.NewAuthorizerServer(logger, commonConfig, authResolvers)
 
 	return &Topaz{
 		cfg:              cfg,
 		opts:             authorizerOpts,
-		Resolver:         resolvers,
+		Resolver:         authResolvers,
 		AuthorizerServer: authServer,
 	}, nil
 }

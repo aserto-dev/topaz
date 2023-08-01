@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/aserto-dev/go-aserto/client"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
@@ -24,17 +23,6 @@ import (
 )
 
 var locker edge.EdgeDirLock
-
-var allowedOrigins = []string{
-	"http://localhost",
-	"http://localhost:*",
-	"https://localhost",
-	"https://localhost:*",
-	"http://127.0.0.1",
-	"http://127.0.0.1:*",
-	"https://127.0.0.1",
-	"https://127.0.0.1:*",
-}
 
 // Authorizer is an authorizer service instance, responsible for managing
 // the authorizer API, user directory instance and the OPA plugins.
@@ -109,15 +97,14 @@ func (e *Authorizer) ConfigServices() error {
 		}
 
 		var opts []grpc.ServerOption
-		unary, streeam := middlewareList.AsGRPCOptions()
-		opts = append(opts, unary)
-		opts = append(opts, streeam)
+		unary, stream := middlewareList.AsGRPCOptions()
+		opts = append(opts, unary, stream)
 
-		edge, err := NewEdgeDir(serviceConfig.registeredServices, serviceConfig.API, opts, dir)
+		edgeDir, err := NewEdgeDir(serviceConfig.registeredServices, serviceConfig.API, opts, dir)
 		if err != nil {
 			return err
 		}
-		e.Services["edge_"+address] = edge
+		e.Services["edge_"+address] = edgeDir
 		if contains(serviceConfig.registeredServices, "authorizer") {
 			topaz, err := NewTopaz(serviceConfig.API, &e.Configuration.Common, opts, e.Logger)
 			if err != nil {
@@ -197,12 +184,6 @@ func contains[T comparable](slice []T, item T) bool {
 		}
 	}
 	return false
-}
-
-func isLocalDirectory(address string) bool {
-	return strings.Contains(address, "localhost") ||
-		strings.Contains(address, "127.0.0.1") ||
-		strings.Contains(address, "0.0.0.0")
 }
 
 func (e *Authorizer) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {

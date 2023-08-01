@@ -17,7 +17,7 @@ import (
 func GetMiddlewaresForService(serviceName string, ctx context.Context, cfg *config.Config, logger *zerolog.Logger) (grpcutil.Middlewares, error) {
 
 	if _, ok := cfg.Services[serviceName]; !ok {
-		return nil, fmt.Errorf("Service %s not configured", serviceName)
+		return nil, fmt.Errorf("service %s not configured", serviceName)
 	}
 	var middlewareList grpcutil.Middlewares
 	if len(cfg.Auth.APIKeys) > 0 {
@@ -38,9 +38,10 @@ func GetMiddlewaresForService(serviceName string, ctx context.Context, cfg *conf
 		middlewareList = append(middlewareList, NewInstanceMiddleware(cfg, logger))
 	}
 	// get tenant id from opa instance id.
-	middlewareList = append(middlewareList, NewTenantIDMiddleware(cfg))
-	middlewareList = append(middlewareList, tracing.NewTracingMiddleware(logger))
-	middlewareList = append(middlewareList, gerr.NewErrorMiddleware())
+	middlewareList = append(middlewareList,
+		NewTenantIDMiddleware(cfg),
+		tracing.NewTracingMiddleware(logger),
+		gerr.NewErrorMiddleware())
 
 	return middlewareList, nil
 }
