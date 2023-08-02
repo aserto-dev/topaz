@@ -12,9 +12,10 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/rs/zerolog"
+	"google.golang.org/grpc"
 )
 
-func GetMiddlewaresForService(serviceName string, ctx context.Context, cfg *config.Config, logger *zerolog.Logger) (grpcutil.Middlewares, error) {
+func GetMiddlewaresForService(serviceName string, ctx context.Context, cfg *config.Config, logger *zerolog.Logger) ([]grpc.ServerOption, error) {
 
 	if _, ok := cfg.Services[serviceName]; !ok {
 		return nil, fmt.Errorf("service %s not configured", serviceName)
@@ -43,5 +44,9 @@ func GetMiddlewaresForService(serviceName string, ctx context.Context, cfg *conf
 		tracing.NewTracingMiddleware(logger),
 		gerr.NewErrorMiddleware())
 
-	return middlewareList, nil
+	var opts []grpc.ServerOption
+	unary, stream := middlewareList.AsGRPCOptions()
+	opts = append(opts, unary, stream)
+
+	return opts, nil
 }

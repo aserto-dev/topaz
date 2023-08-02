@@ -71,12 +71,8 @@ func (e *Authorizer) Start() error {
 }
 
 func (e *Authorizer) ConfigServices() error {
-	if readerConfig, ok := e.Configuration.Services["reader"]; ok {
-		if readerConfig.GRPC.ListenAddress != e.Configuration.DirectoryResolver.Address {
-			return errors.New("remote directory resolver address is different from reader grpc address")
-		}
-	}
 
+	// prepare services
 	dir, err := locker.New(&e.Configuration.Edge, e.Logger)
 	if err != nil {
 		return err
@@ -86,8 +82,19 @@ func (e *Authorizer) ConfigServices() error {
 	if err != nil {
 		return err
 	}
+	e.Services["edge"] = edgeDir
 
-	e.Services = make(map[string]ServiceTypes)
+	if serviceConfig, ok := e.Configuration.Services[authorizerService]; ok {
+		topaz, err := NewTopaz(serviceConfig, &e.Configuration.Common, nil, e.Logger)
+		if err != nil {
+			return err
+		}
+		e.Services["topaz"] = topaz
+	}
+
+	if err := e.validateConfig(); err != nil {
+		return err
+	}
 
 	serviceMap := mapToGRPCPorts(e.Configuration.Services)
 
@@ -96,22 +103,9 @@ func (e *Authorizer) ConfigServices() error {
 		serviceConfig := config
 
 		// get middlewares for edge services.
-		middlewareList, err := middlewares.GetMiddlewaresForService(config.registeredServices[0], e.Context, e.Configuration, e.Logger)
+		opts, err := middlewares.GetMiddlewaresForService(authorizerService, e.Context, e.Configuration, e.Logger)
 		if err != nil {
 			return err
-		}
-
-		var opts []grpc.ServerOption
-		unary, stream := middlewareList.AsGRPCOptions()
-		opts = append(opts, unary, stream)
-
-		e.Services["edge"] = edgeDir
-		if contains(serviceConfig.registeredServices, "authorizer") {
-			topaz, err := NewTopaz(serviceConfig.API, &e.Configuration.Common, opts, e.Logger)
-			if err != nil {
-				return err
-			}
-			e.Services["topaz"] = topaz
 		}
 
 		var grpcs []builder.GRPCRegistrations
@@ -223,4 +217,19 @@ func (e *Authorizer) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlo
 	}
 
 	return decisionlogger, err
+}
+
+func (e *Authorizer) validateConfig() error {
+	if readerConfig, ok := e.Configuration.Services["reader"]; ok {
+		if readerConfig.GRPC.ListenAddress != e.Configuration.DirectoryResolver.Address {
+			return errors.New("remote directory resolver address is different from reader grpc address")
+		}
+	}
+
+	for key := range e.Configuration.Services {
+		if !(contains(e.Services["edge"].AvailableServices(), key) || key == authorizerService) {
+			return errors.Errorf("unknown service type %s", key)
+		}
+	}
+	return nil
 }
