@@ -33,8 +33,6 @@ type ConfigureCmd struct {
 	TenantAPIKey      string `help:"root API key to connect to the tenant service"`
 	TenantToken       string `help:"token to connect to the tenant service"`
 	ConnectionID      string `help:"edge authorizer connection id"`
-	DiscoveryURL      string `help:"discovery service url" default:"https://discovery.prod.aserto.com/api/v2/discovery"`
-	DiscoveryKey      string `help:"discovery service api key"`
 	LogStoreDirectory string `help:"local path to store decision logs" default:"decision-logs"`
 }
 
@@ -97,8 +95,14 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 		tenantArr[0] = "relay"
 		params.RelayAddress = strings.Join(tenantArr, ".")
 		params.TenantID = cmd.TenantID
-		params.DiscoveryURL = cmd.DiscoveryURL
-		params.DiscoveryKey = cmd.DiscoveryKey
+
+		discoveryConfig, err := getDiscoveryConfig(c.Context, client)
+		if err != nil {
+			return err
+		}
+		params.DiscoveryKey = discoveryConfig.APIKey
+		params.DiscoveryURL = discoveryConfig.URL
+
 		params.LogStoreDirectory = cmd.LogStoreDirectory
 	}
 
@@ -243,4 +247,49 @@ func fileFromConfigField(structVal *structpb.Struct, field, configDir, fileName 
 	}
 
 	return nil
+}
+
+type discoveryConfig struct {
+	URL    string
+	APIKey string
+}
+
+func newDiscoveryConfig(config *structpb.Struct) (*discoveryConfig, error) {
+	urlField, ok := config.Fields["url"]
+	if !ok {
+		return nil, errors.New("missing field: url")
+	}
+
+	apiKeyField, ok := config.Fields["api_key"]
+	if !ok {
+		return nil, errors.New("missing field: api_key")
+	}
+
+	return &discoveryConfig{URL: urlField.GetStringValue(), APIKey: apiKeyField.GetStringValue()}, nil
+}
+
+func getDiscoveryConfig(ctx context.Context, client connection.ConnectionClient) (*discoveryConfig, error) {
+	resp, err := client.ListConnections(
+		ctx,
+		&connection.ListConnectionsRequest{Kind: api.ProviderKind_PROVIDER_KIND_DISCOVERY},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(resp.Results) == 0 {
+		return nil, errors.New("no discovery connections available for tenant. please contact support@aserto.com")
+	}
+
+	for _, conn := range resp.Results {
+		conResp, err := client.GetConnection(ctx, &connection.GetConnectionRequest{Id: conn.Id})
+		if err == nil {
+			conf, err := newDiscoveryConfig(conResp.Result.Config)
+			if err == nil {
+				return conf, nil
+			}
+		}
+	}
+
+	return nil, errors.New("cannot find discovery configuration")
 }
