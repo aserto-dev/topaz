@@ -197,8 +197,8 @@ decision_logger:
     store_directory: "${TOPAZ_DIR}/{{.LogStoreDirectory}}"
     scribe:
       address: {{.EMSAddress}}
-      client_cert_path: "${TOPAZ_DIR}/cfg/{{.EdgeCertFile}}"
-      client_key_path: "${TOPAZ_DIR}/cfg/{{.EdgeKeyFile}}"
+      client_cert_path: "${TOPAZ_DIR}/edge/{{.EdgeCertFile}}"
+      client_key_path: "${TOPAZ_DIR}/edge/{{.EdgeKeyFile}}"
       ack_wait_seconds: 30
       headers:
         Aserto-Tenant-Id: {{.TenantID }}
@@ -209,7 +209,7 @@ controller:
   enabled: true
   server:
     address: {{.RelayAddress}}
-    client_cert_path: "${TOPAZ_DIR}/cfg/{{.EdgeCertFile}}"
-    client_key_path: "${TOPAZ_DIR}/cfg/{{.EdgeKeyFile}}"
+    client_cert_path: "${TOPAZ_DIR}/edge/{{.EdgeCertFile}}"
+    client_key_path: "${TOPAZ_DIR}/edge/{{.EdgeKeyFile}}"
 {{ end }}  
 `

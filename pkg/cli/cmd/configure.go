@@ -66,6 +66,10 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.EdgeAuthorizer && cmd.TenantAddress != "" {
+		edgeCertsDir, err := CreateEdgeCertsDir()
+		if err != nil {
+			return err
+		}
 
 		clientConfig := clients.TenantConfig{
 			Address:  cmd.TenantAddress,
@@ -82,7 +86,7 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 
 		tenantIDContext := header.ContextWithTenantID(c.Context, cmd.TenantID)
 
-		certFile, keyFile, err := getEdgeAuthorizerCerts(tenantIDContext, client, cmd.ConnectionID, configDir)
+		certFile, keyFile, err := getEdgeAuthorizerCerts(tenantIDContext, client, cmd.ConnectionID, edgeCertsDir)
 		if err != nil {
 			return err
 		}
@@ -148,6 +152,20 @@ func CreateCertsDir() (string, error) {
 	}
 
 	certsDir := path.Join(home, "/.config/topaz/certs")
+	if fi, err := os.Stat(certsDir); err == nil && fi.IsDir() {
+		return certsDir, nil
+	}
+
+	return certsDir, os.MkdirAll(certsDir, 0700)
+}
+
+func CreateEdgeCertsDir() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	certsDir := path.Join(home, "/.config/topaz/edge")
 	if fi, err := os.Stat(certsDir); err == nil && fi.IsDir() {
 		return certsDir, nil
 	}
