@@ -14,47 +14,44 @@ import (
 )
 
 type EdgeDir struct {
-	registeredServices []string
-	dir                *directory.Directory
-	cfg                *builder.API
-	opts               []grpc.ServerOption
+	dir *directory.Directory
 }
 
-func NewEdgeDir(registeredServices []string, cfg *builder.API, edgeOpts []grpc.ServerOption, edge *directory.Directory) (ServiceTypes, error) {
+const (
+	readerService   = "reader"
+	writerService   = "writer"
+	exporterService = "exporter"
+	importerService = "importer"
+)
+
+func NewEdgeDir(edge *directory.Directory) (ServiceTypes, error) {
 	return &EdgeDir{
-		registeredServices: registeredServices,
-		cfg:                cfg,
-		opts:               edgeOpts,
-		dir:                edge,
+		dir: edge,
 	}, nil
 }
 
-func (e *EdgeDir) RegisteredServices() []string {
-	return e.registeredServices
+func (e *EdgeDir) AvailableServices() []string {
+	return []string{readerService, writerService, exporterService, importerService}
 }
 
-func (e *EdgeDir) GetServerOptions() []grpc.ServerOption {
-	return nil
-}
-
-func (e *EdgeDir) GetGRPCRegistrations() builder.GRPCRegistrations {
+func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
-		if contains(e.registeredServices, "reader") {
+		if contains(services, "reader") {
 			reader.RegisterReaderServer(server, e.dir.Reader2())
 		}
-		if contains(e.registeredServices, "writer") {
+		if contains(services, "writer") {
 			writer.RegisterWriterServer(server, e.dir.Writer2())
 		}
-		if contains(e.registeredServices, "importer") {
+		if contains(services, "importer") {
 			importer.RegisterImporterServer(server, e.dir.Importer2())
 		}
-		if contains(e.registeredServices, "exporter") {
+		if contains(services, "exporter") {
 			exporter.RegisterExporterServer(server, e.dir.Exporter2())
 		}
 	}
 }
 
-func (e *EdgeDir) GetGatewayRegistration() builder.HandlerRegistrations {
+func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		// nolint: gocritic temporary disabled until 0.30 schema release/integration.
 		// if contains(registeredServices, "reader") {

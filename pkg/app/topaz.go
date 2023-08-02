@@ -22,6 +22,10 @@ type Topaz struct {
 	opts []grpc.ServerOption
 }
 
+const (
+	authorizerService = "authorizer"
+)
+
 func NewTopaz(cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
 	if cfg.GRPC.Certs.TLSCertPath != "" {
 		tlsCreds, err := certs.GRPCServerTLSCreds(cfg.GRPC.Certs)
@@ -49,20 +53,16 @@ func NewTopaz(cfg *builder.API, commonConfig *config.Common, authorizerOpts []gr
 	}, nil
 }
 
-func (e *Topaz) RegisteredServices() []string {
-	return []string{"authorizer"}
+func (e *Topaz) AvailableServices() []string {
+	return []string{authorizerService}
 }
 
-func (e *Topaz) GetServerOptions() []grpc.ServerOption {
-	return nil
-}
-
-func (e *Topaz) GetGRPCRegistrations() builder.GRPCRegistrations {
+func (e *Topaz) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
 		authz.RegisterAuthorizerServer(server, e.AuthorizerServer)
 	}
 }
 
-func (e *Topaz) GetGatewayRegistration() builder.HandlerRegistrations {
+func (e *Topaz) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
 	return authz.RegisterAuthorizerHandlerFromEndpoint
 }

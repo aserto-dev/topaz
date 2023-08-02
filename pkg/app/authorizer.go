@@ -37,10 +37,9 @@ type Authorizer struct {
 }
 
 type ServiceTypes interface {
-	RegisteredServices() []string
-	GetServerOptions() []grpc.ServerOption
-	GetGRPCRegistrations() builder.GRPCRegistrations
-	GetGatewayRegistration() builder.HandlerRegistrations
+	AvailableServices() []string
+	GetGRPCRegistrations(services ...string) builder.GRPCRegistrations
+	GetGatewayRegistration(services ...string) builder.HandlerRegistrations
 }
 
 func (e *Authorizer) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
@@ -83,11 +82,17 @@ func (e *Authorizer) ConfigServices() error {
 		return err
 	}
 
+	edgeDir, err := NewEdgeDir(dir)
+	if err != nil {
+		return err
+	}
+
 	e.Services = make(map[string]ServiceTypes)
 
 	serviceMap := mapToGRPCPorts(e.Configuration.Services)
 
 	for address, config := range serviceMap {
+		e.Logger.Debug().Msgf("configuring address %s", address)
 		serviceConfig := config
 
 		// get middlewares for edge services.
@@ -100,11 +105,7 @@ func (e *Authorizer) ConfigServices() error {
 		unary, stream := middlewareList.AsGRPCOptions()
 		opts = append(opts, unary, stream)
 
-		edgeDir, err := NewEdgeDir(serviceConfig.registeredServices, serviceConfig.API, opts, dir)
-		if err != nil {
-			return err
-		}
-		e.Services["edge_"+address] = edgeDir
+		e.Services["edge"] = edgeDir
 		if contains(serviceConfig.registeredServices, "authorizer") {
 			topaz, err := NewTopaz(serviceConfig.API, &e.Configuration.Common, opts, e.Logger)
 			if err != nil {
@@ -118,11 +119,10 @@ func (e *Authorizer) ConfigServices() error {
 
 		for _, serv := range e.Services {
 			notAdded := true
-			for _, serviceName := range serv.RegisteredServices() {
+			for _, serviceName := range serv.AvailableServices() {
 				if contains(serviceConfig.registeredServices, serviceName) && notAdded {
-					opts = append(opts, serv.GetServerOptions()...)
-					grpcs = append(grpcs, serv.GetGRPCRegistrations())
-					gateways = append(gateways, serv.GetGatewayRegistration())
+					grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
+					gateways = append(gateways, serv.GetGatewayRegistration(serviceConfig.registeredServices...))
 					notAdded = false
 				}
 			}
