@@ -1,21 +1,12 @@
 package cmd
 
 type templateParams struct {
-	LocalPolicyImage  string
-	PolicyName        string
-	Resource          string
-	Authorization     string
-	EdgeDirectory     bool
-	EdgeAuthorzier    bool
-	SeedMetadata      bool
-	EdgeCertFile      string
-	EdgeKeyFile       string
-	RelayAddress      string
-	EMSAddress        string
-	LogStoreDirectory string
-	TenantID          string
-	DiscoveryURL      string
-	DiscoveryKey      string
+	LocalPolicyImage string
+	PolicyName       string
+	Resource         string
+	Authorization    string
+	EdgeDirectory    bool
+	SeedMetadata     bool
 }
 
 const localImageTemplate = templatePreamble + `
@@ -29,25 +20,6 @@ opa:
     skip_verification: true
 `
 const configTemplate = templatePreamble + `
-{{ if .EdgeAuthorzier }}
-opa:
-  instance_id: "{{ .TenantID }}"
-  graceful_shutdown_period_seconds: 2
-  # max_plugin_wait_time_seconds: 30 set as default
-  config:
-    services:
-      aserto-discovery:
-        url: {{.DiscoveryURL}}
-        credentials:
-          bearer:
-            token: "{{ .DiscoveryKey }}"
-            scheme: "basic"
-        headers:
-          Aserto-Tenant-Id: {{ .TenantID }}
-    discovery:
-      service: aserto-discovery
-      resource: {{.PolicyName}}/{{.PolicyName}}/opa
-{{ else }}
 opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2
@@ -70,7 +42,6 @@ opa:
           polling:
             min_delay_seconds: 60
             max_delay_seconds: 120
-{{ end }}
 `
 
 const templatePreamble = `---
@@ -189,27 +160,4 @@ api:
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
     health:
       listen_address: "0.0.0.0:8484"
-
-{{if .EdgeAuthorzier }}
-decision_logger:
-  type: self
-  config:
-    store_directory: "${TOPAZ_DIR}/{{.LogStoreDirectory}}"
-    scribe:
-      address: {{.EMSAddress}}
-      client_cert_path: "${TOPAZ_DIR}/edge/{{.EdgeCertFile}}"
-      client_key_path: "${TOPAZ_DIR}/edge/{{.EdgeKeyFile}}"
-      ack_wait_seconds: 30
-      headers:
-        Aserto-Tenant-Id: {{.TenantID }}
-    shipper:
-      publish_timeout_seconds: 2
-
-controller:
-  enabled: true
-  server:
-    address: {{.RelayAddress}}
-    client_cert_path: "${TOPAZ_DIR}/edge/{{.EdgeCertFile}}"
-    client_key_path: "${TOPAZ_DIR}/edge/{{.EdgeKeyFile}}"
-{{ end }}  
 `
