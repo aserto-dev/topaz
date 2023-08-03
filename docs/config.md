@@ -3,6 +3,7 @@ The main configuration for Topaz can be devided in 3 main sections:
 1. Common configuration
 2. Auth configuration - optional
 3. Decision logger configuration - optional
+4. Controller configuration - optional
 
 ## Topaz configuration environment variables
 
@@ -206,4 +207,22 @@ opa:
          registry_service: 'ghcr.io'
          registry_image: 'aserto-policies/policy-peoplefinder-rbac'
          digest: 'b36c9fac3c4f3a20e524ef4eca4ac3170e30281fe003b80a499591043299c898'
+```
+
+When deploying topaz as an [Aserto Edge Authorizer](https://docs.aserto.com/docs/edge-authorizers/overview) you can configure the decision logger to send the logs to the upstream Aserto policy instance. For configuration details see: https://docs.aserto.com/docs/edge-authorizers/decision-logs 
+
+
+## 4. Controller configuration (optional)
+
+The controller allows an edge Topaz authorizer to connect to the Aserto Control Plane through a secure mTLS connection.  This way the edge authorizers can sync their running policy with an upstream policy instance and sync their local directory with a remote directory. 
+
+For more details on the security and management of edge authorizers see documentation available [here](https://docs.aserto.com/docs/edge-authorizers/security-and-management).
+
+```
+controller:
+  enabled: true
+  server:
+    address: relay.prod.aserto.com:8443
+    client_cert_path: <path to client certificate>
+    client_key_path: <path to client key>
 ```
