@@ -16,9 +16,9 @@ require (
 	github.com/aserto-dev/errors v0.0.5
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.2
-	github.com/aserto-dev/go-directory v0.21.7-0.20230731175128-38d662e6385f
+	github.com/aserto-dev/go-directory v0.21.7-0.20230803181948-a340eae335ad
 	github.com/aserto-dev/go-directory-cli v0.20.13
-	github.com/aserto-dev/go-edge-ds v0.21.8-0.20230725184051-8903516f79ed
+	github.com/aserto-dev/go-edge-ds v0.21.8-0.20230803182051-245c4be5d258
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.8.81
@@ -53,14 +53,17 @@ require (
 )
 
 require (
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.31.0-20230721003620-2341cbb21958.1 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230106234847-43070de90fa1 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
+	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230512164433-5d1fd1a340c9 // indirect
 	github.com/aserto-dev/aserto-grpc v0.2.2 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.5.1 // indirect
+	github.com/bufbuild/protovalidate-go v0.2.1 // indirect
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/containerd/containerd v1.7.2 // indirect
@@ -76,6 +79,7 @@ require (
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/google/cel-go v0.17.1 // indirect
 	github.com/google/flatbuffers v2.0.8+incompatible // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
@@ -123,6 +127,7 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/stoewer/go-strcase v1.3.0 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/tchap/go-patricia/v2 v2.3.1 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
