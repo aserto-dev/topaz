@@ -103,7 +103,7 @@ func (e *Authorizer) ConfigServices() error {
 		serviceConfig := config
 
 		// get middlewares for edge services.
-		opts, err := middlewares.GetMiddlewaresForService(authorizerService, e.Context, e.Configuration, e.Logger)
+		opts, err := middlewares.GetMiddlewaresForService(e.Context, e.Configuration, e.Logger)
 		if err != nil {
 			return err
 		}
