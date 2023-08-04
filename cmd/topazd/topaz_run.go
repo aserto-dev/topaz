@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
+	"github.com/aserto-dev/aserto-management/controller"
 	"github.com/aserto-dev/go-aserto/client"
 	"github.com/aserto-dev/topaz/pkg/app"
-	"github.com/aserto-dev/topaz/pkg/app/controller"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/spf13/cobra"
@@ -53,7 +53,7 @@ var cmdRun = &cobra.Command{
 			return err
 		}
 
-		controllerFactory := controller.NewControllerFactory(authorizer.Logger, authorizer.Configuration.ControllerConfig, client.NewDialOptionsProvider())
+		controllerFactory := controller.NewFactory(authorizer.Logger, authorizer.Configuration.ControllerConfig, client.NewDialOptionsProvider())
 
 		runtime, _, err := topaz.NewRuntimeResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration, controllerFactory, decisionlog, directory)
 		if err != nil {

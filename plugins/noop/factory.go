@@ -1,4 +1,4 @@
-package dummy
+package noop
 
 import (
 	"github.com/open-policy-agent/opa/plugins"
@@ -15,7 +15,7 @@ func NewPluginFactory(name string) PluginFactory {
 }
 
 func (p PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugin {
-	return &Dummy{
+	return &Noop{
 		Manager: m,
 		Name:    p.name,
 	}

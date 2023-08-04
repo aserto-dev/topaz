@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/plugins/dummy"
+	"github.com/aserto-dev/topaz/plugins/noop"
 	"github.com/mitchellh/mapstructure"
 	"github.com/open-policy-agent/opa/plugins"
 	"github.com/open-policy-agent/opa/util"
@@ -35,7 +35,7 @@ func (f PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugi
 		cfg.TenantID = strings.Split(m.ID, "/")[0]
 	}
 	if !cfg.Enabled {
-		return &dummy.Dummy{
+		return &noop.Noop{
 			Manager: m,
 			Name:    PluginName,
 		}

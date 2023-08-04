@@ -40,11 +40,8 @@ func (m *InstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
 				InstanceLabel: m.instanceLabel,
 				Name:          m.policyName,
 			}
-			result, err := handler(ctx, req)
-			return result, err
 		}
-		result, err := handler(ctx, req)
-		return result, err
+		return handler(ctx, req)
 	}
 }
 
