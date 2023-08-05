@@ -13,10 +13,12 @@ import (
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi2 "github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw2 "github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	edge "github.com/aserto-dev/go-edge-ds/pkg/server"
 	"github.com/aserto-dev/go-edge-ds/pkg/session"
@@ -116,7 +118,7 @@ func (e *Authorizer) configServices() error {
 			defaultAPI.GRPC.ListenAddress = e.Configuration.DirectoryResolver.Address
 			defaultAPI.GRPC.Certs = e.Configuration.Services["authorizer"].GRPC.Certs
 			serviceMap[e.Configuration.DirectoryResolver.Address] = services{
-				registeredServices: []string{"reader", "writer", "importer", "exporter"},
+				registeredServices: []string{"model", "reader", "writer", "importer", "exporter"},
 				API:                &defaultAPI,
 			}
 		}
@@ -271,6 +273,9 @@ func (e *Authorizer) getAuthorizerGatewayRegistrations() builder.HandlerRegistra
 
 func (e *Authorizer) getEdgeRegistrations(registeredServices []string, edgeDir *directory.Directory) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
+		if contains(registeredServices, "model") {
+			dsm3.RegisterModelServer(server, edgeDir.Model3())
+		}
 		if contains(registeredServices, "reader") {
 			dsr2.RegisterReaderServer(server, edgeDir.Reader2())
 			dsr3.RegisterReaderServer(server, edgeDir.Reader3())
@@ -292,6 +297,15 @@ func (e *Authorizer) getEdgeRegistrations(registeredServices []string, edgeDir *
 
 func (e *Authorizer) getEdgeGatewayRegistration(registeredServices []string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
+		if contains(registeredServices, "model") {
+			err := dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+			if err := dsm3stream.RegisterModelStreamHandlersFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
+				return err
+			}
+		}
 		if contains(registeredServices, "reader") {
 			err := dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
@@ -328,14 +342,14 @@ func (e *Authorizer) createAuthorizerWithEdgeRegistrations(cfg *builder.API, aut
 	server, err := e.ServiceBuilder.CreateService(cfg, authorizerOpts,
 		func(server *grpc.Server) {
 			e.getAuthorizerRegistration()(server)
-			e.getEdgeRegistrations([]string{"reader", "writer", "importer", "exporter"}, edgeDir)(server)
+			e.getEdgeRegistrations([]string{"model", "reader", "writer", "importer", "exporter"}, edgeDir)(server)
 		},
 		func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 			err := e.getAuthorizerGatewayRegistrations()(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
 			}
-			err = e.getEdgeGatewayRegistration([]string{"reader", "writer", "importer", "exporter"})(ctx, mux, grpcEndpoint, opts)
+			err = e.getEdgeGatewayRegistration([]string{"model", "reader", "writer", "importer", "exporter"})(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
 			}

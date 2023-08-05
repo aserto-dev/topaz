@@ -2,8 +2,12 @@ module github.com/aserto-dev/topaz
 
 go 1.19
 
-// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-// replace github.com/aserto-dev/go-directory => ../go-directory
+replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
+replace github.com/aserto-dev/go-directory => ../go-directory
+
+replace github.com/aserto-dev/openapi-directory => ../openapi-directory
+
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
@@ -16,13 +20,13 @@ require (
 	github.com/aserto-dev/errors v0.0.5
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.2
-	github.com/aserto-dev/go-directory v0.21.7-0.20230803211840-7fcbbdb25139
+	github.com/aserto-dev/go-directory v0.21.7-0.20230804235215-9b1386c7a067
 	github.com/aserto-dev/go-directory-cli v0.20.13
-	github.com/aserto-dev/go-edge-ds v0.21.8-0.20230803212005-066638916c72
+	github.com/aserto-dev/go-edge-ds v0.21.8-0.20230804235932-0bf2903544fe
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.8.81
-	github.com/aserto-dev/openapi-directory v0.21.6-0.20230731181915-866d614d3b22
+	github.com/aserto-dev/openapi-directory v0.21.6-0.20230801180906-3dc4d98b9278
 	github.com/aserto-dev/runtime v0.54.1
 	github.com/aserto-dev/service-host v0.0.2
 	github.com/fatih/color v1.15.0
@@ -138,13 +142,13 @@ require (
 	go.opentelemetry.io/otel/metric v1.16.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.16.0 // indirect
 	go.opentelemetry.io/otel/trace v1.16.0 // indirect
-	golang.org/x/crypto v0.11.0 // indirect
+	golang.org/x/crypto v0.12.0 // indirect
 	golang.org/x/exp v0.0.0-20230801115018-d63ba01acd4b // indirect
 	golang.org/x/mod v0.12.0 // indirect
-	golang.org/x/net v0.13.0 // indirect
-	golang.org/x/sys v0.10.0 // indirect
-	golang.org/x/term v0.10.0 // indirect
-	golang.org/x/text v0.11.0 // indirect
+	golang.org/x/net v0.14.0 // indirect
+	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/term v0.11.0 // indirect
+	golang.org/x/text v0.12.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.11.0 // indirect
 	google.golang.org/genproto v0.0.0-20230803162519-f966b187b2e5 // indirect
