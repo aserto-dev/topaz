@@ -22,7 +22,10 @@ Both run and start topaz CLI commands allow passing optional environment variabl
 
 ## 1. Common configuration
 
-### a. Logging
+### a. Version
+The configuration version accepted by the version of topaz - current compatible version: 1
+
+### b. Logging
 The [logging mechanism](https://github.com/aserto-dev/logger) for topaz is based on [zerolog](https://github.com/rs/zerolog) and has the following available settings:
  - *prod* - boolean - if set to false the entire log output will be written using a zerolog ConsoleWriter, setting this to true will write the errors to the stderr output and other logs to the stdout 
  - *log_level* - string - this value is parsed by zerolog to match desired logging level (default: info), available levels: trace, debug, info, warn, error, fatal and panic
@@ -34,7 +37,7 @@ logging:
   log_level: debug
 ```
 
-### b. API
+### c. API
 The API section is a map that defines the API configuration for each of the possible services that topaz is able to spin up:["reader","writer","importer","exporter","authorizer"]
 #### 1. grpc
 The grpc section allows configuring the listen address, the connection timeout and the certificates. 
@@ -112,6 +115,22 @@ api:
     grpc:
       connection_timeout_seconds: 2
 ```
+
+#### 5. metrics
+Allow topaz to spin up a metrics server for the configured API. 
+Example: 
+```
+api:
+  reader:
+    metrics:
+      listen_address: "localhost:9696"   
+    gateway:
+      listen_address: localhost:9393  
+    grpc:
+      listen_address: localhost:9595
+```
+
+For this example the metrics data is available at http://localhost:9696/metrics
 
 ### c. Directory
 The directory section allows setting the configuration for the topaz [local edge directory](https://github.com/aserto-dev/go-edge-ds).

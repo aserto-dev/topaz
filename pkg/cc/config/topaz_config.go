@@ -61,6 +61,9 @@ func defaults(v *viper.Viper) {
 }
 
 func (c *Config) validation() error {
+	if c.Version != 1 {
+		return errors.New("unsupported config version")
+	}
 	if c.Command.Mode == CommandModeRun && c.OPA.InstanceID == "" {
 		return errors.New("opa.instance_id not set")
 	}

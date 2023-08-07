@@ -45,6 +45,9 @@ opa:
 `
 
 const templatePreamble = `---
+# compatible config version
+version: 1 
+
 logging:
   prod: true
   log_level: info
