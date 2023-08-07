@@ -1,0 +1,350 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Topaz Config Schema",
+    "description": "Schema for topaz configuration files.",
+    "$ref": "#/definitions/Root",
+    "definitions": {
+        "Root": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "version": {
+                    "$ref": "#/definitions/Version"
+                },
+                "logging": {
+                    "$ref": "#/definitions/Logging"
+                },
+                "directory": {
+                    "$ref": "#definitions/Directory"
+                },
+                "remote_directory": {
+                    "$ref": "#definitions/RemoteDirectory"
+                },
+                "jwt": {
+                    "#ref": "#definitions/JSONWebToken"
+                },
+                "api": {
+                    "$ref": "#definitions/Services"
+                },
+                "opa": {
+                    "$ref": "#definitions/OpenPolicyAgent"
+                }
+            },
+            "required": [
+                "version",
+                "logging"
+            ]
+        },
+        "Version": {
+            "description": "config schema version",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1,
+            "required": [
+                "version"
+            ]
+        },
+        "Logging": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "prod": {
+                    "type": "boolean",
+                    "description": "log output format, structured json (prod=true) or unstructured text (prod=false)",
+                    "default": "false"
+                },
+                "log_level": {
+                    "type": "string",
+                    "description": "log level [trace|debug|info|warning|error]",
+                    "enum": [
+                        "trace",
+                        "debug",
+                        "info",
+                        "warning",
+                        "error"
+                    ],
+                    "default": "info"
+                },
+                "grpc_log_level": {
+                    "type": "string",
+                    "description": "gRPC log level, when not specified the `log_level` value is used",
+                    "enum": [
+                        "trace",
+                        "debug",
+                        "info",
+                        "warning",
+                        "error"
+                    ],
+                    "default": "info"
+                }
+            }
+        },
+        "Directory": {
+            "description": "edge directory config",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "db_path": {
+                    "type": "string",
+                    "description": "file path of edge directory database file",
+                    "default": "${TOPAZ_DIR}/db/directory.db"
+                },
+                "request_timeout": {
+                    "type": "string",
+                    "description": "edge directory request timeout in seconds",
+                    "default": "5s"
+                },
+                "seed_metadata": {
+                    "type": "boolean",
+                    "description": "seed edge directory with the default metadata objects",
+                    "default": "false"
+                }
+            }
+        },
+        "RemoteDirectory": {
+            "description": "remote directory config",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "description": "gRPC host address and port"
+                },
+                "token": {
+                    "type": "string",
+                    "description": "Bearer authorization token"
+                },
+                "tenant_id": {
+                    "type": "string",
+                    "description": "tenant identifier"
+                },
+                "api_key": {
+                    "type": "string",
+                    "description": "basic authorization token"
+                },
+                "client_cert_path": {
+                    "type": "string",
+                    "description": "path to gRPC certificate file"
+                },
+                "client_key_path": {
+                    "type": "string",
+                    "description": "path to gRPC key file"
+                },
+                "timeout_in_seconds": {
+                    "type": "integer",
+                    "description": "gRPC connection timeout in seconds"
+                },
+                "insecure": {
+                    "type": "boolean",
+                    "description": "skip TLS verification",
+                    "default": "false"
+                },
+                "headers": {
+                    "type": "object",
+                    "description": "map of additional gRPC headers",
+                    "examples": [
+                        {
+                            "aserto-account-id": "a192e882-b648-4a57-89a4-029cfb1b7289"
+                        }
+                    ]
+                }
+            }
+        },
+        "JSONWebToken": {
+            "type": "object",
+            "description": "JWT config",
+            "additionalProperties": false,
+            "properties": {
+                "acceptable_time_skew_seconds": {
+                    "type": "integer",
+                    "description": "allowed skew",
+                    "minimum": 0,
+                    "maximum": 60
+                }
+            }
+        },
+        "Services": {
+            "type": "object",
+            "description": "Services type config",
+            "uniqueItems": true,
+            "properties": {
+                "reader": {
+                    "description": "directory reader service",
+                    "$ref": "#/definitions/ServiceInstance"
+                },
+                "writer": {
+                    "description": "directory writer service",
+                    "$ref": "#/definitions/ServiceInstance"
+                },
+                "importer": {
+                    "description": "directory importer service",
+                    "$ref": "#/definitions/ServiceInstance"
+                },
+                "exporter": {
+                    "description": "directory exporter service",
+                    "$ref": "#/definitions/ServiceInstance"
+                },
+                "model": {
+                    "description": "directory model service",
+                    "$ref": "#/definitions/ServiceInstance"
+                },
+                "authorizer": {
+                    "description": "authorizer service",
+                    "$ref": "#/definitions/ServiceInstance"
+                }
+            }
+        },
+        "ServiceInstance": {
+            "description": "Service instance config",
+            "properties": {
+                "needs": {
+                    "description": "Required service dependencies",
+                    "$ref": "#/definitions/ServiceNeeds"
+                },
+                "grpc": {
+                    "description": "Service gRPC endpoint configuration",
+                    "$ref": "#/definitions/ServiceGRPC"
+                },
+                "gateway": {
+                    "description": "Service REST gateway endpoint configuration",
+                    "$ref": "#/definitions/ServiceGateway"
+                },
+                "health": {
+                    "description": "Service health endpoint configuration",
+                    "$ref": "#/definitions/ServiceHealth"
+                },
+                "metrics": {
+                    "description": "Service metrics endpoint configuration",
+                    "$ref": "#/definitions/ServiceMetrics"
+                }
+            }
+        },
+        "ServiceNeeds":{
+            "type": "array",
+            "uniqueItems": true
+        },
+        "ServiceGRPC": {
+            "properties": {
+                "listen_address": {
+                    "description": "gRPC host address and port",
+                    "type": "string"
+                },
+                "connection_timeout_seconds": {
+                    "description": "gRPC connection timeout in seconds",
+                    "type": "integer"
+                },
+                "certs": {
+                    "description": "gRPC TLS certificate configuration",
+                    "$ref": "#/definitions/ServiceTLSCertificates"
+                }
+            }
+        },
+        "ServiceGateway": {
+            "properties": {
+                "listen_address": {
+                    "description": "REST gateway host address and port",
+                    "type": "string"
+                },
+                "allowed_origins":{
+                    "description": "allowed CORS origins",
+                    "type": "array",
+                    "uniqueItems": true
+                },
+                "certs": {
+                    "description": "REST gateway TLS certificate configuration",
+                    "$ref": "#/definitions/ServiceTLSCertificates"
+                },
+                "http": {
+                    "description": "allow HTTP traffic",
+                    "type": "boolean",
+                    "default": false
+                },
+                "read_timeout": {
+                    "description": "ReadTimeout is the maximum duration for reading the entire request, including the body",
+                    "$comment": "https://pkg.go.dev/net/http@go1.20.7#Server",
+                    "type": "string",
+                    "default":  "2s"
+                },
+                "read_header_timeout": {
+                    "description": "ReadHeaderTimeout is the amount of time allowed to read request headers",
+                    "$comment": "https://pkg.go.dev/net/http@go1.20.7#Server",
+                    "type": "string",
+                    "default":  "2s"
+                },
+                "write_timeout": {
+                    "description": "WriteTimeout is the maximum duration before timing out writes of the response",
+                    "$comment": "https://pkg.go.dev/net/http@go1.20.7#Server",
+                    "type": "string",
+                    "default":  "2s"
+                },
+                "idle_timeout": {
+                    "description": "IdleTimeout is the maximum amount of time to wait for the next request when keep-alives are enabled",
+                    "$comment": "https://pkg.go.dev/net/http@go1.20.7#Server",
+                    "type": "string",
+                    "default":  "30s"
+                }
+            }
+        },
+        "ServiceHealth": {
+            "properties": {
+                "listen_address": {
+                    "description": "health host address and port",
+                    "type": "string"
+                }
+            }
+        },
+        "ServiceMetrics": {
+            "properties": {
+                "listen_address": {
+                    "description": "metrics host address and port",
+                    "type": "string"
+                }
+            }
+        },
+        "ServiceTLSCertificates": {
+            "properties": {
+                "tls_cert_path": {
+                    "description": "TLS certificate filepath",
+                    "type": "string"
+                },
+                "tls_key_path": {
+                    "description": "TLS key filepath",
+                    "type": "string"
+                },
+                "tls_ca_cert_path": {
+                    "description": "TLS CA certificate filepath",
+                    "type": "string"
+                }
+            }
+        },
+        "OpenPolicyAgent": {
+            "description": "Open Policy Agent config, see https://www.openpolicyagent.org/docs/latest/configuration/",
+            "properties": {
+                "instance_id": {
+                    "description": "",
+                    "type": "string"
+                },
+                "graceful_shutdown_period_seconds": {
+                    "description": "",
+                    "type": "integer"
+                },
+                "max_plugin_wait_time_seconds": {
+                    "description": "",
+                    "type": "integer"
+                },
+                "local_bundles": {
+                    "$ref": "#/definitions/OpenPolicyAgentLocalBundles"
+                },
+                "config": {
+                    "$ref": "#/definitions/OpenPolicyAgentConfig"
+                }
+            }
+        },
+        "OpenPolicyAgentLocalBundles": {
+            "description": "OPA local bundles block"
+        },
+        "OpenPolicyAgentConfig": {
+            "description": "OPA config block"
+        }
+    }
+}
