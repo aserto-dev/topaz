@@ -141,6 +141,7 @@
     "protomsg",
     "protoutil",
     "rakyll",
+    "rapidoc",
     "rbuf",
     "registery",
     "rego",

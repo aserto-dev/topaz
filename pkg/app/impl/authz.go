@@ -14,7 +14,7 @@ import (
 	"github.com/aserto-dev/header"
 
 	runtime "github.com/aserto-dev/runtime"
-	decisionlog_plugin "github.com/aserto-dev/topaz/decision_log/plugin"
+	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decision_log"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/version"

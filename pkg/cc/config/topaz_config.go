@@ -1,18 +1,25 @@
 package config
 
 import (
-	"fmt"
 	"strings"
 
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
+	"github.com/aserto-dev/aserto-management/controller"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
 
+const ConfigFileVersion = 1
+
 type Config struct {
-	Common         `json:",squash"` // nolint:staticcheck // squash is used by mapstructure
-	Auth           AuthnConfig      `json:"auth"`
-	DecisionLogger file.Config      `json:"decision_logger"`
+	Common           `json:",squash"`   // nolint:staticcheck // squash is used by mapstructure
+	Auth             AuthnConfig        `json:"auth"`
+	DecisionLogger   DecisionLogConfig  `json:"decision_logger"`
+	ControllerConfig *controller.Config `json:"controller"`
+}
+
+type DecisionLogConfig struct {
+	Type   string                 `json:"type"`
+	Config map[string]interface{} `json:"config"`
 }
 
 type AuthnConfig struct {
@@ -56,6 +63,9 @@ func defaults(v *viper.Viper) {
 }
 
 func (c *Config) validation() error {
+	if c.Version != ConfigFileVersion {
+		return errors.New("unsupported config version")
+	}
 	if c.Command.Mode == CommandModeRun && c.OPA.InstanceID == "" {
 		return errors.New("opa.instance_id not set")
 	}
@@ -65,12 +75,6 @@ func (c *Config) validation() error {
 
 	if len(c.Services) == 0 {
 		return errors.New("no api services configured")
-	}
-
-	for key := range c.Services {
-		if _, ok := ServiceTypeMap()[key]; !ok {
-			return errors.New(fmt.Sprintf("unknown service type configuration %s", key))
-		}
 	}
 
 	setDefaultCallsAuthz(c)

@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/fatih/color"
 )
@@ -52,6 +53,7 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 	params := templateParams{
+		Version:          config.ConfigFileVersion,
 		LocalPolicyImage: cmd.LocalPolicyImage,
 		PolicyName:       cmd.PolicyName,
 		Resource:         cmd.Resource,
