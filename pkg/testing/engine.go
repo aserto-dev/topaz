@@ -2,13 +2,14 @@ package testing
 
 import (
 	"context"
+	"errors"
+	"os"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
 
 	"github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -49,9 +50,12 @@ func (h *EngineHarness) Cleanup() {
 }
 
 func (h *EngineHarness) Runtime() *runtime.Runtime {
-	result, err := h.Engine.Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
-	require.NoError(h.t, err)
-	return result
+	if _, ok := h.Engine.Services["topaz"]; ok {
+		result, err := h.Engine.Services["topaz"].(*app.Topaz).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
+		require.NoError(h.t, err)
+		return result
+	}
+	return nil
 }
 
 func (h *EngineHarness) Context() context.Context {
@@ -83,6 +87,15 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	if online {
 		configFile = AssetDefaultConfigOnline()
 	}
+
+	err = os.Setenv("TOPAZ_DIR", "/tmp/topaz/test")
+	assert.NoError(err)
+	if _, err := os.Stat("/tmp/topaz/test"); errors.Is(err, os.ErrNotExist) {
+		err = os.MkdirAll("/tmp/topaz/test", 0777)
+		assert.NoError(err)
+		err = os.MkdirAll("/tmp/topaz/test/certs", 0777)
+		assert.NoError(err)
+	}
 	h.Engine, h.cleanup, err = topaz.BuildTestApp(
 		h.LogDebugger,
 		h.LogDebugger,
@@ -91,12 +104,16 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	)
 	assert.NoError(err)
 	directory := topaz.DirectoryResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration)
-	decisionlog, err := file.New(h.Engine.Context, &h.Engine.Configuration.DecisionLogger, h.Engine.Logger)
+	decisionlog, err := h.Engine.GetDecisionLogger(h.Engine.Configuration.DecisionLogger)
 	assert.NoError(err)
-	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, decisionlog, directory)
+	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, nil, decisionlog, directory)
 	assert.NoError(err)
-	h.Engine.Resolver.SetRuntimeResolver(rt)
-	h.Engine.Resolver.SetDirectoryResolver(directory)
+	err = h.Engine.ConfigServices()
+	assert.NoError(err)
+	if _, ok := h.Engine.Services["topaz"]; ok {
+		h.Engine.Services["topaz"].(*app.Topaz).Resolver.SetRuntimeResolver(rt)
+		h.Engine.Services["topaz"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
+	}
 	err = h.Engine.Start()
 	assert.NoError(err)
 

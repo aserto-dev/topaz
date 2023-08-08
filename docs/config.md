@@ -3,6 +3,7 @@ The main configuration for Topaz can be devided in 3 main sections:
 1. Common configuration
 2. Auth configuration - optional
 3. Decision logger configuration - optional
+4. Controller configuration - optional
 
 ## Topaz configuration environment variables
 
@@ -21,7 +22,10 @@ Both run and start topaz CLI commands allow passing optional environment variabl
 
 ## 1. Common configuration
 
-### a. Logging
+### a. Version
+The configuration version accepted by the version of topaz - current compatible version: 1
+
+### b. Logging
 The [logging mechanism](https://github.com/aserto-dev/logger) for topaz is based on [zerolog](https://github.com/rs/zerolog) and has the following available settings:
  - *prod* - boolean - if set to false the entire log output will be written using a zerolog ConsoleWriter, setting this to true will write the errors to the stderr output and other logs to the stdout 
  - *log_level* - string - this value is parsed by zerolog to match desired logging level (default: info), available levels: trace, debug, info, warn, error, fatal and panic
@@ -33,7 +37,7 @@ logging:
   log_level: debug
 ```
 
-### b. API
+### c. API
 The API section is a map that defines the API configuration for each of the possible services that topaz is able to spin up:["reader","writer","importer","exporter","authorizer"]
 #### 1. grpc
 The grpc section allows configuring the listen address, the connection timeout and the certificates. 
@@ -111,6 +115,22 @@ api:
     grpc:
       connection_timeout_seconds: 2
 ```
+
+#### 5. metrics
+Allow topaz to spin up a metrics server for the configured API. 
+Example: 
+```
+api:
+  reader:
+    metrics:
+      listen_address: "localhost:9696"   
+    gateway:
+      listen_address: localhost:9393  
+    grpc:
+      listen_address: localhost:9595
+```
+
+For this example the metrics data is available at http://localhost:9696/metrics
 
 ### c. Directory
 The directory section allows setting the configuration for the topaz [local edge directory](https://github.com/aserto-dev/go-edge-ds).
@@ -206,4 +226,22 @@ opa:
          registry_service: 'ghcr.io'
          registry_image: 'aserto-policies/policy-peoplefinder-rbac'
          digest: 'b36c9fac3c4f3a20e524ef4eca4ac3170e30281fe003b80a499591043299c898'
+```
+
+When deploying topaz as an [Aserto Edge Authorizer](https://docs.aserto.com/docs/edge-authorizers/overview) you can configure the decision logger to send the logs to the upstream Aserto policy instance. For configuration details see: https://docs.aserto.com/docs/edge-authorizers/decision-logs 
+
+
+## 4. Controller configuration (optional)
+
+The controller allows an edge Topaz authorizer to connect to the Aserto Control Plane through a secure mTLS connection.  This way the edge authorizers can sync their running policy with an upstream policy instance and sync their local directory with a remote directory. 
+
+For more details on the security and management of edge authorizers see documentation available [here](https://docs.aserto.com/docs/edge-authorizers/security-and-management).
+
+```
+controller:
+  enabled: true
+  server:
+    address: relay.prod.aserto.com:8443
+    client_cert_path: <path to client certificate>
+    client_key_path: <path to client key>
 ```

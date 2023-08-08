@@ -18,7 +18,6 @@ import (
 func TestWithMissingIdentity(t *testing.T) {
 	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
 		cfg.Edge.DBPath = atesting.AssetAcmeEBBFilePath()
-		cfg.DirectoryResolver.Address = "localhost:12345"
 	})
 	defer harness.Cleanup()
 

@@ -39,6 +39,7 @@ const (
 
 // Config holds the configuration for the app.
 type Common struct {
+	Version int           `json:"version"`
 	Logging logger.Config `json:"logging"`
 
 	Command struct {
