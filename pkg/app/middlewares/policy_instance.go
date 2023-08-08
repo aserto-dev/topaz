@@ -13,26 +13,26 @@ import (
 	"google.golang.org/grpc"
 )
 
-type InstanceMiddleware struct {
+type PolicyInstanceMiddleware struct {
 	policyName    string
 	instanceLabel string
 	logger        *zerolog.Logger
 }
 
-func NewInstanceMiddleware(cfg *config.Config, logger *zerolog.Logger) *InstanceMiddleware {
+func NewInstanceMiddleware(cfg *config.Config, logger *zerolog.Logger) *PolicyInstanceMiddleware {
 	details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
 
-	return &InstanceMiddleware{
+	return &PolicyInstanceMiddleware{
 		policyName:    details[0],
 		instanceLabel: details[1],
 		logger:        logger,
 	}
 }
 
-var _ grpcutil.Middleware = &InstanceMiddleware{}
+var _ grpcutil.Middleware = &PolicyInstanceMiddleware{}
 
 // If the unary operation is an Is request attach configured instance information to request.
-func (m *InstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
+func (m *PolicyInstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		request, ok := req.(*authorizer.IsRequest)
 		if ok {
@@ -46,7 +46,7 @@ func (m *InstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
 }
 
 // passthrough as Is call is Unary type operation.
-func (m *InstanceMiddleware) Stream() grpc.StreamServerInterceptor {
+func (m *PolicyInstanceMiddleware) Stream() grpc.StreamServerInterceptor {
 	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
 		wrapped := grpcmiddleware.WrapServerStream(stream)

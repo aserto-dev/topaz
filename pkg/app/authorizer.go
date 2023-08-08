@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/aserto-dev/go-aserto/client"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
@@ -165,6 +166,19 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 		} else {
 			serv.registeredServices = append(serv.registeredServices, key)
 			serv.API = config
+		}
+		// set default gateway timeouts
+		if serv.API.Gateway.ReadTimeout == 0 {
+			serv.API.Gateway.ReadTimeout = 2 * time.Second
+		}
+		if serv.API.Gateway.ReadHeaderTimeout == 0 {
+			serv.API.Gateway.ReadHeaderTimeout = 2 * time.Second
+		}
+		if serv.API.Gateway.WriteTimeout == 0 {
+			serv.API.Gateway.WriteTimeout = 2 * time.Second
+		}
+		if serv.API.Gateway.IdleTimeout == 0 {
+			serv.API.Gateway.WriteTimeout = 30 * time.Second
 		}
 		portMap[config.GRPC.ListenAddress] = serv
 	}

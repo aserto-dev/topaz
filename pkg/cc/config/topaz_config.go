@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+const ConfigFileVersion = 1
+
 type Config struct {
 	Common           `json:",squash"`   // nolint:staticcheck // squash is used by mapstructure
 	Auth             AuthnConfig        `json:"auth"`
@@ -61,7 +63,7 @@ func defaults(v *viper.Viper) {
 }
 
 func (c *Config) validation() error {
-	if c.Version != 1 {
+	if c.Version != ConfigFileVersion {
 		return errors.New("unsupported config version")
 	}
 	if c.Command.Mode == CommandModeRun && c.OPA.InstanceID == "" {

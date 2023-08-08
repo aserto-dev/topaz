@@ -2,6 +2,8 @@ package testing
 
 import (
 	"context"
+	"errors"
+	"os"
 	"testing"
 	"time"
 
@@ -84,6 +86,15 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	configFile := AssetDefaultConfigLocal()
 	if online {
 		configFile = AssetDefaultConfigOnline()
+	}
+
+	err = os.Setenv("TOPAZ_DIR", "/tmp/topaz/test")
+	assert.NoError(err)
+	if _, err := os.Stat("/tmp/topaz/test"); errors.Is(err, os.ErrNotExist) {
+		err = os.MkdirAll("/tmp/topaz/test", 0777)
+		assert.NoError(err)
+		err = os.MkdirAll("/tmp/topaz/test/certs", 0777)
+		assert.NoError(err)
 	}
 	h.Engine, h.cleanup, err = topaz.BuildTestApp(
 		h.LogDebugger,
