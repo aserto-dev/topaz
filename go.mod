@@ -28,6 +28,8 @@ require (
 	github.com/aserto-dev/go-grpc v0.8.56
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
+	github.com/aserto-dev/openapi-authorizer v0.8.81
+	github.com/aserto-dev/openapi-directory v0.21.6-0.20230802231916-c64b7b8884fd
 	github.com/aserto-dev/runtime v0.54.1
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.3
@@ -66,8 +68,6 @@ require (
 	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230512164433-5d1fd1a340c9 // indirect
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
-	github.com/aserto-dev/openapi-authorizer v0.8.81 // indirect
-	github.com/aserto-dev/openapi-directory v0.21.6-0.20230802231916-c64b7b8884fd // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.5.1 // indirect
 	github.com/bufbuild/protovalidate-go v0.2.1 // indirect

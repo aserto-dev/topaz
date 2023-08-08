@@ -1,33 +1,32 @@
 {
-    "product": "Topaz CLI",
-    "company": "Aserto, Inc.",
-    "license": "LICENSE",
-    "upgrade-code": "77a61504-e94d-42ff-be69-aa055f0153ed",
-    "files": {
-      "guid": "670fcd0f-28ab-4232-a7a2-debf123190e1",
-      "items": [
-        "topaz.exe"
-      ]
-    },
-    "env": {
-      "guid": "0079f533-c8c2-411d-891f-d18f52f21141",
-      "vars": [
-        {
-          "name": "PATH",
-          "value": "[INSTALLDIR]",
-          "permanent": "yes",
-          "system": "no",
-          "action": "set",
-          "part": "last"
-        }
-      ]
-    },
-    "shortcuts": {},
-    "choco": {
-      "description": "Topaz CLI",
-      "project-url": "https://github.com/aserto-dev/topaz",
-      "tags": "policy cli",
-      "license-url": "https://github.com/aserto-dev/topaz/blob/main/LICENSE"
-    }
+  "product": "Topaz CLI",
+  "company": "Aserto, Inc.",
+  "license": "LICENSE",
+  "upgrade-code": "77a61504-e94d-42ff-be69-aa055f0153ed",
+  "files": {
+    "guid": "670fcd0f-28ab-4232-a7a2-debf123190e1",
+    "items": [
+      "topaz.exe"
+    ]
+  },
+  "env": {
+    "guid": "0079f533-c8c2-411d-891f-d18f52f21141",
+    "vars": [
+      {
+        "name": "PATH",
+        "value": "[INSTALLDIR]",
+        "permanent": "yes",
+        "system": "no",
+        "action": "set",
+        "part": "last"
+      }
+    ]
+  },
+  "shortcuts": {},
+  "choco": {
+    "description": "Topaz CLI",
+    "project-url": "https://github.com/aserto-dev/topaz",
+    "tags": "policy cli",
+    "license-url": "https://github.com/aserto-dev/topaz/blob/main/LICENSE"
   }
-  
+}
