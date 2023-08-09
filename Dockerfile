@@ -16,7 +16,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     	--mount=type=ssh \
     	go run mage.go deps build
 
-FROM alpine
+FROM alpine:3.18.3
 ARG VERSION
 ARG COMMIT
 
