@@ -66,11 +66,13 @@ func (c *Config) validation() error {
 	if c.Version != ConfigFileVersion {
 		return errors.New("unsupported config version")
 	}
-	if c.Command.Mode == CommandModeRun && c.OPA.InstanceID == "" {
-		return errors.New("opa.instance_id not set")
-	}
-	if len(c.OPA.Config.Bundles) > 1 {
-		return errors.New("opa.config.bundles - too many bundles")
+	if _, ok := c.Services["authorizer"]; ok {
+		if c.Command.Mode == CommandModeRun && c.OPA.InstanceID == "" {
+			return errors.New("opa.instance_id not set")
+		}
+		if len(c.OPA.Config.Bundles) > 1 {
+			return errors.New("opa.config.bundles - too many bundles")
+		}
 	}
 
 	if len(c.Services) == 0 {
