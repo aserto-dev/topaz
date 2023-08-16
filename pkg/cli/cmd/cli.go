@@ -13,22 +13,23 @@ import (
 var ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
 
 type CLI struct {
-	Backup    BackupCmd    `cmd:"" help:"backup directory data"`
-	Configure ConfigureCmd `cmd:"" help:"configure topaz service"`
-	Export    ExportCmd    `cmd:"" help:"export directory objects"`
-	Install   InstallCmd   `cmd:"" help:"install topaz"`
-	Import    ImportCmd    `cmd:"" help:"import directory objects"`
-	Load      LoadCmd      `cmd:"" help:"load a manifest file"`
-	Restore   RestoreCmd   `cmd:"" help:"restore directory data"`
-	Run       RunCmd       `cmd:"" help:""`
-	Save      SaveCmd      `cmd:"" help:"save a manifest file"`
-	Start     StartCmd     `cmd:"" help:"start topaz instance"`
-	Status    StatusCmd    `cmd:"" help:"display topaz instance status"`
+	Start     StartCmd     `cmd:"" help:"start topaz in daemon mode"`
 	Stop      StopCmd      `cmd:"" help:"stop topaz instance"`
+	Status    StatusCmd    `cmd:"" help:"status of topaz daemon process"`
+	Run       RunCmd       `cmd:"" help:"run topaz in console mode"`
+	Load      LoadCmd      `cmd:"" help:"load manifest from file"`
+	Save      SaveCmd      `cmd:"" help:"save manifest to file"`
+	Import    ImportCmd    `cmd:"" help:"import directory objects"`
+	Export    ExportCmd    `cmd:"" help:"export directory objects"`
+	Backup    BackupCmd    `cmd:"" help:"backup directory data"`
+	Restore   RestoreCmd   `cmd:"" help:"restore directory data"`
+	Test      TestCmd      `cmd:"" help:"execute assertions"`
+	Install   InstallCmd   `cmd:"" help:"install topaz container"`
+	Configure ConfigureCmd `cmd:"" help:"configure topaz service"`
 	Update    UpdateCmd    `cmd:"" help:"update topaz container version"`
+	Uninstall UninstallCmd `cmd:"" help:"uninstall topaz container"`
 	Version   VersionCmd   `cmd:"" help:"version information"`
-	Uninstall UninstallCmd `cmd:"" help:"uninstall topaz, removes all locally installed artifacts"`
-	NoCheck   bool         `name:"no-check" env:"TOPAZ_NO_CHECK" help:"disable local container running check"`
+	NoCheck   bool         `name:"no-check" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
 }
 
 type VersionCmd struct{}
