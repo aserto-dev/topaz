@@ -1,4 +1,6 @@
 ---
+version: 1
+
 logging:
   prod: true
   log_level: trace

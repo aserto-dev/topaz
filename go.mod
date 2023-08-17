@@ -4,10 +4,14 @@ go 1.19
 
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
+// replace github.com/aserto-dev/go-directory => ../go-directory
+
+// replace github.com/aserto-dev/openapi-directory => ../openapi-directory
+
+// replace github.com/aserto-dev/azm => ../azm
+
 // replace github.com/aserto-dev/service-host => ../service-host
-
 // replace github.com/aserto-dev/self-decision-logger => ../self-decision-logger
-
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-aserto => ../go-aserto
 // replace github.com/aserto-dev/certs => ../certs
@@ -18,19 +22,19 @@ require (
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.2
 	github.com/aserto-dev/certs v0.0.3
-	github.com/aserto-dev/clui v0.8.1
-	github.com/aserto-dev/errors v0.0.5
+	github.com/aserto-dev/clui v0.8.2
+	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.2
-	github.com/aserto-dev/go-directory v0.21.7-0.20230804235215-9b1386c7a067
+	github.com/aserto-dev/go-directory v0.21.8-0.20230817201146-72f44e043624
 	github.com/aserto-dev/go-directory-cli v0.20.13
-	github.com/aserto-dev/go-edge-ds v0.21.8-0.20230804235932-0bf2903544fe
-	github.com/aserto-dev/go-grpc v0.8.56
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20230817220143-d98c270b7069
+	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.8.81
 	github.com/aserto-dev/openapi-directory v0.21.6-0.20230802231916-c64b7b8884fd
-	github.com/aserto-dev/runtime v0.54.1
+	github.com/aserto-dev/runtime v0.54.2
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.3
 	github.com/fatih/color v1.15.0
@@ -44,7 +48,7 @@ require (
 	github.com/mennanov/fmutils v0.2.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.27.8
+	github.com/onsi/gomega v1.27.10
 	github.com/open-policy-agent/opa v0.54.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.30.0
@@ -153,17 +157,17 @@ require (
 	go.opentelemetry.io/otel/sdk v1.16.0 // indirect
 	go.opentelemetry.io/otel/trace v1.16.0 // indirect
 	golang.org/x/crypto v0.12.0 // indirect
-	golang.org/x/exp v0.0.0-20230807204917-050eac23e9de // indirect
+	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63 // indirect
 	golang.org/x/mod v0.12.0 // indirect
 	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	golang.org/x/term v0.11.0 // indirect
 	golang.org/x/text v0.12.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
-	golang.org/x/tools v0.11.0 // indirect
-	google.golang.org/genproto v0.0.0-20230807174057-1744710a1577 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20230807174057-1744710a1577 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230807174057-1744710a1577 // indirect
+	golang.org/x/tools v0.12.1-0.20230815132531-74c255bcf846 // indirect
+	google.golang.org/genproto v0.0.0-20230815205213-6bfd019c3878 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20230815205213-6bfd019c3878 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230815205213-6bfd019c3878 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

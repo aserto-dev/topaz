@@ -69,6 +69,10 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
+			if a.RelationType.GetObjectType() == "" {
+				a.RelationType.ObjectType = a.Object.Type
+			}
+
 			resp, err := client.CheckRelation(bctx.Context, &dsr.CheckRelationRequest{
 				Subject:  a.Subject,
 				Relation: a.RelationType,

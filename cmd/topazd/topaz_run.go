@@ -47,25 +47,24 @@ var cmdRun = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		directory := topaz.DirectoryResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration)
-		decisionlog, err := authorizer.GetDecisionLogger(authorizer.Configuration.DecisionLogger)
-		if err != nil {
-			return err
-		}
-
-		controllerFactory := controller.NewFactory(authorizer.Logger, authorizer.Configuration.ControllerConfig, client.NewDialOptionsProvider())
-
-		runtime, _, err := topaz.NewRuntimeResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration, controllerFactory, decisionlog, directory)
-		if err != nil {
-			return err
-		}
-
 		err = authorizer.ConfigServices()
 		if err != nil {
 			return err
 		}
-
 		if _, ok := authorizer.Services["topaz"]; ok {
+			directory := topaz.DirectoryResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration)
+			decisionlog, err := authorizer.GetDecisionLogger(authorizer.Configuration.DecisionLogger)
+			if err != nil {
+				return err
+			}
+
+			controllerFactory := controller.NewFactory(authorizer.Logger, authorizer.Configuration.ControllerConfig, client.NewDialOptionsProvider())
+
+			runtime, _, err := topaz.NewRuntimeResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration, controllerFactory, decisionlog, directory)
+			if err != nil {
+				return err
+			}
+
 			authorizer.Services["topaz"].(*app.Topaz).Resolver.SetRuntimeResolver(runtime)
 			authorizer.Services["topaz"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
 		}
