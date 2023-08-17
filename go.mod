@@ -2,10 +2,8 @@ module github.com/aserto-dev/topaz
 
 go 1.19
 
-replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
-replace github.com/aserto-dev/azm => ../azm
-
+// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+// replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/self-decision-logger => ../self-decision-logger
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
@@ -19,12 +17,12 @@ require (
 	github.com/aserto-dev/aserto-management v0.9.2
 	github.com/aserto-dev/certs v0.0.3
 	github.com/aserto-dev/clui v0.8.2
-	github.com/aserto-dev/errors v0.0.5
+	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.2
 	github.com/aserto-dev/go-directory v0.21.7
 	github.com/aserto-dev/go-directory-cli v0.20.13
-	github.com/aserto-dev/go-edge-ds v0.21.9
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20230817203811-825b97bfa21b
 	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
@@ -62,7 +60,7 @@ require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/aserto-dev/azm v0.0.0-00010101000000-000000000000 // indirect
+	github.com/aserto-dev/azm v0.0.1 // indirect
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
