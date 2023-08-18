@@ -61,6 +61,7 @@ func (h *EngineHarness) Req(verb, path, tenantID, body string) (string, int) {
 }
 
 func (h *EngineHarness) CreateGRPCClient() authz2.AuthorizerClient {
+
 	authorizerAPIConfig, ok := h.Engine.Configuration.Services["authorizer"]
 	if !ok {
 		log.Fatal("no authorizer configuration found")

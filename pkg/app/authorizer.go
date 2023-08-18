@@ -11,9 +11,9 @@ import (
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
