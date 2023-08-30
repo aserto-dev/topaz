@@ -35,11 +35,12 @@
 .vscode/launch.json
 
 # test config & data files
-config.y?ml
-test.y?ml
-data?.json
-bundle.tar.gz
-*ds.db
+!config.yaml
+./pkg/testing/assets/config.y?ml
+./pkg/testing/assets/test.y?ml
+./pkg/testing/assets/data?.json
+./pkg/testing/assets/bundle.tar.gz
+./pkg/testing/assets/*ds.db
 
 # allow test assets
 !pkg/testing/assets/*.db
