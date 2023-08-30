@@ -3,8 +3,8 @@ package ds
 import (
 	"bytes"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
@@ -33,7 +33,7 @@ import (
 //		"with_objects": false
 //	  })
 type extendedRelation struct {
-	*dsc.RelationIdentifier
+	*dsc2.RelationIdentifier
 	WithObjects bool `json:"with_objects"`
 }
 
@@ -52,15 +52,15 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			if a == nil || a.RelationIdentifier == nil {
 
 				a = &extendedRelation{
-					RelationIdentifier: &dsc.RelationIdentifier{
-						Subject: &dsc.ObjectIdentifier{
+					RelationIdentifier: &dsc2.RelationIdentifier{
+						Subject: &dsc2.ObjectIdentifier{
 							Type: proto.String(""),
 							Key:  proto.String(""),
 						},
-						Relation: &dsc.RelationTypeIdentifier{
+						Relation: &dsc2.RelationTypeIdentifier{
 							Name: proto.String(""),
 						},
-						Object: &dsc.ObjectIdentifier{
+						Object: &dsc2.ObjectIdentifier{
 							Type: proto.String(""),
 							Key:  proto.String(""),
 						},
@@ -75,7 +75,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			resp, err := client.GetRelation(bctx.Context, &reader.GetRelationRequest{Param: a.RelationIdentifier, WithObjects: &a.WithObjects})
+			resp, err := client.GetRelation(bctx.Context, &dsr2.GetRelationRequest{Param: a.RelationIdentifier, WithObjects: &a.WithObjects})
 			if err != nil {
 				traceError(&bctx, fnName, err)
 				return nil, err

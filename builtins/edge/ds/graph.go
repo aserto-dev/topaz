@@ -3,8 +3,8 @@ package ds
 import (
 	"bytes"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -42,10 +42,10 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
 			type args struct {
-				Anchor   *dsc.ObjectIdentifier       `json:"anchor"`
-				Subject  *dsc.ObjectIdentifier       `json:"subject"`
-				Relation *dsc.RelationTypeIdentifier `json:"relation"`
-				Object   *dsc.ObjectIdentifier       `json:"object"`
+				Anchor   *dsc2.ObjectIdentifier       `json:"anchor"`
+				Subject  *dsc2.ObjectIdentifier       `json:"subject"`
+				Relation *dsc2.RelationTypeIdentifier `json:"relation"`
+				Object   *dsc2.ObjectIdentifier       `json:"object"`
 			}
 
 			var a args
@@ -55,18 +55,18 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 
 			if a.Anchor == nil && a.Subject == nil && a.Relation == nil && a.Object == nil {
 				a = args{
-					Anchor: &dsc.ObjectIdentifier{
+					Anchor: &dsc2.ObjectIdentifier{
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
-					Subject: &dsc.ObjectIdentifier{
+					Subject: &dsc2.ObjectIdentifier{
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
-					Relation: &dsc.RelationTypeIdentifier{
+					Relation: &dsc2.RelationTypeIdentifier{
 						Name: proto.String(""),
 					},
-					Object: &dsc.ObjectIdentifier{
+					Object: &dsc2.ObjectIdentifier{
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
@@ -79,7 +79,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			resp, err := client.GetGraph(bctx.Context, &dsr.GetGraphRequest{
+			resp, err := client.GetGraph(bctx.Context, &dsr2.GetGraphRequest{
 				Anchor:   a.Anchor,
 				Subject:  a.Subject,
 				Relation: a.Relation,

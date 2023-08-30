@@ -3,8 +3,8 @@ package clients
 import (
 	"context"
 
-	grpcClient "github.com/aserto-dev/go-aserto/client"
-	"github.com/aserto-dev/go-directory-cli/client"
+	"github.com/aserto-dev/go-aserto/client"
+	dirClient "github.com/aserto-dev/go-directory-cli/client"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/fullstorydev/grpcurl"
 	"github.com/pkg/errors"
@@ -23,7 +23,7 @@ type Config struct {
 	TenantID  string `flag:"tenant-id" help:""`
 }
 
-func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*client.Client, error) {
+func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dirClient.Client, error) {
 
 	if cfg.Host == "" {
 		cfg.Host = localhostDirectory
@@ -33,29 +33,29 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*client.Client, error) {
 		return nil, err
 	}
 
-	opts := []grpcClient.ConnectionOption{
-		grpcClient.WithAddr(cfg.Host),
-		grpcClient.WithInsecure(cfg.Insecure),
+	opts := []client.ConnectionOption{
+		client.WithAddr(cfg.Host),
+		client.WithInsecure(cfg.Insecure),
 	}
 
 	if cfg.APIKey != "" {
-		opts = append(opts, grpcClient.WithAPIKeyAuth(cfg.APIKey))
+		opts = append(opts, client.WithAPIKeyAuth(cfg.APIKey))
 	}
 
 	if cfg.SessionID != "" {
-		opts = append(opts, grpcClient.WithSessionID(cfg.SessionID))
+		opts = append(opts, client.WithSessionID(cfg.SessionID))
 	}
 
 	if cfg.TenantID != "" {
-		opts = append(opts, grpcClient.WithTenantID(cfg.TenantID))
+		opts = append(opts, client.WithTenantID(cfg.TenantID))
 	}
 
-	conn, err := grpcClient.NewConnection(c.Context, opts...)
+	conn, err := client.NewConnection(c.Context, opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	return client.New(conn.Conn, c.UI)
+	return dirClient.New(conn.Conn, c.UI)
 }
 
 func validate(cfg *Config) error {

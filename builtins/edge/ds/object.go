@@ -3,8 +3,8 @@ package ds
 import (
 	"bytes"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"google.golang.org/protobuf/proto"
 
@@ -29,14 +29,14 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var a *dsc.ObjectIdentifier
+			var a *dsc2.ObjectIdentifier
 
 			if err := ast.As(op1.Value, &a); err != nil {
 				return nil, err
 			}
 
 			if a.Type == nil && a.Key == nil {
-				a = &dsc.ObjectIdentifier{
+				a = &dsc2.ObjectIdentifier{
 					Type: proto.String(""),
 					Key:  proto.String(""),
 				}
@@ -48,7 +48,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			resp, err := client.GetObject(bctx.Context, &dsr.GetObjectRequest{
+			resp, err := client.GetObject(bctx.Context, &dsr2.GetObjectRequest{
 				Param: a,
 			})
 			if err != nil {
