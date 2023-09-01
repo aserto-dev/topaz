@@ -75,14 +75,25 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 				return err
 			}
 
+			if req.Relation.GetObjectType() == "" {
+				req.Relation.ObjectType = req.Object.Type
+			}
+
 			start := time.Now()
 			resp, err := dsc.Reader.CheckRelation(c.Context, &req)
 			if err != nil {
 				return err
 			}
 			duration := time.Since(start)
-
-			fmt.Printf("%04d %s %s  %s (%s)\n", i, "check-relation  ", iff(expected == resp.GetCheck(), passed, failed), checkRelationString(&req), duration)
+			outcome := resp.GetCheck()
+			fmt.Printf("%04d %s %s  %s [%t] (%s)\n",
+				i+1,
+				"check-relation  ",
+				iff(expected == outcome, passed, failed),
+				checkRelationString(&req),
+				outcome,
+				duration,
+			)
 		}
 
 		if field, ok := msg.Fields[checkPermission]; ok {
@@ -97,8 +108,16 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 				return err
 			}
 			duration := time.Since(start)
+			outcome := resp.GetCheck()
 
-			fmt.Printf("%04d %s %s  %s (%s)\n", i, "check-permission", iff(expected == resp.GetCheck(), passed, failed), checkPermissionString(&req), duration)
+			fmt.Printf("%04d %s %s  %s [%t] (%s)\n",
+				i+1,
+				"check-permission",
+				iff(expected == resp.GetCheck(), passed, failed),
+				checkPermissionString(&req),
+				outcome,
+				duration,
+			)
 		}
 	}
 
