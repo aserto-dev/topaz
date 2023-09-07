@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/aserto-dev/go-aserto/client"
@@ -21,9 +23,17 @@ import (
 	edge "github.com/aserto-dev/go-edge-ds/pkg/server"
 
 	builder "github.com/aserto-dev/service-host"
+
+	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
+	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
 )
 
 var locker edge.EdgeDirLock
+
+const (
+	authorizerOpenAPISpec string = "/authorizer/openapi.json"
+	directoryOpenAPISpec  string = "/directory/openapi.json"
+)
 
 // Authorizer is an authorizer service instance, responsible for managing
 // the authorizer API, user directory instance and the OPA plugins.
@@ -143,6 +153,11 @@ func (e *Authorizer) ConfigServices() error {
 		if err != nil {
 			return err
 		}
+
+		// add openAPI handlers for all servers
+		server.Gateway.Mux.HandleFunc(authorizerOpenAPISpec, azOpenAPIHandler)
+		server.Gateway.Mux.HandleFunc(directoryOpenAPISpec, dsOpenAPIHandler)
+
 		err = e.Manager.AddGRPCServer(server)
 		if err != nil {
 			return err
@@ -265,4 +280,28 @@ func edgeNeeded(cfg map[string]*builder.API) bool {
 		return true
 	}
 	return false
+}
+
+func azOpenAPIHandler(w http.ResponseWriter, r *http.Request) {
+	buf, err := azOpenAPI.Static().ReadFile("openapi.json")
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writeFile(buf, w, r)
+}
+
+func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request) {
+	buf, err := dsOpenAPI.Static().ReadFile("openapi.json")
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writeFile(buf, w, r)
+}
+
+func writeFile(buf []byte, w http.ResponseWriter, _ *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
+	_, _ = w.Write(buf)
 }

@@ -25,6 +25,8 @@ require (
 	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
+	github.com/aserto-dev/openapi-authorizer v0.8.81
+	github.com/aserto-dev/openapi-directory v0.21.5
 	github.com/aserto-dev/runtime v0.54.2
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.3
