@@ -72,18 +72,19 @@ func (e *Authorizer) Start() error {
 }
 
 func (e *Authorizer) ConfigServices() error {
-
 	// prepare services
-	dir, err := locker.New(&e.Configuration.Edge, e.Logger)
-	if err != nil {
-		return err
-	}
+	if edgeNeeded(e.Configuration.Services) {
+		dir, err := locker.New(&e.Configuration.Edge, e.Logger)
+		if err != nil {
+			return err
+		}
 
-	edgeDir, err := NewEdgeDir(dir)
-	if err != nil {
-		return err
+		edgeDir, err := NewEdgeDir(dir)
+		if err != nil {
+			return err
+		}
+		e.Services["edge"] = edgeDir
 	}
-	e.Services["edge"] = edgeDir
 
 	if serviceConfig, ok := e.Configuration.Services[authorizerService]; ok {
 		topaz, err := NewTopaz(serviceConfig, &e.Configuration.Common, nil, e.Logger)
@@ -241,9 +242,27 @@ func (e *Authorizer) validateConfig() error {
 	}
 
 	for key := range e.Configuration.Services {
-		if !(contains(e.Services["edge"].AvailableServices(), key) || key == authorizerService) {
-			return errors.Errorf("unknown service type %s", key)
+		if _, ok := e.Services["edge"]; ok {
+			if !(contains(e.Services["edge"].AvailableServices(), key) || key == authorizerService) {
+				return errors.Errorf("unknown service type %s", key)
+			}
 		}
 	}
 	return nil
+}
+
+func edgeNeeded(cfg map[string]*builder.API) bool {
+	if _, ok := cfg[readerService]; ok {
+		return true
+	}
+	if _, ok := cfg[writerService]; ok {
+		return true
+	}
+	if _, ok := cfg[importerService]; ok {
+		return true
+	}
+	if _, ok := cfg[exporterService]; ok {
+		return true
+	}
+	return false
 }
