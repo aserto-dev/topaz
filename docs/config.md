@@ -50,9 +50,9 @@ grpc:
   listen_address: "localhost:8282"
   connection_timeout_seconds: 160 
   certs:
-    tls_cert_path: "/app/grpc.crt"
-    tls_key_path: "/app/grpc.key"
-    tls_ca_cert_path: "/app/grpc-ca.crt"
+    tls_cert_path: "/certs/grpc.crt"
+    tls_key_path: "/certs/grpc.key"
+    tls_ca_cert_path: "/certs/grpc-ca.crt"
 ```
 
 #### 2. gateway
@@ -75,9 +75,9 @@ gateway:
   listen_address: "localhost:8383"
   http: false
   certs:
-    tls_cert_path: "/app/gateway.crt"
-    tls_key_path: "/app/gateway.key"
-    tls_ca_cert_path: "/app/gateway-ca.crt"
+    tls_cert_path: "/certs/gateway.crt"
+    tls_key_path: "/certs/gateway.key"
+    tls_ca_cert_path: "/certs/gateway-ca.crt"
   allowed_origins:
   - https://*.aserto.com
   - https://*aserto-console.netlify.app
