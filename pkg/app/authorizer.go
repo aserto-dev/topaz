@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/aserto-dev/go-aserto/client"
@@ -21,9 +23,17 @@ import (
 	edge "github.com/aserto-dev/go-edge-ds/pkg/server"
 
 	builder "github.com/aserto-dev/service-host"
+
+	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
+	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
 )
 
 var locker edge.EdgeDirLock
+
+const (
+	authorizerOpenAPISpec string = "/authorizer/openapi.json"
+	directoryOpenAPISpec  string = "/directory/openapi.json"
+)
 
 // Authorizer is an authorizer service instance, responsible for managing
 // the authorizer API, user directory instance and the OPA plugins.
@@ -72,18 +82,19 @@ func (e *Authorizer) Start() error {
 }
 
 func (e *Authorizer) ConfigServices() error {
-
 	// prepare services
-	dir, err := locker.New(&e.Configuration.Edge, e.Logger)
-	if err != nil {
-		return err
-	}
+	if edgeNeeded(e.Configuration.Services) {
+		dir, err := locker.New(&e.Configuration.Edge, e.Logger)
+		if err != nil {
+			return err
+		}
 
-	edgeDir, err := NewEdgeDir(dir)
-	if err != nil {
-		return err
+		edgeDir, err := NewEdgeDir(dir)
+		if err != nil {
+			return err
+		}
+		e.Services["edge"] = edgeDir
 	}
-	e.Services["edge"] = edgeDir
 
 	if serviceConfig, ok := e.Configuration.Services[authorizerService]; ok {
 		topaz, err := NewTopaz(serviceConfig, &e.Configuration.Common, nil, e.Logger)
@@ -142,6 +153,11 @@ func (e *Authorizer) ConfigServices() error {
 		if err != nil {
 			return err
 		}
+
+		// add openAPI handlers for all servers
+		server.Gateway.Mux.HandleFunc(authorizerOpenAPISpec, azOpenAPIHandler)
+		server.Gateway.Mux.HandleFunc(directoryOpenAPISpec, dsOpenAPIHandler)
+
 		err = e.Manager.AddGRPCServer(server)
 		if err != nil {
 			return err
@@ -241,9 +257,51 @@ func (e *Authorizer) validateConfig() error {
 	}
 
 	for key := range e.Configuration.Services {
-		if !(contains(e.Services["edge"].AvailableServices(), key) || key == authorizerService) {
-			return errors.Errorf("unknown service type %s", key)
+		if _, ok := e.Services["edge"]; ok {
+			if !(contains(e.Services["edge"].AvailableServices(), key) || key == authorizerService) {
+				return errors.Errorf("unknown service type %s", key)
+			}
 		}
 	}
 	return nil
+}
+
+func edgeNeeded(cfg map[string]*builder.API) bool {
+	if _, ok := cfg[readerService]; ok {
+		return true
+	}
+	if _, ok := cfg[writerService]; ok {
+		return true
+	}
+	if _, ok := cfg[importerService]; ok {
+		return true
+	}
+	if _, ok := cfg[exporterService]; ok {
+		return true
+	}
+	return false
+}
+
+func azOpenAPIHandler(w http.ResponseWriter, r *http.Request) {
+	buf, err := azOpenAPI.Static().ReadFile("openapi.json")
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writeFile(buf, w, r)
+}
+
+func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request) {
+	buf, err := dsOpenAPI.Static().ReadFile("openapi.json")
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	writeFile(buf, w, r)
+}
+
+func writeFile(buf []byte, w http.ResponseWriter, _ *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
+	_, _ = w.Write(buf)
 }
