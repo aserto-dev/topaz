@@ -27,7 +27,10 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
 		}
 	}
-	color.Green(">>> configure policy")
+
+	if !cmd.Stdout {
+		color.Green(">>> configure policy")
+	}
 
 	configDir, err := CreateConfigDir()
 	if err != nil {
@@ -65,7 +68,9 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		return WriteConfig(w, localImageTemplate, &params)
 	}
 
-	color.Green("policy name: %s", params.PolicyName)
+	if !cmd.Stdout {
+		color.Green("policy name: %s", params.PolicyName)
+	}
 
 	return WriteConfig(w, configTemplate, &params)
 }
