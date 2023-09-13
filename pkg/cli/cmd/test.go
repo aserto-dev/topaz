@@ -26,8 +26,6 @@ const (
 	expected        string = "expected"
 	passed          string = "PASS"
 	failed          string = "FAIL"
-	trueStr         string = "true"
-	falseStr        string = "false"
 )
 
 type TestCmd struct {
@@ -135,7 +133,7 @@ func (*TestExecCmd) execCheckRelation(c *cc.CommonCtx, dsc *client.Client, field
 		"check-relation  ",
 		iff(expected == outcome, color.GreenString(passed), color.RedString(failed)),
 		checkRelationString(&req),
-		iff(outcome, color.BlueString(trueStr), color.YellowString(falseStr)),
+		iff(outcome, color.BlueString("%t", outcome), color.YellowString("%t", outcome)),
 		duration,
 	)
 
@@ -161,7 +159,7 @@ func (*TestExecCmd) execCheckPermission(c *cc.CommonCtx, dsc *client.Client, fie
 		"check-permission",
 		iff(expected == resp.GetCheck(), color.GreenString(passed), color.RedString(failed)),
 		checkPermissionString(&req),
-		iff(outcome, color.BlueString(trueStr), color.YellowString(falseStr)),
+		iff(outcome, color.BlueString("%t", outcome), color.YellowString("%t", outcome)),
 		duration,
 	)
 
@@ -187,7 +185,7 @@ func (*TestExecCmd) execCheckDecision(c *cc.CommonCtx, azc az2.AuthorizerClient,
 		"check-decision  ",
 		iff(expected == decision.GetIs(), color.GreenString(passed), color.RedString(failed)),
 		checkDecisionString(&req),
-		iff(decision.GetIs(), color.BlueString(trueStr), color.YellowString(falseStr)),
+		iff(decision.GetIs(), color.BlueString("%t", decision.GetIs()), color.YellowString("%t", decision.GetIs())),
 		duration,
 	)
 
