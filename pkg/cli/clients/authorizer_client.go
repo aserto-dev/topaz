@@ -4,30 +4,29 @@ import (
 	"context"
 
 	grpcClient "github.com/aserto-dev/go-aserto/client"
-	"github.com/aserto-dev/go-directory-cli/client"
-	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/fullstorydev/grpcurl"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
+
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
 
-type Config struct {
-	Host      string `flag:"host" short:"H" help:"" env:"TOPAZ_DIRECTORY_SVC" default:"localhost:9292"`
-	APIKey    string `flag:"api-key" short:"k" help:"" env:"TOPAZ_DIRECTORY_KEY"`
-	Insecure  bool   `flag:"insecure" short:"i" help:""`
-	SessionID string `flag:"session-id"  help:""`
-	TenantID  string `flag:"tenant-id" help:""`
+type AuthorizerConfig struct {
+	Host     string
+	APIKey   string
+	Insecure bool
+	TenantID string
 }
 
-func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*client.Client, error) {
-
+func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.AuthorizerClient, error) {
 	if cfg.Host == "" {
-		cfg.Host = localhostDirectory
+		cfg.Host = localhostAuthorizer
 	}
 
-	if err := validate(cfg); err != nil {
+	if err := cfg.validate(); err != nil {
 		return nil, err
 	}
 
@@ -40,10 +39,6 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*client.Client, error) {
 		opts = append(opts, grpcClient.WithAPIKeyAuth(cfg.APIKey))
 	}
 
-	if cfg.SessionID != "" {
-		opts = append(opts, grpcClient.WithSessionID(cfg.SessionID))
-	}
-
 	if cfg.TenantID != "" {
 		opts = append(opts, grpcClient.WithTenantID(cfg.TenantID))
 	}
@@ -53,10 +48,10 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*client.Client, error) {
 		return nil, err
 	}
 
-	return client.New(conn.Conn, c.UI)
+	return authorizer.NewAuthorizerClient(conn.Conn), nil
 }
 
-func validate(cfg *Config) error {
+func (cfg *AuthorizerConfig) validate() error {
 	ctx := context.Background()
 
 	tlsConf, err := grpcurl.ClientTLSConfig(cfg.Insecure, "", "", "")
