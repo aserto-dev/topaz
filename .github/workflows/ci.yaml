@@ -224,7 +224,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         with:
           distribution: goreleaser
-          version: v1.18.2
+          version: v1.20.0
           args: release --clean
 
   msi:
