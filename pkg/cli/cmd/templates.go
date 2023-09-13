@@ -47,7 +47,7 @@ opa:
 
 const templatePreamble = `---
 # config schema version
-version: {{ .Version }} 
+version: {{ .Version }}
 
 logging:
   prod: true
@@ -92,8 +92,8 @@ api:
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
       http: false
       read_timeout: 2s # default 2 seconds
-      read_header_timeout: 2s 
-      write_timeout: 2s 
+      read_header_timeout: 2s
+      write_timeout: 2s
       idle_timeout: 30s # default 30 seconds
     health:
       listen_address: "0.0.0.0:9494"
@@ -178,7 +178,7 @@ api:
       idle_timeout: 30s
     health:
       listen_address: "0.0.0.0:9494"
-  
+
   authorizer:
     needs:
       - reader
