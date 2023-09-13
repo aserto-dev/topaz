@@ -8,6 +8,7 @@ import (
 	"time"
 
 	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	"github.com/fatih/color"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
@@ -21,8 +22,8 @@ const (
 	checkRelation   string = "check_relation"
 	checkPermission string = "check_permission"
 	expected        string = "expected"
-	passed          string = "PASSED"
-	failed          string = "FAILED"
+	passed          string = "PASS"
+	failed          string = "FAIL"
 )
 
 type TestCmd struct {
@@ -31,7 +32,8 @@ type TestCmd struct {
 }
 
 type TestExecCmd struct {
-	File string `arg:""  default:"assertions.json" help:"filepath to assertions file"`
+	File    string `arg:""  default:"assertions.json" help:"filepath to assertions file"`
+	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
 	clients.Config
 }
 
@@ -60,6 +62,15 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
+	if cmd.NoColor {
+		color.NoColor = true
+	}
+
+	var (
+		pass = color.GreenString(passed)
+		fail = color.RedString(failed)
+	)
+
 	for i := 0; i < len(assertions.Assertions); i++ {
 		var msg structpb.Struct
 		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(assertions.Assertions[i], &msg)
@@ -86,12 +97,12 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 			}
 			duration := time.Since(start)
 			outcome := resp.GetCheck()
-			fmt.Printf("%04d %s %s  %s [%t] (%s)\n",
+			fmt.Printf("%04d %s %v  %s [%s] (%s)\n",
 				i+1,
 				"check-relation  ",
-				iff(expected == outcome, passed, failed),
+				iff(expected == outcome, pass, fail),
 				checkRelationString(&req),
-				outcome,
+				iff(outcome, color.BlueString("true"), color.YellowString("false")),
 				duration,
 			)
 		}
@@ -110,12 +121,12 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 			duration := time.Since(start)
 			outcome := resp.GetCheck()
 
-			fmt.Printf("%04d %s %s  %s [%t] (%s)\n",
+			fmt.Printf("%04d %s %v  %s [%s] (%s)\n",
 				i+1,
 				"check-permission",
-				iff(expected == resp.GetCheck(), passed, failed),
+				iff(expected == resp.GetCheck(), pass, fail),
 				checkPermissionString(&req),
-				outcome,
+				iff(outcome, color.BlueString("true"), color.YellowString("false")),
 				duration,
 			)
 		}
