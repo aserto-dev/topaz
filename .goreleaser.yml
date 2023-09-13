@@ -59,7 +59,6 @@ builds:
 archives:
   # https://goreleaser.com/customization/archive/
   - format: zip
-    rlcp: true
     builds:
     - topaz
     - topazd
@@ -68,7 +67,7 @@ archives:
       - README.md
     name_template: >-
       topaz_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
-    
+
 checksum:
   # https://goreleaser.com/customization/checksum/
   name_template: "checksums.txt"
@@ -119,7 +118,7 @@ brews:
   -
     name: topaz
 
-    tap:
+    repository:
       owner: "{{ .Env.ORG }}"
       name: homebrew-tap
       token: "{{ .Env.ASERTO_TAP }}"
@@ -163,7 +162,7 @@ dockers:
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
       - "--label=org.opencontainers.image.description=Topaz Authorizer"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
-  
+
   - use: buildx
     goos: linux
     goarch: arm64
