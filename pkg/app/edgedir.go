@@ -43,7 +43,7 @@ func NewEdgeDir(edge *directory.Directory) (ServiceTypes, error) {
 }
 
 func (e *EdgeDir) AvailableServices() []string {
-	return []string{readerService, writerService, exporterService, importerService}
+	return []string{modelService, readerService, writerService, exporterService, importerService}
 }
 
 func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {

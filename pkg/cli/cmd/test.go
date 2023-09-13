@@ -46,7 +46,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 	defer r.Close()
 
-	dsc, err := clients.NewDirectoryClient(c, &cmd.Config)
+	dsClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -76,7 +76,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 			}
 
 			start := time.Now()
-			resp, err := dsc.Reader.CheckRelation(c.Context, &req)
+			resp, err := dsClient.Reader.CheckRelation(c.Context, &req)
 			if err != nil {
 				return err
 			}
@@ -92,7 +92,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 			}
 
 			start := time.Now()
-			resp, err := dsc.Reader.CheckPermission(c.Context, &req)
+			resp, err := dsClient.Reader.CheckPermission(c.Context, &req)
 			if err != nil {
 				return err
 			}

@@ -17,6 +17,7 @@ type CLI struct {
 	Stop      StopCmd      `cmd:"" help:"stop topaz instance"`
 	Status    StatusCmd    `cmd:"" help:"status of topaz daemon process"`
 	Run       RunCmd       `cmd:"" help:"run topaz in console mode"`
+	Manifest  ManifestCmd  `cmd:"" help:"manifest commands"`
 	Load      LoadCmd      `cmd:"" help:"load manifest from file"`
 	Save      SaveCmd      `cmd:"" help:"save manifest to file"`
 	Import    ImportCmd    `cmd:"" help:"import directory objects"`

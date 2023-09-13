@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"io"
 	"os"
 	"path"
 
@@ -10,7 +11,7 @@ import (
 )
 
 type SaveCmd struct {
-	File string `arg:""  default:"manifest.yaml" help:"absolute path to manifest file"`
+	File string `arg:"" type:"path" default:"manifest.yaml" help:"absolute path to manifest file"`
 	clients.Config
 }
 
@@ -33,5 +34,21 @@ func (cmd *SaveCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	color.Green(">>> save manifest to %s", cmd.File)
-	return dirClient.Save(c.Context, cmd.File)
+
+	r, err := dirClient.GetManifest(c.Context)
+	if err != nil {
+		return err
+	}
+
+	w, err := os.Create(cmd.File)
+	if err != nil {
+		return err
+	}
+	defer w.Close()
+
+	if _, err := io.Copy(w, r); err != nil {
+		return err
+	}
+
+	return nil
 }

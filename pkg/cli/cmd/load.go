@@ -11,7 +11,7 @@ import (
 )
 
 type LoadCmd struct {
-	File string `arg:""  default:"manifest.yaml" help:"absolute path to manifest file"`
+	Path string `arg:"" type:"existingfile" default:"manifest.yaml" help:"absolute path to manifest file"`
 	clients.Config
 }
 
@@ -28,14 +28,20 @@ func (cmd *LoadCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if cmd.File == defaultManifestName {
+	if cmd.Path == defaultManifestName {
 		currentDir, err := os.Getwd()
 		if err != nil {
 			return err
 		}
-		cmd.File = path.Join(currentDir, defaultManifestName)
+		cmd.Path = path.Join(currentDir, defaultManifestName)
 	}
 
-	color.Green(">>> load manifest from %s", cmd.File)
-	return dirClient.Load(c.Context, cmd.File)
+	r, err := os.Open(cmd.Path)
+	if err != nil {
+		return err
+	}
+
+	color.Green(">>> load manifest from %s", cmd.Path)
+
+	return dirClient.SetManifest(c.Context, r)
 }

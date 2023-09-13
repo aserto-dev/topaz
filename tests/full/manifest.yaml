@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  # user represents a user
+  user: {}
+
+  # group represents a group
+  group:
+    relations:
+      # member is a member of a group, which can be a user or the membership of another group
+      member: user | group#member
+
+  # document represents a document
+  document:
+    relations:
+      # writer is a writer of the document
+      writer: user | group#member
+
+      # reader is a reader of the document
+      reader: user | group#member
+
+    permissions:
+      # write indicates which user can write to the document
+      write: writer
+
+      # read indicates which user can read the document
+      read: reader + write

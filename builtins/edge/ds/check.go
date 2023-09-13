@@ -1,8 +1,8 @@
 package ds
 
 import (
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -36,9 +36,9 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
 			type args struct {
-				Subject      *dsc.ObjectIdentifier       `json:"subject"`
-				RelationType *dsc.RelationTypeIdentifier `json:"relation"`
-				Object       *dsc.ObjectIdentifier       `json:"object"`
+				Subject      *dsc2.ObjectIdentifier       `json:"subject"`
+				RelationType *dsc2.RelationTypeIdentifier `json:"relation"`
+				Object       *dsc2.ObjectIdentifier       `json:"object"`
 			}
 
 			var a args
@@ -49,14 +49,14 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 
 			if a.Subject == nil && a.RelationType == nil && a.Object == nil {
 				a = args{
-					Subject: &dsc.ObjectIdentifier{
+					Subject: &dsc2.ObjectIdentifier{
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
-					RelationType: &dsc.RelationTypeIdentifier{
+					RelationType: &dsc2.RelationTypeIdentifier{
 						Name: proto.String(""),
 					},
-					Object: &dsc.ObjectIdentifier{
+					Object: &dsc2.ObjectIdentifier{
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
@@ -73,7 +73,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 				a.RelationType.ObjectType = a.Object.Type
 			}
 
-			resp, err := client.CheckRelation(bctx.Context, &dsr.CheckRelationRequest{
+			resp, err := client.CheckRelation(bctx.Context, &dsr2.CheckRelationRequest{
 				Subject:  a.Subject,
 				Relation: a.RelationType,
 				Object:   a.Object,
@@ -112,9 +112,9 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
 			type args struct {
-				Subject    *dsc.ObjectIdentifier     `json:"subject"`
-				Permission *dsc.PermissionIdentifier `json:"permission"`
-				Object     *dsc.ObjectIdentifier     `json:"object"`
+				Subject    *dsc2.ObjectIdentifier     `json:"subject"`
+				Permission *dsc2.PermissionIdentifier `json:"permission"`
+				Object     *dsc2.ObjectIdentifier     `json:"object"`
 			}
 
 			var a args
@@ -125,14 +125,14 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 
 			if a.Subject == nil && a.Permission == nil && a.Object == nil {
 				a = args{
-					Subject: &dsc.ObjectIdentifier{
+					Subject: &dsc2.ObjectIdentifier{
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
-					Permission: &dsc.PermissionIdentifier{
+					Permission: &dsc2.PermissionIdentifier{
 						Name: proto.String(""),
 					},
-					Object: &dsc.ObjectIdentifier{
+					Object: &dsc2.ObjectIdentifier{
 						Type: proto.String(""),
 						Key:  proto.String(""),
 					},
@@ -145,7 +145,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			resp, err := client.CheckPermission(bctx.Context, &dsr.CheckPermissionRequest{
+			resp, err := client.CheckPermission(bctx.Context, &dsr2.CheckPermissionRequest{
 				Subject: a.Subject,
 
 				Permission: a.Permission,
