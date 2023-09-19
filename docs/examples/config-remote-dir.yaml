@@ -2,7 +2,10 @@
 # You can find these values in the Aserto Console: for the directory access key you will find these values in the connections tab for Aserto Directory and to you will find the tenant ID in your account settings. 
 # In this example, as we use the policy todo image, we recommend setting up a Demo Citadel IDP connection to exercise the example policy paths with the users that have the correct permissions. 
 
+# yaml-language-server: $schema=https://topaz.sh/schema/config.json
 ---
+version: 1
+
 logging:
   prod: true
   log_level: debug
