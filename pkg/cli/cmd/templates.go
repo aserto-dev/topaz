@@ -45,7 +45,8 @@ opa:
             max_delay_seconds: 120
 `
 
-const templatePreamble = `---
+const templatePreamble = `# yaml-language-server: $schema=https://topaz.sh/schema/config.json
+---
 # config schema version
 version: {{ .Version }}
 

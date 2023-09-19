@@ -1,7 +1,9 @@
 # Important: This is not a working example as some field need to be updated with your Aserto information.
 #
-# This is an example of a topaz configuration that will allow it to run as an edge authorizer connected to the Aserto Control Plane. 
-# This configuration can be generated using the Aserto CLI 
+# This is an example of a topaz configuration that will allow it to run as an edge authorizer connected to the Aserto Control Plane.
+# This configuration can be generated using the Aserto CLI
+
+# yaml-language-server: $schema=https://topaz.sh/schema/config.json
 ---
 version: 1
 
@@ -98,7 +100,7 @@ api:
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
     health:
       listen_address: "0.0.0.0:9494"
-  
+
   authorizer:
     needs:
       - reader

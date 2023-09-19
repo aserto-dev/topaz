@@ -2,7 +2,11 @@
 # 1. Github PAT with the available rights to access private packages.
 # 2. Your organization
 # 3. Your policy image name and label
+
+# yaml-language-server: $schema=https://topaz.sh/schema/config.json
 ---
+version: 1
+
 logging:
   prod: true
   log_level: debug
