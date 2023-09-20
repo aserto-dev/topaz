@@ -96,3 +96,86 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			return ast.NewTerm(v), nil
 		}
 }
+
+// RegisterRelations - ds.relations
+//
+//	ds.relations({
+//		"object": {
+//		  "type": ""
+//		  "key": "",
+//		},
+//		"relation": {
+//		  "name": "",
+//		},
+//		"subject": {
+//		  "type": ""
+//		  "key": "",
+//		}
+//	  })
+func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+	return &rego.Function{
+			Name:    fnName,
+			Decl:    types.NewFunction(types.Args(types.A), types.A),
+			Memoize: true,
+		},
+		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
+			var a *dsc.RelationIdentifier
+			if err := ast.As(op1.Value, &a); err != nil {
+				return nil, err
+			}
+
+			if a == nil || a.Object == nil || a.Relation == nil || a.Subject == nil {
+
+				a = &dsc.RelationIdentifier{
+					Subject: &dsc.ObjectIdentifier{
+						Type: proto.String(""),
+						Key:  proto.String(""),
+					},
+					Relation: &dsc.RelationTypeIdentifier{
+						Name: proto.String(""),
+					},
+					Object: &dsc.ObjectIdentifier{
+						Type: proto.String(""),
+						Key:  proto.String(""),
+					},
+				}
+				return help(fnName, a)
+			}
+
+			client, err := dr.GetDS(bctx.Context)
+			if err != nil {
+				return nil, errors.Wrapf(err, "get directory client")
+			}
+
+			page := &dsc.PaginationRequest{Size: 1, Token: ""}
+
+			resp := &reader.GetRelationsResponse{}
+
+			for {
+				r, err := client.GetRelations(bctx.Context, &reader.GetRelationsRequest{Param: a, Page: page})
+				if err != nil {
+					traceError(&bctx, fnName, err)
+					return nil, err
+				}
+
+				resp.Results = append(resp.Results, r.Results...)
+
+				if r.Page.NextToken == "" {
+					break
+				}
+				page.Token = r.Page.NextToken
+			}
+
+			buf := new(bytes.Buffer)
+			if err := ProtoToBuf(buf, resp); err != nil {
+				return nil, err
+			}
+
+			v, err := ast.ValueFromReader(buf)
+			if err != nil {
+				return nil, err
+			}
+
+			return ast.NewTerm(v), nil
+		}
+}
