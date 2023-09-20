@@ -18,7 +18,37 @@ By default if you run/start the topaz container using the topaz CLI the followin
 - TOPAZ_CFG_DIR - default $HOME/.config/topaz - the directory from where topaz will load the configuration file
 - TOPAZ_EDS_DIR - default $HOME/.config/topaz - the directory where topaz will store the edge directory DB
 
-Both run and start topaz CLI commands allow passing optional environment variables to your running container using the -e flag. This will allow you to use any desired environment variable in your configuration file as long as you pass it to the container.
+Both run and start topaz CLI commands allow passing optional environment variables to your running container using the -e or --env flag. This will allow you to use any desired environment variable in your configuration file as long as you pass it to the container.
+e.g.
+```shell
+topaz run --env=TOPAZ_OPA_CONFIG_SERVICES_GHCR_CREDENTIALS_BEARER_TOKEN --env=TOPAZ_OPA_CONFIG_SERVICES_GHCR_CREDENTIALS_BEARER_SCHEME
+```
+
+Only values that are present in the topaz config file will be overwritten by the environment variables.
+In order for the above environment variables to be used in the topaz configuration file the following configuration must be present:
+```yaml
+opa:
+  config:
+    services:
+      ghcr:
+        credentials:
+          bearer:
+            token: token_placeholder
+            scheme: scheme_placeholder
+```
+
+If you want to compose a value from multiple environment variables or a variable and a hardcoded string you can use interpolation.
+e.g.
+```yaml
+directory:
+  db_path: ${TOPAZ_DIR}/db/directory.db
+```
+
+and then run the topaz command with the `TOPAZ_DIR` environment variable set to the desired value.
+e.g.
+```shell
+topaz run --env=TOPAZ_DIR
+```
 
 ## 1. Common configuration
 
