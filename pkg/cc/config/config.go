@@ -98,7 +98,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 	v.AddConfigPath(".")
 	v.SetConfigFile(file)
 	v.SetEnvPrefix("TOPAZ")
-	v.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	// Set defaults
 	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
