@@ -8,6 +8,7 @@ env:
 before:
   # https://goreleaser.com/customization/hooks/
   hooks:
+      - ./pre-build.sh
 
 builds:
   # https://goreleaser.com/customization/build/

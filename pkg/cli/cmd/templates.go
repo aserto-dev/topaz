@@ -67,6 +67,27 @@ jwt:
   acceptable_time_skew_seconds: 5 # set as default, 5 secs
 
 api:
+  console:
+    gateway:
+      listen_address: "0.0.0.0:8080"
+      allowed_origins:
+      - http://localhost
+      - http://localhost:*
+      - https://localhost
+      - https://localhost:*
+      - https://0.0.0.0:*
+      - https://*.aserto.com
+      - https://*aserto-console.netlify.app
+      certs:
+        tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+        tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+        tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+    grpc:
+      listen_address: "0.0.0.0:8081"
+      certs:
+        tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+        tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+        tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
   reader:
     grpc:
       listen_address: "0.0.0.0:9292"
@@ -83,6 +104,7 @@ api:
       - http://localhost:*
       - https://localhost
       - https://localhost:*
+      - https://0.0.0.0:*
       - https://*.aserto.com
       - https://*aserto-console.netlify.app
       # if no certs are specified, the gateway will have the http flag enabled (http: true)
@@ -196,6 +218,7 @@ api:
       - http://localhost:*
       - https://localhost
       - https://localhost:*
+      - https://0.0.0.0:*
       - https://*.aserto.com
       - https://*aserto-console.netlify.app
       certs:
