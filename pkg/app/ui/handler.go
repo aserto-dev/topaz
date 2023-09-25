@@ -14,6 +14,25 @@ type fsWithDefinition struct {
 	consoleFS http.FileSystem
 }
 
+type consoleCfg struct {
+	AsertoDirectoryURL       string `json:"asertoDirectoryUrl"`
+	AuthorizerServiceURL     string `json:"authorizerServiceUrl"`
+	AuthorizerAPIKey         string `json:"authorizerApiKey"`
+	DirectoryAPIKey          string `json:"directoryApiKey"`
+	DirectoryTenantID        string `json:"directoryTenantId"`
+	AsertoDirectoryReaderURL string `json:"asertoDirectoryReaderUrl"`
+	AsertoDirectoryWriterURL string `json:"asertoDirectoryWriterUrl"`
+	AsertoDirectoryModelURL  string `json:"asertoDirectoryModelUrl"`
+}
+
+type consoleCfgWithRemoteDirectory struct {
+	AsertoDirectoryURL   string `json:"asertoDirectoryUrl"`
+	AuthorizerServiceURL string `json:"authorizerServiceUrl"`
+	AuthorizerAPIKey     string `json:"authorizerApiKey"`
+	DirectoryAPIKey      string `json:"directoryApiKey"`
+	DirectoryTenantID    string `json:"directoryTenantId"`
+}
+
 func (f *fsWithDefinition) Open(name string) (http.File, error) {
 	if strings.HasPrefix(name, "/ui/") {
 		return f.consoleFS.Open("console/build/index.html")
@@ -29,43 +48,67 @@ func UIHandler(consoleFS http.FileSystem) http.Handler {
 
 func ConfigHandler(confServices *config.Config) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		type consoleCfg struct {
-			AsertoDirectoryUrl   string `json:"asertoDirectoryUrl"`
-			AuthorizerServiceUrl string `json:"authorizerServiceUrl"`
-			AuthorizerApiKey     string `json:"authorizerApiKey"`
-			DirectoryApiKey      string `json:"directoryApiKey"`
-			DirectoryTenantId    string `json:"directoryTenantId"`
-		}
-
 		var apiKey string
 		for key := range confServices.Auth.APIKeys {
 			apiKey = key
 			break
 		}
 
-		cfg := &consoleCfg{}
-		if serviceConfig, ok := confServices.Services["authorizer"]; ok {
-			cfg.AuthorizerServiceUrl = fmt.Sprintf("https://%s", serviceConfig.Gateway.ListenAddress)
-			cfg.AuthorizerApiKey = apiKey
-		}
-
-		if serviceConfig, ok := confServices.Services["reader"]; ok {
-			cfg.AsertoDirectoryUrl = fmt.Sprintf("https://%s", serviceConfig.Gateway.ListenAddress)
+		if _, ok := confServices.Services["reader"]; ok {
+			cfg := composeConfig(confServices, apiKey)
+			buf, _ := json.Marshal(cfg)
+			writeJSON(buf, w, r)
 		} else {
-			host := strings.Split(confServices.DirectoryResolver.Address, ":")[0]
-			cfg.AsertoDirectoryUrl = fmt.Sprintf("https://%s", host)
-			if confServices.DirectoryResolver.TenantID != "" {
-				cfg.DirectoryTenantId = confServices.DirectoryResolver.TenantID
-			}
+			cfg := composeRemoteDiretoryConfig(confServices, apiKey)
+			buf, _ := json.Marshal(cfg)
+			writeJSON(buf, w, r)
 		}
-
-		if confServices.DirectoryResolver.APIKey != "" {
-			cfg.DirectoryApiKey = confServices.DirectoryResolver.APIKey
-		}
-
-		buf, _ := json.Marshal(cfg)
-		writeFile(buf, w, r)
 	}
+}
+
+func composeConfig(confServices *config.Config, apiKey string) *consoleCfg {
+	cfg := &consoleCfg{}
+	cfg.AsertoDirectoryReaderURL = fmt.Sprintf("https://%s", confServices.Services["reader"].Gateway.ListenAddress)
+	cfg.AsertoDirectoryURL = fmt.Sprintf("https://%s", confServices.Services["reader"].Gateway.ListenAddress)
+
+	if confServices.Services["writer"] != nil {
+		cfg.AsertoDirectoryWriterURL = fmt.Sprintf("https://%s", confServices.Services["writer"].Gateway.ListenAddress)
+	}
+
+	if confServices.Services["model"] != nil {
+		cfg.AsertoDirectoryModelURL = fmt.Sprintf("https://%s", confServices.Services["model"].Gateway.ListenAddress)
+	}
+
+	if serviceConfig, ok := confServices.Services["authorizer"]; ok {
+		cfg.AuthorizerServiceURL = fmt.Sprintf("https://%s", serviceConfig.Gateway.ListenAddress)
+		cfg.AuthorizerAPIKey = apiKey
+	}
+
+	if confServices.DirectoryResolver.APIKey != "" {
+		cfg.DirectoryAPIKey = confServices.DirectoryResolver.APIKey
+	}
+
+	return cfg
+}
+
+func composeRemoteDiretoryConfig(confServices *config.Config, apiKey string) *consoleCfgWithRemoteDirectory {
+	cfg := &consoleCfgWithRemoteDirectory{}
+	host := strings.Split(confServices.DirectoryResolver.Address, ":")[0]
+	cfg.AsertoDirectoryURL = fmt.Sprintf("https://%s", host)
+	if confServices.DirectoryResolver.TenantID != "" {
+		cfg.DirectoryTenantID = confServices.DirectoryResolver.TenantID
+	}
+
+	if serviceConfig, ok := confServices.Services["authorizer"]; ok {
+		cfg.AuthorizerServiceURL = fmt.Sprintf("https://%s", serviceConfig.Gateway.ListenAddress)
+		cfg.AuthorizerAPIKey = apiKey
+	}
+
+	if confServices.DirectoryResolver.APIKey != "" {
+		cfg.DirectoryAPIKey = confServices.DirectoryResolver.APIKey
+	}
+
+	return cfg
 }
 
 func AuthorizersHandler(confServices *config.Config) func(w http.ResponseWriter, r *http.Request) {
@@ -95,11 +138,11 @@ func AuthorizersHandler(confServices *config.Config) func(w http.ResponseWriter,
 		}
 
 		buf, _ := json.Marshal(cfg)
-		writeFile(buf, w, r)
+		writeJSON(buf, w, r)
 	}
 }
 
-func writeFile(buf []byte, w http.ResponseWriter, _ *http.Request) {
+func writeJSON(buf []byte, w http.ResponseWriter, _ *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
 	_, _ = w.Write(buf)
