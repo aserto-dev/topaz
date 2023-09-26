@@ -42,7 +42,7 @@ func GetInfo() Info {
 
 // String() -- return version info string.
 func (vi Info) String() string {
-	return fmt.Sprintf("%s g%s %s-%s [%s]",
+	return fmt.Sprintf("%s %s %s-%s [%s]",
 		vi.Version,
 		vi.Commit,
 		runtime.GOOS,
