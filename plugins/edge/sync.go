@@ -6,10 +6,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
-	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
+	dse2 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
+	dsi2 "github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsw2 "github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
 	"golang.org/x/sync/errgroup"
 
 	dsClient "github.com/aserto-dev/go-aserto/client"
@@ -28,10 +28,10 @@ const (
 
 type directoryClient struct {
 	conn     grpc.ClientConnInterface
-	Reader   dsr.ReaderClient
-	Writer   dsw.WriterClient
-	Importer dsi.ImporterClient
-	Exporter dse.ExporterClient
+	Reader   dsr2.ReaderClient
+	Writer   dsw2.WriterClient
+	Importer dsi2.ImporterClient
+	Exporter dse2.ExporterClient
 }
 
 type Sync struct {
@@ -39,7 +39,7 @@ type Sync struct {
 	cfg         *Config
 	topazConfig *topaz.Config
 	log         *zerolog.Logger
-	exportChan  chan *dse.ExportResponse
+	exportChan  chan *dse2.ExportResponse
 	errChan     chan error
 }
 
@@ -66,7 +66,7 @@ func NewSyncMgr(c *Config, topazConfig *topaz.Config, logger *zerolog.Logger) *S
 		cfg:         c,
 		topazConfig: topazConfig,
 		log:         logger,
-		exportChan:  make(chan *dse.ExportResponse, channelSize),
+		exportChan:  make(chan *dse2.ExportResponse, channelSize),
 		errChan:     make(chan error, 1),
 	}
 }
@@ -116,8 +116,8 @@ func (s *Sync) producer() error {
 	counts := Counter{}
 	s.log.Info().Time("producer-start", time.Now().UTC()).Msg(syncRun)
 
-	stream, err := pluginDirClient.Exporter.Export(s.ctx, &dse.ExportRequest{
-		Options:   uint32(dse.Option_OPTION_ALL),
+	stream, err := pluginDirClient.Exporter.Export(s.ctx, &dse2.ExportRequest{
+		Options:   uint32(dse2.Option_OPTION_ALL),
 		StartFrom: &timestamppb.Timestamp{},
 	})
 	if err != nil {
@@ -136,15 +136,15 @@ func (s *Sync) producer() error {
 		atomic.AddInt32(&counts.Received, 1)
 
 		switch msg.Msg.(type) {
-		case *dse.ExportResponse_ObjectType:
+		case *dse2.ExportResponse_ObjectType:
 			atomic.AddInt32(&counts.ObjectTypes, 1)
-		case *dse.ExportResponse_RelationType:
+		case *dse2.ExportResponse_RelationType:
 			atomic.AddInt32(&counts.RelationTypes, 1)
-		case *dse.ExportResponse_Permission:
+		case *dse2.ExportResponse_Permission:
 			atomic.AddInt32(&counts.Permissions, 1)
-		case *dse.ExportResponse_Object:
+		case *dse2.ExportResponse_Object:
 			atomic.AddInt32(&counts.Objects, 1)
-		case *dse.ExportResponse_Relation:
+		case *dse2.ExportResponse_Relation:
 			atomic.AddInt32(&counts.Relations, 1)
 		default:
 			s.log.Debug().Msg("unknown message type")
@@ -186,8 +186,8 @@ func (s *Sync) subscriber() error {
 		atomic.AddInt32(&counts.Received, 1)
 
 		switch m := msg.Msg.(type) {
-		case *dse.ExportResponse_ObjectType:
-			_, err := topazDirclient.Writer.SetObjectType(s.ctx, &dsw.SetObjectTypeRequest{ObjectType: m.ObjectType})
+		case *dse2.ExportResponse_ObjectType:
+			_, err := topazDirclient.Writer.SetObjectType(s.ctx, &dsw2.SetObjectTypeRequest{ObjectType: m.ObjectType})
 			if err != nil {
 				s.log.Error().Err(err).Msgf("failed to set object type %v", m.ObjectType)
 				s.errChan <- err
@@ -195,8 +195,8 @@ func (s *Sync) subscriber() error {
 			}
 			atomic.AddInt32(&counts.ObjectTypes, 1)
 
-		case *dse.ExportResponse_RelationType:
-			_, err := topazDirclient.Writer.SetRelationType(s.ctx, &dsw.SetRelationTypeRequest{RelationType: m.RelationType})
+		case *dse2.ExportResponse_RelationType:
+			_, err := topazDirclient.Writer.SetRelationType(s.ctx, &dsw2.SetRelationTypeRequest{RelationType: m.RelationType})
 			if err != nil {
 				s.log.Error().Err(err).Msgf("failed to set relation type %v", m.RelationType)
 				s.errChan <- err
@@ -204,8 +204,8 @@ func (s *Sync) subscriber() error {
 			}
 			atomic.AddInt32(&counts.RelationTypes, 1)
 
-		case *dse.ExportResponse_Permission:
-			_, err := topazDirclient.Writer.SetPermission(s.ctx, &dsw.SetPermissionRequest{Permission: m.Permission})
+		case *dse2.ExportResponse_Permission:
+			_, err := topazDirclient.Writer.SetPermission(s.ctx, &dsw2.SetPermissionRequest{Permission: m.Permission})
 			if err != nil {
 				s.log.Error().Err(err).Msgf("failed to set permission %v", m.Permission)
 				s.errChan <- err
@@ -213,8 +213,8 @@ func (s *Sync) subscriber() error {
 			}
 			atomic.AddInt32(&counts.Permissions, 1)
 
-		case *dse.ExportResponse_Object:
-			_, err := topazDirclient.Writer.SetObject(s.ctx, &dsw.SetObjectRequest{Object: m.Object})
+		case *dse2.ExportResponse_Object:
+			_, err := topazDirclient.Writer.SetObject(s.ctx, &dsw2.SetObjectRequest{Object: m.Object})
 			if err != nil {
 				s.log.Error().Err(err).Msgf("failed to set object %v", m.Object)
 				s.errChan <- err
@@ -222,8 +222,8 @@ func (s *Sync) subscriber() error {
 			}
 			atomic.AddInt32(&counts.Objects, 1)
 
-		case *dse.ExportResponse_Relation:
-			_, err := topazDirclient.Writer.SetRelation(s.ctx, &dsw.SetRelationRequest{Relation: m.Relation})
+		case *dse2.ExportResponse_Relation:
+			_, err := topazDirclient.Writer.SetRelation(s.ctx, &dsw2.SetRelationRequest{Relation: m.Relation})
 			if err != nil {
 				s.log.Error().Err(err).Msgf("failed to set relation %v", m.Relation)
 				s.errChan <- err
@@ -295,10 +295,10 @@ func (s *Sync) getTopazDirectoryClient() (*directoryClient, error) {
 
 	return &directoryClient{
 		conn:     conn.Conn,
-		Reader:   dsr.NewReaderClient(conn.Conn),
-		Writer:   dsw.NewWriterClient(conn.Conn),
-		Importer: dsi.NewImporterClient(conn.Conn),
-		Exporter: dse.NewExporterClient(conn.Conn),
+		Reader:   dsr2.NewReaderClient(conn.Conn),
+		Writer:   dsw2.NewWriterClient(conn.Conn),
+		Importer: dsi2.NewImporterClient(conn.Conn),
+		Exporter: dse2.NewExporterClient(conn.Conn),
 	}, nil
 }
 
@@ -332,9 +332,9 @@ func (s *Sync) getPluginDirectoryClient() (*directoryClient, error) {
 
 	return &directoryClient{
 		conn:     conn.Conn,
-		Reader:   dsr.NewReaderClient(conn.Conn),
-		Writer:   dsw.NewWriterClient(conn.Conn),
-		Importer: dsi.NewImporterClient(conn.Conn),
-		Exporter: dse.NewExporterClient(conn.Conn),
+		Reader:   dsr2.NewReaderClient(conn.Conn),
+		Writer:   dsw2.NewWriterClient(conn.Conn),
+		Importer: dsi2.NewImporterClient(conn.Conn),
+		Exporter: dse2.NewExporterClient(conn.Conn),
 	}, nil
 }

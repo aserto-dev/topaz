@@ -11,8 +11,8 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/pkg/errors"
@@ -32,7 +32,7 @@ var (
 
 // getUserFromJWT.
 func (s *AuthorizerServer) getUserFromJWT(ctx context.Context, bearerJWT string) (proto.Message, error) {
-	resp := v2.Object{}
+	resp := dsc2.Object{}
 
 	ident, err := s.getIdentityFromJWT(ctx, bearerJWT)
 	if err != nil {
@@ -193,7 +193,7 @@ func (s *AuthorizerServer) getObject(ctx context.Context, objType, key string) (
 		return nil, err
 	}
 
-	objResp, err := client.GetObject(ctx, &ds2.GetObjectRequest{Param: &v2.ObjectIdentifier{Type: &objType, Key: &key}})
+	objResp, err := client.GetObject(ctx, &dsr2.GetObjectRequest{Param: &dsc2.ObjectIdentifier{Type: &objType, Key: &key}})
 	if err != nil {
 		return nil, err
 	}

@@ -3,10 +3,10 @@ package app
 import (
 	"context"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
+	dse2 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
+	dsi2 "github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsw2 "github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	builder "github.com/aserto-dev/service-host"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -37,16 +37,16 @@ func (e *EdgeDir) AvailableServices() []string {
 func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
 		if contains(services, "reader") {
-			reader.RegisterReaderServer(server, e.dir.Reader2())
+			dsr2.RegisterReaderServer(server, e.dir.Reader2())
 		}
 		if contains(services, "writer") {
-			writer.RegisterWriterServer(server, e.dir.Writer2())
+			dsw2.RegisterWriterServer(server, e.dir.Writer2())
 		}
 		if contains(services, "importer") {
-			importer.RegisterImporterServer(server, e.dir.Importer2())
+			dsi2.RegisterImporterServer(server, e.dir.Importer2())
 		}
 		if contains(services, "exporter") {
-			exporter.RegisterExporterServer(server, e.dir.Exporter2())
+			dse2.RegisterExporterServer(server, e.dir.Exporter2())
 		}
 	}
 }
