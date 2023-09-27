@@ -18,7 +18,7 @@ require (
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.20.3
-	github.com/aserto-dev/go-authorizer v0.20.2
+	github.com/aserto-dev/go-authorizer v0.20.3-0.20230927192145-4ce5f98e8a29
 	github.com/aserto-dev/go-directory v0.21.7
 	github.com/aserto-dev/go-directory-cli v0.20.13
 	github.com/aserto-dev/go-edge-ds v0.21.13
