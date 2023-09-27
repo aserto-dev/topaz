@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"runtime"
 
 	"github.com/aserto-dev/mage-loot/common"
@@ -126,8 +127,19 @@ func Release() error {
 	return common.Release("--rm-dist")
 }
 
-func Run() error {
+func RunTest() error {
 	return sh.RunV("./dist/topazd_"+runtime.GOOS+"_"+runtime.GOARCH+"/topazd", "--config-file", "./pkg/testing/assets/config-local.yaml", "run")
+}
+
+func Run() error {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+
+	cfg := path.Join(home, ".config/topaz/cfg/config.yaml")
+	os.Setenv("TOPAZ_DIR", path.Join(home, ".config/topaz"))
+	return sh.RunV("./dist/topazd_"+runtime.GOOS+"_"+runtime.GOARCH+"/topazd", "--config-file", cfg, "run")
 }
 
 func writeVersion() error {
