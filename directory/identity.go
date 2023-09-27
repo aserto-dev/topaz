@@ -7,24 +7,24 @@ import (
 
 	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	v2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	ds2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 )
 
-func GetIdentityV2(client ds2.ReaderClient, ctx context.Context, identity string) (*v2.Object, error) {
+func GetIdentityV2(client dsr2.ReaderClient, ctx context.Context, identity string) (*dsc2.Object, error) {
 	identityString := "identity"
-	obj := v2.ObjectIdentifier{Type: &identityString, Key: &identity}
+	obj := dsc2.ObjectIdentifier{Type: &identityString, Key: &identity}
 
 	relationString := "identifier"
 	subjectType := "user"
 	withObjects := true
 
-	relResp, err := client.GetRelation(ctx, &ds2.GetRelationRequest{
-		Param: &v2.RelationIdentifier{
+	relResp, err := client.GetRelation(ctx, &dsr2.GetRelationRequest{
+		Param: &dsc2.RelationIdentifier{
 			Object:   &obj,
-			Relation: &v2.RelationTypeIdentifier{Name: &relationString, ObjectType: &identityString},
-			Subject:  &v2.ObjectIdentifier{Type: &subjectType},
+			Relation: &dsc2.RelationTypeIdentifier{Name: &relationString, ObjectType: &identityString},
+			Subject:  &dsc2.ObjectIdentifier{Type: &subjectType},
 		},
 		WithObjects: &withObjects,
 	})
