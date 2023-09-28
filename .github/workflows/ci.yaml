@@ -20,6 +20,9 @@ env:
   VAULT_ADDR: https://vault.eng.aserto.com/
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
   GO_VERSION: "1.19"
+  GO_LINT_VERSION: "v1.53.3"
+  GO_TESTSUM_VERSION: "1.10.1"
+  GO_RELEASER_VERSION: "v1.20.0"
 
 jobs:
   test:
@@ -42,12 +45,12 @@ jobs:
         name: Lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.53.3
+          version: ${{ env.GO_LINT_VERSION }}
       -
         name: Test Setup
         uses: autero1/action-gotestsum@v2.0.0
         with:
-          gotestsum_version: 1.10.1
+          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
       -
         name: Test
         run: |
@@ -124,7 +127,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
-          version: v1.20.0
+          version: 
           args: release --clean --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -197,7 +200,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         with:
           distribution: goreleaser
-          version: v1.20.0
+          version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean
 
   msi:
