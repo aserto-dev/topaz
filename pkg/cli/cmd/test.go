@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
@@ -26,6 +28,7 @@ const (
 	expected        string = "expected"
 	passed          string = "PASS"
 	failed          string = "FAIL"
+	errored         string = "ERR "
 )
 
 type TestCmd struct {
@@ -36,11 +39,44 @@ type TestCmd struct {
 type TestExecCmd struct {
 	File    string `arg:""  default:"assertions.json" help:"filepath to assertions file"`
 	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
+	Summary bool   `flag:"" default:"false" help:"display test summary"`
+	results *testResults
 	clients.Config
 }
 
 type TestTemplateCmd struct {
 	Pretty bool `arg:"" default:"false" help:"pretty print JSON"`
+}
+
+type testResults struct {
+	total   int32
+	passed  int32
+	failed  int32
+	errored int32
+}
+
+func (t *testResults) IncrTotal() {
+	atomic.AddInt32(&t.total, 1)
+}
+
+func (t *testResults) IncrPassed() {
+	atomic.AddInt32(&t.passed, 1)
+}
+
+func (t *testResults) IncrFailed() {
+	atomic.AddInt32(&t.failed, 1)
+}
+
+func (t *testResults) IncrErrored() {
+	atomic.AddInt32(&t.errored, 1)
+}
+
+func (t *testResults) Passed(passed bool) {
+	if passed {
+		t.IncrPassed()
+		return
+	}
+	t.IncrFailed()
 }
 
 func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
@@ -79,6 +115,13 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		color.NoColor = true
 	}
 
+	cmd.results = &testResults{
+		total:   int32(len(assertions.Assertions)),
+		passed:  0,
+		failed:  0,
+		errored: 0,
+	}
+
 	for i := 0; i < len(assertions.Assertions); i++ {
 		var msg structpb.Struct
 		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(assertions.Assertions[i], &msg)
@@ -107,12 +150,27 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
+	if cmd.Summary {
+		fmt.Print("\nTest Execution Summary:\n")
+		fmt.Printf("%s\n", strings.Repeat("-", 23))
+		fmt.Printf("total:   %d\n", cmd.results.total)
+		fmt.Printf("passed:  %d\n", cmd.results.passed)
+		fmt.Printf("failed:  %d\n", cmd.results.failed)
+		fmt.Printf("errored: %d\n", cmd.results.errored)
+		fmt.Println()
+	}
+
+	if cmd.results.errored > 0 || cmd.results.failed > 0 {
+		return errors.New("one or more test errored or failed")
+	}
+
 	return nil
 }
 
-func (*TestExecCmd) execCheckRelation(c *cc.CommonCtx, dsc *client.Client, field *structpb.Value, i int, expected bool) error {
+func (cmd *TestExecCmd) execCheckRelation(c *cc.CommonCtx, dsc *client.Client, field *structpb.Value, i int, expected bool) error {
 	var req dsr2.CheckRelationRequest
 	if err := unmarshalReq(field, &req); err != nil {
+		cmd.results.IncrErrored()
 		return err
 	}
 
@@ -123,6 +181,7 @@ func (*TestExecCmd) execCheckRelation(c *cc.CommonCtx, dsc *client.Client, field
 	start := time.Now()
 	resp, err := dsc.Reader.CheckRelation(c.Context, &req)
 	if err != nil {
+		cmd.results.IncrErrored()
 		return err
 	}
 	duration := time.Since(start)
@@ -137,18 +196,22 @@ func (*TestExecCmd) execCheckRelation(c *cc.CommonCtx, dsc *client.Client, field
 		duration,
 	)
 
+	cmd.results.Passed(outcome == expected)
+
 	return nil
 }
 
-func (*TestExecCmd) execCheckPermission(c *cc.CommonCtx, dsc *client.Client, field *structpb.Value, i int, expected bool) error {
+func (cmd *TestExecCmd) execCheckPermission(c *cc.CommonCtx, dsc *client.Client, field *structpb.Value, i int, expected bool) error {
 	var req dsr2.CheckPermissionRequest
 	if err := unmarshalReq(field, &req); err != nil {
+		cmd.results.IncrErrored()
 		return err
 	}
 
 	start := time.Now()
 	resp, err := dsc.Reader.CheckPermission(c.Context, &req)
 	if err != nil {
+		cmd.results.IncrErrored()
 		return err
 	}
 	duration := time.Since(start)
@@ -163,18 +226,22 @@ func (*TestExecCmd) execCheckPermission(c *cc.CommonCtx, dsc *client.Client, fie
 		duration,
 	)
 
+	cmd.results.Passed(outcome == expected)
+
 	return nil
 }
 
-func (*TestExecCmd) execCheckDecision(c *cc.CommonCtx, azc az2.AuthorizerClient, field *structpb.Value, i int, expected bool) error {
+func (cmd *TestExecCmd) execCheckDecision(c *cc.CommonCtx, azc az2.AuthorizerClient, field *structpb.Value, i int, expected bool) error {
 	var req az2.IsRequest
 	if err := unmarshalReq(field, &req); err != nil {
+		cmd.results.IncrErrored()
 		return err
 	}
 
 	start := time.Now()
 	resp, err := azc.Is(c.Context, &req)
 	if err != nil {
+		cmd.results.IncrErrored()
 		return err
 	}
 	duration := time.Since(start)
@@ -188,6 +255,8 @@ func (*TestExecCmd) execCheckDecision(c *cc.CommonCtx, azc az2.AuthorizerClient,
 		iff(decision.GetIs(), color.BlueString("%t", decision.GetIs()), color.YellowString("%t", decision.GetIs())),
 		duration,
 	)
+
+	cmd.results.Passed(expected == decision.GetIs())
 
 	return nil
 }
