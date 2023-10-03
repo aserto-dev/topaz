@@ -68,19 +68,19 @@ func ConfigHandler(confServices *config.Config) func(w http.ResponseWriter, r *h
 
 func composeConfig(confServices *config.Config, apiKey string) *consoleCfg {
 	cfg := &consoleCfg{}
-	cfg.AsertoDirectoryReaderURL = fmt.Sprintf("https://%s", confServices.Services["reader"].Gateway.ListenAddress)
-	cfg.AsertoDirectoryURL = fmt.Sprintf("https://%s", confServices.Services["reader"].Gateway.ListenAddress)
+	cfg.AsertoDirectoryReaderURL = fmt.Sprintf("https://%s", serviceAddress(confServices.Services["reader"].Gateway.ListenAddress))
+	cfg.AsertoDirectoryURL = fmt.Sprintf("https://%s", serviceAddress(confServices.Services["reader"].Gateway.ListenAddress))
 
 	if confServices.Services["writer"] != nil {
-		cfg.AsertoDirectoryWriterURL = fmt.Sprintf("https://%s", confServices.Services["writer"].Gateway.ListenAddress)
+		cfg.AsertoDirectoryWriterURL = fmt.Sprintf("https://%s", serviceAddress(confServices.Services["writer"].Gateway.ListenAddress))
 	}
 
 	if confServices.Services["model"] != nil {
-		cfg.AsertoDirectoryModelURL = fmt.Sprintf("https://%s", confServices.Services["model"].Gateway.ListenAddress)
+		cfg.AsertoDirectoryModelURL = fmt.Sprintf("https://%s", serviceAddress(confServices.Services["model"].Gateway.ListenAddress))
 	}
 
 	if serviceConfig, ok := confServices.Services["authorizer"]; ok {
-		cfg.AuthorizerServiceURL = fmt.Sprintf("https://%s", serviceConfig.Gateway.ListenAddress)
+		cfg.AuthorizerServiceURL = fmt.Sprintf("https://%s", serviceAddress(serviceConfig.Gateway.ListenAddress))
 		cfg.AuthorizerAPIKey = apiKey
 	}
 
@@ -89,6 +89,21 @@ func composeConfig(confServices *config.Config, apiKey string) *consoleCfg {
 	}
 
 	return cfg
+}
+
+func serviceAddress(listenAddress string) string {
+	addr, port, found := strings.Cut(listenAddress, ":")
+	if addr == "0.0.0.0" {
+		addr = "localhost"
+	}
+
+	fmt.Println("addr: ", addr)
+
+	if found {
+		return fmt.Sprintf("%s:%s", addr, port)
+	}
+
+	return addr
 }
 
 func composeRemoteDiretoryConfig(confServices *config.Config, apiKey string) *consoleCfgWithRemoteDirectory {
