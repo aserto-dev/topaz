@@ -97,8 +97,6 @@ func serviceAddress(listenAddress string) string {
 		addr = "localhost"
 	}
 
-	fmt.Println("addr: ", addr)
-
 	if found {
 		return fmt.Sprintf("%s:%s", addr, port)
 	}
@@ -115,7 +113,7 @@ func composeRemoteDiretoryConfig(confServices *config.Config, apiKey string) *co
 	}
 
 	if serviceConfig, ok := confServices.Services["authorizer"]; ok {
-		cfg.AuthorizerServiceURL = fmt.Sprintf("https://%s", serviceConfig.Gateway.ListenAddress)
+		cfg.AuthorizerServiceURL = fmt.Sprintf("https://%s", serviceAddress(serviceConfig.Gateway.ListenAddress))
 		cfg.AuthorizerAPIKey = apiKey
 	}
 
