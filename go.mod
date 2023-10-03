@@ -24,6 +24,7 @@ require (
 	github.com/aserto-dev/runtime v0.54.2
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.5
+	github.com/cli/browser v1.2.0
 	github.com/fatih/color v1.15.0
 	github.com/fullstorydev/grpcurl v1.8.7
 	github.com/google/uuid v1.3.1
