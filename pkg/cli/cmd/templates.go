@@ -47,7 +47,7 @@ opa:
 
 const templatePreamble = `---
 # config schema version
-version: {{ .Version }} 
+version: {{ .Version }}
 
 logging:
   prod: true
@@ -114,12 +114,39 @@ api:
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
       http: false
       read_timeout: 2s # default 2 seconds
-      read_header_timeout: 2s 
-      write_timeout: 2s 
+      read_header_timeout: 2s
+      write_timeout: 2s
       idle_timeout: 30s # default 30 seconds
     health:
       listen_address: "0.0.0.0:9494"
   writer:
+    grpc:
+      listen_address: "0.0.0.0:9292"
+      certs:
+        tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+        tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+        tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+    gateway:
+      listen_address: "0.0.0.0:9393"
+      allowed_origins:
+      - http://localhost
+      - http://localhost:*
+      - https://localhost
+      - https://localhost:*
+      - https://*.aserto.com
+      - https://*aserto-console.netlify.app
+      certs:
+        tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+        tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+        tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+      http: false
+      read_timeout: 2s
+      read_header_timeout: 2s
+      write_timeout: 2s
+      idle_timeout: 30s
+    health:
+      listen_address: "0.0.0.0:9494"
+  model:
     grpc:
       listen_address: "0.0.0.0:9292"
       certs:
@@ -200,7 +227,7 @@ api:
       idle_timeout: 30s
     health:
       listen_address: "0.0.0.0:9494"
-  
+
   authorizer:
     needs:
       - reader

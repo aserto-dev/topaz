@@ -35,11 +35,11 @@ type consoleCfgWithRemoteDirectory struct {
 
 func (f *fsWithDefinition) Open(name string) (http.File, error) {
 	if strings.HasPrefix(name, "/ui/") {
-		return f.consoleFS.Open("console/build/index.html")
+		return f.consoleFS.Open("console/index.html")
 	}
 
 	name = strings.TrimPrefix(name, "/public")
-	return f.consoleFS.Open(fmt.Sprintf("console/build%s", name))
+	return f.consoleFS.Open(fmt.Sprintf("console%s", name))
 }
 
 func UIHandler(consoleFS http.FileSystem) http.Handler {
