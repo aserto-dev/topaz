@@ -32,6 +32,7 @@ type Topaz struct {
 
 const (
 	authorizerService = "authorizer"
+	consoleService    = "console"
 )
 
 func NewTopaz(cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {

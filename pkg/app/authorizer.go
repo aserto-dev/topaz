@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/aserto-dev/go-aserto/client"
@@ -11,9 +12,11 @@ import (
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
+	"github.com/aserto-dev/topaz/pkg/app/ui"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
@@ -93,6 +96,10 @@ func (e *Authorizer) ConfigServices() error {
 		e.Services["topaz"] = topaz
 	}
 
+	if _, ok := e.Configuration.Services[consoleService]; ok {
+		e.Services["console"] = NewConsole()
+	}
+
 	if err := e.validateConfig(); err != nil {
 		return err
 	}
@@ -142,6 +149,14 @@ func (e *Authorizer) ConfigServices() error {
 		if err != nil {
 			return err
 		}
+
+		if contains(serviceConfig.registeredServices, "console") {
+			server.Gateway.Mux.Handle("/ui/", ui.UIHandler(http.FS(console)))
+			server.Gateway.Mux.Handle("/public/", ui.UIHandler(http.FS(console)))
+			server.Gateway.Mux.HandleFunc("/api/v1/config", ui.ConfigHandler(e.Configuration))
+			server.Gateway.Mux.HandleFunc("/api/v1/authorizers", ui.AuthorizersHandler(e.Configuration))
+		}
+
 		err = e.Manager.AddGRPCServer(server)
 		if err != nil {
 			return err
@@ -241,8 +256,10 @@ func (e *Authorizer) validateConfig() error {
 	}
 
 	for key := range e.Configuration.Services {
-		if !(contains(e.Services["edge"].AvailableServices(), key) || key == authorizerService) {
-			return errors.Errorf("unknown service type %s", key)
+		if _, ok := e.Services["edge"]; ok {
+			if !(contains(e.Services["edge"].AvailableServices(), key) || key == authorizerService || key == consoleService) {
+				return errors.Errorf("unknown service type %s", key)
+			}
 		}
 	}
 	return nil

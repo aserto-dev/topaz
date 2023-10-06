@@ -19,7 +19,7 @@ on:
 env:
   VAULT_ADDR: https://vault.eng.aserto.com/
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
-  GO_VERSION: "1.19"
+  GO_VERSION: "1.20"
   GO_RELEASER_VERSION: "v1.20.0"
 
 jobs:
@@ -46,8 +46,7 @@ jobs:
       -
         name: Build
         run: |
-          go build -o ./bin/topaz ./cmd/topaz/
-          go build -o ./bin/topazd ./cmd/topazd/
+          go run mage.go deps build
       -
         name: Lint
         uses: golangci/golangci-lint-action@v3

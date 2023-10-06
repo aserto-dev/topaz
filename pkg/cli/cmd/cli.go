@@ -30,6 +30,7 @@ type CLI struct {
 	Update    UpdateCmd    `cmd:"" help:"update topaz container version"`
 	Uninstall UninstallCmd `cmd:"" help:"uninstall topaz container"`
 	Version   VersionCmd   `cmd:"" help:"version information"`
+	Console   ConsoleCmd   `cmd:"" help:"opens the console in the browser"`
 	NoCheck   bool         `name:"no-check" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
 }
 
