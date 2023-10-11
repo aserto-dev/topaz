@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo
+data:
+  .env: |
+    JWKS_URI=https://citadel.demo.aserto.com/dex/keys
+    ISSUER=https://citadel.demo.aserto.com/dex
+    AUDIENCE=citadel-app
+    
+    ASERTO_POLICY_ROOT="todoApp"
+    
+    # This configuration targets a Topaz instance running locally.
+    ASERTO_AUTHORIZER_SERVICE_URL=localhost:8282
+    ASERTO_AUTHORIZER_CERT_PATH='/root/.config/topaz/certs/grpc-ca.crt'
+    ASERTO_DIRECTORY_SERVICE_URL=localhost:9292
+    ASERTO_DIRECTORY_GRPC_CERT_PATH='/root/.config/topaz/certs/grpc-ca.crt'
