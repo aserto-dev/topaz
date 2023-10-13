@@ -46,7 +46,7 @@ func Lint() error {
 
 // Test runs all tests and generates a code coverage report.
 func Test() error {
-	return common.Test("-timeout", "240s")
+	return common.Test("-timeout", "240s", "-parallel=1")
 }
 
 // DockerImage builds the docker image for the project.

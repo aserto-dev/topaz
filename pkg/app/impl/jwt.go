@@ -12,7 +12,8 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-edge-ds/pkg/pb"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/pkg/errors"
@@ -165,6 +166,13 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 		}
 
 		return user, nil
+	case api.IdentityType_IDENTITY_TYPE_MANUAL:
+		if identityContext.Identity == "" {
+			return nil, fmt.Errorf("identity value not set (type: %s)", identityContext.Type.String())
+		}
+
+		// the resulting user object will be an empty object.
+		return pb.NewStruct(), nil
 	default:
 		return nil, fmt.Errorf("invalid identity type %s", identityContext.Type.String())
 	}
@@ -175,7 +183,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	if err != nil {
 		return nil, err
 	}
-	user, err := directory.GetIdentityV2(client, ctx, identity)
+	user, err := directory.GetIdentityV2(ctx, client, identity)
 	switch {
 	case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
 		// Try to find a user with key == identity
@@ -187,13 +195,16 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	}
 }
 
-func (s *AuthorizerServer) getObject(ctx context.Context, objType, key string) (proto.Message, error) {
+func (s *AuthorizerServer) getObject(ctx context.Context, objType, objID string) (proto.Message, error) {
 	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	objResp, err := client.GetObject(ctx, &dsr2.GetObjectRequest{Param: &dsc2.ObjectIdentifier{Type: &objType, Key: &key}})
+	objResp, err := client.GetObject(ctx, &dsr3.GetObjectRequest{
+		ObjectType: objType,
+		ObjectId:   objID,
+	})
 	if err != nil {
 		return nil, err
 	}

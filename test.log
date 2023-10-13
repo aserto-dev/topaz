@@ -1,0 +1,907 @@
+
+Running tests.
+EMPTY builtins/edge/ds
+EMPTY cmd/topaz
+EMPTY cmd/topazd
+EMPTY decision_log
+EMPTY decision_log/logger/file
+EMPTY decision_log/logger/nop
+EMPTY directory
+EMPTY pkg/app
+EMPTY pkg/app/auth
+EMPTY pkg/app/directory
+EMPTY pkg/app/impl
+EMPTY pkg/app/management
+EMPTY pkg/app/middlewares
+EMPTY pkg/app/tests
+PASS pkg/app/tests/builtin.TestBuiltinsHelp/ds.identity (0.01s)
+PASS pkg/app/tests/builtin.TestBuiltinsHelp/ds.user (0.00s)
+PASS pkg/app/tests/builtin.TestBuiltinsHelp/ds.check (0.00s)
+PASS pkg/app/tests/builtin.TestBuiltinsHelp/ds.check_relation (0.00s)
+PASS pkg/app/tests/builtin.TestBuiltinsHelp/ds.check_permission (0.00s)
+PASS pkg/app/tests/builtin.TestBuiltinsHelp/ds.graph (0.00s)
+PASS pkg/app/tests/builtin.TestBuiltinsHelp/ds.object (0.00s)
+PASS pkg/app/tests/builtin.TestBuiltinsHelp/ds.relation (0.00s)
+PASS pkg/app/tests/builtin.TestBuiltinsHelp/ds.relations (0.00s)
+PASS pkg/app/tests/builtin.TestBuiltinsHelp (0.77s)
+coverage: 29.8% of statements in ./...
+PASS pkg/app/tests/builtin (coverage: 29.8% of statements in ./...)
+=== RUN   TestWithMissingIdentity
+    logger.go:25: >> Log output for topaz: /var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/topaz-test-log-1993671959.log
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for importer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for model"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for writer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for authorizer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for reader"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for exporter"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","name":"ds.check_permission","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.identity","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.relation","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.relations","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check_relation","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.user","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.object","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.graph","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","component":"runtime","instance-id":"-","time":"2023-10-12T13:52:40-07:00","message":"creating OPA plugins manager"}
+{"level":"info","plugin-name":"aserto_decision_log","time":"2023-10-12T13:52:40-07:00","message":"registering plugin"}
+{"level":"info","plugin-name":"aserto_edge","time":"2023-10-12T13:52:40-07:00","message":"registering plugin"}
+{"level":"info","component":"runtime","instance-id":"-","name":"peoplefinder","plugin":"bundle","time":"2023-10-12T13:52:40-07:00","message":"Starting bundle loader."}
+{"level":"info","component":"runtime","instance-id":"-","name":"peoplefinder","plugin":"bundle","time":"2023-10-12T13:52:41-07:00","message":"Bundle loaded and activated successfully. Etag updated to 22c52a6b67f4522a0bd13dd9e7919166411b8eee523737d50c1d7c000adc9a6c."}
+{"level":"info","component":"runtime","instance-id":"-","time":"2023-10-12T13:52:41-07:00","message":"runtime is ready"}
+{"level":"info","component":"edge-ds","component":"kvs","db_path":"/var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/eds-acmecorp.db","time":"2023-10-12T13:52:41-07:00","message":"opening boltdb store"}
+--- FAIL: TestWithMissingIdentity (0.56s)
+panic: invalid freelist page: 0, page type is unknown<00> [recovered]
+	panic: invalid freelist page: 0, page type is unknown<00>
+
+goroutine 67 [running]:
+testing.tRunner.func1.2({0x1023ebec0, 0x140003a6080})
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1545 +0x1c8
+testing.tRunner.func1()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1548 +0x360
+panic({0x1023ebec0?, 0x140003a6080?})
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/panic.go:914 +0x218
+go.etcd.io/bbolt.(*freelist).read(0x101fcc993?, 0x12b3bc000)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/freelist.go:267 +0x1d0
+go.etcd.io/bbolt.(*DB).loadFreelist.func1()
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:415 +0xa8
+sync.(*Once).doSlow(0x1400014f848?, 0x1025106c0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/sync/once.go:74 +0x100
+sync.(*Once).Do(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/sync/once.go:65
+go.etcd.io/bbolt.(*DB).loadFreelist(0x1400014f680?)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:408 +0x48
+go.etcd.io/bbolt.Open({0x14000040e40, 0x40}, 0x14?, 0x140003a5330)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:290 +0x340
+github.com/aserto-dev/go-edge-ds/pkg/bdb.(*BoltDB).Open(0x1400037fec0)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/boltdb.go:72 +0x168
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate.CheckSchemaVersion(0x101fccbff?, 0x5?, 0x12aba0e38?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/migrate.go:45 +0x44
+github.com/aserto-dev/go-edge-ds/pkg/directory.New(0x14000692b88, 0x140004a4540)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/directory/directory.go:66 +0x2f4
+github.com/aserto-dev/go-edge-ds.New(0x1400035e4c0?, 0x140002ec5b0)
+	/Users/gertd/workspace/v3/go-edge-ds/eds.go:11 +0x258
+github.com/aserto-dev/go-edge-ds/pkg/server.(*EdgeDirLock).New(0x103482500, 0x100fd3e60?, 0x0?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/server/eds-lock.go:20 +0x30
+github.com/aserto-dev/topaz/pkg/app.(*Authorizer).ConfigServices(0x14000051950)
+	/Users/gertd/workspace/v3/topaz/pkg/app/authorizer.go:77 +0x6c
+github.com/aserto-dev/topaz/pkg/testing.setup(0x140005c31e0, 0x14000486e10?, 0x1)
+	/Users/gertd/workspace/v3/topaz/pkg/testing/engine.go:111 +0x3b0
+github.com/aserto-dev/topaz/pkg/testing.SetupOnline(...)
+	/Users/gertd/workspace/v3/topaz/pkg/testing/engine.go:74
+github.com/aserto-dev/topaz/pkg/app/tests/authz_test.TestWithMissingIdentity(0x1?)
+	/Users/gertd/workspace/v3/topaz/pkg/app/tests/authz/authz_test.go:19 +0x70
+testing.tRunner(0x140005c31e0, 0x102716df8)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1595 +0xe8
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1648 +0x33c
+FAIL pkg/app/tests/authz.TestWithMissingIdentity (0.56s)
+FAIL pkg/app/tests/authz
+PASS pkg/app/tests/manifest.TestManifest (0.55s)
+coverage: 22.6% of statements in ./...
+PASS pkg/app/tests/manifest (coverage: 22.6% of statements in ./...)
+PASS pkg/app/tests/migrate.TestMigrate003 (0.82s)
+coverage: 23.7% of statements in ./...
+PASS pkg/app/tests/migrate (coverage: 23.7% of statements in ./...)
+EMPTY pkg/app/topaz
+EMPTY pkg/cc
+EMPTY pkg/cc/config
+EMPTY pkg/cc/context
+EMPTY pkg/cli/cc
+EMPTY pkg/cli/cc/iostream
+EMPTY pkg/cli/clients
+EMPTY pkg/cli/cmd
+EMPTY pkg/cli/dockerx
+EMPTY pkg/cli/x
+EMPTY pkg/rapidoc
+EMPTY pkg/testing
+EMPTY pkg/version
+EMPTY plugins/decision_log
+EMPTY plugins/edge
+EMPTY plugins/noop
+EMPTY resolvers
+FAIL pkg/app/tests/query
+PASS pkg/app/tests/runtime.TestEngine (0.37s)
+coverage: 26.4% of statements in ./...
+PASS pkg/app/tests/runtime (coverage: 26.4% of statements in ./...)
+PASS pkg/app/tests/policy.TestPolicy/TestListPolicies (0.01s)
+PASS pkg/app/tests/policy.TestPolicy/TestListPoliciesMasked (0.00s)
+PASS pkg/app/tests/policy.TestPolicy/TestListPoliciesMaskedComposed (0.00s)
+PASS pkg/app/tests/policy.TestPolicy/TestListPoliciesInvalidMask (0.00s)
+PASS pkg/app/tests/policy.TestPolicy/TestListPoliciesEmptyMask (0.00s)
+PASS pkg/app/tests/policy.TestPolicy/TestGetPolicies (0.00s)
+PASS pkg/app/tests/policy.TestPolicy/TestGetPoliciesMasked (0.00s)
+PASS pkg/app/tests/policy.TestPolicy/TestGetPoliciesMaskedComposed (0.00s)
+PASS pkg/app/tests/policy.TestPolicy/TestGetPoliciesInvalidMask (0.00s)
+PASS pkg/app/tests/policy.TestPolicy/TestGetPoliciesEmptyMask (0.00s)
+PASS pkg/app/tests/policy.TestPolicy/TestGetPoliciesInvalidID (0.00s)
+PASS pkg/app/tests/policy.TestPolicy (1.05s)
+coverage: 27.4% of statements in ./...
+PASS pkg/app/tests/policy (coverage: 27.4% of statements in ./...)
+=== RUN   TestQuery
+    logger.go:25: >> Log output for topaz: /var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/topaz-test-log-1220279270.log
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for reader"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for exporter"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for authorizer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for importer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for model"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for writer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","name":"ds.identity","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.user","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check_relation","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check_permission","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.object","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.relation","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.relations","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.graph","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","component":"runtime","instance-id":"5d7cccc6-1657-11ec-a291-00001df0866c","time":"2023-10-12T13:52:43-07:00","message":"creating OPA plugins manager"}
+{"level":"info","component":"runtime","instance-id":"5d7cccc6-1657-11ec-a291-00001df0866c","path":"/Users/gertd/workspace/v3/topaz/pkg/testing/assets/mycars_bundle","time":"2023-10-12T13:52:43-07:00","message":"Loading local bundle"}
+{"level":"info","plugin-name":"aserto_decision_log","time":"2023-10-12T13:52:43-07:00","message":"registering plugin"}
+{"level":"info","plugin-name":"aserto_edge","time":"2023-10-12T13:52:43-07:00","message":"registering plugin"}
+{"level":"info","component":"runtime","instance-id":"5d7cccc6-1657-11ec-a291-00001df0866c","time":"2023-10-12T13:52:43-07:00","message":"runtime is ready"}
+{"level":"info","component":"edge-ds","component":"kvs","db_path":"/var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/eds-acmecorp.db","time":"2023-10-12T13:52:43-07:00","message":"opening boltdb store"}
+{"level":"info","component":"edge-ds","current":"0.0.2","time":"2023-10-12T13:52:43-07:00","message":"schema_version"}
+{"level":"info","component":"edge-ds","component":"migrate","component":"kvs","db_path":"/var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/eds-acmecorp.db","time":"2023-10-12T13:52:43-07:00","message":"opening boltdb store"}
+{"level":"info","component":"edge-ds","component":"migrate","current":"0.0.2","required":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"begin schema migration"}
+{"level":"info","component":"edge-ds","component":"migrate","next":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"starting"}
+{"level":"info","component":"edge-ds","component":"migrate","component":"kvs","db_path":"/var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/eds-acmecorp.db","time":"2023-10-12T13:52:43-07:00","message":"opening boltdb store"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"StartMigration"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"_manifest/default/0.0.1","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"MigrateModel"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"object_types","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relation_types","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"permissions","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"objects","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"objects","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"UpdateObjects"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relations_obj","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relations_obj","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"UpdateRelations"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relations_sub","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relations_sub","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"UpdateRelations"}
+unexpected fault address 0x12c398000
+fatal error: fault
+[signal SIGBUS: bus error code=0x1 addr=0x12c398000 pc=0x1030168c4]
+
+goroutine 10 [running]:
+runtime.throw({0x1035ff79a?, 0x0?})
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/panic.go:1077 +0x40 fp=0x14000887830 sp=0x14000887800 pc=0x102626c40
+runtime.sigpanic()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/signal_unix.go:858 +0x178 fp=0x14000887890 sp=0x14000887830 pc=0x10263eb78
+go.etcd.io/bbolt.(*page).fastCheck(0x12c398000, 0x6b)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/page.go:57 +0x24 fp=0x14000887970 sp=0x140008878a0 pc=0x1030168c4
+go.etcd.io/bbolt.(*Tx).page(0x1400015c540?, 0x6b?)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/tx.go:534 +0x74 fp=0x140008879b0 sp=0x14000887970 pc=0x103019134
+go.etcd.io/bbolt.(*Bucket).pageNode(0x1400015c558?, 0x6b?)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/bucket.go:740 +0x90 fp=0x14000887a00 sp=0x140008879b0 pc=0x10300ab30
+go.etcd.io/bbolt.(*Cursor).search(0x14000887c28, {0x14000887bc8, 0xd, 0x20}, 0x20?)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/cursor.go:272 +0x3c fp=0x14000887aa0 sp=0x14000887a00 pc=0x10300bb3c
+go.etcd.io/bbolt.(*Cursor).seek(0x14000887c28, {0x14000887bc8?, 0x140003c1b28?, 0x10300a62c?})
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/cursor.go:159 +0x34 fp=0x14000887ae0 sp=0x14000887aa0 pc=0x10300b524
+go.etcd.io/bbolt.(*Bucket).spill(0x1400015c558)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/bucket.go:568 +0x194 fp=0x14000887d10 sp=0x14000887ae0 pc=0x10300a154
+go.etcd.io/bbolt.(*Tx).Commit(0x1400015c540)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/tx.go:163 +0xdc fp=0x14000887e40 sp=0x14000887d10 pc=0x1030179bc
+go.etcd.io/bbolt.(*DB).Update(0x140005766d0?, 0x14000083f00)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:869 +0xc8 fp=0x14000887eb0 sp=0x14000887e40 pc=0x10300f0e8
+go.etcd.io/bbolt.(*batch).run(0x14000920bc0)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:977 +0x16c fp=0x14000887f20 sp=0x14000887eb0 pc=0x10300f90c
+go.etcd.io/bbolt.(*batch).run-fm()
+	<autogenerated>:1 +0x28 fp=0x14000887f40 sp=0x14000887f20 pc=0x10301ca98
+sync.(*Once).doSlow(0x0?, 0x10265e904?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/sync/once.go:74 +0x100 fp=0x14000887fa0 sp=0x14000887f40 pc=0x10267a4f0
+sync.(*Once).Do(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/sync/once.go:65
+go.etcd.io/bbolt.(*batch).trigger(...)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:959
+go.etcd.io/bbolt.(*batch).trigger-fm()
+	<autogenerated>:1 +0x54 fp=0x14000887fd0 sp=0x14000887fa0 pc=0x10301cb24
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000887fd0 sp=0x14000887fd0 pc=0x10265e904
+created by time.goFunc
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/time/sleep.go:176 +0x38
+
+goroutine 1 [chan receive]:
+runtime.gopark(0x140003e99b8?, 0x1025fc1ec?, 0x50?, 0xe4?, 0x18?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000885940 sp=0x14000885920 pc=0x102629918
+runtime.chanrecv(0x1400014c150, 0x140003e9a3f, 0x1)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/chan.go:583 +0x414 fp=0x140008859c0 sp=0x14000885940 pc=0x1025f5144
+runtime.chanrecv1(0x104abe8c0?, 0x103a1ffa0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/chan.go:442 +0x14 fp=0x140008859f0 sp=0x140008859c0 pc=0x1025f4cf4
+testing.(*T).Run(0x14000102d00, {0x10360546d?, 0x139de4fb839f5?}, 0x103d4b0b8)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1649 +0x350 fp=0x14000885ab0 sp=0x140008859f0 pc=0x10276a480
+testing.runTests.func1(0x1400002f050?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:2054 +0x48 fp=0x14000885b00 sp=0x14000885ab0 pc=0x10276c2a8
+testing.tRunner(0x14000102d00, 0x140003e9c28)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1595 +0xe8 fp=0x14000885b50 sp=0x14000885b00 pc=0x1027697a8
+testing.runTests(0x14000141680?, {0x104a8f0c0, 0x1, 0x1}, {0x40?, 0x103c0ce40?, 0x104ac0120?})
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:2052 +0x3b4 fp=0x14000885c50 sp=0x14000885b50 pc=0x10276c1a4
+testing.(*M).Run(0x14000141680)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1925 +0x538 fp=0x14000885ea0 sp=0x14000885c50 pc=0x10276ae78
+main.main()
+	_testmain.go:81 +0x1c8 fp=0x14000885f30 sp=0x14000885ea0 pc=0x1035fd6a8
+runtime.main()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:267 +0x2bc fp=0x14000885fd0 sp=0x14000885f30 pc=0x1026294bc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000885fd0 sp=0x14000885fd0 pc=0x10265e904
+
+goroutine 2 [force gc (idle)]:
+runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000072f90 sp=0x14000072f70 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.forcegchelper()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:322 +0xb8 fp=0x14000072fd0 sp=0x14000072f90 pc=0x102629778
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000072fd0 sp=0x14000072fd0 pc=0x10265e904
+created by runtime.init.6 in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:310 +0x24
+
+goroutine 3 [GC sweep wait]:
+runtime.gopark(0x1?, 0x0?, 0x0?, 0x0?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000073760 sp=0x14000073740 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.bgsweep(0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgcsweep.go:321 +0x108 fp=0x140000737b0 sp=0x14000073760 pc=0x102614178
+runtime.gcenable.func1()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:200 +0x28 fp=0x140000737d0 sp=0x140000737b0 pc=0x102608bd8
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140000737d0 sp=0x140000737d0 pc=0x10265e904
+created by runtime.gcenable in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:200 +0x6c
+
+goroutine 18 [sleep]:
+runtime.gopark(0x14000050050?, 0x139dec54ae689?, 0x0?, 0x0?, 0x103d4b2d0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x1400006e710 sp=0x1400006e6f0 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.(*scavengerState).sleep(0x104ac1fc0, 0x41122e4400000000)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgcscavenge.go:504 +0x128 fp=0x1400006e780 sp=0x1400006e710 pc=0x102611b78
+runtime.bgscavenge(0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgcscavenge.go:662 +0x9c fp=0x1400006e7b0 sp=0x1400006e780 pc=0x102611f2c
+runtime.gcenable.func2()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:201 +0x28 fp=0x1400006e7d0 sp=0x1400006e7b0 pc=0x102608b78
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x1400006e7d0 sp=0x1400006e7d0 pc=0x10265e904
+created by runtime.gcenable in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:201 +0xac
+
+goroutine 34 [finalizer wait]:
+runtime.gopark(0x0?, 0x103d4b128?, 0x0?, 0x60?, 0x2000000020?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000072580 sp=0x14000072560 pc=0x102629918
+runtime.runfinq()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mfinal.go:193 +0x108 fp=0x140000727d0 sp=0x14000072580 pc=0x102607cc8
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140000727d0 sp=0x140000727d0 pc=0x10265e904
+created by runtime.createfing in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mfinal.go:163 +0x80
+
+goroutine 35 [GC worker (idle)]:
+runtime.gopark(0x139de5ff81b28?, 0x3?, 0x28?, 0x23?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000574730 sp=0x14000574710 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x140005747d0 sp=0x14000574730 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140005747d0 sp=0x140005747d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 50 [GC worker (idle)]:
+runtime.gopark(0x104b03e40?, 0x3?, 0xa6?, 0x84?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000570730 sp=0x14000570710 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x140005707d0 sp=0x14000570730 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140005707d0 sp=0x140005707d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 19 [semacquire]:
+runtime.gopark(0x104acd1c0?, 0x14000102820?, 0x80?, 0x24?, 0x1400003ed80?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x1400006ee80 sp=0x1400006ee60 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.semacquire1(0x104ac2afc, 0x18?, 0x0, 0x0, 0x28?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/sema.go:160 +0x208 fp=0x1400006eed0 sp=0x1400006ee80 pc=0x10263ba08
+runtime.semacquire(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/sema.go:111
+runtime.gcMarkDone()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:810 +0x38 fp=0x1400006ef30 sp=0x1400006eed0 pc=0x102609768
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1425 +0x38c fp=0x1400006efd0 sp=0x1400006ef30 pc=0x10260aadc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x1400006efd0 sp=0x1400006efd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 36 [GC worker (idle)]:
+runtime.gopark(0x139de5ff65179?, 0x3?, 0x64?, 0x1?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000574f30 sp=0x14000574f10 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x14000574fd0 sp=0x14000574f30 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000574fd0 sp=0x14000574fd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 51 [GC worker (idle)]:
+runtime.gopark(0x104b03e40?, 0x3?, 0x1f?, 0x59?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000570f30 sp=0x14000570f10 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x14000570fd0 sp=0x14000570f30 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000570fd0 sp=0x14000570fd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 20 [GC worker (idle)]:
+runtime.gopark(0x139de5fb8fba6?, 0x3?, 0x5e?, 0x8b?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x1400006f730 sp=0x1400006f710 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x1400006f7d0 sp=0x1400006f730 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x1400006f7d0 sp=0x1400006f7d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 52 [GC mark termination]:
+runtime.systemstack_switch()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:200 +0x8 fp=0x140005716d0 sp=0x140005716c0 pc=0x10265c2d8
+runtime.gcMarkDone()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:830 +0x108 fp=0x14000571730 sp=0x140005716d0 pc=0x102609838
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1425 +0x38c fp=0x140005717d0 sp=0x14000571730 pc=0x10260aadc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140005717d0 sp=0x140005717d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 53 [semacquire]:
+runtime.gopark(0x14000496000?, 0x140005804e0?, 0x0?, 0x60?, 0x14000100480?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000571e80 sp=0x14000571e60 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.semacquire1(0x104ac2afc, 0x18?, 0x0, 0x0, 0x28?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/sema.go:160 +0x208 fp=0x14000571ed0 sp=0x14000571e80 pc=0x10263ba08
+runtime.semacquire(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/sema.go:111
+runtime.gcMarkDone()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:810 +0x38 fp=0x14000571f30 sp=0x14000571ed0 pc=0x102609768
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1425 +0x38c fp=0x14000571fd0 sp=0x14000571f30 pc=0x10260aadc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000571fd0 sp=0x14000571fd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 54 [GC worker (idle)]:
+runtime.gopark(0x139de5ff65ac0?, 0x3?, 0xed?, 0x0?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000572730 sp=0x14000572710 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x140005727d0 sp=0x14000572730 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140005727d0 sp=0x140005727d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 21 [GC worker (idle)]:
+runtime.gopark(0x139de5ff65d07?, 0x3?, 0x9a?, 0x17?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x1400006ff30 sp=0x1400006ff10 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x1400006ffd0 sp=0x1400006ff30 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x1400006ffd0 sp=0x1400006ffd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 4 [select]:
+runtime.gopark(0x14000317f78?, 0x3?, 0x90?, 0xe0?, 0x14000317f62?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000317e10 sp=0x14000317df0 pc=0x102629918
+runtime.selectgo(0x14000317f78, 0x14000317f5c, 0x1400011f500?, 0x0, 0x0?, 0x1)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/select.go:327 +0x608 fp=0x14000317f20 sp=0x14000317e10 pc=0x10263abd8
+go.opencensus.io/stats/view.(*worker).start(0x1400011f500)
+	/Users/gertd/workspace/pkg/mod/go.opencensus.io@v0.24.0/stats/view/worker.go:292 +0x88 fp=0x14000317fb0 sp=0x14000317f20 pc=0x103238b78
+go.opencensus.io/stats/view.init.0.func1()
+	/Users/gertd/workspace/pkg/mod/go.opencensus.io@v0.24.0/stats/view/worker.go:34 +0x28 fp=0x14000317fd0 sp=0x14000317fb0 pc=0x103237f18
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000317fd0 sp=0x14000317fd0 pc=0x10265e904
+created by go.opencensus.io/stats/view.init.0 in goroutine 1
+	/Users/gertd/workspace/pkg/mod/go.opencensus.io@v0.24.0/stats/view/worker.go:34 +0x98
+
+goroutine 8 [chan receive]:
+runtime.gopark(0x14000052000?, 0xa738?, 0x60?, 0x70?, 0x1050e4108?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x140003bcc80 sp=0x140003bcc60 pc=0x102629918
+runtime.chanrecv(0x140002e23c0, 0x140003bcdb8, 0x1)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/chan.go:583 +0x414 fp=0x140003bcd00 sp=0x140003bcc80 pc=0x1025f5144
+runtime.chanrecv1(0x0?, 0x14000904f20?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/chan.go:442 +0x14 fp=0x140003bcd30 sp=0x140003bcd00 pc=0x1025f4cf4
+go.etcd.io/bbolt.(*DB).Batch(0x14000375680, 0x14000908b10)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:938 +0x314 fp=0x140003bcdd0 sp=0x140003bcd30 pc=0x10300f654
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate/mig003.init.updateRelations.func14(0x140003fe4d0?, 0x140003758c0, 0xe?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/mig003/migrate.go:133 +0xf4 fp=0x140003bce30 sp=0x140003bcdd0 pc=0x1030336f4
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate/mig003.Migrate(0x103ac2c80?, 0x14000584a50?, 0x14000789ba0?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/mig003/migrate.go:55 +0xb4 fp=0x140003bcea0 sp=0x140003bce30 pc=0x103032e24
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate.execute(0x14000041380?, 0x140000db0a0?, 0x800?, 0x103ce6ee0?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/migrate.go:174 +0x68 fp=0x140003bcef0 sp=0x140003bcea0 pc=0x103036e58
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate.migrate(0x1400015a030, 0x1036048e5?, 0x8?, 0x140003bd178)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/migrate.go:157 +0xf8 fp=0x140003bd020 sp=0x140003bcef0 pc=0x103036a98
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate.Migrate(0x1035ffaec?, 0x140000daf50, 0x103d57768?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/migrate.go:93 +0x484 fp=0x140003bd490 sp=0x140003bd020 pc=0x103036554
+github.com/aserto-dev/go-edge-ds/pkg/directory.New(0x140002cadc8, 0x140000daf50)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/directory/directory.go:69 +0x394 fp=0x140003bd840 sp=0x140003bd490 pc=0x10320d2a4
+github.com/aserto-dev/go-edge-ds.New(0x1400042ba60?, 0x140003fe1c0)
+	/Users/gertd/workspace/v3/go-edge-ds/eds.go:11 +0x258 fp=0x140003bdb50 sp=0x140003bd840 pc=0x1035771b8
+github.com/aserto-dev/go-edge-ds/pkg/server.(*EdgeDirLock).New(0x104abab50, 0x102603e60?, 0x0?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/server/eds-lock.go:20 +0x30 fp=0x140003bdba0 sp=0x140003bdb50 pc=0x103577300
+github.com/aserto-dev/topaz/pkg/app.(*Authorizer).ConfigServices(0x140001ba550)
+	/Users/gertd/workspace/v3/topaz/pkg/app/authorizer.go:77 +0x6c fp=0x140003bddf0 sp=0x140003bdba0 pc=0x1035e8a9c
+github.com/aserto-dev/topaz/pkg/testing.setup(0x14000102ea0, 0x14000083f08?, 0x0)
+	/Users/gertd/workspace/v3/topaz/pkg/testing/engine.go:111 +0x3b0 fp=0x140003bdec0 sp=0x140003bddf0 pc=0x1035fa570
+github.com/aserto-dev/topaz/pkg/testing.SetupOffline(...)
+	/Users/gertd/workspace/v3/topaz/pkg/testing/engine.go:68
+github.com/aserto-dev/topaz/pkg/app/tests/query_test.TestQuery(0x14000576798?)
+	/Users/gertd/workspace/v3/topaz/pkg/app/tests/query/query_test.go:17 +0x6c fp=0x140003bdf60 sp=0x140003bdec0 pc=0x1035fb40c
+testing.tRunner(0x14000102ea0, 0x103d4b0b8)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1595 +0xe8 fp=0x140003bdfb0 sp=0x140003bdf60 pc=0x1027697a8
+testing.(*T).Run.func1()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1648 +0x2c fp=0x140003bdfd0 sp=0x140003bdfb0 pc=0x10276a5bc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140003bdfd0 sp=0x140003bdfd0 pc=0x10265e904
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1648 +0x33c
+FAIL pkg/app/tests/query.TestQuery (-1.00s)
+
+=== Failed
+=== FAIL: pkg/app/tests/authz TestWithMissingIdentity (0.56s)
+    logger.go:25: >> Log output for topaz: /var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/topaz-test-log-1993671959.log
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for importer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for model"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for writer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for authorizer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for reader"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:40-07:00","message":"setting up certs for exporter"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:40-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","name":"ds.check_permission","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.identity","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.relation","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.relations","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check_relation","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.user","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.object","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.graph","time":"2023-10-12T13:52:40-07:00","message":"registering builtin1"}
+{"level":"info","component":"runtime","instance-id":"-","time":"2023-10-12T13:52:40-07:00","message":"creating OPA plugins manager"}
+{"level":"info","plugin-name":"aserto_decision_log","time":"2023-10-12T13:52:40-07:00","message":"registering plugin"}
+{"level":"info","plugin-name":"aserto_edge","time":"2023-10-12T13:52:40-07:00","message":"registering plugin"}
+{"level":"info","component":"runtime","instance-id":"-","name":"peoplefinder","plugin":"bundle","time":"2023-10-12T13:52:40-07:00","message":"Starting bundle loader."}
+{"level":"info","component":"runtime","instance-id":"-","name":"peoplefinder","plugin":"bundle","time":"2023-10-12T13:52:41-07:00","message":"Bundle loaded and activated successfully. Etag updated to 22c52a6b67f4522a0bd13dd9e7919166411b8eee523737d50c1d7c000adc9a6c."}
+{"level":"info","component":"runtime","instance-id":"-","time":"2023-10-12T13:52:41-07:00","message":"runtime is ready"}
+{"level":"info","component":"edge-ds","component":"kvs","db_path":"/var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/eds-acmecorp.db","time":"2023-10-12T13:52:41-07:00","message":"opening boltdb store"}
+panic: invalid freelist page: 0, page type is unknown<00> [recovered]
+	panic: invalid freelist page: 0, page type is unknown<00>
+
+goroutine 67 [running]:
+testing.tRunner.func1.2({0x1023ebec0, 0x140003a6080})
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1545 +0x1c8
+testing.tRunner.func1()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1548 +0x360
+panic({0x1023ebec0?, 0x140003a6080?})
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/panic.go:914 +0x218
+go.etcd.io/bbolt.(*freelist).read(0x101fcc993?, 0x12b3bc000)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/freelist.go:267 +0x1d0
+go.etcd.io/bbolt.(*DB).loadFreelist.func1()
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:415 +0xa8
+sync.(*Once).doSlow(0x1400014f848?, 0x1025106c0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/sync/once.go:74 +0x100
+sync.(*Once).Do(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/sync/once.go:65
+go.etcd.io/bbolt.(*DB).loadFreelist(0x1400014f680?)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:408 +0x48
+go.etcd.io/bbolt.Open({0x14000040e40, 0x40}, 0x14?, 0x140003a5330)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:290 +0x340
+github.com/aserto-dev/go-edge-ds/pkg/bdb.(*BoltDB).Open(0x1400037fec0)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/boltdb.go:72 +0x168
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate.CheckSchemaVersion(0x101fccbff?, 0x5?, 0x12aba0e38?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/migrate.go:45 +0x44
+github.com/aserto-dev/go-edge-ds/pkg/directory.New(0x14000692b88, 0x140004a4540)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/directory/directory.go:66 +0x2f4
+github.com/aserto-dev/go-edge-ds.New(0x1400035e4c0?, 0x140002ec5b0)
+	/Users/gertd/workspace/v3/go-edge-ds/eds.go:11 +0x258
+github.com/aserto-dev/go-edge-ds/pkg/server.(*EdgeDirLock).New(0x103482500, 0x100fd3e60?, 0x0?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/server/eds-lock.go:20 +0x30
+github.com/aserto-dev/topaz/pkg/app.(*Authorizer).ConfigServices(0x14000051950)
+	/Users/gertd/workspace/v3/topaz/pkg/app/authorizer.go:77 +0x6c
+github.com/aserto-dev/topaz/pkg/testing.setup(0x140005c31e0, 0x14000486e10?, 0x1)
+	/Users/gertd/workspace/v3/topaz/pkg/testing/engine.go:111 +0x3b0
+github.com/aserto-dev/topaz/pkg/testing.SetupOnline(...)
+	/Users/gertd/workspace/v3/topaz/pkg/testing/engine.go:74
+github.com/aserto-dev/topaz/pkg/app/tests/authz_test.TestWithMissingIdentity(0x1?)
+	/Users/gertd/workspace/v3/topaz/pkg/app/tests/authz/authz_test.go:19 +0x70
+testing.tRunner(0x140005c31e0, 0x102716df8)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1595 +0xe8
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1648 +0x33c
+
+=== FAIL: pkg/app/tests/query TestQuery (unknown)
+    logger.go:25: >> Log output for topaz: /var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/topaz-test-log-1220279270.log
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for reader"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for exporter"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for authorizer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for importer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for model"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","component":"config","time":"2023-10-12T13:52:43-07:00","message":"setting up certs for writer"}
+{"level":"info","component":"config","existing-files":["/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key","/tmp/topaz/test/certs/grpc-ca.crt","/tmp/topaz/test/certs/grpc.crt","/tmp/topaz/test/certs/grpc.key","/tmp/topaz/test/certs/gateway-ca.crt","/tmp/topaz/test/certs/gateway.crt","/tmp/topaz/test/certs/gateway.key"],"time":"2023-10-12T13:52:43-07:00","message":"some cert files already exist, skipping generation"}
+{"level":"info","name":"ds.identity","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.user","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check_relation","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.check_permission","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.object","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.relation","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.relations","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","name":"ds.graph","time":"2023-10-12T13:52:43-07:00","message":"registering builtin1"}
+{"level":"info","component":"runtime","instance-id":"5d7cccc6-1657-11ec-a291-00001df0866c","time":"2023-10-12T13:52:43-07:00","message":"creating OPA plugins manager"}
+{"level":"info","component":"runtime","instance-id":"5d7cccc6-1657-11ec-a291-00001df0866c","path":"/Users/gertd/workspace/v3/topaz/pkg/testing/assets/mycars_bundle","time":"2023-10-12T13:52:43-07:00","message":"Loading local bundle"}
+{"level":"info","plugin-name":"aserto_decision_log","time":"2023-10-12T13:52:43-07:00","message":"registering plugin"}
+{"level":"info","plugin-name":"aserto_edge","time":"2023-10-12T13:52:43-07:00","message":"registering plugin"}
+{"level":"info","component":"runtime","instance-id":"5d7cccc6-1657-11ec-a291-00001df0866c","time":"2023-10-12T13:52:43-07:00","message":"runtime is ready"}
+{"level":"info","component":"edge-ds","component":"kvs","db_path":"/var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/eds-acmecorp.db","time":"2023-10-12T13:52:43-07:00","message":"opening boltdb store"}
+{"level":"info","component":"edge-ds","current":"0.0.2","time":"2023-10-12T13:52:43-07:00","message":"schema_version"}
+{"level":"info","component":"edge-ds","component":"migrate","component":"kvs","db_path":"/var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/eds-acmecorp.db","time":"2023-10-12T13:52:43-07:00","message":"opening boltdb store"}
+{"level":"info","component":"edge-ds","component":"migrate","current":"0.0.2","required":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"begin schema migration"}
+{"level":"info","component":"edge-ds","component":"migrate","next":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"starting"}
+{"level":"info","component":"edge-ds","component":"migrate","component":"kvs","db_path":"/var/folders/zc/v5w967xx6qs6rzgq_44nvhqh0000gn/T/eds-acmecorp.db","time":"2023-10-12T13:52:43-07:00","message":"opening boltdb store"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"StartMigration"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"_manifest/default/0.0.1","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"MigrateModel"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"object_types","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relation_types","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"permissions","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"objects","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"objects","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"UpdateObjects"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relations_obj","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relations_obj","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"UpdateRelations"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relations_sub","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","path":"relations_sub","time":"2023-10-12T13:52:43-07:00","message":"CreateBucket"}
+{"level":"info","component":"edge-ds","component":"migrate","version":"0.0.3","time":"2023-10-12T13:52:43-07:00","message":"UpdateRelations"}
+unexpected fault address 0x12c398000
+fatal error: fault
+[signal SIGBUS: bus error code=0x1 addr=0x12c398000 pc=0x1030168c4]
+
+goroutine 10 [running]:
+runtime.throw({0x1035ff79a?, 0x0?})
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/panic.go:1077 +0x40 fp=0x14000887830 sp=0x14000887800 pc=0x102626c40
+runtime.sigpanic()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/signal_unix.go:858 +0x178 fp=0x14000887890 sp=0x14000887830 pc=0x10263eb78
+go.etcd.io/bbolt.(*page).fastCheck(0x12c398000, 0x6b)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/page.go:57 +0x24 fp=0x14000887970 sp=0x140008878a0 pc=0x1030168c4
+go.etcd.io/bbolt.(*Tx).page(0x1400015c540?, 0x6b?)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/tx.go:534 +0x74 fp=0x140008879b0 sp=0x14000887970 pc=0x103019134
+go.etcd.io/bbolt.(*Bucket).pageNode(0x1400015c558?, 0x6b?)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/bucket.go:740 +0x90 fp=0x14000887a00 sp=0x140008879b0 pc=0x10300ab30
+go.etcd.io/bbolt.(*Cursor).search(0x14000887c28, {0x14000887bc8, 0xd, 0x20}, 0x20?)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/cursor.go:272 +0x3c fp=0x14000887aa0 sp=0x14000887a00 pc=0x10300bb3c
+go.etcd.io/bbolt.(*Cursor).seek(0x14000887c28, {0x14000887bc8?, 0x140003c1b28?, 0x10300a62c?})
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/cursor.go:159 +0x34 fp=0x14000887ae0 sp=0x14000887aa0 pc=0x10300b524
+go.etcd.io/bbolt.(*Bucket).spill(0x1400015c558)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/bucket.go:568 +0x194 fp=0x14000887d10 sp=0x14000887ae0 pc=0x10300a154
+go.etcd.io/bbolt.(*Tx).Commit(0x1400015c540)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/tx.go:163 +0xdc fp=0x14000887e40 sp=0x14000887d10 pc=0x1030179bc
+go.etcd.io/bbolt.(*DB).Update(0x140005766d0?, 0x14000083f00)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:869 +0xc8 fp=0x14000887eb0 sp=0x14000887e40 pc=0x10300f0e8
+go.etcd.io/bbolt.(*batch).run(0x14000920bc0)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:977 +0x16c fp=0x14000887f20 sp=0x14000887eb0 pc=0x10300f90c
+go.etcd.io/bbolt.(*batch).run-fm()
+	<autogenerated>:1 +0x28 fp=0x14000887f40 sp=0x14000887f20 pc=0x10301ca98
+sync.(*Once).doSlow(0x0?, 0x10265e904?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/sync/once.go:74 +0x100 fp=0x14000887fa0 sp=0x14000887f40 pc=0x10267a4f0
+sync.(*Once).Do(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/sync/once.go:65
+go.etcd.io/bbolt.(*batch).trigger(...)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:959
+go.etcd.io/bbolt.(*batch).trigger-fm()
+	<autogenerated>:1 +0x54 fp=0x14000887fd0 sp=0x14000887fa0 pc=0x10301cb24
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000887fd0 sp=0x14000887fd0 pc=0x10265e904
+created by time.goFunc
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/time/sleep.go:176 +0x38
+
+goroutine 1 [chan receive]:
+runtime.gopark(0x140003e99b8?, 0x1025fc1ec?, 0x50?, 0xe4?, 0x18?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000885940 sp=0x14000885920 pc=0x102629918
+runtime.chanrecv(0x1400014c150, 0x140003e9a3f, 0x1)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/chan.go:583 +0x414 fp=0x140008859c0 sp=0x14000885940 pc=0x1025f5144
+runtime.chanrecv1(0x104abe8c0?, 0x103a1ffa0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/chan.go:442 +0x14 fp=0x140008859f0 sp=0x140008859c0 pc=0x1025f4cf4
+testing.(*T).Run(0x14000102d00, {0x10360546d?, 0x139de4fb839f5?}, 0x103d4b0b8)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1649 +0x350 fp=0x14000885ab0 sp=0x140008859f0 pc=0x10276a480
+testing.runTests.func1(0x1400002f050?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:2054 +0x48 fp=0x14000885b00 sp=0x14000885ab0 pc=0x10276c2a8
+testing.tRunner(0x14000102d00, 0x140003e9c28)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1595 +0xe8 fp=0x14000885b50 sp=0x14000885b00 pc=0x1027697a8
+testing.runTests(0x14000141680?, {0x104a8f0c0, 0x1, 0x1}, {0x40?, 0x103c0ce40?, 0x104ac0120?})
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:2052 +0x3b4 fp=0x14000885c50 sp=0x14000885b50 pc=0x10276c1a4
+testing.(*M).Run(0x14000141680)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1925 +0x538 fp=0x14000885ea0 sp=0x14000885c50 pc=0x10276ae78
+main.main()
+	_testmain.go:81 +0x1c8 fp=0x14000885f30 sp=0x14000885ea0 pc=0x1035fd6a8
+runtime.main()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:267 +0x2bc fp=0x14000885fd0 sp=0x14000885f30 pc=0x1026294bc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000885fd0 sp=0x14000885fd0 pc=0x10265e904
+
+goroutine 2 [force gc (idle)]:
+runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000072f90 sp=0x14000072f70 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.forcegchelper()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:322 +0xb8 fp=0x14000072fd0 sp=0x14000072f90 pc=0x102629778
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000072fd0 sp=0x14000072fd0 pc=0x10265e904
+created by runtime.init.6 in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:310 +0x24
+
+goroutine 3 [GC sweep wait]:
+runtime.gopark(0x1?, 0x0?, 0x0?, 0x0?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000073760 sp=0x14000073740 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.bgsweep(0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgcsweep.go:321 +0x108 fp=0x140000737b0 sp=0x14000073760 pc=0x102614178
+runtime.gcenable.func1()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:200 +0x28 fp=0x140000737d0 sp=0x140000737b0 pc=0x102608bd8
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140000737d0 sp=0x140000737d0 pc=0x10265e904
+created by runtime.gcenable in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:200 +0x6c
+
+goroutine 18 [sleep]:
+runtime.gopark(0x14000050050?, 0x139dec54ae689?, 0x0?, 0x0?, 0x103d4b2d0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x1400006e710 sp=0x1400006e6f0 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.(*scavengerState).sleep(0x104ac1fc0, 0x41122e4400000000)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgcscavenge.go:504 +0x128 fp=0x1400006e780 sp=0x1400006e710 pc=0x102611b78
+runtime.bgscavenge(0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgcscavenge.go:662 +0x9c fp=0x1400006e7b0 sp=0x1400006e780 pc=0x102611f2c
+runtime.gcenable.func2()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:201 +0x28 fp=0x1400006e7d0 sp=0x1400006e7b0 pc=0x102608b78
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x1400006e7d0 sp=0x1400006e7d0 pc=0x10265e904
+created by runtime.gcenable in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:201 +0xac
+
+goroutine 34 [finalizer wait]:
+runtime.gopark(0x0?, 0x103d4b128?, 0x0?, 0x60?, 0x2000000020?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000072580 sp=0x14000072560 pc=0x102629918
+runtime.runfinq()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mfinal.go:193 +0x108 fp=0x140000727d0 sp=0x14000072580 pc=0x102607cc8
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140000727d0 sp=0x140000727d0 pc=0x10265e904
+created by runtime.createfing in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mfinal.go:163 +0x80
+
+goroutine 35 [GC worker (idle)]:
+runtime.gopark(0x139de5ff81b28?, 0x3?, 0x28?, 0x23?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000574730 sp=0x14000574710 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x140005747d0 sp=0x14000574730 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140005747d0 sp=0x140005747d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 50 [GC worker (idle)]:
+runtime.gopark(0x104b03e40?, 0x3?, 0xa6?, 0x84?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000570730 sp=0x14000570710 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x140005707d0 sp=0x14000570730 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140005707d0 sp=0x140005707d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 19 [semacquire]:
+runtime.gopark(0x104acd1c0?, 0x14000102820?, 0x80?, 0x24?, 0x1400003ed80?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x1400006ee80 sp=0x1400006ee60 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.semacquire1(0x104ac2afc, 0x18?, 0x0, 0x0, 0x28?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/sema.go:160 +0x208 fp=0x1400006eed0 sp=0x1400006ee80 pc=0x10263ba08
+runtime.semacquire(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/sema.go:111
+runtime.gcMarkDone()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:810 +0x38 fp=0x1400006ef30 sp=0x1400006eed0 pc=0x102609768
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1425 +0x38c fp=0x1400006efd0 sp=0x1400006ef30 pc=0x10260aadc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x1400006efd0 sp=0x1400006efd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 36 [GC worker (idle)]:
+runtime.gopark(0x139de5ff65179?, 0x3?, 0x64?, 0x1?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000574f30 sp=0x14000574f10 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x14000574fd0 sp=0x14000574f30 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000574fd0 sp=0x14000574fd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 51 [GC worker (idle)]:
+runtime.gopark(0x104b03e40?, 0x3?, 0x1f?, 0x59?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000570f30 sp=0x14000570f10 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x14000570fd0 sp=0x14000570f30 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000570fd0 sp=0x14000570fd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 20 [GC worker (idle)]:
+runtime.gopark(0x139de5fb8fba6?, 0x3?, 0x5e?, 0x8b?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x1400006f730 sp=0x1400006f710 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x1400006f7d0 sp=0x1400006f730 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x1400006f7d0 sp=0x1400006f7d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 52 [GC mark termination]:
+runtime.systemstack_switch()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:200 +0x8 fp=0x140005716d0 sp=0x140005716c0 pc=0x10265c2d8
+runtime.gcMarkDone()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:830 +0x108 fp=0x14000571730 sp=0x140005716d0 pc=0x102609838
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1425 +0x38c fp=0x140005717d0 sp=0x14000571730 pc=0x10260aadc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140005717d0 sp=0x140005717d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 53 [semacquire]:
+runtime.gopark(0x14000496000?, 0x140005804e0?, 0x0?, 0x60?, 0x14000100480?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000571e80 sp=0x14000571e60 pc=0x102629918
+runtime.goparkunlock(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:404
+runtime.semacquire1(0x104ac2afc, 0x18?, 0x0, 0x0, 0x28?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/sema.go:160 +0x208 fp=0x14000571ed0 sp=0x14000571e80 pc=0x10263ba08
+runtime.semacquire(...)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/sema.go:111
+runtime.gcMarkDone()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:810 +0x38 fp=0x14000571f30 sp=0x14000571ed0 pc=0x102609768
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1425 +0x38c fp=0x14000571fd0 sp=0x14000571f30 pc=0x10260aadc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000571fd0 sp=0x14000571fd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 54 [GC worker (idle)]:
+runtime.gopark(0x139de5ff65ac0?, 0x3?, 0xed?, 0x0?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000572730 sp=0x14000572710 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x140005727d0 sp=0x14000572730 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140005727d0 sp=0x140005727d0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 21 [GC worker (idle)]:
+runtime.gopark(0x139de5ff65d07?, 0x3?, 0x9a?, 0x17?, 0x0?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x1400006ff30 sp=0x1400006ff10 pc=0x102629918
+runtime.gcBgMarkWorker()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1293 +0xd8 fp=0x1400006ffd0 sp=0x1400006ff30 pc=0x10260a828
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x1400006ffd0 sp=0x1400006ffd0 pc=0x10265e904
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/mgc.go:1217 +0x28
+
+goroutine 4 [select]:
+runtime.gopark(0x14000317f78?, 0x3?, 0x90?, 0xe0?, 0x14000317f62?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x14000317e10 sp=0x14000317df0 pc=0x102629918
+runtime.selectgo(0x14000317f78, 0x14000317f5c, 0x1400011f500?, 0x0, 0x0?, 0x1)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/select.go:327 +0x608 fp=0x14000317f20 sp=0x14000317e10 pc=0x10263abd8
+go.opencensus.io/stats/view.(*worker).start(0x1400011f500)
+	/Users/gertd/workspace/pkg/mod/go.opencensus.io@v0.24.0/stats/view/worker.go:292 +0x88 fp=0x14000317fb0 sp=0x14000317f20 pc=0x103238b78
+go.opencensus.io/stats/view.init.0.func1()
+	/Users/gertd/workspace/pkg/mod/go.opencensus.io@v0.24.0/stats/view/worker.go:34 +0x28 fp=0x14000317fd0 sp=0x14000317fb0 pc=0x103237f18
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x14000317fd0 sp=0x14000317fd0 pc=0x10265e904
+created by go.opencensus.io/stats/view.init.0 in goroutine 1
+	/Users/gertd/workspace/pkg/mod/go.opencensus.io@v0.24.0/stats/view/worker.go:34 +0x98
+
+goroutine 8 [chan receive]:
+runtime.gopark(0x14000052000?, 0xa738?, 0x60?, 0x70?, 0x1050e4108?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/proc.go:398 +0xc8 fp=0x140003bcc80 sp=0x140003bcc60 pc=0x102629918
+runtime.chanrecv(0x140002e23c0, 0x140003bcdb8, 0x1)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/chan.go:583 +0x414 fp=0x140003bcd00 sp=0x140003bcc80 pc=0x1025f5144
+runtime.chanrecv1(0x0?, 0x14000904f20?)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/chan.go:442 +0x14 fp=0x140003bcd30 sp=0x140003bcd00 pc=0x1025f4cf4
+go.etcd.io/bbolt.(*DB).Batch(0x14000375680, 0x14000908b10)
+	/Users/gertd/workspace/pkg/mod/go.etcd.io/bbolt@v1.3.7/db.go:938 +0x314 fp=0x140003bcdd0 sp=0x140003bcd30 pc=0x10300f654
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate/mig003.init.updateRelations.func14(0x140003fe4d0?, 0x140003758c0, 0xe?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/mig003/migrate.go:133 +0xf4 fp=0x140003bce30 sp=0x140003bcdd0 pc=0x1030336f4
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate/mig003.Migrate(0x103ac2c80?, 0x14000584a50?, 0x14000789ba0?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/mig003/migrate.go:55 +0xb4 fp=0x140003bcea0 sp=0x140003bce30 pc=0x103032e24
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate.execute(0x14000041380?, 0x140000db0a0?, 0x800?, 0x103ce6ee0?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/migrate.go:174 +0x68 fp=0x140003bcef0 sp=0x140003bcea0 pc=0x103036e58
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate.migrate(0x1400015a030, 0x1036048e5?, 0x8?, 0x140003bd178)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/migrate.go:157 +0xf8 fp=0x140003bd020 sp=0x140003bcef0 pc=0x103036a98
+github.com/aserto-dev/go-edge-ds/pkg/bdb/migrate.Migrate(0x1035ffaec?, 0x140000daf50, 0x103d57768?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/bdb/migrate/migrate.go:93 +0x484 fp=0x140003bd490 sp=0x140003bd020 pc=0x103036554
+github.com/aserto-dev/go-edge-ds/pkg/directory.New(0x140002cadc8, 0x140000daf50)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/directory/directory.go:69 +0x394 fp=0x140003bd840 sp=0x140003bd490 pc=0x10320d2a4
+github.com/aserto-dev/go-edge-ds.New(0x1400042ba60?, 0x140003fe1c0)
+	/Users/gertd/workspace/v3/go-edge-ds/eds.go:11 +0x258 fp=0x140003bdb50 sp=0x140003bd840 pc=0x1035771b8
+github.com/aserto-dev/go-edge-ds/pkg/server.(*EdgeDirLock).New(0x104abab50, 0x102603e60?, 0x0?)
+	/Users/gertd/workspace/v3/go-edge-ds/pkg/server/eds-lock.go:20 +0x30 fp=0x140003bdba0 sp=0x140003bdb50 pc=0x103577300
+github.com/aserto-dev/topaz/pkg/app.(*Authorizer).ConfigServices(0x140001ba550)
+	/Users/gertd/workspace/v3/topaz/pkg/app/authorizer.go:77 +0x6c fp=0x140003bddf0 sp=0x140003bdba0 pc=0x1035e8a9c
+github.com/aserto-dev/topaz/pkg/testing.setup(0x14000102ea0, 0x14000083f08?, 0x0)
+	/Users/gertd/workspace/v3/topaz/pkg/testing/engine.go:111 +0x3b0 fp=0x140003bdec0 sp=0x140003bddf0 pc=0x1035fa570
+github.com/aserto-dev/topaz/pkg/testing.SetupOffline(...)
+	/Users/gertd/workspace/v3/topaz/pkg/testing/engine.go:68
+github.com/aserto-dev/topaz/pkg/app/tests/query_test.TestQuery(0x14000576798?)
+	/Users/gertd/workspace/v3/topaz/pkg/app/tests/query/query_test.go:17 +0x6c fp=0x140003bdf60 sp=0x140003bdec0 pc=0x1035fb40c
+testing.tRunner(0x14000102ea0, 0x103d4b0b8)
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1595 +0xe8 fp=0x140003bdfb0 sp=0x140003bdf60 pc=0x1027697a8
+testing.(*T).Run.func1()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1648 +0x2c fp=0x140003bdfd0 sp=0x140003bdfb0 pc=0x10276a5bc
+runtime.goexit()
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/runtime/asm_arm64.s:1197 +0x4 fp=0x140003bdfd0 sp=0x140003bdfd0 pc=0x10265e904
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.21.3/libexec/src/testing/testing.go:1648 +0x33c
+
+DONE 27 tests, 2 failures in 5.154s
+Error: running "/Users/gertd/workspace/v3/topaz/.ext/gobin/gotestsum-v1.10.1/gotestsum --format short-verbose -- -timeout 240s -parallel=1 -count=1 -v /Users/gertd/workspace/v3/topaz/... -coverprofile=cover.out -coverpkg=./... /Users/gertd/workspace/v3/topaz/..." failed with exit code 1
