@@ -16,9 +16,9 @@ require (
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.3
-	github.com/aserto-dev/go-directory v0.21.8-0.20231013033351-a44245e9f60e
+	github.com/aserto-dev/go-directory v0.21.8-0.20231015213014-2bac9fa0ff01
 	github.com/aserto-dev/go-directory-cli v0.20.14-0.20230913232053-927068a67595
-	github.com/aserto-dev/go-edge-ds v0.21.10-0.20230817220143-d98c270b7069
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231016010552-b43dd36f22a0
 	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
@@ -159,9 +159,9 @@ require (
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.14.0 // indirect
-	google.golang.org/genproto v0.0.0-20231009173412-8bfb1ae86b6c // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20231009173412-8bfb1ae86b6c // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20231009173412-8bfb1ae86b6c // indirect
+	google.golang.org/genproto v0.0.0-20231012201019-e917dd12ba7a // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20231012201019-e917dd12ba7a // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231012201019-e917dd12ba7a // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
