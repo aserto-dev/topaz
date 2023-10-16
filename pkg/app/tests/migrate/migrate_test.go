@@ -4,11 +4,12 @@ import (
 	"context"
 	"testing"
 
-	"github.com/alecthomas/assert/v2"
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	atesting "github.com/aserto-dev/topaz/pkg/testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMigrate003(t *testing.T) {

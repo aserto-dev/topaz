@@ -1,15 +1,12 @@
 module github.com/aserto-dev/topaz
 
-go 1.21
-
-toolchain go1.21.3
+go 1.20
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
 require (
-	github.com/alecthomas/assert/v2 v2.1.0
-	github.com/alecthomas/kong v0.8.0
+	github.com/alecthomas/kong v0.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.2
 	github.com/aserto-dev/certs v0.0.3
@@ -28,7 +25,7 @@ require (
 	github.com/aserto-dev/runtime v0.56.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.5
-	github.com/cli/browser v1.3.0
+	github.com/cli/browser v1.2.0
 	github.com/fatih/color v1.15.0
 	github.com/fullstorydev/grpcurl v1.8.8
 	github.com/google/uuid v1.3.1
@@ -61,7 +58,6 @@ require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
-	github.com/alecthomas/repr v0.1.0 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230512164433-5d1fd1a340c9 // indirect
 	github.com/aserto-dev/azm v0.0.4 // indirect
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
@@ -93,7 +89,6 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/hexops/gotextdiff v1.0.3 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jhump/protoreflect v1.15.2 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
