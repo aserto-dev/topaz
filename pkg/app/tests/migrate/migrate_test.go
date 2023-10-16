@@ -2,14 +2,18 @@ package migrate_test
 
 import (
 	"context"
+	"io"
 	"testing"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	atesting "github.com/aserto-dev/topaz/pkg/testing"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMigrate003(t *testing.T) {
@@ -26,7 +30,7 @@ func TestMigrate003(t *testing.T) {
 
 	objectCount := 0
 	for {
-		resp, err := client.Reader.GetObjects(ctx, &reader.GetObjectsRequest{Page: &common.PaginationRequest{Size: 100, Token: token}})
+		resp, err := client.Reader.GetObjects(ctx, &dsr3.GetObjectsRequest{Page: &dsc3.PaginationRequest{Size: 100, Token: token}})
 		if err != nil {
 			t.Fail()
 		}
@@ -38,20 +42,31 @@ func TestMigrate003(t *testing.T) {
 	}
 	t.Logf("objects:   %d", objectCount)
 
-	token = ""
 	relationCount := 0
+
+	stream, err := client.Exporter.Export(ctx, &dse3.ExportRequest{
+		Options:   uint32(dse3.Option_OPTION_DATA_RELATIONS),
+		StartFrom: &timestamppb.Timestamp{},
+	})
+	require.NoError(t, err)
+	require.NotNil(t, stream)
+
 	for {
-		resp, err := client.Reader.GetRelations(ctx, &reader.GetRelationsRequest{
-			Page: &common.PaginationRequest{Size: 100, Token: token},
-		})
-		if err != nil {
-			t.Fail()
-		}
-		relationCount += len(resp.Results)
-		if resp.Page.NextToken == "" {
+		msg, err := stream.Recv()
+		if err == io.EOF {
 			break
 		}
-		token = resp.Page.NextToken
+		if err != nil {
+			require.NoError(t, err)
+		}
+
+		_, ok := msg.Msg.(*dse3.ExportResponse_Relation)
+		if !ok {
+			t.Log("unknown message type, skipped")
+			continue
+		}
+
+		relationCount++
 	}
 	t.Logf("relations: %d", relationCount)
 
