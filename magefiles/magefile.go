@@ -19,8 +19,9 @@ import (
 const containerImage string = "topaz"
 
 func init() {
-	os.Setenv("GO_VERSION", "1.19")
+	os.Setenv("GO_VERSION", "1.20")
 	os.Setenv("DOCKER_BUILDKIT", "1")
+	os.Setenv("CONSOLE_VERSION", "0.0.0-20231011130045.0.g99326ef7")
 }
 
 // Generate generates all code.
@@ -51,6 +52,10 @@ func Test() error {
 
 // DockerImage builds the docker image for the project.
 func DockerImage() error {
+	err := BuildAll()
+	if err != nil {
+		return err
+	}
 	version, err := common.Version()
 	if err != nil {
 		return errors.Wrap(err, "failed to calculate version")

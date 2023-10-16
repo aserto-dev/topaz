@@ -73,6 +73,8 @@ var (
 		"-p", "8383:8383",
 		"-p", "8484:8484",
 		"-p", "9292:9292",
+		"-p", "9393:9393",
+		"-p", "8080:8080",
 		"-v", "$TOPAZ_CERTS_DIR/certs:/certs:rw",
 		"-v", "$TOPAZ_CFG_DIR/cfg:/config:ro",
 		"-v", "$TOPAZ_EDS_DIR/db:/db:rw",

@@ -41,14 +41,6 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	// if !cmd.Stdout && cmd.Path == "" {
-	// 	currentDir, err := os.Getwd()
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	cmd.Path = path.Join(currentDir, defaultManifestName)
-	// }
-
 	color.Green(">>> get manifest to %s", cmd.Path)
 
 	r, err := dirClient.GetManifest(c.Context)
@@ -90,14 +82,6 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 	}
-
-	// if cmd.Path == defaultManifestName {
-	// 	currentDir, err := os.Getwd()
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	cmd.Path = path.Join(currentDir, defaultManifestName)
-	// }
 
 	color.Green(">>> set manifest from %s", cmd.Path)
 

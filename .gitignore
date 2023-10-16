@@ -42,6 +42,9 @@
 ./pkg/testing/assets/bundle.tar.gz
 ./pkg/testing/assets/*ds.db
 
+# console static files that get copied at build
+/pkg/app/console/*
+
 # allow test assets
 !pkg/testing/assets/*.db
 !pkg/testing/assets/config*.yaml
