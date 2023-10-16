@@ -2,9 +2,8 @@ module github.com/aserto-dev/topaz
 
 go 1.19
 
-replace github.com/aserto-dev/go-directory => ../go-directory
-
-replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+// replace github.com/aserto-dev/go-directory => ../go-directory
+// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
 require (
 	github.com/alecthomas/assert/v2 v2.1.0
