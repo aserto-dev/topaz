@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=config.json
 ---
 # config schema version
-version: 1
+version: 2
 
 logging:
   prod: true

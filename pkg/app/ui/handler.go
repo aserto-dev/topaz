@@ -54,7 +54,7 @@ func ConfigHandler(confServices *config.Config) func(w http.ResponseWriter, r *h
 			break
 		}
 
-		if _, ok := confServices.Services["reader"]; ok {
+		if _, ok := confServices.APIConfig.Services["reader"]; ok {
 			cfg := composeConfig(confServices, apiKey)
 			buf, _ := json.Marshal(cfg)
 			writeJSON(buf, w, r)
@@ -68,18 +68,18 @@ func ConfigHandler(confServices *config.Config) func(w http.ResponseWriter, r *h
 
 func composeConfig(confServices *config.Config, apiKey string) *consoleCfg {
 	cfg := &consoleCfg{}
-	cfg.AsertoDirectoryReaderURL = fmt.Sprintf("https://%s", serviceAddress(confServices.Services["reader"].Gateway.ListenAddress))
-	cfg.AsertoDirectoryURL = fmt.Sprintf("https://%s", serviceAddress(confServices.Services["reader"].Gateway.ListenAddress))
+	cfg.AsertoDirectoryReaderURL = fmt.Sprintf("https://%s", serviceAddress(confServices.APIConfig.Services["reader"].Gateway.ListenAddress))
+	cfg.AsertoDirectoryURL = fmt.Sprintf("https://%s", serviceAddress(confServices.APIConfig.Services["reader"].Gateway.ListenAddress))
 
-	if confServices.Services["writer"] != nil {
-		cfg.AsertoDirectoryWriterURL = fmt.Sprintf("https://%s", serviceAddress(confServices.Services["writer"].Gateway.ListenAddress))
+	if confServices.APIConfig.Services["writer"] != nil {
+		cfg.AsertoDirectoryWriterURL = fmt.Sprintf("https://%s", serviceAddress(confServices.APIConfig.Services["writer"].Gateway.ListenAddress))
 	}
 
-	if confServices.Services["model"] != nil {
-		cfg.AsertoDirectoryModelURL = fmt.Sprintf("https://%s", serviceAddress(confServices.Services["model"].Gateway.ListenAddress))
+	if confServices.APIConfig.Services["model"] != nil {
+		cfg.AsertoDirectoryModelURL = fmt.Sprintf("https://%s", serviceAddress(confServices.APIConfig.Services["model"].Gateway.ListenAddress))
 	}
 
-	if serviceConfig, ok := confServices.Services["authorizer"]; ok {
+	if serviceConfig, ok := confServices.APIConfig.Services["authorizer"]; ok {
 		cfg.AuthorizerServiceURL = fmt.Sprintf("https://%s", serviceAddress(serviceConfig.Gateway.ListenAddress))
 		cfg.AuthorizerAPIKey = apiKey
 	}
@@ -112,7 +112,7 @@ func composeRemoteDiretoryConfig(confServices *config.Config, apiKey string) *co
 		cfg.DirectoryTenantID = confServices.DirectoryResolver.TenantID
 	}
 
-	if serviceConfig, ok := confServices.Services["authorizer"]; ok {
+	if serviceConfig, ok := confServices.APIConfig.Services["authorizer"]; ok {
 		cfg.AuthorizerServiceURL = fmt.Sprintf("https://%s", serviceAddress(serviceConfig.Gateway.ListenAddress))
 		cfg.AuthorizerAPIKey = apiKey
 	}
@@ -142,7 +142,7 @@ func AuthorizersHandler(confServices *config.Config) func(w http.ResponseWriter,
 		}
 
 		var cfg *authorizersResult
-		if serviceConfig, ok := confServices.Services["authorizer"]; ok {
+		if serviceConfig, ok := confServices.APIConfig.Services["authorizer"]; ok {
 			cfg = &authorizersResult{
 				Results: []AuthorizerInstance{{URL: fmt.Sprintf("https://%s", serviceConfig.Gateway.ListenAddress), Name: "authorizer", APIKey: apiKey}},
 			}

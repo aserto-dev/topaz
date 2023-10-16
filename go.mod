@@ -4,7 +4,7 @@ go 1.20
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-// replace github.com/aserto-dev/azm => ../azm
+replace github.com/aserto-dev/service-host => ../service-host
 
 require (
 	github.com/alecthomas/kong v0.8.1
