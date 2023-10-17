@@ -1,4 +1,4 @@
-package engine_test
+package policy_test
 
 import (
 	"context"
@@ -14,7 +14,7 @@ import (
 
 func TestPolicy(t *testing.T) {
 	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Edge.DBPath = atesting.AssetAcmeEBBFilePath()
+		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
 	})
 	defer harness.Cleanup()
 

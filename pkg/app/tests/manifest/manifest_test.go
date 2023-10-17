@@ -1,4 +1,4 @@
-package engine_test
+package manifest_test
 
 import (
 	"bytes"
@@ -14,8 +14,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -64,10 +62,19 @@ func TestManifest(t *testing.T) {
 	}
 
 	// getManifest should fail with not found error when manifest does not exist.
-	if _, _, err := getManifest(ctx, client.Model); err == nil {
-		assert.Error(t, err)
+	if metadata, body, err := getManifest(ctx, client.Model); err == nil {
+		assert.NoError(t, err)
+		assert.NotNil(t, metadata)
+		assert.Empty(t, metadata)
+
+		buf := make([]byte, 1024)
+
+		n, err := body.Read(buf)
+		assert.Error(t, err, "EOF")
+		assert.Equal(t, n, 0)
+		assert.Len(t, buf, 1024)
 	} else {
-		assert.Equal(t, status.Code(err), codes.NotFound)
+		assert.NoError(t, err)
 	}
 }
 
