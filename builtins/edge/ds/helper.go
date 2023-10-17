@@ -2,6 +2,7 @@ package ds
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -13,6 +14,19 @@ import (
 
 func help(fnName string, args interface{}) (*ast.Term, error) {
 	m := map[string]interface{}{fnName: args}
+	val, err := ast.InterfaceToValue(m)
+	if err != nil {
+		return nil, err
+	}
+	return ast.NewTerm(val), nil
+}
+
+func helpMsg(fnName string, msg proto.Message) (*ast.Term, error) {
+	v, err := ProtoToInterface(msg)
+	if err != nil {
+		return nil, err
+	}
+	m := map[string]interface{}{fnName: v}
 	val, err := ast.InterfaceToValue(m)
 	if err != nil {
 		return nil, err
@@ -63,4 +77,25 @@ func traceError(bctx *topdown.BuiltinContext, fnName string, err error) {
 			})
 		}
 	}
+}
+
+func ProtoToInterface(msg proto.Message) (interface{}, error) {
+	b, err := protojson.MarshalOptions{
+		Multiline:       false,
+		Indent:          "",
+		AllowPartial:    false,
+		UseProtoNames:   true,
+		UseEnumNumbers:  false,
+		EmitUnpopulated: true,
+	}.Marshal(msg)
+	if err != nil {
+		return nil, err
+	}
+
+	var v interface{}
+	if err := json.Unmarshal(b, &v); err != nil {
+		return nil, err
+	}
+
+	return v, nil
 }

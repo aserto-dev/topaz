@@ -42,6 +42,13 @@ func NewEdgeDir(edge *directory.Directory) (ServiceTypes, error) {
 	}, nil
 }
 
+func (e *EdgeDir) Close() {
+	if e.dir != nil {
+		e.dir.Close()
+		e.dir = nil
+	}
+}
+
 func (e *EdgeDir) AvailableServices() []string {
 	return []string{modelService, readerService, writerService, exporterService, importerService}
 }
