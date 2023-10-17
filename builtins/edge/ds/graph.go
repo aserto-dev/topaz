@@ -4,34 +4,17 @@ import (
 	"bytes"
 
 	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	"github.com/aserto-dev/topaz/resolvers"
-
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/types"
-
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/proto"
 )
 
 // RegisterGraph - ds.graph
-//
-//	v3 (latest) request format:
-//
-//	ds.graph({
-//	    "anchor_type": "",
-//	    "anchor_id": "",
-//	    "object_type": "",
-//	    "object_id": "",
-//	    "relation": "",
-//	    "subject_type": "",
-//	    "subject_id": ""
-//	    "subject_relation": ""
-//	}
-//
-//	v2 request format:
 //
 //	ds.graph({
 //		"anchor": {
@@ -58,45 +41,37 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
-			var args dsr3.GetGraphRequest
-
-			if err := ast.As(op1.Value, &args); err != nil {
-
-				// if v3 input parsing fails, fallback to v2 before exiting with an error.
-				type argsV2 struct {
-					Anchor   *dsc2.ObjectIdentifier       `json:"anchor"`
-					Subject  *dsc2.ObjectIdentifier       `json:"subject"`
-					Relation *dsc2.RelationTypeIdentifier `json:"relation"`
-					Object   *dsc2.ObjectIdentifier       `json:"object"`
-				}
-
-				var a2 argsV2
-				if err := ast.As(op1.Value, &a2); err != nil {
-					return nil, err
-				}
-
-				args = dsr3.GetGraphRequest{
-					AnchorType:  a2.Anchor.GetType(),
-					AnchorId:    a2.Anchor.GetKey(),
-					ObjectType:  a2.Object.GetType(),
-					ObjectId:    a2.Object.GetKey(),
-					Relation:    a2.Relation.GetName(),
-					SubjectType: a2.Subject.GetType(),
-					SubjectId:   a2.Subject.GetKey(),
-				}
+			type args struct {
+				Anchor   *dsc2.ObjectIdentifier       `json:"anchor"`
+				Subject  *dsc2.ObjectIdentifier       `json:"subject"`
+				Relation *dsc2.RelationTypeIdentifier `json:"relation"`
+				Object   *dsc2.ObjectIdentifier       `json:"object"`
 			}
 
-			if proto.Equal(&args, &dsr3.GetGraphRequest{}) {
-				return helpMsg(fnName, &dsr3.GetGraphRequest{
-					AnchorType:      "",
-					AnchorId:        "",
-					ObjectType:      "",
-					ObjectId:        "",
-					Relation:        "",
-					SubjectType:     "",
-					SubjectId:       "",
-					SubjectRelation: "",
-				})
+			var a args
+			if err := ast.As(op1.Value, &a); err != nil {
+				return nil, err
+			}
+
+			if a.Anchor == nil && a.Subject == nil && a.Relation == nil && a.Object == nil {
+				a = args{
+					Anchor: &dsc2.ObjectIdentifier{
+						Type: proto.String(""),
+						Key:  proto.String(""),
+					},
+					Subject: &dsc2.ObjectIdentifier{
+						Type: proto.String(""),
+						Key:  proto.String(""),
+					},
+					Relation: &dsc2.RelationTypeIdentifier{
+						Name: proto.String(""),
+					},
+					Object: &dsc2.ObjectIdentifier{
+						Type: proto.String(""),
+						Key:  proto.String(""),
+					},
+				}
+				return help(fnName, a)
 			}
 
 			client, err := dr.GetDS(bctx.Context)
@@ -104,7 +79,12 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			resp, err := client.GetGraph(bctx.Context, &args)
+			resp, err := client.GetGraph(bctx.Context, &dsr2.GetGraphRequest{
+				Anchor:   a.Anchor,
+				Subject:  a.Subject,
+				Relation: a.Relation,
+				Object:   a.Object,
+			})
 			if err != nil {
 				traceError(&bctx, fnName, err)
 				return nil, err

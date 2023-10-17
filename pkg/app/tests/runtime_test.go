@@ -1,40 +1,28 @@
-package runtime_test
+package engine_test
 
 import (
-	"testing"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	atesting "github.com/aserto-dev/topaz/pkg/testing"
+	"github.com/aserto-dev/topaz/pkg/testing"
 )
-
-var (
-	ginkgoT *testing.T
-)
-
-func TestEngine(t *testing.T) {
-	RegisterFailHandler(Fail)
-	ginkgoT = t
-	RunSpecs(t, "Engine Suite")
-}
 
 var _ = Describe("Engine Runtime", func() {
 	Context("with offline bundle file", func() {
 
 		var (
-			h *atesting.EngineHarness
+			h *testing.EngineHarness
 		)
 
-		BeforeSuite(func() {
-			h = atesting.SetupOffline(ginkgoT, func(cfg *config.Config) {
-				cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
-				cfg.OPA.LocalBundles.Paths = []string{atesting.AssetLocalBundle()}
+		BeforeEach(func() {
+			h = testing.SetupOffline(ginkgoT, func(cfg *config.Config) {
+				cfg.Edge.DBPath = testing.AssetAcmeEBBFilePath()
+				cfg.OPA.LocalBundles.Paths = []string{testing.AssetLocalBundle()}
 			})
 		})
 
-		AfterSuite(func() {
+		AfterEach(func() {
 			h.Cleanup()
 		})
 
@@ -202,7 +190,7 @@ var _ = Describe("Engine Runtime", func() {
 
 					Expect(len(result.Result)).To(BeNumerically(">", 0))
 					Expect(result.Result[0].Bindings).To(HaveKeyWithValue("x", "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs"))
-					// Expect(len(result.Metrics)).To(BeNumerically(">", 0))
+					Expect(len(result.Metrics)).To(BeNumerically(">", 0))
 				})
 			})
 		})

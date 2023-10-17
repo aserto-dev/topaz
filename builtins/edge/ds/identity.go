@@ -4,24 +4,17 @@ import (
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/topaz/directory"
 	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/rs/zerolog"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/types"
-
 	"github.com/pkg/errors"
-	"github.com/rs/zerolog"
 )
 
-// RegisterIdentity - ds.identity - get user id (key) for identity
+// RegisterIdentity - ds.identity
 //
-// v3 (latest) request format:
-//
-//	ds.identity({
-//		"id": ""
-//	})
-//
-// v2 request format:
+// get user id for identity
 //
 //	ds.identity({
 //		"key": ""
@@ -34,25 +27,17 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
-			type argsV3 struct {
-				ID string `json:"id"`
-			}
-
-			var args struct {
-				ID  string `json:"id"`
+			type args struct {
 				Key string `json:"key"`
 			}
 
-			if err := ast.As(op1.Value, &args); err != nil {
+			var a args
+			if err := ast.As(op1.Value, &a); err != nil {
 				return nil, err
 			}
 
-			if args.ID == "" && args.Key != "" {
-				args.ID = args.Key
-			}
-
-			if args.ID == "" && args.Key == "" {
-				return help(fnName, argsV3{})
+			if (args{}) == a {
+				return help(fnName, args{})
 			}
 
 			client, err := dr.GetDS(bctx.Context)
@@ -60,7 +45,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			user, err := directory.GetIdentityV2(bctx.Context, client, args.ID)
+			user, err := directory.GetIdentityV2(client, bctx.Context, a.Key)
 			switch {
 			case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
 				return nil, err
@@ -68,7 +53,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				traceError(&bctx, fnName, err)
 				return nil, err
 			default:
-				return ast.StringTerm(user.Id), nil
+				return ast.StringTerm(user.Key), nil
 			}
 		}
 }

@@ -14,7 +14,7 @@ go:
     version: "v1.10.1"
   golangci-lint:
     importPath: "github.com/golangci/golangci-lint/cmd/golangci-lint"
-    version: "v1.53.3"
+    version: "v1.54.2"
   goimports:
     importPath: "golang.org/x/tools/cmd/goimports"
     version: "latest"
@@ -23,4 +23,4 @@ go:
     version: "v1.3.1"
   grpcurl:
     importPath: "github.com/fullstorydev/grpcurl/cmd/grpcurl"
-    version: "v1.8.8"
+    version: "v1.8.7"
