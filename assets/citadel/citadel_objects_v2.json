@@ -1,12 +1,6 @@
 {
   "objects": [
     {
-      "key": "system",
-      "type": "system",
-      "display_name": "System",
-      "properties": {}
-    },
-    {
       "key": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "type": "identity",
       "properties": {
