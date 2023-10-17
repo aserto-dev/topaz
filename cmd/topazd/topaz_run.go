@@ -41,6 +41,10 @@ var cmdRun = &cobra.Command{
 		})
 		defer func() {
 			if cleanup != nil {
+				authorizer.Manager.StopServers(authorizer.Context)
+				if edgeDir, ok := authorizer.Services["edge"].(*app.EdgeDir); ok {
+					edgeDir.Close()
+				}
 				cleanup()
 			}
 		}()
