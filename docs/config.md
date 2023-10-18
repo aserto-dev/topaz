@@ -23,7 +23,7 @@ Both run and start topaz CLI commands allow passing optional environment variabl
 ## 1. Common configuration
 
 ### a. Version
-The configuration version accepted by the version of topaz - current compatible version: 1
+The configuration version accepted by the version of topaz - current compatible version: 2
 
 ### b. Logging
 The [logging mechanism](https://github.com/aserto-dev/logger) for topaz is based on [zerolog](https://github.com/rs/zerolog) and has the following available settings:
@@ -38,7 +38,19 @@ logging:
 ```
 
 ### c. API
-The API section is a map that defines the API configuration for each of the possible services that topaz is able to spin up:["reader","writer","importer","exporter","authorizer"]
+The API section is defines the configuration for the health, metrics and services that topaz is able to spin up. 
+
+#### Health:
+The health configuration allows topaz to spin up a health server.
+- *listen_address* - string - allows the health service to spin up on the configured port (default: "0.0.0.0:9494") 
+- *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. By default the certificates are not configured. 
+#### Metrics:
+The metrics configuration allows topaz to spin up a metric server.
+- *listen_address* - string - allows the metric service to spin up on the configured port (default: "0.0.0.0:9696") 
+- *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. By default the certificates are not configured. 
+- *zpages* - bool - if enabled the metrics server will enable [zpages](https://opencensus.io/zpages/go/) on the "/debug" route
+
+#### Services APIs:
 #### 1. grpc
 The grpc section allows configuring the listen address, the connection timeout and the certificates. 
 - *listen_address* - string - allows the topaz GRPC server to spin up on the requested port (default: "0.0.0.0:8282")
@@ -84,17 +96,7 @@ gateway:
   - https://*aserto-playground.netlify.app
 ```
 
-#### 3. health
-The health is the simplest of these section as it only allows to set the listen address of the health server. By default the listen address is set to 0.0.0.0:8484
-
-To check the health of your service you can use the available [grpc-health-probe](https://github.com/grpc-ecosystem/grpc-health-probe) 
-Example:
-```
-grpc-health-probe --addr=localhost:8484
-status: SERVING
-```
-
-#### 4. needs
+#### 3. needs
 The `needs` section allows adding a dependency between the services started. For example when using an edge directory with a reader service it is recommended to set the authorizer services to be dependent on the reader spin-up to be able to resolve the identity for the authorization calls.
 
 Example:
@@ -115,22 +117,6 @@ api:
     grpc:
       connection_timeout_seconds: 2
 ```
-
-#### 5. metrics
-Allow topaz to spin up a metrics server for the configured API. 
-Example: 
-```
-api:
-  reader:
-    metrics:
-      listen_address: "localhost:9696"   
-    gateway:
-      listen_address: localhost:9393  
-    grpc:
-      listen_address: localhost:9595
-```
-
-For this example the metrics data is available at http://localhost:9696/metrics
 
 ### c. Directory
 The directory section allows setting the configuration for the topaz [local edge directory](https://github.com/aserto-dev/go-edge-ds).

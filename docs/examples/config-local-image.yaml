@@ -3,6 +3,7 @@
 # Using topaz with a local policy image gives you an easier method to ensure that your policies work as you desire before pushing an image to an upstream container registry. 
 # If you have started topaz with this configuration, if you rebuild the image, any changes will be reflected in your topaz runtime bundle. 
 ---
+version: 2
 logging:
   prod: true
   log_level: info
@@ -16,26 +17,27 @@ remote_directory:
   insecure: true
     
 api:
-  authorizer:
-    grpc:
-      connection_timeout_seconds: 2
-      listen_address: "localhost:8282"
-      certs:
-        tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-        tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-        tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
-    gateway:
-      listen_address: "localhost:8383"
-      allowed_origins:
-      - https://*.aserto.com
-      - https://*aserto-console.netlify.app
-      certs:
-        tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
-        tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
-        tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
-    health:
-      listen_address: "localhost:8484"
-
+  health:
+    listen_address: "localhost:8484"
+  services:
+    authorizer:
+      grpc:
+        connection_timeout_seconds: 2
+        listen_address: "localhost:8282"
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+      gateway:
+        listen_address: "localhost:8383"
+        allowed_origins:
+        - https://*.aserto.com
+        - https://*aserto-console.netlify.app
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+    
 opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2

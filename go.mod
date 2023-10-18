@@ -17,7 +17,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.3
 	github.com/aserto-dev/go-directory v0.21.8-0.20231015213014-2bac9fa0ff01
 	github.com/aserto-dev/go-directory-cli v0.20.14-0.20230913232053-927068a67595
-	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231024184532-1fd643274507
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231016010552-b43dd36f22a0
 	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
@@ -54,7 +54,8 @@ require (
 )
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.31.0-20231017183020-0de7443d03cf.2 // indirect
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.31.0-20230914171853-63dfe56cc2c4.1 // indirect
+	contrib.go.opencensus.io/exporter/prometheus v0.4.0 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
@@ -73,6 +74,8 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
+	github.com/go-kit/log v0.2.1 // indirect
+	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
@@ -83,9 +86,8 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
-	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.0.0-rc.0 // indirect
+	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.0.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.0-rc.5 // indirect
-	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
@@ -124,6 +126,7 @@ require (
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.11.0 // indirect
+	github.com/prometheus/statsd_exporter v0.21.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rs/cors v1.9.0 // indirect

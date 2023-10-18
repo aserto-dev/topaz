@@ -74,8 +74,10 @@ func (e *Authorizer) Start() error {
 	}
 
 	//Add registered services to the health service
-	for serviceName := range e.Configuration.APIConfig.Services {
-		e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_SERVING)
+	if e.Manager.HealthServer != nil {
+		for serviceName := range e.Configuration.APIConfig.Services {
+			e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_SERVING)
+		}
 	}
 
 	return nil
@@ -102,16 +104,18 @@ func (e *Authorizer) ConfigServices() error {
 	}
 
 	// prepare services
-	dir, err := locker.New(&e.Configuration.Edge, e.Logger)
-	if err != nil {
-		return err
-	}
+	if e.Configuration.Edge.DBPath != "" {
+		dir, err := locker.New(&e.Configuration.Edge, e.Logger)
+		if err != nil {
+			return err
+		}
 
-	edgeDir, err := NewEdgeDir(dir)
-	if err != nil {
-		return err
+		edgeDir, err := NewEdgeDir(dir)
+		if err != nil {
+			return err
+		}
+		e.Services["edge"] = edgeDir
 	}
-	e.Services["edge"] = edgeDir
 
 	if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
 		topaz, err := NewTopaz(serviceConfig, &e.Configuration.Common, nil, e.Logger)
