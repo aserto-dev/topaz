@@ -168,6 +168,50 @@
     {
       "subject": {
         "type": "user",
+        "key": "summer@the-smiths.com"
+      },
+      "relation": "manager",
+      "object": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "morty@the-citadel.com"
+      },
+      "relation": "manager",
+      "object": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "beth@the-smiths.com"
+      },
+      "relation": "manager",
+      "object": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "jerry@the-smiths.com"
+      },
+      "relation": "manager",
+      "object": {
+        "type": "user",
+        "key": "beth@the-smiths.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
         "key": "rick@the-citadel.com"
       },
       "relation": "identifier",
