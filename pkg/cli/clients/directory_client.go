@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/aserto-dev/go-aserto/client"
-	dirClient "github.com/aserto-dev/go-directory-cli/client"
+	dsc "github.com/aserto-dev/go-directory-cli/client"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/fullstorydev/grpcurl"
 	"github.com/pkg/errors"
@@ -12,8 +12,6 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 )
-
-const localhostDirectory = "localhost:9292"
 
 type Config struct {
 	Host      string `flag:"host" short:"H" help:"" env:"TOPAZ_DIRECTORY_SVC" default:"localhost:9292"`
@@ -23,7 +21,7 @@ type Config struct {
 	TenantID  string `flag:"tenant-id" help:""`
 }
 
-func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dirClient.Client, error) {
+func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dsc.Client, error) {
 
 	if cfg.Host == "" {
 		cfg.Host = localhostDirectory
@@ -55,7 +53,7 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dirClient.Client, error)
 		return nil, err
 	}
 
-	return dirClient.New(conn.Conn, c.UI)
+	return dsc.New(conn.Conn, c.UI)
 }
 
 func validate(cfg *Config) error {
