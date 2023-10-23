@@ -3,7 +3,6 @@ package ds
 import (
 	"bytes"
 
-	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-edge-ds/pkg/convert"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -42,28 +41,37 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
 			var (
-				args     dsr3.GetObjectRequest
+				args struct {
+					ObjectType    string `json:"object_type,omitempty"` // v3 object_type
+					ObjectID      string `json:"object_id,omitempty"`   // v3 object_id
+					WithRelations bool   `json:"with_relations"`        // v3 with_relations (false in case of v2)
+					Type          string `json:"type,omitempty"`        // v2 type
+					Key           string `json:"key,omitempty"`         // v2 key
+				}
 				outputV2 bool
+				req      *dsr3.GetObjectRequest
 			)
 
 			if err := ast.As(op1.Value, &args); err != nil {
-
-				// if v3 input parsing fails, fallback to v2 before exiting with an error.
-				var a2 dsc2.ObjectIdentifier
-				if err := ast.As(op1.Value, &a2); err != nil {
-					return nil, err
-				}
-
-				outputV2 = true
-
-				args = dsr3.GetObjectRequest{
-					ObjectType:    a2.GetType(),
-					ObjectId:      a2.GetKey(),
-					WithRelations: false,
-				}
+				return nil, errors.Wrapf(err, "failed to parse ds.object input message")
 			}
 
-			if proto.Equal(&args, &dsr3.GetObjectRequest{}) {
+			req = &dsr3.GetObjectRequest{
+				ObjectType:    args.ObjectType,
+				ObjectId:      args.ObjectID,
+				WithRelations: args.WithRelations,
+			}
+
+			if args.ObjectType == "" && args.ObjectID == "" && args.Type != "" && args.Key != "" {
+				req = &dsr3.GetObjectRequest{
+					ObjectType:    args.Type,
+					ObjectId:      args.Key,
+					WithRelations: false,
+				}
+				outputV2 = true
+			}
+
+			if proto.Equal(req, &dsr3.GetObjectRequest{}) {
 				return helpMsg(fnName, &dsr3.GetObjectRequest{
 					ObjectType:    "",
 					ObjectId:      "",
@@ -76,7 +84,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			resp, err := client.GetObject(bctx.Context, &args)
+			resp, err := client.GetObject(bctx.Context, req)
 			if err != nil {
 				traceError(&bctx, fnName, err)
 				return nil, err

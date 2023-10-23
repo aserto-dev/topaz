@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -12,12 +13,14 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
+	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-edge-ds/pkg/pb"
 	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/lestrrat-go/jwx/jwt"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/aserto-dev/topaz/directory"
 )
@@ -191,7 +194,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	case err != nil:
 		return nil, err
 	default:
-		return user, nil
+		return addObjectKey(user)
 	}
 }
 
@@ -209,5 +212,22 @@ func (s *AuthorizerServer) getObject(ctx context.Context, objType, objID string)
 		return nil, err
 	}
 
-	return objResp.Result, nil
+	return addObjectKey(objResp.Result)
+}
+
+func addObjectKey(in *common.Object) (proto.Message, error) {
+	buf := new(bytes.Buffer)
+	if err := pb.ProtoToBuf(buf, in); err != nil {
+		return nil, err
+	}
+
+	out := pb.NewStruct()
+
+	if err := pb.BufToProto(bytes.NewReader(buf.Bytes()), out); err != nil {
+		return nil, err
+	}
+
+	out.Fields["key"] = structpb.NewStringValue(out.Fields["id"].GetStringValue())
+
+	return out, nil
 }

@@ -34,10 +34,6 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 
-			type argsV3 struct {
-				ID string `json:"id"`
-			}
-
 			var args struct {
 				ID  string `json:"id"`
 				Key string `json:"key"`
@@ -52,6 +48,9 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			}
 
 			if args.ID == "" && args.Key == "" {
+				type argsV3 struct {
+					ID string `json:"id"`
+				}
 				return help(fnName, argsV3{})
 			}
 
