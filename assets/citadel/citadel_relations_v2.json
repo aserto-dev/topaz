@@ -14,6 +14,17 @@
     {
       "subject": {
         "type": "user",
+        "key": "beth@the-smiths.com"
+      },
+      "relation": "manager",
+      "object": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
         "key": "morty@the-citadel.com"
       },
       "relation": "manager",
