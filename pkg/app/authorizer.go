@@ -35,7 +35,7 @@ const (
 	consoleService    = "console"
 )
 
-func NewTopaz(cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
+func NewAuthorizer(cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
 	if cfg.GRPC.Certs.TLSCertPath != "" {
 		tlsCreds, err := certs.GRPCServerTLSCreds(cfg.GRPC.Certs)
 		if err != nil {
@@ -89,6 +89,10 @@ func (e *Topaz) GetGatewayRegistration(services ...string) builder.HandlerRegist
 
 		return nil
 	}
+}
+
+func (e *Topaz) Cleanups() []func() {
+	return nil
 }
 
 const (

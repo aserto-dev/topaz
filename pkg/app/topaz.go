@@ -46,6 +46,7 @@ type ServiceTypes interface {
 	AvailableServices() []string
 	GetGRPCRegistrations(services ...string) builder.GRPCRegistrations
 	GetGatewayRegistration(services ...string) builder.HandlerRegistrations
+	Cleanups() []func()
 }
 
 func (e *Authorizer) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
@@ -118,7 +119,7 @@ func (e *Authorizer) ConfigServices() error {
 	}
 
 	if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
-		topaz, err := NewTopaz(serviceConfig, &e.Configuration.Common, nil, e.Logger)
+		topaz, err := NewAuthorizer(serviceConfig, &e.Configuration.Common, nil, e.Logger)
 		if err != nil {
 			return err
 		}
@@ -151,6 +152,7 @@ func (e *Authorizer) ConfigServices() error {
 
 		var grpcs []builder.GRPCRegistrations
 		var gateways []builder.HandlerRegistrations
+		var cleanups []func()
 
 		for _, serv := range e.Services {
 			notAdded := true
@@ -158,6 +160,7 @@ func (e *Authorizer) ConfigServices() error {
 				if contains(serviceConfig.registeredServices, serviceName) && notAdded {
 					grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
 					gateways = append(gateways, serv.GetGatewayRegistration(serviceConfig.registeredServices...))
+					cleanups = append(cleanups, serv.Cleanups()...)
 					notAdded = false
 				}
 			}
@@ -178,8 +181,7 @@ func (e *Authorizer) ConfigServices() error {
 					}
 				}
 				return nil
-			}, true)
-
+			}, true, cleanups...)
 		if err != nil {
 			return err
 		}
@@ -289,8 +291,14 @@ func (e *Authorizer) validateConfig() error {
 		}
 	}
 
+	if _, ok := e.Configuration.APIConfig.Services["console"]; ok {
+		if _, ok := e.Configuration.APIConfig.Services["model"]; !ok {
+			return errors.New("console needs the model service to be configured")
+		}
+	}
+
 	if _, ok := e.Configuration.APIConfig.Services["model"]; !ok {
-		e.Logger.Info().Msg("model service not configured, you will not read or update the directory manifest")
+		e.Logger.Info().Msg("model service not configured, you will not be able to read or update the directory manifest")
 	}
 
 	for key := range e.Configuration.APIConfig.Services {
