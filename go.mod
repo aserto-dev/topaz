@@ -4,7 +4,7 @@ go 1.20
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-replace github.com/aserto-dev/service-host => ../service-host
+// replace github.com/aserto-dev/service-host => ../service-host
 
 require (
 	github.com/alecthomas/kong v0.8.1
@@ -25,7 +25,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.21.6-0.20230802231916-c64b7b8884fd
 	github.com/aserto-dev/runtime v0.56.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
-	github.com/aserto-dev/service-host v0.0.5
+	github.com/aserto-dev/service-host v0.0.6-0.20231023100550-71c9a4e38b5c
 	github.com/cli/browser v1.2.0
 	github.com/fatih/color v1.15.0
 	github.com/fullstorydev/grpcurl v1.8.8

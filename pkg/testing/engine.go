@@ -39,13 +39,16 @@ func (h *EngineHarness) Cleanup() {
 	h.cleanup()
 
 	assert.Eventually(func() bool {
-		return !PortOpen("127.0.0.1:8484")
+		return !PortOpen("0.0.0.0:9494")
 	}, ten*time.Second, ten*time.Millisecond)
 	assert.Eventually(func() bool {
-		return !PortOpen("127.0.0.1:8383")
+		return !PortOpen("0.0.0.0:8383")
 	}, ten*time.Second, ten*time.Millisecond)
 	assert.Eventually(func() bool {
-		return !PortOpen("127.0.0.1:8282")
+		return !PortOpen("0.0.0.0:8282")
+	}, ten*time.Second, ten*time.Millisecond)
+	assert.Eventually(func() bool {
+		return !PortOpen("0.0.0.0:9292")
 	}, ten*time.Second, ten*time.Millisecond)
 }
 

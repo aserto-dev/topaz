@@ -20,6 +20,8 @@ jwt:
   acceptable_time_skew_seconds: 5 # set as default, 5 secs
 
 api:
+  health:
+    listen_address: "0.0.0.0:9494"
   services:
     model:
       grpc:
