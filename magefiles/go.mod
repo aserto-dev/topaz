@@ -1,6 +1,6 @@
 module github.com/aserto-dev/topaz/magefiles
 
-go 1.19
+go 1.20
 
 require (
 	github.com/aserto-dev/mage-loot v0.8.15
@@ -19,7 +19,7 @@ require (
 	github.com/kyokomi/emoji v2.2.4+incompatible // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
