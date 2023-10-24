@@ -74,7 +74,7 @@ func (e *Authorizer) Start() error {
 		return errors.Wrap(err, "failed to start engine server")
 	}
 
-	//Add registered services to the health service
+	// Add registered services to the health service
 	if e.Manager.HealthServer != nil {
 		for serviceName := range e.Configuration.APIConfig.Services {
 			e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_SERVING)
@@ -85,49 +85,13 @@ func (e *Authorizer) Start() error {
 }
 
 func (e *Authorizer) ConfigServices() error {
-	var metricsMiddleware []grpc.ServerOption
-	var err error
-	// init health server if configured
-	if e.Configuration.APIConfig.Health.ListenAddress != "" {
-		err := e.Manager.SetupHealthServer(e.Configuration.APIConfig.Health.ListenAddress, e.Configuration.APIConfig.Health.Certificates)
-		if err != nil {
-			return err
-		}
+	metricsMiddleware, err := e.setupHealthAndMetrics()
+	if err != nil {
+		return err
 	}
 
-	if e.Configuration.APIConfig.Metrics.ListenAddress != "" {
-		metricsMiddleware, err = e.Manager.SetupMetricsServer(e.Configuration.APIConfig.Metrics.ListenAddress,
-			e.Configuration.APIConfig.Metrics.Certificates,
-			e.Configuration.APIConfig.Metrics.ZPages)
-		if err != nil {
-			return err
-		}
-	}
-
-	// prepare services
-	if e.Configuration.Edge.DBPath != "" {
-		dir, err := locker.New(&e.Configuration.Edge, e.Logger)
-		if err != nil {
-			return err
-		}
-
-		edgeDir, err := NewEdgeDir(dir)
-		if err != nil {
-			return err
-		}
-		e.Services["edge"] = edgeDir
-	}
-
-	if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
-		authorizer, err := NewAuthorizer(serviceConfig, &e.Configuration.Common, nil, e.Logger)
-		if err != nil {
-			return err
-		}
-		e.Services["authorizer"] = authorizer
-	}
-
-	if _, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
-		e.Services["console"] = NewConsole()
+	if err := e.prepareServices(); err != nil {
+		return err
 	}
 
 	if err := e.validateConfig(); err != nil {
@@ -146,9 +110,7 @@ func (e *Authorizer) ConfigServices() error {
 			return err
 		}
 
-		if metricsMiddleware != nil {
-			opts = append(opts, metricsMiddleware...)
-		}
+		opts = append(opts, metricsMiddleware...)
 
 		var grpcs []builder.GRPCRegistrations
 		var gateways []builder.HandlerRegistrations
@@ -199,6 +161,54 @@ func (e *Authorizer) ConfigServices() error {
 		}
 	}
 
+	return nil
+}
+
+func (e *Authorizer) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
+	if e.Configuration.APIConfig.Health.ListenAddress != "" {
+		err := e.Manager.SetupHealthServer(e.Configuration.APIConfig.Health.ListenAddress, e.Configuration.APIConfig.Health.Certificates)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if e.Configuration.APIConfig.Metrics.ListenAddress != "" {
+		metricsMiddleware, err := e.Manager.SetupMetricsServer(e.Configuration.APIConfig.Metrics.ListenAddress,
+			e.Configuration.APIConfig.Metrics.Certificates,
+			e.Configuration.APIConfig.Metrics.ZPages)
+		if err != nil {
+			return nil, err
+		}
+		return metricsMiddleware, nil
+	}
+	return nil, nil
+}
+
+func (e *Authorizer) prepareServices() error {
+	// prepare services
+	if e.Configuration.Edge.DBPath != "" {
+		dir, err := locker.New(&e.Configuration.Edge, e.Logger)
+		if err != nil {
+			return err
+		}
+
+		edgeDir, err := NewEdgeDir(dir)
+		if err != nil {
+			return err
+		}
+		e.Services["edge"] = edgeDir
+	}
+
+	if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
+		authorizer, err := NewAuthorizer(serviceConfig, &e.Configuration.Common, nil, e.Logger)
+		if err != nil {
+			return err
+		}
+		e.Services["authorizer"] = authorizer
+	}
+
+	if _, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
+		e.Services["console"] = NewConsole()
+	}
 	return nil
 }
 
