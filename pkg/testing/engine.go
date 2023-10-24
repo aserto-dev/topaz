@@ -50,8 +50,8 @@ func (h *EngineHarness) Cleanup() {
 }
 
 func (h *EngineHarness) Runtime() *runtime.Runtime {
-	if _, ok := h.Engine.Services["topaz"]; ok {
-		result, err := h.Engine.Services["topaz"].(*app.Topaz).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
+	if _, ok := h.Engine.Services["authorizer"]; ok {
+		result, err := h.Engine.Services["authorizer"].(*app.Topaz).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
 		require.NoError(h.t, err)
 		return result
 	}
@@ -110,9 +110,9 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	assert.NoError(err)
 	err = h.Engine.ConfigServices()
 	assert.NoError(err)
-	if _, ok := h.Engine.Services["topaz"]; ok {
-		h.Engine.Services["topaz"].(*app.Topaz).Resolver.SetRuntimeResolver(rt)
-		h.Engine.Services["topaz"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
+	if _, ok := h.Engine.Services["authorizer"]; ok {
+		h.Engine.Services["authorizer"].(*app.Topaz).Resolver.SetRuntimeResolver(rt)
+		h.Engine.Services["authorizer"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
 	}
 	err = h.Engine.Start()
 	assert.NoError(err)

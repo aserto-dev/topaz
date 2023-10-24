@@ -52,7 +52,7 @@ var cmdRun = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		if _, ok := authorizer.Services["topaz"]; ok {
+		if _, ok := authorizer.Services["authorizer"]; ok {
 			directory := topaz.DirectoryResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration)
 			decisionlog, err := authorizer.GetDecisionLogger(authorizer.Configuration.DecisionLogger)
 			if err != nil {
@@ -66,8 +66,8 @@ var cmdRun = &cobra.Command{
 				return err
 			}
 
-			authorizer.Services["topaz"].(*app.Topaz).Resolver.SetRuntimeResolver(runtime)
-			authorizer.Services["topaz"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
+			authorizer.Services["authorizer"].(*app.Topaz).Resolver.SetRuntimeResolver(runtime)
+			authorizer.Services["authorizer"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
 		}
 
 		err = authorizer.Start()

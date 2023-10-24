@@ -119,11 +119,11 @@ func (e *Authorizer) ConfigServices() error {
 	}
 
 	if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
-		topaz, err := NewAuthorizer(serviceConfig, &e.Configuration.Common, nil, e.Logger)
+		authorizer, err := NewAuthorizer(serviceConfig, &e.Configuration.Common, nil, e.Logger)
 		if err != nil {
 			return err
 		}
-		e.Services["topaz"] = topaz
+		e.Services["authorizer"] = authorizer
 	}
 
 	if _, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
