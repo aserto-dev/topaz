@@ -5,6 +5,7 @@ go 1.20
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/service-host => ../service-host
+// replace github.com/aserto-dev/runtime => ../runtime
 
 require (
 	github.com/alecthomas/kong v0.8.1
@@ -25,7 +26,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.21.6-0.20230802231916-c64b7b8884fd
 	github.com/aserto-dev/runtime v0.56.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
-	github.com/aserto-dev/service-host v0.0.6-0.20231023100550-71c9a4e38b5c
+	github.com/aserto-dev/service-host v0.0.6-0.20231025142719-d47b6f7554d6
 	github.com/cli/browser v1.2.0
 	github.com/fatih/color v1.15.0
 	github.com/fullstorydev/grpcurl v1.8.8
@@ -39,7 +40,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.28.0
-	github.com/open-policy-agent/opa v0.56.0
+	github.com/open-policy-agent/opa v0.57.1
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.31.0
 	github.com/spf13/cobra v1.7.0
@@ -58,6 +59,7 @@ require (
 	contrib.go.opencensus.io/exporter/prometheus v0.4.0 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
+	github.com/Microsoft/hcsshim v0.11.0 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230512164433-5d1fd1a340c9 // indirect
@@ -69,7 +71,7 @@ require (
 	github.com/bufbuild/protovalidate-go v0.3.4 // indirect
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/containerd/containerd v1.7.4 // indirect
+	github.com/containerd/containerd v1.7.6 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
@@ -145,10 +147,10 @@ require (
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/yashtewari/glob-intersection v0.2.0 // indirect
 	go.etcd.io/bbolt v1.3.7 // indirect
-	go.opentelemetry.io/otel v1.16.0 // indirect
-	go.opentelemetry.io/otel/metric v1.16.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.16.0 // indirect
-	go.opentelemetry.io/otel/trace v1.16.0 // indirect
+	go.opentelemetry.io/otel v1.19.0 // indirect
+	go.opentelemetry.io/otel/metric v1.19.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.19.0 // indirect
+	go.opentelemetry.io/otel/trace v1.19.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/crypto v0.14.0 // indirect

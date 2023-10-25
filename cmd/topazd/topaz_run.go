@@ -61,10 +61,12 @@ var cmdRun = &cobra.Command{
 
 			controllerFactory := controller.NewFactory(authorizer.Logger, authorizer.Configuration.ControllerConfig, client.NewDialOptionsProvider())
 
-			runtime, _, err := topaz.NewRuntimeResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration, controllerFactory, decisionlog, directory)
+			runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration, controllerFactory, decisionlog, directory)
 			if err != nil {
 				return err
 			}
+
+			defer runtimeCleanup()
 
 			authorizer.Services["authorizer"].(*app.Topaz).Resolver.SetRuntimeResolver(runtime)
 			authorizer.Services["authorizer"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
