@@ -62,10 +62,14 @@ func (co *CallOptions) ForPath(path string) *Options {
 func defaults(v *viper.Viper) {
 }
 
-func (c *Config) validation() error {
-	if c.Version != ConfigFileVersion {
+func validateVersion(version int) error {
+	if version != ConfigFileVersion {
 		return errors.New("unsupported config version")
 	}
+	return nil
+}
+
+func (c *Config) validation() error {
 	if _, ok := c.APIConfig.Services["authorizer"]; ok {
 		if c.Command.Mode == CommandModeRun && c.OPA.InstanceID == "" {
 			return errors.New("opa.instance_id not set")

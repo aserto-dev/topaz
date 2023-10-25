@@ -139,6 +139,11 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		if err := v.ReadConfig(r); err != nil {
 			return nil, errors.Wrapf(err, "failed to parse config file '%s'", file)
 		}
+
+		err = validateVersion(v.GetInt("version"))
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	v.AutomaticEnv()
