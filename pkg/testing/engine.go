@@ -22,7 +22,7 @@ const (
 // EngineHarness wraps an Aserto Runtime Engine so we can set it up easily
 // and monitor its logs.
 type EngineHarness struct {
-	Engine      *app.Authorizer
+	Engine      *app.Topaz
 	LogDebugger *LogDebugger
 
 	cleanup func()
@@ -54,7 +54,7 @@ func (h *EngineHarness) Cleanup() {
 
 func (h *EngineHarness) Runtime() *runtime.Runtime {
 	if _, ok := h.Engine.Services["authorizer"]; ok {
-		result, err := h.Engine.Services["authorizer"].(*app.Topaz).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
+		result, err := h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
 		require.NoError(h.t, err)
 		return result
 	}
@@ -114,8 +114,8 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	err = h.Engine.ConfigServices()
 	assert.NoError(err)
 	if _, ok := h.Engine.Services["authorizer"]; ok {
-		h.Engine.Services["authorizer"].(*app.Topaz).Resolver.SetRuntimeResolver(rt)
-		h.Engine.Services["authorizer"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
+		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(rt)
+		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
 	}
 	err = h.Engine.Start()
 	assert.NoError(err)

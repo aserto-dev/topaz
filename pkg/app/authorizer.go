@@ -22,7 +22,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-type Topaz struct {
+type Authorizer struct {
 	Resolver         *resolvers.Resolvers
 	AuthorizerServer *impl.AuthorizerServer
 
@@ -54,7 +54,7 @@ func NewAuthorizer(cfg *builder.API, commonConfig *config.Common, authorizerOpts
 
 	authServer := impl.NewAuthorizerServer(logger, commonConfig, authResolvers)
 
-	return &Topaz{
+	return &Authorizer{
 		cfg:              cfg,
 		opts:             authorizerOpts,
 		Resolver:         authResolvers,
@@ -62,17 +62,17 @@ func NewAuthorizer(cfg *builder.API, commonConfig *config.Common, authorizerOpts
 	}, nil
 }
 
-func (e *Topaz) AvailableServices() []string {
+func (e *Authorizer) AvailableServices() []string {
 	return []string{authorizerService}
 }
 
-func (e *Topaz) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
+func (e *Authorizer) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
 		authz.RegisterAuthorizerServer(server, e.AuthorizerServer)
 	}
 }
 
-func (e *Topaz) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
+func (e *Authorizer) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		if err := authz.RegisterAuthorizerHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
 			return err
@@ -91,7 +91,7 @@ func (e *Topaz) GetGatewayRegistration(services ...string) builder.HandlerRegist
 	}
 }
 
-func (e *Topaz) Cleanups() []func() {
+func (e *Authorizer) Cleanups() []func() {
 	return nil
 }
 

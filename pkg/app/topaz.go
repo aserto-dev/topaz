@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-aserto/client"
+	eds "github.com/aserto-dev/go-edge-ds"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
@@ -23,16 +24,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
 
-	edge "github.com/aserto-dev/go-edge-ds/pkg/server"
-
 	builder "github.com/aserto-dev/service-host"
 )
 
-var locker edge.EdgeDirLock
-
-// Authorizer is an authorizer service instance, responsible for managing
+// Topaz is an authorizer service instance, responsible for managing
 // the authorizer API, user directory instance and the OPA plugins.
-type Authorizer struct {
+type Topaz struct {
 	Context        context.Context
 	Logger         *zerolog.Logger
 	ServerOptions  []grpc.ServerOption
@@ -49,12 +46,12 @@ type ServiceTypes interface {
 	Cleanups() []func()
 }
 
-func (e *Authorizer) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
+func (e *Topaz) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
 	e.ServerOptions = append(e.ServerOptions, grpcOptions...)
 }
 
 // Start starts all services required by the engine.
-func (e *Authorizer) Start() error {
+func (e *Topaz) Start() error {
 	// build dependencies map.
 	for _, cfg := range e.Configuration.APIConfig.Services {
 		if len(cfg.Needs) > 0 {
@@ -84,7 +81,7 @@ func (e *Authorizer) Start() error {
 	return nil
 }
 
-func (e *Authorizer) ConfigServices() error {
+func (e *Topaz) ConfigServices() error {
 	metricsMiddleware, err := e.setupHealthAndMetrics()
 	if err != nil {
 		return err
@@ -164,7 +161,7 @@ func (e *Authorizer) ConfigServices() error {
 	return nil
 }
 
-func (e *Authorizer) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
+func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 	if e.Configuration.APIConfig.Health.ListenAddress != "" {
 		err := e.Manager.SetupHealthServer(e.Configuration.APIConfig.Health.ListenAddress, e.Configuration.APIConfig.Health.Certificates)
 		if err != nil {
@@ -183,10 +180,10 @@ func (e *Authorizer) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 	return nil, nil
 }
 
-func (e *Authorizer) prepareServices() error {
+func (e *Topaz) prepareServices() error {
 	// prepare services
 	if e.Configuration.Edge.DBPath != "" {
-		dir, err := locker.New(&e.Configuration.Edge, e.Logger)
+		dir, err := eds.New(e.Context, &e.Configuration.Edge, e.Logger)
 		if err != nil {
 			return err
 		}
@@ -255,7 +252,7 @@ func contains[T comparable](slice []T, item T) bool {
 	return false
 }
 
-func (e *Authorizer) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
+func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
 	var decisionlogger decisionlog.DecisionLogger
 	var err error
 
@@ -294,7 +291,7 @@ func (e *Authorizer) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlo
 	return decisionlogger, err
 }
 
-func (e *Authorizer) validateConfig() error {
+func (e *Topaz) validateConfig() error {
 	if readerConfig, ok := e.Configuration.APIConfig.Services["reader"]; ok {
 		if readerConfig.GRPC.ListenAddress != e.Configuration.DirectoryResolver.Address {
 			return errors.New("remote directory resolver address is different from reader grpc address")
