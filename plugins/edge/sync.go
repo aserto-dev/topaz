@@ -260,14 +260,14 @@ func (s *Sync) getTopazDirectoryClient() (*directoryClient, error) {
 
 	caCertPath := ""
 	// when reader registered to same port as authorizer.
-	if conf, ok := s.topazConfig.Common.Services["authorizer"]; ok {
+	if conf, ok := s.topazConfig.Common.APIConfig.Services["authorizer"]; ok {
 		if conf.GRPC.ListenAddress == s.topazConfig.DirectoryResolver.Address {
 			caCertPath = conf.GRPC.Certs.TLSCACertPath
 			host = conf.GRPC.ListenAddress
 		}
 	}
 	// if reader api configured separately.
-	if conf, ok := s.topazConfig.Common.Services["writer"]; ok {
+	if conf, ok := s.topazConfig.Common.APIConfig.Services["writer"]; ok {
 		host = conf.GRPC.ListenAddress
 		caCertPath = conf.GRPC.Certs.TLSCACertPath
 	}

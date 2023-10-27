@@ -20,7 +20,7 @@ import (
 
 // Injectors from wire.go:
 
-func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Authorizer, func(), error) {
+func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Topaz, func(), error) {
 	ccCC, cleanup, err := cc.NewCC(logOutput, errOutput, configPath, overrides)
 	if err != nil {
 		return nil, nil, err
@@ -32,7 +32,7 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 	serviceFactory := builder.NewServiceFactory()
 	serviceManager := builder.NewServiceManager(zerologLogger)
 	v2 := DefaultServices()
-	authorizer := &app.Authorizer{
+	topaz := &app.Topaz{
 		Context:        context,
 		Logger:         zerologLogger,
 		ServerOptions:  v,
@@ -41,12 +41,12 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 		Manager:        serviceManager,
 		Services:       v2,
 	}
-	return authorizer, func() {
+	return topaz, func() {
 		cleanup()
 	}, nil
 }
 
-func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Authorizer, func(), error) {
+func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Topaz, func(), error) {
 	ccCC, cleanup, err := cc.NewTestCC(logOutput, errOutput, configPath, overrides)
 	if err != nil {
 		return nil, nil, err
@@ -58,7 +58,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 	serviceFactory := builder.NewServiceFactory()
 	serviceManager := builder.NewServiceManager(zerologLogger)
 	v2 := DefaultServices()
-	authorizer := &app.Authorizer{
+	topaz := &app.Topaz{
 		Context:        context,
 		Logger:         zerologLogger,
 		ServerOptions:  v,
@@ -67,7 +67,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 		Manager:        serviceManager,
 		Services:       v2,
 	}
-	return authorizer, func() {
+	return topaz, func() {
 		cleanup()
 	}, nil
 }
@@ -76,7 +76,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 
 var (
 	commonSet = wire.NewSet(resolvers.New, impl.NewAuthorizerServer, builder.NewServiceFactory, builder.NewServiceManager, DefaultGRPCOptions,
-		DefaultServices, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Authorizer), "*"),
+		DefaultServices, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Topaz), "*"),
 	)
 
 	appTestSet = wire.NewSet(

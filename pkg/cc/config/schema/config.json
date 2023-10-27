@@ -38,8 +38,8 @@
         "Version": {
             "description": "config schema version",
             "type": "integer",
-            "minimum": 1,
-            "maximum": 1,
+            "minimum": 2,
+            "maximum": 2,
             "required": [
                 "version"
             ]

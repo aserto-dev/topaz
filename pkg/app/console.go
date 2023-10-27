@@ -33,3 +33,7 @@ func (e *ConsoleService) GetGatewayRegistration(services ...string) builder.Hand
 		return nil
 	}
 }
+
+func (e *ConsoleService) Cleanups() []func() {
+	return nil
+}

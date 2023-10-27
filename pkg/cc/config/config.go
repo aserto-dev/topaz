@@ -37,6 +37,19 @@ const (
 	CommandModeBuild
 )
 
+type ServicesConfig struct {
+	Health struct {
+		ListenAddress string                `json:"listen_address"`
+		Certificates  *certs.TLSCredsConfig `json:"certs"`
+	} `json:"health"`
+	Metrics struct {
+		ListenAddress string                `json:"listen_address"`
+		Certificates  *certs.TLSCredsConfig `json:"certs"`
+		ZPages        bool                  `json:"zpages"`
+	} `json:"metrics"`
+	Services map[string]*builder.API `json:"services"`
+}
+
 // Config holds the configuration for the app.
 type Common struct {
 	Version int           `json:"version"`
@@ -46,7 +59,7 @@ type Common struct {
 		Mode CommandMode
 	} `json:"-"`
 
-	Services map[string]*builder.API `json:"api"`
+	APIConfig ServicesConfig `json:"api"`
 
 	JWT struct {
 		// Specifies the duration in which exp (Expiry) and nbf (Not Before)
@@ -126,6 +139,11 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		if err := v.ReadConfig(r); err != nil {
 			return nil, errors.Wrapf(err, "failed to parse config file '%s'", file)
 		}
+
+		err = validateVersion(v.GetInt("version"))
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	v.AutomaticEnv()
@@ -201,7 +219,7 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, erro
 
 func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator) error {
 	existingFiles := []string{}
-	for serviceName, config := range c.Services {
+	for serviceName, config := range c.APIConfig.Services {
 		log.Info().Msgf("setting up certs for %s", serviceName)
 		for _, file := range []string{
 			config.GRPC.Certs.TLSCACertPath,
@@ -289,9 +307,9 @@ func subEnvVars(s string) string {
 }
 
 func setDefaultCerts(cfg *Config) error {
-	for srvName, config := range cfg.Services {
-		if config.GRPC.ListenAddress == "" || config.Gateway.ListenAddress == "" {
-			return errors.New(fmt.Sprintf("%s must have a grpc and gateway listen address specified", srvName))
+	for srvName, config := range cfg.APIConfig.Services {
+		if config.GRPC.ListenAddress == "" {
+			return errors.New(fmt.Sprintf("%s must have a grpc listen address specified", srvName))
 		}
 		if config.GRPC.Certs.TLSCACertPath == "" || config.GRPC.Certs.TLSCertPath == "" || config.GRPC.Certs.TLSKeyPath == "" {
 			config.GRPC.Certs.TLSKeyPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc.key", srvName))

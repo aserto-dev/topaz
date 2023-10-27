@@ -29,7 +29,7 @@ var (
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),
 		wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"),
-		wire.Struct(new(app.Authorizer), "*"),
+		wire.Struct(new(app.Topaz), "*"),
 	)
 
 	appTestSet = wire.NewSet(
@@ -43,14 +43,14 @@ var (
 	)
 )
 
-func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Authorizer, func(), error) {
+func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Topaz, func(), error) {
 	wire.Build(appSet)
-	return &app.Authorizer{}, func() {}, nil
+	return &app.Topaz{}, func() {}, nil
 }
 
-func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Authorizer, func(), error) {
+func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Topaz, func(), error) {
 	wire.Build(appTestSet)
-	return &app.Authorizer{}, func() {}, nil
+	return &app.Topaz{}, func() {}, nil
 }
 
 func DefaultGRPCOptions() []grpc.ServerOption {

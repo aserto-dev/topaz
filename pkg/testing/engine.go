@@ -22,7 +22,7 @@ const (
 // EngineHarness wraps an Aserto Runtime Engine so we can set it up easily
 // and monitor its logs.
 type EngineHarness struct {
-	Engine      *app.Authorizer
+	Engine      *app.Topaz
 	LogDebugger *LogDebugger
 
 	cleanup func()
@@ -39,19 +39,22 @@ func (h *EngineHarness) Cleanup() {
 	h.cleanup()
 
 	assert.Eventually(func() bool {
-		return !PortOpen("127.0.0.1:8484")
+		return !PortOpen("0.0.0.0:9494")
 	}, ten*time.Second, ten*time.Millisecond)
 	assert.Eventually(func() bool {
-		return !PortOpen("127.0.0.1:8383")
+		return !PortOpen("0.0.0.0:8383")
 	}, ten*time.Second, ten*time.Millisecond)
 	assert.Eventually(func() bool {
-		return !PortOpen("127.0.0.1:8282")
+		return !PortOpen("0.0.0.0:8282")
+	}, ten*time.Second, ten*time.Millisecond)
+	assert.Eventually(func() bool {
+		return !PortOpen("0.0.0.0:9292")
 	}, ten*time.Second, ten*time.Millisecond)
 }
 
 func (h *EngineHarness) Runtime() *runtime.Runtime {
-	if _, ok := h.Engine.Services["topaz"]; ok {
-		result, err := h.Engine.Services["topaz"].(*app.Topaz).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
+	if _, ok := h.Engine.Services["authorizer"]; ok {
+		result, err := h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
 		require.NoError(h.t, err)
 		return result
 	}
@@ -110,9 +113,9 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	assert.NoError(err)
 	err = h.Engine.ConfigServices()
 	assert.NoError(err)
-	if _, ok := h.Engine.Services["topaz"]; ok {
-		h.Engine.Services["topaz"].(*app.Topaz).Resolver.SetRuntimeResolver(rt)
-		h.Engine.Services["topaz"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
+	if _, ok := h.Engine.Services["authorizer"]; ok {
+		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(rt)
+		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
 	}
 	err = h.Engine.Start()
 	assert.NoError(err)

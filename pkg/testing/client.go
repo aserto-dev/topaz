@@ -24,7 +24,7 @@ import (
 
 // CreateClient creates a new http client that can talk to the API.
 func (h *EngineHarness) CreateClient() *http.Client {
-	authorizerAPIConfig, ok := h.Engine.Configuration.Services["authorizer"]
+	authorizerAPIConfig, ok := h.Engine.Configuration.APIConfig.Services["authorizer"]
 	if !ok {
 		log.Fatal("no authorizer configuration found")
 	}
@@ -69,7 +69,7 @@ func (h *EngineHarness) Req(verb, path, tenantID, body string) (string, int) {
 
 func (h *EngineHarness) CreateGRPCClient() authz2.AuthorizerClient {
 
-	authorizerAPIConfig, ok := h.Engine.Configuration.Services["authorizer"]
+	authorizerAPIConfig, ok := h.Engine.Configuration.APIConfig.Services["authorizer"]
 	if !ok {
 		log.Fatal("no authorizer configuration found")
 	}
@@ -105,7 +105,7 @@ type DirectoryClient struct {
 }
 
 func (h *EngineHarness) CreateDirectoryClient(ctx context.Context) *DirectoryClient {
-	readerAPIConfig, ok := h.Engine.Configuration.Services["reader"]
+	readerAPIConfig, ok := h.Engine.Configuration.APIConfig.Services["reader"]
 	if !ok {
 		log.Fatal("no reader configuration found")
 	}

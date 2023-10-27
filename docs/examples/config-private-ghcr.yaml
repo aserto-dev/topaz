@@ -3,21 +3,20 @@
 # 2. Your organization
 # 3. Your policy image name and label
 ---
+version: 2
 logging:
   prod: true
   log_level: debug
 
-directory:
-  db_path: ${TOPAZ_DIR}/db/directory.db
-  seed_metadata: false
-
 api:
-  authorizer:
-    gateway:
-      allowed_origins:
-      - https://localhost
-    grpc:
-      connection_timeout_seconds: 2
+  services:
+    authorizer:
+      gateway:
+        allowed_origins:
+        - https://localhost
+      grpc:
+        listen_address: "0.0.0.0:8282"
+        connection_timeout_seconds: 2
 
 opa:
   instance_id: "-"
