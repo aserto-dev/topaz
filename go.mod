@@ -2,6 +2,8 @@ module github.com/aserto-dev/topaz
 
 go 1.20
 
+toolchain go1.20
+
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/service-host => ../service-host

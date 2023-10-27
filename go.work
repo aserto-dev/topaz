@@ -1,5 +1,7 @@
 go 1.20
 
+toolchain go1.20
+
 use (
 	.
 	./magefiles
