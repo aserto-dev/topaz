@@ -227,11 +227,11 @@ jobs:
           version: v1.20.0
           args: release --clean
 
-      - name: Archive Deployment Examples
+      - name: Archive deployment examples
         run: |
           cd assets/sidecar-deployment && zip topaz_deployment_examples.zip *.yaml
 
-      - name: Upload example deployment files
+      - name: Upload deployment examples
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
