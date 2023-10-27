@@ -422,6 +422,8 @@ github.com/aserto-dev/aserto-management v0.9.2 h1:fX0YMEWvE+THKm96A/h6gjDxHtFzKF
 github.com/aserto-dev/aserto-management v0.9.2/go.mod h1:T+P3l7Lr9QhKgQOnOkh8j4S9tqpyuRXWE1aYZWFGn9o=
 github.com/aserto-dev/azm v0.0.9 h1:q2Qj34cu/3MndwONhRKuY+duKDwMOGDHGed38iGTd+I=
 github.com/aserto-dev/azm v0.0.9/go.mod h1:GeMRu6I7JMpByppqflZcusgbMZyXCGnYEdDW6x4qgX4=
+github.com/aserto-dev/azm v0.0.10 h1:v5OU9XaTyrZgapp5wJ872kXiIPhaZQUZyMK2UXUoANg=
+github.com/aserto-dev/azm v0.0.10/go.mod h1:GeMRu6I7JMpByppqflZcusgbMZyXCGnYEdDW6x4qgX4=
 github.com/aserto-dev/certs v0.0.3 h1:FiCJwh3nMHm/g1hRzKng1ZghLhNJgbMFxQd6ppJSVEE=
 github.com/aserto-dev/certs v0.0.3/go.mod h1:9mFvZ1NR92aEGj4ce6QleZGPXJuDZKTv+CWIOX28Xj8=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
@@ -442,6 +444,8 @@ github.com/aserto-dev/go-edge-ds v0.21.10-0.20231027213819-91f75877f2a1 h1:A/v17
 github.com/aserto-dev/go-edge-ds v0.21.10-0.20231027213819-91f75877f2a1/go.mod h1:Go8jNorahmc96+HT/OCCV/a57foZ/nWfUbfiaDXf9NQ=
 github.com/aserto-dev/go-edge-ds v0.21.10-0.20231027230853-dab48317072c h1:dm/35593o23BUSuMSxcUzFrn82l+o8OQavNkmbNecHc=
 github.com/aserto-dev/go-edge-ds v0.21.10-0.20231027230853-dab48317072c/go.mod h1:Go8jNorahmc96+HT/OCCV/a57foZ/nWfUbfiaDXf9NQ=
+github.com/aserto-dev/go-edge-ds v0.21.10-0.20231027235055-4e9af2c7cb8e h1:5dkxTCCrf6MoDph4g94fyJGZzsRPVU16024Qge9yRJ0=
+github.com/aserto-dev/go-edge-ds v0.21.10-0.20231027235055-4e9af2c7cb8e/go.mod h1:NSy2SnpK8vgnkRq3BEua2e8nOQfOEwdVoGE/xOyxXBc=
 github.com/aserto-dev/go-grpc v0.8.57 h1:CjQVxZ2HkBvJrfCtaDeq2kZSn2yLmRel5kHCVzqRMLs=
 github.com/aserto-dev/go-grpc v0.8.57/go.mod h1:2FcclMDheTsEvYCY72o+EwTaoO0ti3/it4G6xIlzNIM=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
