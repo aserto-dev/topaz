@@ -2,9 +2,11 @@ module github.com/aserto-dev/topaz
 
 go 1.20
 
-// replace github.com/aserto-dev/go-directory => ../go-directory
-// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-// replace github.com/aserto-dev/azm => ../azm
+replace github.com/aserto-dev/go-directory => ../go-directory
+
+replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
+replace github.com/aserto-dev/azm => ../azm
 
 require (
 	github.com/alecthomas/kong v0.8.1
@@ -15,9 +17,9 @@ require (
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.20.3
 	github.com/aserto-dev/go-authorizer v0.20.3
-	github.com/aserto-dev/go-directory v0.21.8-0.20231015213014-2bac9fa0ff01
+	github.com/aserto-dev/go-directory v0.21.8-0.20231025221233-49189a5f0560
 	github.com/aserto-dev/go-directory-cli v0.20.14-0.20230913232053-927068a67595
-	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231024184532-1fd643274507
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231027213819-91f75877f2a1
 	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
@@ -29,7 +31,7 @@ require (
 	github.com/cli/browser v1.2.0
 	github.com/fatih/color v1.15.0
 	github.com/fullstorydev/grpcurl v1.8.8
-	github.com/google/uuid v1.3.1
+	github.com/google/uuid v1.4.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0
@@ -60,7 +62,7 @@ require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230512164433-5d1fd1a340c9 // indirect
-	github.com/aserto-dev/azm v0.0.6 // indirect
+	github.com/aserto-dev/azm v0.0.9 // indirect
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -141,7 +143,7 @@ require (
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/yashtewari/glob-intersection v0.2.0 // indirect
-	go.etcd.io/bbolt v1.3.7 // indirect
+	go.etcd.io/bbolt v1.3.8 // indirect
 	go.opentelemetry.io/otel v1.16.0 // indirect
 	go.opentelemetry.io/otel/metric v1.16.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.16.0 // indirect
