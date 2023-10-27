@@ -2,8 +2,6 @@ module github.com/aserto-dev/topaz
 
 go 1.20
 
-toolchain go1.20
-
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/service-host => ../service-host
@@ -20,7 +18,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.3
 	github.com/aserto-dev/go-directory v0.21.8-0.20231025221233-49189a5f0560
 	github.com/aserto-dev/go-directory-cli v0.20.14-0.20230913232053-927068a67595
-	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231027213819-91f75877f2a1
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231027230853-dab48317072c
 	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
