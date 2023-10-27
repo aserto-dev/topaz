@@ -14,7 +14,7 @@ require (
 	github.com/aserto-dev/certs v0.0.3
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.6
-	github.com/aserto-dev/go-aserto v0.20.3
+	github.com/aserto-dev/go-aserto v0.20.4
 	github.com/aserto-dev/go-authorizer v0.20.3
 	github.com/aserto-dev/go-directory v0.21.8-0.20231025221233-49189a5f0560
 	github.com/aserto-dev/go-directory-cli v0.20.14-0.20230913232053-927068a67595
@@ -26,10 +26,10 @@ require (
 	github.com/aserto-dev/openapi-directory v0.21.6-0.20230802231916-c64b7b8884fd
 	github.com/aserto-dev/runtime v0.56.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
-	github.com/aserto-dev/service-host v0.0.6-0.20231025142719-d47b6f7554d6
-	github.com/cli/browser v1.2.0
+	github.com/aserto-dev/service-host v0.0.6
+	github.com/cli/browser v1.3.0
 	github.com/fatih/color v1.15.0
-	github.com/fullstorydev/grpcurl v1.8.8
+	github.com/fullstorydev/grpcurl v1.8.9
 	github.com/google/uuid v1.4.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
@@ -39,7 +39,7 @@ require (
 	github.com/mennanov/fmutils v0.2.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.28.0
+	github.com/onsi/gomega v1.29.0
 	github.com/open-policy-agent/opa v0.57.1
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.31.0
@@ -85,7 +85,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/cel-go v0.18.1 // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.0.0 // indirect
@@ -95,7 +95,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/jhump/protoreflect v1.15.2 // indirect
+	github.com/jhump/protoreflect v1.15.3 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
 	github.com/kyokomi/emoji v2.2.4+incompatible // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
@@ -147,10 +147,10 @@ require (
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/yashtewari/glob-intersection v0.2.0 // indirect
 	go.etcd.io/bbolt v1.3.8 // indirect
-	go.opentelemetry.io/otel v1.16.0 // indirect
-	go.opentelemetry.io/otel/metric v1.16.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.16.0 // indirect
-	go.opentelemetry.io/otel/trace v1.16.0 // indirect
+	go.opentelemetry.io/otel v1.19.0 // indirect
+	go.opentelemetry.io/otel/metric v1.19.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.19.0 // indirect
+	go.opentelemetry.io/otel/trace v1.19.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/crypto v0.14.0 // indirect
