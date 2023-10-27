@@ -7,6 +7,10 @@ types:
   # user represents any rebel that has access to the system
   user: {}
 
+  identity:
+    relations:
+      identifier: user
+
   # group represents a collection of users and/or (nested) groups
   group:
     relations:
@@ -28,7 +32,7 @@ types:
       viewer: user | group#member
       author: user | group#member
       parent: folder
-   permissions:
+    permissions:
       can_view: viewer | editor | owner | parent->can_view
       can_write: editor | owner | parent->can_write
       can_share: owner | parent->can_share
