@@ -60,12 +60,15 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		EdgeDirectory:    cmd.EdgeDirectory,
 		SeedMetadata:     cmd.SeedMetadata,
 	}
-	if params.LocalPolicyImage != "" {
-		color.Green("using local policy image: %s", params.LocalPolicyImage)
-		return WriteConfig(w, localImageTemplate, &params)
-	}
 
-	color.Green("policy name: %s", params.PolicyName)
+	if !cmd.Stdout {
+		if params.LocalPolicyImage != "" {
+			color.Green("using local policy image: %s", params.LocalPolicyImage)
+			return WriteConfig(w, localImageTemplate, &params)
+		}
+
+		color.Green("policy name: %s", params.PolicyName)
+	}
 
 	return WriteConfig(w, configTemplate, &params)
 }
