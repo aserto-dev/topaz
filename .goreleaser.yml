@@ -168,7 +168,7 @@ dockers:
     goos: linux
     goarch: arm64
     image_templates:
-      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-arm64"
+      - &arm64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-arm64"
     skip_push: false
     dockerfile: Dockerfile.goreleaser
     build_flag_templates:
