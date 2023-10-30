@@ -177,3 +177,7 @@ dockers:
       - "--label=org.opencontainers.image.description=Topaz"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
 
+docker_manifests:
+  # https://goreleaser.com/customization/docker_manifest/
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:v3-latest-test"
+    image_templates: [*amd64-image, *arm64-image]
