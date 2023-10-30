@@ -1,0 +1,159 @@
+{
+  "objects": [
+    {
+      "type": "identity",
+      "id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "group",
+      "id": "admin",
+      "properties": {}
+    },
+    {
+      "type": "identity",
+      "id": "summer@the-smiths.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "identity",
+      "id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "group",
+      "id": "evil_genius",
+      "properties": {}
+    },
+    {
+      "type": "identity",
+      "id": "rick@the-citadel.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "group",
+      "id": "viewer",
+      "properties": {}
+    },
+    {
+      "type": "identity",
+      "id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "identity",
+      "id": "morty@the-citadel.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "identity",
+      "id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "identity",
+      "id": "beth@the-smiths.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "identity",
+      "id": "jerry@the-smiths.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "group",
+      "id": "editor",
+      "properties": {}
+    },
+    {
+      "type": "identity",
+      "id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "user",
+      "id": "rick@the-citadel.com",
+      "properties": {
+        "email": "rick@the-citadel.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Rick%20Sanchez.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "type": "user",
+      "id": "morty@the-citadel.com",
+      "properties": {
+        "email": "morty@the-citadel.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Morty%20Smith.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "type": "user",
+      "id": "summer@the-smiths.com",
+      "properties": {
+        "email": "summer@the-smiths.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Summer%20Smith.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "type": "user",
+      "id": "beth@the-smiths.com",
+      "properties": {
+        "email": "beth@the-smiths.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Beth%20Smith.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "type": "user",
+      "id": "jerry@the-smiths.com",
+      "properties": {
+        "email": "jerry@the-smiths.com",
+        "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Jerry%20Smith.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    }
+  ]
+}
