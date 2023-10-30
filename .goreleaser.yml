@@ -151,7 +151,7 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
-      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-amd64"
+      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:v3-latest-test-amd64"
     skip_push: false
     dockerfile: Dockerfile.goreleaser
     build_flag_templates:
@@ -161,14 +161,14 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
-      - "--label=org.opencontainers.image.description=Topaz Authorizer"
+      - "--label=org.opencontainers.image.description=Topaz"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
 
   - use: buildx
     goos: linux
     goarch: arm64
     image_templates:
-      - &arm64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-arm64"
+      - &arm64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:v3-latest-test-arm64"
     skip_push: false
     dockerfile: Dockerfile.goreleaser
     build_flag_templates:
@@ -178,16 +178,16 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
-      - "--label=org.opencontainers.image.description=Topaz Authorizer"
+      - "--label=org.opencontainers.image.description=Topaz"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
 
-docker_manifests:
-  # https://goreleaser.com/customization/docker_manifest/
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:latest"
-    image_templates: [*amd64-image, *arm64-image]
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}"
-    image_templates: [*amd64-image, *arm64-image]
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}"
-    image_templates: [*amd64-image, *arm64-image]
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
-    image_templates: [*amd64-image, *arm64-image]
+# docker_manifests:
+#   # https://goreleaser.com/customization/docker_manifest/
+#   - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:latest"
+#     image_templates: [*amd64-image, *arm64-image]
+#   - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}"
+#     image_templates: [*amd64-image, *arm64-image]
+#   - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}"
+#     image_templates: [*amd64-image, *arm64-image]
+#   - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+#     image_templates: [*amd64-image, *arm64-image]
