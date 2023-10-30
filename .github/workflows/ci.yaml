@@ -66,6 +66,16 @@ jobs:
         continue-on-error: true
         with:
           path-to-profile: cover.out
+      -
+        name: Publish v3-latest-test container images
+        uses: goreleaser/goreleaser-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          distribution: goreleaser
+          version: ${{ env.GO_RELEASER_VERSION }}
+          args: release --config=.goreleaser-v3.yml --clean --snapshot 
+
   push:
     runs-on: ubuntu-latest
     # when on a branch only push if the branch is main

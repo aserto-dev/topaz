@@ -16,9 +16,7 @@ builds:
     main: ./cmd/topazd
     binary: topazd
     goos:
-      - darwin
       - linux
-      - windows
     goarch:
       - amd64
       - arm64
@@ -38,9 +36,7 @@ builds:
     main: ./cmd/topaz
     binary: topaz
     goos:
-      - darwin
       - linux
-      - windows
     goarch:
       - amd64
       - arm64
@@ -91,59 +87,59 @@ changelog:
 
 release:
   # https://goreleaser.com/customization/release/
-  github:
-    owner: "{{ .Env.ORG }}"
-    name: "{{ .Env.REPO }}"
+  # github:
+  #   owner: "{{ .Env.ORG }}"
+  #   name: "{{ .Env.REPO }}"
 
-  draft: false
-  prerelease: false
-  name_template: "{{.ProjectName}} {{.Tag}}"
+  # draft: false
+  # prerelease: false
+  # name_template: "{{.ProjectName}} {{.Tag}}"
 
 blobs:
   # https://goreleaser.com/customization/blob/
-  -
-    provider: gs
-    bucket: topaz-cli
-    folder: "topaz/{{ .Version }}"
-    extra_files:
-      - glob: VERSION.txt
-  -
-    provider: gs
-    bucket: topaz-cli
-    folder: "topaz/latest"
-    extra_files:
-      - glob: VERSION.txt
+  # -
+  #   provider: gs
+  #   bucket: topaz-cli
+  #   folder: "topaz/{{ .Version }}"
+  #   extra_files:
+  #     - glob: VERSION.txt
+  # -
+  #   provider: gs
+  #   bucket: topaz-cli
+  #   folder: "topaz/latest"
+  #   extra_files:
+  #     - glob: VERSION.txt
 
 brews:
   # https://goreleaser.com/customization/homebrew/
-  -
-    name: topaz
+  # -
+  #   name: topaz
 
-    repository:
-      owner: "{{ .Env.ORG }}"
-      name: homebrew-tap
-      token: "{{ .Env.ASERTO_TAP }}"
+  #   repository:
+  #     owner: "{{ .Env.ORG }}"
+  #     name: homebrew-tap
+  #     token: "{{ .Env.ASERTO_TAP }}"
 
-    url_template: "https://storage.googleapis.com/topaz-cli/topaz/{{ .Version }}/{{ .ArtifactName }}"
+  #   url_template: "https://storage.googleapis.com/topaz-cli/topaz/{{ .Version }}/{{ .ArtifactName }}"
 
-    download_strategy: CurlDownloadStrategy
+  #   download_strategy: CurlDownloadStrategy
 
-    commit_author:
-      name: Aserto Bot
-      email: github-bot@aserto.com
+  #   commit_author:
+  #     name: Aserto Bot
+  #     email: github-bot@aserto.com
 
-    homepage: "https://www.topaz.sh/docs/"
+  #   homepage: "https://www.topaz.sh/docs/"
 
-    description: "Topaz CLI"
+  #   description: "Topaz CLI"
 
-    license: "MIT"
+  #   license: "MIT"
 
-    skip_upload: false
+  #   skip_upload: false
 
-    test: |
-      system "#{bin}/topaz version"
-    install: |
-      bin.install "topaz"
+  #   test: |
+  #     system "#{bin}/topaz version"
+  #   install: |
+  #     bin.install "topaz"
 
 dockers:
   # https://goreleaser.com/customization/docker/
@@ -151,7 +147,7 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
-      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-amd64"
+      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:v3-latest-test-amd64"
     skip_push: false
     dockerfile: Dockerfile.goreleaser
     build_flag_templates:
@@ -159,7 +155,7 @@ dockers:
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.version=v3-latest-test-amd64"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
       - "--label=org.opencontainers.image.description=Topaz"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
@@ -168,7 +164,7 @@ dockers:
     goos: linux
     goarch: arm64
     image_templates:
-      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-arm64"
+      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:v3-latest-test-amd64"
     skip_push: false
     dockerfile: Dockerfile.goreleaser
     build_flag_templates:
@@ -176,18 +172,8 @@ dockers:
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.version=v3-latest-test-arm64"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
       - "--label=org.opencontainers.image.description=Topaz"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
 
-docker_manifests:
-  # https://goreleaser.com/customization/docker_manifest/
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:latest"
-    image_templates: [*amd64-image, *arm64-image]
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}"
-    image_templates: [*amd64-image, *arm64-image]
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}"
-    image_templates: [*amd64-image, *arm64-image]
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
-    image_templates: [*amd64-image, *arm64-image]
