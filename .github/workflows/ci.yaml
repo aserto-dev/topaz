@@ -66,15 +66,73 @@ jobs:
         continue-on-error: true
         with:
           path-to-profile: cover.out
+
+  publish-test-image:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Read Configuration
+        uses: hashicorp/vault-action@v2
+        id: vault
+        with:
+          url: https://vault.eng.aserto.com/
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            kv/data/github  "SSH_PRIVATE_KEY"     | SSH_PRIVATE_KEY;
+            kv/data/github  "USERNAME"            | DOCKER_USERNAME;
+            kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
+            kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
+      -
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      -
+        name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      -
+        name: Setup QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: https://ghcr.io
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+      -
+        name: Docker SSH Setup
+        run: |
+          mkdir -p $HOME/.ssh
+          umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
+          ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+          git config --global url."git@github.com:".insteadOf https://github.com/
+          git config --global user.email "github-bot@aserto.com"
+          git config --global user.name "Aserto Bot"
+          eval `ssh-agent`
+          ssh-add $HOME/.ssh/id_rsa
+      -
+        name: Wait for tests to succeed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: wait-for-tests
+        with:
+          token: ${{ env.READ_WRITE_TOKEN }}
+          checkName: test
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      -
+        name: Stop if tests fail
+        if: steps.wait-for-tests.outputs.conclusion != 'success'
+        run: exit 1
       -
         name: Publish v3-latest-test container images
         uses: goreleaser/goreleaser-action@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           distribution: goreleaser
           version: ${{ env.GO_RELEASER_VERSION }}
-          args: release --config=.goreleaser-v3.yml --clean --snapshot 
+          args: release --config=.goreleaser-v3.yml --clean --snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   push:
     runs-on: ubuntu-latest
