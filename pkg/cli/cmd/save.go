@@ -1,13 +1,9 @@
 package cmd
 
 import (
-	"io"
-	"os"
-	"path"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/fatih/color"
+	"github.com/pkg/errors"
 )
 
 type SaveCmd struct {
@@ -16,39 +12,41 @@ type SaveCmd struct {
 }
 
 func (cmd *SaveCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
-	}
+	return errors.Errorf("The \"topaz save\" command has been deprecated, see \"topaz manifest get\".")
 
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
-	if err != nil {
-		return err
-	}
+	// if err := CheckRunning(c); err != nil {
+	// 	return err
+	// }
 
-	if cmd.File == defaultManifestName {
-		currentDir, err := os.Getwd()
-		if err != nil {
-			return err
-		}
-		cmd.File = path.Join(currentDir, defaultManifestName)
-	}
+	// dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
+	// if err != nil {
+	// 	return err
+	// }
 
-	color.Green(">>> save manifest to %s", cmd.File)
+	// if cmd.File == defaultManifestName {
+	// 	currentDir, err := os.Getwd()
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	cmd.File = path.Join(currentDir, defaultManifestName)
+	// }
 
-	r, err := dirClient.GetManifest(c.Context)
-	if err != nil {
-		return err
-	}
+	// color.Green(">>> save manifest to %s", cmd.File)
 
-	w, err := os.Create(cmd.File)
-	if err != nil {
-		return err
-	}
-	defer w.Close()
+	// r, err := dirClient.GetManifest(c.Context)
+	// if err != nil {
+	// 	return err
+	// }
 
-	if _, err := io.Copy(w, r); err != nil {
-		return err
-	}
+	// w, err := os.Create(cmd.File)
+	// if err != nil {
+	// 	return err
+	// }
+	// defer w.Close()
 
-	return nil
+	// if _, err := io.Copy(w, r); err != nil {
+	// 	return err
+	// }
+
+	// return nil
 }

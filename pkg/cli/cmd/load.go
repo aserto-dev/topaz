@@ -1,13 +1,9 @@
 package cmd
 
 import (
-	"os"
-	"path"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/fatih/color"
-	"github.com/google/uuid"
+	"github.com/pkg/errors"
 )
 
 type LoadCmd struct {
@@ -15,33 +11,35 @@ type LoadCmd struct {
 	clients.Config
 }
 
-var defaultManifestName = "manifest.yaml"
+// var defaultManifestName = "manifest.yaml"
 
 func (cmd *LoadCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
-	}
+	return errors.Errorf("The \"topaz load\" command has been deprecated, see \"topaz manifest set\".")
 
-	cmd.Config.SessionID = uuid.NewString()
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
-	if err != nil {
-		return err
-	}
+	// if err := CheckRunning(c); err != nil {
+	// 	return err
+	// }
 
-	if cmd.Path == defaultManifestName {
-		currentDir, err := os.Getwd()
-		if err != nil {
-			return err
-		}
-		cmd.Path = path.Join(currentDir, defaultManifestName)
-	}
+	// cmd.Config.SessionID = uuid.NewString()
+	// dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
+	// if err != nil {
+	// 	return err
+	// }
 
-	r, err := os.Open(cmd.Path)
-	if err != nil {
-		return err
-	}
+	// if cmd.Path == defaultManifestName {
+	// 	currentDir, err := os.Getwd()
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	cmd.Path = path.Join(currentDir, defaultManifestName)
+	// }
 
-	color.Green(">>> load manifest from %s", cmd.Path)
+	// r, err := os.Open(cmd.Path)
+	// if err != nil {
+	// 	return err
+	// }
 
-	return dirClient.SetManifest(c.Context, r)
+	// color.Green(">>> load manifest from %s", cmd.Path)
+
+	// return dirClient.SetManifest(c.Context, r)
 }

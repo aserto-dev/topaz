@@ -256,7 +256,7 @@ func checkV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkR
 
 	start := time.Now()
 
-	resp, err := c.Reader3.Check(ctx, &req)
+	resp, err := c.Reader.Check(ctx, &req)
 
 	duration := time.Since(start)
 
@@ -276,7 +276,7 @@ func checkPermissionV3(ctx context.Context, c *client.Client, msg *structpb.Valu
 
 	start := time.Now()
 
-	resp, err := c.Reader3.CheckPermission(ctx, &req)
+	resp, err := c.Reader.CheckPermission(ctx, &req)
 
 	duration := time.Since(start)
 
@@ -296,7 +296,7 @@ func checkRelationV3(ctx context.Context, c *client.Client, msg *structpb.Value)
 
 	start := time.Now()
 
-	resp, err := c.Reader3.CheckRelation(ctx, &req)
+	resp, err := c.Reader.CheckRelation(ctx, &req)
 
 	duration := time.Since(start)
 
@@ -316,7 +316,7 @@ func checkPermissionV2(ctx context.Context, c *client.Client, msg *structpb.Valu
 
 	start := time.Now()
 
-	resp, err := c.Reader.CheckPermission(ctx, &req)
+	resp, err := c.Reader2.CheckPermission(ctx, &req)
 
 	duration := time.Since(start)
 
@@ -336,7 +336,7 @@ func checkRelationV2(ctx context.Context, c *client.Client, msg *structpb.Value)
 
 	start := time.Now()
 
-	resp, err := c.Reader.CheckRelation(ctx, &req)
+	resp, err := c.Reader2.CheckRelation(ctx, &req)
 
 	duration := time.Since(start)
 
