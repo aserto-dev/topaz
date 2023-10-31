@@ -125,7 +125,7 @@ jobs:
         if: steps.wait-for-tests.outputs.conclusion != 'success'
         run: exit 1
       -
-        name: Publish v3-latest-test container images
+        name: Build container images
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
@@ -133,6 +133,11 @@ jobs:
           args: release --config=.goreleaser-v3.yml --clean --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Push Snapshot images
+        run: |
+          docker push ghcr.io/aserto-dev/topaz:v3-latest-test-amd64
+          docker push ghcr.io/aserto-dev/topaz:v3-latest-test-arm64
 
   push:
     runs-on: ubuntu-latest
