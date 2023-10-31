@@ -12,6 +12,7 @@
     {
       "type": "group",
       "id": "admin",
+      "display_name": "admin-group",
       "properties": {}
     },
     {
@@ -35,6 +36,7 @@
     {
       "type": "group",
       "id": "evil_genius",
+      "display_name": "evil_genius-group",
       "properties": {}
     },
     {
@@ -49,6 +51,7 @@
     {
       "type": "group",
       "id": "viewer",
+      "display_name": "viewer-group",
       "properties": {}
     },
     {
@@ -99,6 +102,7 @@
     {
       "type": "group",
       "id": "editor",
+      "display_name": "editor-group",
       "properties": {}
     },
     {
@@ -113,6 +117,7 @@
     {
       "type": "user",
       "id": "rick@the-citadel.com",
+      "display_name": "Rick Sanchez",
       "properties": {
         "email": "rick@the-citadel.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Rick%20Sanchez.jpg",
@@ -122,6 +127,7 @@
     {
       "type": "user",
       "id": "morty@the-citadel.com",
+      "display_name": "Morty Smith",
       "properties": {
         "email": "morty@the-citadel.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Morty%20Smith.jpg",
@@ -131,6 +137,7 @@
     {
       "type": "user",
       "id": "summer@the-smiths.com",
+      "display_name": "Summer Smith",
       "properties": {
         "email": "summer@the-smiths.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Summer%20Smith.jpg",
@@ -140,6 +147,7 @@
     {
       "type": "user",
       "id": "beth@the-smiths.com",
+      "display_name": "Beth Smith",
       "properties": {
         "email": "beth@the-smiths.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Beth%20Smith.jpg",
@@ -149,6 +157,7 @@
     {
       "type": "user",
       "id": "jerry@the-smiths.com",
+      "display_name": "Jerry Smith",
       "properties": {
         "email": "jerry@the-smiths.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Jerry%20Smith.jpg",

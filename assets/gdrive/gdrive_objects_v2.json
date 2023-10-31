@@ -102,7 +102,7 @@
     {
       "key": "luke@yavin4base.mil",
       "type": "user",
-      "displayName": "Luke Skywalker",
+      "display_name": "Luke Skywalker",
       "properties": {
         "email": "luke@yavin4base.mil",
         "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/luke.jpg",
@@ -112,7 +112,7 @@
     {
       "key": "leia@yavin4base.mil",
       "type": "user",
-      "displayName": "Leia Skywalker",
+      "display_name": "Leia Skywalker",
       "properties": {
         "email": "leia@yavin4base.mil",
         "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/leia.jpg",
@@ -122,7 +122,7 @@
     {
       "key": "han@yavin4base.mil",
       "type": "user",
-      "displayName": "Han Solo",
+      "display_name": "Han Solo",
       "properties": {
         "email": "han@yavin4base.mil",
         "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/han.jpg",
@@ -132,7 +132,7 @@
     {
       "key": "r2d2@droids.yavin4base.mil",
       "type": "user",
-      "displayName": "R2D2",
+      "display_name": "R2D2",
       "properties": {
         "email": "r2d2@droids.yavin4base.mil",
         "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/r2d2.jpg",
@@ -142,7 +142,7 @@
     {
       "key": "r2d2@droids.yavin4base.mil",
       "type": "user",
-      "displayName": "C3PO",
+      "display_name": "C3PO",
       "properties": {
         "email": "c3po@droids.yavin4base.mil",
         "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/c3po.jpg",
@@ -152,73 +152,73 @@
     {
       "key": "everyone",
       "type": "group",
-      "displayName": "everyone-group",
+      "display_name": "everyone-group",
       "properties": {}
     },
     {
       "key": "strike-team",
       "type": "group",
-      "displayName": "strike-team-group",
+      "display_name": "strike-team-group",
       "properties": {}
     },
     {
       "key": "root",
       "type": "folder",
-      "displayName": "root-folder",
+      "display_name": "root-folder",
       "properties": {}
     },
     {
       "key": "missions",
       "type": "folder",
-      "displayName": "missions-folder",
+      "display_name": "missions-folder",
       "properties": {}
     },
     {
       "key": "death-star",
       "type": "folder",
-      "displayName": "death-star",
+      "display_name": "death-star",
       "properties": {}
     },
     {
       "key": "clone-wars",
       "type": "folder",
-      "displayName": "clone-wars-folder",
+      "display_name": "clone-wars-folder",
       "properties": {}
     },
     {
       "key": "general",
       "type": "folder",
-      "displayName": "general-folder",
+      "display_name": "general-folder",
       "properties": {}
     },
     {
       "key": "clone-wars",
       "type": "folder",
-      "displayName": "clone-wars-folder",
+      "display_name": "clone-wars-folder",
       "properties": {}
     },
     {
       "key": "siteplan.png",
       "type": "document",
-      "displayName": "siteplan.png-document",
+      "display_name": "siteplan.png-document",
       "properties": {}
     },
     {
       "key": "striketeam.xls",
       "type": "document",
-      "displayName": "striketeam.xls-document",
+      "display_name": "striketeam.xls-document",
       "properties": {}
     },
     {
       "key": "dining-menu.pdf",
       "type": "document",
-      "displayName": "dining-menu.pdf-document",
+      "display_name": "dining-menu.pdf-document",
       "properties": {}
     },
     {
       "key": "rebel-handbook.pdf",
       "type": "document",
-      "displayName": "rebel-handbook.pdf-document",
+      "display_name": "rebel-handbook.pdf-document",
       "properties": {}
     }
   ]

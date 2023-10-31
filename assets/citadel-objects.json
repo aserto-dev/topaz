@@ -12,7 +12,7 @@
     {
       "key": "admin",
       "type": "group",
-      "displayName": "admin-group",
+      "display_name": "admin-group",
       "properties": {}
     },
     {
@@ -36,7 +36,7 @@
     {
       "key": "evil_genius",
       "type": "group",
-      "displayName": "evil_genius-group",
+      "display_name": "evil_genius-group",
       "properties": {}
     },
     {
@@ -51,7 +51,7 @@
     {
       "key": "viewer",
       "type": "group",
-      "displayName": "viewer-group",
+      "display_name": "viewer-group",
       "properties": {}
     },
     {
@@ -102,7 +102,7 @@
     {
       "key": "editor",
       "type": "group",
-      "displayName": "editor-group",
+      "display_name": "editor-group",
       "properties": {}
     },
     {
@@ -117,7 +117,7 @@
     {
       "key": "rick@the-citadel.com",
       "type": "user",
-      "displayName": "Rick Sanchez",
+      "display_name": "Rick Sanchez",
       "properties": {
         "email": "rick@the-citadel.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Rick%20Sanchez.jpg",
@@ -127,7 +127,7 @@
     {
       "key": "morty@the-citadel.com",
       "type": "user",
-      "displayName": "Morty Smith",
+      "display_name": "Morty Smith",
       "properties": {
         "email": "morty@the-citadel.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Morty%20Smith.jpg",
@@ -137,7 +137,7 @@
     {
       "key": "summer@the-smiths.com",
       "type": "user",
-      "displayName": "Summer Smith",
+      "display_name": "Summer Smith",
       "properties": {
         "email": "summer@the-smiths.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Summer%20Smith.jpg",
@@ -147,7 +147,7 @@
     {
       "key": "beth@the-smiths.com",
       "type": "user",
-      "displayName": "Beth Smith",
+      "display_name": "Beth Smith",
       "properties": {
         "email": "beth@the-smiths.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Beth%20Smith.jpg",
@@ -157,7 +157,7 @@
     {
       "key": "jerry@the-smiths.com",
       "type": "user",
-      "displayName": "Jerry Smith",
+      "display_name": "Jerry Smith",
       "properties": {
         "email": "jerry@the-smiths.com",
         "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Jerry%20Smith.jpg",
