@@ -439,6 +439,8 @@ github.com/aserto-dev/go-directory-cli v0.20.14-0.20231030211808-dba8363420c2 h1
 github.com/aserto-dev/go-directory-cli v0.20.14-0.20231030211808-dba8363420c2/go.mod h1:XUgBKap2L2uZYWFiX2JH3/Tp5wMPtOrqh2CItgeazKY=
 github.com/aserto-dev/go-edge-ds v0.21.10-0.20231031001943-29857a63e376 h1:5fvetOdcJ9cSaRDCbk8d3s51mMRuM/7sYpDd+sVN7v0=
 github.com/aserto-dev/go-edge-ds v0.21.10-0.20231031001943-29857a63e376/go.mod h1:kmdrCYUQ6FUDDe2W4HV0VhInCCF9IT67AkPt/rmnSeU=
+github.com/aserto-dev/go-edge-ds v0.21.10-0.20231031185627-a370a6bf4f04 h1:HANaXMnPf45K7+h33L9FeszkZcMCJRayYKzEmmfHe3A=
+github.com/aserto-dev/go-edge-ds v0.21.10-0.20231031185627-a370a6bf4f04/go.mod h1:kmdrCYUQ6FUDDe2W4HV0VhInCCF9IT67AkPt/rmnSeU=
 github.com/aserto-dev/go-grpc v0.8.57 h1:CjQVxZ2HkBvJrfCtaDeq2kZSn2yLmRel5kHCVzqRMLs=
 github.com/aserto-dev/go-grpc v0.8.57/go.mod h1:2FcclMDheTsEvYCY72o+EwTaoO0ti3/it4G6xIlzNIM=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
@@ -466,6 +468,8 @@ github.com/bufbuild/protocompile v0.6.0 h1:Uu7WiSQ6Yj9DbkdnOe7U4mNKp58y9WDMKDn28
 github.com/bufbuild/protocompile v0.6.0/go.mod h1:YNP35qEYoYGme7QMtz5SBCoN4kL4g12jTtjuzRNdjpE=
 github.com/bufbuild/protovalidate-go v0.3.4 h1:FrHcBBShspitvmC9Nkwu7BNs/EXWjkEQqrgFnWxYH60=
 github.com/bufbuild/protovalidate-go v0.3.4/go.mod h1:Au57xmLypglbQAF0GzuDDYbYIct7SZ9QnwJlaPolyFw=
+github.com/bufbuild/protovalidate-go v0.4.0 h1:ModSkCLEW07fiyGtdtMXKY+Gz3oPFKSfiaSCgL+FtpU=
+github.com/bufbuild/protovalidate-go v0.4.0/go.mod h1:QqeUPLVYEKQc+/rkoUXFqXW03zPBfrEfIbX+zmA0VxA=
 github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 h1:3uZCA/BLTIu+DqCfguByNMJa2HVHpXvjfy0Dy7g6fuA=
 github.com/bytecodealliance/wasmtime-go/v3 v3.0.2/go.mod h1:RnUjnIXxEJcL6BgCvNyzCCRzZcxCgsZCi+RNlvYor5Q=
 github.com/cenkalti/backoff/v4 v4.2.1 h1:y4OZtCnogmCPw98Zjyt5a6+QwPLGkiQsYW5oUqylYbM=

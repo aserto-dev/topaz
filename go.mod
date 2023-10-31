@@ -5,7 +5,6 @@ go 1.20
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
 
@@ -20,7 +19,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.3
 	github.com/aserto-dev/go-directory v0.30.0
 	github.com/aserto-dev/go-directory-cli v0.20.14-0.20231030211808-dba8363420c2
-	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231031001943-29857a63e376
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231031185627-a370a6bf4f04
 	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
@@ -70,7 +69,7 @@ require (
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.6.0 // indirect
-	github.com/bufbuild/protovalidate-go v0.3.4 // indirect
+	github.com/bufbuild/protovalidate-go v0.4.0 // indirect
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/containerd/containerd v1.7.6 // indirect
