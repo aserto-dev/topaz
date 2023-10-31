@@ -5,6 +5,7 @@ go 1.20
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
 
@@ -19,12 +20,12 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.3
 	github.com/aserto-dev/go-directory v0.30.0
 	github.com/aserto-dev/go-directory-cli v0.20.14-0.20231030211808-dba8363420c2
-	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231030213031-17025f0c9936
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231031001943-29857a63e376
 	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
-	github.com/aserto-dev/openapi-authorizer v0.8.81
-	github.com/aserto-dev/openapi-directory v0.21.6-0.20230802231916-c64b7b8884fd
+	github.com/aserto-dev/openapi-authorizer v0.20.3
+	github.com/aserto-dev/openapi-directory v0.30.0
 	github.com/aserto-dev/runtime v0.56.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.6
@@ -56,7 +57,7 @@ require (
 )
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.31.0-20231017183020-0de7443d03cf.2 // indirect
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.31.0-20231030212536-12f9cba37c9d.2 // indirect
 	contrib.go.opencensus.io/exporter/prometheus v0.4.0 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
