@@ -2,9 +2,12 @@ module github.com/aserto-dev/topaz
 
 go 1.20
 
-// replace github.com/aserto-dev/go-directory => ../go-directory
-// replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
-// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+replace github.com/aserto-dev/go-directory => ../go-directory
+
+replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
+
+replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
 
@@ -15,11 +18,11 @@ require (
 	github.com/aserto-dev/certs v0.0.3
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.6
-	github.com/aserto-dev/go-aserto v0.20.4
+	github.com/aserto-dev/go-aserto v0.30.0
 	github.com/aserto-dev/go-authorizer v0.20.3
-	github.com/aserto-dev/go-directory v0.30.0
-	github.com/aserto-dev/go-directory-cli v0.20.14-0.20231030211808-dba8363420c2
-	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231031190948-a9344351a677
+	github.com/aserto-dev/go-directory v0.30.2
+	github.com/aserto-dev/go-directory-cli v0.20.14-0.20231101232339-7ed9ac5676bc
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231101230751-3b4cac06efca
 	github.com/aserto-dev/go-grpc v0.8.57
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
