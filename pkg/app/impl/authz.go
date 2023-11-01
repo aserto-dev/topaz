@@ -146,14 +146,14 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 	).PrepareForEval(ctx)
 
 	if err != nil {
-		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt.String())
+		return resp, aerr.ErrBadQuery.Err(err).Msg(queryStmt.String())
 	}
 
 	queryResults, err := qry.Eval(ctx, rego.EvalInput(input))
 	if err != nil {
-		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt.String()).Msg("query evaluation failed")
+		return resp, aerr.ErrBadQuery.Err(err).Msgf("query evaluation failed: %s", queryStmt.String())
 	} else if len(queryResults) == 0 {
-		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt.String()).Msg("undefined results")
+		return resp, aerr.ErrBadQuery.Err(err).Msgf("undefined results: %s", queryStmt.String())
 	}
 
 	for _, expression := range queryResults[0].Expressions {
@@ -257,15 +257,15 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	).PrepareForEval(ctx)
 
 	if err != nil {
-		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt)
+		return resp, aerr.ErrBadQuery.Err(err).Msg(queryStmt)
 	}
 
 	results, err := query.Eval(ctx, rego.EvalInput(input))
 
 	if err != nil {
-		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("query evaluation failed")
+		return resp, aerr.ErrBadQuery.Err(err).Msgf("query evaluation failed: %s", queryStmt)
 	} else if len(results) == 0 {
-		return resp, aerr.ErrBadQuery.Err(err).Str("query", queryStmt).Msg("undefined results")
+		return resp, aerr.ErrBadQuery.Err(err).Msgf("undefined results: %s", queryStmt)
 	}
 
 	v := results[0].Bindings["x"]
