@@ -21,7 +21,7 @@ const containerImage string = "topaz"
 func init() {
 	os.Setenv("GO_VERSION", "1.20")
 	os.Setenv("DOCKER_BUILDKIT", "1")
-	os.Setenv("CONSOLE_VERSION", "0.0.0-20231027154542.0.gd6d8b5f5")
+	os.Setenv("CONSOLE_VERSION", "0.0.0-20231101160837.0.ga9673675")
 }
 
 // Generate generates all code.
