@@ -404,7 +404,7 @@ func checkPermissionStringV3(req *dsr3.CheckPermissionRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
 		req.GetPermission(),
-		req.GetSubjectType(), req.GetObjectId(),
+		req.GetSubjectType(), req.GetSubjectId(),
 	)
 }
 
