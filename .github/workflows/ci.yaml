@@ -236,6 +236,8 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/github  "ROOT_TOKEN"        | ROOT_TOKEN;
+      - name: Install hub
+        run: choco install -y "hub"
       - name: Download exe
         id: download_exe
         shell: bash
