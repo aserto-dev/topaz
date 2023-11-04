@@ -2,6 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.20
 
+// replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
@@ -19,12 +20,12 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.3
 	github.com/aserto-dev/go-directory v0.30.2
 	github.com/aserto-dev/go-directory-cli v0.20.14-0.20231101232339-7ed9ac5676bc
-	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231101230751-3b4cac06efca
-	github.com/aserto-dev/go-grpc v0.8.57
+	github.com/aserto-dev/go-edge-ds v0.21.10-0.20231104001822-83ba9ba4c910
+	github.com/aserto-dev/go-grpc v0.8.58
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.3
-	github.com/aserto-dev/openapi-directory v0.30.0
+	github.com/aserto-dev/openapi-directory v0.30.1
 	github.com/aserto-dev/runtime v0.56.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.6
@@ -64,7 +65,7 @@ require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230512164433-5d1fd1a340c9 // indirect
-	github.com/aserto-dev/azm v0.0.12 // indirect
+	github.com/aserto-dev/azm v0.0.15 // indirect
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -84,6 +85,7 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/cel-go v0.18.1 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect

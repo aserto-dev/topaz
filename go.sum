@@ -416,8 +416,8 @@ github.com/aserto-dev/aserto-grpc v0.2.2 h1:i6rWdvydyqs7eBqsZHYdPPCC+xVwQve8KrBg
 github.com/aserto-dev/aserto-grpc v0.2.2/go.mod h1:uDMB5njLdoCa0Hr+TOg6A4gH85uNqTvufkM5sKtEjcE=
 github.com/aserto-dev/aserto-management v0.9.2 h1:fX0YMEWvE+THKm96A/h6gjDxHtFzKFhmDFCgu/AMs4Y=
 github.com/aserto-dev/aserto-management v0.9.2/go.mod h1:T+P3l7Lr9QhKgQOnOkh8j4S9tqpyuRXWE1aYZWFGn9o=
-github.com/aserto-dev/azm v0.0.12 h1:nR8UFpUdwWoOGnwETEaCPkItLms+PFDMrTbGBJzZJ6w=
-github.com/aserto-dev/azm v0.0.12/go.mod h1:ZLBW4yhU6/l9y5xACV/s5FcVGLlSbiql2MUTQqVsKzM=
+github.com/aserto-dev/azm v0.0.15 h1:GO222vhAfcEeJJBTuWJBHNm1lIMA6qxkFjiVHN5pPeo=
+github.com/aserto-dev/azm v0.0.15/go.mod h1:oNNvPYysttO/otHryQDm6u71jAt/Qhs9izhrde7HlD0=
 github.com/aserto-dev/certs v0.0.3 h1:FiCJwh3nMHm/g1hRzKng1ZghLhNJgbMFxQd6ppJSVEE=
 github.com/aserto-dev/certs v0.0.3/go.mod h1:9mFvZ1NR92aEGj4ce6QleZGPXJuDZKTv+CWIOX28Xj8=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
@@ -434,10 +434,10 @@ github.com/aserto-dev/go-directory v0.30.2 h1:cUkvzma8paV2YFaCIvjfy1a9DMNCx5qV3E
 github.com/aserto-dev/go-directory v0.30.2/go.mod h1:jHn6ckERuci6nWz9vCzAbYoF2UnbOwEzl++sA1L3nyc=
 github.com/aserto-dev/go-directory-cli v0.20.14-0.20231101232339-7ed9ac5676bc h1:KBOJZkYvLsEMNHTp6LQ/JZdJDHJnf9Cq3vqF3CaFzC4=
 github.com/aserto-dev/go-directory-cli v0.20.14-0.20231101232339-7ed9ac5676bc/go.mod h1:WrKLhSCksEs0hG2CMaItu6HsAbQMAq00Bq6Kqw5WkcI=
-github.com/aserto-dev/go-edge-ds v0.21.10-0.20231101230751-3b4cac06efca h1:RLD8yhdz2wld6bUtn2JnjPyo7W5yEQ3quIBzgUp/OzQ=
-github.com/aserto-dev/go-edge-ds v0.21.10-0.20231101230751-3b4cac06efca/go.mod h1:tsMc+Zm4lrQ7iKlAeRblMnFTUCtYvGr2sFdhMguhdcU=
-github.com/aserto-dev/go-grpc v0.8.57 h1:CjQVxZ2HkBvJrfCtaDeq2kZSn2yLmRel5kHCVzqRMLs=
-github.com/aserto-dev/go-grpc v0.8.57/go.mod h1:2FcclMDheTsEvYCY72o+EwTaoO0ti3/it4G6xIlzNIM=
+github.com/aserto-dev/go-edge-ds v0.21.10-0.20231104001822-83ba9ba4c910 h1:Ur85jPmnuAzWb3x8jYTRsK0NG/9t1QOm3uszbN4sTxc=
+github.com/aserto-dev/go-edge-ds v0.21.10-0.20231104001822-83ba9ba4c910/go.mod h1:yKjKFm2u7zz3u/MmrOYq1mugsC2trE3diA+WkQrkvvc=
+github.com/aserto-dev/go-grpc v0.8.58 h1:uoNDm6ddJQHR94fIq+v6gHWBZTRTQCvRnNvGxsansrU=
+github.com/aserto-dev/go-grpc v0.8.58/go.mod h1:2FcclMDheTsEvYCY72o+EwTaoO0ti3/it4G6xIlzNIM=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1/go.mod h1:QnWF5/X2U/kmbu7GEw+zupvqX2hIthDjyXlRTwt2zEI=
 github.com/aserto-dev/header v0.0.5 h1:nEvYNgBoIwomxuvo14JuQ/ZqGGHU67NKuZyNdW4n4FU=
@@ -446,8 +446,8 @@ github.com/aserto-dev/logger v0.0.4 h1:GF+17mhn03ZnE5KHCszrzGRcZULgczsql+y+PCHjg
 github.com/aserto-dev/logger v0.0.4/go.mod h1:awdS/W0VnLNyP+aT5mmLx9PjOcT5IrXsYMxqwHglSLU=
 github.com/aserto-dev/openapi-authorizer v0.20.3 h1:HtzuT4jxJzjm/WogAb6JVL3pksmNw9xQ0fggYJLfW1A=
 github.com/aserto-dev/openapi-authorizer v0.20.3/go.mod h1:3kmTs3pjNE5aQXt1Ob71uVdqC2qC61EO9gl6O63md4U=
-github.com/aserto-dev/openapi-directory v0.30.0 h1:poMJEmhWLFlsy/AO/rgnhQA1O2dU2oDokp8GPaxVsvw=
-github.com/aserto-dev/openapi-directory v0.30.0/go.mod h1:9qvcKhAO3kg0H+vjRhUrWXbxGtsPMp/g6X7bne0C0L4=
+github.com/aserto-dev/openapi-directory v0.30.1 h1:bAbtFgDFqsR143F8ZzJdKVyBHjhMNx5E1wC1BLSPO18=
+github.com/aserto-dev/openapi-directory v0.30.1/go.mod h1:vwc+6wBy+p/6D8oFRMVIaoUlJxxS/KgQZJ3S0r8zaG4=
 github.com/aserto-dev/runtime v0.56.0 h1:o9bNzrAkoiBMT/TAeIbidXjnyPaDNodzyqMmz5TBXsA=
 github.com/aserto-dev/runtime v0.56.0/go.mod h1:CuJMOiaF6yw9wk2reef4cFnUIb/LsqwvQLTIn1cvfMs=
 github.com/aserto-dev/self-decision-logger v0.0.4 h1:Thlz9QTlJm0X+uC3YLUTSyvX+VgF2wVIk9Wh8+rkE/c=
@@ -576,6 +576,7 @@ github.com/golang/mock v1.4.1/go.mod h1:UOMv5ysSaYNkG+OFQykRIcU/QvvxJf3p21QfJ2Bt
 github.com/golang/mock v1.4.3/go.mod h1:UOMv5ysSaYNkG+OFQykRIcU/QvvxJf3p21QfJ2Bt3cw=
 github.com/golang/mock v1.4.4/go.mod h1:l3mdAwkq5BuhzHwde/uurv3sEJeZMXNpwsxVWU71h+4=
 github.com/golang/mock v1.5.0/go.mod h1:CWnOUgYIOo4TcNZ0wHX3YZCqsaM1I1Jvs6v3mP3KVu8=
+github.com/golang/mock v1.6.0 h1:ErTB+efbowRARo13NNdxyJji2egdxLGQhRaY+DUumQc=
 github.com/golang/mock v1.6.0/go.mod h1:p6yTPP+5HYm5mzsMV8JkE6ZKdX+/wYM6Hr+LicevLPs=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
