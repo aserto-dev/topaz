@@ -59,7 +59,7 @@ jobs:
       -
         name: Test
         run: |
-          gotestsum --format short-verbose -- -count=1 -v -timeout=240s -coverprofile=cover.out -coverpkg=./... ./...
+          gotestsum --format short-verbose -- -count=1 -parallel=1 -v -timeout=240s -coverprofile=cover.out -coverpkg=./... ./...
       -
         name: Upload code coverage
         uses: shogo82148/actions-goveralls@v1
