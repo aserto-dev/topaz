@@ -207,18 +207,18 @@ jobs:
           version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean
 
-      - name: Archive deployment examples
-        run: |
-          cd assets/sidecar-deployment && zip topaz_deployment_examples.zip *.yaml
+      # - name: Archive deployment examples
+      #   run: |
+      #     cd assets/sidecar-deployment && zip topaz_deployment_examples.zip *.yaml
 
-      - name: Upload deployment examples
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: assets/sidecar-deployment
-          asset_name: topaz_deployment_examples.zip
-          tag: ${{ github.ref }}
-          overwrite: false
+      # - name: Upload deployment examples
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: assets/sidecar-deployment
+      #     asset_name: topaz_deployment_examples.zip
+      #     tag: ${{ github.ref }}
+      #     overwrite: false
 
   msi:
     needs: release
