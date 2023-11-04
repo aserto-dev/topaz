@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-deployment
+  labels:
+    app.kubernetes.io/name: ToDo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo
+  template:
+    metadata:
+      labels:
+        app: todo
+    spec:
+      # using an init container to download the topaz edge directory db file that contains our required user informations
+      initContainers:
+      - name: get-eds-citadel
+        image: busybox:1.28
+        command: ["/bin/sh","-c","cd /db/;wget https://github.com/aserto-dev/topaz/raw/main/pkg/testing/assets/eds-citadel.db;"]
+        volumeMounts:
+        - name: topaz-db
+          mountPath: "/db/"
+      containers:
+      - name: topaz
+        image: ghcr.io/aserto-dev/topaz:latest
+        command: ["/app/topazd"]
+        args: ["run","-c","/config/config.yaml"]
+        # only exposing the ports used by the todo backend app
+        ports:
+        - containerPort: 8282
+        - containerPort: 9292
+        volumeMounts:
+          - name: topaz-config
+            mountPath: "/config/config.yaml"
+            subPath: "config.yaml"
+          - name: shared-certs
+            mountPath: "/root/.config/"
+          - name: topaz-db
+            mountPath: "/db/"
+      - name: todo 
+        image: todo-go-v2:latest
+        # as we upload a local built docker image to minikube we want to ensure it will not try to pull from an upstream registry
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3001
+        volumeMounts:
+          - name: config
+            mountPath: "/app/.env"
+            subPath: ".env"
+          - name: shared-certs
+            mountPath: "/root/.config/"
+      volumes:
+      - name: config
+        configMap:
+          name: "todo"
+          items:
+          - key: ".env"
+            path: ".env"
+      - name: topaz-config
+        configMap:
+          name: "topaz-config"
+      # shared volume between topaz and backend application to access the certs
+      # recommended to use a cert-manager to generate and share the certificates between required parties
+      - name: shared-certs
+        emptyDir: {}
+      # shared volume between topaz and init container to grab the prepared edge directory db file
+      - name: topaz-db
+        emptyDir: {}

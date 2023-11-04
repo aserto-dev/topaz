@@ -206,29 +206,31 @@ jobs:
           distribution: goreleaser
           version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean
-
-      # - name: Archive deployment examples
-      #   run: |
-      #     cd assets/sidecar-deployment && zip topaz_deployment_examples.zip *.yaml
-
-      # - name: Upload deployment examples
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     file: assets/sidecar-deployment
-      #     asset_name: topaz_deployment_examples.zip
-      #     tag: ${{ github.ref }}
-      #     overwrite: false
+      - 
+        name: Archive deployment examples
+        run: |
+          cd assets/sidecar-deployment && zip topaz_deployment_examples.zip *.yaml
+      - 
+        name: Upload deployment examples
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: assets/sidecar-deployment
+          asset_name: topaz_deployment_examples.zip
+          tag: ${{ github.ref }}
+          overwrite: false
 
   msi:
     needs: release
     runs-on: windows-latest
     steps:
-      - name: Checkout
+      - 
+        name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Read Configuration
+      - 
+        name: Read Configuration
         uses: hashicorp/vault-action@v2
         id: vault
         with:
@@ -236,9 +238,11 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/github  "ROOT_TOKEN"        | ROOT_TOKEN;
-      - name: Install hub
+      - 
+        name: Install hub
         run: choco install -y "hub"
-      - name: Download exe
+      - 
+        name: Download exe
         id: download_exe
         shell: bash
         run: |
@@ -247,14 +251,17 @@ jobs:
           unzip -o *.zip && rm -v *.zip
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.ROOT_TOKEN }}
-      - name: Install go-msi
+      - 
+        name: Install go-msi
         run: choco install -y "go-msi"
-      - name: Prepare PATH
+      - 
+        name: Prepare PATH
         shell: bash
         run: |
           echo "$WIX\\bin" >> $GITHUB_PATH
           echo "C:\\Program Files\\go-msi" >> $GITHUB_PATH
-      - name: Build MSI
+      - 
+        name: Build MSI
         id: buildmsi
         shell: bash
         env:
@@ -264,7 +271,8 @@ jobs:
           msi="$(basename "$ZIP_FILE" ".zip").msi"
           printf "msi=${msi}" >> $GITHUB_OUTPUT
           go-msi make --arch amd64 --msi "$PWD/$msi" --out "$PWD/build" --version "${GITHUB_REF#refs/tags/}"
-      - name: Upload MSI
+      - 
+        name: Upload MSI
         shell: bash
         run: |
           tag_name="${GITHUB_REF#refs/tags/}"
