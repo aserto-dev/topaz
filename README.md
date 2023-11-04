@@ -144,8 +144,8 @@ topaz run
 Retrieve the "Citadel" json files, placing them in the current directory:
 
 ```shell
-curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel-objects-v3.json >./citadel-objects.json
-curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel-relations-v3.json >./citadel-relations.json
+curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel/citadel_objects.json >./citadel_objects.json
+curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel/citadel_relations.json >./citadel_relations.json
 ```
 
 Import the contents of the file into Topaz directory. This creates the sample users (Rick, Morty, and friends); groups; and relations.
@@ -223,7 +223,7 @@ Commands:
 Flags:
   -h, --help        Show context-sensitive help.
       --no-check    disable local container status check ($TOPAZ_NO_CHECK)
-      
+
 Run "topaz <command> --help" for more information on a command.
 ```
 
