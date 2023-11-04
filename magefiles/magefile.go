@@ -19,8 +19,9 @@ import (
 const containerImage string = "topaz"
 
 func init() {
-	os.Setenv("GO_VERSION", "1.19")
+	os.Setenv("GO_VERSION", "1.20")
 	os.Setenv("DOCKER_BUILDKIT", "1")
+	os.Setenv("CONSOLE_VERSION", "0.0.0-20231102163131.0.g76203df3")
 }
 
 // Generate generates all code.
@@ -46,11 +47,15 @@ func Lint() error {
 
 // Test runs all tests and generates a code coverage report.
 func Test() error {
-	return common.Test("-timeout", "240s")
+	return common.Test("-timeout", "240s", "-parallel=1")
 }
 
 // DockerImage builds the docker image for the project.
 func DockerImage() error {
+	err := BuildAll()
+	if err != nil {
+		return err
+	}
 	version, err := common.Version()
 	if err != nil {
 		return errors.Wrap(err, "failed to calculate version")
@@ -127,19 +132,13 @@ func Release() error {
 	return common.Release("--rm-dist")
 }
 
-func RunTest() error {
-	return sh.RunV("./dist/topazd_"+runtime.GOOS+"_"+runtime.GOARCH+"/topazd", "--config-file", "./pkg/testing/assets/config-local.yaml", "run")
-}
-
 func Run() error {
-	home, err := os.UserHomeDir()
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return err
 	}
-
-	cfg := path.Join(home, ".config/topaz/cfg/config.yaml")
-	os.Setenv("TOPAZ_DIR", path.Join(home, ".config/topaz"))
-	return sh.RunV("./dist/topazd_"+runtime.GOOS+"_"+runtime.GOARCH+"/topazd", "--config-file", cfg, "run")
+	os.Setenv("TOPAZ_DIR", path.Join(homeDir, ".config", "topaz"))
+	return sh.RunV("./dist/topazd_"+runtime.GOOS+"_"+runtime.GOARCH+"/topazd", "run", "--config-file", "~/.config/topaz/cfg/config.yaml")
 }
 
 func writeVersion() error {

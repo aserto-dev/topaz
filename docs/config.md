@@ -1,5 +1,5 @@
 # Topaz configuration
-The main configuration for Topaz can be divided in 3 main sections:
+The main configuration for Topaz can be devided in 3 main sections:
 1. Common configuration
 2. Auth configuration - optional
 3. Decision logger configuration - optional
@@ -8,82 +8,26 @@ The main configuration for Topaz can be divided in 3 main sections:
 ## Topaz configuration environment variables
 
 ---
-> The topaz service configuration is built using the [spf13/viper](https://github.com/spf13/viper) library so all configuration parameters can be passed to the topazd service as environment variable with the **TOPAZ_** prefix.
+> The topaz service configuration is built using the [spf13/viper](https://github.com/spf13/viper) library so all configuration parameters can be passed to the topazd service as environment variable with the **TOPAZ_** prefix. 
 ---
 
-If you use topaz CLI to generate your configuration file by default it will add the TOPAZ_DIR environment variable to the path configurations. By default this is empty and considered an NOP addition, but it can easily allow you to specify the desired value to the run/start topaz CLI command with the `-e` flag.
+If you use topaz CLI to generate your configuration file by default it will add the TOPAZ_DIR environment variable to the path configurations. By default this is empty and considered an NOP addition, but it can easily allow you to specify the desired value to the run/start topaz CLI command with the `-e` flag. 
 
 By default if you run/start the topaz container using the topaz CLI the following environment variables will be set in your topaz container:
 - TOPAZ_CERTS_DIR - default $HOME/.config/topaz - the directory where topaz will load/generate the certs
 - TOPAZ_CFG_DIR - default $HOME/.config/topaz - the directory from where topaz will load the configuration file
 - TOPAZ_EDS_DIR - default $HOME/.config/topaz - the directory where topaz will store the edge directory DB
 
-Both run and start topaz CLI commands allow passing optional environment variables to your running container using the -e or --env flag. This will allow you to use any desired environment variable in your configuration file as long as you pass it to the container.
-
-You have 2 ways of using the environment variables in your configuration file:
-### 1. Using vipers automatic environment variable binding
-Viper substitutes vales in the config based on the pattern of the environment variable name. The pattern is as follows:
-`TOPAZ_OPA_CONFIG_SERVICES_GHCR_CREDENTIALS_BEARER_SCHEME` will be split in: 
-  - `TOPAZ` - is the prefix that is used to identify the environment variable as a topaz environment variable.
-  - `OPA_CONFIG_SERVICES_GHCR_CREDENTIALS_BEARER_SCHEME` - is converted to the following YAML path: `opa.config.services.ghcr.credentials.bearer.scheme` and it's value is overwritten by the environment variable value.
-
-Only values that are present in the topaz config file will be overwritten by the environment variables.
-In order for the above environment variables to be used in the topaz configuration file the following configuration must be present:
-```yaml
-opa:
-  config:
-    services:
-      ghcr:
-        credentials:
-          bearer:
-            token:
-            scheme:
-```
-and then run topaz with
-```shell
-topaz run --env=TOPAZ_OPA_CONFIG_SERVICES_GHCR_CREDENTIALS_BEARER_TOKEN --env=TOPAZ_OPA_CONFIG_SERVICES_GHCR_CREDENTIALS_BEARER_SCHEME
-```
-
-### 2. Using interpolation
-If you prefer to use interpolation, the name of the environment variable does not have to follow a particular pattern.
-You just need to interpolate it usign `${ENV_NAME}` in your config file
-
-```yaml
-opa:
-  config:
-    services:
-      ghcr:
-        credentials:
-          bearer:
-            token: ${TOKEN}
-            scheme: ${SCHEME}
-```
-and then run topaz with
-```shell
-topaz run --env=TOKEN --env=SCHEME
-```
-
-The interpolation allows you to compose a value from multiple environment variables or a variable and a hardcoded string.
-e.g.
-```yaml
-directory:
-  db_path: ${TOPAZ_DIR}/db/directory.db
-```
-
-and then run the topaz with
-e.g.
-```shell
-topaz run --env=TOPAZ_DIR
-```
+Both run and start topaz CLI commands allow passing optional environment variables to your running container using the -e flag. This will allow you to use any desired environment variable in your configuration file as long as you pass it to the container. 
 
 ## 1. Common configuration
 
 ### a. Version
-The configuration version accepted by the version of topaz - current compatible version: 1
+The configuration version accepted by the version of topaz - current compatible version: 2
 
 ### b. Logging
 The [logging mechanism](https://github.com/aserto-dev/logger) for topaz is based on [zerolog](https://github.com/rs/zerolog) and has the following available settings:
- - *prod* - boolean - if set to false the entire log output will be written using a zerolog ConsoleWriter, setting this to true will write the errors to the stderr output and other logs to the stdout
+ - *prod* - boolean - if set to false the entire log output will be written using a zerolog ConsoleWriter, setting this to true will write the errors to the stderr output and other logs to the stdout 
  - *log_level* - string - this value is parsed by zerolog to match desired logging level (default: info), available levels: trace, debug, info, warn, error, fatal and panic
  - *grpc_log_level* - string - same as above available values, however this is specific for the logged grpc messages, having the default value set to warn
 
@@ -94,9 +38,21 @@ logging:
 ```
 
 ### c. API
-The API section is a map that defines the API configuration for each of the possible services that topaz is able to spin up:["reader","writer","importer","exporter","authorizer"]
+The API section is defines the configuration for the health, metrics and services that topaz is able to spin up. 
+
+#### Health:
+The health configuration allows topaz to spin up a health server.
+- *listen_address* - string - allows the health service to spin up on the configured port (default: "0.0.0.0:9494") 
+- *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. By default the certificates are not configured. 
+#### Metrics:
+The metrics configuration allows topaz to spin up a metric server.
+- *listen_address* - string - allows the metric service to spin up on the configured port (default: "0.0.0.0:9696") 
+- *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. By default the certificates are not configured. 
+- *zpages* - bool - if enabled the metrics server will enable [zpages](https://opencensus.io/zpages/go/) on the "/debug" route
+
+#### Services APIs:
 #### 1. grpc
-The grpc section allows configuring the listen address, the connection timeout and the certificates.
+The grpc section allows configuring the listen address, the connection timeout and the certificates. 
 - *listen_address* - string - allows the topaz GRPC server to spin up on the requested port (default: "0.0.0.0:8282")
 - *connection_timeout_seconds* - uint32 - sets the timeout for a [connection establishment](https://pkg.go.dev/google.golang.org/grpc#ConnectionTimeout) (default: 120)
 - *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. If you do not have your certificates in the specified paths, topaz will generate self-signed certificates for you. By default topaz will generate the certificates in ` ~/.config/topaz/certs/` path
@@ -104,15 +60,15 @@ Example:
 ```
 grpc:
   listen_address: "localhost:8282"
-  connection_timeout_seconds: 160
+  connection_timeout_seconds: 160 
   certs:
-    tls_cert_path: "/certs/grpc.crt"
-    tls_key_path: "/certs/grpc.key"
-    tls_ca_cert_path: "/certs/grpc-ca.crt"
+    tls_cert_path: "/app/grpc.crt"
+    tls_key_path: "/app/grpc.key"
+    tls_ca_cert_path: "/app/grpc-ca.crt"
 ```
 
 #### 2. gateway
-The gateway section allows configuring the [grpc gateway](https://github.com/grpc-ecosystem/grpc-gateway) for your topaz authorizer.
+The gateway section allows configuring the [grpc gateway](https://github.com/grpc-ecosystem/grpc-gateway) for your topaz authorizer. 
 
 - *listen_address* - string - allows the topaz Gateway server to spin up on the requested port (default: "0.0.0.0:8383")
 - *http* - boolean - when set to true it allows the gateway service to respond to plain http request (default: false)
@@ -120,9 +76,9 @@ The gateway section allows configuring the [grpc gateway](https://github.com/grp
 - *allowed_origins* - []string - allows setting the paths for the [CORS handler](https://github.com/rs/cors)
 
 Detailed information about the gateway http server timeout configuration is available [here](https://pkg.go.dev/net/http#Server)
-- *read_timeout* - time.Duration - default value set to 2 * time.Second (default: 2000000000)
-- *read_header_timeout* - time.Duration - default value set to 2 * time.Second (default: 2000000000)
-- *write_timeout* - time.Duration - default value set to 2 * time.Second (default: 2000000000)
+- *read_timeout* - time.Duration - default value set to 2 * time.Second (default: 2000000000) 
+- *read_header_timeout* - time.Duration - default value set to 2 * time.Second (default: 2000000000) 
+- *write_timeout* - time.Duration - default value set to 2 * time.Second (default: 2000000000) 
 - *idle_timeout* - time.Duration - default is set to 30 * time.Second (default: 30000000000)
 
 Example:
@@ -131,26 +87,16 @@ gateway:
   listen_address: "localhost:8383"
   http: false
   certs:
-    tls_cert_path: "/certs/gateway.crt"
-    tls_key_path: "/certs/gateway.key"
-    tls_ca_cert_path: "/certs/gateway-ca.crt"
+    tls_cert_path: "/app/gateway.crt"
+    tls_key_path: "/app/gateway.key"
+    tls_ca_cert_path: "/app/gateway-ca.crt"
   allowed_origins:
   - https://*.aserto.com
   - https://*aserto-console.netlify.app
   - https://*aserto-playground.netlify.app
 ```
 
-#### 3. health
-The health is the simplest of these section as it only allows to set the listen address of the health server. By default the listen address is set to 0.0.0.0:8484
-
-To check the health of your service you can use the available [grpc-health-probe](https://github.com/grpc-ecosystem/grpc-health-probe)
-Example:
-```
-grpc-health-probe --addr=localhost:8484
-status: SERVING
-```
-
-#### 4. needs
+#### 3. needs
 The `needs` section allows adding a dependency between the services started. For example when using an edge directory with a reader service it is recommended to set the authorizer services to be dependent on the reader spin-up to be able to resolve the identity for the authorization calls.
 
 Example:
@@ -158,7 +104,7 @@ Example:
 api:
   reader:
     gateway:
-      listen_address: localhost:9393
+      listen_address: localhost:9393  
     grpc:
       listen_address: localhost:9595
   authorizer:
@@ -171,22 +117,6 @@ api:
     grpc:
       connection_timeout_seconds: 2
 ```
-
-#### 5. metrics
-Allow topaz to spin up a metrics server for the configured API.
-Example:
-```
-api:
-  reader:
-    metrics:
-      listen_address: "localhost:9696"
-    gateway:
-      listen_address: localhost:9393
-    grpc:
-      listen_address: localhost:9595
-```
-
-For this example the metrics data is available at http://localhost:9696/metrics
 
 ### c. Directory
 The directory section allows setting the configuration for the topaz [local edge directory](https://github.com/aserto-dev/go-edge-ds).
@@ -201,7 +131,7 @@ Topaz is able to communicate with a directory service based on the [pb-directory
 The remote address can also be configured to a service that implements the proto definitions (for example, the Postgres-based Aserto directory service). In this case, Topaz will NOT spin-up a local edge directory service, and instead send all directory requests to this remote service.
 - *address* - string - address:port of the remote directory service
 - *api_key* - string - API key for the directory
-- *tenant_id* - string - the directory tenant ID
+- *tenant_id* - string - the directory tenant ID 
 
 Example (using the hosted Aserto directory):
 ```
@@ -215,11 +145,11 @@ remote_directory:
 
 The OPA configuration section represent the [runtime configuration](https://github.com/aserto-dev/runtime/blob/main/config.go). The main elements of the runtime configuration are:
 - *local_bundles* - runtime.LocalBundlesConfig - allows the runtime to run with a local bundle (local path or local policy OCI image)
-- *instance_id* - string - represent the unique identifier of the runtime
+- *instance_id* - string - represent the unique identifier of the runtime 
 - *plugins_error_limit* - int - represents the maximum number of errors that an OPA plugin can trigger before killing the runtime
 - *graceful_shutdown_period_seconds* - int - passed to the runtime plugin manager, this represents the allowed time to stop the running plugins gracefully
 - *max_plugin_wait_time_seconds* - int -  passed to the runtime plugin manager, this represents the maximum wait time for a plugin to spin-up (default: 30)
-- *flags* - runtime.Flags - currently only the boolean *enable_status_plugin* is available. When set to true the runtime status is affected by the OPA status plugin
+- *flags* - runtime.Flags - currently only the boolean *enable_status_plugin* is available. When set to true the runtime status is affected by the OPA status plugin 
 - *config* - runtime.OPAConfig - the details of the [OPA configuration](https://www.openpolicyagent.org/docs/latest/configuration/)
 
 For more details regarding the OPA configuration see [examples folder](/docs/examples/)
@@ -230,7 +160,7 @@ The JWT section allows setting a custom *acceptable_time_skew_seconds* - int - t
 
 
 ## 2. Auth configuration (optional)
-By default Topaz authentication configuration is disabled, however if you want to configure API key basic authentication this section of the configuration allows you to set this up.
+By default Topaz authentication configuration is disabled, however if you want to configure API key basic authentication this section of the configuration allows you to set this up. 
 
 The options section allows you to specify overrides for specific paths if you want to enable the api key authentication or/and the anonymous authentication for these.
 
@@ -249,7 +179,7 @@ auth:
       override:
         enable_anonymous: true
         enable_api_key: false
-
+    
 ```
 
 ## 3. Decision logger configuration (optional)
@@ -277,19 +207,19 @@ opa:
  config:
    plugins:
      aserto_decision_log:
-       enabled: true
+       enabled: true 
        policy_info:
          registry_service: 'ghcr.io'
          registry_image: 'aserto-policies/policy-peoplefinder-rbac'
          digest: 'b36c9fac3c4f3a20e524ef4eca4ac3170e30281fe003b80a499591043299c898'
 ```
 
-When deploying topaz as an [Aserto Edge Authorizer](https://docs.aserto.com/docs/edge-authorizers/overview) you can configure the decision logger to send the logs to the upstream Aserto policy instance. For configuration details see: https://docs.aserto.com/docs/edge-authorizers/decision-logs
+When deploying topaz as an [Aserto Edge Authorizer](https://docs.aserto.com/docs/edge-authorizers/overview) you can configure the decision logger to send the logs to the upstream Aserto policy instance. For configuration details see: https://docs.aserto.com/docs/edge-authorizers/decision-logs 
 
 
 ## 4. Controller configuration (optional)
 
-The controller allows an edge Topaz authorizer to connect to the Aserto Control Plane through a secure mTLS connection.  This way the edge authorizers can sync their running policy with an upstream policy instance and sync their local directory with a remote directory.
+The controller allows an edge Topaz authorizer to connect to the Aserto Control Plane through a secure mTLS connection.  This way the edge authorizers can sync their running policy with an upstream policy instance and sync their local directory with a remote directory. 
 
 For more details on the security and management of edge authorizers see documentation available [here](https://docs.aserto.com/docs/edge-authorizers/security-and-management).
 

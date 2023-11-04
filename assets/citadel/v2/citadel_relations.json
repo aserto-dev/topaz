@@ -1,0 +1,224 @@
+{
+  "relations": [
+    {
+      "subject": {
+        "type": "user",
+        "key": "jerry@the-smiths.com"
+      },
+      "relation": "manager",
+      "object": {
+        "type": "user",
+        "key": "beth@the-smiths.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "beth@the-smiths.com"
+      },
+      "relation": "manager",
+      "object": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "morty@the-citadel.com"
+      },
+      "relation": "manager",
+      "object": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "summer@the-smiths.com"
+      },
+      "relation": "manager",
+      "object": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "beth@the-smiths.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "beth@the-smiths.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "morty@the-citadel.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "summer@the-smiths.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "beth@the-smiths.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "jerry@the-smiths.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "jerry@the-smiths.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "jerry@the-smiths.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "morty@the-citadel.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "morty@the-citadel.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "rick@the-citadel.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "summer@the-smiths.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "summer@the-smiths.com"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      },
+      "relation": "member",
+      "object": {
+        "type": "group",
+        "key": "admin"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "morty@the-citadel.com"
+      },
+      "relation": "member",
+      "object": {
+        "type": "group",
+        "key": "editor"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "summer@the-smiths.com"
+      },
+      "relation": "member",
+      "object": {
+        "type": "group",
+        "key": "editor"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "rick@the-citadel.com"
+      },
+      "relation": "member",
+      "object": {
+        "type": "group",
+        "key": "evil_genius"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "beth@the-smiths.com"
+      },
+      "relation": "member",
+      "object": {
+        "type": "group",
+        "key": "viewer"
+      }
+    },
+    {
+      "subject": {
+        "type": "user",
+        "key": "jerry@the-smiths.com"
+      },
+      "relation": "member",
+      "object": {
+        "type": "group",
+        "key": "viewer"
+      }
+    }
+  ]
+}

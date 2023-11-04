@@ -1,37 +1,16 @@
 package cmd
 
 import (
-	"os"
-	"path"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/fatih/color"
+	"github.com/pkg/errors"
 )
 
 type SaveCmd struct {
-	File string `arg:""  default:"manifest.yaml" help:"absolute path to manifest file"`
+	File string `arg:"" type:"path" default:"manifest.yaml" help:"absolute path to manifest file"`
 	clients.Config
 }
 
 func (cmd *SaveCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
-	}
-
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
-	if err != nil {
-		return err
-	}
-
-	if cmd.File == defaultManifestName {
-		currentDir, err := os.Getwd()
-		if err != nil {
-			return err
-		}
-		cmd.File = path.Join(currentDir, defaultManifestName)
-	}
-
-	color.Green(">>> save manifest to %s", cmd.File)
-	return dirClient.Save(c.Context, cmd.File)
+	return errors.Errorf("The \"topaz save\" command has been deprecated, see \"topaz manifest get\".")
 }

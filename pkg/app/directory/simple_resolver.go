@@ -3,8 +3,8 @@ package directory
 import (
 	"context"
 
-	grpcc "github.com/aserto-dev/go-aserto/client"
-	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	"github.com/aserto-dev/go-aserto/client"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
@@ -12,30 +12,30 @@ import (
 
 type Resolver struct {
 	logger  *zerolog.Logger
-	cfg     *grpcc.Config
-	dirConn *grpcc.Connection
+	cfg     *client.Config
+	dirConn *client.Connection
 }
 
 var _ resolvers.DirectoryResolver = &Resolver{}
 
 // The simple directory resolver returns a simple directory reader client.
-func NewResolver(logger *zerolog.Logger, cfg *grpcc.Config) resolvers.DirectoryResolver {
+func NewResolver(logger *zerolog.Logger, cfg *client.Config) resolvers.DirectoryResolver {
 	return &Resolver{
 		logger: logger,
 		cfg:    cfg,
 	}
 }
 
-func connect(logger *zerolog.Logger, cfg *grpcc.Config) (*grpcc.Connection, error) {
+func connect(logger *zerolog.Logger, cfg *client.Config) (*client.Connection, error) {
 	logger.Debug().Str("tenant-id", cfg.TenantID).Str("addr", cfg.Address).Str("apiKey", cfg.APIKey).Bool("insecure", cfg.Insecure).Msg("GetDS")
 
 	ctx := context.Background()
 
-	conn, err := grpcc.NewConnection(ctx,
-		grpcc.WithAddr(cfg.Address),
-		grpcc.WithAPIKeyAuth(cfg.APIKey),
-		grpcc.WithTenantID(cfg.TenantID),
-		grpcc.WithInsecure(cfg.Insecure),
+	conn, err := client.NewConnection(ctx,
+		client.WithAddr(cfg.Address),
+		client.WithAPIKeyAuth(cfg.APIKey),
+		client.WithTenantID(cfg.TenantID),
+		client.WithInsecure(cfg.Insecure),
 	)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func connect(logger *zerolog.Logger, cfg *grpcc.Config) (*grpcc.Connection, erro
 }
 
 // GetDS - returns a directory reader service client.
-func (r *Resolver) GetDS(ctx context.Context) (dsr2.ReaderClient, error) {
+func (r *Resolver) GetDS(ctx context.Context) (dsr3.ReaderClient, error) {
 	if r.dirConn == nil {
 		dirConn, err := connect(r.logger, r.cfg)
 		if err != nil {
@@ -52,5 +52,5 @@ func (r *Resolver) GetDS(ctx context.Context) (dsr2.ReaderClient, error) {
 		}
 		r.dirConn = dirConn
 	}
-	return dsr2.NewReaderClient(r.dirConn.Conn), nil
+	return dsr3.NewReaderClient(r.dirConn.Conn), nil
 }

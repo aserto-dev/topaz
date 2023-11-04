@@ -10,14 +10,21 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/aserto-dev/go-aserto/client"
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
 
 // CreateClient creates a new http client that can talk to the API.
 func (h *EngineHarness) CreateClient() *http.Client {
-	authorizerAPIConfig, ok := h.Engine.Configuration.Services["authorizer"]
+	authorizerAPIConfig, ok := h.Engine.Configuration.APIConfig.Services["authorizer"]
 	if !ok {
 		log.Fatal("no authorizer configuration found")
 	}
@@ -61,7 +68,8 @@ func (h *EngineHarness) Req(verb, path, tenantID, body string) (string, int) {
 }
 
 func (h *EngineHarness) CreateGRPCClient() authz2.AuthorizerClient {
-	authorizerAPIConfig, ok := h.Engine.Configuration.Services["authorizer"]
+
+	authorizerAPIConfig, ok := h.Engine.Configuration.APIConfig.Services["authorizer"]
 	if !ok {
 		log.Fatal("no authorizer configuration found")
 	}
@@ -86,4 +94,37 @@ func (h *EngineHarness) CreateGRPCClient() authz2.AuthorizerClient {
 		h.t.Fatal(err)
 	}
 	return authz2.NewAuthorizerClient(conn)
+}
+
+type DirectoryClient struct {
+	Model    dsm3.ModelClient
+	Reader   dsr3.ReaderClient
+	Writer   dsw3.WriterClient
+	Importer dsi3.ImporterClient
+	Exporter dse3.ExporterClient
+}
+
+func (h *EngineHarness) CreateDirectoryClient(ctx context.Context) *DirectoryClient {
+	readerAPIConfig, ok := h.Engine.Configuration.APIConfig.Services["reader"]
+	if !ok {
+		log.Fatal("no reader configuration found")
+	}
+
+	c, err := client.NewConnection(
+		ctx,
+		client.WithAddr(readerAPIConfig.GRPC.ListenAddress),
+		client.WithCACertPath(readerAPIConfig.GRPC.Certs.TLSCACertPath),
+		client.WithInsecure(true),
+	)
+	if err != nil {
+		h.t.Fatal(err)
+	}
+
+	return &DirectoryClient{
+		Model:    dsm3.NewModelClient(c.Conn),
+		Reader:   dsr3.NewReaderClient(c.Conn),
+		Writer:   dsw3.NewWriterClient(c.Conn),
+		Importer: dsi3.NewImporterClient(c.Conn),
+		Exporter: dse3.NewExporterClient(c.Conn),
+	}
 }

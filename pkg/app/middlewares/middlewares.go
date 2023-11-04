@@ -41,6 +41,7 @@ func GetMiddlewaresForService(ctx context.Context, cfg *config.Config, logger *z
 
 	var opts []grpc.ServerOption
 	unary, stream := middlewareList.AsGRPCOptions()
+
 	opts = append(opts, unary, stream)
 
 	return opts, nil

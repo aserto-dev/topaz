@@ -1,0 +1,214 @@
+{
+  "relations": [
+    {
+      "object_type": "identity",
+      "object_id": "1",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "luke@yavin4base.mil"
+    },
+    {
+      "object_type": "identity",
+      "object_id": "2",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "leia@yavin4base.mil"
+    },
+    {
+      "object_type": "identity",
+      "object_id": "3",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "han@yavin4base.mil"
+    },
+    {
+      "object_type": "identity",
+      "object_id": "4",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "r2d2@droids.yavin4base.mil"
+    },
+    {
+      "object_type": "identity",
+      "object_id": "3",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "c3po@droids.yavin4base.mil"
+    },
+    {
+      "object_type": "identity",
+      "object_id": "luke@yavin4base.mil",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "luke@yavin4base.mil"
+    },
+    {
+      "object_type": "identity",
+      "object_id": "2",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "leia@yavin4base.mil"
+    },
+    {
+      "object_type": "identity",
+      "object_id": "leia@yavin4base.mil",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "han@yavin4base.mil"
+    },
+    {
+      "object_type": "identity",
+      "object_id": "r2d2@yavin4base.mil",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "r2d2@droids.yavin4base.mil"
+    },
+    {
+      "object_type": "identity",
+      "object_id": "c3po@yavin4base.mil",
+      "relation": "identifier",
+      "subject_type": "user",
+      "subject_id": "c3po@droids.yavin4base.mil"
+    },
+    {
+      "object_type": "group",
+      "object_id": "everyone",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "luke.yavin4base.mil"
+    },
+    {
+      "object_type": "group",
+      "object_id": "everyone",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "leia.yavin4base.mil"
+    },
+    {
+      "object_type": "group",
+      "object_id": "everyone",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "han.yavin4base.mil"
+    },
+    {
+      "object_type": "group",
+      "object_id": "everyone",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "r2d2.droids.yavin4base.mil"
+    },
+    {
+      "object_type": "group",
+      "object_id": "everyone",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "c3po.droids.yavin4base.mil"
+    },
+    {
+      "object_type": "group",
+      "object_id": "strike-team",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "luke.yavin4base.mil"
+    },
+    {
+      "object_type": "group",
+      "object_id": "strike-team",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "leia.yavin4base.mil"
+    },
+    {
+      "object_type": "group",
+      "object_id": "strike-team",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "han.yavin4base.mil"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "missions",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "death-star",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "missions"
+    },
+    {
+      "object_type": "document",
+      "object_id": "siteplan.png",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "death-star"
+    },
+    {
+      "object_type": "document",
+      "object_id": "striketeam.xls",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "death-star"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "missions",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "clone-wars"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "missions",
+      "relation": "editor",
+      "subject_type": "group",
+      "subject_id": "strike-team"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "death-star",
+      "relation": "editor",
+      "subject_type": "group",
+      "subject_id": "strike-team"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "general",
+      "relation": "viewer",
+      "subject_type": "group",
+      "subject_id": "everyone"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "general",
+      "relation": "viewer",
+      "subject_type": "user",
+      "subject_id": "lea@yavin4base.mil"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "general",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "document",
+      "object_id": "dining-menu.pdf",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "general"
+    },
+    {
+      "object_type": "document",
+      "object_id": "rebel-handbook.pdf",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "general"
+    }
+  ]
+}

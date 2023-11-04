@@ -1,0 +1,8 @@
+{
+  "assertions": [
+    {"check_permission":{"object":{"type":"document","key":"someresource"},"permission":{"name":"read"},"subject":{"type":"user","key":"somegal"}},"expected":true},
+    {"check_permission":{"object":{"type":"document","key":"someresource"},"permission":{"name":"read"},"subject":{"type":"user","key":"anotherguy"}},"expected":true},
+    {"check_permission":{"object":{"type":"document","key":"someresource"},"permission":{"name":"write"},"subject":{"type":"user","key":"anotherguy"}},"expected":true},
+    {"check_permission":{"object":{"type":"document","key":"someresource"},"permission":{"name":"write"},"subject":{"type":"user","key":"somegal"}},"expected":false}
+  ]
+}

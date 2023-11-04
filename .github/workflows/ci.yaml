@@ -19,44 +19,43 @@ on:
 env:
   VAULT_ADDR: https://vault.eng.aserto.com/
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
-  GO_VERSION: "1.19"
+  GO_VERSION: "1.20"
+  GO_RELEASER_VERSION: "v1.20.0"
+  GO_LANGCI_LINT_VERSION: "v1.53.3"
+  GO_TESTSUM_VERSION: "1.10.1"
+  CONSOLE_VERSION: "0.0.0-20231102163131.0.g76203df3"
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       -
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       -
         name: Setup Go
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
       -
-        name: Setup caching
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-      -
         name: Build
-        run: |
-          go build -o ./bin/topaz ./cmd/topaz/
-          go build -o ./bin/topazd ./cmd/topazd/
+        uses: goreleaser/goreleaser-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          distribution: goreleaser
+          version: ${{ env.GO_RELEASER_VERSION }}
+          args: build --clean --snapshot --single-target
       -
         name: Lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.52.2
+          version: ${{ env.GO_LANGCI_LINT_VERSION }}
+          args: --timeout=30m
       -
         name: Test Setup
         uses: autero1/action-gotestsum@v2.0.0
         with:
-          gotestsum_version: 1.10.0
+          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
       -
         name: Test
         run: |
@@ -67,6 +66,7 @@ jobs:
         continue-on-error: true
         with:
           path-to-profile: cover.out
+
   push:
     runs-on: ubuntu-latest
     # when on a branch only push if the branch is main
@@ -75,7 +75,7 @@ jobs:
     steps:
       -
         name: Read Configuration
-        uses: hashicorp/vault-action@v2.5.0
+        uses: hashicorp/vault-action@v2
         id: vault
         with:
           url: https://vault.eng.aserto.com/
@@ -86,7 +86,7 @@ jobs:
             kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
             kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
       -
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       -
@@ -94,16 +94,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
-      -
-        name: Setup caching
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v2
@@ -142,7 +132,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
-          version: v1.20.0
+          version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -155,7 +145,7 @@ jobs:
     steps:
       -
         name: Read Configuration
-        uses: hashicorp/vault-action@v2.5.0
+        uses: hashicorp/vault-action@v2
         id: vault
         with:
           url: https://vault.eng.aserto.com/
@@ -168,7 +158,7 @@ jobs:
             kv/data/github  "ASERTO_TAP"                              | ASERTO_TAP;
             kv/data/gcp     "SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE"  | SERVICE_ACCOUNT_GITHUB_ACTIONS_RELEASE;
       -
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       -
@@ -176,16 +166,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
-      -
-        name: Setup caching
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v2
@@ -224,7 +204,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/gs.json
         with:
           distribution: goreleaser
-          version: v1.20.0
+          version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean
 
       - name: Archive deployment examples
@@ -245,11 +225,11 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Read Configuration
-        uses: hashicorp/vault-action@v2.5.0
+        uses: hashicorp/vault-action@v2
         id: vault
         with:
           url: ${{ env.VAULT_ADDR }}

@@ -27,7 +27,6 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
 		}
 	}
-
 	if !cmd.Stdout {
 		color.Green(">>> configure policy")
 	}
@@ -63,12 +62,13 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		EdgeDirectory:    cmd.EdgeDirectory,
 		SeedMetadata:     cmd.SeedMetadata,
 	}
-	if params.LocalPolicyImage != "" {
-		color.Green("using local policy image: %s", params.LocalPolicyImage)
-		return WriteConfig(w, localImageTemplate, &params)
-	}
 
 	if !cmd.Stdout {
+		if params.LocalPolicyImage != "" {
+			color.Green("using local policy image: %s", params.LocalPolicyImage)
+			return WriteConfig(w, localImageTemplate, &params)
+		}
+
 		color.Green("policy name: %s", params.PolicyName)
 	}
 

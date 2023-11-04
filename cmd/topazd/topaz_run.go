@@ -24,7 +24,7 @@ var cmdRun = &cobra.Command{
 	Long:  `Start instance of the Topaz authorization service.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		configPath := config.Path(flagRunConfigFile)
-		authorizer, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, func(cfg *config.Config) {
+		topazApp, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, func(cfg *config.Config) {
 			cfg.Command.Mode = config.CommandModeRun
 
 			if len(flagRunBundleFiles) > 0 {
@@ -41,40 +41,43 @@ var cmdRun = &cobra.Command{
 		})
 		defer func() {
 			if cleanup != nil {
+				topazApp.Manager.StopServers(topazApp.Context)
 				cleanup()
 			}
 		}()
 		if err != nil {
 			return err
 		}
-		err = authorizer.ConfigServices()
+		err = topazApp.ConfigServices()
 		if err != nil {
 			return err
 		}
-		if _, ok := authorizer.Services["topaz"]; ok {
-			directory := topaz.DirectoryResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration)
-			decisionlog, err := authorizer.GetDecisionLogger(authorizer.Configuration.DecisionLogger)
+		if _, ok := topazApp.Services["authorizer"]; ok {
+			directory := topaz.DirectoryResolver(topazApp.Context, topazApp.Logger, topazApp.Configuration)
+			decisionlog, err := topazApp.GetDecisionLogger(topazApp.Configuration.DecisionLogger)
 			if err != nil {
 				return err
 			}
 
-			controllerFactory := controller.NewFactory(authorizer.Logger, authorizer.Configuration.ControllerConfig, client.NewDialOptionsProvider())
+			controllerFactory := controller.NewFactory(topazApp.Logger, topazApp.Configuration.ControllerConfig, client.NewDialOptionsProvider())
 
-			runtime, _, err := topaz.NewRuntimeResolver(authorizer.Context, authorizer.Logger, authorizer.Configuration, controllerFactory, decisionlog, directory)
+			runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(topazApp.Context, topazApp.Logger, topazApp.Configuration, controllerFactory, decisionlog, directory)
 			if err != nil {
 				return err
 			}
 
-			authorizer.Services["topaz"].(*app.Topaz).Resolver.SetRuntimeResolver(runtime)
-			authorizer.Services["topaz"].(*app.Topaz).Resolver.SetDirectoryResolver(directory)
+			defer runtimeCleanup()
+
+			topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(runtime)
+			topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
 		}
 
-		err = authorizer.Start()
+		err = topazApp.Start()
 		if err != nil {
 			return err
 		}
 
-		<-authorizer.Context.Done()
+		<-topazApp.Context.Done()
 
 		return nil
 	},

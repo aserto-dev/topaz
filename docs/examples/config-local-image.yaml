@@ -1,12 +1,9 @@
 # If you follow the [topaz quickstart guide](https://github.com/aserto-dev/topaz#quickstart) and you wish to run an local image that you built with [policy CLI](https://github.com/opcr-io/policy) you can use the `topaz configure -d -s -l ghcr.io/default:latest` to generate this example configuration.
 # In this case the `ghcr.io/default:latest` policy image is set as your *local_policy_image*. In this example this values is set with the assumption that you [build your policy image](https://openpolicycontainers.com/docs/cli/build) without setting a custom tag.
-# Using topaz with a local policy image gives you an easier method to ensure that your policies work as you desire before pushing an image to an upstream container registry.
-# If you have started topaz with this configuration, if you rebuild the image, any changes will be reflected in your topaz runtime bundle.
-
-# yaml-language-server: $schema=https://topaz.sh/schema/config.json
+# Using topaz with a local policy image gives you an easier method to ensure that your policies work as you desire before pushing an image to an upstream container registry. 
+# If you have started topaz with this configuration, if you rebuild the image, any changes will be reflected in your topaz runtime bundle. 
 ---
-version: 1
-
+version: 2
 logging:
   prod: true
   log_level: info
@@ -14,32 +11,33 @@ logging:
 directory:
   db_path: ${TOPAZ_DIR}/db/directory.db
   seed_metadata: true
-
+    
 remote_directory:
   address: "localhost:9292"
   insecure: true
-
+    
 api:
-  authorizer:
-    grpc:
-      connection_timeout_seconds: 2
-      listen_address: "localhost:8282"
-      certs:
-        tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-        tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-        tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
-    gateway:
-      listen_address: "localhost:8383"
-      allowed_origins:
-      - https://*.aserto.com
-      - https://*aserto-console.netlify.app
-      certs:
-        tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
-        tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
-        tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
-    health:
-      listen_address: "localhost:8484"
-
+  health:
+    listen_address: "localhost:8484"
+  services:
+    authorizer:
+      grpc:
+        connection_timeout_seconds: 2
+        listen_address: "localhost:8282"
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+      gateway:
+        listen_address: "localhost:8383"
+        allowed_origins:
+        - https://*.aserto.com
+        - https://*aserto-console.netlify.app
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+    
 opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2

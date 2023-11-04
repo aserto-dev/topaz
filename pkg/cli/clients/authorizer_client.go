@@ -3,7 +3,7 @@ package clients
 import (
 	"context"
 
-	grpcClient "github.com/aserto-dev/go-aserto/client"
+	azc "github.com/aserto-dev/go-aserto/client"
 	"github.com/fullstorydev/grpcurl"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -30,20 +30,20 @@ func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.Aut
 		return nil, err
 	}
 
-	opts := []grpcClient.ConnectionOption{
-		grpcClient.WithAddr(cfg.Host),
-		grpcClient.WithInsecure(cfg.Insecure),
+	opts := []azc.ConnectionOption{
+		azc.WithAddr(cfg.Host),
+		azc.WithInsecure(cfg.Insecure),
 	}
 
 	if cfg.APIKey != "" {
-		opts = append(opts, grpcClient.WithAPIKeyAuth(cfg.APIKey))
+		opts = append(opts, azc.WithAPIKeyAuth(cfg.APIKey))
 	}
 
 	if cfg.TenantID != "" {
-		opts = append(opts, grpcClient.WithTenantID(cfg.TenantID))
+		opts = append(opts, azc.WithTenantID(cfg.TenantID))
 	}
 
-	conn, err := grpcClient.NewConnection(c.Context, opts...)
+	conn, err := azc.NewConnection(c.Context, opts...)
 	if err != nil {
 		return nil, err
 	}

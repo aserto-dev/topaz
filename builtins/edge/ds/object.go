@@ -3,10 +3,9 @@ package ds
 import (
 	"bytes"
 
-	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/pkg/convert"
 	"github.com/aserto-dev/topaz/resolvers"
-	"google.golang.org/protobuf/proto"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -14,13 +13,24 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"google.golang.org/protobuf/proto"
 )
 
 // RegisterObject - ds.object
 //
+// v3 (latest) request format:
+//
 //	ds.object({
-//		"type": ""
-//		"key": "",
+//		"object_type": "",
+//		"object_id": "",
+//		"with_relation": false
+//	})
+//
+// v2 request format:
+//
+//	ds.object({
+//		"type": "",
+//		"key": ""
 //	})
 func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
@@ -29,18 +39,44 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var a *dsc2.ObjectIdentifier
 
-			if err := ast.As(op1.Value, &a); err != nil {
-				return nil, err
+			var (
+				args struct {
+					ObjectType    string `json:"object_type,omitempty"` // v3 object_type
+					ObjectID      string `json:"object_id,omitempty"`   // v3 object_id
+					WithRelations bool   `json:"with_relations"`        // v3 with_relations (false in case of v2)
+					Type          string `json:"type,omitempty"`        // v2 type
+					Key           string `json:"key,omitempty"`         // v2 key
+				}
+				outputV2 bool
+				req      *dsr3.GetObjectRequest
+			)
+
+			if err := ast.As(op1.Value, &args); err != nil {
+				return nil, errors.Wrapf(err, "failed to parse ds.object input message")
 			}
 
-			if a.Type == nil && a.Key == nil {
-				a = &dsc2.ObjectIdentifier{
-					Type: proto.String(""),
-					Key:  proto.String(""),
+			req = &dsr3.GetObjectRequest{
+				ObjectType:    args.ObjectType,
+				ObjectId:      args.ObjectID,
+				WithRelations: args.WithRelations,
+			}
+
+			if args.ObjectType == "" && args.ObjectID == "" && args.Type != "" && args.Key != "" {
+				req = &dsr3.GetObjectRequest{
+					ObjectType:    args.Type,
+					ObjectId:      args.Key,
+					WithRelations: false,
 				}
-				return help(fnName, a)
+				outputV2 = true
+			}
+
+			if proto.Equal(req, &dsr3.GetObjectRequest{}) {
+				return helpMsg(fnName, &dsr3.GetObjectRequest{
+					ObjectType:    "",
+					ObjectId:      "",
+					WithRelations: false,
+				})
 			}
 
 			client, err := dr.GetDS(bctx.Context)
@@ -48,17 +84,22 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
-			resp, err := client.GetObject(bctx.Context, &dsr2.GetObjectRequest{
-				Param: a,
-			})
+			resp, err := client.GetObject(bctx.Context, req)
 			if err != nil {
 				traceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			buf := new(bytes.Buffer)
+			var result proto.Message
+
 			if resp.Result != nil {
-				if err := ProtoToBuf(buf, resp.Result); err != nil {
+				result = resp.Result
+				if outputV2 {
+					result = convert.ObjectToV2(resp.Result)
+				}
+
+				if err := ProtoToBuf(buf, result); err != nil {
 					return nil, err
 				}
 			}

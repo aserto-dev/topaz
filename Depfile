@@ -23,4 +23,4 @@ go:
     version: "v1.3.1"
   grpcurl:
     importPath: "github.com/fullstorydev/grpcurl/cmd/grpcurl"
-    version: "v1.8.7"
+    version: "v1.8.8"

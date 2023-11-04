@@ -1,0 +1,225 @@
+{
+  "objects": [
+    {
+      "key": "1",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "2",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "3",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "4",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "5",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "6",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "luke@yavin4base.mil",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "leia@yavin4base.mil",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "han@yavin4base.mil",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "r2d2@droids.yavin4base.mil",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "c3po@droids.yavin4base.mil",
+      "type": "identity",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "key": "luke@yavin4base.mil",
+      "type": "user",
+      "display_name": "Luke Skywalker",
+      "properties": {
+        "email": "luke@yavin4base.mil",
+        "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/luke.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "key": "leia@yavin4base.mil",
+      "type": "user",
+      "display_name": "Leia Skywalker",
+      "properties": {
+        "email": "leia@yavin4base.mil",
+        "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/leia.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "key": "han@yavin4base.mil",
+      "type": "user",
+      "display_name": "Han Solo",
+      "properties": {
+        "email": "han@yavin4base.mil",
+        "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/han.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "key": "r2d2@droids.yavin4base.mil",
+      "type": "user",
+      "display_name": "R2D2",
+      "properties": {
+        "email": "r2d2@droids.yavin4base.mil",
+        "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/r2d2.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "key": "r2d2@droids.yavin4base.mil",
+      "type": "user",
+      "display_name": "C3PO",
+      "properties": {
+        "email": "c3po@droids.yavin4base.mil",
+        "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/c3po.jpg",
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "key": "everyone",
+      "type": "group",
+      "display_name": "everyone-group",
+      "properties": {}
+    },
+    {
+      "key": "strike-team",
+      "type": "group",
+      "display_name": "strike-team-group",
+      "properties": {}
+    },
+    {
+      "key": "root",
+      "type": "folder",
+      "display_name": "root-folder",
+      "properties": {}
+    },
+    {
+      "key": "missions",
+      "type": "folder",
+      "display_name": "missions-folder",
+      "properties": {}
+    },
+    {
+      "key": "death-star",
+      "type": "folder",
+      "display_name": "death-star",
+      "properties": {}
+    },
+    {
+      "key": "clone-wars",
+      "type": "folder",
+      "display_name": "clone-wars-folder",
+      "properties": {}
+    },
+    {
+      "key": "general",
+      "type": "folder",
+      "display_name": "general-folder",
+      "properties": {}
+    },
+    {
+      "key": "clone-wars",
+      "type": "folder",
+      "display_name": "clone-wars-folder",
+      "properties": {}
+    },
+    {
+      "key": "siteplan.png",
+      "type": "document",
+      "display_name": "siteplan.png-document",
+      "properties": {}
+    },
+    {
+      "key": "striketeam.xls",
+      "type": "document",
+      "display_name": "striketeam.xls-document",
+      "properties": {}
+    },
+    {
+      "key": "dining-menu.pdf",
+      "type": "document",
+      "display_name": "dining-menu.pdf-document",
+      "properties": {}
+    },
+    {
+      "key": "rebel-handbook.pdf",
+      "type": "document",
+      "display_name": "rebel-handbook.pdf-document",
+      "properties": {}
+    }
+  ]
+}

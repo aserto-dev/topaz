@@ -8,6 +8,7 @@ env:
 before:
   # https://goreleaser.com/customization/hooks/
   hooks:
+      - ./pre-build.sh {{ .Env.CONSOLE_VERSION }}
 
 builds:
   # https://goreleaser.com/customization/build/
@@ -160,7 +161,7 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
-      - "--label=org.opencontainers.image.description=Topaz Authorizer"
+      - "--label=org.opencontainers.image.description=Topaz"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
 
   - use: buildx
@@ -177,7 +178,7 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
-      - "--label=org.opencontainers.image.description=Topaz Authorizer"
+      - "--label=org.opencontainers.image.description=Topaz"
       - "--label=org.opencontainers.image.licenses=Apache-2.0"
 
 docker_manifests:

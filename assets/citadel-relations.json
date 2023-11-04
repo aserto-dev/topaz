@@ -168,12 +168,12 @@
     {
       "subject": {
         "type": "user",
-        "key": "summer@the-smiths.com"
-      },
-      "relation": "manager",
-      "object": {
-        "type": "user",
         "key": "rick@the-citadel.com"
+      },
+      "relation": "identifier",
+      "object": {
+        "type": "identity",
+        "key": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
       }
     },
     {
@@ -190,7 +190,7 @@
     {
       "subject": {
         "type": "user",
-        "key": "beth@the-smiths.com"
+        "key": "summer@the-smiths.com"
       },
       "relation": "manager",
       "object": {
@@ -207,17 +207,6 @@
       "object": {
         "type": "user",
         "key": "beth@the-smiths.com"
-      }
-    },
-    {
-      "subject": {
-        "type": "user",
-        "key": "rick@the-citadel.com"
-      },
-      "relation": "identifier",
-      "object": {
-        "type": "identity",
-        "key": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
       }
     }
   ]

@@ -18,8 +18,8 @@ func AssetsDir() string {
 	return filepath.Join(filepath.Dir(filename), "assets")
 }
 
-// AssetAcmeEBBFilePath returns the path of the test contoso EDS database file.
-func AssetAcmeEBBFilePath() string {
+// AssetAcmeDBFilePath returns the path of the test contoso EDS database file.
+func AssetAcmeDBFilePath() string {
 	const filename = "eds-acmecorp.db"
 	srcFile := filepath.Join(AssetsDir(), filename)
 	dstFile := filepath.Join(os.TempDir(), filename)

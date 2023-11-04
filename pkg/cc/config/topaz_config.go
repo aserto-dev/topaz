@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-const ConfigFileVersion = 1
+const ConfigFileVersion = 2
 
 type Config struct {
 	Common           `json:",squash"`   // nolint:staticcheck // squash is used by mapstructure
@@ -62,11 +62,15 @@ func (co *CallOptions) ForPath(path string) *Options {
 func defaults(v *viper.Viper) {
 }
 
-func (c *Config) validation() error {
-	if c.Version != ConfigFileVersion {
+func validateVersion(version int) error {
+	if version != ConfigFileVersion {
 		return errors.New("unsupported config version")
 	}
-	if _, ok := c.Services["authorizer"]; ok {
+	return nil
+}
+
+func (c *Config) validation() error {
+	if _, ok := c.APIConfig.Services["authorizer"]; ok {
 		if c.Command.Mode == CommandModeRun && c.OPA.InstanceID == "" {
 			return errors.New("opa.instance_id not set")
 		}
@@ -75,7 +79,7 @@ func (c *Config) validation() error {
 		}
 	}
 
-	if len(c.Services) == 0 {
+	if len(c.APIConfig.Services) == 0 {
 		return errors.New("no api services configured")
 	}
 

@@ -12,7 +12,7 @@ import (
 	dsw2 "github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
 	"golang.org/x/sync/errgroup"
 
-	dsClient "github.com/aserto-dev/go-aserto/client"
+	"github.com/aserto-dev/go-aserto/client"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 
 	"github.com/rs/zerolog"
@@ -260,35 +260,35 @@ func (s *Sync) getTopazDirectoryClient() (*directoryClient, error) {
 
 	caCertPath := ""
 	// when reader registered to same port as authorizer.
-	if conf, ok := s.topazConfig.Common.Services["authorizer"]; ok {
+	if conf, ok := s.topazConfig.Common.APIConfig.Services["authorizer"]; ok {
 		if conf.GRPC.ListenAddress == s.topazConfig.DirectoryResolver.Address {
 			caCertPath = conf.GRPC.Certs.TLSCACertPath
 			host = conf.GRPC.ListenAddress
 		}
 	}
 	// if reader api configured separately.
-	if conf, ok := s.topazConfig.Common.Services["writer"]; ok {
+	if conf, ok := s.topazConfig.Common.APIConfig.Services["writer"]; ok {
 		host = conf.GRPC.ListenAddress
 		caCertPath = conf.GRPC.Certs.TLSCACertPath
 	}
 
-	opts := []dsClient.ConnectionOption{
-		dsClient.WithAddr(host),
-		dsClient.WithInsecure(s.topazConfig.DirectoryResolver.Insecure),
-		dsClient.WithCACertPath(caCertPath),
+	opts := []client.ConnectionOption{
+		client.WithAddr(host),
+		client.WithInsecure(s.topazConfig.DirectoryResolver.Insecure),
+		client.WithCACertPath(caCertPath),
 	}
 
 	if s.topazConfig.DirectoryResolver.APIKey != "" {
-		opts = append(opts, dsClient.WithAPIKeyAuth(s.topazConfig.DirectoryResolver.APIKey))
+		opts = append(opts, client.WithAPIKeyAuth(s.topazConfig.DirectoryResolver.APIKey))
 	}
 
-	opts = append(opts, dsClient.WithSessionID(s.cfg.SessionID))
+	opts = append(opts, client.WithSessionID(s.cfg.SessionID))
 
 	if s.topazConfig.DirectoryResolver.TenantID != "" {
-		opts = append(opts, dsClient.WithTenantID(s.topazConfig.DirectoryResolver.TenantID))
+		opts = append(opts, client.WithTenantID(s.topazConfig.DirectoryResolver.TenantID))
 	}
 
-	conn, err := dsClient.NewConnection(s.ctx, opts...)
+	conn, err := client.NewConnection(s.ctx, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -308,24 +308,24 @@ func (s *Sync) getPluginDirectoryClient() (*directoryClient, error) {
 		host = s.cfg.Addr
 	}
 
-	opts := []dsClient.ConnectionOption{
-		dsClient.WithAddr(host),
-		dsClient.WithInsecure(s.cfg.Insecure),
+	opts := []client.ConnectionOption{
+		client.WithAddr(host),
+		client.WithInsecure(s.cfg.Insecure),
 	}
 
 	if s.cfg.APIKey != "" {
-		opts = append(opts, dsClient.WithAPIKeyAuth(s.cfg.APIKey))
+		opts = append(opts, client.WithAPIKeyAuth(s.cfg.APIKey))
 	}
 
 	if s.cfg.SessionID != "" {
-		opts = append(opts, dsClient.WithSessionID(s.cfg.SessionID))
+		opts = append(opts, client.WithSessionID(s.cfg.SessionID))
 	}
 
 	if s.cfg.TenantID != "" {
-		opts = append(opts, dsClient.WithTenantID(s.cfg.TenantID))
+		opts = append(opts, client.WithTenantID(s.cfg.TenantID))
 	}
 
-	conn, err := dsClient.NewConnection(s.ctx, opts...)
+	conn, err := client.NewConnection(s.ctx, opts...)
 	if err != nil {
 		return nil, err
 	}
