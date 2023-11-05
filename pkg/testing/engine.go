@@ -9,7 +9,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -52,14 +51,14 @@ func (h *EngineHarness) Cleanup() {
 	}, ten*time.Second, ten*time.Millisecond)
 }
 
-func (h *EngineHarness) Runtime() *runtime.Runtime {
-	if _, ok := h.Engine.Services["authorizer"]; ok {
-		result, err := h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
-		require.NoError(h.t, err)
-		return result
-	}
-	return nil
-}
+// func (h *EngineHarness) Runtime() *runtime.Runtime {
+// 	if _, ok := h.Engine.Services["authorizer"]; ok {
+// 		result, err := h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
+// 		require.NoError(h.t, err)
+// 		return result
+// 	}
+// 	return nil
+// }
 
 func (h *EngineHarness) Context() context.Context {
 	return context.Background()
