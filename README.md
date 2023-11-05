@@ -144,8 +144,8 @@ topaz run
 Retrieve the "Citadel" json files, placing them in the current directory:
 
 ```shell
-curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel-objects.json >./citadel-objects.json
-curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel-relations.json >./citadel-relations.json
+curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel/citadel_objects.json >./citadel_objects.json
+curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel/citadel_relations.json >./citadel_relations.json
 ```
 
 Import the contents of the file into Topaz directory. This creates the sample users (Rick, Morty, and friends); groups; and relations.
@@ -198,23 +198,31 @@ Usage: topaz <command>
 Topaz CLI
 
 Commands:
-  backup       backup directory data
-  configure    configure topaz service
-  export       export directory objects
-  install      install topaz
-  import       import directory objects
-  load         load a manifest file
-  restore      restore directory data
-  run
-  save         save a manifest file
-  start        start topaz instance
-  status       display topaz instance status
-  stop         stop topaz instance
-  version      version information
-  uninstall    uninstall topaz, removes all locally installed artifacts
+  start              start topaz in daemon mode
+  stop               stop topaz instance
+  status             status of topaz daemon process
+  run                run topaz in console mode
+  manifest get       get manifest
+  manifest set       set manifest
+  manifest delete    delete manifest
+  load               load manifest from file
+  save               save manifest to file
+  import             import directory objects
+  export             export directory objects
+  backup             backup directory data
+  restore            restore directory data
+  test exec          execute assertions
+  test template      output assertions template
+  install            install topaz container
+  configure          configure topaz service
+  update             update topaz container version
+  uninstall          uninstall topaz container
+  version            version information
+  console            opens the console in the browser
 
 Flags:
-  -h, --help    Show context-sensitive help.
+  -h, --help        Show context-sensitive help.
+      --no-check    disable local container status check ($TOPAZ_NO_CHECK)
 
 Run "topaz <command> --help" for more information on a command.
 ```
