@@ -28,7 +28,7 @@ types:
       viewer: user | group#member
       author: user | group#member
       parent: folder
-   permissions:
+    permissions:
       can_view: viewer | editor | owner | parent->can_view
       can_write: editor | owner | parent->can_write
       can_share: owner | parent->can_share
