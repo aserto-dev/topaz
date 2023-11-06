@@ -228,10 +228,9 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 						Results: convert.RelationArrayToV2(resp.Results),
 					}
 				}
-
-				if err := ProtoToBuf(buf, result); err != nil {
-					return nil, err
-				}
+			}
+			if err := ProtoToBuf(buf, result); err != nil {
+				return nil, err
 			}
 
 			v, err := ast.ValueFromReader(buf)
