@@ -84,10 +84,10 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				if outputV2 {
 					result = convert.ObjectToV2(resp.Result)
 				}
+			}
 
-				if err := ProtoToBuf(buf, result); err != nil {
-					return nil, err
-				}
+			if err := ProtoToBuf(buf, result); err != nil {
+				return nil, err
 			}
 
 			v, err := ast.ValueFromReader(buf)
