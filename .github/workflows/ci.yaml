@@ -239,14 +239,11 @@ jobs:
           secrets: |
             kv/data/github  "ROOT_TOKEN"        | ROOT_TOKEN;
       - 
-        name: Install hub
-        run: choco install -y "hub"
-      - 
         name: Download exe
         id: download_exe
         shell: bash
         run: |
-          hub release download "${GITHUB_REF#refs/tags/}" -i '*windows_x86_64*.zip'
+          gh release download "${GITHUB_REF#refs/tags/}" -p "topaz_windows_x86_64.zip"
           printf "zip=%s\n" *.zip >> $GITHUB_OUTPUT
           unzip -o *.zip && rm -v *.zip
         env:
