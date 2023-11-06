@@ -432,10 +432,10 @@ github.com/aserto-dev/go-decision-logs v0.0.4 h1:beu/mhqZ92ovhSIPOv2f4q0Ci7HWNLl
 github.com/aserto-dev/go-decision-logs v0.0.4/go.mod h1:W50DNu4HPCk+iyI39cP3+KBytdrQYVieSPXh9StuRzA=
 github.com/aserto-dev/go-directory v0.30.2 h1:cUkvzma8paV2YFaCIvjfy1a9DMNCx5qV3EjcLo68RuA=
 github.com/aserto-dev/go-directory v0.30.2/go.mod h1:jHn6ckERuci6nWz9vCzAbYoF2UnbOwEzl++sA1L3nyc=
-github.com/aserto-dev/go-directory-cli v0.30.1-0.20231105222812-42a7b4f12a85 h1:JpC1cCNZKCBPcb6WeSZtXgXZA5IUtGQXbAWDW+Fy8Xg=
-github.com/aserto-dev/go-directory-cli v0.30.1-0.20231105222812-42a7b4f12a85/go.mod h1:EvTAQdfREB8Wq5aRJxk3krkBz6/4LUwJjfbc0MjVUl8=
-github.com/aserto-dev/go-edge-ds v0.30.0 h1:2o1ixUEDEQMEj/5Tk6HcXgirXKhi9GoG470YO4n6eDY=
-github.com/aserto-dev/go-edge-ds v0.30.0/go.mod h1:yKjKFm2u7zz3u/MmrOYq1mugsC2trE3diA+WkQrkvvc=
+github.com/aserto-dev/go-directory-cli v0.30.1 h1:5tEDG7uj//NXEzKkF4cbQbsvPuZzn/3hrhTA0GuG/7A=
+github.com/aserto-dev/go-directory-cli v0.30.1/go.mod h1:EvTAQdfREB8Wq5aRJxk3krkBz6/4LUwJjfbc0MjVUl8=
+github.com/aserto-dev/go-edge-ds v0.30.1 h1:Y8GfQMB/ePoMD54uiWVA3Q8BqlFkRyNu+jGlTbgBYuA=
+github.com/aserto-dev/go-edge-ds v0.30.1/go.mod h1:yKjKFm2u7zz3u/MmrOYq1mugsC2trE3diA+WkQrkvvc=
 github.com/aserto-dev/go-grpc v0.8.58 h1:uoNDm6ddJQHR94fIq+v6gHWBZTRTQCvRnNvGxsansrU=
 github.com/aserto-dev/go-grpc v0.8.58/go.mod h1:2FcclMDheTsEvYCY72o+EwTaoO0ti3/it4G6xIlzNIM=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
