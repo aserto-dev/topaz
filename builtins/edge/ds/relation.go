@@ -122,10 +122,9 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 						Objects: convert.ObjectMapToV2(resp.Objects),
 					}
 				}
-
-				if err := ProtoToBuf(buf, result); err != nil {
-					return nil, err
-				}
+			}
+			if err := ProtoToBuf(buf, result); err != nil {
+				return nil, err
 			}
 
 			v, err := ast.ValueFromReader(buf)
