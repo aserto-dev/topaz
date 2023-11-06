@@ -43,7 +43,7 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 
 	color.Green(">>> get manifest to %s", cmd.Path)
 
-	r, err := dirClient.GetManifest(c.Context)
+	r, err := dirClient.V3.GetManifest(c.Context)
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 
 	color.Green(">>> set manifest from %s", cmd.Path)
 
-	return dirClient.SetManifest(c.Context, r)
+	return dirClient.V3.SetManifest(c.Context, r)
 }
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
@@ -96,5 +96,5 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 
 	color.Green(">>> delete manifest")
 
-	return dirClient.DeleteManifest(c.Context)
+	return dirClient.V3.DeleteManifest(c.Context)
 }

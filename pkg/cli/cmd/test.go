@@ -14,7 +14,8 @@ import (
 	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 
-	"github.com/aserto-dev/go-directory-cli/client"
+	v2 "github.com/aserto-dev/go-directory-cli/client/v2"
+	client "github.com/aserto-dev/go-directory-cli/client/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 
@@ -117,15 +118,15 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 
 		switch {
 		case checkType == Check && reqVersion == 3:
-			result = checkV3(c.Context, dsc, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckPermission && reqVersion == 3:
-			result = checkPermissionV3(c.Context, dsc, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkPermissionV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckRelation && reqVersion == 3:
-			result = checkRelationV3(c.Context, dsc, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkRelationV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckPermission && reqVersion == 2:
-			result = checkPermissionV2(c.Context, dsc, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkPermissionV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckRelation && reqVersion == 2:
-			result = checkRelationV2(c.Context, dsc, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkRelationV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckDecision:
 			result = checkDecisionV2(c.Context, azc, msg.Fields[checkTypeMapStr[checkType]])
 		}
@@ -308,7 +309,7 @@ func checkRelationV3(ctx context.Context, c *client.Client, msg *structpb.Value)
 	}
 }
 
-func checkPermissionV2(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
+func checkPermissionV2(ctx context.Context, c *v2.Client, msg *structpb.Value) *checkResult {
 	var req dsr2.CheckPermissionRequest
 	if err := unmarshalReq(msg, &req); err != nil {
 		return &checkResult{Err: err}
@@ -316,7 +317,7 @@ func checkPermissionV2(ctx context.Context, c *client.Client, msg *structpb.Valu
 
 	start := time.Now()
 
-	resp, err := c.Reader2.CheckPermission(ctx, &req)
+	resp, err := c.Reader.CheckPermission(ctx, &req)
 
 	duration := time.Since(start)
 
@@ -328,7 +329,7 @@ func checkPermissionV2(ctx context.Context, c *client.Client, msg *structpb.Valu
 	}
 }
 
-func checkRelationV2(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
+func checkRelationV2(ctx context.Context, c *v2.Client, msg *structpb.Value) *checkResult {
 	var req dsr2.CheckRelationRequest
 	if err := unmarshalReq(msg, &req); err != nil {
 		return &checkResult{Err: err}
@@ -336,7 +337,7 @@ func checkRelationV2(ctx context.Context, c *client.Client, msg *structpb.Value)
 
 	start := time.Now()
 
-	resp, err := c.Reader2.CheckRelation(ctx, &req)
+	resp, err := c.Reader.CheckRelation(ctx, &req)
 
 	duration := time.Since(start)
 
