@@ -142,6 +142,7 @@ func Run() error {
 }
 
 func writeVersion() error {
+	// get tag.
 	version, err := exec.Command("git", "describe", "--tags").Output()
 	if err != nil {
 		return errors.Wrap(err, "failed to get current git tag")
