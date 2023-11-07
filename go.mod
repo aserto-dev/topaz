@@ -28,7 +28,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.30.1
 	github.com/aserto-dev/runtime v0.56.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
-	github.com/aserto-dev/service-host v0.0.6
+	github.com/aserto-dev/service-host v0.0.7
 	github.com/cli/browser v1.3.0
 	github.com/fatih/color v1.15.0
 	github.com/fullstorydev/grpcurl v1.8.9
