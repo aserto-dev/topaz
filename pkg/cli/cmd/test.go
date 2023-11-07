@@ -361,8 +361,17 @@ func checkDecisionV2(ctx context.Context, c az2.AuthorizerClient, msg *structpb.
 
 	duration := time.Since(start)
 
+	if err != nil {
+		return &checkResult{
+			Outcome:  false,
+			Duration: duration,
+			Err:      err,
+			Str:      checkDecisionStringV2(&req),
+		}
+	}
+
 	return &checkResult{
-		Outcome:  resp.Decisions[0].GetIs(),
+		Outcome:  iff(err != nil, false, resp.Decisions[0].GetIs()),
 		Duration: duration,
 		Err:      err,
 		Str:      checkDecisionStringV2(&req),
