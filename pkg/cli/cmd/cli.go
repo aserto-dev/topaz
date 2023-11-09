@@ -2,12 +2,9 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/aserto-dev/topaz/pkg/cli/x"
-	"github.com/aserto-dev/topaz/pkg/version"
 )
 
 var ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
@@ -39,17 +36,6 @@ type CLI struct {
 	Version   VersionCmd   `cmd:"" help:"version information"`
 	Console   ConsoleCmd   `cmd:"" help:"opens the console in the browser"`
 	NoCheck   bool         `name:"no-check" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
-}
-
-type VersionCmd struct{}
-
-func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
-	fmt.Fprintf(c.UI.Output(), "%s - %s (%s)\n",
-		x.AppName,
-		version.GetInfo().String(),
-		x.AppVersionTag,
-	)
-	return nil
 }
 
 func CheckRunning(c *cc.CommonCtx) error {

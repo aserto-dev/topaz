@@ -132,13 +132,21 @@ func Release() error {
 	return common.Release("--rm-dist")
 }
 
+func RunTest() error {
+	return sh.RunV("./dist/topazd_"+runtime.GOOS+"_"+runtime.GOARCH+"/topazd", "--config-file", "./pkg/testing/assets/config-local.yaml", "run")
+}
+
 func Run() error {
-	homeDir, err := os.UserHomeDir()
+	home, err := os.UserHomeDir()
 	if err != nil {
 		return err
 	}
-	os.Setenv("TOPAZ_DIR", path.Join(homeDir, ".config", "topaz"))
-	return sh.RunV("./dist/topazd_"+runtime.GOOS+"_"+runtime.GOARCH+"/topazd", "run", "--config-file", "~/.config/topaz/cfg/config.yaml")
+
+	topazDir := path.Join(home, ".config/topaz")
+	os.Setenv("TOPAZ_DIR", topazDir)
+	cfg := path.Join(topazDir, "cfg/config.yaml")
+
+	return sh.RunV("./dist/topazd_"+runtime.GOOS+"_"+runtime.GOARCH+"/topazd", "--config-file", cfg, "run")
 }
 
 func writeVersion() error {

@@ -18,10 +18,10 @@ require (
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.30.0
 	github.com/aserto-dev/go-authorizer v0.20.3
-	github.com/aserto-dev/go-directory v0.30.2
+	github.com/aserto-dev/go-directory v0.30.3
 	github.com/aserto-dev/go-directory-cli v0.30.1
-	github.com/aserto-dev/go-edge-ds v0.30.1
-	github.com/aserto-dev/go-grpc v0.8.58
+	github.com/aserto-dev/go-edge-ds v0.30.2
+	github.com/aserto-dev/go-grpc v0.8.59
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.3
@@ -30,12 +30,12 @@ require (
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.7
 	github.com/cli/browser v1.3.0
-	github.com/fatih/color v1.15.0
+	github.com/fatih/color v1.16.0
 	github.com/fullstorydev/grpcurl v1.8.9
 	github.com/google/uuid v1.4.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.1
 	github.com/lestrrat-go/jwx v1.2.26
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.2.1
@@ -47,7 +47,7 @@ require (
 	github.com/spf13/viper v1.17.0
 	github.com/stretchr/testify v1.8.4
 	go.opencensus.io v0.24.0
-	golang.org/x/sync v0.4.0
+	golang.org/x/sync v0.5.0
 	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
@@ -86,7 +86,6 @@ require (
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/cel-go v0.18.1 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.0.0 // indirect
@@ -159,13 +158,13 @@ require (
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 	golang.org/x/mod v0.13.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/sys v0.14.0 // indirect
 	golang.org/x/term v0.13.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.14.0 // indirect
 	google.golang.org/genproto v0.0.0-20231030173426-d783a09b4405 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20231030173426-d783a09b4405 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231030173426-d783a09b4405 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
