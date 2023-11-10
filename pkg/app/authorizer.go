@@ -32,7 +32,6 @@ type Authorizer struct {
 
 const (
 	authorizerService = "authorizer"
-	consoleService    = "console"
 )
 
 func NewAuthorizer(cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
