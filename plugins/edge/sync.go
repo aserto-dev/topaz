@@ -6,17 +6,22 @@ import (
 	"sync/atomic"
 	"time"
 
-	dse2 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
-	dsi2 "github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
-	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
-	dsw2 "github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
-	"golang.org/x/sync/errgroup"
+	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	"github.com/aserto-dev/go-directory/pkg/pb"
+	"github.com/aserto-dev/go-edge-ds/pkg/bdb"
 
 	"github.com/aserto-dev/go-aserto/client"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 
 	"github.com/rs/zerolog"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -28,10 +33,11 @@ const (
 
 type directoryClient struct {
 	conn     grpc.ClientConnInterface
-	Reader   dsr2.ReaderClient
-	Writer   dsw2.WriterClient
-	Importer dsi2.ImporterClient
-	Exporter dse2.ExporterClient
+	Model    dsm3.ModelClient
+	Reader   dsr3.ReaderClient
+	Writer   dsw3.WriterClient
+	Importer dsi3.ImporterClient
+	Exporter dse3.ExporterClient
 }
 
 type Sync struct {
@@ -39,20 +45,18 @@ type Sync struct {
 	cfg         *Config
 	topazConfig *topaz.Config
 	log         *zerolog.Logger
-	exportChan  chan *dse2.ExportResponse
+	exportChan  chan *dse3.ExportResponse
 	errChan     chan error
 }
 
 type Counter struct {
-	Received      int32
-	Upserts       int32
-	Deletes       int32
-	Errors        int32
-	ObjectTypes   int32
-	RelationTypes int32
-	Permissions   int32
-	Objects       int32
-	Relations     int32
+	Received  int32
+	Upserts   int32
+	Deletes   int32
+	Errors    int32
+	Manifests int32
+	Objects   int32
+	Relations int32
 }
 
 type Result struct {
@@ -66,7 +70,7 @@ func NewSyncMgr(c *Config, topazConfig *topaz.Config, logger *zerolog.Logger) *S
 		cfg:         c,
 		topazConfig: topazConfig,
 		log:         logger,
-		exportChan:  make(chan *dse2.ExportResponse, channelSize),
+		exportChan:  make(chan *dse3.ExportResponse, channelSize),
 		errChan:     make(chan error, 1),
 	}
 }
@@ -116,9 +120,14 @@ func (s *Sync) producer() error {
 	counts := Counter{}
 	s.log.Info().Time("producer-start", time.Now().UTC()).Msg(syncRun)
 
-	stream, err := pluginDirClient.Exporter.Export(s.ctx, &dse2.ExportRequest{
-		Options:   uint32(dse2.Option_OPTION_ALL),
-		StartFrom: &timestamppb.Timestamp{},
+	watermark, err := s.getWatermark()
+	if err != nil {
+		return err
+	}
+
+	stream, err := pluginDirClient.Exporter.Export(s.ctx, &dse3.ExportRequest{
+		Options:   uint32(dse3.Option_OPTION_DATA),
+		StartFrom: watermark,
 	})
 	if err != nil {
 		return err
@@ -136,15 +145,9 @@ func (s *Sync) producer() error {
 		atomic.AddInt32(&counts.Received, 1)
 
 		switch msg.Msg.(type) {
-		case *dse2.ExportResponse_ObjectType:
-			atomic.AddInt32(&counts.ObjectTypes, 1)
-		case *dse2.ExportResponse_RelationType:
-			atomic.AddInt32(&counts.RelationTypes, 1)
-		case *dse2.ExportResponse_Permission:
-			atomic.AddInt32(&counts.Permissions, 1)
-		case *dse2.ExportResponse_Object:
+		case *dse3.ExportResponse_Object:
 			atomic.AddInt32(&counts.Objects, 1)
-		case *dse2.ExportResponse_Relation:
+		case *dse3.ExportResponse_Relation:
 			atomic.AddInt32(&counts.Relations, 1)
 		default:
 			s.log.Debug().Msg("unknown message type")
@@ -157,9 +160,6 @@ func (s *Sync) producer() error {
 	close(s.exportChan)
 
 	s.log.Info().Int32("received", counts.Received).Msg(syncRun)
-	s.log.Info().Int32("object_types", counts.ObjectTypes).Msg(syncRun)
-	s.log.Info().Int32("relation_types", counts.RelationTypes).Msg(syncRun)
-	s.log.Info().Int32("permissions", counts.Permissions).Msg(syncRun)
 	s.log.Info().Int32("objects", counts.Objects).Msg(syncRun)
 	s.log.Info().Int32("relations", counts.Relations).Msg(syncRun)
 	s.log.Info().Time("producer-end", time.Now().UTC()).Msg(syncRun)
@@ -168,7 +168,7 @@ func (s *Sync) producer() error {
 }
 
 func (s *Sync) subscriber() error {
-	topazDirclient, err := s.getTopazDirectoryClient()
+	topazDirClient, err := s.getTopazDirectoryClient()
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to get directory connection")
 		return err
@@ -176,6 +176,14 @@ func (s *Sync) subscriber() error {
 
 	counts := Counter{}
 	s.log.Info().Time("subscriber-start", time.Now().UTC()).Msg(syncRun)
+
+	watermark := &timestamppb.Timestamp{Seconds: 0, Nanos: 0}
+
+	stream, err := topazDirClient.Importer.Import(s.ctx)
+	if err != nil {
+		s.log.Error().Err(err).Msgf("subscriber - failed to setup import stream")
+		return err
+	}
 
 	for {
 		msg, ok := <-s.exportChan
@@ -186,60 +194,49 @@ func (s *Sync) subscriber() error {
 		atomic.AddInt32(&counts.Received, 1)
 
 		switch m := msg.Msg.(type) {
-		case *dse2.ExportResponse_ObjectType:
-			_, err := topazDirclient.Writer.SetObjectType(s.ctx, &dsw2.SetObjectTypeRequest{ObjectType: m.ObjectType})
-			if err != nil {
-				s.log.Error().Err(err).Msgf("failed to set object type %v", m.ObjectType)
-				s.errChan <- err
-				atomic.AddInt32(&counts.Errors, 1)
-			}
-			atomic.AddInt32(&counts.ObjectTypes, 1)
-
-		case *dse2.ExportResponse_RelationType:
-			_, err := topazDirclient.Writer.SetRelationType(s.ctx, &dsw2.SetRelationTypeRequest{RelationType: m.RelationType})
-			if err != nil {
-				s.log.Error().Err(err).Msgf("failed to set relation type %v", m.RelationType)
-				s.errChan <- err
-				atomic.AddInt32(&counts.Errors, 1)
-			}
-			atomic.AddInt32(&counts.RelationTypes, 1)
-
-		case *dse2.ExportResponse_Permission:
-			_, err := topazDirclient.Writer.SetPermission(s.ctx, &dsw2.SetPermissionRequest{Permission: m.Permission})
-			if err != nil {
-				s.log.Error().Err(err).Msgf("failed to set permission %v", m.Permission)
-				s.errChan <- err
-				atomic.AddInt32(&counts.Errors, 1)
-			}
-			atomic.AddInt32(&counts.Permissions, 1)
-
-		case *dse2.ExportResponse_Object:
-			_, err := topazDirclient.Writer.SetObject(s.ctx, &dsw2.SetObjectRequest{Object: m.Object})
-			if err != nil {
+		case *dse3.ExportResponse_Object:
+			if err := stream.Send(&dsi3.ImportRequest{
+				OpCode: dsi3.Opcode_OPCODE_SET,
+				Msg:    &dsi3.ImportRequest_Object{Object: m.Object},
+			}); err == nil {
+				watermark = maxTS(watermark, m.Object.GetUpdatedAt())
+				atomic.AddInt32(&counts.Objects, 1)
+				atomic.AddInt32(&counts.Upserts, 1)
+			} else {
 				s.log.Error().Err(err).Msgf("failed to set object %v", m.Object)
 				s.errChan <- err
 				atomic.AddInt32(&counts.Errors, 1)
 			}
-			atomic.AddInt32(&counts.Objects, 1)
 
-		case *dse2.ExportResponse_Relation:
-			_, err := topazDirclient.Writer.SetRelation(s.ctx, &dsw2.SetRelationRequest{Relation: m.Relation})
-			if err != nil {
-				s.log.Error().Err(err).Msgf("failed to set relation %v", m.Relation)
+		case *dse3.ExportResponse_Relation:
+			if err := stream.Send(&dsi3.ImportRequest{
+				OpCode: dsi3.Opcode_OPCODE_SET,
+				Msg:    &dsi3.ImportRequest_Relation{Relation: m.Relation},
+			}); err == nil {
+				watermark = maxTS(watermark, m.Relation.GetUpdatedAt())
+				atomic.AddInt32(&counts.Relations, 1)
+				atomic.AddInt32(&counts.Upserts, 1)
+			} else {
+				s.log.Error().Err(err).Msgf("failed to set object %v", m.Relation)
 				s.errChan <- err
 				atomic.AddInt32(&counts.Errors, 1)
 			}
-			atomic.AddInt32(&counts.Relations, 1)
 
 		default:
 			s.log.Debug().Msg("unknown message type")
 		}
 	}
 
+	if err := stream.CloseSend(); err != nil {
+		return err
+	}
+
+	if err := s.setWatermark(watermark); err != nil {
+		s.log.Error().Err(err).Msg("failed to save watermark")
+	}
+
 	s.log.Info().Int32("received", counts.Received).Msg(syncRun)
-	s.log.Info().Int32("object_types", counts.ObjectTypes).Msg(syncRun)
-	s.log.Info().Int32("relation_types", counts.RelationTypes).Msg(syncRun)
-	s.log.Info().Int32("permissions", counts.Permissions).Msg(syncRun)
+	s.log.Info().Int32("manifest", counts.Manifests).Msg(syncRun)
 	s.log.Info().Int32("objects", counts.Objects).Msg(syncRun)
 	s.log.Info().Int32("relations", counts.Relations).Msg(syncRun)
 
@@ -295,10 +292,11 @@ func (s *Sync) getTopazDirectoryClient() (*directoryClient, error) {
 
 	return &directoryClient{
 		conn:     conn.Conn,
-		Reader:   dsr2.NewReaderClient(conn.Conn),
-		Writer:   dsw2.NewWriterClient(conn.Conn),
-		Importer: dsi2.NewImporterClient(conn.Conn),
-		Exporter: dse2.NewExporterClient(conn.Conn),
+		Model:    dsm3.NewModelClient(conn.Conn),
+		Reader:   dsr3.NewReaderClient(conn.Conn),
+		Writer:   dsw3.NewWriterClient(conn.Conn),
+		Importer: dsi3.NewImporterClient(conn.Conn),
+		Exporter: dse3.NewExporterClient(conn.Conn),
 	}, nil
 }
 
@@ -332,9 +330,72 @@ func (s *Sync) getPluginDirectoryClient() (*directoryClient, error) {
 
 	return &directoryClient{
 		conn:     conn.Conn,
-		Reader:   dsr2.NewReaderClient(conn.Conn),
-		Writer:   dsw2.NewWriterClient(conn.Conn),
-		Importer: dsi2.NewImporterClient(conn.Conn),
-		Exporter: dse2.NewExporterClient(conn.Conn),
+		Model:    dsm3.NewModelClient(conn.Conn),
+		Reader:   dsr3.NewReaderClient(conn.Conn),
+		Writer:   dsw3.NewWriterClient(conn.Conn),
+		Importer: dsi3.NewImporterClient(conn.Conn),
+		Exporter: dse3.NewExporterClient(conn.Conn),
 	}, nil
+}
+
+func maxTS(lhs, rhs *timestamppb.Timestamp) *timestamppb.Timestamp {
+	if lhs.GetSeconds() > rhs.GetSeconds() {
+		return lhs
+	} else if lhs.GetSeconds() == rhs.GetSeconds() && lhs.GetNanos() > rhs.GetNanos() {
+		return lhs
+	}
+	return rhs
+}
+
+func (s *Sync) getWatermark() (*timestamppb.Timestamp, error) {
+	client, err := s.getTopazDirectoryClient()
+	if err != nil {
+		s.log.Error().Err(err).Msgf("getWatermark - failed to get directory connection")
+		return nil, err
+	}
+
+	result, err := client.Reader.GetObject(s.ctx,
+		&dsr3.GetObjectRequest{
+			ObjectType:    "system",
+			ObjectId:      "edge_sync",
+			WithRelations: false,
+			Page:          &dsc3.PaginationRequest{Size: 1},
+		},
+	)
+	switch {
+	case bdb.ErrIsNotFound(err):
+		return &timestamppb.Timestamp{Seconds: 0, Nanos: 0}, nil
+	case err != nil:
+		return nil, err
+	default:
+	}
+
+	seconds := int64(result.Result.Properties.GetFields()["last_updated_seconds"].GetNumberValue())
+	nanos := int32(result.Result.Properties.GetFields()["last_updated_nanos"].GetNumberValue())
+
+	return &timestamppb.Timestamp{Seconds: seconds, Nanos: nanos}, nil
+}
+
+func (s *Sync) setWatermark(ts *timestamppb.Timestamp) error {
+	client, err := s.getTopazDirectoryClient()
+	if err != nil {
+		s.log.Error().Err(err).Msgf("setWatermark - failed to get directory connection")
+		return err
+	}
+
+	props := pb.NewStruct()
+	props.Fields["last_updated_seconds"] = structpb.NewNumberValue(float64(ts.GetSeconds()))
+	props.Fields["last_updated_nanos"] = structpb.NewNumberValue(float64(ts.GetNanos() + 1))
+
+	if _, err := client.Writer.SetObject(s.ctx,
+		&dsw3.SetObjectRequest{Object: &dsc3.Object{
+			Type:       "system",
+			Id:         "edge_sync",
+			Properties: props,
+		}},
+	); err != nil {
+		return err
+	}
+
+	return nil
 }
