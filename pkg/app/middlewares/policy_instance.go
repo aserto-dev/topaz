@@ -51,7 +51,6 @@ func (m *PolicyInstanceMiddleware) Stream() grpc.StreamServerInterceptor {
 		ctx := stream.Context()
 		wrapped := grpcmiddleware.WrapServerStream(stream)
 		wrapped.WrappedContext = ctx
-		m.logger.Error().Msg("stream operation not used by instance middleware")
 		return handler(srv, wrapped)
 	}
 }
