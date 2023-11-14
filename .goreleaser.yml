@@ -5,11 +5,6 @@ env:
   - ORG=aserto-dev
   - REPO=topaz
 
-before:
-  # https://goreleaser.com/customization/hooks/
-  hooks:
-      - ./pre-build.sh {{ .Env.CONSOLE_VERSION }}
-
 builds:
   # https://goreleaser.com/customization/build/
   - id: topazd

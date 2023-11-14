@@ -13,7 +13,6 @@ import (
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
-	"github.com/aserto-dev/topaz/pkg/app/ui"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
@@ -24,6 +23,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
 
+	console "github.com/aserto-dev/go-topaz-ui"
+	"github.com/aserto-dev/go-topaz-ui/ui"
 	builder "github.com/aserto-dev/service-host"
 )
 
@@ -145,11 +146,15 @@ func (e *Topaz) ConfigServices() error {
 			return err
 		}
 
-		if contains(serviceConfig.registeredServices, "console") {
-			server.Gateway.Mux.Handle("/ui/", ui.UIHandler(http.FS(console)))
-			server.Gateway.Mux.Handle("/public/", ui.UIHandler(http.FS(console)))
-			server.Gateway.Mux.HandleFunc("/api/v1/config", ui.ConfigHandler(e.Configuration))
-			server.Gateway.Mux.HandleFunc("/api/v1/authorizers", ui.AuthorizersHandler(e.Configuration))
+		if con, ok := e.Services[consoleService]; ok {
+			consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
+
+			if contains(serviceConfig.registeredServices, "console") {
+				server.Gateway.Mux.Handle("/ui/", ui.UIHandler(http.FS(console.FS)))
+				server.Gateway.Mux.Handle("/public/", ui.UIHandler(http.FS(console.FS)))
+				server.Gateway.Mux.HandleFunc("/api/v1/config", ui.ConfigHandler(consoleConfig))
+				server.Gateway.Mux.HandleFunc("/api/v1/authorizers", ui.AuthorizersHandler(consoleConfig))
+			}
 		}
 
 		err = e.Manager.AddGRPCServer(server)
@@ -299,8 +304,10 @@ func (e *Topaz) validateConfig() error {
 	}
 
 	if _, ok := e.Configuration.APIConfig.Services["console"]; ok {
-		if _, ok := e.Configuration.APIConfig.Services["model"]; !ok {
-			return errors.New("console needs the model service to be configured")
+		if _, ok := e.Configuration.APIConfig.Services["reader"]; ok {
+			if _, ok := e.Configuration.APIConfig.Services["model"]; !ok {
+				return errors.New("console needs the model service to be configured")
+			}
 		}
 	}
 
