@@ -2,7 +2,6 @@ package edge
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -27,6 +26,7 @@ import (
 
 const (
 	syncScheduler  string = "scheduler"
+	syncTask       string = "sync-task"
 	syncRun        string = "sync-run"
 	syncProducer   string = "producer"
 	syncSubscriber string = "subscriber"
@@ -177,7 +177,7 @@ func (s *Sync) subscriber() error {
 	counts := Counter{}
 	s.log.Info().Str(status, started).Msg(syncSubscriber)
 
-	watermark := &timestamppb.Timestamp{Seconds: 0, Nanos: 0}
+	watermark := s.getWatermark()
 
 	stream, err := topazDirClient.Importer.Import(s.ctx)
 	if err != nil {
@@ -341,20 +341,12 @@ func maxTS(lhs, rhs *timestamppb.Timestamp) *timestamppb.Timestamp {
 }
 
 func (s *Sync) getWatermark() *timestamppb.Timestamp {
-	ts := &timestamppb.Timestamp{Seconds: 0, Nanos: 0}
-	r, err := os.Open(s.syncFilename())
+	fi, err := os.Stat(s.syncFilename())
 	if err != nil {
-		return ts
-	}
-	defer r.Close()
-
-	var watermark timestamppb.Timestamp
-	dec := json.NewDecoder(r)
-	if err := dec.Decode(&watermark); err != nil {
-		return ts
+		return &timestamppb.Timestamp{Seconds: 0, Nanos: 0}
 	}
 
-	return &watermark
+	return timestamppb.New(fi.ModTime())
 }
 
 func (s *Sync) setWatermark(ts *timestamppb.Timestamp) error {
@@ -362,10 +354,12 @@ func (s *Sync) setWatermark(ts *timestamppb.Timestamp) error {
 	if err != nil {
 		return err
 	}
-	defer w.Close()
+	w.WriteString(ts.AsTime().Format(time.RFC3339Nano) + "\n")
+	w.Close()
 
-	enc := json.NewEncoder(w)
-	if err := enc.Encode(ts); err != nil {
+	wmTime := ts.AsTime().Add(time.Millisecond)
+
+	if err := os.Chtimes(s.syncFilename(), wmTime, wmTime); err != nil {
 		return err
 	}
 

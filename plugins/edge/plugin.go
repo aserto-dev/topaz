@@ -106,6 +106,7 @@ func (p *Plugin) SyncNow() {
 
 func (p *Plugin) scheduler(interval *time.Ticker) {
 	defer interval.Stop()
+
 	wait := time.Duration(p.config.SyncInterval) * time.Minute
 
 	for {
@@ -130,11 +131,11 @@ func (p *Plugin) scheduler(interval *time.Ticker) {
 }
 
 func (p *Plugin) task() {
-	p.logger.Info().Time("started", time.Now()).Msg("scheduler")
+	p.logger.Info().Str(status, started).Msg(syncTask)
 
 	defer func() {
 		if r := recover(); r != nil {
-			p.logger.Error().Interface("recover", r).Msg("task-panic")
+			p.logger.Error().Interface("recover", r).Msg(syncTask)
 		}
 	}()
 
@@ -145,5 +146,5 @@ func (p *Plugin) task() {
 	sync := NewSyncMgr(p.config, p.topazConfig, p.logger)
 	sync.Run()
 
-	p.logger.Info().Time("finished", time.Now()).Msg("scheduler")
+	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
