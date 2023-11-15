@@ -2,18 +2,19 @@ package edge
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"io"
+	"os"
+	"path/filepath"
 	"sync/atomic"
 	"time"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	"github.com/aserto-dev/go-directory/pkg/pb"
-	"github.com/aserto-dev/go-edge-ds/pkg/bdb"
 
 	"github.com/aserto-dev/go-aserto/client"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
@@ -21,14 +22,19 @@ import (
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
-	syncRun     string = "run"
-	channelSize int    = 2000
-	localHost   string = "localhost:9292"
+	syncScheduler  string = "scheduler"
+	syncRun        string = "sync-run"
+	syncProducer   string = "producer"
+	syncSubscriber string = "subscriber"
+	status         string = "status"
+	started        string = "started"
+	finished       string = "finished"
+	channelSize    int    = 2000
+	localHost      string = "localhost:9292"
 )
 
 type directoryClient struct {
@@ -77,7 +83,7 @@ func NewSyncMgr(c *Config, topazConfig *topaz.Config, logger *zerolog.Logger) *S
 
 func (s *Sync) Run() {
 	runStartTime := time.Now().UTC()
-	s.log.Info().Time("started", runStartTime).Msg(syncRun)
+	s.log.Info().Str(status, started).Msg(syncRun)
 
 	defer func() {
 		close(s.errChan)
@@ -106,24 +112,20 @@ func (s *Sync) Run() {
 	}
 
 	runEndTime := time.Now().UTC()
-	s.log.Info().Time("ended", runEndTime).Msg(syncRun)
-	s.log.Info().Str("duration", runEndTime.Sub(runStartTime).String()).Msg(syncRun)
+	s.log.Info().Str(status, finished).Str("duration", runEndTime.Sub(runStartTime).String()).Msg(syncRun)
 }
 
 func (s *Sync) producer() error {
-	pluginDirClient, err := s.getPluginDirectoryClient()
+	pluginDirClient, err := s.getRemoteDirectoryClient()
 	if err != nil {
-		s.log.Error().Err(err).Msgf("producer - failed to get directory connection")
+		s.log.Error().Err(err).Msgf("%s - failed to get directory connection", syncProducer)
 		return err
 	}
 
 	counts := Counter{}
-	s.log.Info().Time("producer-start", time.Now().UTC()).Msg(syncRun)
+	s.log.Info().Str(status, started).Msg(syncProducer)
 
-	watermark, err := s.getWatermark()
-	if err != nil {
-		return err
-	}
+	watermark := s.getWatermark()
 
 	stream, err := pluginDirClient.Exporter.Export(s.ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
@@ -150,7 +152,7 @@ func (s *Sync) producer() error {
 		case *dse3.ExportResponse_Relation:
 			atomic.AddInt32(&counts.Relations, 1)
 		default:
-			s.log.Debug().Msg("unknown message type")
+			s.log.Debug().Msg("producer unknown message type")
 		}
 
 		s.exportChan <- msg
@@ -159,23 +161,21 @@ func (s *Sync) producer() error {
 	s.log.Debug().Msg("producer closed export channel")
 	close(s.exportChan)
 
-	s.log.Info().Int32("received", counts.Received).Msg(syncRun)
-	s.log.Info().Int32("objects", counts.Objects).Msg(syncRun)
-	s.log.Info().Int32("relations", counts.Relations).Msg(syncRun)
-	s.log.Info().Time("producer-end", time.Now().UTC()).Msg(syncRun)
+	s.log.Info().Str(status, finished).Int32("received", counts.Received).Int32("objects", counts.Objects).
+		Int32("relations", counts.Relations).Int32("errors", counts.Errors).Msg(syncProducer)
 
 	return nil
 }
 
 func (s *Sync) subscriber() error {
-	topazDirClient, err := s.getTopazDirectoryClient()
+	topazDirClient, err := s.getLocalDirectoryClient()
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to get directory connection")
 		return err
 	}
 
 	counts := Counter{}
-	s.log.Info().Time("subscriber-start", time.Now().UTC()).Msg(syncRun)
+	s.log.Info().Str(status, started).Msg(syncSubscriber)
 
 	watermark := &timestamppb.Timestamp{Seconds: 0, Nanos: 0}
 
@@ -191,6 +191,7 @@ func (s *Sync) subscriber() error {
 			s.log.Debug().Msg("export channel closed")
 			break
 		}
+
 		atomic.AddInt32(&counts.Received, 1)
 
 		switch m := msg.Msg.(type) {
@@ -235,21 +236,13 @@ func (s *Sync) subscriber() error {
 		s.log.Error().Err(err).Msg("failed to save watermark")
 	}
 
-	s.log.Info().Int32("received", counts.Received).Msg(syncRun)
-	s.log.Info().Int32("manifest", counts.Manifests).Msg(syncRun)
-	s.log.Info().Int32("objects", counts.Objects).Msg(syncRun)
-	s.log.Info().Int32("relations", counts.Relations).Msg(syncRun)
-
-	s.log.Info().Int32("upserts", counts.Upserts).Msg(syncRun)
-	s.log.Info().Int32("deletes", counts.Deletes).Msg(syncRun)
-	s.log.Info().Int32("errors", counts.Errors).Msg(syncRun)
-
-	s.log.Info().Time("subscriber-end", time.Now().UTC()).Msg(syncRun)
+	s.log.Info().Str(status, finished).Int32("received", counts.Received).Int32("objects", counts.Objects).
+		Int32("relations", counts.Relations).Int32("errors", counts.Errors).Msg(syncSubscriber)
 
 	return nil
 }
 
-func (s *Sync) getTopazDirectoryClient() (*directoryClient, error) {
+func (s *Sync) getLocalDirectoryClient() (*directoryClient, error) {
 	host := localHost
 	if s.topazConfig.DirectoryResolver.Address != "" {
 		host = s.topazConfig.DirectoryResolver.Address
@@ -300,7 +293,7 @@ func (s *Sync) getTopazDirectoryClient() (*directoryClient, error) {
 	}, nil
 }
 
-func (s *Sync) getPluginDirectoryClient() (*directoryClient, error) {
+func (s *Sync) getRemoteDirectoryClient() (*directoryClient, error) {
 	host := localHost
 	if s.cfg.Addr != "" {
 		host = s.cfg.Addr
@@ -347,55 +340,39 @@ func maxTS(lhs, rhs *timestamppb.Timestamp) *timestamppb.Timestamp {
 	return rhs
 }
 
-func (s *Sync) getWatermark() (*timestamppb.Timestamp, error) {
-	client, err := s.getTopazDirectoryClient()
+func (s *Sync) getWatermark() *timestamppb.Timestamp {
+	ts := &timestamppb.Timestamp{Seconds: 0, Nanos: 0}
+	r, err := os.Open(s.syncFilename())
 	if err != nil {
-		s.log.Error().Err(err).Msgf("getWatermark - failed to get directory connection")
-		return nil, err
+		return ts
+	}
+	defer r.Close()
+
+	var watermark timestamppb.Timestamp
+	dec := json.NewDecoder(r)
+	if err := dec.Decode(&watermark); err != nil {
+		return ts
 	}
 
-	result, err := client.Reader.GetObject(s.ctx,
-		&dsr3.GetObjectRequest{
-			ObjectType:    "system",
-			ObjectId:      "edge_sync",
-			WithRelations: false,
-			Page:          &dsc3.PaginationRequest{Size: 1},
-		},
-	)
-	switch {
-	case bdb.ErrIsNotFound(err):
-		return &timestamppb.Timestamp{Seconds: 0, Nanos: 0}, nil
-	case err != nil:
-		return nil, err
-	default:
-	}
-
-	seconds := int64(result.Result.Properties.GetFields()["last_updated_seconds"].GetNumberValue())
-	nanos := int32(result.Result.Properties.GetFields()["last_updated_nanos"].GetNumberValue())
-
-	return &timestamppb.Timestamp{Seconds: seconds, Nanos: nanos}, nil
+	return &watermark
 }
 
 func (s *Sync) setWatermark(ts *timestamppb.Timestamp) error {
-	client, err := s.getTopazDirectoryClient()
+	w, err := os.Create(s.syncFilename())
 	if err != nil {
-		s.log.Error().Err(err).Msgf("setWatermark - failed to get directory connection")
 		return err
 	}
+	defer w.Close()
 
-	props := pb.NewStruct()
-	props.Fields["last_updated_seconds"] = structpb.NewNumberValue(float64(ts.GetSeconds()))
-	props.Fields["last_updated_nanos"] = structpb.NewNumberValue(float64(ts.GetNanos() + 1))
-
-	if _, err := client.Writer.SetObject(s.ctx,
-		&dsw3.SetObjectRequest{Object: &dsc3.Object{
-			Type:       "system",
-			Id:         "edge_sync",
-			Properties: props,
-		}},
-	); err != nil {
+	enc := json.NewEncoder(w)
+	if err := enc.Encode(ts); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (s *Sync) syncFilename() string {
+	dir, file := filepath.Split(s.topazConfig.Common.Edge.DBPath)
+	return filepath.Join(dir, fmt.Sprintf("%s.%s", file, "sync"))
 }
