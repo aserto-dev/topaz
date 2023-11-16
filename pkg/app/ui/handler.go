@@ -40,14 +40,20 @@ func ConfigHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http
 	confServices.AuthorizerServiceURL = serviceAddress(confServices.AuthorizerServiceURL)
 	confServices.AsertoDirectoryURL = serviceAddress(confServices.AsertoDirectoryURL)
 
-	asertoDirectoryModelURL := serviceAddress(*confServices.AsertoDirectoryModelURL)
-	confServices.AsertoDirectoryModelURL = &asertoDirectoryModelURL
+	if confServices.AsertoDirectoryModelURL != nil {
+		asertoDirectoryModelURL := serviceAddress(*confServices.AsertoDirectoryModelURL)
+		confServices.AsertoDirectoryModelURL = &asertoDirectoryModelURL
+	}
 
-	asertoDirectoryReaderURL := serviceAddress(*confServices.AsertoDirectoryReaderURL)
-	confServices.AsertoDirectoryReaderURL = &asertoDirectoryReaderURL
+	if confServices.AsertoDirectoryReaderURL != nil {
+		asertoDirectoryReaderURL := serviceAddress(*confServices.AsertoDirectoryReaderURL)
+		confServices.AsertoDirectoryReaderURL = &asertoDirectoryReaderURL
+	}
 
-	asertoDirectoryWriterURL := serviceAddress(*confServices.AsertoDirectoryWriterURL)
-	confServices.AsertoDirectoryWriterURL = &asertoDirectoryWriterURL
+	if confServices.AsertoDirectoryWriterURL != nil {
+		asertoDirectoryWriterURL := serviceAddress(*confServices.AsertoDirectoryWriterURL)
+		confServices.AsertoDirectoryWriterURL = &asertoDirectoryWriterURL
+	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		buf, _ := json.Marshal(confServices)
