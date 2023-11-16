@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aserto-dev/go-topaz-ui/ui"
 	builder "github.com/aserto-dev/service-host"
+	"github.com/aserto-dev/topaz/pkg/app/ui"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
