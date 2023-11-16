@@ -1,6 +1,7 @@
 package edge
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -21,6 +22,7 @@ import (
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -96,6 +98,10 @@ func (s *Sync) Run() {
 		}
 	}()
 
+	if err := s.syncManifest(); err != nil {
+		s.log.Error().Str("sync-manifest", "").Err(err).Msg(syncRun)
+	}
+
 	g := new(errgroup.Group)
 
 	g.Go(func() error {
@@ -116,7 +122,7 @@ func (s *Sync) Run() {
 }
 
 func (s *Sync) producer() error {
-	pluginDirClient, err := s.getRemoteDirectoryClient()
+	dsc, err := s.getRemoteDirectoryClient()
 	if err != nil {
 		s.log.Error().Err(err).Msgf("%s - failed to get directory connection", syncProducer)
 		return err
@@ -127,7 +133,7 @@ func (s *Sync) producer() error {
 
 	watermark := s.getWatermark()
 
-	stream, err := pluginDirClient.Exporter.Export(s.ctx, &dse3.ExportRequest{
+	stream, err := dsc.Exporter.Export(s.ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
 		StartFrom: watermark,
 	})
@@ -168,7 +174,7 @@ func (s *Sync) producer() error {
 }
 
 func (s *Sync) subscriber() error {
-	topazDirClient, err := s.getLocalDirectoryClient()
+	dsc, err := s.getLocalDirectoryClient()
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to get directory connection")
 		return err
@@ -179,7 +185,7 @@ func (s *Sync) subscriber() error {
 
 	watermark := s.getWatermark()
 
-	stream, err := topazDirClient.Importer.Import(s.ctx)
+	stream, err := dsc.Importer.Import(s.ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to setup import stream")
 		return err
@@ -369,4 +375,105 @@ func (s *Sync) setWatermark(ts *timestamppb.Timestamp) error {
 func (s *Sync) syncFilename() string {
 	dir, file := filepath.Split(s.topazConfig.Common.Edge.DBPath)
 	return filepath.Join(dir, fmt.Sprintf("%s.%s", file, "sync"))
+}
+
+func (s *Sync) syncManifest() error {
+	ldsc, err := s.getLocalDirectoryClient()
+	if err != nil {
+		return err
+	}
+
+	rdsc, err := s.getRemoteDirectoryClient()
+	if err != nil {
+		return err
+	}
+
+	rmd, rr, err := s.getManifest(rdsc.Model)
+	if err != nil {
+		return err
+	}
+
+	lmd, _, err := s.getManifest(ldsc.Model)
+	if err != nil {
+		return err
+	}
+
+	if rmd.Etag != lmd.Etag {
+		if err := s.setManifest(ldsc.Model, rr); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *Sync) getManifest(mc dsm3.ModelClient) (*dsm3.Metadata, io.Reader, error) {
+	stream, err := mc.GetManifest(s.ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	data := bytes.Buffer{}
+	var metadata *dsm3.Metadata
+
+	bytesRecv := 0
+	for {
+		resp, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return nil, nil, err
+		}
+
+		if md, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Metadata); ok {
+			metadata = md.Metadata
+		}
+
+		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
+			data.Write(body.Body.Data)
+			bytesRecv += len(body.Body.Data)
+		}
+	}
+
+	return metadata, bytes.NewReader(data.Bytes()), nil
+}
+
+const blockSize = 1024 * 64
+
+func (s *Sync) setManifest(mc dsm3.ModelClient, r io.Reader) error {
+	stream, err := mc.SetManifest(s.ctx)
+	if err != nil {
+		return err
+	}
+
+	buf := make([]byte, blockSize)
+	for {
+		n, err := r.Read(buf)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+
+		if err := stream.Send(&dsm3.SetManifestRequest{
+			Msg: &dsm3.SetManifestRequest_Body{
+				Body: &dsm3.Body{Data: buf[0:n]},
+			},
+		}); err != nil {
+			return err
+		}
+
+		if n < blockSize {
+			break
+		}
+	}
+
+	if _, err := stream.CloseAndRecv(); err != nil {
+		return err
+	}
+
+	return nil
 }
