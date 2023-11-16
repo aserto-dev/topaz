@@ -24,8 +24,8 @@ import (
 	"google.golang.org/grpc/health/grpc_health_v1"
 
 	console "github.com/aserto-dev/go-topaz-ui"
-	"github.com/aserto-dev/go-topaz-ui/ui"
 	builder "github.com/aserto-dev/service-host"
+	"github.com/aserto-dev/topaz/pkg/app/ui"
 )
 
 // Topaz is an authorizer service instance, responsible for managing
