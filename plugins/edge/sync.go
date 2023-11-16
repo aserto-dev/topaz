@@ -360,7 +360,7 @@ func (s *Sync) setWatermark(ts *timestamppb.Timestamp) error {
 	if err != nil {
 		return err
 	}
-	w.WriteString(ts.AsTime().Format(time.RFC3339Nano) + "\n")
+	_, _ = w.WriteString(ts.AsTime().Format(time.RFC3339Nano) + "\n")
 	w.Close()
 
 	wmTime := ts.AsTime().Add(time.Millisecond)
@@ -388,20 +388,13 @@ func (s *Sync) syncManifest() error {
 		return err
 	}
 
-	rmd, rr, err := s.getManifest(rdsc.Model)
+	_, rr, err := s.getManifest(rdsc.Model)
 	if err != nil {
 		return err
 	}
 
-	lmd, _, err := s.getManifest(ldsc.Model)
-	if err != nil {
+	if err := s.setManifest(ldsc.Model, rr); err != nil {
 		return err
-	}
-
-	if rmd.Etag != lmd.Etag {
-		if err := s.setManifest(ldsc.Model, rr); err != nil {
-			return err
-		}
 	}
 
 	return nil
