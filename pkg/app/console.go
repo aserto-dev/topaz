@@ -56,11 +56,11 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *ui.ConsoleCfg {
 	}
 	writerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
-		readerURL = getGatewayAddress(serviceConfig)
+		writerURL = getGatewayAddress(serviceConfig)
 	}
 	modelURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
-		readerURL = getGatewayAddress(serviceConfig)
+		modelURL = getGatewayAddress(serviceConfig)
 	}
 	return &ui.ConsoleCfg{
 		AsertoDirectoryURL:       readerURL,
