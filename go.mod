@@ -5,7 +5,6 @@ go 1.20
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
-
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
 
@@ -20,7 +19,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.3
 	github.com/aserto-dev/go-directory v0.30.4
 	github.com/aserto-dev/go-directory-cli v0.30.1
-	github.com/aserto-dev/go-edge-ds v0.30.4
+	github.com/aserto-dev/go-edge-ds v0.30.5
 	github.com/aserto-dev/go-grpc v0.8.59
 	github.com/aserto-dev/go-topaz-ui v0.0.2
 	github.com/aserto-dev/header v0.0.5
