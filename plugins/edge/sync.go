@@ -35,7 +35,7 @@ const (
 	status         string = "status"
 	started        string = "started"
 	finished       string = "finished"
-	channelSize    int    = 2000
+	channelSize    int    = 10000
 	localHost      string = "localhost:9292"
 )
 
