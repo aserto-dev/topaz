@@ -107,31 +107,35 @@ func (p *Plugin) SyncNow() {
 func (p *Plugin) scheduler(interval *time.Ticker) {
 	defer interval.Stop()
 
+	wait := time.Duration(p.config.SyncInterval) * time.Minute
+
 	for {
 		select {
 		case <-p.ctx.Done():
-			p.logger.Warn().Time("done", time.Now()).Msg("scheduler")
+			p.logger.Warn().Time("done", time.Now()).Msg(syncScheduler)
 			return
 		case t := <-interval.C:
-			p.logger.Info().Time("dispatch", t).Msg("scheduler")
+			p.logger.Info().Time("dispatch", t).Msg(syncScheduler)
+			interval.Stop()
 			p.task()
 			interval.Reset(time.Duration(p.config.SyncInterval) * time.Minute)
-			p.logger.Info().Int("interval", p.config.SyncInterval).Time("next", time.Now().Add(time.Duration(p.config.SyncInterval)*time.Minute)).Msg("scheduler")
+			p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
 		case <-p.syncNow:
 			p.logger.Info().Msg("run-now")
+			interval.Stop()
 			p.task()
 			interval.Reset(time.Duration(p.config.SyncInterval) * time.Minute)
-			p.logger.Info().Int("interval", p.config.SyncInterval).Time("next", time.Now().Add(time.Duration(p.config.SyncInterval)*time.Minute)).Msg("scheduler")
+			p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
 		}
 	}
 }
 
 func (p *Plugin) task() {
-	p.logger.Info().Time("started", time.Now()).Msg("scheduler")
+	p.logger.Info().Str(status, started).Msg(syncTask)
 
 	defer func() {
 		if r := recover(); r != nil {
-			p.logger.Error().Interface("recover", r).Msg("task-panic")
+			p.logger.Error().Interface("recover", r).Msg(syncTask)
 		}
 	}()
 
@@ -142,5 +146,5 @@ func (p *Plugin) task() {
 	sync := NewSyncMgr(p.config, p.topazConfig, p.logger)
 	sync.Run()
 
-	p.logger.Info().Time("finished", time.Now()).Msg("scheduler")
+	p.logger.Info().Str(status, finished).Msg(syncTask)
 }

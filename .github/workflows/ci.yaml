@@ -267,15 +267,12 @@ jobs:
           msi="$(basename "$ZIP_FILE" ".zip").msi"
           printf "msi=${msi}" >> $GITHUB_OUTPUT
           go-msi make --arch amd64 --msi "$PWD/$msi" --out "$PWD/build" --version "${GITHUB_REF#refs/tags/}"
-      # - 
-      #   name: Upload MSI
-      #   shell: bash
-      #   run: |
-      #     tag_name="${GITHUB_REF#refs/tags/}"
-      #     hub release edit "$tag_name" -m "" -a "$MSI_FILE"
-      #     release_url="$(gh api repos/:owner/:repo/releases -q ".[]|select(.tag_name==\"${tag_name}\")|.url")"
-      #     publish_args=( -F draft=false )
-      #     gh api -X PATCH "$release_url" "${publish_args[@]}"
-      #   env:
-      #     MSI_FILE: ${{ steps.buildmsi.outputs.msi }}
-      #     GITHUB_TOKEN: ${{ steps.vault.outputs.ROOT_TOKEN }}
+      - 
+        name: Upload MSI
+        shell: bash
+        run: |
+          tag_name="${GITHUB_REF#refs/tags/}"
+          gh release upload "$tag_name" "$MSI_FILE" --repo aserto-dev/topaz --clobber
+        env:
+          MSI_FILE: ${{ steps.buildmsi.outputs.msi }}
+          GITHUB_TOKEN: ${{ steps.vault.outputs.ROOT_TOKEN }}
