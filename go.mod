@@ -4,6 +4,7 @@ go 1.20
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
@@ -17,9 +18,9 @@ require (
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.30.0
 	github.com/aserto-dev/go-authorizer v0.20.3
-	github.com/aserto-dev/go-directory v0.30.4
+	github.com/aserto-dev/go-directory v0.30.5
 	github.com/aserto-dev/go-directory-cli v0.30.1
-	github.com/aserto-dev/go-edge-ds v0.30.5
+	github.com/aserto-dev/go-edge-ds v0.30.6
 	github.com/aserto-dev/go-grpc v0.8.59
 	github.com/aserto-dev/go-topaz-ui v0.0.2
 	github.com/aserto-dev/header v0.0.5
@@ -28,7 +29,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.30.1
 	github.com/aserto-dev/runtime v0.58.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
-	github.com/aserto-dev/service-host v0.0.7
+	github.com/aserto-dev/service-host v0.0.8
 	github.com/cli/browser v1.3.0
 	github.com/fatih/color v1.16.0
 	github.com/fullstorydev/grpcurl v1.8.9
@@ -63,7 +64,7 @@ require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
-	github.com/aserto-dev/azm v0.0.16 // indirect
+	github.com/aserto-dev/azm v0.0.17 // indirect
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -77,6 +78,7 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
