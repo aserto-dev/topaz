@@ -27,9 +27,17 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
+	rootPath, err := dockerx.DefaultRoots()
+	if err != nil {
+		return err
+	}
+
 	color.Green(">>> starting topaz...")
 
-	args := cmd.dockerArgs()
+	args, err := cmd.dockerArgs(rootPath)
+	if err != nil {
+		return err
+	}
 
 	cmdArgs := []string{
 		"run",
@@ -38,15 +46,10 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 
 	args = append(args, cmdArgs...)
 
-	path, err := dockerx.DefaultRoots()
-	if err != nil {
-		return err
-	}
-
-	return dockerx.DockerWith(cmd.env(path), args...)
+	return dockerx.DockerWith(cmd.env(rootPath), args...)
 }
 
-func (cmd *RunCmd) dockerArgs() []string {
+func (cmd *RunCmd) dockerArgs(path string) ([]string, error) {
 	args := append([]string{}, dockerCmd...)
 	args = append(args, "-ti")
 
@@ -61,11 +64,17 @@ func (cmd *RunCmd) dockerArgs() []string {
 		args = append(args, "--env", env)
 	}
 
+	ports, err := getPorts(path)
+	if err != nil {
+		return nil, err
+	}
+	args = append(args, ports...)
+
 	if cmd.Hostname != "" {
 		args = append(args, hostname...)
 	}
 
-	return append(args, containerName...)
+	return append(args, containerName...), nil
 }
 
 func (cmd *RunCmd) env(path string) map[string]string {

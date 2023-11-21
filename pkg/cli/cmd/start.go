@@ -2,12 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/pkg/errors"
+	"gopkg.in/yaml.v2"
 
 	"github.com/fatih/color"
 )
@@ -29,9 +31,17 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
+	rootPath, err := dockerx.DefaultRoots()
+	if err != nil {
+		return err
+	}
+
 	color.Green(">>> starting topaz...")
 
-	args := cmd.dockerArgs()
+	args, err := cmd.dockerArgs(rootPath)
+	if err != nil {
+		return err
+	}
 
 	cmdArgs := []string{
 		"run",
@@ -39,11 +49,6 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	args = append(args, cmdArgs...)
-
-	rootPath, err := dockerx.DefaultRoots()
-	if err != nil {
-		return err
-	}
 
 	if _, err := os.Stat(path.Join(rootPath, "cfg", "config.yaml")); errors.Is(err, os.ErrNotExist) {
 		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(rootPath, "cfg", "config.yaml"))
@@ -69,14 +74,6 @@ var (
 		"--rm",
 		"--name", dockerx.Topaz,
 		"--platform=linux/amd64",
-		"-p", "8282:8282",
-		"-p", "8383:8383",
-		"-p", "8484:8484",
-		"-p", "9292:9292",
-		"-p", "9393:9393",
-		"-p", "9494:9494",
-		"-p", "9696:9696",
-		"-p", "8080:8080",
 		"-v", "$TOPAZ_CERTS_DIR/certs:/certs:rw",
 		"-v", "$TOPAZ_CFG_DIR/cfg:/config:ro",
 		"-v", "$TOPAZ_EDS_DIR/db:/db:rw",
@@ -99,13 +96,14 @@ var (
 	}
 )
 
-func (cmd *StartCmd) dockerArgs() []string {
+func (cmd *StartCmd) dockerArgs(rootPath string) ([]string, error) {
 	args := append([]string{}, dockerCmd...)
 
 	policyRoot := os.Getenv("POLICY_FILE_STORE_ROOT ")
 	if policyRoot == "" {
 		policyRoot = dockerx.DefaultPolicyRoot
 	}
+
 	dockerArgs = append(dockerArgs, "-v", fmt.Sprintf("%s:/root/.policy:ro", policyRoot))
 	args = append(args, dockerArgs...)
 	args = append(args, daemonArgs...)
@@ -113,12 +111,17 @@ func (cmd *StartCmd) dockerArgs() []string {
 	for _, env := range cmd.Env {
 		args = append(args, "--env", env)
 	}
+	ports, err := getPorts(rootPath)
+	if err != nil {
+		return nil, err
+	}
+	args = append(args, ports...)
 
 	if cmd.Hostname != "" {
 		args = append(args, hostname...)
 	}
 
-	return append(args, containerName...)
+	return append(args, containerName...), nil
 }
 
 func (cmd *StartCmd) env(rootPath string) map[string]string {
@@ -130,4 +133,91 @@ func (cmd *StartCmd) env(rootPath string) map[string]string {
 		"CONTAINER_VERSION":  cmd.ContainerVersion,
 		"CONTAINER_HOSTNAME": cmd.Hostname,
 	}
+}
+
+func getPorts(rootPath string) ([]string, error) {
+	portMap := make(map[string]string)
+	content, err := os.ReadFile(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
+	if err != nil {
+		return nil, err
+	}
+
+	var api map[string]interface{}
+	err = yaml.Unmarshal(content, &api)
+	if err != nil {
+		return nil, err
+	}
+
+	healthConfig := getValueByKey(api["api"], "health")
+	if healthConfig != nil {
+		port, err := getPort(healthConfig)
+		if err != nil {
+			return nil, err
+		}
+		portMap[port] = fmt.Sprintf("%s:%s", port, port)
+	}
+
+	metricsConfig := getValueByKey(api["api"], "metrics")
+	if metricsConfig != nil {
+		port, err := getPort(metricsConfig)
+		if err != nil {
+			return nil, err
+		}
+		portMap[port] = fmt.Sprintf("%s:%s", port, port)
+	}
+
+	servicesConfig, ok := getValueByKey(api["api"], "services").(map[interface{}]interface{})
+	if ok {
+		for _, value := range servicesConfig {
+			grpcConfig := getValueByKey(value, "grpc")
+			if grpcConfig != nil {
+				port, err := getPort(grpcConfig)
+				if err != nil {
+					return nil, err
+				}
+				portMap[port] = fmt.Sprintf("%s:%s", port, port)
+			}
+			gatewayConfig := getValueByKey(value, "gateway")
+			if gatewayConfig != nil {
+				port, err := getPort(gatewayConfig)
+				if err != nil {
+					return nil, err
+				}
+				portMap[port] = fmt.Sprintf("%s:%s", port, port)
+			}
+		}
+	}
+
+	// ensure unique assignment for each port
+	var args []string
+	for _, v := range portMap {
+		args = append(args, "-p", v)
+	}
+	return args, nil
+}
+
+func getPort(obj interface{}) (string, error) {
+	address := getValueByKey(obj, "listen_address")
+	if address != nil {
+		_, port, err := net.SplitHostPort(address.(string))
+		if err != nil {
+			return "", err
+		}
+		return port, nil
+	}
+
+	return "", fmt.Errorf("listen_address not found")
+}
+
+func getValueByKey(obj interface{}, key string) interface{} {
+	mobj, ok := obj.(map[interface{}]interface{})
+	if !ok {
+		return nil
+	}
+	for k, v := range mobj {
+		if k == key {
+			return v
+		}
+	}
+	return nil
 }
