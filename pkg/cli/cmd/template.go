@@ -98,6 +98,16 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	return cmd.installTemplate(c, instance)
 }
 
+// installTemplate steps:
+// 1 - topaz stop - ensure topaz is not running, so we can reconfigure
+// 2 - topaz configure - generate a new configuration based on the requirements of the template
+// 3 - topaz start - start instance using new configuration
+// 4 - wait for health endpoint to be in serving state
+// 5 - topaz manifest delete --force, reset the directory store
+// 6 - topaz manifest set, deploy the manifest
+// 7 - topaz import, load IDP and domain data (in that order)
+// 8 - topaz test exec, execute assertions when part of template
+// 9 - topaz console, launch console so the user start exploring the template artifacts
 func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance) error {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -109,18 +119,14 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 
 	cmd.Config.Insecure = true
 
-	// # 1 topaz stop
+	// 1 - topaz stop - ensure topaz is not running, so we can reconfigure
 	{
 		command := &StopCmd{}
 		if err := command.Run(c); err != nil {
 			return err
 		}
 	}
-	// # 2 remove directory.db, mimic `topaz delete manifest`
-	{
-		_ = os.Remove(filepath.Join(topazDir, "db", "directory.db"))
-	}
-	// # 3 topaz config -n -r
+	// 2 - topaz configure - generate a new configuration based on the requirements of the template
 	{
 		command := ConfigureCmd{
 			PolicyName: i.Assets.Policy.Name,
@@ -130,8 +136,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			return err
 		}
 	}
-	// # 4 topaz stop
-	// # 5 topaz start
+	// 3 - topaz start - start instance using new configuration
 	{
 		command := &StartCmd{
 			ContainerName:    "topaz",
@@ -141,12 +146,20 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			return err
 		}
 	}
+	// 4 - wait for health endpoint to be in serving state
 	{
 		if !isServing() {
 			return fmt.Errorf("gRPC endpoint not SERVING")
 		}
 	}
-	// # 6 topaz set manifest
+	// 5 - topaz manifest delete --force, reset the directory store
+	{
+		command := DeleteManifestCmd{}
+		if err := command.Run(c); err != nil {
+			return err
+		}
+	}
+	// 6 - topaz manifest set, deploy the manifest
 	{
 		manifestDir := path.Join(topazDir, "model")
 		if err := os.MkdirAll(manifestDir, 0700); err != nil {
@@ -179,7 +192,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			return err
 		}
 	}
-	// # 7 topaz import idp & domain data
+	// 7 - topaz import, load IDP and domain data (in that order)
 	{
 		dataDir := path.Join(topazDir, "data")
 		if err := os.MkdirAll(dataDir, 0700); err != nil {
@@ -229,8 +242,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			return err
 		}
 	}
-
-	// # 9 topaz test exec assertions
+	// 8 - topaz test exec, execute assertions when part of template
 	{
 		assertionsDir := path.Join(topazDir, "assertions")
 		if err := os.MkdirAll(assertionsDir, 0700); err != nil {
@@ -267,10 +279,10 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			}
 		}
 	}
-
+	// 9 - topaz console, launch console so the user start exploring the template artifacts
 	{
 		command := ConsoleCmd{
-			ConsoleAdress: "https://localhost:8080/ui/directory",
+			ConsoleAddress: "https://localhost:8080/ui/directory",
 		}
 		if err := command.Run(c); err != nil {
 			return err
@@ -297,7 +309,7 @@ func getBytesFromURL(url string) ([]byte, error) {
 
 func getTemplateList() (tmplList, error) {
 	buf, err := getBytesFromURL(templatesURL)
-	if err != nil {
+	if err != nil {:
 		return nil, err
 	}
 
