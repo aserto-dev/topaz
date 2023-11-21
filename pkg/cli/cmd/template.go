@@ -154,7 +154,10 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 	}
 	// 5 - topaz manifest delete --force, reset the directory store
 	{
-		command := DeleteManifestCmd{}
+		command := DeleteManifestCmd{
+			Force:  true,
+			Config: cmd.Config,
+		}
 		if err := command.Run(c); err != nil {
 			return err
 		}
@@ -309,7 +312,7 @@ func getBytesFromURL(url string) ([]byte, error) {
 
 func getTemplateList() (tmplList, error) {
 	buf, err := getBytesFromURL(templatesURL)
-	if err != nil {:
+	if err != nil {
 		return nil, err
 	}
 
