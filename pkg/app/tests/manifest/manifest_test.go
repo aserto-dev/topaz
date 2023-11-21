@@ -61,11 +61,10 @@ func TestManifest(t *testing.T) {
 		assert.NoError(t, err)
 	}
 
-	// getManifest should fail with not found error when manifest does not exist.
+	// getManifest should not fail, but return an empty manifest.
 	if metadata, body, err := getManifest(ctx, client.Model); err == nil {
 		assert.NoError(t, err)
 		assert.NotNil(t, metadata)
-		assert.Empty(t, metadata)
 
 		buf := make([]byte, 1024)
 

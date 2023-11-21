@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"bufio"
+	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
@@ -28,6 +31,7 @@ type SetManifestCmd struct {
 }
 
 type DeleteManifestCmd struct {
+	Force bool `flag:"" help:"do not ask for conformation to delete manifest"`
 	clients.Config
 }
 
@@ -89,12 +93,45 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
+	if err := CheckRunning(c); err != nil {
+		return err
+	}
+
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
 
-	color.Green(">>> delete manifest")
+	c.UI.Exclamation().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
+	if cmd.Force || promptYesNo("Do you want to continue?", false) {
+		color.Green(">>> delete manifest")
+		return dirClient.V3.DeleteManifest(c.Context)
+	}
+	return nil
+}
 
-	return dirClient.V3.DeleteManifest(c.Context)
+func promptYesNo(label string, def bool) bool {
+	choices := "Y/n"
+	if !def {
+		choices = "y/N"
+	}
+
+	r := bufio.NewReader(os.Stdin)
+	var s string
+
+	for {
+		fmt.Fprintf(os.Stderr, "%s (%s) ", label, choices)
+		s, _ = r.ReadString('\n')
+		s = strings.TrimSpace(s)
+		if s == "" {
+			return def
+		}
+		s = strings.ToLower(s)
+		if s == "y" || s == "yes" {
+			return true
+		}
+		if s == "n" || s == "no" {
+			return false
+		}
+	}
 }
