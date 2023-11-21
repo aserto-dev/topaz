@@ -28,6 +28,7 @@ type SetManifestCmd struct {
 }
 
 type DeleteManifestCmd struct {
+	Force bool `flag:"" help:"suppress deletion warning and conformation"`
 	clients.Config
 }
 
@@ -89,9 +90,25 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
+	if err := CheckRunning(c); err != nil {
+		return err
+	}
+
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
+	}
+
+	if !cmd.Force {
+		var answer string
+		c.UI.Exclamation().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
+		c.UI.Normal().
+			WithAskString("Type CONFIRMED to continue", &answer).
+			Do()
+
+		if answer != "CONFIRMED" {
+			return nil
+		}
 	}
 
 	color.Green(">>> delete manifest")
