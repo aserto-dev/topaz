@@ -211,22 +211,7 @@ api:
 opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2
-  # max_plugin_wait_time_seconds: 30 set as default
   local_bundles:
-    paths: []
+    paths: [${TOPAZ_POLICIES_PATH}]
     skip_verification: true
-  config:
-    services:
-      ghcr:
-        url: https://ghcr.io
-        type: "oci"
-        response_header_timeout_seconds: 5
-    bundles:
-      todo:
-        service: ghcr
-        resource: "ghcr.io/aserto-policies/policy-todo-rebac:latest"
-        persist: false
-        config:
-          polling:
-            min_delay_seconds: 60
-            max_delay_seconds: 120
+    watch: true
