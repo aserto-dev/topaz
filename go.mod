@@ -21,7 +21,7 @@ require (
 	github.com/aserto-dev/go-directory-cli v0.30.1
 	github.com/aserto-dev/go-edge-ds v0.30.7
 	github.com/aserto-dev/go-grpc v0.8.59
-	github.com/aserto-dev/go-topaz-ui v0.0.2
+	github.com/aserto-dev/go-topaz-ui v0.0.3
 	github.com/aserto-dev/header v0.0.5
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.3
@@ -51,7 +51,8 @@ require (
 	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
-	sigs.k8s.io/controller-runtime v0.16.3
+	gopkg.in/yaml.v2 v2.4.0
+	sigs.k8s.io/controller-runtime v0.15.0
 )
 
 require (
@@ -170,7 +171,6 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231030173426-d783a09b4405 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.3.1 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
