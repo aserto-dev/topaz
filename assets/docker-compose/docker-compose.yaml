@@ -1,0 +1,27 @@
+version: "3.5"
+services:
+  topaz:
+    command:
+      - run
+      - --config-file
+      - /config/local.yaml
+    container_name: topaz
+    environment:
+      - TOPAZ_POLICIES_PATH=/policies
+    image: ghcr.io/aserto-dev/topaz:latest
+    ports:
+      - 8282:8282
+      - 8383:8383
+      - 8484:8484
+      - 8585:8585
+      - 9292:9292
+    networks:
+      - my-network
+    volumes:
+      - ./config:/config
+      - ./policies:/policies
+      - ./certs:/certs
+networks:
+  my-network:
+    driver: bridge
+    name: my-network
