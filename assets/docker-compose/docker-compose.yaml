@@ -10,17 +10,30 @@ services:
       - TOPAZ_POLICIES_PATH=/policies
     image: ghcr.io/aserto-dev/topaz:latest
     ports:
+      - 8081:8081
       - 8282:8282
       - 8383:8383
-      - 8484:8484
-      - 8585:8585
       - 9292:9292
+      - 9393:9393
+      - 9494:9494
+      - 9595:9595
     networks:
       - my-network
     volumes:
       - ./config:/config
       - ./policies:/policies
       - ./certs:/certs
+  topaz-console:
+    container_name: topaz-console
+    image: ghcr.io/aserto-dev/self-hosted-console:0.0.1
+    ports:
+      - 8080:8080
+    environment:
+      - AUTHORIZER_SERVICE_URL=https://localhost:8383
+      - ASERTO_DIRECTORY_URL=https://localhost:9393
+      - STORAGE_PATH=/config
+    volumes:
+      - ./config:/config
 networks:
   my-network:
     driver: bridge
