@@ -23,9 +23,11 @@ services:
       - ./config:/config
       - ./policies:/policies
       - ./certs:/certs
+      - ./data:/data
+      - ./db:/db
   topaz-console:
     container_name: topaz-console
-    image: ghcr.io/aserto-dev/self-hosted-console:0.0.1
+    image: ghcr.io/aserto-dev/self-hosted-console:0.0.6
     ports:
       - 8080:8080
     environment:
