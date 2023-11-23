@@ -97,7 +97,7 @@
                 "display_name": "Jerry Smith",
                 "properties": {
                     "email": "jerry@the-smiths.com",
-                    "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Jerry%20Smith.jpg",
+                    "picture": "https://www.topaz.sh/assets/citadel/img/Jerry%20Smith.jpg",
                     "status": "USER_STATUS_ACTIVE",
                     "roles": ["viewer"]
                 }
@@ -108,7 +108,7 @@
                 "display_name": "Beth Smith",
                 "properties": {
                     "email": "beth@the-smiths.com",
-                    "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Beth%20Smith.jpg",
+                    "picture": "https://www.topaz.sh/assets/citadel/img/Beth%20Smith.jpg",
                     "status": "USER_STATUS_ACTIVE",
                     "roles": ["viewer"]
                 }
@@ -128,7 +128,7 @@
                 "display_name": "Rick Sanchez",
                 "properties": {
                     "email": "rick@the-citadel.com",
-                    "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Rick%20Sanchez.jpg",
+                    "picture": "https://www.topaz.sh/assets/citadel/img/Rick%20Sanchez.jpg",
                     "status": "USER_STATUS_ACTIVE",
                     "roles": ["admin", "evil_genius"]
                 }
@@ -139,7 +139,7 @@
                 "display_name": "Morty Smith",
                 "properties": {
                     "email": "morty@the-citadel.com",
-                    "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Morty%20Smith.jpg",
+                    "picture": "https://www.topaz.sh/assets/citadel/img/Morty%20Smith.jpg",
                     "status": "USER_STATUS_ACTIVE",
                     "roles": ["editor"]
                 }
@@ -150,7 +150,7 @@
                 "display_name": "Summer Smith",
                 "properties": {
                     "email": "summer@the-smiths.com",
-                    "picture": "https://github.com/aserto-demo/contoso-ad-sample/raw/main/UserImages/Summer%20Smith.jpg",
+                    "picture": "https://www.topaz.sh/assets/citadel/img/Summer%20Smith.jpg",
                     "status": "USER_STATUS_ACTIVE",
                     "roles": ["editor"]
                 }
