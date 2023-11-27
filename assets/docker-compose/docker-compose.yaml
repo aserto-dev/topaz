@@ -31,8 +31,8 @@ services:
     ports:
       - 8080:8080
     environment:
-      - AUTHORIZER_SERVICE_URL=https://localhost:8383
-      - ASERTO_DIRECTORY_URL=https://localhost:9393
+      - AUTHORIZER_SERVICE_URL=http://localhost:8383
+      - ASERTO_DIRECTORY_URL=http://localhost:9393
       - STORAGE_PATH=/config
     volumes:
       - ./config:/config
