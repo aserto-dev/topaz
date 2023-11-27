@@ -1,0 +1,42 @@
+version: "3.5"
+services:
+  topaz:
+    command:
+      - run
+      - --config-file
+      - /config/local.yaml
+    container_name: topaz
+    environment:
+      - TOPAZ_POLICIES_PATH=/policies
+    image: ghcr.io/aserto-dev/topaz:latest
+    ports:
+      - 8081:8081
+      - 8282:8282
+      - 8383:8383
+      - 9292:9292
+      - 9393:9393
+      - 9494:9494
+      - 9595:9595
+    networks:
+      - my-network
+    volumes:
+      - ./config:/config
+      - ./policies:/policies
+      - ./certs:/certs
+      - ./data:/data
+      - ./db:/db
+  topaz-console:
+    container_name: topaz-console
+    image: ghcr.io/aserto-dev/self-hosted-console:0.0.6
+    ports:
+      - 8080:8080
+    environment:
+      - AUTHORIZER_SERVICE_URL=http://localhost:8383
+      - ASERTO_DIRECTORY_URL=http://localhost:9393
+      - STORAGE_PATH=/config
+    volumes:
+      - ./config:/config
+networks:
+  my-network:
+    driver: bridge
+    name: my-network
