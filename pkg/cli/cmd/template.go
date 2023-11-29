@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -24,11 +26,11 @@ const (
 type tmplList map[string]*tmplItem
 
 type tmplItem struct {
-	Title            string `json:"title"`
-	ShortDescription string `json:"short_description"`
-	Description      string `json:"description"`
-	URL              string `json:"topaz_url"`
-	DocumentationURL string `json:"docs_url"`
+	Title            string `json:"title,omitempty"`
+	ShortDescription string `json:"short_description,omitempty"`
+	Description      string `json:"description,omitempty"`
+	URL              string `json:"topaz_url,omitempty"`
+	DocumentationURL string `json:"docs_url,omitempty"`
 }
 
 type tmplInstance struct {
@@ -98,7 +100,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	if !cmd.Force {
 		var proceed bool
 		c.UI.Exclamation().WithAskBool("Installing this template will completely reset your topaz configuration. Do you want to proceed ?", &proceed).Do()
-		if proceed == false {
+		if !proceed {
 			return nil
 		}
 	}
@@ -121,7 +123,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 // 6 - topaz manifest set, deploy the manifest
 // 7 - topaz import, load IDP and domain data (in that order)
 // 8 - topaz test exec, execute assertions when part of template
-// 9 - topaz console, launch console so the user start exploring the template artifacts
+// 9 - topaz console, launch console so the user start exploring the template artifacts.
 func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance) error {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -226,11 +228,11 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			if err != nil {
 				return err
 			}
-			defer f.Close()
 
 			if _, err := f.Write(buf); err != nil {
 				return err
 			}
+			f.Close()
 		}
 
 		for _, v := range i.Assets.DomainData {
@@ -243,11 +245,11 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			if err != nil {
 				return err
 			}
-			defer f.Close()
 
 			if _, err := f.Write(buf); err != nil {
 				return err
 			}
+			f.Close()
 		}
 
 		command := ImportCmd{
@@ -276,11 +278,11 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			if err != nil {
 				return err
 			}
-			defer f.Close()
 
 			if _, err := f.Write(buf); err != nil {
 				return err
 			}
+			f.Close()
 		}
 
 		for _, v := range i.Assets.Assertions {
@@ -309,8 +311,8 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 	return nil
 }
 
-func getBytesFromURL(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+func getBytesFromURL(fileURL string) ([]byte, error) {
+	resp, err := http.Get(fileURL)
 	if err != nil {
 		return nil, err
 	}
@@ -338,13 +340,23 @@ func getTemplateList(templatesURL string) (tmplList, error) {
 	return tmplList, nil
 }
 
-func getItem(name string, templatesURL string) (*tmplItem, error) {
+func getItem(name, templatesURL string) (*tmplItem, error) {
 	list, err := getTemplateList(templatesURL)
 	if err != nil {
 		return nil, err
 	}
 
 	if item, ok := list[name]; ok {
+		parsed, err := url.Parse(item.URL)
+		if err != nil {
+			return nil, err
+		}
+		if parsed.Scheme == "" {
+			base := strings.Replace(templatesURL, path.Base(templatesURL), "", 1)
+			fullURL := base + "/" + item.URL
+			item.URL = fullURL
+		}
+
 		return item, nil
 	}
 
