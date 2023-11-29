@@ -9,7 +9,6 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
-	"strings"
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -17,16 +16,19 @@ import (
 )
 
 const (
-	templatesURL   string = "https://topaz.sh/assets/templates.json"
-	colName        string = "name"
-	colDescription string = "description"
+	colName          string = "name"
+	colDescription   string = "description"
+	colDocumentation string = "documentation"
 )
 
 type tmplList map[string]*tmplItem
 
 type tmplItem struct {
-	Description string `json:"description"`
-	URL         string `json:"url"`
+	Title            string `json:"title"`
+	ShortDescription string `json:"short_description"`
+	Description      string `json:"description"`
+	URL              string `json:"topaz_url"`
+	DocumentationURL string `json:"docs_url"`
 }
 
 type tmplInstance struct {
@@ -49,10 +51,12 @@ type TemplateCmd struct {
 	Install InstallTemplateCmd `cmd:"" help:"install template"`
 }
 
-type ListTemplatesCmd struct{}
+type ListTemplatesCmd struct {
+	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates.json" help:"template url"`
+}
 
 func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
-	buf, err := getBytesFromURL("https://topaz.sh/assets/templates.json")
+	buf, err := getBytesFromURL(cmd.TemplatesURL)
 	if err != nil {
 		return err
 	}
@@ -68,23 +72,24 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 		maxWidth = max(maxWidth, len(n)+1)
 	}
 
-	fmt.Fprintf(c.UI.Output(), "%-*s : %s\n", maxWidth, colName, colDescription)
-	fmt.Fprintf(c.UI.Output(), "%-*s : %s\n", maxWidth, strings.Repeat("-", maxWidth), strings.Repeat("-", len(colDescription)))
-
+	table := c.UI.Normal().WithTable(colName, colDescription, colDocumentation)
+	table.WithTableNoAutoWrapText()
 	for n, t := range tmplList {
-		fmt.Fprintf(c.UI.Output(), "%-*s : %s\n", maxWidth, n, t.Description)
+		table.WithTableRow(n, t.ShortDescription, t.DocumentationURL)
 	}
+	table.Do()
 
 	return nil
 }
 
 type InstallTemplateCmd struct {
-	Name string `arg:"" required:"" help:"template name"`
+	Name         string `arg:"" required:"" help:"template name"`
+	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates.json" help:"template url"`
 	clients.Config
 }
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
-	item, err := getItem(cmd.Name)
+	item, err := getItem(cmd.Name, cmd.TemplatesURL)
 	if err != nil {
 		return err
 	}
@@ -310,7 +315,7 @@ func getBytesFromURL(url string) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func getTemplateList() (tmplList, error) {
+func getTemplateList(templatesURL string) (tmplList, error) {
 	buf, err := getBytesFromURL(templatesURL)
 	if err != nil {
 		return nil, err
@@ -324,8 +329,8 @@ func getTemplateList() (tmplList, error) {
 	return tmplList, nil
 }
 
-func getItem(name string) (*tmplItem, error) {
-	list, err := getTemplateList()
+func getItem(name string, templatesURL string) (*tmplItem, error) {
+	list, err := getTemplateList(templatesURL)
 	if err != nil {
 		return nil, err
 	}
