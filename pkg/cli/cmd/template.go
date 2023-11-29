@@ -84,7 +84,9 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 
 type InstallTemplateCmd struct {
 	Name         string `arg:"" required:"" help:"template name"`
+	Force        bool   `flag:"" required:"false" help:"forcefully apply template"`
 	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates.json" help:"template url"`
+
 	clients.Config
 }
 
@@ -92,6 +94,13 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	item, err := getItem(cmd.Name, cmd.TemplatesURL)
 	if err != nil {
 		return err
+	}
+	if !cmd.Force {
+		var proceed bool
+		c.UI.Exclamation().WithAskBool("Installing this template will completely reset your topaz configuration. Do you want to proceed ?", &proceed).Do()
+		if proceed == false {
+			return nil
+		}
 	}
 
 	instance, err := item.getInstance()
