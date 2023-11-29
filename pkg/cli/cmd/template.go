@@ -99,7 +99,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	}
 	if !cmd.Force {
 		var proceed bool
-		c.UI.Exclamation().WithAskBool("Installing this template will completely reset your topaz configuration. Do you want to proceed ?", &proceed).Do()
+		c.UI.Exclamation().WithAskBool("Installing this template will completely reset your topaz configuration. Do you want to proceed ? [true/false]", &proceed).Do()
 		if !proceed {
 			return nil
 		}

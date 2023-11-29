@@ -18,7 +18,7 @@ type ConfigureCmd struct {
 	Resource         string `short:"r" help:"resource url"`
 	Stdout           bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
 	EdgeDirectory    bool   `short:"d" help:"enable edge directory" default:"false"`
-	SeedMetadata     bool   `short:"s" help:"enable seed metadata" default:"false"`
+	Force            bool   `flag:"" default:"false" short:"f" required:"false" help:"forcefully create configuration"`
 }
 
 func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
@@ -49,6 +49,15 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Stdout {
 		w = c.UI.Output()
 	} else {
+		if !cmd.Force {
+			if _, err := os.Stat(path.Join(configDir, "config.yaml")); err == nil {
+				var proceed bool
+				c.UI.Exclamation().WithAskBool("A configuration file already exists. Do you want to continue ? [true/false]", &proceed).Do()
+				if !proceed {
+					return nil
+				}
+			}
+		}
 		w, err = os.Create(path.Join(configDir, "config.yaml"))
 		if err != nil {
 			return err
@@ -60,7 +69,7 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		PolicyName:       cmd.PolicyName,
 		Resource:         cmd.Resource,
 		EdgeDirectory:    cmd.EdgeDirectory,
-		SeedMetadata:     cmd.SeedMetadata,
+		SeedMetadata:     false,
 	}
 
 	if !cmd.Stdout {
