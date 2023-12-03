@@ -19,13 +19,13 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.3
 	github.com/aserto-dev/go-directory v0.30.5
 	github.com/aserto-dev/go-directory-cli v0.30.1
-	github.com/aserto-dev/go-edge-ds v0.30.7
+	github.com/aserto-dev/go-edge-ds v0.30.8-0.20231203040443-3882a7490155
 	github.com/aserto-dev/go-grpc v0.8.59
 	github.com/aserto-dev/go-topaz-ui v0.0.4
-	github.com/aserto-dev/header v0.0.5
+	github.com/aserto-dev/header v0.0.6
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.3
-	github.com/aserto-dev/openapi-directory v0.30.1
+	github.com/aserto-dev/openapi-directory v0.30.2
 	github.com/aserto-dev/runtime v0.58.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.8
