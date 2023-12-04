@@ -1,0 +1,27 @@
+name: templates
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read Configuration
+        uses: hashicorp/vault-action@v2.7.2
+        id: vault
+        with:
+          url: https://vault.eng.aserto.com/
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+              kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
+
+      - name: Update topaz-website
+        run: |
+          curl -XPOST -H "Authorization: token ${READ_WRITE_TOKEN}" \
+          --fail-with-body \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Content-Type: application/json" \
+          https://api.github.com/repos/aserto-dev/topaz-website/actions/workflows/update_templates.yaml/dispatches \
+          --data '{"ref": "main", "inputs": {"version": "${{ github.ref_name }}" }}'
+      
