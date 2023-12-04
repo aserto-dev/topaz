@@ -85,9 +85,11 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 }
 
 type InstallTemplateCmd struct {
-	Name         string `arg:"" required:"" help:"template name"`
-	Force        bool   `flag:"" required:"false" help:"forcefully apply template"`
-	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates.json" help:"template url"`
+	Name             string `arg:"" required:"" help:"template name"`
+	Force            bool   `flag:"" default:"false" required:"false" help:"forcefully apply template"`
+	ContainerName    string `optional:"" default:"topaz" help:"container name"`
+	ContainerVersion string `optional:"" default:"latest" help:"container version" `
+	TemplatesURL     string `arg:"" required:"false" default:"https://topaz.sh/assets/templates.json" help:"template url"`
 
 	clients.Config
 }
@@ -125,15 +127,48 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 // 8 - topaz test exec, execute assertions when part of template
 // 9 - topaz console, launch console so the user start exploring the template artifacts.
 func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance) error {
-	homeDir, err := os.UserHomeDir()
+	topazDir, err := getTopazDir()
 	if err != nil {
 		return err
 	}
-	topazDir := path.Join(homeDir, ".config", "topaz")
-
 	os.Setenv("TOPAZ_DIR", topazDir)
 
 	cmd.Config.Insecure = true
+	// prepare Topaz configuration and start container
+	err = cmd.prepareTopaz(c, i)
+	if err != nil {
+		return err
+	}
+
+	// 4 - wait for health endpoint to be in serving state
+	if !isServing() {
+		return fmt.Errorf("gRPC endpoint not SERVING")
+	}
+
+	// reset directory store and load data from template
+	err = cmd.loadData(c, i, topazDir)
+	if err != nil {
+		return err
+	}
+
+	// 8 - topaz test exec, execute assertions when part of template
+	err = cmd.runTemplateTests(c, i, topazDir)
+	if err != nil {
+		return err
+	}
+
+	// 9 - topaz console, launch console so the user start exploring the template artifacts
+	command := ConsoleCmd{
+		ConsoleAddress: "https://localhost:8080/ui/directory",
+	}
+	if err := command.Run(c); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, i *tmplInstance) error {
 
 	// 1 - topaz stop - ensure topaz is not running, so we can reconfigure
 	{
@@ -142,11 +177,13 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			return err
 		}
 	}
+
 	// 2 - topaz configure - generate a new configuration based on the requirements of the template
 	{
 		command := ConfigureCmd{
 			PolicyName: i.Assets.Policy.Name,
 			Resource:   i.Assets.Policy.Resource,
+			Force:      true,
 		}
 		if err := command.Run(c); err != nil {
 			return err
@@ -155,19 +192,17 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 	// 3 - topaz start - start instance using new configuration
 	{
 		command := &StartCmd{
-			ContainerName:    "topaz",
-			ContainerVersion: "latest",
+			ContainerName:    cmd.ContainerName,
+			ContainerVersion: cmd.ContainerVersion,
 		}
 		if err := command.Run(c); err != nil {
 			return err
 		}
 	}
-	// 4 - wait for health endpoint to be in serving state
-	{
-		if !isServing() {
-			return fmt.Errorf("gRPC endpoint not SERVING")
-		}
-	}
+	return nil
+}
+
+func (cmd *InstallTemplateCmd) loadData(c *cc.CommonCtx, i *tmplInstance, topazDir string) error {
 	// 5 - topaz manifest delete --force, reset the directory store
 	{
 		command := DeleteManifestCmd{
@@ -261,58 +296,49 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 			return err
 		}
 	}
-	// 8 - topaz test exec, execute assertions when part of template
-	{
-		assertionsDir := path.Join(topazDir, "assertions")
-		if err := os.MkdirAll(assertionsDir, 0700); err != nil {
+	return nil
+}
+
+func (cmd *InstallTemplateCmd) runTemplateTests(c *cc.CommonCtx, i *tmplInstance, topazDir string) error {
+	assertionsDir := path.Join(topazDir, "assertions")
+	if err := os.MkdirAll(assertionsDir, 0700); err != nil {
+		return err
+	}
+
+	for _, v := range i.Assets.Assertions {
+		buf, err := getBytesFromURL(v)
+		if err != nil {
 			return err
 		}
 
-		for _, v := range i.Assets.Assertions {
-			buf, err := getBytesFromURL(v)
-			if err != nil {
-				return err
-			}
-
-			f, err := os.Create(filepath.Join(assertionsDir, filepath.Base(v)))
-			if err != nil {
-				return err
-			}
-
-			if _, err := f.Write(buf); err != nil {
-				return err
-			}
-			f.Close()
+		f, err := os.Create(filepath.Join(assertionsDir, filepath.Base(v)))
+		if err != nil {
+			return err
 		}
 
-		for _, v := range i.Assets.Assertions {
-			command := TestExecCmd{
-				File:    filepath.Join(assertionsDir, filepath.Base(v)),
-				NoColor: false,
-				Summary: true,
-				Config:  cmd.Config,
-			}
-
-			if err := command.Run(c); err != nil {
-				return err
-			}
+		if _, err := f.Write(buf); err != nil {
+			return err
 		}
+		f.Close()
 	}
-	// 9 - topaz console, launch console so the user start exploring the template artifacts
-	{
-		command := ConsoleCmd{
-			ConsoleAddress: "https://localhost:8080/ui/directory",
+
+	for _, v := range i.Assets.Assertions {
+		command := TestExecCmd{
+			File:    filepath.Join(assertionsDir, filepath.Base(v)),
+			NoColor: false,
+			Summary: true,
+			Config:  cmd.Config,
 		}
+
 		if err := command.Run(c); err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
 func getBytesFromURL(fileURL string) ([]byte, error) {
-	resp, err := http.Get(fileURL)
+	resp, err := http.Get(fileURL) //nolint used to download the template files
 	if err != nil {
 		return nil, err
 	}
@@ -392,4 +418,12 @@ func isServing() bool {
 	}
 	fmt.Println(string(out))
 	return true
+}
+
+func getTopazDir() (string, error) {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	return path.Join(homeDir, ".config", "topaz"), nil
 }
