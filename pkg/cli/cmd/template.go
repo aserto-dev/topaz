@@ -54,11 +54,11 @@ type TemplateCmd struct {
 }
 
 type ListTemplatesCmd struct {
-	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates.json" help:"template url"`
+	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh" help:"template url"`
 }
 
 func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
-	buf, err := getBytesFromURL(cmd.TemplatesURL)
+	buf, err := getBytesFromURL(fmt.Sprintf("%s/assets/templates.json", cmd.TemplatesURL))
 	if err != nil {
 		return err
 	}
@@ -89,13 +89,13 @@ type InstallTemplateCmd struct {
 	Force            bool   `flag:"" default:"false" required:"false" help:"forcefully apply template"`
 	ContainerName    string `optional:"" default:"topaz" help:"container name"`
 	ContainerVersion string `optional:"" default:"latest" help:"container version" `
-	TemplatesURL     string `arg:"" required:"false" default:"https://topaz.sh/assets/templates.json" help:"template url"`
+	TemplatesURL     string `arg:"" required:"false" default:"https://topaz.sh" help:"template url"`
 
 	clients.Config
 }
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
-	item, err := getItem(cmd.Name, cmd.TemplatesURL)
+	item, err := getItem(cmd.Name, fmt.Sprintf("%s/assets/templates.json", cmd.TemplatesURL))
 	if err != nil {
 		return err
 	}
@@ -220,7 +220,7 @@ func (cmd *InstallTemplateCmd) loadData(c *cc.CommonCtx, i *tmplInstance, topazD
 			return err
 		}
 
-		buf, err := getBytesFromURL(i.Assets.Manifest)
+		buf, err := getBytesFromURL(fmt.Sprintf("%s/%s", cmd.TemplatesURL, i.Assets.Manifest))
 		if err != nil {
 			return err
 		}
@@ -254,7 +254,7 @@ func (cmd *InstallTemplateCmd) loadData(c *cc.CommonCtx, i *tmplInstance, topazD
 		}
 
 		for _, v := range i.Assets.IdentityData {
-			buf, err := getBytesFromURL(v)
+			buf, err := getBytesFromURL(fmt.Sprintf("%s/%s", cmd.TemplatesURL, v))
 			if err != nil {
 				return err
 			}
@@ -271,7 +271,7 @@ func (cmd *InstallTemplateCmd) loadData(c *cc.CommonCtx, i *tmplInstance, topazD
 		}
 
 		for _, v := range i.Assets.DomainData {
-			buf, err := getBytesFromURL(v)
+			buf, err := getBytesFromURL(fmt.Sprintf("%s/%s", cmd.TemplatesURL, v))
 			if err != nil {
 				return err
 			}
@@ -306,7 +306,7 @@ func (cmd *InstallTemplateCmd) runTemplateTests(c *cc.CommonCtx, i *tmplInstance
 	}
 
 	for _, v := range i.Assets.Assertions {
-		buf, err := getBytesFromURL(v)
+		buf, err := getBytesFromURL(fmt.Sprintf("%s/%s", cmd.TemplatesURL, v))
 		if err != nil {
 			return err
 		}
