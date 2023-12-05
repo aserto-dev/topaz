@@ -2,6 +2,9 @@ name: templates
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+    - assets
 
 jobs:
   trigger:
