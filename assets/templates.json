@@ -1,0 +1,34 @@
+{
+    "peoplefinder":{
+        "title": "Peoplefinder",
+        "short_description": "Corporate directory end-to-end sample",
+        "description": "A corporate directory application that includes a React front-end and a node.js back-end.  It demonstrates three styles of policies - RBAC, ABAC, and ReBAC.",
+        "docs_url": "https://docs.aserto.com/docs/getting-started/peoplefinder/peoplefinder-overview",        
+        "topaz_url": "/templates/topaz/acmecorp.json",
+        "hosted_url": "/templates/hosted/acmecorp.json"
+    },
+    "todo":{
+        "title": "Todo",
+        "short_description": "Todo application end-to-end sample",
+        "description": "A simple Todo application with a back-end implementation in every language, and an interactive tutorial for the policy language. Provides a head start for learning how to integrate Aserto into your own app.",
+        "docs_url": "https://docs.aserto.com/docs/quickstarts/todo/overview",        
+        "topaz_url": "/templates/topaz/citadel.json",
+        "hosted_url": "/templates/hosted/citadel.json"
+    },
+    "simple-rbac": {
+        "title": "Simple RBAC",
+        "short_description": "Simple RBAC authorization template",
+        "description": "The Simple RBAC template defines a resource type, with read, write, and delete permissions, that are granted through the reader, writer, and owner roles. You can evolve it to fit your needs.",
+        "docs_url": "https://docs.aserto.com/docs/quickstarts/todo/overview",        
+        "topaz_url": "/templates/topaz/simple-rbac.json",
+        "hosted_url": "/templates/hosted/simple-rbac.json"
+    },
+    "gdrive": {
+        "title": "GDrive",
+        "short_description": "Google Drive authorization template",
+        "description": "Google Drive",
+        "docs_url": "",                
+        "topaz_url": "/templates/topaz/gdrive.json",
+        "hosted_url": "/templates/hosted/gdrive.json"
+    }
+}
