@@ -58,7 +58,7 @@ type ListTemplatesCmd struct {
 }
 
 func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
-	buf, err := getBytesFromURL(fmt.Sprintf("%s/assets/templates/topaz/templates.json", cmd.TemplatesURL))
+	buf, err := getBytesFromURL(fmt.Sprintf("%s/assets/templates/templates.json", cmd.TemplatesURL))
 	if err != nil {
 		return err
 	}
@@ -95,7 +95,7 @@ type InstallTemplateCmd struct {
 }
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
-	item, err := getItem(cmd.Name, fmt.Sprintf("%s/assets/templates/topaz/templates.json", cmd.TemplatesURL))
+	item, err := getItem(cmd.Name, fmt.Sprintf("%s/assets/templates/templates.json", cmd.TemplatesURL))
 	if err != nil {
 		return err
 	}
