@@ -22,19 +22,20 @@ type CLI struct {
 	Status    StatusCmd    `cmd:"" help:"status of topaz daemon process"`
 	Run       RunCmd       `cmd:"" help:"run topaz in console mode"`
 	Manifest  ManifestCmd  `cmd:"" help:"manifest commands"`
-	Load      LoadCmd      `cmd:"" help:"load manifest from file (DEPRECATED)"`
-	Save      SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)"`
+	Test      TestCmd      `cmd:"" help:"test assertions commands"`
+	Templates TemplateCmd  `cmd:"" help:"template commands"`
+	Console   ConsoleCmd   `cmd:"" help:"open console in the browser"`
 	Import    ImportCmd    `cmd:"" help:"import directory objects"`
 	Export    ExportCmd    `cmd:"" help:"export directory objects"`
 	Backup    BackupCmd    `cmd:"" help:"backup directory data"`
 	Restore   RestoreCmd   `cmd:"" help:"restore directory data"`
-	Test      TestCmd      `cmd:"" help:"execute assertions"`
 	Install   InstallCmd   `cmd:"" help:"install topaz container"`
 	Configure ConfigureCmd `cmd:"" help:"configure topaz service"`
 	Update    UpdateCmd    `cmd:"" help:"update topaz container version"`
 	Uninstall UninstallCmd `cmd:"" help:"uninstall topaz container"`
+	Load      LoadCmd      `cmd:"" help:"load manifest from file (DEPRECATED)"`
+	Save      SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)"`
 	Version   VersionCmd   `cmd:"" help:"version information"`
-	Console   ConsoleCmd   `cmd:"" help:"opens the console in the browser"`
 	NoCheck   bool         `name:"no-check" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
 }
 

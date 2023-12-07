@@ -38,7 +38,7 @@
           "enabled": true,
           "manager": "syeda@acmecorp.com",
           "phone": "+1-20-5555-9834",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Karin%20Lamb.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Karin%20Lamb.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -78,7 +78,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-214-555-1812",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Nuno%20Farinha.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Nuno%20Farinha.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -100,7 +100,7 @@
           "enabled": true,
           "manager": "juliani@acmecorp.com",
           "phone": "+1-425-555-0174",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Karen%20Berg.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Karen%20Berg.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -140,7 +140,7 @@
           "enabled": true,
           "manager": "joses@acmecorp.com",
           "phone": "+1-212-555-2538",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Dominik%20Paiha.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Dominik%20Paiha.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -162,7 +162,7 @@
           "enabled": true,
           "manager": "joses@acmecorp.com",
           "phone": "+1-2555-4845",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Annelie%20Zubar.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Annelie%20Zubar.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -219,7 +219,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-804-555-2465",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Tina%20Makovec.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Tina%20Makovec.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -241,7 +241,7 @@
           "enabled": true,
           "manager": "kellyk@acmecorp.com",
           "phone": "+1-206-555-8951",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/John%20Evans.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/John%20Evans.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -263,7 +263,7 @@
           "enabled": true,
           "manager": "kellyk@acmecorp.com",
           "phone": "+1-206-555-2416",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Sunil%20Uppal.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Sunil%20Uppal.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -303,7 +303,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-2732",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kate%20Taneyhill.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kate%20Taneyhill.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -343,7 +343,7 @@
           "enabled": true,
           "manager": "keithd@acmecorp.com",
           "phone": "+1-206-555-4539",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Mchiel%20Wories.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Mchiel%20Wories.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -392,7 +392,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-7593",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Anders%20Madsen.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Anders%20Madsen.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -414,7 +414,7 @@
           "enabled": true,
           "manager": "karimm@acmecorp.com",
           "phone": "+1-206-555-8258",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Garth%20Fort.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Garth%20Fort.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -445,7 +445,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-1833",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chris%20McGurk.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chris%20McGurk.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -467,7 +467,7 @@
           "enabled": true,
           "manager": "amya@acmecorp.com",
           "phone": "+1-206-555-1437",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ian%20Tien.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ian%20Tien.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -507,7 +507,7 @@
           "enabled": true,
           "manager": "miken@acmecorp.com",
           "phone": "+1-206-555-8185",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Nuria%20Gonzalez.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Nuria%20Gonzalez.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -538,7 +538,7 @@
           "enabled": true,
           "manager": "frankm1@acmecorp.com",
           "phone": "+1-425-555-0187",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jeff%20Hay.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jeff%20Hay.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -569,7 +569,7 @@
           "enabled": true,
           "manager": "keithd@acmecorp.com",
           "phone": "+1-206-555-4932",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jelle%20Visser.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jelle%20Visser.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -599,7 +599,7 @@
           "enabled": true,
           "manager": "brads@acmecorp.com",
           "phone": "+1-206-555-5862",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Idan%20Rubin.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Idan%20Rubin.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -648,7 +648,7 @@
           "enabled": true,
           "manager": "mollyc@acmecorp.com",
           "phone": "+1-425-555-0193",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Sean%20Chai.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Sean%20Chai.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -724,7 +724,7 @@
           "enabled": true,
           "manager": "scottb@acmecorp.com",
           "phone": "+1-206-555-3448",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ayla%20Kol.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ayla%20Kol.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -746,7 +746,7 @@
           "enabled": true,
           "manager": "ellena@acmecorp.com",
           "phone": "+1-206-555-4295",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Michael%20Lund.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Michael%20Lund.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -786,7 +786,7 @@
           "enabled": true,
           "manager": "lenea@acmecorp.com",
           "phone": "+1-701-555-6828",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Vernette%20Price.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Vernette%20Price.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -808,7 +808,7 @@
           "enabled": true,
           "manager": "erikac@acmecorp.com",
           "phone": "+1-206-555-7698",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ken%20Ewert.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ken%20Ewert.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -830,7 +830,7 @@
           "enabled": true,
           "manager": "davidm@acmecorp.com",
           "phone": "+1-206-555-5295",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ray%20Chow.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ray%20Chow.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -870,7 +870,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-2474",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Rob%20Barker.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Rob%20Barker.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -927,7 +927,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-2464",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Dan%20Bacon.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Dan%20Bacon.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -958,7 +958,7 @@
           "enabled": true,
           "manager": "barryj@acmecorp.com",
           "phone": "+1-206-555-6492",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Denis%20Dehenne.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Denis%20Dehenne.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1007,7 +1007,7 @@
           "enabled": true,
           "manager": "scottb@acmecorp.com",
           "phone": "+1-206-555-4738",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Alisa%20Lawyer.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Alisa%20Lawyer.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1056,7 +1056,7 @@
           "enabled": true,
           "manager": "syeda@acmecorp.com",
           "phone": "+1-20-5555-2697",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Merav%20Sror.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Merav%20Sror.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1078,7 +1078,7 @@
           "enabled": true,
           "manager": "lenea@acmecorp.com",
           "phone": "+1-20-5555-6851",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Howard%20Gonzalez.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Howard%20Gonzalez.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1199,7 +1199,7 @@
           "enabled": true,
           "manager": "jennim@acmecorp.com",
           "phone": "+1-206-555-8792",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jeremy%20Los.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jeremy%20Los.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1221,7 +1221,7 @@
           "enabled": true,
           "manager": "alans@acmecorp.com",
           "phone": "+1-206-555-9977",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Scott%20Bishop.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Scott%20Bishop.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1252,7 +1252,7 @@
           "enabled": true,
           "manager": "jackc@acmecorp.com",
           "phone": "+1-619-555-7772",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Steve%20Luper.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Steve%20Luper.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1292,7 +1292,7 @@
           "enabled": true,
           "manager": "jennim@acmecorp.com",
           "phone": "+1-206-555-4666",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lina%20Abola.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lina%20Abola.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1323,7 +1323,7 @@
           "enabled": true,
           "manager": "christk@acmecorp.com",
           "phone": "+1-212-555-9758",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Brad%20Sutton.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Brad%20Sutton.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1354,7 +1354,7 @@
           "enabled": true,
           "manager": "alans@acmecorp.com",
           "phone": "+1-206-555-8673",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Barry%20Johnson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Barry%20Johnson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1376,7 +1376,7 @@
           "enabled": true,
           "manager": "davidm@acmecorp.com",
           "phone": "+1-206-555-1443",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kim%20Ralls.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kim%20Ralls.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1398,7 +1398,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-5233",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Scott%20Rockfield.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Scott%20Rockfield.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1429,7 +1429,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-713-555-6563",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Dan%20Park.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Dan%20Park.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1451,7 +1451,7 @@
           "enabled": true,
           "manager": "bens@acmecorp.com",
           "phone": "+1-206-555-1298",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Hans%20Gufler.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Hans%20Gufler.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1518,7 +1518,7 @@
           "enabled": true,
           "manager": "andrewm@acmecorp.com",
           "phone": "+1-206-555-1694",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Richard%20Tupy.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Richard%20Tupy.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1549,7 +1549,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-06-5555-8461",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Luca%20Dellamore.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Luca%20Dellamore.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1571,7 +1571,7 @@
           "enabled": true,
           "manager": "jennim@acmecorp.com",
           "phone": "+1-206-555-6235",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/John%20Ganio.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/John%20Ganio.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1656,7 +1656,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-206-555-4157",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Matt%20Hink.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Matt%20Hink.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1678,7 +1678,7 @@
           "enabled": true,
           "manager": "danp@acmecorp.com",
           "phone": "+1-206-555-4676",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jack%20Creasey.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jack%20Creasey.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1763,7 +1763,7 @@
           "enabled": true,
           "manager": "eduardd@acmecorp.com",
           "phone": "+1-312-555-5454",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/April%20Stewart.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/April%20Stewart.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1803,7 +1803,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-2918",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Margaret%20Au.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Margaret%20Au.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1825,7 +1825,7 @@
           "enabled": true,
           "manager": "aaronp@acmecorp.com",
           "phone": "+1-20-5555-4595",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Syed%20Abbas.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Syed%20Abbas.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1847,7 +1847,7 @@
           "enabled": true,
           "manager": "cesarg@acmecorp.com",
           "phone": "+1-206-555-6621",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Michael%20Ludwig.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Michael%20Ludwig.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1869,7 +1869,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-8835",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Erwin%20Zischka.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Erwin%20Zischka.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1963,7 +1963,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-5413",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Alexandre%20Silva.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Alexandre%20Silva.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -1985,7 +1985,7 @@
           "enabled": true,
           "manager": "stevel@acmecorp.com",
           "phone": "+1-701-555-3621",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lene%20Aalling.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lene%20Aalling.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2016,7 +2016,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-8382",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ned%20Friend.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ned%20Friend.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2047,7 +2047,7 @@
           "enabled": true,
           "manager": "cesarg@acmecorp.com",
           "phone": "+1-206-555-2297",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Trey%20Pratt.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Trey%20Pratt.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2132,7 +2132,7 @@
           "enabled": true,
           "manager": "joses@acmecorp.com",
           "phone": "+1-91-555-8595",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kirk%20Nason.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kirk%20Nason.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2163,7 +2163,7 @@
           "enabled": true,
           "manager": "aaronp@acmecorp.com",
           "phone": "+1-206-555-8454",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Parna%20Khot.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Parna%20Khot.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2211,7 +2211,7 @@
           "enabled": true,
           "manager": "davidz@acmecorp.com",
           "phone": "+1-206-555-7223",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Carol%20Troup.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Carol%20Troup.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2332,7 +2332,7 @@
           "enabled": true,
           "manager": "lenea@acmecorp.com",
           "phone": "+1-707-555-3823",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Hazem%20Abolrous.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Hazem%20Abolrous.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2372,7 +2372,7 @@
           "enabled": true,
           "manager": "jackc@acmecorp.com",
           "phone": "+1-360-555-4638",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Eduard%20Dell.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Eduard%20Dell.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2439,7 +2439,7 @@
           "enabled": true,
           "manager": "danj@acmecorp.com",
           "phone": "+1-425-555-0196",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Toni%20Poe.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Toni%20Poe.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2560,7 +2560,7 @@
           "enabled": true,
           "manager": "jeffh@acmecorp.com",
           "phone": "+1-425-555-0131",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Tai%20Lee.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Tai%20Lee.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2582,7 +2582,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-425-555-0129",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Cassie%20Hicks.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Cassie%20Hicks.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2676,7 +2676,7 @@
           "enabled": true,
           "manager": "kellyk@acmecorp.com",
           "phone": "+1-206-555-1214",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Phyllis%20Harris.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Phyllis%20Harris.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2698,7 +2698,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-6963",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jaka%20Stele.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jaka%20Stele.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2720,7 +2720,7 @@
           "enabled": true,
           "manager": "karimm@acmecorp.com",
           "phone": "+1-206-555-9002",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chris%20Johnson%20%5BFINANCE%5D.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chris%20Johnson%20%5BFINANCE%5D.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2868,7 +2868,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-20-5555-7862",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Peder%20Thode.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Peder%20Thode.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2908,7 +2908,7 @@
           "enabled": true,
           "manager": "karimm@acmecorp.com",
           "phone": "+1-415-555-2597",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/James%20Wittrell.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/James%20Wittrell.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2930,7 +2930,7 @@
           "enabled": true,
           "manager": "arthury@acmecorp.com",
           "phone": "+1-214-555-7757",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ye%20Xu.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ye%20Xu.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -2979,7 +2979,7 @@
           "enabled": true,
           "manager": "barryj@acmecorp.com",
           "phone": "+1-206-555-9642",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Brian%20Groth.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Brian%20Groth.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3001,7 +3001,7 @@
           "enabled": true,
           "manager": "erikac@acmecorp.com",
           "phone": "+1-206-555-7649",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jon%20Grande.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jon%20Grande.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3023,7 +3023,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-20-5555-1626",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jim%20Lucey.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jim%20Lucey.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3045,7 +3045,7 @@
           "enabled": true,
           "manager": "davidm@acmecorp.com",
           "phone": "+1-206-555-8157",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jim%20Corbin.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jim%20Corbin.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3076,7 +3076,7 @@
           "enabled": true,
           "manager": "aaronp@acmecorp.com",
           "phone": "+1-206-555-5784",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jesus%20Escolar.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jesus%20Escolar.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3116,7 +3116,7 @@
           "enabled": true,
           "manager": "brads@acmecorp.com",
           "phone": "+1-206-555-4747",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jan%20Kotas.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jan%20Kotas.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3138,7 +3138,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-9299",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Dave%20Natsuhara.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Dave%20Natsuhara.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3168,7 +3168,7 @@
           "enabled": true,
           "manager": "cesarg@acmecorp.com",
           "phone": "+1-206-555-6443",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Anne%20Weiler.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Anne%20Weiler.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3208,7 +3208,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-3599",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Valery%20Ushakov.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Valery%20Ushakov.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3230,7 +3230,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-6953",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Sean%20Purcell.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Sean%20Purcell.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3288,7 +3288,7 @@
           "enabled": true,
           "manager": "alanb@acmecorp.com",
           "phone": "+1-206-555-1123",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/David%20Simpson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/David%20Simpson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3319,7 +3319,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-1211",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Stephen%20Deming.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Stephen%20Deming.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3341,7 +3341,7 @@
           "enabled": true,
           "manager": "brads@acmecorp.com",
           "phone": "+1-206-555-8398",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Michael%20Sullivan.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Michael%20Sullivan.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3371,7 +3371,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-206-555-7213",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Magnus%20Hedlund.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Magnus%20Hedlund.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3393,7 +3393,7 @@
           "enabled": true,
           "manager": "lenea@acmecorp.com",
           "phone": "+1-026-555-8454",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Josh%20Edwards.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Josh%20Edwards.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3415,7 +3415,7 @@
           "enabled": true,
           "manager": "syeda@acmecorp.com",
           "phone": "+1-20-5555-8569",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lorraine%20Nay.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lorraine%20Nay.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3437,7 +3437,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-206-555-8936",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kelly%20Weadock.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kelly%20Weadock.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3459,7 +3459,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-3119",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Bernard%20Tham.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Bernard%20Tham.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3517,7 +3517,7 @@
           "enabled": true,
           "manager": "scottb@acmecorp.com",
           "phone": "+1-206-555-9848",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Simon%20Rapier.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Simon%20Rapier.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3539,7 +3539,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-7177",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Michael%20Zeman.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Michael%20Zeman.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3561,7 +3561,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-714-555-4825",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Alicia%20Thomber.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Alicia%20Thomber.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3637,7 +3637,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-206-555-3434",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Robert%20O%27Hara.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Robert%20O%27Hara.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3659,7 +3659,7 @@
           "enabled": true,
           "manager": "arthury@acmecorp.com",
           "phone": "+1-509-555-3766",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Gina%20Boyer.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Gina%20Boyer.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3744,7 +3744,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-6127",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Allan%20Guinot.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Allan%20Guinot.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3784,7 +3784,7 @@
           "enabled": true,
           "manager": "karimm@acmecorp.com",
           "phone": "+1-425-555-9559",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jill%20Frank.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jill%20Frank.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3815,7 +3815,7 @@
           "enabled": true,
           "manager": "danj@acmecorp.com",
           "phone": "+1-425-555-0107",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Sanjay%20Shah.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Sanjay%20Shah.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3837,7 +3837,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-20-5555-7545",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lisa%20Andrews.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lisa%20Andrews.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3867,7 +3867,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-617-555-2429",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ron%20Gabel.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ron%20Gabel.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3897,7 +3897,7 @@
           "enabled": true,
           "manager": "andrewm@acmecorp.com",
           "phone": "+1-206-555-6667",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Danni%20Ortman.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Danni%20Ortman.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3928,7 +3928,7 @@
           "enabled": true,
           "manager": "kellyk@acmecorp.com",
           "phone": "+1-206-555-6811",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jordao%20Moreno.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jordao%20Moreno.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3977,7 +3977,7 @@
           "enabled": true,
           "manager": "syeda@acmecorp.com",
           "phone": "+1-20-5555-6548",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jason%20Carlson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jason%20Carlson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -3999,7 +3999,7 @@
           "enabled": true,
           "manager": "arturol@acmecorp.com",
           "phone": "+1-206-555-3325",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Heinrich%20Fischer.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Heinrich%20Fischer.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4030,7 +4030,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-5651",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Sunil%20Koduri.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Sunil%20Koduri.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4052,7 +4052,7 @@
           "enabled": true,
           "manager": "jackc@acmecorp.com",
           "phone": "+1-914-555-7414",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Larry%20Zhang.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Larry%20Zhang.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4074,7 +4074,7 @@
           "enabled": true,
           "manager": "arturol@acmecorp.com",
           "phone": "+1-206-555-1739",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Rob%20Young.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Rob%20Young.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4096,7 +4096,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-206-555-2443",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Alan%20Steiner.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Alan%20Steiner.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4127,7 +4127,7 @@
           "enabled": true,
           "manager": "joses@acmecorp.com",
           "phone": "+1-201-555-5625",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Michael%20Ovesen.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Michael%20Ovesen.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4167,7 +4167,7 @@
           "enabled": true,
           "manager": "karimm@acmecorp.com",
           "phone": "+1-206-555-9764",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chase%20Carpenter.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chase%20Carpenter.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4189,7 +4189,7 @@
           "enabled": true,
           "manager": "aaronp@acmecorp.com",
           "phone": "+1-212-555-8236",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Roland%20Wacker.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Roland%20Wacker.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4256,7 +4256,7 @@
           "enabled": true,
           "manager": "ellena@acmecorp.com",
           "phone": "+1-206-555-8879",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ken%20Malcolmson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ken%20Malcolmson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4278,7 +4278,7 @@
           "enabled": true,
           "manager": "cesarg@acmecorp.com",
           "phone": "+1-206-555-7947",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lisa%20Miller.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lisa%20Miller.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4381,7 +4381,7 @@
           "enabled": true,
           "manager": "joses@acmecorp.com",
           "phone": "+1-410-555-3839",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kim%20Abercrombie.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kim%20Abercrombie.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4412,7 +4412,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-425-555-9296",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Erik%20Gubbels.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Erik%20Gubbels.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4443,7 +4443,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-206-555-9004",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chris%20Johnson%20%5BSALES%5D.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chris%20Johnson%20%5BSALES%5D.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4474,7 +4474,7 @@
           "enabled": true,
           "manager": "davidm@acmecorp.com",
           "phone": "+1-206-555-3965",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jenni%20Merrifield.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jenni%20Merrifield.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4505,7 +4505,7 @@
           "enabled": true,
           "manager": "arthury@acmecorp.com",
           "phone": "+1-108-5-7862",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Luis%20Bonifaz.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Luis%20Bonifaz.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4572,7 +4572,7 @@
           "enabled": true,
           "manager": "spencel@acmecorp.com",
           "phone": "+1-214-555-3187",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Arthur%20Yasinski.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Arthur%20Yasinski.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4639,7 +4639,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-206-555-6448",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Erik%20Andersen.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Erik%20Andersen.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4661,7 +4661,7 @@
           "enabled": true,
           "manager": "kellyk@acmecorp.com",
           "phone": "+1-206-555-2312",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Felipe%20Martins.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Felipe%20Martins.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4692,7 +4692,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-6941",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Tony%20Madigan.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Tony%20Madigan.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4777,7 +4777,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-20-5555-5894",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Gareth%20Chan.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Gareth%20Chan.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4844,7 +4844,7 @@
           "enabled": true,
           "manager": "jennim@acmecorp.com",
           "phone": "+1-206-555-9538",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Arlene%20Huff.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Arlene%20Huff.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4902,7 +4902,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-206-555-6511",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kelly%20Krout.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kelly%20Krout.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -4978,7 +4978,7 @@
           "enabled": true,
           "manager": "jackc@acmecorp.com",
           "phone": "+1-253-555-7934",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Spencer%20Low.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Spencer%20Low.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5018,7 +5018,7 @@
           "enabled": true,
           "manager": "alans@acmecorp.com",
           "phone": "+1-206-555-1931",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chris%20Norred.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chris%20Norred.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5040,7 +5040,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-201-555-8474",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Scott%20Gode.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Scott%20Gode.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5080,7 +5080,7 @@
           "enabled": true,
           "manager": "danj@acmecorp.com",
           "phone": "+1-425-555-0116",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jim%20Daly.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jim%20Daly.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5128,7 +5128,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-6552",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Mike%20Tiano.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Mike%20Tiano.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5150,7 +5150,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-7231",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ari%20Suominen.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ari%20Suominen.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5172,7 +5172,7 @@
           "enabled": true,
           "manager": "arthury@acmecorp.com",
           "phone": "+1-214-555-8815",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Fabrice%20Canel.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Fabrice%20Canel.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5266,7 +5266,7 @@
           "enabled": true,
           "manager": "miken@acmecorp.com",
           "phone": "+1-206-555-9267",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chris%20Barry.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chris%20Barry.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5297,7 +5297,7 @@
           "enabled": true,
           "manager": "danj@acmecorp.com",
           "phone": "+1-206-555-5472",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Adam%20Barr.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Adam%20Barr.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5418,7 +5418,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-212-555-9437",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Peter%20Saddow.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Peter%20Saddow.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5467,7 +5467,7 @@
           "enabled": true,
           "manager": "arturol@acmecorp.com",
           "phone": "+1-206-555-5567",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Marie%20Dubois.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Marie%20Dubois.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5507,7 +5507,7 @@
           "enabled": true,
           "manager": "dianet@acmecorp.com",
           "phone": "+1-206-555-4156",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Karim%20Manar.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Karim%20Manar.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5565,7 +5565,7 @@
           "enabled": true,
           "manager": "larryz@acmecorp.com",
           "phone": "+1-206-555-9337",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jose%20Saraiva.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jose%20Saraiva.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5596,7 +5596,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-6173",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chen%20Yang.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chen%20Yang.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5618,7 +5618,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-6561",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Don%20Funk.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Don%20Funk.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5658,7 +5658,7 @@
           "enabled": true,
           "manager": "karimm@acmecorp.com",
           "phone": "+1-415-555-7777",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lars%20Hansson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lars%20Hansson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5689,7 +5689,7 @@
           "enabled": true,
           "manager": "lenea@acmecorp.com",
           "phone": "+1-413-555-3855",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Manish%20Chopra.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Manish%20Chopra.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5738,7 +5738,7 @@
           "enabled": true,
           "manager": "mollyc@acmecorp.com",
           "phone": "+1-425-555-0184",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Julian%20Isla.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Julian%20Isla.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5778,7 +5778,7 @@
           "enabled": true,
           "manager": "joses@acmecorp.com",
           "phone": "+1-541-555-2668",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kari%20Furse.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kari%20Furse.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5800,7 +5800,7 @@
           "enabled": true,
           "manager": "joses@acmecorp.com",
           "phone": "+1-214-555-8332",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/John%20Kane.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/John%20Kane.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5822,7 +5822,7 @@
           "enabled": true,
           "manager": "erikac@acmecorp.com",
           "phone": "+1-206-555-4542",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Michael%20Mainer.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Michael%20Mainer.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5871,7 +5871,7 @@
           "enabled": true,
           "manager": "ellena@acmecorp.com",
           "phone": "+1-206-555-4484",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Blaine%20Dockter.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Blaine%20Dockter.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5893,7 +5893,7 @@
           "enabled": true,
           "manager": "cesarg@acmecorp.com",
           "phone": "+1-206-555-4557",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Steve%20Masters.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Steve%20Masters.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5933,7 +5933,7 @@
           "enabled": true,
           "manager": "danj@acmecorp.com",
           "phone": "+1-425-555-0121",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Frank%20Martinez.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Frank%20Martinez.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5955,7 +5955,7 @@
           "enabled": true,
           "manager": "jeffh@acmecorp.com",
           "phone": "+1-425-555-0140",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Greg%20Winston.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Greg%20Winston.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5977,7 +5977,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-404-555-2693",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Shmuel%20Yair.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Shmuel%20Yair.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -5999,7 +5999,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-20-5555-4594",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Mary%20Cha.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Mary%20Cha.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6039,7 +6039,7 @@
           "enabled": true,
           "manager": "keithd@acmecorp.com",
           "phone": "+1-206-555-4515",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Brian%20Cox.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Brian%20Cox.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6070,7 +6070,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-3415",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jessica%20Arnold.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jessica%20Arnold.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6119,7 +6119,7 @@
           "enabled": true,
           "manager": "joses@acmecorp.com",
           "phone": "+1-213-555-1265",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Eran%20Harel.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Eran%20Harel.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6141,7 +6141,7 @@
           "enabled": true,
           "manager": "christk@acmecorp.com",
           "phone": "+1-212-555-4178",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Cesar%20Garcia.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Cesar%20Garcia.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6163,7 +6163,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-206-555-4122",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/David%20Zazzo.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/David%20Zazzo.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6203,7 +6203,7 @@
           "enabled": true,
           "manager": "miken@acmecorp.com",
           "phone": "+1-206-555-3164",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Terry%20Earls.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Terry%20Earls.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6279,7 +6279,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-3748",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Cliff%20Diddier.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Cliff%20Diddier.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6328,7 +6328,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-7139",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Dough%20Mahugh.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Dough%20Mahugh.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6350,7 +6350,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-804-555-5958",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Neil%20Orint.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Neil%20Orint.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6408,7 +6408,7 @@
           "enabled": true,
           "manager": "ellena@acmecorp.com",
           "phone": "+1-206-555-8147",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/John%20Yokum.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/John%20Yokum.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6430,7 +6430,7 @@
           "enabled": true,
           "manager": "christk@acmecorp.com",
           "phone": "+1-212-555-8335",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Aaron%20Painter.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Aaron%20Painter.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6461,7 +6461,7 @@
           "enabled": true,
           "manager": "syeda@acmecorp.com",
           "phone": "+1-20-5555-4379",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Toby%20Nixon.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Toby%20Nixon.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6572,7 +6572,7 @@
           "enabled": true,
           "manager": "jennim@acmecorp.com",
           "phone": "+1-206-555-3155",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Steven%20Wright.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Steven%20Wright.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6603,7 +6603,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-850-555-5277",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Maru%20Subrmani.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Maru%20Subrmani.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6625,7 +6625,7 @@
           "enabled": true,
           "manager": "cesarg@acmecorp.com",
           "phone": "+1-206-555-3449",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jun%20Cao.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jun%20Cao.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6647,7 +6647,7 @@
           "enabled": true,
           "manager": "jackc@acmecorp.com",
           "phone": "+1-804-555-2217",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Alan%20Brewer.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Alan%20Brewer.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6669,7 +6669,7 @@
           "enabled": true,
           "manager": "bens@acmecorp.com",
           "phone": "+1-206-555-5934",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/David%20Bradley.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/David%20Bradley.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6718,7 +6718,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-5488",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Christian%20Rytt.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Christian%20Rytt.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6758,7 +6758,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-212-555-3889",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Cari%20Drummelle.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Cari%20Drummelle.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6789,7 +6789,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-2342",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Qiong%20Wu.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Qiong%20Wu.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6829,7 +6829,7 @@
           "enabled": true,
           "manager": "jeffh@acmecorp.com",
           "phone": "+1-425-555-0177",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Christa%20Geller.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Christa%20Geller.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6860,7 +6860,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-3874",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ted%20Bremer.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ted%20Bremer.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6882,7 +6882,7 @@
           "enabled": true,
           "manager": "mollyc@acmecorp.com",
           "phone": "+1-425-555-0164",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Diane%20Prescott.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Diane%20Prescott.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6922,7 +6922,7 @@
           "enabled": true,
           "manager": "chrisn@acmecorp.com",
           "phone": "+1-206-555-1783",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jesper%20Aaberg.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jesper%20Aaberg.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6944,7 +6944,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-9351",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Paul%20Duffy.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Paul%20Duffy.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -6984,7 +6984,7 @@
           "enabled": true,
           "manager": "arthury@acmecorp.com",
           "phone": "+1-607-555-4568",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Dan%20Hough.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Dan%20Hough.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7006,7 +7006,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-206-555-2363",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jamie%20Reding.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jamie%20Reding.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7063,7 +7063,7 @@
           "enabled": true,
           "manager": "aaronp@acmecorp.com",
           "phone": "+1-206-555-8223",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lubor%20Kollar.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lubor%20Kollar.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7121,7 +7121,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-7444",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Olivier%20Fontana.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Olivier%20Fontana.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7187,7 +7187,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-3382",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Maurice%20Taylor.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Maurice%20Taylor.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7209,7 +7209,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-9244",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chris%20Gray.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chris%20Gray.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7258,7 +7258,7 @@
           "enabled": true,
           "manager": "arthury@acmecorp.com",
           "phone": "+1-214-555-4151",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Sven%20Buck.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Sven%20Buck.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7289,7 +7289,7 @@
           "enabled": true,
           "manager": "ellena@acmecorp.com",
           "phone": "+1-206-555-4595",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Tony%20Wang.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Tony%20Wang.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7320,7 +7320,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-860-555-4516",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jenny%20Lysaker.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jenny%20Lysaker.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7342,7 +7342,7 @@
           "enabled": true,
           "manager": "bens@acmecorp.com",
           "phone": "+1-206-555-1242",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Erika%20Cheley.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Erika%20Cheley.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7382,7 +7382,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-206-555-1422",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/David%20Bossard.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/David%20Bossard.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7422,7 +7422,7 @@
           "enabled": true,
           "manager": "kellyw@acmecorp.com",
           "phone": "+1-206-555-3186",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Arturo%20Lopez.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Arturo%20Lopez.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7480,7 +7480,7 @@
           "enabled": true,
           "manager": "joses@acmecorp.com",
           "phone": "+1-206-555-1785",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Marcelo%20Truffat.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Marcelo%20Truffat.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7511,7 +7511,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-804-555-3648",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Luka%20Abrus.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Luka%20Abrus.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7533,7 +7533,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-9821",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Corinna%20Bolender.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Corinna%20Bolender.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7555,7 +7555,7 @@
           "enabled": true,
           "manager": "erikac@acmecorp.com",
           "phone": "+1-206-555-3556",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lukas%20Keller.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lukas%20Keller.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7577,7 +7577,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-212-555-4428",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Robin%20Young.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Robin%20Young.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7689,7 +7689,7 @@
           "enabled": true,
           "manager": "arturol@acmecorp.com",
           "phone": "+1-206-555-7455",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kevin%20Kennedy.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kevin%20Kennedy.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7738,7 +7738,7 @@
           "enabled": true,
           "manager": "alans@acmecorp.com",
           "phone": "+1-206-555-8148",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Mike%20Nash.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Mike%20Nash.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7760,7 +7760,7 @@
           "enabled": true,
           "manager": "karimm@acmecorp.com",
           "phone": "+1-206-555-6848",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Joel%20Lachance.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Joel%20Lachance.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7809,7 +7809,7 @@
           "enabled": true,
           "manager": "arthury@acmecorp.com",
           "phone": "+1-607-555-6337",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Tina%20Lassila.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Tina%20Lassila.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7840,7 +7840,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-2318",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Simon%20Pearson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Simon%20Pearson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7934,7 +7934,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-206-555-7436",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Keith%20Dishmo.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Keith%20Dishmo.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7974,7 +7974,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-1459",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/David%20So.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/David%20So.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -7996,7 +7996,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-9003",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chris%20F.%20Johnson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chris%20F.%20Johnson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8018,7 +8018,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-1577",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Michiko%20Osada.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Michiko%20Osada.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8040,7 +8040,7 @@
           "enabled": true,
           "manager": "lenea@acmecorp.com",
           "phone": "+1-701-555-7818",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Nate%20Sun.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Nate%20Sun.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8080,7 +8080,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-20-5555-8548",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Esther%20Valle.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Esther%20Valle.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8138,7 +8138,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-6132",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Michelle%20Fredette.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Michelle%20Fredette.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8169,7 +8169,7 @@
           "enabled": true,
           "manager": "syeda@acmecorp.com",
           "phone": "+1-20-5555-2592",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jeff%20Williams.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jeff%20Williams.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8200,7 +8200,7 @@
           "enabled": true,
           "manager": "",
           "phone": "+1-425-555-0179",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Dan%20Jump.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Dan%20Jump.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8222,7 +8222,7 @@
           "enabled": true,
           "manager": "lenea@acmecorp.com",
           "phone": "+1-701-555-4446",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ty%20Carlson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ty%20Carlson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8262,7 +8262,7 @@
           "enabled": true,
           "manager": "dianep@acmecorp.com",
           "phone": "+1-425-555-0124",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Todd%20Rowe.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Todd%20Rowe.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8320,7 +8320,7 @@
           "enabled": true,
           "manager": "lenea@acmecorp.com",
           "phone": "+1-206-555-4629",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Eric%20Gruber.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Eric%20Gruber.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8369,7 +8369,7 @@
           "enabled": true,
           "manager": "jennim@acmecorp.com",
           "phone": "+1-206-555-1678",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Terrence%20Phillip.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Terrence%20Phillip.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8427,7 +8427,7 @@
           "enabled": true,
           "manager": "jennim@acmecorp.com",
           "phone": "+1-206-555-6852",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Hugo%20Garcia.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Hugo%20Garcia.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8449,7 +8449,7 @@
           "enabled": true,
           "manager": "brads@acmecorp.com",
           "phone": "+1-206-555-4886",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kenneth%20Cools.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kenneth%20Cools.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8507,7 +8507,7 @@
           "enabled": true,
           "manager": "brads@acmecorp.com",
           "phone": "+1-206-555-5499",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jon%20Jaffe.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jon%20Jaffe.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8529,7 +8529,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-206-555-5661",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kerim%20Hanif.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kerim%20Hanif.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8569,7 +8569,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-206-555-2987",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Christine%20Koch.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Christine%20Koch.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8591,7 +8591,7 @@
           "enabled": true,
           "manager": "lenea@acmecorp.com",
           "phone": "+1-312-555-9181",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Patricia%20Doyle.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Patricia%20Doyle.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8667,7 +8667,7 @@
           "enabled": true,
           "manager": "aaronp@acmecorp.com",
           "phone": "+1-206-555-5846",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/John%20John.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/John%20John.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8725,7 +8725,7 @@
           "enabled": true,
           "manager": "barryj@acmecorp.com",
           "phone": "+1-206-555-2246",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Manueal%20Machado.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Manueal%20Machado.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8800,7 +8800,7 @@
           "enabled": true,
           "manager": "jennim@acmecorp.com",
           "phone": "+1-206-555-7794",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Mark%20Hanson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Mark%20Hanson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8822,7 +8822,7 @@
           "enabled": true,
           "manager": "jennim@acmecorp.com",
           "phone": "+1-206-555-8452",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Scott%20MacDonald.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Scott%20MacDonald.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8862,7 +8862,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-212-555-9441",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Vladimir%20Egorov.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Vladimir%20Egorov.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8910,7 +8910,7 @@
           "enabled": true,
           "manager": "davidm@acmecorp.com",
           "phone": "+1-212-555-1665",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Mike%20Ray.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Mike%20Ray.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -8977,7 +8977,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-206-555-8216",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ben%20Spain.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ben%20Spain.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9008,7 +9008,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-4724",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Guido%20Pica.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Guido%20Pica.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9065,7 +9065,7 @@
           "enabled": true,
           "manager": "cesarg@acmecorp.com",
           "phone": "+1-212-555-5864",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/William%20Vong.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/William%20Vong.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9150,7 +9150,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-20-5555-3658",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Reina%20Cabatana.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Reina%20Cabatana.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9172,7 +9172,7 @@
           "enabled": true,
           "manager": "kellyk@acmecorp.com",
           "phone": "+1-206-555-8834",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Christian%20Jene.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Christian%20Jene.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9212,7 +9212,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-9549",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Humberto%20Acevedo.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Humberto%20Acevedo.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9234,7 +9234,7 @@
           "enabled": true,
           "manager": "ellena@acmecorp.com",
           "phone": "+1-212-555-5422",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Sameer%20Tejani.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Sameer%20Tejani.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9292,7 +9292,7 @@
           "enabled": true,
           "manager": "aaronp@acmecorp.com",
           "phone": "+1-206-555-6864",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Renee%20Lo.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Renee%20Lo.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9314,7 +9314,7 @@
           "enabled": true,
           "manager": "garthf@acmecorp.com",
           "phone": "+1-206-555-1346",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Amy%20Alberts.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Amy%20Alberts.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9336,7 +9336,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-404-555-9264",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/David%20Wright.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/David%20Wright.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9367,7 +9367,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-20-5555-7963",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/David%20Hamilton.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/David%20Hamilton.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9416,7 +9416,7 @@
           "enabled": true,
           "manager": "scottb@acmecorp.com",
           "phone": "+1-206-555-4262",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Andy%20Jacobs.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Andy%20Jacobs.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9447,7 +9447,7 @@
           "enabled": true,
           "manager": "arturol@acmecorp.com",
           "phone": "+1-206-555-9001",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kris%20Johnsen.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kris%20Johnsen.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9495,7 +9495,7 @@
           "enabled": true,
           "manager": "christg@acmecorp.com",
           "phone": "+1-425-555-0172",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Anna%20Lidman.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Anna%20Lidman.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9526,7 +9526,7 @@
           "enabled": true,
           "manager": "alans@acmecorp.com",
           "phone": "+1-206-555-6345",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Andrew%20Ma.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Andrew%20Ma.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9557,7 +9557,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-4536",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Carlos%20Grilo.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Carlos%20Grilo.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9588,7 +9588,7 @@
           "enabled": true,
           "manager": "christk@acmecorp.com",
           "phone": "+1-212-555-1397",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ellen%20Adams.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ellen%20Adams.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9610,7 +9610,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-213-555-3269",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Marc%20Faerber.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Marc%20Faerber.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9640,7 +9640,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-206-555-1659",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Alfons%20Parovszky.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Alfons%20Parovszky.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9671,7 +9671,7 @@
           "enabled": true,
           "manager": "arthury@acmecorp.com",
           "phone": "+1-617-555-7395",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Elizabeth%20Andersen.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Elizabeth%20Andersen.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9693,7 +9693,7 @@
           "enabled": true,
           "manager": "arturol@acmecorp.com",
           "phone": "+1-206-555-9541",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kai%20Axford.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kai%20Axford.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9715,7 +9715,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-206-555-4331",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Tom%20Youtsey.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Tom%20Youtsey.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9737,7 +9737,7 @@
           "enabled": true,
           "manager": "syeda@acmecorp.com",
           "phone": "+1-20-5555-4625",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Tad%20Orman.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Tad%20Orman.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9786,7 +9786,7 @@
           "enabled": true,
           "manager": "ellena@acmecorp.com",
           "phone": "+1-206-555-3518",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Don%20Hall.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Don%20Hall.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9816,7 +9816,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-4112",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Thomas%20Hamborg.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Thomas%20Hamborg.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9838,7 +9838,7 @@
           "enabled": true,
           "manager": "aaronp@acmecorp.com",
           "phone": "+1-206-555-5461",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Allison%20Brown.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Allison%20Brown.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9860,7 +9860,7 @@
           "enabled": true,
           "manager": "erikac@acmecorp.com",
           "phone": "+1-206-555-1393",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Justin%20Thorp.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Justin%20Thorp.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9909,7 +9909,7 @@
           "enabled": true,
           "manager": "davidm@acmecorp.com",
           "phone": "+1-212-555-5231",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Frank%20Miller.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Frank%20Miller.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9940,7 +9940,7 @@
           "enabled": true,
           "manager": "davids@acmecorp.com",
           "phone": "+1-06-5555-1284",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Pavel%20Simsa.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Pavel%20Simsa.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9962,7 +9962,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-804-555-3383",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Euan%20Garden.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Euan%20Garden.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -9993,7 +9993,7 @@
           "enabled": true,
           "manager": "syeda@acmecorp.com",
           "phone": "+1-20-5555-1394",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Tosh%20Meston.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Tosh%20Meston.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10042,7 +10042,7 @@
           "enabled": true,
           "manager": "arthury@acmecorp.com",
           "phone": "+1-206-555-3654",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Kevin%20Verboort.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Kevin%20Verboort.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10082,7 +10082,7 @@
           "enabled": true,
           "manager": "andrewm@acmecorp.com",
           "phone": "+1-206-555-2699",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ivo%20Salmre.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ivo%20Salmre.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10104,7 +10104,7 @@
           "enabled": true,
           "manager": "bens@acmecorp.com",
           "phone": "+1-206-555-9867",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Jo%20Berry.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Jo%20Berry.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10189,7 +10189,7 @@
           "enabled": true,
           "manager": "brads@acmecorp.com",
           "phone": "+1-206-555-7167",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Iben%20Thorell.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Iben%20Thorell.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10229,7 +10229,7 @@
           "enabled": true,
           "manager": "annal@acmecorp.com",
           "phone": "+1-425-555-0192",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Molly%20Clark.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Molly%20Clark.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10304,7 +10304,7 @@
           "enabled": true,
           "manager": "alans@acmecorp.com",
           "phone": "+1-206-555-6169",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Stan%20Orme.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Stan%20Orme.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10326,7 +10326,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-1413",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Andrea%20Dunker.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Andrea%20Dunker.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10366,7 +10366,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-212-555-3984",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Diane%20Glimp.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Diane%20Glimp.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10441,7 +10441,7 @@
           "enabled": true,
           "manager": "carolt@acmecorp.com",
           "phone": "+1-206-555-6699",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Anu%20Deshpande.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Anu%20Deshpande.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10508,7 +10508,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-9366",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Stuart%20Munson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Stuart%20Munson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10539,7 +10539,7 @@
           "enabled": true,
           "manager": "davidm@acmecorp.com",
           "phone": "+1-206-555-1913",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lolan%20Song.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lolan%20Song.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10588,7 +10588,7 @@
           "enabled": true,
           "manager": "aprils@acmecorp.com",
           "phone": "+1-09-5555-3784",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Marko%20Zajc.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Marko%20Zajc.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10619,7 +10619,7 @@
           "enabled": true,
           "manager": "stano@acmecorp.com",
           "phone": "+1-206-555-5542",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Sanjay%20Patel.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Sanjay%20Patel.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10659,7 +10659,7 @@
           "enabled": true,
           "manager": "adamb@acmecorp.com",
           "phone": "+1-206-555-9327",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Diane%20Tibbot.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Diane%20Tibbot.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10698,7 +10698,7 @@
           "enabled": true,
           "manager": "kellyk@acmecorp.com",
           "phone": "+1-206-555-9269",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Pieter%20Wycoff.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Pieter%20Wycoff.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10756,7 +10756,7 @@
           "enabled": true,
           "manager": "barryj@acmecorp.com",
           "phone": "+1-206-555-1471",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Ray%20Mohrman.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Ray%20Mohrman.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10796,7 +10796,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-8793",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Daniel%20Durrer.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Daniel%20Durrer.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10827,7 +10827,7 @@
           "enabled": true,
           "manager": "brads@acmecorp.com",
           "phone": "+1-206-555-5292",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Lori%20Kane.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Lori%20Kane.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10903,7 +10903,7 @@
           "enabled": true,
           "manager": "christk@acmecorp.com",
           "phone": "+1-212-555-2867",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/David%20Maman.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/David%20Maman.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -10925,7 +10925,7 @@
           "enabled": true,
           "manager": "kellyk@acmecorp.com",
           "phone": "+1-206-555-9000",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/Chris%20Johnson.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Chris%20Johnson.jpg",
           "roles": [
             "user",
             "acmecorp",
@@ -11001,7 +11001,7 @@
           "enabled": true,
           "manager": "briang@acmecorp.com",
           "phone": "+1-206-555-7749",
-          "picture": "https://www.topaz.sh/assets/acmecorp/img/David%20Derwin.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/David%20Derwin.jpg",
           "roles": [
             "user",
             "acmecorp",
