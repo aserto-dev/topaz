@@ -51,9 +51,8 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 	} else {
 		if !cmd.Force {
 			if _, err := os.Stat(path.Join(configDir, "config.yaml")); err == nil {
-				var proceed bool
-				c.UI.Exclamation().WithAskBool("A configuration file already exists. Do you want to continue ? [true/false]", &proceed).Do()
-				if !proceed {
+				c.UI.Exclamation().Msg("A configuration file already exists.")
+				if !promptYesNo("Do you want to continue?", false) {
 					return nil
 				}
 			}
