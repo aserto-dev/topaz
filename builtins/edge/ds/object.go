@@ -13,6 +13,8 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -87,7 +89,9 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			resp, err := client.GetObject(bctx.Context, req)
 			if err != nil {
 				traceError(&bctx, fnName, err)
-				return nil, err
+				if status.Code(err) != codes.NotFound {
+					return nil, err
+				}
 			}
 
 			buf := new(bytes.Buffer)

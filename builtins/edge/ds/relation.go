@@ -16,6 +16,8 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -108,7 +110,9 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			resp, err := client.GetRelation(bctx.Context, &args)
 			if err != nil {
 				traceError(&bctx, fnName, err)
-				return nil, err
+				if status.Code(err) != codes.NotFound {
+					return nil, err
+				}
 			}
 
 			buf := new(bytes.Buffer)
