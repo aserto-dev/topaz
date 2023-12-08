@@ -129,7 +129,7 @@ func (p *Plugin) scheduler() {
 			cycle++
 
 			wait := time.Duration(waitInSec) * time.Second
-			interval.Reset(time.Duration(wait))
+			interval.Reset(wait)
 			p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
 
 		case <-p.syncNow:
