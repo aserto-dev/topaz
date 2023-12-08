@@ -63,10 +63,7 @@ func (p *Plugin) Start(ctx context.Context) error {
 
 	p.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateOK})
 
-	// start first run after 15 sec delay.
-	go p.scheduler(time.NewTicker(
-		time.Duration(15) * time.Second),
-	)
+	go p.scheduler()
 
 	return nil
 }
@@ -87,9 +84,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 	if p.config.Enabled != newConfig.Enabled {
 		p.logger.Info().Str("id", p.manager.ID).Bool("old", p.config.Enabled).Bool("new", newConfig.Enabled).Msg("sync enabled changed")
 		if newConfig.Enabled {
-			go p.scheduler(time.NewTicker(
-				time.Duration(newConfig.SyncInterval) * time.Minute),
-			)
+			go p.scheduler()
 		} else {
 			p.cancel()
 		}
@@ -104,10 +99,19 @@ func (p *Plugin) SyncNow() {
 	p.syncNow <- true
 }
 
-func (p *Plugin) scheduler(interval *time.Ticker) {
+const cycles int = 4
+
+func (p *Plugin) scheduler() {
+	// p.config.SyncInterval 1m-60m
+	// 1m -> 60s -> 15s interval
+	// 5m -> 300s -> 75s interval
+	// 60m -> 3600s -> 900s interval
+	waitInSec := (p.config.SyncInterval * 60) / cycles
+
+	interval := time.NewTicker(15 * time.Second)
 	defer interval.Stop()
 
-	wait := time.Duration(p.config.SyncInterval) * time.Minute
+	cycle := cycles
 
 	for {
 		select {
@@ -117,20 +121,27 @@ func (p *Plugin) scheduler(interval *time.Ticker) {
 		case t := <-interval.C:
 			p.logger.Info().Time("dispatch", t).Msg(syncScheduler)
 			interval.Stop()
-			p.task()
-			interval.Reset(time.Duration(p.config.SyncInterval) * time.Minute)
+
+			p.task(cycle%cycles == 0)
+			if cycle%cycles == 0 {
+				cycle = 0
+			}
+			cycle++
+
+			wait := time.Duration(waitInSec) * time.Second
+			interval.Reset(wait)
 			p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
+
 		case <-p.syncNow:
 			p.logger.Info().Msg("run-now")
 			interval.Stop()
-			p.task()
-			interval.Reset(time.Duration(p.config.SyncInterval) * time.Minute)
-			p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
+
+			p.task(true)
 		}
 	}
 }
 
-func (p *Plugin) task() {
+func (p *Plugin) task(fullSync bool) {
 	p.logger.Info().Str(status, started).Msg(syncTask)
 
 	defer func() {
@@ -144,7 +155,7 @@ func (p *Plugin) task() {
 	}
 
 	sync := NewSyncMgr(p.config, p.topazConfig, p.logger)
-	sync.Run()
+	sync.Run(fullSync)
 
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
