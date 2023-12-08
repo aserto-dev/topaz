@@ -10,15 +10,19 @@ import (
 	"sync/atomic"
 	"time"
 
+	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	"github.com/aserto-dev/go-edge-ds/pkg/ds"
+	"github.com/pkg/errors"
 
 	"github.com/aserto-dev/go-aserto/client"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 
+	cuckoo "github.com/panmari/cuckoofilter"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -55,6 +59,8 @@ type Sync struct {
 	log         *zerolog.Logger
 	exportChan  chan *dse3.ExportResponse
 	errChan     chan error
+	filter      *cuckoo.Filter
+	counts      *Counter
 }
 
 type Counter struct {
@@ -83,9 +89,9 @@ func NewSyncMgr(c *Config, topazConfig *topaz.Config, logger *zerolog.Logger) *S
 	}
 }
 
-func (s *Sync) Run() {
+func (s *Sync) Run(fs bool) {
 	runStartTime := time.Now().UTC()
-	s.log.Info().Str(status, started).Msg(syncRun)
+	s.log.Info().Str(status, started).Bool("full-sync", fs).Msg(syncRun)
 
 	defer func() {
 		close(s.errChan)
@@ -98,18 +104,27 @@ func (s *Sync) Run() {
 		}
 	}()
 
+	s.counts = &Counter{}
+
 	if err := s.syncManifest(); err != nil {
 		s.log.Error().Str("sync-manifest", "").Err(err).Msg(syncRun)
 	}
 
 	g := new(errgroup.Group)
 
+	watermark := s.getWatermark()
+
+	if fs {
+		watermark = &timestamppb.Timestamp{}
+		s.filter = cuckoo.NewFilter(1000000)
+	}
+
 	g.Go(func() error {
 		return s.subscriber()
 	})
 
 	g.Go(func() error {
-		return s.producer()
+		return s.producer(watermark)
 	})
 
 	err := g.Wait()
@@ -117,11 +132,22 @@ func (s *Sync) Run() {
 		s.log.Error().Err(err).Msg("sync run failed")
 	}
 
+	if fs {
+		if err := s.diff(); err != nil {
+			s.log.Error().Err(err).Msg("failed to diff")
+		}
+	}
+
 	runEndTime := time.Now().UTC()
 	s.log.Info().Str(status, finished).Str("duration", runEndTime.Sub(runStartTime).String()).Msg(syncRun)
 }
 
-func (s *Sync) producer() error {
+func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
+	defer func() {
+		s.log.Debug().Msg("producer closed export channel")
+		close(s.exportChan)
+	}()
+
 	dsc, err := s.getRemoteDirectoryClient()
 	if err != nil {
 		s.log.Error().Err(err).Msgf("%s - failed to get directory connection", syncProducer)
@@ -130,8 +156,6 @@ func (s *Sync) producer() error {
 
 	counts := Counter{}
 	s.log.Info().Str(status, started).Msg(syncProducer)
-
-	watermark := s.getWatermark()
 
 	stream, err := dsc.Exporter.Export(s.ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
@@ -152,20 +176,23 @@ func (s *Sync) producer() error {
 
 		atomic.AddInt32(&counts.Received, 1)
 
-		switch msg.Msg.(type) {
+		switch m := msg.Msg.(type) {
 		case *dse3.ExportResponse_Object:
 			atomic.AddInt32(&counts.Objects, 1)
+			if fullSync(watermark) {
+				s.filter.Insert(getObjectKey(m.Object))
+			}
 		case *dse3.ExportResponse_Relation:
 			atomic.AddInt32(&counts.Relations, 1)
+			if fullSync(watermark) {
+				s.filter.Insert(getRelationKey(m.Relation))
+			}
 		default:
 			s.log.Debug().Msg("producer unknown message type")
 		}
 
 		s.exportChan <- msg
 	}
-
-	s.log.Debug().Msg("producer closed export channel")
-	close(s.exportChan)
 
 	s.log.Info().Str(status, finished).Int32("received", counts.Received).Int32("objects", counts.Objects).
 		Int32("relations", counts.Relations).Int32("errors", counts.Errors).Msg(syncProducer)
@@ -185,7 +212,7 @@ func (s *Sync) subscriber() error {
 
 	watermark := s.getWatermark()
 
-	stream, err := dsc.Importer.Import(s.ctx)
+	writer, err := dsc.Importer.Import(s.ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to setup import stream")
 		return err
@@ -202,7 +229,7 @@ func (s *Sync) subscriber() error {
 
 		switch m := msg.Msg.(type) {
 		case *dse3.ExportResponse_Object:
-			if err := stream.Send(&dsi3.ImportRequest{
+			if err := writer.Send(&dsi3.ImportRequest{
 				OpCode: dsi3.Opcode_OPCODE_SET,
 				Msg:    &dsi3.ImportRequest_Object{Object: m.Object},
 			}); err == nil {
@@ -216,7 +243,7 @@ func (s *Sync) subscriber() error {
 			}
 
 		case *dse3.ExportResponse_Relation:
-			if err := stream.Send(&dsi3.ImportRequest{
+			if err := writer.Send(&dsi3.ImportRequest{
 				OpCode: dsi3.Opcode_OPCODE_SET,
 				Msg:    &dsi3.ImportRequest_Relation{Relation: m.Relation},
 			}); err == nil {
@@ -234,7 +261,7 @@ func (s *Sync) subscriber() error {
 		}
 	}
 
-	if err := stream.CloseSend(); err != nil {
+	if err := writer.CloseSend(); err != nil {
 		return err
 	}
 
@@ -467,6 +494,116 @@ func (s *Sync) setManifest(mc dsm3.ModelClient, r io.Reader) error {
 	if _, err := stream.CloseAndRecv(); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func getObjectKey(obj *dsc3.Object) []byte {
+	return []byte(fmt.Sprintf("%s:%s", obj.Type, obj.Id))
+}
+
+func getRelationKey(rel *dsc3.Relation) []byte {
+	return []byte(fmt.Sprintf("%s:%s#%s@%s:%s%s",
+		rel.ObjectType, rel.ObjectId, rel.Relation, rel.SubjectType, rel.SubjectId,
+		ds.Iff(rel.SubjectRelation == "", "", fmt.Sprintf("#%s", rel.SubjectRelation))))
+}
+
+func fullSync(watermark *timestamppb.Timestamp) bool {
+	return (watermark.Seconds == 0 && watermark.Nanos == 0)
+}
+
+func (s *Sync) diff() error {
+	if s.filter == nil {
+		return errors.New("filter not initialized")
+	}
+
+	dsc, err := s.getLocalDirectoryClient()
+	if err != nil {
+		s.log.Error().Err(err).Msgf("diff - failed to create directory client")
+		return err
+	}
+
+	writer, err := dsc.Importer.Import(s.ctx)
+	if err != nil {
+		s.log.Error().Err(err).Msgf("subscriber - failed to setup import stream")
+		return err
+	}
+
+	objDeleted := 0
+	relDeleted := 0
+
+	{
+		reader, err := dsc.Exporter.Export(s.ctx, &dse3.ExportRequest{StartFrom: &timestamppb.Timestamp{}, Options: uint32(dse3.Option_OPTION_DATA_OBJECTS)})
+		if err != nil {
+			return err
+		}
+
+		for {
+			msg, err := reader.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				return err
+			}
+			obj := msg.Msg.(*dse3.ExportResponse_Object).Object
+			if !s.filter.Lookup(getObjectKey(obj)) {
+				s.log.Trace().Str("key", string(getObjectKey(obj))).Msg("delete")
+
+				if err := writer.Send(&dsi3.ImportRequest{
+					OpCode: dsi3.Opcode_OPCODE_DELETE,
+					Msg:    &dsi3.ImportRequest_Object{Object: obj},
+				}); err == nil {
+					atomic.AddInt32(&s.counts.Deletes, 1)
+					objDeleted++
+				} else {
+					s.log.Error().Err(err).Msgf("failed to delete object %v", obj)
+					s.errChan <- err
+					atomic.AddInt32(&s.counts.Errors, 1)
+				}
+			}
+		}
+	}
+
+	{
+		reader, err := dsc.Exporter.Export(s.ctx, &dse3.ExportRequest{StartFrom: &timestamppb.Timestamp{}, Options: uint32(dse3.Option_OPTION_DATA_RELATIONS)})
+		if err != nil {
+			return err
+		}
+		for {
+			msg, err := reader.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				return err
+			}
+			rel := msg.Msg.(*dse3.ExportResponse_Relation).Relation
+			if !s.filter.Lookup(getRelationKey(rel)) {
+				s.log.Trace().Str("key", string(getRelationKey(rel))).Msg("delete")
+
+				if err := writer.Send(&dsi3.ImportRequest{
+					OpCode: dsi3.Opcode_OPCODE_DELETE,
+					Msg:    &dsi3.ImportRequest_Relation{Relation: rel},
+				}); err == nil {
+					atomic.AddInt32(&s.counts.Deletes, 1)
+					relDeleted++
+				} else {
+					s.log.Error().Err(err).Msgf("failed to delete relation %v", rel)
+					s.errChan <- err
+					atomic.AddInt32(&s.counts.Errors, 1)
+				}
+			}
+		}
+	}
+
+	if err := writer.CloseSend(); err != nil {
+		return err
+	}
+
+	s.filter = nil
+
+	s.log.Info().Int("obj", objDeleted).Int("rel", relDeleted).Msg("diff")
 
 	return nil
 }

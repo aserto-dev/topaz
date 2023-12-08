@@ -431,8 +431,6 @@ github.com/aserto-dev/go-directory v0.30.6 h1:JdxofQIHyqrHJxn1L/vxiYamCYFX6rGeuM
 github.com/aserto-dev/go-directory v0.30.6/go.mod h1:qd/+uHrKvskPSN48FLGeZ/FoiORxjRmikCKRIp3pnYY=
 github.com/aserto-dev/go-directory-cli v0.30.1 h1:5tEDG7uj//NXEzKkF4cbQbsvPuZzn/3hrhTA0GuG/7A=
 github.com/aserto-dev/go-directory-cli v0.30.1/go.mod h1:EvTAQdfREB8Wq5aRJxk3krkBz6/4LUwJjfbc0MjVUl8=
-github.com/aserto-dev/go-edge-ds v0.30.9 h1:34IM61rchb+WCIogDdBPjnMeLsRG/Q2CU/1aHHBjiPM=
-github.com/aserto-dev/go-edge-ds v0.30.9/go.mod h1:6GUYXucLwB4ChGCFg+HymbZhk1U/YuGmSizpS4/aeZw=
 github.com/aserto-dev/go-grpc v0.8.59 h1:GWNgYUYPdLy6F1tMktSQWfls82nhrQXAY2NBM9zuKdo=
 github.com/aserto-dev/go-grpc v0.8.59/go.mod h1:2FcclMDheTsEvYCY72o+EwTaoO0ti3/it4G6xIlzNIM=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
@@ -504,6 +502,8 @@ github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 h1:8UrgZ3GkP4i/CLijOJx79Yu+etly
 github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0/go.mod h1:v57UDF4pDQJcEfFUCRop3lJL149eHGSe9Jvczhzjo/0=
 github.com/dgraph-io/badger/v3 v3.2103.5 h1:ylPa6qzbjYRQMU6jokoj4wzcaweHylt//CH0AKt0akg=
 github.com/dgraph-io/ristretto v0.1.1 h1:6CWw5tJNgpegArSHpNHJKldNeq03FQCwYvfMVWajOK8=
+github.com/dgryski/go-metro v0.0.0-20200812162917-85c65e2d0165 h1:BS21ZUJ/B5X2UVUbczfmdWH7GapPWAhxcMsDnjJTU1E=
+github.com/dgryski/go-metro v0.0.0-20200812162917-85c65e2d0165/go.mod h1:c9O8+fpSOX1DM8cPNSkX/qsBWdkD4yd2dpciOWQjpBw=
 github.com/dgryski/trifles v0.0.0-20200323201526-dd97f9abfb48 h1:fRzb/w+pyskVMQ+UbP35JkH8yB7MYb4q/qhBarqZE6g=
 github.com/dgryski/trifles v0.0.0-20200323201526-dd97f9abfb48/go.mod h1:if7Fbed8SFyPtHLHbg49SI7NAdJiC5WIA09pe59rfAA=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
@@ -791,6 +791,8 @@ github.com/opencontainers/go-digest v1.0.0/go.mod h1:0JzlMkj0TRzQZfJkVvzbP0HBR3I
 github.com/opencontainers/image-spec v1.1.0-rc5 h1:Ygwkfw9bpDvs+c9E34SdgGOj41dX/cbdlwvlWt0pnFI=
 github.com/opencontainers/image-spec v1.1.0-rc5/go.mod h1:X4pATf0uXsnn3g5aiGIsVnJBR4mxhKzfwmvK/B2NTm8=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
+github.com/panmari/cuckoofilter v1.0.6 h1:WKb1aSj16h22x0CKVtTCaRkJiCnVGPLEMGbNY8xwXf8=
+github.com/panmari/cuckoofilter v1.0.6/go.mod h1:bKADbQPGbN6TxUvo/IbMEIUbKuASnpsOvrLTgpSX0aU=
 github.com/pelletier/go-toml/v2 v2.1.0 h1:FnwAJ4oYMvbT/34k9zzHuZNrhlz48GB3/s6at6/MHO4=
 github.com/pelletier/go-toml/v2 v2.1.0/go.mod h1:tJU2Z3ZkXwnxa4DPO899bsyIoywizdUvyaeZurnPPDc=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
