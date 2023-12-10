@@ -4,7 +4,7 @@
     "assets": {
         "manifest": "/assets/templates/simple-rbac/manifest.yaml",
         "policy": {
-            "name": "default",
+            "name": "simple-rbac",
             "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
         },
         "idp_data": [
