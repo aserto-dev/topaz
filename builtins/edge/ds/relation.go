@@ -108,11 +108,12 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			}
 
 			resp, err := client.GetRelation(bctx.Context, &args)
-			if err != nil {
+			switch {
+			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
-				if status.Code(err) != codes.NotFound {
-					return nil, err
-				}
+				return ast.NullTerm(), err
+			case err != nil:
+				return nil, err
 			}
 
 			buf := new(bytes.Buffer)

@@ -164,3 +164,71 @@ func TestBuiltinsHelp(t *testing.T) {
 		t.Run(tc.name, f)
 	}
 }
+
+var builtinNotFoundErrTests = []struct {
+	name     string
+	query    string
+	expected map[string]interface{}
+}{
+	{
+		name:  "ds.identity",
+		query: `x = ds.identity({"id": "no_existing_identifier"})`,
+	},
+	{
+		name:  "ds.user",
+		query: `x = ds.user({"id": "none_existing_user_object_id"})`,
+	},
+	{
+		name:  "ds.object",
+		query: `x = ds.object({"object_type": "none_existing_type", "object_id": "none_existing_id"})`,
+	},
+	{
+		name: "ds.relation",
+		query: `x = ds.relation({
+			"object_type": "none_existing_object_type", 
+			"object_id": "none_existing_object_id",
+			"relation": "none_existing_relation",
+			"subject_type": "none_existing_subject_type",
+			"subject_id": "none_existing_subject_id",
+			})`,
+	},
+	{
+		name: "ds.relation.with.subject_relation",
+		query: `x = ds.relation({
+			"object_type": "none_existing_object_type", 
+			"object_id": "none_existing_object_id",
+			"relation": "none_existing_relation",
+			"subject_type": "none_existing_subject_type",
+			"subject_id": "none_existing_subject_id",
+			"subject_relation": "none_existing_subject_relation",
+			})`,
+	},
+}
+
+func TestBuiltinsNotFoundErr(t *testing.T) {
+	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
+		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
+	})
+	defer harness.Cleanup()
+
+	client := harness.CreateGRPCClient()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	for _, tc := range builtinNotFoundErrTests {
+		f := func(t *testing.T) {
+			resp, err := client.Query(ctx, &authz2.QueryRequest{
+				Query: tc.query,
+			})
+			require.NoError(t, err)
+			require.NotNil(t, resp)
+			require.NotNil(t, resp.Response)
+
+			r := resp.Response.AsMap()
+			require.NotNil(t, r)
+		}
+
+		t.Run(tc.name, f)
+	}
+}
