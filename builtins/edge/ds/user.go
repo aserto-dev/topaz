@@ -73,11 +73,12 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				ObjectId:      args.ID,
 				WithRelations: false,
 			})
-			if err != nil {
+			switch {
+			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
-				if status.Code(err) != codes.NotFound {
-					return nil, err
-				}
+				return ast.NullTerm(), err
+			case err != nil:
+				return nil, err
 			}
 
 			buf := new(bytes.Buffer)

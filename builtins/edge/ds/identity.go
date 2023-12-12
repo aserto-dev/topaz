@@ -1,9 +1,10 @@
 package ds
 
 import (
-	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/topaz/directory"
 	"github.com/aserto-dev/topaz/resolvers"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -61,10 +62,10 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 
 			user, err := directory.GetIdentityV2(bctx.Context, client, args.ID)
 			switch {
-			case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
-				return nil, err
-			case err != nil:
+			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
+				return ast.NullTerm(), err
+			case err != nil:
 				return nil, err
 			default:
 				return ast.StringTerm(user.Id), nil
