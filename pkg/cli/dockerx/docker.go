@@ -12,7 +12,6 @@ import (
 const (
 	Topaz             = "topaz"
 	DefaultConfigRoot = ".config/topaz"
-	DefaultPolicyRoot = "$HOME/.policy"
 )
 
 var (
@@ -43,4 +42,20 @@ func DefaultRoots() (confRoot string, err error) {
 	}
 
 	return path.Join(home, DefaultConfigRoot), nil
+}
+
+func PolicyRoot() string {
+	const defaultPolicyRoot = ".policy"
+
+	policyRoot := os.Getenv("POLICY_FILE_STORE_ROOT")
+	if policyRoot == "" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return ""
+		}
+
+		return path.Join(home, defaultPolicyRoot)
+	}
+	fmt.Println("POLICY_ROT", policyRoot)
+	return policyRoot
 }

@@ -99,11 +99,7 @@ var (
 func (cmd *StartCmd) dockerArgs(rootPath string) ([]string, error) {
 	args := append([]string{}, dockerCmd...)
 
-	policyRoot := os.Getenv("POLICY_FILE_STORE_ROOT ")
-	if policyRoot == "" {
-		policyRoot = dockerx.DefaultPolicyRoot
-	}
-
+	policyRoot := dockerx.PolicyRoot()
 	dockerArgs = append(dockerArgs, "-v", fmt.Sprintf("%s:/root/.policy:ro", policyRoot))
 	args = append(args, dockerArgs...)
 	args = append(args, daemonArgs...)
