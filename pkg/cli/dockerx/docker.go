@@ -56,6 +56,5 @@ func PolicyRoot() string {
 
 		return path.Join(home, defaultPolicyRoot)
 	}
-	fmt.Println("POLICY_ROT", policyRoot)
 	return policyRoot
 }
