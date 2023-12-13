@@ -64,7 +64,11 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
-				return ast.NullTerm(), err
+				astVal, err := ast.InterfaceToValue(map[string]any{})
+				if err != nil {
+					return nil, err
+				}
+				return ast.NewTerm(astVal), nil
 			case err != nil:
 				return nil, err
 			default:
