@@ -26,7 +26,7 @@ require (
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.30.2
-	github.com/aserto-dev/runtime v0.58.0
+	github.com/aserto-dev/runtime v0.58.1
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.8
 	github.com/cli/browser v1.3.0
