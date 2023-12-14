@@ -24,6 +24,7 @@ type CLI struct {
 	Manifest  ManifestCmd  `cmd:"" help:"manifest commands"`
 	Test      TestCmd      `cmd:"" help:"test assertions commands"`
 	Templates TemplateCmd  `cmd:"" help:"template commands"`
+	Certs     CertsCmd     `cmd:"" help:"cert commands"`
 	Console   ConsoleCmd   `cmd:"" help:"open console in the browser"`
 	Import    ImportCmd    `cmd:"" help:"import directory objects"`
 	Export    ExportCmd    `cmd:"" help:"export directory objects"`
