@@ -32,7 +32,7 @@ opa:
         response_header_timeout_seconds: 5
         credentials:
           bearer:
-            schema: "Bearer"
+            schema: "Basic"
             token: "<your_pat>"
     bundles:
       peoplefinder:
