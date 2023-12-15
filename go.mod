@@ -17,9 +17,9 @@ require (
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.30.0
 	github.com/aserto-dev/go-authorizer v0.20.5
-	github.com/aserto-dev/go-directory v0.30.6
+	github.com/aserto-dev/go-directory v0.30.7
 	github.com/aserto-dev/go-directory-cli v0.30.1
-	github.com/aserto-dev/go-edge-ds v0.30.10-0.20231214221638-64fdbae3d99b
+	github.com/aserto-dev/go-edge-ds v0.30.10-0.20231215070527-0100b22b50c6
 	github.com/aserto-dev/go-grpc v0.8.59
 	github.com/aserto-dev/go-topaz-ui v0.0.4
 	github.com/aserto-dev/header v0.0.6
@@ -32,7 +32,7 @@ require (
 	github.com/cli/browser v1.3.0
 	github.com/fatih/color v1.16.0
 	github.com/fullstorydev/grpcurl v1.8.9
-	github.com/google/uuid v1.4.0
+	github.com/google/uuid v1.5.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.1
@@ -49,7 +49,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.5.0
-	google.golang.org/grpc v1.59.0
+	google.golang.org/grpc v1.60.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v2 v2.4.0
