@@ -1,0 +1,39 @@
+---
+version: 2
+logging:
+  prod: true
+  log_level: debug
+
+api:
+  services:
+    authorizer:
+      gateway:
+        allowed_origins:
+        - https://localhost
+        listen_address: "0.0.0.0:8383"
+      grpc:
+        listen_address: "0.0.0.0:8282"
+        connection_timeout_seconds: 2
+
+opa:
+  instance_id: "-"
+  config:
+    bundles:
+      ppf:
+        persist: false
+        config:
+          polling:
+            max_delay_seconds: 120
+            min_delay_seconds: 60
+        resource:  "apcr.io/<my-tenant>/<my-repository>:<tag>"
+        service: "myservice"    
+    services:
+      myservice:
+        type: "oci"
+        credentials:
+          bearer:
+            token: '<my-tenant>:<my-registry-key>'
+            scheme: 'basic'
+        response_header_timeout_seconds: 60
+        url:  "https://apcr.io/v2"
+ 
