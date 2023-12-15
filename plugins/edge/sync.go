@@ -239,9 +239,6 @@ func (s *Sync) subscriber() error {
 
 		switch m := msg.Msg.(type) {
 		case *dse3.ExportResponse_Object:
-			if m == nil {
-				panic("nil")
-			}
 			if err := writer.Send(&dsi3.ImportRequest{
 				OpCode: dsi3.Opcode_OPCODE_SET,
 				Msg:    &dsi3.ImportRequest_Object{Object: m.Object},
@@ -256,9 +253,6 @@ func (s *Sync) subscriber() error {
 			}
 
 		case *dse3.ExportResponse_Relation:
-			if m == nil {
-				panic("nil")
-			}
 			if err := writer.Send(&dsi3.ImportRequest{
 				OpCode: dsi3.Opcode_OPCODE_SET,
 				Msg:    &dsi3.ImportRequest_Relation{Relation: m.Relation},
