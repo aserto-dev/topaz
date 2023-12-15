@@ -154,7 +154,13 @@ func (p *Plugin) task(fullSync bool) {
 		panic(errors.Errorf("tenant-id empty"))
 	}
 
-	sync := NewSyncMgr(p.config, p.topazConfig, p.logger)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer func() {
+		p.logger.Trace().Msg("task cleanup")
+		cancel()
+	}()
+
+	sync := NewSyncMgr(ctx, p.config, p.topazConfig, p.logger)
 	sync.Run(fullSync)
 
 	p.logger.Info().Str(status, finished).Msg(syncTask)

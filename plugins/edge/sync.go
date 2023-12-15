@@ -41,6 +41,7 @@ const (
 	finished       string = "finished"
 	channelSize    int    = 10000
 	localHost      string = "localhost:9292"
+	initFilterSize uint   = 1000000
 )
 
 type directoryClient struct {
@@ -78,9 +79,9 @@ type Result struct {
 	Err    error
 }
 
-func NewSyncMgr(c *Config, topazConfig *topaz.Config, logger *zerolog.Logger) *Sync {
+func NewSyncMgr(ctx context.Context, c *Config, topazConfig *topaz.Config, logger *zerolog.Logger) *Sync {
 	return &Sync{
-		ctx:         context.Background(),
+		ctx:         ctx,
 		cfg:         c,
 		topazConfig: topazConfig,
 		log:         logger,
@@ -116,7 +117,7 @@ func (s *Sync) Run(fs bool) {
 
 	if fs {
 		watermark = &timestamppb.Timestamp{}
-		s.filter = cuckoo.NewFilter(1000000)
+		s.filter = cuckoo.NewFilter(initFilterSize)
 	}
 
 	g.Go(func() error {
@@ -148,16 +149,20 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 		close(s.exportChan)
 	}()
 
-	dsc, err := s.getRemoteDirectoryClient()
+	ctx, cancel := context.WithCancel(s.ctx)
+	defer cancel()
+
+	dsc, err := s.getRemoteDirectoryClient(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("%s - failed to get directory connection", syncProducer)
 		return err
 	}
+	defer dsc.conn.(*grpc.ClientConn).Close()
 
 	counts := Counter{}
 	s.log.Info().Str(status, started).Msg(syncProducer)
 
-	stream, err := dsc.Exporter.Export(s.ctx, &dse3.ExportRequest{
+	stream, err := dsc.Exporter.Export(ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
 		StartFrom: watermark,
 	})
@@ -189,6 +194,7 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 			}
 		default:
 			s.log.Debug().Msg("producer unknown message type")
+			continue // do not msg to exportChan when unknown.
 		}
 
 		s.exportChan <- msg
@@ -201,18 +207,22 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 }
 
 func (s *Sync) subscriber() error {
-	dsc, err := s.getLocalDirectoryClient()
+	ctx, cancel := context.WithCancel(s.ctx)
+	defer cancel()
+
+	dsc, err := s.getLocalDirectoryClient(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to get directory connection")
 		return err
 	}
+	defer dsc.conn.(*grpc.ClientConn).Close()
 
 	counts := Counter{}
 	s.log.Info().Str(status, started).Msg(syncSubscriber)
 
 	watermark := s.getWatermark()
 
-	writer, err := dsc.Importer.Import(s.ctx)
+	writer, err := dsc.Importer.Import(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to setup import stream")
 		return err
@@ -275,7 +285,7 @@ func (s *Sync) subscriber() error {
 	return nil
 }
 
-func (s *Sync) getLocalDirectoryClient() (*directoryClient, error) {
+func (s *Sync) getLocalDirectoryClient(ctx context.Context) (*directoryClient, error) {
 	host := localHost
 	if s.topazConfig.DirectoryResolver.Address != "" {
 		host = s.topazConfig.DirectoryResolver.Address
@@ -311,7 +321,7 @@ func (s *Sync) getLocalDirectoryClient() (*directoryClient, error) {
 		opts = append(opts, client.WithTenantID(s.topazConfig.DirectoryResolver.TenantID))
 	}
 
-	conn, err := client.NewConnection(s.ctx, opts...)
+	conn, err := client.NewConnection(ctx, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -326,7 +336,7 @@ func (s *Sync) getLocalDirectoryClient() (*directoryClient, error) {
 	}, nil
 }
 
-func (s *Sync) getRemoteDirectoryClient() (*directoryClient, error) {
+func (s *Sync) getRemoteDirectoryClient(ctx context.Context) (*directoryClient, error) {
 	host := localHost
 	if s.cfg.Addr != "" {
 		host = s.cfg.Addr
@@ -349,7 +359,7 @@ func (s *Sync) getRemoteDirectoryClient() (*directoryClient, error) {
 		opts = append(opts, client.WithTenantID(s.cfg.TenantID))
 	}
 
-	conn, err := client.NewConnection(s.ctx, opts...)
+	conn, err := client.NewConnection(ctx, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -405,15 +415,20 @@ func (s *Sync) syncFilename() string {
 }
 
 func (s *Sync) syncManifest() error {
-	ldsc, err := s.getLocalDirectoryClient()
-	if err != nil {
-		return err
-	}
+	ctx, cancel := context.WithCancel(s.ctx)
+	defer cancel()
 
-	rdsc, err := s.getRemoteDirectoryClient()
+	ldsc, err := s.getLocalDirectoryClient(ctx)
 	if err != nil {
 		return err
 	}
+	defer ldsc.conn.(*grpc.ClientConn).Close()
+
+	rdsc, err := s.getRemoteDirectoryClient(ctx)
+	if err != nil {
+		return err
+	}
+	defer rdsc.conn.(*grpc.ClientConn).Close()
 
 	_, rr, err := s.getManifest(rdsc.Model)
 	if err != nil {
@@ -517,13 +532,17 @@ func (s *Sync) diff() error {
 		return errors.New("filter not initialized")
 	}
 
-	dsc, err := s.getLocalDirectoryClient()
+	ctx, cancel := context.WithCancel(s.ctx)
+	defer cancel()
+
+	dsc, err := s.getLocalDirectoryClient(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("diff - failed to create directory client")
 		return err
 	}
+	defer dsc.conn.(*grpc.ClientConn).Close()
 
-	writer, err := dsc.Importer.Import(s.ctx)
+	writer, err := dsc.Importer.Import(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to setup import stream")
 		return err
@@ -533,7 +552,7 @@ func (s *Sync) diff() error {
 	relDeleted := 0
 
 	{
-		reader, err := dsc.Exporter.Export(s.ctx, &dse3.ExportRequest{StartFrom: &timestamppb.Timestamp{}, Options: uint32(dse3.Option_OPTION_DATA_OBJECTS)})
+		reader, err := dsc.Exporter.Export(ctx, &dse3.ExportRequest{StartFrom: &timestamppb.Timestamp{}, Options: uint32(dse3.Option_OPTION_DATA_OBJECTS)})
 		if err != nil {
 			return err
 		}
@@ -566,7 +585,7 @@ func (s *Sync) diff() error {
 	}
 
 	{
-		reader, err := dsc.Exporter.Export(s.ctx, &dse3.ExportRequest{StartFrom: &timestamppb.Timestamp{}, Options: uint32(dse3.Option_OPTION_DATA_RELATIONS)})
+		reader, err := dsc.Exporter.Export(ctx, &dse3.ExportRequest{StartFrom: &timestamppb.Timestamp{}, Options: uint32(dse3.Option_OPTION_DATA_RELATIONS)})
 		if err != nil {
 			return err
 		}
