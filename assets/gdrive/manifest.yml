@@ -32,18 +32,19 @@ types:
       can_view: viewer | editor | owner | parent->can_view
       can_write: editor | owner | parent->can_write
       can_share: owner | parent->can_share
-      can_create: parent->can_create
+      can_create: owner | parent->can_create
+      can_delete: owner | parent->can_delete
 
-  # doc represents a document within a folder
-  doc:
+  # document represents a document within a folder
+  document:
     relations:
-      owner: user 
+      owner: user
       editor: user | group#member
       viewer: user | group#member
       parent: folder
 
     permissions:
-      can_view: viewer | editor | owner | parent->can_view 
+      can_view: viewer | editor | owner | parent->can_view
       can_write: editor | owner | parent->can_write
       can_delete: owner | parent->can_delete
       can_share: owner | parent->can_share
