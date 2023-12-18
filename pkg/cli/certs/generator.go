@@ -31,7 +31,7 @@ func (c *CertPaths) FindExisting() []string {
 	return existing
 }
 
-func GenerateCerts(logOut, errOut io.Writer, certPaths ...*CertPaths) error {
+func GenerateCerts(logOut, errOut io.Writer, dnsNames []string, certPaths ...*CertPaths) error {
 	existingFiles := []string{}
 
 	for _, cert := range certPaths {
@@ -43,10 +43,10 @@ func GenerateCerts(logOut, errOut io.Writer, certPaths ...*CertPaths) error {
 		return nil
 	}
 
-	return generate(logOut, errOut, certPaths...)
+	return generate(logOut, errOut, dnsNames, certPaths...)
 }
 
-func generate(logOut, errOut io.Writer, certPaths ...*CertPaths) error {
+func generate(logOut, errOut io.Writer, dnsNames []string, certPaths ...*CertPaths) error {
 	zerologLogger, err := logger.NewLogger(
 		logOut, errOut,
 		&logger.Config{Prod: false, LogLevel: "warn", LogLevelParsed: zerolog.WarnLevel},
@@ -64,6 +64,7 @@ func generate(logOut, errOut io.Writer, certPaths ...*CertPaths) error {
 			CertPath:         certPaths.Cert,
 			CACertPath:       certPaths.CA,
 			DefaultTLSGenDir: certPaths.Dir,
+			DNSNames:         dnsNames,
 		}); err != nil {
 			return errors.Wrap(err, "failed to create dev certs")
 		}

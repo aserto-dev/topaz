@@ -23,10 +23,14 @@ type CertsCmd struct {
 
 const (
 	DefaultCertsDir = "~/.config/topaz/certs"
+
+	gatewayCertFileName = "gateway"
+	grpcCertFileName    = "grpc"
+	certCommonName      = "topaz"
 )
 
 type ListCertsCmd struct {
-	CertsDir string `arg:"" required:"false" default:"~/.config/topaz/certs" help:"Path to dev certs folder" `
+	CertsDir string `arg:"" required:"false" default:"~/.config/topaz/certs" help:"path to dev certs folder" `
 }
 
 func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
@@ -83,9 +87,9 @@ func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
 }
 
 type GenerateCertsCmd struct {
-	TrustCert bool   `flag:"" default:"false" help:"trust generated dev cert"`
-	Name      string `flag:"" required:"false" default:"" help:"Common name used in dev cert generation" `
-	CertsDir  string `arg:"" required:"false" default:"~/.config/topaz/certs" help:"Path to dev cert folder" `
+	TrustCert bool     `flag:"" default:"false" help:"trust generated dev cert"`
+	CertsDir  string   `flag:"" required:"false" default:"~/.config/topaz/certs" help:"path to dev cert folder" `
+	DNSNames  []string `arg:"" required:"false" default:"" help:"array of DNS Names used in certificate generation"`
 }
 
 // Generate a pair of gateway and grpc certificates.
@@ -101,29 +105,22 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 		certsDir = path.Join(home, "/.config/topaz/certs")
 	}
 
-	gateway := "gateway"
-	grpc := "grpc"
-	if cmd.Name != "" {
-		gateway = fmt.Sprintf("%s_gateway", cmd.Name)
-		grpc = fmt.Sprintf("%s_grpc", cmd.Name)
-	}
-
 	pathGateway := &certs.CertPaths{
-		Name: cmd.Name,
-		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", gateway)),
-		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", gateway)),
-		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", gateway)),
+		Name: certCommonName,
+		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", gatewayCertFileName)),
+		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", gatewayCertFileName)),
+		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", gatewayCertFileName)),
 		Dir:  certsDir,
 	}
 	pathGRPC := &certs.CertPaths{
-		Name: cmd.Name,
-		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", grpc)),
-		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", grpc)),
-		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", grpc)),
+		Name: certCommonName,
+		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", grpcCertFileName)),
+		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", grpcCertFileName)),
+		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", grpcCertFileName)),
 		Dir:  certsDir,
 	}
 	c.UI.Progress("Please wait").Start()
-	err := certs.GenerateCerts(c.UI.Output(), c.UI.Err(), pathGateway, pathGRPC)
+	err := certs.GenerateCerts(c.UI.Output(), c.UI.Err(), cmd.DNSNames, pathGateway, pathGRPC)
 	if err != nil {
 		return err
 	}
@@ -136,7 +133,7 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 }
 
 type TrustCertsCmd struct {
-	CertsDir string `arg:"" required:"false" default:"~/.config/topaz/certs" help:"Path to cert file" `
+	CertsDir string `arg:"" required:"false" default:"~/.config/topaz/certs" help:"path to certs folder" `
 }
 
 func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
