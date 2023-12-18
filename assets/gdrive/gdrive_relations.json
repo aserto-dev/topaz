@@ -166,21 +166,24 @@
       "object_id": "missions",
       "relation": "editor",
       "subject_type": "group",
-      "subject_id": "strike-team"
+      "subject_id": "strike-team",
+      "subject_relation": "member"
     },
     {
       "object_type": "folder",
       "object_id": "death-star",
       "relation": "editor",
       "subject_type": "group",
-      "subject_id": "strike-team"
+      "subject_id": "strike-team",
+      "subject_relation": "member"
     },
     {
       "object_type": "folder",
       "object_id": "general",
       "relation": "viewer",
       "subject_type": "group",
-      "subject_id": "everyone"
+      "subject_id": "everyone",
+      "subject_relation": "member"
     },
     {
       "object_type": "folder",
