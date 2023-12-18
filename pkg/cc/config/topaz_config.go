@@ -97,7 +97,7 @@ func (c *Config) validation() error {
 func setDefaultCallsAuthz(cfg *Config) {
 	if len(cfg.Auth.Options.Overrides) == 0 {
 		infoPath := OptionOverrides{
-			Paths:    []string{"/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo"},
+			Paths:    []string{"/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo", "/grpc.reflection.v1.ServerReflection.ServerReflectionInfo"},
 			Override: Options{EnableAPIKey: false, EnableAnonymous: true},
 		}
 		cfg.Auth.Options.Overrides = append(cfg.Auth.Options.Overrides, infoPath)
