@@ -23,14 +23,14 @@ func AddTrustedCert(certPath string) error {
 	return updateCaCerts()
 }
 
-func RemoveTrustedCert(certPath string) error {
+func RemoveTrustedCert(certPath string, filter string) error {
 	if !dirExists(CaCertsDir) {
 		// Nothing to remove
 		return nil
 	}
 
 	if err := sh.RunV("rm", "-rf", CaCertsDir); err != nil {
-		return errors.Wrap(err, "unable to remove sidecar cert")
+		return errors.Wrap(err, "unable to remove cert")
 	}
 
 	return updateCaCerts()

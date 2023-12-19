@@ -157,7 +157,7 @@ func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		if !file.IsDir() && strings.HasSuffix(file.Name(), "-ca.crt") {
 			if cmd.Remove {
 				c.UI.Normal().Msgf("Removing %s from trusted store", file.Name())
-				if err := certs.RemoveTrustedCert(filepath.Join(certsDir, file.Name())); err != nil {
+				if err := certs.RemoveTrustedCert(filepath.Join(certsDir, file.Name()), certCommonName); err != nil {
 					return err
 				}
 			} else {

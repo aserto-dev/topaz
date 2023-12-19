@@ -20,13 +20,13 @@ func AddTrustedCert(certPath string) error {
 	keychain := path.Join(homedir, loginKeychain)
 
 	if err := sh.RunV("security", "add-trusted-cert", "-k", keychain, certPath); err != nil {
-		return errors.Wrap(err, "trusting sidecar ca cert")
+		return errors.Wrap(err, "trusting ca cert")
 	}
 
 	return nil
 }
 
-func RemoveTrustedCert(certPath string) error {
+func RemoveTrustedCert(certPath string, filter string) error {
 	homedir, err := os.UserHomeDir()
 	if err != nil {
 		return err
@@ -34,14 +34,14 @@ func RemoveTrustedCert(certPath string) error {
 
 	keychain := path.Join(homedir, loginKeychain)
 
-	if !findCert("authorizer-gateway-ca", keychain) {
+	if !findCert(filter, keychain) {
 		fmt.Println("No certificate to remove.")
 		return nil
 	}
 
 	fmt.Fprintln(os.Stderr, "Deleting dev certificate...")
-	if err := sh.RunV("security", "delete-certificate", "-c", "authorizer-gateway-ca", "-t", keychain); err != nil {
-		return errors.Wrap(err, "can't remove sidecar ca cert")
+	if err := sh.RunV("security", "delete-certificate", "-c", filter, "-t", keychain); err != nil {
+		return errors.Wrap(err, "can't remove ca cert")
 	}
 
 	return nil
