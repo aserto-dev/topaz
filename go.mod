@@ -6,6 +6,7 @@ go 1.20
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/service-host => ../service-host
+
 // replace github.com/aserto-dev/runtime => ../runtime
 
 require (
@@ -28,7 +29,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.30.2
 	github.com/aserto-dev/runtime v0.58.0
 	github.com/aserto-dev/self-decision-logger v0.0.4
-	github.com/aserto-dev/service-host v0.0.8
+	github.com/aserto-dev/service-host v0.0.9
 	github.com/cli/browser v1.3.0
 	github.com/fatih/color v1.16.0
 	github.com/fullstorydev/grpcurl v1.8.9
