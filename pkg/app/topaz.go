@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/go-aserto/client"
 	eds "github.com/aserto-dev/go-edge-ds"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
@@ -126,22 +127,30 @@ func (e *Topaz) ConfigServices() error {
 			}
 		}
 
-		server, err := e.ServiceBuilder.CreateService(serviceConfig.API,
-			opts,
-			func(server *grpc.Server) {
-				for _, f := range grpcs {
-					f(server)
-				}
-			},
-			func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-				for _, f := range gateways {
-					err := f(ctx, mux, grpcEndpoint, opts)
-					if err != nil {
-						return err
+		server, err := e.ServiceBuilder.CreateService(
+			serviceConfig.API,
+			&builder.GRPCOptions{
+				ServerOptions: opts,
+				Registrations: func(server *grpc.Server) {
+					for _, f := range grpcs {
+						f(server)
 					}
-				}
-				return nil
-			}, true, cleanups...)
+				},
+			},
+			&builder.GatewayOptions{
+				HandlerRegistrations: func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
+					for _, f := range gateways {
+						err := f(ctx, mux, grpcEndpoint, opts)
+						if err != nil {
+							return err
+						}
+					}
+					return nil
+				},
+				ErrorHandler: cerr.CustomErrorHandler,
+			},
+			cleanups...,
+		)
 		if err != nil {
 			return err
 		}
