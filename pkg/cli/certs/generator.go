@@ -31,16 +31,17 @@ func (c *CertPaths) FindExisting() []string {
 	return existing
 }
 
-func GenerateCerts(logOut, errOut io.Writer, dnsNames []string, certPaths ...*CertPaths) error {
-	existingFiles := []string{}
+func GenerateCerts(logOut, errOut io.Writer, force bool, dnsNames []string, certPaths ...*CertPaths) error {
+	if !force {
+		existingFiles := []string{}
+		for _, cert := range certPaths {
+			existingFiles = append(existingFiles, cert.FindExisting()...)
+		}
 
-	for _, cert := range certPaths {
-		existingFiles = append(existingFiles, cert.FindExisting()...)
-	}
-
-	if len(existingFiles) != 0 {
-		fmt.Fprintln(logOut, "Some cert files already exist. Skipping generation.", existingFiles)
-		return nil
+		if len(existingFiles) != 0 {
+			fmt.Fprintln(logOut, "Some cert files already exist. Skipping generation.", existingFiles)
+			return nil
+		}
 	}
 
 	return generate(logOut, errOut, dnsNames, certPaths...)

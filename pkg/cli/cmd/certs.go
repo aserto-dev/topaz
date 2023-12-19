@@ -16,9 +16,10 @@ import (
 )
 
 type CertsCmd struct {
-	List     ListCertsCmd     `cmd:"" help:"list dev certs"`
-	Generate GenerateCertsCmd `cmd:"" help:"generate dev certs"`
-	Trust    TrustCertsCmd    `cmd:"" help:"trust dev certs"`
+	List     ListCertsCmd      `cmd:"" help:"list dev certs"`
+	Remove   RemoveCertFileCmd `cmd:"" help:"remove dev cert file"`
+	Generate GenerateCertsCmd  `cmd:"" help:"generate dev certs"`
+	Trust    TrustCertsCmd     `cmd:"" help:"trust/untrust dev certs"`
 }
 
 const (
@@ -30,7 +31,7 @@ const (
 )
 
 type ListCertsCmd struct {
-	CertsDir string `arg:"" required:"false" default:"~/.config/topaz/certs" help:"path to dev certs folder" `
+	CertsDir string `flag:"" required:"false" default:"~/.config/topaz/certs" help:"path to dev cert folder" `
 }
 
 func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
@@ -88,6 +89,7 @@ func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
 
 type GenerateCertsCmd struct {
 	TrustCert bool     `flag:"" default:"false" help:"trust generated dev cert"`
+	Force     bool     `flag:"" default:"false" help:"force generate dev cert"`
 	CertsDir  string   `flag:"" required:"false" default:"~/.config/topaz/certs" help:"path to dev cert folder" `
 	DNSNames  []string `arg:"" required:"false" default:"" help:"array of DNS Names used in certificate generation"`
 }
@@ -119,8 +121,8 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", grpcCertFileName)),
 		Dir:  certsDir,
 	}
-	c.UI.Progress("Please wait").Start()
-	err := certs.GenerateCerts(c.UI.Output(), c.UI.Err(), cmd.DNSNames, pathGateway, pathGRPC)
+	c.UI.Progress("").Start()
+	err := certs.GenerateCerts(c.UI.Output(), c.UI.Err(), cmd.Force, cmd.DNSNames, pathGateway, pathGRPC)
 	if err != nil {
 		return err
 	}
@@ -133,7 +135,8 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 }
 
 type TrustCertsCmd struct {
-	CertsDir string `arg:"" required:"false" default:"~/.config/topaz/certs" help:"path to certs folder" `
+	CertsDir string `flag:"" required:"false" default:"~/.config/topaz/certs" help:"path to dev cert folder" `
+	Remove   bool   `flag:"" default:"false" help:"remove trusted dev cert"`
 }
 
 func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
@@ -151,12 +154,53 @@ func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 	for _, file := range files {
-		c.UI.Normal().Msgf("Adding %s to trusted store", file.Name())
 		if !file.IsDir() && strings.HasSuffix(file.Name(), "-ca.crt") {
-			if err := certs.AddTrustedCert(filepath.Join(certsDir, file.Name())); err != nil {
-				return err
+			if cmd.Remove {
+				c.UI.Normal().Msgf("Removing %s from trusted store", file.Name())
+				if err := certs.RemoveTrustedCert(filepath.Join(certsDir, file.Name())); err != nil {
+					return err
+				}
+			} else {
+				c.UI.Normal().Msgf("Adding %s to trusted store", file.Name())
+				if err := certs.AddTrustedCert(filepath.Join(certsDir, file.Name())); err != nil {
+					return err
+				}
 			}
 		}
 	}
 	return nil
+}
+
+type RemoveCertFileCmd struct {
+	All          bool   `flag:"" required:"false" default:"false" help:"remove all certs"`
+	CertsDir     string `flag:"" required:"false" default:"~/.config/topaz/certs" help:"path to dev cert folder" `
+	CertFileName string `arg:"" required:"false" default:"" help:"name of the cert file to remove" `
+}
+
+func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
+	certsDir := cmd.CertsDir
+	if cmd.CertsDir == DefaultCertsDir {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return err
+		}
+
+		certsDir = path.Join(home, "/.config/topaz/certs")
+	}
+	if cmd.All {
+		c.UI.Progress("Removing all dev certs").Start()
+		files, err := os.ReadDir(certsDir)
+		if err != nil {
+			return err
+		}
+		for _, file := range files {
+			if err := os.Remove(filepath.Join(certsDir, file.Name())); err != nil {
+				return err
+			}
+		}
+		c.UI.Progress("Done").Stop()
+		return nil
+	}
+
+	return os.Remove(filepath.Join(certsDir, cmd.CertFileName))
 }

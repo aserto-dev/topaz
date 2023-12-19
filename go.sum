@@ -419,6 +419,8 @@ github.com/aserto-dev/certs v0.0.3 h1:FiCJwh3nMHm/g1hRzKng1ZghLhNJgbMFxQd6ppJSVE
 github.com/aserto-dev/certs v0.0.3/go.mod h1:9mFvZ1NR92aEGj4ce6QleZGPXJuDZKTv+CWIOX28Xj8=
 github.com/aserto-dev/certs v0.0.4-0.20231218151444-0d5c50795f40 h1:WqJKCV+mp381Grxnd2GkSH6ocXrUmVdfS0IGUYr4Uyk=
 github.com/aserto-dev/certs v0.0.4-0.20231218151444-0d5c50795f40/go.mod h1:BGRgkJ4GB7XoETzDtnMxQySk5IVpJIa18aWuylvAsac=
+github.com/aserto-dev/certs v0.0.4 h1:1rHymGGRONYUB/KgZjRlMwwioQzj1vWIuFL2frQwrFA=
+github.com/aserto-dev/certs v0.0.4/go.mod h1:BGRgkJ4GB7XoETzDtnMxQySk5IVpJIa18aWuylvAsac=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
 github.com/aserto-dev/clui v0.8.3/go.mod h1:KsL/g2x5LAbkEE4ofW/ZoA4FDOIdAyLes/5ullvzUt8=
 github.com/aserto-dev/errors v0.0.6 h1:iH5fkJwBGFPbcdS4B8mwvNdwODlhDEXXPduZtjLh6vo=
@@ -1496,6 +1498,8 @@ google.golang.org/grpc v1.59.0 h1:Z5Iec2pjwb+LEOqzpB2MR12/eKFhDPhuqW91O+4bwUk=
 google.golang.org/grpc v1.59.0/go.mod h1:aUPDwccQo6OTjy7Hct4AfBPD1GptF4fyUjIkQ9YtF98=
 google.golang.org/grpc v1.60.0 h1:6FQAR0kM31P6MRdeluor2w2gPaS4SVNrD/DNTxrQ15k=
 google.golang.org/grpc v1.60.0/go.mod h1:OlCHIeLYqSSsLi6i49B5QGdzaMZK9+M7LXN2FKz4eGM=
+google.golang.org/grpc v1.60.1 h1:26+wFr+cNqSGFcOXcabYC0lUVJVRa2Sb2ortSK7VrEU=
+google.golang.org/grpc v1.60.1/go.mod h1:OlCHIeLYqSSsLi6i49B5QGdzaMZK9+M7LXN2FKz4eGM=
 google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0/go.mod h1:6Kw0yEErY5E/yWrBtf03jp27GLLJujG4z/JK95pnjjw=
 google.golang.org/protobuf v0.0.0-20200109180630-ec00e32a8dfd/go.mod h1:DFci5gLYBciE7Vtevhsrf46CRTquxDuWsQurQQe4oz8=
 google.golang.org/protobuf v0.0.0-20200221191635-4d8936d0db64/go.mod h1:kwYJMbMJ01Woi6D6+Kah6886xMZcty6N08ah7+eCXa0=

@@ -12,7 +12,7 @@ require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.2
-	github.com/aserto-dev/certs v0.0.4-0.20231218151444-0d5c50795f40
+	github.com/aserto-dev/certs v0.0.4
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.30.0
@@ -49,7 +49,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.5.0
-	google.golang.org/grpc v1.60.0
+	google.golang.org/grpc v1.60.1
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v2 v2.4.0
