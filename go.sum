@@ -421,6 +421,8 @@ github.com/aserto-dev/certs v0.0.4-0.20231218151444-0d5c50795f40 h1:WqJKCV+mp381
 github.com/aserto-dev/certs v0.0.4-0.20231218151444-0d5c50795f40/go.mod h1:BGRgkJ4GB7XoETzDtnMxQySk5IVpJIa18aWuylvAsac=
 github.com/aserto-dev/certs v0.0.4 h1:1rHymGGRONYUB/KgZjRlMwwioQzj1vWIuFL2frQwrFA=
 github.com/aserto-dev/certs v0.0.4/go.mod h1:BGRgkJ4GB7XoETzDtnMxQySk5IVpJIa18aWuylvAsac=
+github.com/aserto-dev/certs v0.0.5 h1:URZEN3DMUIqob3pf78NtTpe7sYPrR2oJYV5MbJ91YKA=
+github.com/aserto-dev/certs v0.0.5/go.mod h1:BGRgkJ4GB7XoETzDtnMxQySk5IVpJIa18aWuylvAsac=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
 github.com/aserto-dev/clui v0.8.3/go.mod h1:KsL/g2x5LAbkEE4ofW/ZoA4FDOIdAyLes/5ullvzUt8=
 github.com/aserto-dev/errors v0.0.6 h1:iH5fkJwBGFPbcdS4B8mwvNdwODlhDEXXPduZtjLh6vo=

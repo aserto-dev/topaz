@@ -23,7 +23,7 @@ func AddTrustedCert(certPath string) error {
 	return updateCaCerts()
 }
 
-func RemoveTrustedCert(certPath string, filter string) error {
+func RemoveTrustedCert(certPath, filter string) error {
 	if !dirExists(CaCertsDir) {
 		// Nothing to remove
 		return nil

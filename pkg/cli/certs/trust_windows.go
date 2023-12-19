@@ -21,8 +21,8 @@ func AddTrustedCert(certPath string) error {
 	return nil
 }
 
-func RemoveTrustedCert(certPath string, filter string) error {
-	removeCmd := fmt.Sprintf("get-childitem %s | Where-Object { $_.Subject -match '%s' } | Remove-Item", certStore, filter)
+func RemoveTrustedCert(certPath, filter string) error {
+	removeCmd := fmt.Sprintf("get-childitem %s | Where-Object -Property Subject -match '%s' | Remove-Item", certStore, filter)
 
 	if err := sh.RunV("pwsh", "-Command", removeCmd); err != nil {
 		if err := sh.RunV("powershell", "-Command", removeCmd); err != nil {

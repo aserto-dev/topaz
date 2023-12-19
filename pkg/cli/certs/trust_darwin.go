@@ -26,7 +26,7 @@ func AddTrustedCert(certPath string) error {
 	return nil
 }
 
-func RemoveTrustedCert(certPath string, filter string) error {
+func RemoveTrustedCert(certPath, filter string) error {
 	homedir, err := os.UserHomeDir()
 	if err != nil {
 		return err
