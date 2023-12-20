@@ -3,6 +3,7 @@ package edge
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -113,19 +114,18 @@ func (s *Sync) Run(fs bool) {
 
 	g := new(errgroup.Group)
 
-	watermark := s.getWatermark()
+	wm := s.getWatermark(fs)
 
 	if fs {
-		watermark = &timestamppb.Timestamp{}
-		s.filter = cuckoo.NewFilter(initFilterSize)
+		s.filter = cuckoo.NewFilter(wm.getFilterSize())
 	}
 
 	g.Go(func() error {
-		return s.subscriber()
+		return s.subscriber(wm)
 	})
 
 	g.Go(func() error {
-		return s.producer(watermark)
+		return s.producer(wm)
 	})
 
 	err := g.Wait()
@@ -143,7 +143,7 @@ func (s *Sync) Run(fs bool) {
 	s.log.Info().Str(status, finished).Str("duration", runEndTime.Sub(runStartTime).String()).Msg(syncRun)
 }
 
-func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
+func (s *Sync) producer(wm *watermark) error {
 	defer func() {
 		s.log.Debug().Msg("producer closed export channel")
 		close(s.exportChan)
@@ -151,6 +151,8 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 
 	ctx, cancel := context.WithCancel(s.ctx)
 	defer cancel()
+
+	fs := fullSync(wm)
 
 	dsc, err := s.getRemoteDirectoryClient(ctx)
 	if err != nil {
@@ -164,7 +166,7 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 
 	stream, err := dsc.Exporter.Export(ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
-		StartFrom: watermark,
+		StartFrom: wm.Timestamp,
 	})
 	if err != nil {
 		return err
@@ -184,12 +186,12 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 		switch m := msg.Msg.(type) {
 		case *dse3.ExportResponse_Object:
 			atomic.AddInt32(&counts.Objects, 1)
-			if fullSync(watermark) {
+			if fs {
 				s.filter.Insert(getObjectKey(m.Object))
 			}
 		case *dse3.ExportResponse_Relation:
 			atomic.AddInt32(&counts.Relations, 1)
-			if fullSync(watermark) {
+			if fs {
 				s.filter.Insert(getRelationKey(m.Relation))
 			}
 		default:
@@ -206,9 +208,12 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 	return nil
 }
 
-func (s *Sync) subscriber() error {
+func (s *Sync) subscriber(wm *watermark) error {
 	ctx, cancel := context.WithCancel(s.ctx)
 	defer cancel()
+
+	fs := fullSync(wm)
+	ts := &timestamppb.Timestamp{Seconds: wm.Timestamp.Seconds, Nanos: wm.Timestamp.Nanos}
 
 	dsc, err := s.getLocalDirectoryClient(ctx)
 	if err != nil {
@@ -219,8 +224,6 @@ func (s *Sync) subscriber() error {
 
 	counts := Counter{}
 	s.log.Info().Str(status, started).Msg(syncSubscriber)
-
-	watermark := s.getWatermark()
 
 	writer, err := dsc.Importer.Import(ctx)
 	if err != nil {
@@ -243,7 +246,7 @@ func (s *Sync) subscriber() error {
 				OpCode: dsi3.Opcode_OPCODE_SET,
 				Msg:    &dsi3.ImportRequest_Object{Object: m.Object},
 			}); err == nil {
-				watermark = maxTS(watermark, m.Object.GetUpdatedAt())
+				ts = maxTS(ts, m.Object.GetUpdatedAt())
 				atomic.AddInt32(&counts.Objects, 1)
 				atomic.AddInt32(&counts.Upserts, 1)
 			} else {
@@ -257,7 +260,7 @@ func (s *Sync) subscriber() error {
 				OpCode: dsi3.Opcode_OPCODE_SET,
 				Msg:    &dsi3.ImportRequest_Relation{Relation: m.Relation},
 			}); err == nil {
-				watermark = maxTS(watermark, m.Relation.GetUpdatedAt())
+				ts = maxTS(ts, m.Relation.GetUpdatedAt())
 				atomic.AddInt32(&counts.Relations, 1)
 				atomic.AddInt32(&counts.Upserts, 1)
 			} else {
@@ -275,7 +278,15 @@ func (s *Sync) subscriber() error {
 		return err
 	}
 
-	if err := s.setWatermark(watermark); err != nil {
+	wm.Timestamp = ts
+
+	if fs {
+		wm.ObjectCount = uint(counts.Objects)
+		wm.RelationCount = uint(counts.Relations)
+		wm.TotalCount = uint(counts.Objects + counts.Relations)
+	}
+
+	if err := s.setWatermark(wm); err != nil {
 		s.log.Error().Err(err).Msg("failed to save watermark")
 	}
 
@@ -374,6 +385,43 @@ func (s *Sync) getRemoteDirectoryClient(ctx context.Context) (*directoryClient, 
 	}, nil
 }
 
+type watermark struct {
+	LastUpdated   string                 `json:"last_updated"`
+	Timestamp     *timestamppb.Timestamp `json:"ts"`
+	TotalCount    uint                   `json:"count,omitempty"`
+	ObjectCount   uint                   `json:"obj_count,omitempty"`
+	RelationCount uint                   `json:"rel_count,omitempty"`
+}
+
+func newWatermark() *watermark {
+	return &watermark{
+		LastUpdated:   "",
+		Timestamp:     &timestamppb.Timestamp{Seconds: 0, Nanos: 0},
+		TotalCount:    0,
+		ObjectCount:   0,
+		RelationCount: 0,
+	}
+}
+
+func (wm *watermark) updTS(ts *timestamppb.Timestamp) {
+	if wm.Timestamp.GetSeconds() > ts.GetSeconds() {
+		return
+	}
+
+	if wm.Timestamp.GetSeconds() == ts.GetSeconds() && wm.Timestamp.GetNanos() > ts.GetNanos() {
+		return
+	}
+
+	wm.Timestamp = ts
+}
+
+func (wm *watermark) getFilterSize() uint {
+	if wm.TotalCount == 0 {
+		return initFilterSize
+	}
+	return wm.TotalCount * 2 // TODO roundup to nearest 1K boundary, with a minimum of 100K
+}
+
 func maxTS(lhs, rhs *timestamppb.Timestamp) *timestamppb.Timestamp {
 	if lhs.GetSeconds() > rhs.GetSeconds() {
 		return lhs
@@ -383,28 +431,46 @@ func maxTS(lhs, rhs *timestamppb.Timestamp) *timestamppb.Timestamp {
 	return rhs
 }
 
-func (s *Sync) getWatermark() *timestamppb.Timestamp {
-	fi, err := os.Stat(s.syncFilename())
+func (s *Sync) getWatermark(fs bool) *watermark {
+	r, err := os.Open(s.syncFilename())
 	if err != nil {
-		return &timestamppb.Timestamp{Seconds: 0, Nanos: 0}
+		return newWatermark()
+	}
+	defer r.Close()
+
+	var wm watermark
+	dec := json.NewDecoder(r)
+	if err := dec.Decode(&wm); err != nil {
+		return newWatermark()
 	}
 
-	return timestamppb.New(fi.ModTime())
+	// re-calc watermark timestamp value on each full sync.
+	if fs {
+		wm.Timestamp.Seconds = 0
+		wm.Timestamp.Nanos = 0
+	}
+
+	return &wm
 }
 
-func (s *Sync) setWatermark(ts *timestamppb.Timestamp) error {
+func (s *Sync) setWatermark(wm *watermark) error {
+	if wm == nil {
+		panic("nil") // TODO
+	}
+
+	wm.Timestamp.Nanos = wm.Timestamp.Nanos + 1000 // add 1 micro second
+	wm.LastUpdated = wm.Timestamp.AsTime().Format(time.RFC3339Nano)
+
 	w, err := os.Create(s.syncFilename())
 	if err != nil {
 		return err
 	}
-	_, _ = w.WriteString(ts.AsTime().Format(time.RFC3339Nano) + "\n")
-	w.Close()
+	defer w.Close()
 
-	wmTime := ts.AsTime().Add(time.Millisecond)
-
-	if err := os.Chtimes(s.syncFilename(), wmTime, wmTime); err != nil {
+	if err := json.NewEncoder(w).Encode(wm); err != nil {
 		return err
 	}
+	w.Sync() // flush sync marker.
 
 	return nil
 }
@@ -523,8 +589,8 @@ func getRelationKey(rel *dsc3.Relation) []byte {
 		ds.Iff(rel.SubjectRelation == "", "", fmt.Sprintf("#%s", rel.SubjectRelation))))
 }
 
-func fullSync(watermark *timestamppb.Timestamp) bool {
-	return (watermark.Seconds == 0 && watermark.Nanos == 0)
+func fullSync(wm *watermark) bool {
+	return (wm.Timestamp.Seconds == 0 && wm.Timestamp.Nanos == 0)
 }
 
 func (s *Sync) diff() error {
