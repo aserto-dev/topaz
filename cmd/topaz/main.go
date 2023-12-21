@@ -25,6 +25,9 @@ func main() {
 			Indenter:            kong.SpaceIndenter,
 			NoExpandSubcommands: true,
 		}),
+		kong.Vars{
+			"topaz_dir": cmd.GetTopazDir(),
+		},
 	)
 
 	ctx, err := cc.NewCommonContext(cli.NoCheck)

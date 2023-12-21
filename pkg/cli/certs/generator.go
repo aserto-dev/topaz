@@ -2,11 +2,10 @@ package certs
 
 import (
 	"fmt"
-	"io"
 	"os"
 
 	"github.com/aserto-dev/certs"
-	"github.com/aserto-dev/logger"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
@@ -31,7 +30,7 @@ func (c *CertPaths) FindExisting() []string {
 	return existing
 }
 
-func GenerateCerts(logOut, errOut io.Writer, force bool, dnsNames []string, certPaths ...*CertPaths) error {
+func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...*CertPaths) error {
 	if !force {
 		existingFiles := []string{}
 		for _, cert := range certPaths {
@@ -39,24 +38,17 @@ func GenerateCerts(logOut, errOut io.Writer, force bool, dnsNames []string, cert
 		}
 
 		if len(existingFiles) != 0 {
-			fmt.Fprintln(logOut, "Some cert files already exist. Skipping generation.", existingFiles)
+			fmt.Fprintln(c.UI.Output(), "Some cert files already exist. Skipping generation.", existingFiles)
 			return nil
 		}
 	}
 
-	return generate(logOut, errOut, dnsNames, certPaths...)
+	return generate(dnsNames, certPaths...)
 }
 
-func generate(logOut, errOut io.Writer, dnsNames []string, certPaths ...*CertPaths) error {
-	zerologLogger, err := logger.NewLogger(
-		logOut, errOut,
-		&logger.Config{Prod: false, LogLevel: "warn", LogLevelParsed: zerolog.WarnLevel},
-	)
-	if err != nil {
-		return errors.Wrap(err, "failed to create logger")
-	}
-
-	generator := certs.NewGenerator(zerologLogger)
+func generate(dnsNames []string, certPaths ...*CertPaths) error {
+	logger := zerolog.Nop()
+	generator := certs.NewGenerator(&logger)
 
 	for _, certPaths := range certPaths {
 		if err := generator.MakeDevCert(&certs.CertGenConfig{

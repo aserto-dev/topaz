@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const loginKeychain = "Library/Keychains/login.keychain-db"
+const loginKeyChain = "Library/Keychains/login.keychain-db"
 
 func AddTrustedCert(certPath string) error {
 	homedir, err := os.UserHomeDir()
@@ -17,9 +17,9 @@ func AddTrustedCert(certPath string) error {
 		return err
 	}
 
-	keychain := path.Join(homedir, loginKeychain)
+	keyChain := path.Join(homedir, loginKeyChain)
 
-	if err := sh.RunV("security", "add-trusted-cert", "-k", keychain, certPath); err != nil {
+	if err := sh.RunV("security", "add-trusted-cert", "-k", keyChain, certPath); err != nil {
 		return errors.Wrap(err, "trusting ca cert")
 	}
 
@@ -32,15 +32,15 @@ func RemoveTrustedCert(certPath, filter string) error {
 		return err
 	}
 
-	keychain := path.Join(homedir, loginKeychain)
+	keyChain := path.Join(homedir, loginKeyChain)
 
-	if !findCert(filter, keychain) {
+	if !findCert(filter, keyChain) {
 		fmt.Println("No certificate to remove.")
 		return nil
 	}
 
 	fmt.Fprintln(os.Stderr, "Deleting dev certificate...")
-	if err := sh.RunV("security", "delete-certificate", "-c", filter, "-t", keychain); err != nil {
+	if err := sh.RunV("security", "delete-certificate", "-c", filter, "-t", keyChain); err != nil {
 		return errors.Wrap(err, "can't remove ca cert")
 	}
 
@@ -49,8 +49,8 @@ func RemoveTrustedCert(certPath, filter string) error {
 
 const StatusNotFound = 44
 
-func findCert(name, keychain string) bool {
-	if err := sh.RunV("security", "find-certificate", "-c", name, keychain); err != nil {
+func findCert(name, keyChain string) bool {
+	if err := sh.RunV("security", "find-certificate", "-c", name, keyChain); err != nil {
 		return false
 	}
 
