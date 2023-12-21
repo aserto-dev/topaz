@@ -37,8 +37,27 @@
       "properties": {}
     },
     {
+      "type": "folder",
+      "id": "beth",
+      "display_name": "Beths's home folder",
+      "properties": {}
+    },
+    {
       "type": "doc",
       "id": "secrets.txt",
+      "display_name": "Family secrets",
+      "properties": {}
+    },
+    {
+      "type": "doc",
+      "id": "secrets.txt",
+      "display_name": "Family secrets",
+      "properties": {}
+    },
+    {
+      "type": "doc",
+      "id": "groceries.txt",
+      "display_name": "Grocery list",
       "properties": {}
     },
     {

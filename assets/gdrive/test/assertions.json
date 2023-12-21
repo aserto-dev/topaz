@@ -5,7 +5,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "root", "relation": "can_view", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+      {"object_type": "folder", "object_id": "root", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -17,7 +17,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "root", "relation": "can_view", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+      {"object_type": "folder", "object_id": "root", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -29,7 +29,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "root", "relation": "can_view", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+      {"object_type": "folder", "object_id": "root", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -41,7 +41,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "root", "relation": "can_view", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+      {"object_type": "folder", "object_id": "root", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -53,7 +53,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "root", "relation": "can_view", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+      {"object_type": "folder", "object_id": "root", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -71,7 +71,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "rick", "relation": "can_view", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+      {"object_type": "folder", "object_id": "rick", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
 	  "expected": true
 	},
     {"check":
@@ -87,7 +87,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "rick", "relation": "can_view", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+      {"object_type": "folder", "object_id": "rick", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -99,7 +99,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "rick", "relation": "can_view", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+      {"object_type": "folder", "object_id": "rick", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -111,7 +111,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "rick", "relation": "can_view", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+      {"object_type": "folder", "object_id": "rick", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -123,7 +123,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "rick", "relation": "can_view", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+      {"object_type": "folder", "object_id": "rick", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -141,7 +141,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "morty", "relation": "can_view", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+      {"object_type": "folder", "object_id": "morty", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
 	  "expected": true
 	},
     {"check":
@@ -157,7 +157,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "morty", "relation": "can_view", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+      {"object_type": "folder", "object_id": "morty", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -169,7 +169,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "morty", "relation": "can_view", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+      {"object_type": "folder", "object_id": "morty", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -181,7 +181,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "morty", "relation": "can_view", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+      {"object_type": "folder", "object_id": "morty", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -193,7 +193,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "morty", "relation": "can_view", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+      {"object_type": "folder", "object_id": "morty", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -211,7 +211,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "summer", "relation": "can_view", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+      {"object_type": "folder", "object_id": "summer", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -227,7 +227,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "summer", "relation": "can_view", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+      {"object_type": "folder", "object_id": "summer", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -239,7 +239,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "summer", "relation": "can_view", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+      {"object_type": "folder", "object_id": "summer", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -251,7 +251,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "summer", "relation": "can_view", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+      {"object_type": "folder", "object_id": "summer", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -263,7 +263,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "summer", "relation": "can_view", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+      {"object_type": "folder", "object_id": "summer", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -281,7 +281,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "jerry", "relation": "can_view", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+      {"object_type": "folder", "object_id": "jerry", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -297,7 +297,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "jerry", "relation": "can_view", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+      {"object_type": "folder", "object_id": "jerry", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -309,7 +309,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "jerry", "relation": "can_view", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+      {"object_type": "folder", "object_id": "jerry", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -321,7 +321,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "jerry", "relation": "can_view", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+      {"object_type": "folder", "object_id": "jerry", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -333,7 +333,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "jerry", "relation": "can_view", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+      {"object_type": "folder", "object_id": "jerry", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -347,7 +347,7 @@
 
 
     {"check":
-      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_view", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
 	  "expected": true
 	},
     {"check":
@@ -363,7 +363,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_view", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -375,7 +375,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_view", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -387,7 +387,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_view", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -399,7 +399,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_view", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+      {"object_type": "folder", "object_id": "morty.shared", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -416,7 +416,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_view", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -432,7 +432,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_view", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -448,7 +448,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_view", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -464,7 +464,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_view", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -480,7 +480,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_view", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+      {"object_type": "doc", "object_id": "secrets.txt", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -498,11 +498,97 @@
 
 
     {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "owner", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+	  "expected": true
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+	  "expected": true
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_write", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+	  "expected": true
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_share", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+	  "expected": true
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_delete", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+	  "expected": true
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+	  "expected": true
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_write", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_share", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_delete", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+	  "expected": true
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_write", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_share", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_delete", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+	  "expected": true
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_write", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_share", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_delete", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+	  "expected": true
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_write", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_share", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+	  "expected": false
+	},
+    {"check":
+      {"object_type": "doc", "object_id": "groceries.txt", "relation": "can_delete", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+	  "expected": false
+	},
+
+
+    {"check":
       {"object_type": "doc", "object_id": "inventions.txt", "relation": "owner", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
-      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_view", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -522,7 +608,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_view", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
 	  "expected": true
 	},
     {"check":
@@ -538,7 +624,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_view", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -554,7 +640,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_view", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -570,7 +656,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_view", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+      {"object_type": "doc", "object_id": "inventions.txt", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": false
 	},
     {"check":
@@ -592,7 +678,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_view", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
+      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_read", "subject_type": "user", "subject_id": "beth@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -612,7 +698,7 @@
 	  "expected": false
 	},
     {"check":
-      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_view", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
+      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_read", "subject_type": "user", "subject_id": "rick@the-citadel.com"},
 	  "expected": false
 	},
     {"check":
@@ -632,7 +718,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_view", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
+      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_read", "subject_type": "user", "subject_id": "morty@the-citadel.com"},
 	  "expected": true
 	},
     {"check":
@@ -648,7 +734,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_view", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
+      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_read", "subject_type": "user", "subject_id": "summer@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -664,7 +750,7 @@
 	  "expected": true
 	},
     {"check":
-      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_view", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
+      {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_read", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": true
 	},
     {"check":
@@ -679,7 +765,5 @@
       {"object_type": "doc", "object_id": "morty_shared.pdf", "relation": "can_delete", "subject_type": "user", "subject_id": "jerry@the-smiths.com"},
 	  "expected": false
 	}
-
-
   ]
 }

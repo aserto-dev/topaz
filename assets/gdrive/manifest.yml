@@ -37,7 +37,7 @@ types:
       viewer: user | group#member
       parent: folder
     permissions:
-      can_view: viewer | editor | owner | parent->can_view
+      can_read: viewer | editor | owner | parent->can_read
       can_write: editor | owner | parent->can_write
       can_share: owner | parent->can_share
 
@@ -46,11 +46,11 @@ types:
     relations:
       owner: user
       editor: user | group#member
-      viewer: user | group#member
+      viewer: user | user:* | group#member
       parent: folder
 
     permissions:
-      can_view: viewer | editor | owner | parent->can_view
+      can_read: viewer | editor | owner | parent->can_read
       can_write: editor | owner | parent->can_write
       can_delete: owner | parent->can_write
       can_share: owner | parent->can_share
