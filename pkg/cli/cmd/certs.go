@@ -66,7 +66,7 @@ func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
 		}
 		certDetails[file.Name()] = cert
 	}
-	table := c.UI.Normal().WithTable("File", "Not Before", "Not After", "Valid")
+	table := c.UI.Normal().WithTable("File", "Not Before", "Not After", "Valid", "CN", "DNS names")
 
 	fileNames := make([]string, 0, len(certDetails))
 	for k := range certDetails {
@@ -81,7 +81,13 @@ func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
 		if time.Until(certDetails[k].NotAfter) < 0 {
 			isValid = false
 		}
-		table.WithTableRow(k, certDetails[k].NotBefore.Format(time.RFC3339), certDetails[k].NotAfter.Format(time.RFC3339), fmt.Sprintf("%t", isValid))
+		table.WithTableRow(k,
+			certDetails[k].NotBefore.Format(time.RFC3339),
+			certDetails[k].NotAfter.Format(time.RFC3339),
+			fmt.Sprintf("%t", isValid),
+			certDetails[k].Issuer.CommonName,
+			strings.Join(certDetails[k].DNSNames, ","),
+		)
 	}
 	table.Do()
 	return nil
