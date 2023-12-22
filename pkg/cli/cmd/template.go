@@ -10,7 +10,6 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
-	"runtime"
 	"strings"
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
@@ -127,7 +126,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 // 8 - topaz test exec, execute assertions when part of template
 // 9 - topaz console, launch console so the user start exploring the template artifacts.
 func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance) error {
-	topazDir := GetTopazDir()
+	topazDir := cc.GetTopazDir()
 	os.Setenv("TOPAZ_DIR", topazDir)
 
 	cmd.Config.Insecure = true
@@ -412,40 +411,4 @@ func isServing() bool {
 	}
 	fmt.Println(string(out))
 	return true
-}
-
-func GetTopazDir() string {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return filepath.Clean(filepath.Join(getHomeDefault(), ".config", "topaz"))
-	}
-	return filepath.Clean(filepath.Join(homeDir, ".config", "topaz"))
-}
-
-func GetTopazCfgDir() string {
-	return filepath.Clean(filepath.Join(GetTopazDir(), "cfg"))
-}
-
-func GetTopazCertsDir() string {
-	return filepath.Clean(filepath.Join(GetTopazDir(), "certs"))
-}
-
-const (
-	fallback        = `~/.config/topaz`
-	darwinFallBack  = fallback
-	linuxFallBack   = fallback
-	windowsFallBack = `\\.config\\topaz`
-)
-
-func getHomeDefault() string {
-	switch runtime.GOOS {
-	case "darwin":
-		return darwinFallBack
-	case "linux":
-		return linuxFallBack
-	case "windows":
-		return filepath.Join(os.Getenv("USERPROFILE"), windowsFallBack)
-	default:
-		return ""
-	}
 }

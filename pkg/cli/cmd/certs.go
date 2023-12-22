@@ -22,13 +22,13 @@ type CertsCmd struct {
 }
 
 const (
-	gatewayCertFileName = "gateway"
-	grpcCertFileName    = "grpc"
-	certCommonName      = "topaz"
+	gatewayFileName = "gateway"
+	grpcFileName    = "grpc"
+	certCommonName  = "topaz"
 )
 
 type ListCertsCmd struct {
-	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev cert folder" `
+	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
 }
 
 func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
@@ -92,10 +92,10 @@ func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
 }
 
 type GenerateCertsCmd struct {
-	TrustCert bool     `flag:"" default:"false" help:"trust generated dev certs"`
-	Force     bool     `flag:"" default:"false" help:"force generation of dev certs, overwriting existing cert files"`
-	CertsDir  string   `flag:"" default:"${topaz_certs_dir}" help:"set path to dev certs folder" `
-	DNSNames  []string `flag:"" default:"localhost" help:"array of DNS names used to generate dev certs"`
+	CertsDir string   `flag:"" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
+	Force    bool     `flag:"" default:"false" help:"force generation of dev certs, overwriting existing cert files"`
+	Trust    bool     `flag:"" default:"false" help:"add generated certs to trust store"`
+	DNSNames []string `flag:"" default:"localhost" help:"list of DNS names used to generate dev certs"`
 }
 
 // Generate a pair of gateway and grpc certificates.
@@ -109,30 +109,28 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 
 	pathGateway := &certs.CertPaths{
 		Name: certCommonName + "-gateway",
-		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", gatewayCertFileName)),
-		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", gatewayCertFileName)),
-		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", gatewayCertFileName)),
+		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", gatewayFileName)),
+		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", gatewayFileName)),
+		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", gatewayFileName)),
 		Dir:  certsDir,
 	}
 
 	pathGRPC := &certs.CertPaths{
 		Name: certCommonName + "-grpc",
-		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", grpcCertFileName)),
-		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", grpcCertFileName)),
-		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", grpcCertFileName)),
+		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", grpcFileName)),
+		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", grpcFileName)),
+		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", grpcFileName)),
 		Dir:  certsDir,
 	}
 
-	c.UI.Progress("Generating gRPC and gateway dev certs").Start()
+	c.UI.Normal().Msgf("certs directory: %s", certsDir)
 
 	err := certs.GenerateCerts(c, cmd.Force, cmd.DNSNames, pathGateway, pathGRPC)
 	if err != nil {
 		return err
 	}
 
-	c.UI.Progress("").Stop()
-
-	if cmd.TrustCert {
+	if cmd.Trust {
 		certTrust := &TrustCertsCmd{CertsDir: certsDir}
 		return certTrust.Run(c)
 	}
@@ -141,8 +139,8 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 }
 
 type TrustCertsCmd struct {
-	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev cert folder" `
-	Remove   bool   `flag:"" default:"false" help:"remove trusted dev cert"`
+	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
+	Remove   bool   `flag:"" default:"false" help:"remove dev cert from trust store"`
 }
 
 func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
@@ -151,28 +149,47 @@ func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("directory %s not found", certsDir)
 	}
 
-	for _, fqn := range getFileList(certsDir, withCACerts()) {
+	c.UI.Normal().Msgf("certs directory: %s", certsDir)
+
+	table := c.UI.Normal().WithTable("File", "Action")
+	defer table.Do()
+
+	list := getFileList(certsDir, withCACerts())
+	if len(list) == 0 {
+		table.WithTableRow("no files found", "no actions performed")
+		return nil
+	}
+
+	for _, fqn := range list {
 		if fi, err := os.Stat(fqn); os.IsNotExist(err) || fi.IsDir() {
 			continue
 		}
 
 		if cmd.Remove {
-			c.UI.Normal().Msgf("Removing %s from trusted store", fqn)
-			if err := certs.RemoveTrustedCert(fqn, certCommonName); err != nil {
+			fn := cc.FileName(fqn)
+			cn := fmt.Sprintf("%s-%s", certCommonName, strings.TrimSuffix(fn, filepath.Ext(fn)))
+
+			table.WithTableRow(fn, "removed from trust store")
+			if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
 				return err
 			}
-		} else {
-			c.UI.Normal().Msgf("Adding %s to trusted store", fqn)
+			continue
+		}
+
+		if !cmd.Remove {
+			table.WithTableRow(cc.FileName(fqn), "added to trust store")
 			if err := certs.AddTrustedCert(fqn); err != nil {
 				return err
 			}
+			continue
 		}
 	}
+
 	return nil
 }
 
 type RemoveCertFileCmd struct {
-	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev cert folder" `
+	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
 }
 
 func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
@@ -181,7 +198,9 @@ func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("directory %s not found", certsDir)
 	}
 
-	c.UI.Progress("Removing all dev certs").Start()
+	c.UI.Normal().Msgf("certs directory: %s", certsDir)
+
+	table := c.UI.Normal().WithTable("File", "Action")
 
 	for _, fqn := range getFileList(certsDir, withAll()) {
 		if fi, err := os.Stat(fqn); os.IsNotExist(err) || fi.IsDir() {
@@ -190,9 +209,11 @@ func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		if err := os.Remove(fqn); err != nil {
 			return err
 		}
+		table.WithTableRow(cc.FileName(fqn), "removed")
 	}
 
-	c.UI.Progress("").Stop()
+	table.Do()
+
 	return nil
 }
 
@@ -235,22 +256,22 @@ func getFileList(certsDir string, opts ...fileListOption) []string {
 
 	if args.inclCACerts {
 		filePaths = append(filePaths,
-			filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", grpcCertFileName)),
-			filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", gatewayCertFileName)),
+			filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", grpcFileName)),
+			filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", gatewayFileName)),
 		)
 	}
 
 	if args.inclCerts {
 		filePaths = append(filePaths,
-			filepath.Join(certsDir, fmt.Sprintf("%s.crt", grpcCertFileName)),
-			filepath.Join(certsDir, fmt.Sprintf("%s.crt", gatewayCertFileName)),
+			filepath.Join(certsDir, fmt.Sprintf("%s.crt", grpcFileName)),
+			filepath.Join(certsDir, fmt.Sprintf("%s.crt", gatewayFileName)),
 		)
 	}
 
 	if args.inclKeys {
 		filePaths = append(filePaths,
-			filepath.Join(certsDir, fmt.Sprintf("%s.key", grpcCertFileName)),
-			filepath.Join(certsDir, fmt.Sprintf("%s.key", gatewayCertFileName)),
+			filepath.Join(certsDir, fmt.Sprintf("%s.key", grpcFileName)),
+			filepath.Join(certsDir, fmt.Sprintf("%s.key", gatewayFileName)),
 		)
 	}
 

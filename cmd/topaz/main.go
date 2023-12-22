@@ -26,9 +26,9 @@ func main() {
 			NoExpandSubcommands: true,
 		}),
 		kong.Vars{
-			"topaz_dir":       cmd.GetTopazDir(),
-			"topaz_certs_dir": cmd.GetTopazCertsDir(),
-			"topaz_cfg_dir":   cmd.GetTopazCfgDir(),
+			"topaz_dir":       cc.GetTopazDir(),
+			"topaz_certs_dir": cc.GetTopazCertsDir(),
+			"topaz_cfg_dir":   cc.GetTopazCfgDir(),
 		},
 	)
 

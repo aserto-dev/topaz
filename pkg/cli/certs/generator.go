@@ -1,7 +1,6 @@
 package certs
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/aserto-dev/certs"
@@ -37,20 +36,23 @@ func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...
 		}
 
 		if len(existingFiles) != 0 {
-			fmt.Fprintf(c.UI.Output(), "\n\nSome cert files already exist, skipping generation.\n")
-			for _, fn := range existingFiles {
-				fmt.Fprintf(c.UI.Output(), "%s (SKIPPED)\n", fn)
+			table := c.UI.Normal().WithTable("File", "Action")
+			for _, fqn := range existingFiles {
+				table.WithTableRow(cc.FileName(fqn), "skipped, file already exists")
 			}
+			table.Do()
 			return nil
 		}
 	}
 
-	return generate(dnsNames, certPaths...)
+	return generate(c, dnsNames, certPaths...)
 }
 
-func generate(dnsNames []string, certPaths ...*CertPaths) error {
+func generate(c *cc.CommonCtx, dnsNames []string, certPaths ...*CertPaths) error {
 	logger := zerolog.Nop()
 	generator := certs.NewGenerator(&logger)
+
+	table := c.UI.Normal().WithTable("File", "Action")
 
 	for _, certPaths := range certPaths {
 		if err := generator.MakeDevCert(&certs.CertGenConfig{
@@ -63,7 +65,13 @@ func generate(dnsNames []string, certPaths ...*CertPaths) error {
 		}); err != nil {
 			return errors.Wrap(err, "failed to create dev certs")
 		}
+
+		table.WithTableRow(cc.FileName(certPaths.CA), "generated")
+		table.WithTableRow(cc.FileName(certPaths.Cert), "generated")
+		table.WithTableRow(cc.FileName(certPaths.Key), "generated")
 	}
+
+	table.Do()
 
 	return nil
 }

@@ -39,20 +39,16 @@ func RemoveTrustedCert(certPath, filter string) error {
 		return nil
 	}
 
-	fmt.Fprintln(os.Stderr, "Deleting dev certificate...")
-	if err := sh.RunV("security", "delete-certificate", "-c", filter, "-t", keyChain); err != nil {
-		return errors.Wrap(err, "can't remove ca cert")
+	if _, err := sh.Output("security", "delete-certificate", "-c", filter, "-t", keyChain); err != nil {
+		return errors.Wrap(err, "failed to remove certificate from trust store")
 	}
 
 	return nil
 }
 
-const StatusNotFound = 44
-
 func findCert(name, keyChain string) bool {
-	if err := sh.RunV("security", "find-certificate", "-c", name, keyChain); err != nil {
+	if _, err := sh.Output("security", "find-certificate", "-c", name, keyChain); err != nil {
 		return false
 	}
-
 	return true
 }
