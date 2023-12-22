@@ -417,24 +417,24 @@ func isServing() bool {
 func GetTopazDir() string {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return path.Join(getHomeDefault(), ".config", "topaz")
+		return filepath.Clean(filepath.Join(getHomeDefault(), ".config", "topaz"))
 	}
-	return path.Join(homeDir, ".config", "topaz")
+	return filepath.Clean(filepath.Join(homeDir, ".config", "topaz"))
 }
 
 func GetTopazCfgDir() string {
-	return path.Join(GetTopazDir(), "cfg")
+	return filepath.Clean(filepath.Join(GetTopazDir(), "cfg"))
 }
 
 func GetTopazCertsDir() string {
-	return path.Join(GetTopazDir(), "certs")
+	return filepath.Clean(filepath.Join(GetTopazDir(), "certs"))
 }
 
 const (
 	fallback        = `~/.config/topaz`
 	darwinFallBack  = fallback
 	linuxFallBack   = fallback
-	windowsFallBack = `.config/topaz`
+	windowsFallBack = `\\.config\\topaz`
 )
 
 func getHomeDefault() string {
@@ -444,7 +444,7 @@ func getHomeDefault() string {
 	case "linux":
 		return linuxFallBack
 	case "windows":
-		return os.Getenv("USERPROFILE") + windowsFallBack
+		return filepath.Join(os.Getenv("USERPROFILE"), windowsFallBack)
 	default:
 		return ""
 	}

@@ -28,7 +28,7 @@ const (
 )
 
 type ListCertsCmd struct {
-	CertsDir string `flag:"" required:"false" default:"${topaz_dir}/certs" help:"path to dev cert folder" `
+	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev cert folder" `
 }
 
 func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
@@ -94,13 +94,13 @@ func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
 type GenerateCertsCmd struct {
 	TrustCert bool     `flag:"" default:"false" help:"trust generated dev certs"`
 	Force     bool     `flag:"" default:"false" help:"force generation of dev certs, overwriting existing cert files"`
-	CertsDir  string   `flag:"" default:"${topaz_dir}/certs" help:"set path to dev certs folder" `
+	CertsDir  string   `flag:"" default:"${topaz_certs_dir}" help:"set path to dev certs folder" `
 	DNSNames  []string `flag:"" default:"localhost" help:"array of DNS names used to generate dev certs"`
 }
 
 // Generate a pair of gateway and grpc certificates.
 func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
-	c.UI.Normal().Msg("Generating gRPC and gateway dev certs")
+	//c.UI.Normal().Msg("Generating gRPC and gateway dev certs")
 
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
@@ -125,13 +125,15 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 		Dir:  certsDir,
 	}
 
-	c.UI.Progress("").Start()
+	c.UI.Progress("Generating gRPC and gateway dev certs").Start()
+
 	err := certs.GenerateCerts(c, cmd.Force, cmd.DNSNames, pathGateway, pathGRPC)
 	if err != nil {
 		return err
 	}
 
-	c.UI.Progress("Done").Stop()
+	c.UI.Progress("").Stop()
+
 	if cmd.TrustCert {
 		certTrust := &TrustCertsCmd{CertsDir: certsDir}
 		return certTrust.Run(c)
@@ -141,7 +143,7 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 }
 
 type TrustCertsCmd struct {
-	CertsDir string `flag:"" required:"false" default:"${topaz_dir}/certs" help:"path to dev cert folder" `
+	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev cert folder" `
 	Remove   bool   `flag:"" default:"false" help:"remove trusted dev cert"`
 }
 
@@ -172,7 +174,7 @@ func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
 }
 
 type RemoveCertFileCmd struct {
-	CertsDir string `flag:"" required:"false" default:"${topaz_dir}/certs" help:"path to dev cert folder" `
+	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev cert folder" `
 }
 
 func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
@@ -192,7 +194,7 @@ func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
-	c.UI.Progress("Done").Stop()
+	c.UI.Progress("").Stop()
 	return nil
 }
 
