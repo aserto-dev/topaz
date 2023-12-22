@@ -50,12 +50,6 @@
     },
     {
       "type": "doc",
-      "id": "secrets.txt",
-      "display_name": "Family secrets",
-      "properties": {}
-    },
-    {
-      "type": "doc",
       "id": "groceries.txt",
       "display_name": "Grocery list",
       "properties": {}
