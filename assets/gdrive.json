@@ -8,10 +8,12 @@
             "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
         },
         "idp_data": [
-            "/assets/templates/gdrive/gdrive_objects.json",
-            "/assets/templates/gdrive/gdrive_relations.json"
+            "/assets/templates/citadel/citadel_objects.json",
+            "/assets/templates/citadel/citadel_relations.json"
         ],
         "domain_data": [
+            "/assets/templates/gdrive/gdrive_objects.json",
+            "/assets/templates/gdrive/gdrive_relations.json"
         ],
         "assertions": []
     }
