@@ -100,8 +100,6 @@ type GenerateCertsCmd struct {
 
 // Generate a pair of gateway and grpc certificates.
 func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
-	//c.UI.Normal().Msg("Generating gRPC and gateway dev certs")
-
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(certsDir, 0755); err != nil {
