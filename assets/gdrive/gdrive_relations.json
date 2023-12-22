@@ -1,214 +1,174 @@
 {
   "relations": [
     {
-      "object_type": "identity",
-      "object_id": "1",
-      "relation": "identifier",
+      "object_type": "folder",
+      "object_id": "root",
+      "relation": "owner",
       "subject_type": "user",
-      "subject_id": "luke@yavin4base.mil"
+      "subject_id": "beth@the-smiths.com"
     },
     {
-      "object_type": "identity",
-      "object_id": "2",
-      "relation": "identifier",
-      "subject_type": "user",
-      "subject_id": "leia@yavin4base.mil"
+      "object_type": "doc",
+      "object_id": "secrets.txt",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "root"
     },
     {
-      "object_type": "identity",
-      "object_id": "3",
-      "relation": "identifier",
+      "object_type": "doc",
+      "object_id": "secrets.txt",
+      "relation": "owner",
       "subject_type": "user",
-      "subject_id": "han@yavin4base.mil"
+      "subject_id": "beth@the-smiths.com"
     },
     {
-      "object_type": "identity",
-      "object_id": "4",
-      "relation": "identifier",
-      "subject_type": "user",
-      "subject_id": "r2d2@droids.yavin4base.mil"
+      "object_type": "doc",
+      "object_id": "groceries.txt",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "root"
     },
     {
-      "object_type": "identity",
-      "object_id": "3",
-      "relation": "identifier",
+      "object_type": "doc",
+      "object_id": "groceries.txt",
+      "relation": "owner",
       "subject_type": "user",
-      "subject_id": "c3po@droids.yavin4base.mil"
+      "subject_id": "beth@the-smiths.com"
     },
     {
-      "object_type": "identity",
-      "object_id": "luke@yavin4base.mil",
-      "relation": "identifier",
+      "object_type": "doc",
+      "object_id": "groceries.txt",
+      "relation": "viewer",
       "subject_type": "user",
-      "subject_id": "luke@yavin4base.mil"
-    },
-    {
-      "object_type": "identity",
-      "object_id": "2",
-      "relation": "identifier",
-      "subject_type": "user",
-      "subject_id": "leia@yavin4base.mil"
-    },
-    {
-      "object_type": "identity",
-      "object_id": "leia@yavin4base.mil",
-      "relation": "identifier",
-      "subject_type": "user",
-      "subject_id": "han@yavin4base.mil"
-    },
-    {
-      "object_type": "identity",
-      "object_id": "r2d2@yavin4base.mil",
-      "relation": "identifier",
-      "subject_type": "user",
-      "subject_id": "r2d2@droids.yavin4base.mil"
-    },
-    {
-      "object_type": "identity",
-      "object_id": "c3po@yavin4base.mil",
-      "relation": "identifier",
-      "subject_type": "user",
-      "subject_id": "c3po@droids.yavin4base.mil"
-    },
-    {
-      "object_type": "group",
-      "object_id": "everyone",
-      "relation": "member",
-      "subject_type": "user",
-      "subject_id": "luke.yavin4base.mil"
-    },
-    {
-      "object_type": "group",
-      "object_id": "everyone",
-      "relation": "member",
-      "subject_type": "user",
-      "subject_id": "leia.yavin4base.mil"
-    },
-    {
-      "object_type": "group",
-      "object_id": "everyone",
-      "relation": "member",
-      "subject_type": "user",
-      "subject_id": "han.yavin4base.mil"
-    },
-    {
-      "object_type": "group",
-      "object_id": "everyone",
-      "relation": "member",
-      "subject_type": "user",
-      "subject_id": "r2d2.droids.yavin4base.mil"
-    },
-    {
-      "object_type": "group",
-      "object_id": "everyone",
-      "relation": "member",
-      "subject_type": "user",
-      "subject_id": "c3po.droids.yavin4base.mil"
-    },
-    {
-      "object_type": "group",
-      "object_id": "strike-team",
-      "relation": "member",
-      "subject_type": "user",
-      "subject_id": "luke.yavin4base.mil"
-    },
-    {
-      "object_type": "group",
-      "object_id": "strike-team",
-      "relation": "member",
-      "subject_type": "user",
-      "subject_id": "leia.yavin4base.mil"
-    },
-    {
-      "object_type": "group",
-      "object_id": "strike-team",
-      "relation": "member",
-      "subject_type": "user",
-      "subject_id": "han.yavin4base.mil"
+      "subject_id": "*"
     },
     {
       "object_type": "folder",
-      "object_id": "missions",
+      "object_id": "rick",
       "relation": "parent",
       "subject_type": "folder",
       "subject_id": "root"
     },
     {
       "object_type": "folder",
-      "object_id": "death-star",
-      "relation": "parent",
-      "subject_type": "folder",
-      "subject_id": "missions"
-    },
-    {
-      "object_type": "document",
-      "object_id": "siteplan.png",
-      "relation": "parent",
-      "subject_type": "folder",
-      "subject_id": "death-star"
-    },
-    {
-      "object_type": "document",
-      "object_id": "striketeam.xls",
-      "relation": "parent",
-      "subject_type": "folder",
-      "subject_id": "death-star"
-    },
-    {
-      "object_type": "folder",
-      "object_id": "missions",
-      "relation": "parent",
-      "subject_type": "folder",
-      "subject_id": "clone-wars"
-    },
-    {
-      "object_type": "folder",
-      "object_id": "missions",
-      "relation": "editor",
-      "subject_type": "group",
-      "subject_id": "strike-team"
-    },
-    {
-      "object_type": "folder",
-      "object_id": "death-star",
-      "relation": "editor",
-      "subject_type": "group",
-      "subject_id": "strike-team"
-    },
-    {
-      "object_type": "folder",
-      "object_id": "general",
-      "relation": "viewer",
-      "subject_type": "group",
-      "subject_id": "everyone"
-    },
-    {
-      "object_type": "folder",
-      "object_id": "general",
-      "relation": "viewer",
+      "object_id": "rick",
+      "relation": "owner",
       "subject_type": "user",
-      "subject_id": "lea@yavin4base.mil"
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "doc",
+      "object_id": "inventions.txt",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "rick"
+    },
+    {
+      "object_type": "doc",
+      "object_id": "inventions.txt",
+      "relation": "owner",
+      "subject_type": "user",
+      "subject_id": "rick@the-citadel.com"
     },
     {
       "object_type": "folder",
-      "object_id": "general",
+      "object_id": "morty",
       "relation": "parent",
       "subject_type": "folder",
       "subject_id": "root"
     },
     {
-      "object_type": "document",
-      "object_id": "dining-menu.pdf",
-      "relation": "parent",
-      "subject_type": "folder",
-      "subject_id": "general"
+      "object_type": "folder",
+      "object_id": "morty",
+      "relation": "owner",
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
     },
     {
-      "object_type": "document",
-      "object_id": "rebel-handbook.pdf",
+      "object_type": "doc",
+      "object_id": "morty_private.pdf",
       "relation": "parent",
       "subject_type": "folder",
-      "subject_id": "general"
+      "subject_id": "morty"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "morty.shared",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "morty"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "morty.shared",
+      "relation": "viewer",
+      "subject_type": "group",
+      "subject_id": "viewer",
+      "subject_relation": "member"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "morty.shared",
+      "relation": "editor",
+      "subject_type": "group",
+      "subject_id": "editor",
+      "subject_relation": "member"
+    },
+    {
+      "object_type": "doc",
+      "object_id": "morty_shared.pdf",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "morty.shared"
+    },
+    {
+      "object_type": "doc",
+      "object_id": "morty_shared.pdf",
+      "relation": "owner",
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "summer",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "summer",
+      "relation": "owner",
+      "subject_type": "user",
+      "subject_id": "summer@the-smiths.com"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "jerry",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "jerry",
+      "relation": "owner",
+      "subject_type": "user",
+      "subject_id": "jerry@the-smiths.com"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "beth",
+      "relation": "parent",
+      "subject_type": "folder",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "folder",
+      "object_id": "beth",
+      "relation": "owner",
+      "subject_type": "user",
+      "subject_id": "beth@the-smiths.com"
     }
   ]
 }

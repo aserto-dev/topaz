@@ -11,7 +11,7 @@
             "/assets/templates/citadel/citadel_objects.json",
             "/assets/templates/citadel/citadel_relations.json"
         ],
-        "domain_data": [            
+        "domain_data": [
         ],
         "assertions": []
     }
