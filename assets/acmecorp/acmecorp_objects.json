@@ -3636,7 +3636,7 @@
         "enabled": true,
         "manager": "stano@acmecorp.com",
         "phone": "+1-206-555-3434",
-        "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Robert%20O%27Hara.jpg",
+        "picture": "https://www.topaz.sh/assets/templates/acmecorp/img/Robert%20OHara.jpg",
         "roles": [
           "user",
           "acmecorp",
