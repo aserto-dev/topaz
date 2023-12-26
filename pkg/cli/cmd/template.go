@@ -418,7 +418,7 @@ func getTopazDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return path.Join(homeDir, ".config", "topaz"), nil
+	return filepath.Clean(path.Join(homeDir, ".config", "topaz")), nil
 }
 
 // isServing adopted from grpc-health-probe cli implementation https://github.com/grpc-ecosystem/grpc-health-probe/blob/master/main.go.
@@ -428,8 +428,8 @@ func isServing() bool {
 	rpcTimeout := time.Second * 30
 
 	bCtx := context.Background()
-	dialCtx, cancel := context.WithTimeout(bCtx, connTimeout)
-	defer cancel()
+	dialCtx, dialCancel := context.WithTimeout(bCtx, connTimeout)
+	defer dialCancel()
 
 	dialOpts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
