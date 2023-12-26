@@ -2,19 +2,23 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"path"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
 const (
@@ -409,20 +413,44 @@ func max(rhs, lhs int) int {
 	return rhs
 }
 
-func isServing() bool {
-	cmd := exec.Command("grpc-health-probe", "-addr=localhost:9494", "-connect-timeout=30s", "-rpc-timeout=30s")
-	out, err := cmd.Output()
-	if err != nil {
-		return false
-	}
-	fmt.Println(string(out))
-	return true
-}
-
 func getTopazDir() (string, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
 	}
-	return path.Join(homeDir, ".config", "topaz"), nil
+	return filepath.Clean(path.Join(homeDir, ".config", "topaz")), nil
+}
+
+// isServing adopted from grpc-health-probe cli implementation https://github.com/grpc-ecosystem/grpc-health-probe/blob/master/main.go.
+func isServing() bool {
+	addr := "localhost:9494"
+	connTimeout := time.Second * 30
+	rpcTimeout := time.Second * 30
+
+	bCtx := context.Background()
+	dialCtx, dialCancel := context.WithTimeout(bCtx, connTimeout)
+	defer dialCancel()
+
+	dialOpts := []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
+
+	conn, err := grpc.DialContext(dialCtx, addr, dialOpts...)
+	if err != nil {
+		return false
+	}
+	defer conn.Close()
+
+	rpcCtx, rpcCancel := context.WithTimeout(bCtx, rpcTimeout)
+	defer rpcCancel()
+
+	resp, err := healthpb.NewHealthClient(conn).Check(rpcCtx, &healthpb.HealthCheckRequest{Service: ""})
+	if err != nil {
+		return false
+	}
+
+	if resp.GetStatus() != healthpb.HealthCheckResponse_SERVING {
+		return false
+	}
+	return true
 }
