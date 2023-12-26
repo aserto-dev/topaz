@@ -437,8 +437,8 @@ github.com/aserto-dev/go-grpc v0.8.59 h1:GWNgYUYPdLy6F1tMktSQWfls82nhrQXAY2NBM9z
 github.com/aserto-dev/go-grpc v0.8.59/go.mod h1:2FcclMDheTsEvYCY72o+EwTaoO0ti3/it4G6xIlzNIM=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1/go.mod h1:QnWF5/X2U/kmbu7GEw+zupvqX2hIthDjyXlRTwt2zEI=
-github.com/aserto-dev/go-topaz-ui v0.0.4 h1:AYR+967+WMsgOgxPBmULfivqXfCWUDARSD+0tzVLKRU=
-github.com/aserto-dev/go-topaz-ui v0.0.4/go.mod h1:BdW4vOhuG0HkjNH4L4omcNa/RJJ4LaxFzbw92qc+pc8=
+github.com/aserto-dev/go-topaz-ui v0.0.5 h1:RCg+XGX1kX6tTkrLvMxdnYBBehLpntUdhudgLeVldjY=
+github.com/aserto-dev/go-topaz-ui v0.0.5/go.mod h1:BdW4vOhuG0HkjNH4L4omcNa/RJJ4LaxFzbw92qc+pc8=
 github.com/aserto-dev/header v0.0.6 h1:uSSo/KAqqypSbgHefmEGdkDgHqteu9n38Z5gHANOaWI=
 github.com/aserto-dev/header v0.0.6/go.mod h1:jUHV4BK6nc/kqHZoN7jNn9jvjGyaISsjIzU/2OSe/Mg=
 github.com/aserto-dev/logger v0.0.4 h1:GF+17mhn03ZnE5KHCszrzGRcZULgczsql+y+PCHjgpI=
@@ -451,8 +451,8 @@ github.com/aserto-dev/runtime v0.58.0 h1:nGjYD6II8nKbiHniF/F0wM7x7BDZKK6qif/DfHb
 github.com/aserto-dev/runtime v0.58.0/go.mod h1:nxvBSG5SdlSm+P0YHKQ7yvl+SqrNHc03aul6WGaPlOs=
 github.com/aserto-dev/self-decision-logger v0.0.4 h1:Thlz9QTlJm0X+uC3YLUTSyvX+VgF2wVIk9Wh8+rkE/c=
 github.com/aserto-dev/self-decision-logger v0.0.4/go.mod h1:YJVf6HiAf5UeykhFxHe0dE+ODC8fUEF+PWteSDyJKw4=
-github.com/aserto-dev/service-host v0.0.8 h1:onCb25BkiW2XqeXoUj/8oRSWByEbVJbsQ4gWxrqOODc=
-github.com/aserto-dev/service-host v0.0.8/go.mod h1:yJuNsSecxkC2RsO6imcZNlEr7nX+N2blmPYC03USPQ0=
+github.com/aserto-dev/service-host v0.0.9 h1:RwSkFtD5CRacVnj1CxYjA3HMpJfmOESmUk+VJjUr0HY=
+github.com/aserto-dev/service-host v0.0.9/go.mod h1:NfLZZW2Y3+1Adgfaw/BAoW8ttPTvFuyapJAow9YdvHU=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
