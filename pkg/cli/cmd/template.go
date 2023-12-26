@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"path"
 	"path/filepath"
 	"strings"
@@ -412,16 +411,6 @@ func max(rhs, lhs int) int {
 		return lhs
 	}
 	return rhs
-}
-
-func isServing2() bool {
-	cmd := exec.Command("grpc-health-probe", "-addr=localhost:9494", "-connect-timeout=30s", "-rpc-timeout=30s")
-	out, err := cmd.Output()
-	if err != nil {
-		return false
-	}
-	fmt.Println(string(out))
-	return true
 }
 
 func getTopazDir() (string, error) {
