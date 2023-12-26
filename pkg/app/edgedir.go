@@ -59,19 +59,27 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 			dsm3.RegisterModelServer(server, e.dir.Model3())
 		}
 		if contains(services, readerService) {
-			dsr2.RegisterReaderServer(server, e.dir.Reader2())
+			if e.dir.Config().EnableV2 {
+				dsr2.RegisterReaderServer(server, e.dir.Reader2())
+			}
 			dsr3.RegisterReaderServer(server, e.dir.Reader3())
 		}
 		if contains(services, writerService) {
-			dsw2.RegisterWriterServer(server, e.dir.Writer2())
+			if e.dir.Config().EnableV2 {
+				dsw2.RegisterWriterServer(server, e.dir.Writer2())
+			}
 			dsw3.RegisterWriterServer(server, e.dir.Writer3())
 		}
 		if contains(services, importerService) {
-			dsi2.RegisterImporterServer(server, e.dir.Importer2())
+			if e.dir.Config().EnableV2 {
+				dsi2.RegisterImporterServer(server, e.dir.Importer2())
+			}
 			dsi3.RegisterImporterServer(server, e.dir.Importer3())
 		}
 		if contains(services, exporterService) {
-			dse2.RegisterExporterServer(server, e.dir.Exporter2())
+			if e.dir.Config().EnableV2 {
+				dse2.RegisterExporterServer(server, e.dir.Exporter2())
+			}
 			dse3.RegisterExporterServer(server, e.dir.Exporter3())
 		}
 	}
