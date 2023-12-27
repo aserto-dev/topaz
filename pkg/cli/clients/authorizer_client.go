@@ -48,7 +48,7 @@ func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.Aut
 		return nil, err
 	}
 
-	return authorizer.NewAuthorizerClient(conn.Conn), nil
+	return authorizer.NewAuthorizerClient(conn), nil
 }
 
 func (cfg *AuthorizerConfig) validate() error {

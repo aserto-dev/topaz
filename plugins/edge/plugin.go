@@ -162,6 +162,7 @@ func (p *Plugin) task(fullSync bool) {
 
 	sync := NewSyncMgr(ctx, p.config, p.topazConfig, p.logger)
 	sync.Run(fullSync)
+	sync = nil
 
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }

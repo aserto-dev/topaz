@@ -42,11 +42,10 @@ const (
 	finished       string = "finished"
 	channelSize    int    = 10000
 	localHost      string = "localhost:9292"
-	initFilterSize uint   = 1000000
 )
 
 type directoryClient struct {
-	conn     grpc.ClientConnInterface
+	conn     *grpc.ClientConn
 	Model    dsm3.ModelClient
 	Reader   dsr3.ReaderClient
 	Writer   dsw3.WriterClient
@@ -159,7 +158,7 @@ func (s *Sync) producer(wm *watermark) error {
 		s.log.Error().Err(err).Msgf("%s - failed to get directory connection", syncProducer)
 		return err
 	}
-	defer dsc.conn.(*grpc.ClientConn).Close()
+	defer dsc.conn.Close()
 
 	counts := Counter{}
 	s.log.Info().Str(status, started).Msg(syncProducer)
@@ -220,7 +219,7 @@ func (s *Sync) subscriber(wm *watermark) error {
 		s.log.Error().Err(err).Msgf("subscriber - failed to get directory connection")
 		return err
 	}
-	defer dsc.conn.(*grpc.ClientConn).Close()
+	defer dsc.conn.Close()
 
 	counts := Counter{}
 	s.log.Info().Str(status, started).Msg(syncSubscriber)
@@ -338,12 +337,12 @@ func (s *Sync) getLocalDirectoryClient(ctx context.Context) (*directoryClient, e
 	}
 
 	return &directoryClient{
-		conn:     conn.Conn,
-		Model:    dsm3.NewModelClient(conn.Conn),
-		Reader:   dsr3.NewReaderClient(conn.Conn),
-		Writer:   dsw3.NewWriterClient(conn.Conn),
-		Importer: dsi3.NewImporterClient(conn.Conn),
-		Exporter: dse3.NewExporterClient(conn.Conn),
+		conn:     conn,
+		Model:    dsm3.NewModelClient(conn),
+		Reader:   dsr3.NewReaderClient(conn),
+		Writer:   dsw3.NewWriterClient(conn),
+		Importer: dsi3.NewImporterClient(conn),
+		Exporter: dse3.NewExporterClient(conn),
 	}, nil
 }
 
@@ -376,12 +375,12 @@ func (s *Sync) getRemoteDirectoryClient(ctx context.Context) (*directoryClient, 
 	}
 
 	return &directoryClient{
-		conn:     conn.Conn,
-		Model:    dsm3.NewModelClient(conn.Conn),
-		Reader:   dsr3.NewReaderClient(conn.Conn),
-		Writer:   dsw3.NewWriterClient(conn.Conn),
-		Importer: dsi3.NewImporterClient(conn.Conn),
-		Exporter: dse3.NewExporterClient(conn.Conn),
+		conn:     conn,
+		Model:    dsm3.NewModelClient(conn),
+		Reader:   dsr3.NewReaderClient(conn),
+		Writer:   dsw3.NewWriterClient(conn),
+		Importer: dsi3.NewImporterClient(conn),
+		Exporter: dse3.NewExporterClient(conn),
 	}, nil
 }
 
@@ -403,23 +402,35 @@ func newWatermark() *watermark {
 	}
 }
 
-func (wm *watermark) updTS(ts *timestamppb.Timestamp) {
-	if wm.Timestamp.GetSeconds() > ts.GetSeconds() {
-		return
-	}
-
-	if wm.Timestamp.GetSeconds() == ts.GetSeconds() && wm.Timestamp.GetNanos() > ts.GetNanos() {
-		return
-	}
-
-	wm.Timestamp = ts
-}
-
+// getFilterSize determine the number of entries for the cuckoo filter.
+// a filter size of 1 mln entries results in a ~= 2Mib memory allocation
+// the default and minimum filterSize configure is 100K entries.
 func (wm *watermark) getFilterSize() uint {
+	const (
+		initFilterSize uint = 100000
+		growthFactor   uint = 2
+		rounding       uint = 1000
+	)
+
+	// when TotalCount is zero, implying uninitialized or unknown we use default filter size (default 100K).
 	if wm.TotalCount == 0 {
 		return initFilterSize
 	}
-	return wm.TotalCount * 2 // TODO roundup to nearest 1K boundary, with a minimum of 100K
+
+	// determine filter minimum capacity, allowing for growths, based on growthFactor constant (default 2x).
+	growthSize := wm.TotalCount * growthFactor
+
+	// if growth size is smaller than initial filter size, use the initial size.
+	if growthSize < initFilterSize {
+		return initFilterSize
+	}
+
+	// round up to the nearest upper boundary (default 1000).
+	remainder := growthSize % rounding
+
+	filterSize := growthSize + (rounding - remainder)
+
+	return filterSize
 }
 
 func maxTS(lhs, rhs *timestamppb.Timestamp) *timestamppb.Timestamp {
@@ -455,10 +466,10 @@ func (s *Sync) getWatermark(fs bool) *watermark {
 
 func (s *Sync) setWatermark(wm *watermark) error {
 	if wm == nil {
-		panic("nil") // TODO
+		panic("watermark nil")
 	}
 
-	wm.Timestamp.Nanos = wm.Timestamp.Nanos + 1000 // add 1 micro second
+	wm.Timestamp.Nanos += 1000 // add 1 micro second
 	wm.LastUpdated = wm.Timestamp.AsTime().Format(time.RFC3339Nano)
 
 	w, err := os.Create(s.syncFilename())
@@ -470,7 +481,7 @@ func (s *Sync) setWatermark(wm *watermark) error {
 	if err := json.NewEncoder(w).Encode(wm); err != nil {
 		return err
 	}
-	w.Sync() // flush sync marker.
+	_ = w.Sync() // flush sync watermark.
 
 	return nil
 }
@@ -488,17 +499,26 @@ func (s *Sync) syncManifest() error {
 	if err != nil {
 		return err
 	}
-	defer ldsc.conn.(*grpc.ClientConn).Close()
+	defer ldsc.conn.Close()
 
 	rdsc, err := s.getRemoteDirectoryClient(ctx)
 	if err != nil {
 		return err
 	}
-	defer rdsc.conn.(*grpc.ClientConn).Close()
+	defer rdsc.conn.Close()
 
-	_, rr, err := s.getManifest(rdsc.Model)
+	localMD, _, err := s.getManifest(ldsc.Model)
 	if err != nil {
 		return err
+	}
+
+	remoteMD, rr, err := s.getManifest(rdsc.Model)
+	if err != nil {
+		return err
+	}
+
+	if localMD.Etag == remoteMD.Etag {
+		return nil
 	}
 
 	if err := s.setManifest(ldsc.Model, rr); err != nil {
@@ -606,7 +626,7 @@ func (s *Sync) diff() error {
 		s.log.Error().Err(err).Msgf("diff - failed to create directory client")
 		return err
 	}
-	defer dsc.conn.(*grpc.ClientConn).Close()
+	defer dsc.conn.Close()
 
 	writer, err := dsc.Importer.Import(ctx)
 	if err != nil {
