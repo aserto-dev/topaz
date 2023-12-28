@@ -18,7 +18,7 @@ type CertsCmd struct {
 	List     ListCertsCmd      `cmd:"" help:"list dev certs"`
 	Generate GenerateCertsCmd  `cmd:"" help:"generate dev certs"`
 	Trust    TrustCertsCmd     `cmd:"" help:"trust/untrust dev certs"`
-	Remove   RemoveCertFileCmd `cmd:"" help:"remove dev cert file"`
+	Remove   RemoveCertFileCmd `cmd:"" help:"remove dev certs"`
 }
 
 const (
