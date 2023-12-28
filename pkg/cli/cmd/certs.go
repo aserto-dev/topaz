@@ -202,6 +202,21 @@ func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 
 	table := c.UI.Normal().WithTable("File", "Action")
 
+	// remove cert from trust store, before delete cert file
+	for _, fqn := range getFileList(certsDir, withCACerts()) {
+		if fi, err := os.Stat(fqn); os.IsNotExist(err) || fi.IsDir() {
+			continue
+		}
+
+		fn := cc.FileName(fqn)
+		cn := fmt.Sprintf("%s-%s", certCommonName, strings.TrimSuffix(fn, filepath.Ext(fn)))
+
+		table.WithTableRow(fn, "removed from trust store")
+		if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
+			return err
+		}
+	}
+
 	for _, fqn := range getFileList(certsDir, withAll()) {
 		if fi, err := os.Stat(fqn); os.IsNotExist(err) || fi.IsDir() {
 			continue
@@ -209,7 +224,7 @@ func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		if err := os.Remove(fqn); err != nil {
 			return err
 		}
-		table.WithTableRow(cc.FileName(fqn), "removed")
+		table.WithTableRow(cc.FileName(fqn), "deleted")
 	}
 
 	table.Do()
