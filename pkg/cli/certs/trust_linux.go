@@ -1,52 +1,25 @@
 package certs
 
 import (
-	"os"
-
-	"github.com/magefile/mage/sh"
 	"github.com/pkg/errors"
 )
 
-const CaCertsDir = "/usr/local/share/ca-certificates/aserto/"
+const devCertsDocLink = `https://www.topaz.sh/docs/command-line-interface/topaz-cli/dev-certs`
 
 func AddTrustedCert(certPath string) error {
-	if !dirExists(CaCertsDir) {
-		if err := os.MkdirAll(CaCertsDir, 0755); err != nil {
-			return errors.Wrap(err, "unable to create ca-certificates directory")
-		}
-	}
+	const errMsg = `Adding trust to dev cert was requested. 
+Trusting the certificate on Linux distributions automatically is not supported. 
+For instructions on how to manually trust the dev cert on your Linux distribution, 
+go to: %s`
 
-	if err := sh.RunV("cp", certPath, CaCertsDir); err != nil {
-		return errors.Wrap(err, "unable to copy ca certificate")
-	}
-
-	return updateCaCerts()
+	return errors.Errorf(errMsg, devCertsDocLink)
 }
 
 func RemoveTrustedCert(certPath, filter string) error {
-	if !dirExists(CaCertsDir) {
-		// Nothing to remove
-		return nil
-	}
+	const errMsg = `Removing trust from dev cert was requested. 
+Trusting the certificate on Linux distributions automatically is not supported. 
+For instructions on how to manually trust the dev cert on your Linux distribution, 
+go to: %s`
 
-	if err := sh.RunV("rm", "-rf", CaCertsDir); err != nil {
-		return errors.Wrap(err, "unable to remove cert")
-	}
-
-	return updateCaCerts()
-}
-
-func updateCaCerts() error {
-	if err := sh.RunV("sudo", "update-ca-certificates"); err != nil {
-		return errors.Wrap(err, "unable to update system ca certificates")
-	}
-
-	return nil
-}
-
-func dirExists(dirPath string) bool {
-	if fi, err := os.Stat(dirPath); err == nil && fi.IsDir() {
-		return true
-	}
-	return false
+	return errors.Errorf(errMsg, devCertsDocLink)
 }

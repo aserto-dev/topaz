@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 	"time"
@@ -151,6 +152,17 @@ func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
 
 	c.UI.Normal().Msgf("certs directory: %s", certsDir)
 
+	if runtime.GOOS == `linux` {
+		var err error
+		if cmd.Remove {
+			err = certs.RemoveTrustedCert("", "")
+		} else {
+			err = certs.AddTrustedCert("")
+		}
+		c.UI.Exclamation().Msg(err.Error())
+		return nil
+	}
+
 	table := c.UI.Normal().WithTable("File", "Action")
 	defer table.Do()
 
@@ -169,18 +181,18 @@ func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
 			fn := cc.FileName(fqn)
 			cn := fmt.Sprintf("%s-%s", certCommonName, strings.TrimSuffix(fn, filepath.Ext(fn)))
 
-			table.WithTableRow(fn, "removed from trust store")
 			if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
 				return err
 			}
+			table.WithTableRow(fn, "removed from trust store")
 			continue
 		}
 
 		if !cmd.Remove {
-			table.WithTableRow(cc.FileName(fqn), "added to trust store")
 			if err := certs.AddTrustedCert(fqn); err != nil {
 				return err
 			}
+			table.WithTableRow(cc.FileName(fqn), "added to trust store")
 			continue
 		}
 	}
