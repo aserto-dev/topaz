@@ -95,7 +95,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 
 	file := "config.yaml"
 	if configPath != "" {
-		exists, err := fileExists(string(configPath))
+		exists, err := FileExists(string(configPath))
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to determine if config file '%s' exists", configPath)
 		}
@@ -123,7 +123,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 
 	defaults(v)
 
-	configExists, err := fileExists(file)
+	configExists, err := FileExists(file)
 	if err != nil {
 		return nil, errors.Wrapf(err, "filesystem error")
 	}
@@ -229,7 +229,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 			config.Gateway.Certs.TLSCertPath,
 			config.Gateway.Certs.TLSKeyPath,
 		} {
-			exists, err := fileExists(file)
+			exists, err := FileExists(file)
 			if err != nil {
 				return errors.Wrapf(err, "failed to determine if file '%s' exists", file)
 			}
@@ -274,7 +274,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 	return nil
 }
 
-func fileExists(path string) (bool, error) {
+func FileExists(path string) (bool, error) {
 	if _, err := os.Stat(path); err == nil {
 		return true, nil
 	} else if os.IsNotExist(err) {
