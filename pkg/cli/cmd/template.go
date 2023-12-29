@@ -29,11 +29,11 @@ type TemplateCmd struct {
 }
 
 type ListTemplatesCmd struct {
-	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh" help:"template url"`
+	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
 }
 
 func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
-	buf, err := getBytes(fmt.Sprintf("%s/assets/templates/templates.json", cmd.TemplatesURL))
+	buf, err := getBytes(cmd.TemplatesURL)
 	if err != nil {
 		return err
 	}
@@ -115,8 +115,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 
 	// 5-8 - reset directory, apply template, and run tests.
-	installer := NewTemplateInstaller(c, tmpl, topazDir, &cmd.Config)
-	if err := installer.Install(); err != nil {
+	if err := installTemplate(c, tmpl, topazDir, &cmd.Config); err != nil {
 		return err
 	}
 
@@ -206,20 +205,21 @@ func (t *template) AbsURL(relative string) string {
 	return abs.String()
 }
 
-type tmplInstaller struct {
-	c        *cc.CommonCtx
-	tmpl     *template
-	topazDir string
-	cfg      *clients.Config
-}
-
-func NewTemplateInstaller(c *cc.CommonCtx, tmpl *template, topazDir string, cfg *clients.Config) *tmplInstaller {
-	return &tmplInstaller{
+func installTemplate(c *cc.CommonCtx, tmpl *template, topazDir string, cfg *clients.Config) error {
+	installer := &tmplInstaller{
 		c:        c,
 		tmpl:     tmpl,
 		topazDir: topazDir,
 		cfg:      cfg,
 	}
+	return installer.Install()
+}
+
+type tmplInstaller struct {
+	c        *cc.CommonCtx
+	tmpl     *template
+	topazDir string
+	cfg      *clients.Config
 }
 
 func (i *tmplInstaller) Install() error {
