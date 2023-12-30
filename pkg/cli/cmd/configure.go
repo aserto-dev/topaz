@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"errors"
-	"html/template"
+	tmplate "html/template"
 	"io"
 	"os"
 	"path"
@@ -37,6 +37,12 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if _, err := CreateCertsDir(); err != nil {
+		return err
+	}
+
+	certGenerator := GenerateCertsCmd{CertsDir: cc.GetTopazCertsDir()}
+	err = certGenerator.Run(c)
+	if err != nil {
 		return err
 	}
 
@@ -126,7 +132,7 @@ func CreateDataDir() (string, error) {
 }
 
 func WriteConfig(w io.Writer, templ string, params *templateParams) error {
-	t, err := template.New("config").Parse(templ)
+	t, err := tmplate.New("config").Parse(templ)
 	if err != nil {
 		return err
 	}
