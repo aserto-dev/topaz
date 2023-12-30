@@ -1,12 +1,11 @@
 package certs
 
 import (
-	"fmt"
-	"io"
 	"os"
+	"path/filepath"
 
 	"github.com/aserto-dev/certs"
-	"github.com/aserto-dev/logger"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
@@ -22,8 +21,7 @@ type CertPaths struct {
 func (c *CertPaths) FindExisting() []string {
 	existing := []string{}
 	for _, cert := range []string{c.Cert, c.CA, c.Key} {
-		fi, err := os.Stat(cert)
-		if !os.IsNotExist(err) && !fi.IsDir() {
+		if fi, err := os.Stat(cert); !os.IsNotExist(err) && !fi.IsDir() {
 			existing = append(existing, cert)
 		}
 	}
@@ -31,7 +29,7 @@ func (c *CertPaths) FindExisting() []string {
 	return existing
 }
 
-func GenerateCerts(logOut, errOut io.Writer, force bool, dnsNames []string, certPaths ...*CertPaths) error {
+func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...*CertPaths) error {
 	if !force {
 		existingFiles := []string{}
 		for _, cert := range certPaths {
@@ -39,24 +37,23 @@ func GenerateCerts(logOut, errOut io.Writer, force bool, dnsNames []string, cert
 		}
 
 		if len(existingFiles) != 0 {
-			fmt.Fprintln(logOut, "Some cert files already exist. Skipping generation.", existingFiles)
+			table := c.UI.Normal().WithTable("File", "Action")
+			for _, fqn := range existingFiles {
+				table.WithTableRow(filepath.Base(fqn), "skipped, file already exists")
+			}
+			table.Do()
 			return nil
 		}
 	}
 
-	return generate(logOut, errOut, dnsNames, certPaths...)
+	return generate(c, dnsNames, certPaths...)
 }
 
-func generate(logOut, errOut io.Writer, dnsNames []string, certPaths ...*CertPaths) error {
-	zerologLogger, err := logger.NewLogger(
-		logOut, errOut,
-		&logger.Config{Prod: false, LogLevel: "warn", LogLevelParsed: zerolog.WarnLevel},
-	)
-	if err != nil {
-		return errors.Wrap(err, "failed to create logger")
-	}
+func generate(c *cc.CommonCtx, dnsNames []string, certPaths ...*CertPaths) error {
+	logger := zerolog.Nop()
+	generator := certs.NewGenerator(&logger)
 
-	generator := certs.NewGenerator(zerologLogger)
+	table := c.UI.Normal().WithTable("File", "Action")
 
 	for _, certPaths := range certPaths {
 		if err := generator.MakeDevCert(&certs.CertGenConfig{
@@ -69,7 +66,13 @@ func generate(logOut, errOut io.Writer, dnsNames []string, certPaths ...*CertPat
 		}); err != nil {
 			return errors.Wrap(err, "failed to create dev certs")
 		}
+
+		table.WithTableRow(filepath.Base(certPaths.CA), "generated")
+		table.WithTableRow(filepath.Base(certPaths.Cert), "generated")
+		table.WithTableRow(filepath.Base(certPaths.Key), "generated")
 	}
+
+	table.Do()
 
 	return nil
 }

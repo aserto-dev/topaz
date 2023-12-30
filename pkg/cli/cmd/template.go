@@ -126,16 +126,12 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 // 8 - topaz test exec, execute assertions when part of template
 // 9 - topaz console, launch console so the user start exploring the template artifacts.
 func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance) error {
-	topazDir, err := getTopazDir()
-	if err != nil {
-		return err
-	}
+	topazDir := cc.GetTopazDir()
 	os.Setenv("TOPAZ_DIR", topazDir)
 
 	cmd.Config.Insecure = true
 	// prepare Topaz configuration and start container
-	err = cmd.prepareTopaz(c, i)
-	if err != nil {
+	if err := cmd.prepareTopaz(c, i); err != nil {
 		return err
 	}
 
@@ -145,14 +141,12 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, i *tmplInstance)
 	}
 
 	// reset directory store and load data from template
-	err = cmd.loadData(c, i, topazDir)
-	if err != nil {
+	if err := cmd.loadData(c, i, topazDir); err != nil {
 		return err
 	}
 
 	// 8 - topaz test exec, execute assertions when part of template
-	err = cmd.runTemplateTests(c, i, topazDir)
-	if err != nil {
+	if err := cmd.runTemplateTests(c, i, topazDir); err != nil {
 		return err
 	}
 
@@ -417,12 +411,4 @@ func isServing() bool {
 	}
 	fmt.Println(string(out))
 	return true
-}
-
-func getTopazDir() (string, error) {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-	return path.Join(homeDir, ".config", "topaz"), nil
 }
