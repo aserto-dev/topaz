@@ -46,9 +46,3 @@ func getHomeFallback() string {
 		return ""
 	}
 }
-
-// FileName returns the filename part of a fully qualified file path.
-func FileName(fqn string) string {
-	_, fn := filepath.Split(fqn)
-	return fn
-}

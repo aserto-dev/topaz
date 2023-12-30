@@ -2,6 +2,7 @@ package certs
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -38,7 +39,7 @@ func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...
 		if len(existingFiles) != 0 {
 			table := c.UI.Normal().WithTable("File", "Action")
 			for _, fqn := range existingFiles {
-				table.WithTableRow(cc.FileName(fqn), "skipped, file already exists")
+				table.WithTableRow(filepath.Base(fqn), "skipped, file already exists")
 			}
 			table.Do()
 			return nil
@@ -66,9 +67,9 @@ func generate(c *cc.CommonCtx, dnsNames []string, certPaths ...*CertPaths) error
 			return errors.Wrap(err, "failed to create dev certs")
 		}
 
-		table.WithTableRow(cc.FileName(certPaths.CA), "generated")
-		table.WithTableRow(cc.FileName(certPaths.Cert), "generated")
-		table.WithTableRow(cc.FileName(certPaths.Key), "generated")
+		table.WithTableRow(filepath.Base(certPaths.CA), "generated")
+		table.WithTableRow(filepath.Base(certPaths.Cert), "generated")
+		table.WithTableRow(filepath.Base(certPaths.Key), "generated")
 	}
 
 	table.Do()

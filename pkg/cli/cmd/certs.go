@@ -178,7 +178,7 @@ func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		}
 
 		if cmd.Remove {
-			fn := cc.FileName(fqn)
+			fn := filepath.Base(fqn)
 			cn := fmt.Sprintf("%s-%s", certCommonName, strings.TrimSuffix(fn, filepath.Ext(fn)))
 
 			if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
@@ -192,7 +192,7 @@ func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
 			if err := certs.AddTrustedCert(fqn); err != nil {
 				return err
 			}
-			table.WithTableRow(cc.FileName(fqn), "added to trust store")
+			table.WithTableRow(filepath.Base(fqn), "added to trust store")
 			continue
 		}
 	}
@@ -220,7 +220,7 @@ func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 			continue
 		}
 
-		fn := cc.FileName(fqn)
+		fn := filepath.Base(fqn)
 		cn := fmt.Sprintf("%s-%s", certCommonName, strings.TrimSuffix(fn, filepath.Ext(fn)))
 
 		table.WithTableRow(fn, "removed from trust store")
@@ -236,7 +236,7 @@ func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		if err := os.Remove(fqn); err != nil {
 			return err
 		}
-		table.WithTableRow(cc.FileName(fqn), "deleted")
+		table.WithTableRow(filepath.Base(fqn), "deleted")
 	}
 
 	table.Do()
