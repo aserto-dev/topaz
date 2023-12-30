@@ -21,12 +21,12 @@ require (
 	github.com/aserto-dev/go-directory-cli v0.30.1
 	github.com/aserto-dev/go-edge-ds v0.30.10
 	github.com/aserto-dev/go-grpc v0.8.59
-	github.com/aserto-dev/go-topaz-ui v0.0.4
+	github.com/aserto-dev/go-topaz-ui v0.0.5
 	github.com/aserto-dev/header v0.0.6
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
-	github.com/aserto-dev/openapi-directory v0.30.2
-	github.com/aserto-dev/runtime v0.58.0
+	github.com/aserto-dev/openapi-directory v0.30.3
+	github.com/aserto-dev/runtime v0.58.1
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.8
 	github.com/cli/browser v1.3.0
@@ -45,12 +45,12 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.31.0
 	github.com/spf13/cobra v1.8.0
-	github.com/spf13/viper v1.18.1
+	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.5.0
 	google.golang.org/grpc v1.60.1
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.32.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v2 v2.4.0
 	sigs.k8s.io/controller-runtime v0.16.3
