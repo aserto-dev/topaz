@@ -13,7 +13,7 @@ require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.2
-	github.com/aserto-dev/certs v0.0.3
+	github.com/aserto-dev/certs v0.0.5
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.30.0
@@ -26,8 +26,8 @@ require (
 	github.com/aserto-dev/header v0.0.6
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
-	github.com/aserto-dev/openapi-directory v0.30.2
-	github.com/aserto-dev/runtime v0.58.0
+	github.com/aserto-dev/openapi-directory v0.30.3
+	github.com/aserto-dev/runtime v0.58.1
 	github.com/aserto-dev/self-decision-logger v0.0.4
 	github.com/aserto-dev/service-host v0.0.9
 	github.com/cli/browser v1.3.0
@@ -46,12 +46,12 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.31.0
 	github.com/spf13/cobra v1.8.0
-	github.com/spf13/viper v1.18.1
+	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.5.0
 	google.golang.org/grpc v1.60.1
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.32.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v2 v2.4.0
 	sigs.k8s.io/controller-runtime v0.16.3
@@ -162,14 +162,14 @@ require (
 	go.opentelemetry.io/otel/trace v1.19.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.16.0 // indirect
-	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
-	golang.org/x/mod v0.13.0 // indirect
+	golang.org/x/exp v0.0.0-20231214170342-aacd6d4b4611 // indirect
+	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/term v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	golang.org/x/tools v0.14.0 // indirect
+	golang.org/x/tools v0.16.0 // indirect
 	google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect

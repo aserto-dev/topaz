@@ -40,6 +40,12 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
+	certGenerator := GenerateCertsCmd{CertsDir: cc.GetTopazCertsDir()}
+	err = certGenerator.Run(c)
+	if err != nil {
+		return err
+	}
+
 	if _, err := CreateDataDir(); err != nil {
 		return err
 	}
