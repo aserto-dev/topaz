@@ -7,9 +7,6 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/spf13/cobra"
-
-	"net/http"
-	_ "net/http/pprof"
 )
 
 var rootCmd = &cobra.Command{
@@ -27,10 +24,6 @@ var versionCmd = &cobra.Command{
 }
 
 func main() {
-	go func() {
-		_ = http.ListenAndServe("localhost:6060", nil)
-	}()
-
 	rootCmd.AddCommand(
 		versionCmd,
 	)
