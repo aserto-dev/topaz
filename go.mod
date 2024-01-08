@@ -12,23 +12,23 @@ go 1.20
 require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.2
-	github.com/aserto-dev/aserto-management v0.9.3-0.20231226174751-9df66c0e7bf2
+	github.com/aserto-dev/aserto-management v0.9.3-0.20240108212936-2d2fa3c931b7
 	github.com/aserto-dev/certs v0.0.5
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.31.0
 	github.com/aserto-dev/go-authorizer v0.20.5
-	github.com/aserto-dev/go-directory v0.30.7
+	github.com/aserto-dev/go-directory v0.30.8
 	github.com/aserto-dev/go-directory-cli v0.30.1
 	github.com/aserto-dev/go-edge-ds v0.30.10
-	github.com/aserto-dev/go-grpc v0.8.60-0.20231226173955-aa742a8cad67
+	github.com/aserto-dev/go-grpc v0.8.60-0.20240108212755-3accbcf8e714
 	github.com/aserto-dev/go-topaz-ui v0.0.5
 	github.com/aserto-dev/header v0.0.6
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.30.3
 	github.com/aserto-dev/runtime v0.58.1
-	github.com/aserto-dev/self-decision-logger v0.0.5-0.20231226171953-5076e55f6a4c
+	github.com/aserto-dev/self-decision-logger v0.0.5-0.20240108213306-c2fae358001f
 	github.com/aserto-dev/service-host v0.0.9
 	github.com/cli/browser v1.3.0
 	github.com/fatih/color v1.16.0
@@ -36,7 +36,7 @@ require (
 	github.com/google/uuid v1.5.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.1
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.0
 	github.com/lestrrat-go/jwx v1.2.27
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.2.1
@@ -49,7 +49,7 @@ require (
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4
 	go.opencensus.io v0.24.0
-	golang.org/x/sync v0.5.0
+	golang.org/x/sync v0.6.0
 	google.golang.org/grpc v1.60.1
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
@@ -125,7 +125,7 @@ require (
 	github.com/nats-io/jwt/v2 v2.5.3 // indirect
 	github.com/nats-io/nats-server/v2 v2.10.7 // indirect
 	github.com/nats-io/nats.go v1.31.0 // indirect
-	github.com/nats-io/nkeys v0.4.6 // indirect
+	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/onsi/ginkgo/v2 v2.13.2 // indirect
@@ -163,18 +163,18 @@ require (
 	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
 	go.opentelemetry.io/otel/trace v1.21.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/crypto v0.18.0 // indirect
 	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b // indirect
 	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
-	golang.org/x/term v0.15.0 // indirect
+	golang.org/x/net v0.20.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/term v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.16.1 // indirect
-	google.golang.org/genproto v0.0.0-20231212172506-995d672761c0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20231212172506-995d672761c0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20231212172506-995d672761c0 // indirect
+	google.golang.org/genproto v0.0.0-20240108191215-35c7eff3a6b1 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240108191215-35c7eff3a6b1 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240108191215-35c7eff3a6b1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.3.1 // indirect
