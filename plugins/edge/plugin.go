@@ -137,6 +137,10 @@ func (p *Plugin) scheduler() {
 			interval.Stop()
 
 			p.task(true)
+
+			wait := time.Duration(waitInSec) * time.Second
+			interval.Reset(wait)
+			p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
 		}
 	}
 }
