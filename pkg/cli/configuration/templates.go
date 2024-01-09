@@ -1,3 +1,5 @@
+package configuration
+
 package cmd
 
 type templateParams struct {
@@ -11,7 +13,7 @@ type templateParams struct {
 	EnableDirectoryV2 bool
 }
 
-const localImageTemplate = templatePreamble + `
+const LocalImageTemplate = templatePreamble + `
 opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2
@@ -21,7 +23,7 @@ opa:
     watch: true
     skip_verification: true
 `
-const configTemplate = templatePreamble + `
+const Template = templatePreamble + `
 opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2

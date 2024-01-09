@@ -7,9 +7,9 @@ import (
 	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/configuration"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
 
 	"github.com/fatih/color"
 )
@@ -54,11 +54,12 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(rootPath, "cfg", "config.yaml"))
 	}
 
-	if _, err := CreateCertsDir(); err != nil {
+	generator := configuration.NewGenerator("config.yaml")
+	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}
 
-	if _, err := CreateDataDir(); err != nil {
+	if _, err := generator.CreateDataDir(); err != nil {
 		return err
 	}
 
@@ -133,54 +134,42 @@ func (cmd *StartCmd) env(rootPath string) map[string]string {
 
 func getPorts(rootPath string) ([]string, error) {
 	portMap := make(map[string]string)
-	content, err := os.ReadFile(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
+	topazConfig, err := configuration.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
 	if err != nil {
 		return nil, err
 	}
 
-	var api map[string]interface{}
-	err = yaml.Unmarshal(content, &api)
-	if err != nil {
-		return nil, err
-	}
-
-	healthConfig := getValueByKey(api["api"], "health")
-	if healthConfig != nil {
-		port, err := getPort(healthConfig)
+	if topazConfig.APIConfig.Health.ListenAddress != "" {
+		port, err := getPort(topazConfig.APIConfig.Health.ListenAddress)
 		if err != nil {
 			return nil, err
 		}
 		portMap[port] = fmt.Sprintf("%s:%s", port, port)
 	}
 
-	metricsConfig := getValueByKey(api["api"], "metrics")
-	if metricsConfig != nil {
-		port, err := getPort(metricsConfig)
+	if topazConfig.APIConfig.Metrics.ListenAddress != "" {
+		port, err := getPort(topazConfig.APIConfig.Metrics.ListenAddress)
 		if err != nil {
 			return nil, err
 		}
 		portMap[port] = fmt.Sprintf("%s:%s", port, port)
 	}
 
-	servicesConfig, ok := getValueByKey(api["api"], "services").(map[interface{}]interface{})
-	if ok {
-		for _, value := range servicesConfig {
-			grpcConfig := getValueByKey(value, "grpc")
-			if grpcConfig != nil {
-				port, err := getPort(grpcConfig)
-				if err != nil {
-					return nil, err
-				}
-				portMap[port] = fmt.Sprintf("%s:%s", port, port)
+	for _, value := range topazConfig.APIConfig.Services {
+		if value.GRPC.ListenAddress != "" {
+			port, err := getPort(value.GRPC.ListenAddress)
+			if err != nil {
+				return nil, err
 			}
-			gatewayConfig := getValueByKey(value, "gateway")
-			if gatewayConfig != nil {
-				port, err := getPort(gatewayConfig)
-				if err != nil {
-					return nil, err
-				}
-				portMap[port] = fmt.Sprintf("%s:%s", port, port)
+			portMap[port] = fmt.Sprintf("%s:%s", port, port)
+		}
+
+		if value.Gateway.ListenAddress != "" {
+			port, err := getPort(value.Gateway.ListenAddress)
+			if err != nil {
+				return nil, err
 			}
+			portMap[port] = fmt.Sprintf("%s:%s", port, port)
 		}
 	}
 
@@ -192,28 +181,10 @@ func getPorts(rootPath string) ([]string, error) {
 	return args, nil
 }
 
-func getPort(obj interface{}) (string, error) {
-	address := getValueByKey(obj, "listen_address")
-	if address != nil {
-		_, port, err := net.SplitHostPort(address.(string))
-		if err != nil {
-			return "", err
-		}
-		return port, nil
+func getPort(address string) (string, error) {
+	_, port, err := net.SplitHostPort(address)
+	if err != nil {
+		return "", err
 	}
-
-	return "", fmt.Errorf("listen_address not found")
-}
-
-func getValueByKey(obj interface{}, key string) interface{} {
-	mobj, ok := obj.(map[interface{}]interface{})
-	if !ok {
-		return nil
-	}
-	for k, v := range mobj {
-		if k == key {
-			return v
-		}
-	}
-	return nil
+	return port, nil
 }
