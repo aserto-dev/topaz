@@ -137,6 +137,10 @@ func (p *Plugin) scheduler() {
 			interval.Stop()
 
 			p.task(true)
+
+			wait := time.Duration(waitInSec) * time.Second
+			interval.Reset(wait)
+			p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
 		}
 	}
 }
@@ -162,6 +166,7 @@ func (p *Plugin) task(fullSync bool) {
 
 	sync := NewSyncMgr(ctx, p.config, p.topazConfig, p.logger)
 	sync.Run(fullSync)
+	sync = nil
 
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }

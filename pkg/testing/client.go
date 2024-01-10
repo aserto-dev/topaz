@@ -121,10 +121,10 @@ func (h *EngineHarness) CreateDirectoryClient(ctx context.Context) *DirectoryCli
 	}
 
 	return &DirectoryClient{
-		Model:    dsm3.NewModelClient(c.Conn),
-		Reader:   dsr3.NewReaderClient(c.Conn),
-		Writer:   dsw3.NewWriterClient(c.Conn),
-		Importer: dsi3.NewImporterClient(c.Conn),
-		Exporter: dse3.NewExporterClient(c.Conn),
+		Model:    dsm3.NewModelClient(c),
+		Reader:   dsr3.NewReaderClient(c),
+		Writer:   dsw3.NewWriterClient(c),
+		Importer: dsi3.NewImporterClient(c),
+		Exporter: dse3.NewExporterClient(c),
 	}
 }
