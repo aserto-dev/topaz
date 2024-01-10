@@ -6,13 +6,12 @@ go 1.20
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/service-host => ../service-host
-
 // replace github.com/aserto-dev/runtime => ../runtime
 
 require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.2
-	github.com/aserto-dev/aserto-management v0.9.3-0.20240108212936-2d2fa3c931b7
+	github.com/aserto-dev/aserto-management v0.9.4
 	github.com/aserto-dev/certs v0.0.5
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.6
@@ -21,14 +20,14 @@ require (
 	github.com/aserto-dev/go-directory v0.30.8
 	github.com/aserto-dev/go-directory-cli v0.30.1
 	github.com/aserto-dev/go-edge-ds v0.30.10
-	github.com/aserto-dev/go-grpc v0.8.60-0.20240108212755-3accbcf8e714
+	github.com/aserto-dev/go-grpc v0.8.60
 	github.com/aserto-dev/go-topaz-ui v0.0.5
 	github.com/aserto-dev/header v0.0.6
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.30.3
 	github.com/aserto-dev/runtime v0.58.1
-	github.com/aserto-dev/self-decision-logger v0.0.5-0.20240108213306-c2fae358001f
+	github.com/aserto-dev/self-decision-logger v0.0.5
 	github.com/aserto-dev/service-host v0.0.9
 	github.com/cli/browser v1.3.0
 	github.com/fatih/color v1.16.0
@@ -37,7 +36,7 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.0
-	github.com/lestrrat-go/jwx v1.2.27
+	github.com/lestrrat-go/jwx v1.2.28
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.2.1
 	github.com/mitchellh/mapstructure v1.5.0
