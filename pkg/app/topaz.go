@@ -197,6 +197,10 @@ func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 func (e *Topaz) prepareServices() error {
 	// prepare services
 	if e.Configuration.Edge.DBPath != "" {
+		// for 0.30.* this defaults to true
+		// starting 0.31.* this defaults to false
+		// and the topaz configure command exposes the option.
+		e.Configuration.Edge.EnableV2 = true
 		dir, err := eds.New(e.Context, &e.Configuration.Edge, e.Logger)
 		if err != nil {
 			return err
