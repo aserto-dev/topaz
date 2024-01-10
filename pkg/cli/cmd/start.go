@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"net"
 	"os"
 	"path"
 
@@ -134,43 +133,18 @@ func (cmd *StartCmd) env(rootPath string) map[string]string {
 
 func getPorts(rootPath string) ([]string, error) {
 	portMap := make(map[string]string)
-	topazConfig, err := configuration.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
+	configLoader, err := configuration.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
 	if err != nil {
 		return nil, err
 	}
 
-	if topazConfig.APIConfig.Health.ListenAddress != "" {
-		port, err := getPort(topazConfig.APIConfig.Health.ListenAddress)
-		if err != nil {
-			return nil, err
-		}
-		portMap[port] = fmt.Sprintf("%s:%s", port, port)
+	portArray, err := configLoader.GetPorts()
+	if err != nil {
+		return nil, err
 	}
 
-	if topazConfig.APIConfig.Metrics.ListenAddress != "" {
-		port, err := getPort(topazConfig.APIConfig.Metrics.ListenAddress)
-		if err != nil {
-			return nil, err
-		}
-		portMap[port] = fmt.Sprintf("%s:%s", port, port)
-	}
-
-	for _, value := range topazConfig.APIConfig.Services {
-		if value.GRPC.ListenAddress != "" {
-			port, err := getPort(value.GRPC.ListenAddress)
-			if err != nil {
-				return nil, err
-			}
-			portMap[port] = fmt.Sprintf("%s:%s", port, port)
-		}
-
-		if value.Gateway.ListenAddress != "" {
-			port, err := getPort(value.Gateway.ListenAddress)
-			if err != nil {
-				return nil, err
-			}
-			portMap[port] = fmt.Sprintf("%s:%s", port, port)
-		}
+	for i := range portArray {
+		portMap[portArray[i]] = fmt.Sprintf("%s:%s", portArray[i], portArray[i])
 	}
 
 	// ensure unique assignment for each port
@@ -179,12 +153,4 @@ func getPorts(rootPath string) ([]string, error) {
 		args = append(args, "-p", v)
 	}
 	return args, nil
-}
-
-func getPort(address string) (string, error) {
-	_, port, err := net.SplitHostPort(address)
-	if err != nil {
-		return "", err
-	}
-	return port, nil
 }
