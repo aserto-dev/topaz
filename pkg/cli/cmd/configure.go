@@ -71,7 +71,7 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 	}
-	params := templateParams{
+	params := configuration.TemplateParams{
 		Version:           config.ConfigFileVersion,
 		LocalPolicyImage:  cmd.LocalPolicyImage,
 		PolicyName:        cmd.PolicyName,

@@ -1,8 +1,6 @@
 package configuration
 
-package cmd
-
-type templateParams struct {
+type TemplateParams struct {
 	Version           int
 	LocalPolicyImage  string
 	PolicyName        string
