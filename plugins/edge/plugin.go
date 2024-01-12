@@ -123,8 +123,10 @@ func (p *Plugin) scheduler() {
 			p.logger.Info().Time("dispatch", t).Msg(syncScheduler)
 			interval.Stop()
 
-			p.task(cycle%cycles == 0)
+			p.task(false) // watermark sync
+
 			if cycle%cycles == 0 {
+				p.task(cycle%cycles == 0)
 				cycle = 0
 			}
 			cycle++
