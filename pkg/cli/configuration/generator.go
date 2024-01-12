@@ -8,6 +8,7 @@ import (
 )
 
 type Generator struct {
+	templateParams
 	ConfigName string
 }
 
@@ -15,8 +16,36 @@ func NewGenerator(configName string) *Generator {
 	return &Generator{ConfigName: configName}
 }
 
-func (g *Generator) GenerateConfig(w io.Writer, templateData string, params *TemplateParams) error {
-	return writeConfig(w, templateData, params)
+func (g *Generator) WithVersion(version int) *Generator {
+	g.Version = version
+	return g
+}
+func (g *Generator) WithLocalPolicyImage(image string) *Generator {
+	g.LocalPolicyImage = image
+	return g
+}
+
+func (g *Generator) WithPolicyName(policyName string) *Generator {
+	g.PolicyName = policyName
+	return g
+}
+func (g *Generator) WithResource(resource string) *Generator {
+	g.Resource = resource
+	return g
+}
+
+func (g *Generator) WithEdgeDirectory(enabled bool) *Generator {
+	g.EdgeDirectory = enabled
+	return g
+}
+
+func (g *Generator) WithEnableDirectoryV2(enabled bool) *Generator {
+	g.EnableDirectoryV2 = enabled
+	return g
+}
+
+func (g *Generator) GenerateConfig(w io.Writer, templateData string) error {
+	return g.writeConfig(w, templateData)
 }
 
 func (g *Generator) CreateConfigDir() (string, error) {
@@ -61,13 +90,13 @@ func (g *Generator) CreateDataDir() (string, error) {
 	return dataDir, os.MkdirAll(dataDir, 0700)
 }
 
-func writeConfig(w io.Writer, templ string, params *TemplateParams) error {
+func (g *Generator) writeConfig(w io.Writer, templ string) error {
 	t, err := template.New("config").Parse(templ)
 	if err != nil {
 		return err
 	}
 
-	err = t.Execute(w, params)
+	err = t.Execute(w, g)
 	if err != nil {
 		return err
 	}

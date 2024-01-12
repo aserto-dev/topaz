@@ -1,6 +1,6 @@
 package configuration
 
-type TemplateParams struct {
+type templateParams struct {
 	Version           int
 	LocalPolicyImage  string
 	PolicyName        string

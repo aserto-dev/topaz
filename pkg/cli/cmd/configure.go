@@ -32,7 +32,13 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		color.Green(">>> configure policy")
 	}
 
-	configGenerator := configuration.NewGenerator(cmd.PolicyName)
+	configGenerator := configuration.NewGenerator(cmd.PolicyName).
+		WithVersion(config.ConfigFileVersion).
+		WithLocalPolicyImage(cmd.LocalPolicyImage).
+		WithPolicyName(cmd.PolicyName).
+		WithResource(cmd.Resource).
+		WithEdgeDirectory(cmd.EdgeDirectory).
+		WithEnableDirectoryV2(cmd.EnableDirectoryV2)
 
 	configDir, err := configGenerator.CreateConfigDir()
 	if err != nil {
@@ -71,24 +77,15 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 	}
-	params := configuration.TemplateParams{
-		Version:           config.ConfigFileVersion,
-		LocalPolicyImage:  cmd.LocalPolicyImage,
-		PolicyName:        cmd.PolicyName,
-		Resource:          cmd.Resource,
-		EdgeDirectory:     cmd.EdgeDirectory,
-		SeedMetadata:      false,
-		EnableDirectoryV2: cmd.EnableDirectoryV2,
-	}
 
 	if !cmd.Stdout {
-		if params.LocalPolicyImage != "" {
-			color.Green("using local policy image: %s", params.LocalPolicyImage)
-			return configGenerator.GenerateConfig(w, configuration.LocalImageTemplate, &params)
+		if cmd.LocalPolicyImage != "" {
+			color.Green("using local policy image: %s", cmd.LocalPolicyImage)
+			return configGenerator.GenerateConfig(w, configuration.LocalImageTemplate)
 		}
 
-		color.Green("policy name: %s", params.PolicyName)
+		color.Green("policy name: %s", cmd.PolicyName)
 	}
 
-	return configGenerator.GenerateConfig(w, configuration.Template, &params)
+	return configGenerator.GenerateConfig(w, configuration.Template)
 }
