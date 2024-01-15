@@ -4,15 +4,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+
+	"github.com/alecthomas/kong"
+	"github.com/posener/complete"
+	"github.com/willabides/kongplete"
 )
 
 func main() {
 	cli := cmd.CLI{}
-	kongCtx := kong.Parse(&cli,
+	parser := kong.Must(&cli,
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
@@ -31,6 +34,13 @@ func main() {
 			"topaz_cfg_dir":   cc.GetTopazCfgDir(),
 		},
 	)
+
+	kongplete.Complete(parser,
+		kongplete.WithPredictor("file", complete.PredictFiles("*")),
+	)
+
+	kongCtx, err := parser.Parse(os.Args[1:])
+	parser.FatalIfErrorf(err)
 
 	ctx, err := cc.NewCommonContext(cli.NoCheck)
 	if err != nil {
