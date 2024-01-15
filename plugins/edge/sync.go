@@ -33,6 +33,7 @@ import (
 
 const (
 	syncScheduler  string = "scheduler"
+	syncOnDemand   string = "on-demand"
 	syncTask       string = "sync-task"
 	syncRun        string = "sync-run"
 	syncProducer   string = "producer"
