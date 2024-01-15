@@ -7,8 +7,8 @@ import (
 	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/cc/configuration"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/configuration"
 	"github.com/fatih/color"
 )
 
