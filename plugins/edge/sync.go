@@ -3,6 +3,7 @@ package edge
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -32,6 +33,7 @@ import (
 
 const (
 	syncScheduler  string = "scheduler"
+	syncOnDemand   string = "on-demand"
 	syncTask       string = "sync-task"
 	syncRun        string = "sync-run"
 	syncProducer   string = "producer"
@@ -41,11 +43,10 @@ const (
 	finished       string = "finished"
 	channelSize    int    = 10000
 	localHost      string = "localhost:9292"
-	initFilterSize uint   = 1000000
 )
 
 type directoryClient struct {
-	conn     grpc.ClientConnInterface
+	conn     *grpc.ClientConn
 	Model    dsm3.ModelClient
 	Reader   dsr3.ReaderClient
 	Writer   dsw3.WriterClient
@@ -113,19 +114,16 @@ func (s *Sync) Run(fs bool) {
 
 	g := new(errgroup.Group)
 
-	watermark := s.getWatermark()
+	wm := s.getWatermark(fs)
 
-	if fs {
-		watermark = &timestamppb.Timestamp{}
-		s.filter = cuckoo.NewFilter(initFilterSize)
-	}
+	s.filter = cuckoo.NewFilter(wm.getFilterSize())
 
 	g.Go(func() error {
-		return s.subscriber()
+		return s.subscriber(wm)
 	})
 
 	g.Go(func() error {
-		return s.producer(watermark)
+		return s.producer(wm)
 	})
 
 	err := g.Wait()
@@ -143,7 +141,7 @@ func (s *Sync) Run(fs bool) {
 	s.log.Info().Str(status, finished).Str("duration", runEndTime.Sub(runStartTime).String()).Msg(syncRun)
 }
 
-func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
+func (s *Sync) producer(wm *watermark) error {
 	defer func() {
 		s.log.Debug().Msg("producer closed export channel")
 		close(s.exportChan)
@@ -152,19 +150,21 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 	ctx, cancel := context.WithCancel(s.ctx)
 	defer cancel()
 
+	fs := fullSync(wm)
+
 	dsc, err := s.getRemoteDirectoryClient(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("%s - failed to get directory connection", syncProducer)
 		return err
 	}
-	defer dsc.conn.(*grpc.ClientConn).Close()
+	defer dsc.conn.Close()
 
 	counts := Counter{}
 	s.log.Info().Str(status, started).Msg(syncProducer)
 
 	stream, err := dsc.Exporter.Export(ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
-		StartFrom: watermark,
+		StartFrom: wm.Timestamp,
 	})
 	if err != nil {
 		return err
@@ -184,12 +184,12 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 		switch m := msg.Msg.(type) {
 		case *dse3.ExportResponse_Object:
 			atomic.AddInt32(&counts.Objects, 1)
-			if fullSync(watermark) {
+			if fs {
 				s.filter.Insert(getObjectKey(m.Object))
 			}
 		case *dse3.ExportResponse_Relation:
 			atomic.AddInt32(&counts.Relations, 1)
-			if fullSync(watermark) {
+			if fs {
 				s.filter.Insert(getRelationKey(m.Relation))
 			}
 		default:
@@ -206,21 +206,22 @@ func (s *Sync) producer(watermark *timestamppb.Timestamp) error {
 	return nil
 }
 
-func (s *Sync) subscriber() error {
+func (s *Sync) subscriber(wm *watermark) error {
 	ctx, cancel := context.WithCancel(s.ctx)
 	defer cancel()
+
+	fs := fullSync(wm)
+	ts := &timestamppb.Timestamp{Seconds: wm.Timestamp.Seconds, Nanos: wm.Timestamp.Nanos}
 
 	dsc, err := s.getLocalDirectoryClient(ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to get directory connection")
 		return err
 	}
-	defer dsc.conn.(*grpc.ClientConn).Close()
+	defer dsc.conn.Close()
 
 	counts := Counter{}
 	s.log.Info().Str(status, started).Msg(syncSubscriber)
-
-	watermark := s.getWatermark()
 
 	writer, err := dsc.Importer.Import(ctx)
 	if err != nil {
@@ -243,7 +244,7 @@ func (s *Sync) subscriber() error {
 				OpCode: dsi3.Opcode_OPCODE_SET,
 				Msg:    &dsi3.ImportRequest_Object{Object: m.Object},
 			}); err == nil {
-				watermark = maxTS(watermark, m.Object.GetUpdatedAt())
+				ts = maxTS(ts, m.Object.GetUpdatedAt())
 				atomic.AddInt32(&counts.Objects, 1)
 				atomic.AddInt32(&counts.Upserts, 1)
 			} else {
@@ -257,7 +258,7 @@ func (s *Sync) subscriber() error {
 				OpCode: dsi3.Opcode_OPCODE_SET,
 				Msg:    &dsi3.ImportRequest_Relation{Relation: m.Relation},
 			}); err == nil {
-				watermark = maxTS(watermark, m.Relation.GetUpdatedAt())
+				ts = maxTS(ts, m.Relation.GetUpdatedAt())
 				atomic.AddInt32(&counts.Relations, 1)
 				atomic.AddInt32(&counts.Upserts, 1)
 			} else {
@@ -275,7 +276,15 @@ func (s *Sync) subscriber() error {
 		return err
 	}
 
-	if err := s.setWatermark(watermark); err != nil {
+	wm.Timestamp = ts
+
+	if fs {
+		wm.ObjectCount = uint(counts.Objects)
+		wm.RelationCount = uint(counts.Relations)
+		wm.TotalCount = uint(counts.Objects + counts.Relations)
+	}
+
+	if err := s.setWatermark(wm); err != nil {
 		s.log.Error().Err(err).Msg("failed to save watermark")
 	}
 
@@ -327,12 +336,12 @@ func (s *Sync) getLocalDirectoryClient(ctx context.Context) (*directoryClient, e
 	}
 
 	return &directoryClient{
-		conn:     conn.Conn,
-		Model:    dsm3.NewModelClient(conn.Conn),
-		Reader:   dsr3.NewReaderClient(conn.Conn),
-		Writer:   dsw3.NewWriterClient(conn.Conn),
-		Importer: dsi3.NewImporterClient(conn.Conn),
-		Exporter: dse3.NewExporterClient(conn.Conn),
+		conn:     conn,
+		Model:    dsm3.NewModelClient(conn),
+		Reader:   dsr3.NewReaderClient(conn),
+		Writer:   dsw3.NewWriterClient(conn),
+		Importer: dsi3.NewImporterClient(conn),
+		Exporter: dse3.NewExporterClient(conn),
 	}, nil
 }
 
@@ -365,13 +374,62 @@ func (s *Sync) getRemoteDirectoryClient(ctx context.Context) (*directoryClient, 
 	}
 
 	return &directoryClient{
-		conn:     conn.Conn,
-		Model:    dsm3.NewModelClient(conn.Conn),
-		Reader:   dsr3.NewReaderClient(conn.Conn),
-		Writer:   dsw3.NewWriterClient(conn.Conn),
-		Importer: dsi3.NewImporterClient(conn.Conn),
-		Exporter: dse3.NewExporterClient(conn.Conn),
+		conn:     conn,
+		Model:    dsm3.NewModelClient(conn),
+		Reader:   dsr3.NewReaderClient(conn),
+		Writer:   dsw3.NewWriterClient(conn),
+		Importer: dsi3.NewImporterClient(conn),
+		Exporter: dse3.NewExporterClient(conn),
 	}, nil
+}
+
+type watermark struct {
+	LastUpdated   string                 `json:"last_updated"`
+	Timestamp     *timestamppb.Timestamp `json:"ts"`
+	TotalCount    uint                   `json:"count,omitempty"`
+	ObjectCount   uint                   `json:"obj_count,omitempty"`
+	RelationCount uint                   `json:"rel_count,omitempty"`
+}
+
+func newWatermark() *watermark {
+	return &watermark{
+		LastUpdated:   "",
+		Timestamp:     &timestamppb.Timestamp{Seconds: 0, Nanos: 0},
+		TotalCount:    0,
+		ObjectCount:   0,
+		RelationCount: 0,
+	}
+}
+
+// getFilterSize determine the number of entries for the cuckoo filter.
+// a filter size of 1 mln entries results in a ~= 2Mib memory allocation
+// the default and minimum filterSize configure is 100K entries.
+func (wm *watermark) getFilterSize() uint {
+	const (
+		initFilterSize uint = 100000
+		growthFactor   uint = 2
+		rounding       uint = 1000
+	)
+
+	// when TotalCount is zero, implying uninitialized or unknown we use default filter size (default 100K).
+	if wm.TotalCount == 0 {
+		return initFilterSize
+	}
+
+	// determine filter minimum capacity, allowing for growths, based on growthFactor constant (default 2x).
+	growthSize := wm.TotalCount * growthFactor
+
+	// if growth size is smaller than initial filter size, use the initial size.
+	if growthSize < initFilterSize {
+		return initFilterSize
+	}
+
+	// round up to the nearest upper boundary (default 1000).
+	remainder := growthSize % rounding
+
+	filterSize := growthSize + (rounding - remainder)
+
+	return filterSize
 }
 
 func maxTS(lhs, rhs *timestamppb.Timestamp) *timestamppb.Timestamp {
@@ -383,28 +441,46 @@ func maxTS(lhs, rhs *timestamppb.Timestamp) *timestamppb.Timestamp {
 	return rhs
 }
 
-func (s *Sync) getWatermark() *timestamppb.Timestamp {
-	fi, err := os.Stat(s.syncFilename())
+func (s *Sync) getWatermark(fs bool) *watermark {
+	r, err := os.Open(s.syncFilename())
 	if err != nil {
-		return &timestamppb.Timestamp{Seconds: 0, Nanos: 0}
+		return newWatermark()
+	}
+	defer r.Close()
+
+	var wm watermark
+	dec := json.NewDecoder(r)
+	if err := dec.Decode(&wm); err != nil {
+		return newWatermark()
 	}
 
-	return timestamppb.New(fi.ModTime())
+	// re-calc watermark timestamp value on each full sync.
+	if fs {
+		wm.Timestamp.Seconds = 0
+		wm.Timestamp.Nanos = 0
+	}
+
+	return &wm
 }
 
-func (s *Sync) setWatermark(ts *timestamppb.Timestamp) error {
+func (s *Sync) setWatermark(wm *watermark) error {
+	if wm == nil {
+		panic("watermark nil")
+	}
+
+	wm.Timestamp.Nanos += 1000 // add 1 micro second
+	wm.LastUpdated = wm.Timestamp.AsTime().Format(time.RFC3339Nano)
+
 	w, err := os.Create(s.syncFilename())
 	if err != nil {
 		return err
 	}
-	_, _ = w.WriteString(ts.AsTime().Format(time.RFC3339Nano) + "\n")
-	w.Close()
+	defer w.Close()
 
-	wmTime := ts.AsTime().Add(time.Millisecond)
-
-	if err := os.Chtimes(s.syncFilename(), wmTime, wmTime); err != nil {
+	if err := json.NewEncoder(w).Encode(wm); err != nil {
 		return err
 	}
+	_ = w.Sync() // flush sync watermark.
 
 	return nil
 }
@@ -422,17 +498,26 @@ func (s *Sync) syncManifest() error {
 	if err != nil {
 		return err
 	}
-	defer ldsc.conn.(*grpc.ClientConn).Close()
+	defer ldsc.conn.Close()
 
 	rdsc, err := s.getRemoteDirectoryClient(ctx)
 	if err != nil {
 		return err
 	}
-	defer rdsc.conn.(*grpc.ClientConn).Close()
+	defer rdsc.conn.Close()
 
-	_, rr, err := s.getManifest(rdsc.Model)
+	localMD, _, err := s.getManifest(ldsc.Model)
 	if err != nil {
 		return err
+	}
+
+	remoteMD, rr, err := s.getManifest(rdsc.Model)
+	if err != nil {
+		return err
+	}
+
+	if localMD.Etag == remoteMD.Etag {
+		return nil
 	}
 
 	if err := s.setManifest(ldsc.Model, rr); err != nil {
@@ -523,8 +608,8 @@ func getRelationKey(rel *dsc3.Relation) []byte {
 		ds.Iff(rel.SubjectRelation == "", "", fmt.Sprintf("#%s", rel.SubjectRelation))))
 }
 
-func fullSync(watermark *timestamppb.Timestamp) bool {
-	return (watermark.Seconds == 0 && watermark.Nanos == 0)
+func fullSync(wm *watermark) bool {
+	return (wm.Timestamp.Seconds == 0 && wm.Timestamp.Nanos == 0)
 }
 
 func (s *Sync) diff() error {
@@ -540,7 +625,7 @@ func (s *Sync) diff() error {
 		s.log.Error().Err(err).Msgf("diff - failed to create directory client")
 		return err
 	}
-	defer dsc.conn.(*grpc.ClientConn).Close()
+	defer dsc.conn.Close()
 
 	writer, err := dsc.Importer.Import(ctx)
 	if err != nil {

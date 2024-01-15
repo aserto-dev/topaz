@@ -1,13 +1,14 @@
 package cmd
 
 type templateParams struct {
-	Version          int
-	LocalPolicyImage string
-	PolicyName       string
-	Resource         string
-	Authorization    string
-	EdgeDirectory    bool
-	SeedMetadata     bool
+	Version           int
+	LocalPolicyImage  string
+	PolicyName        string
+	Resource          string
+	Authorization     string
+	EdgeDirectory     bool
+	SeedMetadata      bool
+	EnableDirectoryV2 bool
 }
 
 const localImageTemplate = templatePreamble + `
@@ -56,7 +57,8 @@ logging:
 
 directory:
   db_path: ${TOPAZ_DIR}/db/directory.db
-  seed_metadata: {{ .SeedMetadata }}
+  request_timeout: 5s # set as default, 5 secs.
+  seed_metadata: false # deprecated in v3, with the introduction of manifest files, this always defaults to false.
 
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:

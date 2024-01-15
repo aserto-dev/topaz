@@ -3,8 +3,8 @@ name: templates
 on:
   workflow_dispatch:
   push:
-    paths:
-    - 'assets/**'
+    tags:
+      - v*
 
 jobs:
   trigger:
@@ -27,4 +27,4 @@ jobs:
           -H "Content-Type: application/json" \
           https://api.github.com/repos/aserto-dev/topaz-website/actions/workflows/update_templates.yaml/dispatches \
           --data '{"ref": "main", "inputs": {"version": "${{ github.ref_name }}" }}'
-      
+

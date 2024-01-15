@@ -14,9 +14,9 @@ import (
 )
 
 type Config struct {
-	Host      string `flag:"host" short:"H" help:"" env:"TOPAZ_DIRECTORY_SVC" default:"localhost:9292"`
-	APIKey    string `flag:"api-key" short:"k" help:"" env:"TOPAZ_DIRECTORY_KEY"`
-	Insecure  bool   `flag:"insecure" short:"i" help:""`
+	Host      string `flag:"host" short:"H" help:"directory service address" env:"TOPAZ_DIRECTORY_SVC" default:"localhost:9292"`
+	APIKey    string `flag:"api-key" short:"k" help:"directory API key" env:"TOPAZ_DIRECTORY_KEY"`
+	Insecure  bool   `flag:"insecure" short:"i" help:"skip TLS verification"`
 	SessionID string `flag:"session-id"  help:""`
 	TenantID  string `flag:"tenant-id" help:""`
 }
@@ -53,7 +53,7 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dsc.Client, error) {
 		return nil, err
 	}
 
-	return dsc.New(conn.Conn, c.UI)
+	return dsc.New(conn, c.UI)
 }
 
 func validate(cfg *Config) error {

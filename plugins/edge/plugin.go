@@ -118,26 +118,30 @@ func (p *Plugin) scheduler() {
 		case <-p.ctx.Done():
 			p.logger.Warn().Time("done", time.Now()).Msg(syncScheduler)
 			return
+
 		case t := <-interval.C:
 			p.logger.Info().Time("dispatch", t).Msg(syncScheduler)
 			interval.Stop()
 
-			p.task(cycle%cycles == 0)
+			p.task(false) // watermark sync
+
 			if cycle%cycles == 0 {
+				p.task(cycle%cycles == 0)
 				cycle = 0
 			}
 			cycle++
 
-			wait := time.Duration(waitInSec) * time.Second
-			interval.Reset(wait)
-			p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
-
 		case <-p.syncNow:
-			p.logger.Info().Msg("run-now")
+			p.logger.Warn().Time("dispatch", time.Now()).Msg(syncOnDemand)
 			interval.Stop()
 
-			p.task(true)
+			p.task(false) // watermark sync
+			p.task(true)  // full-diff sync
 		}
+
+		wait := time.Duration(waitInSec) * time.Second
+		interval.Reset(wait)
+		p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
 	}
 }
 
@@ -162,6 +166,7 @@ func (p *Plugin) task(fullSync bool) {
 
 	sync := NewSyncMgr(ctx, p.config, p.topazConfig, p.logger)
 	sync.Run(fullSync)
+	sync = nil
 
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }

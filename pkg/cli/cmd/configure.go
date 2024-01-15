@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"errors"
-	"html/template"
+	tmplate "html/template"
 	"io"
 	"os"
 	"path"
@@ -13,12 +13,13 @@ import (
 )
 
 type ConfigureCmd struct {
-	PolicyName       string `short:"n" help:"policy name"`
-	LocalPolicyImage string `short:"l" help:"local policy image name"`
-	Resource         string `short:"r" help:"resource url"`
-	Stdout           bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
-	EdgeDirectory    bool   `short:"d" help:"enable edge directory" default:"false"`
-	Force            bool   `flag:"" default:"false" short:"f" required:"false" help:"forcefully create configuration"`
+	PolicyName        string `short:"n" help:"policy name"`
+	LocalPolicyImage  string `short:"l" help:"local policy image name"`
+	Resource          string `short:"r" help:"resource url"`
+	Stdout            bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
+	EdgeDirectory     bool   `short:"d" help:"enable edge directory" default:"false"`
+	Force             bool   `flag:"" default:"false" short:"f" required:"false" help:"forcefully create configuration"`
+	EnableDirectoryV2 bool   `flag:"" name:"enable-v2" hidden:"" default:"true" help:"enable directory version 2 services for backwards compatibility"`
 }
 
 func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
@@ -37,6 +38,12 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if _, err := CreateCertsDir(); err != nil {
+		return err
+	}
+
+	certGenerator := GenerateCertsCmd{CertsDir: cc.GetTopazCertsDir()}
+	err = certGenerator.Run(c)
+	if err != nil {
 		return err
 	}
 
@@ -63,12 +70,13 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 	params := templateParams{
-		Version:          config.ConfigFileVersion,
-		LocalPolicyImage: cmd.LocalPolicyImage,
-		PolicyName:       cmd.PolicyName,
-		Resource:         cmd.Resource,
-		EdgeDirectory:    cmd.EdgeDirectory,
-		SeedMetadata:     false,
+		Version:           config.ConfigFileVersion,
+		LocalPolicyImage:  cmd.LocalPolicyImage,
+		PolicyName:        cmd.PolicyName,
+		Resource:          cmd.Resource,
+		EdgeDirectory:     cmd.EdgeDirectory,
+		SeedMetadata:      false,
+		EnableDirectoryV2: cmd.EnableDirectoryV2,
 	}
 
 	if !cmd.Stdout {
@@ -126,7 +134,7 @@ func CreateDataDir() (string, error) {
 }
 
 func WriteConfig(w io.Writer, templ string, params *templateParams) error {
-	t, err := template.New("config").Parse(templ)
+	t, err := tmplate.New("config").Parse(templ)
 	if err != nil {
 		return err
 	}

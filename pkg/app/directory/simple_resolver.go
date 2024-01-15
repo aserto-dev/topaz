@@ -5,6 +5,7 @@ import (
 
 	"github.com/aserto-dev/go-aserto/client"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"google.golang.org/grpc"
 
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
@@ -13,7 +14,7 @@ import (
 type Resolver struct {
 	logger  *zerolog.Logger
 	cfg     *client.Config
-	dirConn *client.Connection
+	dirConn *grpc.ClientConn
 }
 
 var _ resolvers.DirectoryResolver = &Resolver{}
@@ -26,7 +27,7 @@ func NewResolver(logger *zerolog.Logger, cfg *client.Config) resolvers.Directory
 	}
 }
 
-func connect(logger *zerolog.Logger, cfg *client.Config) (*client.Connection, error) {
+func connect(logger *zerolog.Logger, cfg *client.Config) (*grpc.ClientConn, error) {
 	logger.Debug().Str("tenant-id", cfg.TenantID).Str("addr", cfg.Address).Str("apiKey", cfg.APIKey).Bool("insecure", cfg.Insecure).Msg("GetDS")
 
 	ctx := context.Background()
@@ -52,5 +53,5 @@ func (r *Resolver) GetDS(ctx context.Context) (dsr3.ReaderClient, error) {
 		}
 		r.dirConn = dirConn
 	}
-	return dsr3.NewReaderClient(r.dirConn.Conn), nil
+	return dsr3.NewReaderClient(r.dirConn), nil
 }
