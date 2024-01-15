@@ -116,9 +116,7 @@ func (s *Sync) Run(fs bool) {
 
 	wm := s.getWatermark(fs)
 
-	if fs {
-		s.filter = cuckoo.NewFilter(wm.getFilterSize())
-	}
+	s.filter = cuckoo.NewFilter(wm.getFilterSize())
 
 	g.Go(func() error {
 		return s.subscriber(wm)
