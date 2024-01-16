@@ -1,4 +1,4 @@
-package configuration
+package config
 
 type templateParams struct {
 	Version           int

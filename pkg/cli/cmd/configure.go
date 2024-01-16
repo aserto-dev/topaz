@@ -7,7 +7,6 @@ import (
 	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/pkg/cc/configuration"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/fatih/color"
 )
@@ -32,7 +31,7 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		color.Green(">>> configure policy")
 	}
 
-	configGenerator := configuration.NewGenerator(cmd.PolicyName).
+	configGenerator := config.NewGenerator(cmd.PolicyName).
 		WithVersion(config.ConfigFileVersion).
 		WithLocalPolicyImage(cmd.LocalPolicyImage).
 		WithPolicyName(cmd.PolicyName).
@@ -81,11 +80,11 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 	if !cmd.Stdout {
 		if cmd.LocalPolicyImage != "" {
 			color.Green("using local policy image: %s", cmd.LocalPolicyImage)
-			return configGenerator.GenerateConfig(w, configuration.LocalImageTemplate)
+			return configGenerator.GenerateConfig(w, config.LocalImageTemplate)
 		}
 
 		color.Green("policy name: %s", cmd.PolicyName)
 	}
 
-	return configGenerator.GenerateConfig(w, configuration.Template)
+	return configGenerator.GenerateConfig(w, config.Template)
 }

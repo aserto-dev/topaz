@@ -1,4 +1,4 @@
-package configuration
+package config
 
 import (
 	"html/template"

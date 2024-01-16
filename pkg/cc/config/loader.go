@@ -1,34 +1,51 @@
-package configuration
+package config
 
 import (
 	"bytes"
 	"fmt"
 	"net"
 	"os"
+	"regexp"
+	"strings"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	builder "github.com/aserto-dev/service-host"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 )
 
 type Loader struct {
-	Configuration *config.Config
+	Configuration *Config
 }
+
+var envRegex = regexp.MustCompile(`(?U:\${.*})`)
 
 func LoadConfiguration(fileName string) (*Loader, error) {
 	v := viper.New()
 	v.SetConfigType("yaml")
 	v.AddConfigPath(".")
 	v.SetConfigFile(fileName)
+	v.SetEnvPrefix("TOPAZ")
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	// Set defaults
+	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
+
+	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
+
+	v.SetDefault("remote_directory.address", "0.0.0.0:9292")
+	v.SetDefault("remote_directory.insecure", "true")
+
+	v.AutomaticEnv()
+
 	fileContents, err := os.ReadFile(fileName)
 	if err != nil {
 		return nil, err
 	}
-	cfg := new(config.Config)
+	cfg := new(Config)
+	subBuf := subEnvVars(string(fileContents))
+	r := bytes.NewReader([]byte(subBuf))
 
-	r := bytes.NewReader(fileContents)
 	if err := v.ReadConfig(r); err != nil {
 		return nil, err
 	}
@@ -38,6 +55,7 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return &Loader{
 		Configuration: cfg,
 	}, nil
@@ -187,7 +205,7 @@ func getUniqueServiceCertPaths(services map[string]*builder.API) []string {
 	return pathList
 }
 
-func getDecisionLogPaths(decisionLogConfig config.DecisionLogConfig) ([]string, error) {
+func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) {
 	switch decisionLogConfig.Type {
 	case "file":
 		logpath := fmt.Sprintf("%s", decisionLogConfig.Config["log_file_path"])
@@ -210,4 +228,24 @@ func getDecisionLogPaths(decisionLogConfig config.DecisionLogConfig) ([]string, 
 		return nil, nil // nop decision logger
 
 	}
+}
+
+// subEnvVars will look for any environment variables in the passed in string
+// with the syntax of ${VAR_NAME} and replace that string with ENV[VAR_NAME].
+func subEnvVars(s string) string {
+	updatedConfig := envRegex.ReplaceAllStringFunc(s, func(s string) string {
+		// Trim off the '${' and '}'
+		if len(s) <= 3 {
+			// This should never happen..
+			return ""
+		}
+		varName := s[2 : len(s)-1]
+
+		// Lookup the variable in the environment. We play by
+		// bash rules.. if its undefined we'll treat it as an
+		// empty string instead of raising an error.
+		return os.Getenv(varName)
+	})
+
+	return updatedConfig
 }

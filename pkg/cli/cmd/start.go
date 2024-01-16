@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/aserto-dev/topaz/pkg/cc/configuration"
+	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/pkg/errors"
@@ -55,7 +55,7 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(rootPath, "cfg", "config.yaml"))
 	}
 
-	generator := configuration.NewGenerator("config.yaml")
+	generator := config.NewGenerator("config.yaml")
 	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}
@@ -139,7 +139,7 @@ func (cmd *StartCmd) env(rootPath string) map[string]string {
 
 func getPorts(rootPath string) ([]string, error) {
 	portMap := make(map[string]string)
-	configLoader, err := configuration.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
+	configLoader, err := config.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +163,7 @@ func getPorts(rootPath string) ([]string, error) {
 
 func getVolumes(rootPath string) ([]string, error) {
 	volumeMap := make(map[string]string)
-	configLoader, err := configuration.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
+	configLoader, err := config.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
 	if err != nil {
 		return nil, err
 	}

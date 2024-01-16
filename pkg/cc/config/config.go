@@ -1,18 +1,10 @@
 package config
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
-	"regexp"
-	"strings"
-
-	"github.com/mitchellh/mapstructure"
-	"github.com/pkg/errors"
-	"github.com/rs/zerolog"
-	"github.com/spf13/viper"
 
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/go-aserto/client"
@@ -20,6 +12,8 @@ import (
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
 	builder "github.com/aserto-dev/service-host"
+	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
 )
 
 // CommandMode -- enum type.
@@ -91,7 +85,6 @@ type Overrider func(*Config)
 func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsGenerator *certs.Generator) (*Config, error) { // nolint:funlen // default list of values can be long
 	newLogger := log.With().Str("component", "config").Logger()
 	log = &newLogger
-	v := viper.New()
 
 	file := "config.yaml"
 	if configPath != "" {
@@ -107,97 +100,66 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		file = string(configPath)
 	}
 
-	v.SetConfigType("yaml")
-	v.AddConfigPath(".")
-	v.SetConfigFile(file)
-	v.SetEnvPrefix("TOPAZ")
-	v.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
-
-	// Set defaults
-	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
-
-	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
-
-	v.SetDefault("remote_directory.address", "0.0.0.0:9292")
-	v.SetDefault("remote_directory.insecure", "true")
-
-	defaults(v)
-
 	configExists, err := FileExists(file)
 	if err != nil {
 		return nil, errors.Wrapf(err, "filesystem error")
 	}
 
+	configLoader := new(Loader)
+
 	if configExists {
-		buf, err := os.ReadFile(v.ConfigFileUsed())
+		configLoader, err = LoadConfiguration(file)
 		if err != nil {
-			return nil, errors.Wrapf(err, "failed to read config file '%s'", file)
-		}
-		subBuf := subEnvVars(string(buf))
-		r := bytes.NewReader([]byte(subBuf))
-
-		if err := v.ReadConfig(r); err != nil {
-			return nil, errors.Wrapf(err, "failed to parse config file '%s'", file)
+			return nil, err
 		}
 
-		err = validateVersion(v.GetInt("version"))
+		err = validateVersion(configLoader.Configuration.Version)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	v.AutomaticEnv()
-
-	cfg := new(Config)
-
-	err = v.UnmarshalExact(cfg, func(dc *mapstructure.DecoderConfig) {
-		dc.TagName = "json"
-	})
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to unmarshal config file")
-	}
-
 	if overrides != nil {
-		overrides(cfg)
+		overrides(configLoader.Configuration)
 	}
 
 	// This is where validation of config happens.
 	err = func() error {
 		var err error
 
-		if cfg.Logging.LogLevel == "" {
-			cfg.Logging.LogLevelParsed = zerolog.InfoLevel
+		if configLoader.Configuration.Logging.LogLevel == "" {
+			configLoader.Configuration.Logging.LogLevelParsed = zerolog.InfoLevel
 		} else {
-			cfg.Logging.LogLevelParsed, err = zerolog.ParseLevel(cfg.Logging.LogLevel)
+			configLoader.Configuration.Logging.LogLevelParsed, err = zerolog.ParseLevel(configLoader.Configuration.Logging.LogLevel)
 			if err != nil {
 				return errors.Wrapf(err, "logging.log_level failed to parse")
 			}
 		}
 
-		if cfg.JWT.AcceptableTimeSkewSeconds < 0 {
+		if configLoader.Configuration.JWT.AcceptableTimeSkewSeconds < 0 {
 			return errors.New("jwt.acceptable_time_skew_seconds must be positive or 0")
 		}
 
-		return cfg.validation()
+		return configLoader.Configuration.validation()
 	}()
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to validate config file")
 	}
 
-	err = setDefaultCerts(cfg)
+	err = setDefaultCerts(configLoader.Configuration)
 	if err != nil {
 		return nil, err
 	}
 
 	if certsGenerator != nil {
-		err = cfg.setupCerts(log, certsGenerator)
+		err = configLoader.Configuration.setupCerts(log, certsGenerator)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to setup certs")
 		}
 	}
 
-	return cfg, nil
+	return configLoader.Configuration, nil
 }
 
 // NewLoggerConfig creates a new LoggerConfig.
@@ -282,28 +244,6 @@ func FileExists(path string) (bool, error) {
 	} else {
 		return false, errors.Wrapf(err, "failed to stat file '%s'", path)
 	}
-}
-
-var envRegex = regexp.MustCompile(`(?U:\${.*})`)
-
-// subEnvVars will look for any environment variables in the passed in string
-// with the syntax of ${VAR_NAME} and replace that string with ENV[VAR_NAME].
-func subEnvVars(s string) string {
-	updatedConfig := envRegex.ReplaceAllStringFunc(s, func(s string) string {
-		// Trim off the '${' and '}'
-		if len(s) <= 3 {
-			// This should never happen..
-			return ""
-		}
-		varName := s[2 : len(s)-1]
-
-		// Lookup the variable in the environment. We play by
-		// bash rules.. if its undefined we'll treat it as an
-		// empty string instead of raising an error.
-		return os.Getenv(varName)
-	})
-
-	return updatedConfig
 }
 
 func setDefaultCerts(cfg *Config) error {
