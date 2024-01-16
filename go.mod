@@ -22,7 +22,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.5
 	github.com/aserto-dev/go-directory v0.30.10
 	github.com/aserto-dev/go-directory-cli v0.30.1
-	github.com/aserto-dev/go-edge-ds v0.30.12-0.20240115221509-b006e8e4bc1d
+	github.com/aserto-dev/go-edge-ds v0.30.12-0.20240115225158-83019686fbb2
 	github.com/aserto-dev/go-grpc v0.8.60
 	github.com/aserto-dev/go-topaz-ui v0.0.5
 	github.com/aserto-dev/header v0.0.6
@@ -68,7 +68,7 @@ require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
-	github.com/aserto-dev/azm v0.0.18-0.20240115220008-a188ebaf19f0 // indirect
+	github.com/aserto-dev/azm v0.0.18-0.20240115224901-ba17d4698b57 // indirect
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect

@@ -119,14 +119,15 @@ var builtinHelptests = []struct {
 		query: "x = ds.relations({})",
 		expected: map[string]interface{}{
 			"ds.relations": map[string]interface{}{
-				"object_id":        "",
-				"object_type":      "",
-				"page":             nil,
-				"relation":         "",
-				"subject_id":       "",
-				"subject_relation": "",
-				"subject_type":     "",
-				"with_objects":     false,
+				"object_id":                   "",
+				"object_type":                 "",
+				"page":                        nil,
+				"relation":                    "",
+				"subject_id":                  "",
+				"subject_relation":            "",
+				"subject_type":                "",
+				"with_objects":                false,
+				"with_empty_subject_relation": false,
 			}},
 	},
 }
@@ -185,7 +186,7 @@ var builtinNotFoundErrTests = []struct {
 	{
 		name: "ds.relation",
 		query: `x = ds.relation({
-			"object_type": "none_existing_object_type", 
+			"object_type": "none_existing_object_type",
 			"object_id": "none_existing_object_id",
 			"relation": "none_existing_relation",
 			"subject_type": "none_existing_subject_type",
@@ -195,7 +196,7 @@ var builtinNotFoundErrTests = []struct {
 	{
 		name: "ds.relation.with.subject_relation",
 		query: `x = ds.relation({
-			"object_type": "none_existing_object_type", 
+			"object_type": "none_existing_object_type",
 			"object_id": "none_existing_object_id",
 			"relation": "none_existing_relation",
 			"subject_type": "none_existing_subject_type",
