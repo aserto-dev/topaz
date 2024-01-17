@@ -125,7 +125,6 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	c.UI.Normal().Msgf("certs directory: %s", certsDir)
-
 	err := certs.GenerateCerts(c, cmd.Force, cmd.DNSNames, pathGateway, pathGRPC)
 	if err != nil {
 		return err
