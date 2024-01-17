@@ -125,13 +125,10 @@ func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	c.UI.Normal().Msgf("certs directory: %s", certsDir)
-	progress := c.UI.Progress("generating dev-certs")
-	progress.Start()
 	err := certs.GenerateCerts(c, cmd.Force, cmd.DNSNames, pathGateway, pathGRPC)
 	if err != nil {
 		return err
 	}
-	progress.Stop()
 
 	if cmd.Trust {
 		certTrust := &TrustCertsCmd{CertsDir: certsDir}
