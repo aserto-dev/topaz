@@ -1,0 +1,64 @@
+{
+    "assertions": [
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "openfga/openfga",
+                "relation": "can_read",
+                "subject_type": "user",
+                "subject_id": "anne"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "openfga/openfga",
+                "relation": "can_triage",
+                "subject_type": "user",
+                "subject_id": "anne"
+            },
+            "expected": false
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "openfga/openfga",
+                "relation": "can_administer",
+                "subject_type": "user",
+                "subject_id": "diane"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "openfga/openfga",
+                "relation": "can_read",
+                "subject_type": "user",
+                "subject_id": "erik"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "openfga/openfga",
+                "relation": "can_write",
+                "subject_type": "user",
+                "subject_id": "charles"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "openfga/openfga",
+                "relation": "can_administer",
+                "subject_type": "user",
+                "subject_id": "beth"
+            },
+            "expected": false
+        }
+    ]
+}
