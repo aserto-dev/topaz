@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+#
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  asset:
+    relations:
+      category: asset-category
+      assignee: role#assignee
+    permissions:
+      can_comment: assignee | can_edit | category->is_commenter
+      can_edit: assignee | category->is_editor
+      can_view: assignee | can_comment | category->is_viewer
+  asset-category:
+    relations:
+      assignee: role#assignee
+      org: org
+    permissions:
+      is_asset_creator: assignee | org->is_asset_creator
+      is_commenter: assignee | is_editor | org->is_asset_commenter
+      is_editor: assignee | org->is_asset_editor
+      is_viewer: assignee | is_commenter | org->is_asset_viewer
+  org:
+    relations:
+      owner: user
+      member: user
+      assignee: role#assignee
+    permissions:
+      is_asset_category_creator: assignee | owner
+      is_asset_commenter: assignee | is_asset_editor
+      is_asset_creator: assignee | owner
+      is_asset_editor: assignee | owner
+      is_asset_viewer: assignee | is_asset_commenter
+      is_member: member | owner
+      is_role_assigner: assignee | owner
+      is_role_creator: assignee | owner
+      is_team_assigner: assignee | owner
+      is_team_creator: assignee | owner
+  role:
+    relations:
+      assignee: user | team#member | org#member
+  team:
+    relations:
+      member: user
+  user: {}

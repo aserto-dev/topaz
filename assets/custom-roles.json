@@ -1,0 +1,18 @@
+{
+    "name": "custom-roles",
+    "description": "Custom Roles",
+    "assets": {
+        "manifest": "custom-roles/manifest.yaml",
+        "policy": {
+            "name": "cutom-roles",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [],
+        "domain_data": [
+            "custom-roles/custom_roles_relations.json"
+        ],
+        "assertions": [
+            "assets/custom-roles/test/custom_roles_assertions.json"
+        ]
+    }
+}
