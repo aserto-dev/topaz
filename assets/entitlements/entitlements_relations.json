@@ -1,0 +1,88 @@
+{
+  "relations": [
+    {
+      "object_type": "feature",
+      "object_id": "draft_prs",
+      "relation": "associated_plan",
+      "subject_type": "plan",
+      "subject_id": "enterprise"
+    },
+    {
+      "object_type": "feature",
+      "object_id": "draft_prs",
+      "relation": "associated_plan",
+      "subject_type": "plan",
+      "subject_id": "team"
+    },
+    {
+      "object_type": "feature",
+      "object_id": "issues",
+      "relation": "associated_plan",
+      "subject_type": "plan",
+      "subject_id": "enterprise"
+    },
+    {
+      "object_type": "feature",
+      "object_id": "issues",
+      "relation": "associated_plan",
+      "subject_type": "plan",
+      "subject_id": "free"
+    },
+    {
+      "object_type": "feature",
+      "object_id": "issues",
+      "relation": "associated_plan",
+      "subject_type": "plan",
+      "subject_id": "team"
+    },
+    {
+      "object_type": "feature",
+      "object_id": "sso",
+      "relation": "associated_plan",
+      "subject_type": "plan",
+      "subject_id": "enterprise"
+    },
+    {
+      "object_type": "organization",
+      "object_id": "alpha",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "anne"
+    },
+    {
+      "object_type": "organization",
+      "object_id": "brayer",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "beth"
+    },
+    {
+      "object_type": "organization",
+      "object_id": "cups",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "charles"
+    },
+    {
+      "object_type": "plan",
+      "object_id": "enterprise",
+      "relation": "subscriber",
+      "subject_type": "organization",
+      "subject_id": "cups"
+    },
+    {
+      "object_type": "plan",
+      "object_id": "free",
+      "relation": "subscriber",
+      "subject_type": "organization",
+      "subject_id": "alpha"
+    },
+    {
+      "object_type": "plan",
+      "object_id": "team",
+      "relation": "subscriber",
+      "subject_type": "organization",
+      "subject_id": "brayer"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+---
+
+model:
+  version: 3
+
+types:
+  user: {}
+
+  organization:
+    relations:
+      member: user
+
+  plan:
+    relations:
+      subscriber: organization
+    permissions:
+      can_subscribe: subscriber->member
+
+  feature:
+    relations:
+      associated_plan: plan
+    permissions:
+      can_access: associated_plan->can_subscribe

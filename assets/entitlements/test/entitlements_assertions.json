@@ -1,0 +1,40 @@
+{
+  "assertions": [
+    {"check":
+    {"object_type": "feature", "object_id": "issues", "relation": "can_access", "subject_type": "user", "subject_id": "anne"},
+      "expected": true
+    },
+    {"check":
+    {"object_type": "feature", "object_id": "draft_prs", "relation": "can_access", "subject_type": "user", "subject_id": "anne"},
+      "expected": false
+    },
+    {"check":
+    {"object_type": "feature", "object_id": "sso", "relation": "can_access", "subject_type": "user", "subject_id": "anne"},
+      "expected": false
+    },
+    {"check":
+    {"object_type": "feature", "object_id": "issues", "relation": "can_access", "subject_type": "user", "subject_id": "beth"},
+      "expected": true
+    },
+    {"check":
+    {"object_type": "feature", "object_id": "draft_prs", "relation": "can_access", "subject_type": "user", "subject_id": "beth"},
+      "expected": true
+    },
+    {"check":
+    {"object_type": "feature", "object_id": "sso", "relation": "can_access", "subject_type": "user", "subject_id": "beth"},
+      "expected": false
+    },
+    {"check":
+    {"object_type": "feature", "object_id": "issues", "relation": "can_access", "subject_type": "user", "subject_id": "charles"},
+      "expected": true
+    },
+    {"check":
+    {"object_type": "feature", "object_id": "draft_prs", "relation": "can_access", "subject_type": "user", "subject_id": "charles"},
+      "expected": true
+    },
+    {"check":
+    {"object_type": "feature", "object_id": "sso", "relation": "can_access", "subject_type": "user", "subject_id": "charles"},
+      "expected": true
+    }
+  ]
+}
