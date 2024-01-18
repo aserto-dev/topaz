@@ -1,0 +1,49 @@
+{
+  "objects": [
+    {
+      "type": "channel",
+      "id": "general",
+      "properties": {}
+    },
+    {
+      "type": "workspace",
+      "id": "sandcastle",
+      "properties": {}
+    },
+    {
+      "type": "user",
+      "id": "emily",
+      "properties": {}
+    },
+    {
+      "type": "user",
+      "id": "bob",
+      "properties": {}
+    },
+    {
+      "type": "user",
+      "id": "david",
+      "properties": {}
+    },
+    {
+      "type": "user",
+      "id": "amy",
+      "properties": {}
+    },
+    {
+      "type": "user",
+      "id": "catherine",
+      "properties": {}
+    },
+    {
+      "type": "channel",
+      "id": "marketing_internal",
+      "properties": {}
+    },
+    {
+      "type": "channel",
+      "id": "proj_marketing_campaign",
+      "properties": {}
+    }
+  ]
+}

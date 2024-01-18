@@ -1,0 +1,96 @@
+{
+  "relations": [
+    {
+      "object_type": "channel",
+      "object_id": "general",
+      "relation": "parent_workspace",
+      "subject_type": "workspace",
+      "subject_id": "sandcastle"
+    },
+    {
+      "object_type": "channel",
+      "object_id": "general",
+      "relation": "writer",
+      "subject_type": "user",
+      "subject_id": "emily"
+    },
+    {
+      "object_type": "channel",
+      "object_id": "marketing_internal",
+      "relation": "parent_workspace",
+      "subject_type": "workspace",
+      "subject_id": "sandcastle"
+    },
+    {
+      "object_type": "channel",
+      "object_id": "marketing_internal",
+      "relation": "writer",
+      "subject_type": "user",
+      "subject_id": "bob"
+    },
+    {
+      "object_type": "channel",
+      "object_id": "marketing_internal",
+      "relation": "writer",
+      "subject_type": "user",
+      "subject_id": "emily"
+    },
+    {
+      "object_type": "channel",
+      "object_id": "proj_marketing_campaign",
+      "relation": "parent_workspace",
+      "subject_type": "workspace",
+      "subject_id": "sandcastle"
+    },
+    {
+      "object_type": "channel",
+      "object_id": "proj_marketing_campaign",
+      "relation": "writer",
+      "subject_type": "user",
+      "subject_id": "david"
+    },
+    {
+      "object_type": "channel",
+      "object_id": "proj_marketing_campaign",
+      "relation": "writer",
+      "subject_type": "workspace",
+      "subject_id": "sandcastle#member"
+    },
+    {
+      "object_type": "workspace",
+      "object_id": "sandcastle",
+      "relation": "channels_admin",
+      "subject_type": "user",
+      "subject_id": "bob"
+    },
+    {
+      "object_type": "workspace",
+      "object_id": "sandcastle",
+      "relation": "guest",
+      "subject_type": "user",
+      "subject_id": "david"
+    },
+    {
+      "object_type": "workspace",
+      "object_id": "sandcastle",
+      "relation": "legacy_admin",
+      "subject_type": "user",
+      "subject_id": "amy",
+      "subject_relation": "member"
+    },
+    {
+      "object_type": "workspace",
+      "object_id": "sandcastle",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "catherine"
+    },
+    {
+      "object_type": "workspace",
+      "object_id": "sandcastle",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "emily"
+    }
+  ]
+  }
