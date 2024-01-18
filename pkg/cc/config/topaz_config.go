@@ -5,7 +5,6 @@ import (
 
 	"github.com/aserto-dev/aserto-management/controller"
 	"github.com/pkg/errors"
-	"github.com/spf13/viper"
 )
 
 const ConfigFileVersion = 2
@@ -57,9 +56,6 @@ func (co *CallOptions) ForPath(path string) *Options {
 	}
 
 	return &co.Default
-}
-
-func defaults(v *viper.Viper) {
 }
 
 func validateVersion(version int) error {

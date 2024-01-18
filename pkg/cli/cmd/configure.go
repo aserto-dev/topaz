@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	tmplate "html/template"
 	"io"
 	"os"
 	"path"
@@ -32,12 +31,20 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		color.Green(">>> configure policy")
 	}
 
-	configDir, err := CreateConfigDir()
+	configGenerator := config.NewGenerator(cmd.PolicyName).
+		WithVersion(config.ConfigFileVersion).
+		WithLocalPolicyImage(cmd.LocalPolicyImage).
+		WithPolicyName(cmd.PolicyName).
+		WithResource(cmd.Resource).
+		WithEdgeDirectory(cmd.EdgeDirectory).
+		WithEnableDirectoryV2(cmd.EnableDirectoryV2)
+
+	configDir, err := configGenerator.CreateConfigDir()
 	if err != nil {
 		return err
 	}
 
-	if _, err := CreateCertsDir(); err != nil {
+	if _, err := configGenerator.CreateCertsDir(); err != nil {
 		return err
 	}
 
@@ -47,7 +54,7 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if _, err := CreateDataDir(); err != nil {
+	if _, err := configGenerator.CreateDataDir(); err != nil {
 		return err
 	}
 
@@ -69,80 +76,15 @@ func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 	}
-	params := templateParams{
-		Version:           config.ConfigFileVersion,
-		LocalPolicyImage:  cmd.LocalPolicyImage,
-		PolicyName:        cmd.PolicyName,
-		Resource:          cmd.Resource,
-		EdgeDirectory:     cmd.EdgeDirectory,
-		SeedMetadata:      false,
-		EnableDirectoryV2: cmd.EnableDirectoryV2,
-	}
 
 	if !cmd.Stdout {
-		if params.LocalPolicyImage != "" {
-			color.Green("using local policy image: %s", params.LocalPolicyImage)
-			return WriteConfig(w, localImageTemplate, &params)
+		if cmd.LocalPolicyImage != "" {
+			color.Green("using local policy image: %s", cmd.LocalPolicyImage)
+			return configGenerator.GenerateConfig(w, config.LocalImageTemplate)
 		}
 
-		color.Green("policy name: %s", params.PolicyName)
+		color.Green("policy name: %s", cmd.PolicyName)
 	}
 
-	return WriteConfig(w, configTemplate, &params)
-}
-
-func CreateConfigDir() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	configDir := path.Join(home, "/.config/topaz/cfg")
-	if fi, err := os.Stat(configDir); err == nil && fi.IsDir() {
-		return configDir, nil
-	}
-
-	return configDir, os.MkdirAll(configDir, 0700)
-}
-
-func CreateCertsDir() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	certsDir := path.Join(home, "/.config/topaz/certs")
-	if fi, err := os.Stat(certsDir); err == nil && fi.IsDir() {
-		return certsDir, nil
-	}
-
-	return certsDir, os.MkdirAll(certsDir, 0700)
-}
-
-func CreateDataDir() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	dataDir := path.Join(home, "/.config/topaz/db")
-	if fi, err := os.Stat(dataDir); err == nil && fi.IsDir() {
-		return dataDir, nil
-	}
-
-	return dataDir, os.MkdirAll(dataDir, 0700)
-}
-
-func WriteConfig(w io.Writer, templ string, params *templateParams) error {
-	t, err := tmplate.New("config").Parse(templ)
-	if err != nil {
-		return err
-	}
-
-	err = t.Execute(w, params)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return configGenerator.GenerateConfig(w, config.Template)
 }

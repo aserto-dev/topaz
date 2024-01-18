@@ -2,14 +2,15 @@ package cmd
 
 import (
 	"fmt"
-	"net"
 	"os"
 	"path"
+	"path/filepath"
+	"strings"
 
+	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
 
 	"github.com/fatih/color"
 )
@@ -54,11 +55,12 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(rootPath, "cfg", "config.yaml"))
 	}
 
-	if _, err := CreateCertsDir(); err != nil {
+	generator := config.NewGenerator("config.yaml")
+	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}
 
-	if _, err := CreateDataDir(); err != nil {
+	if _, err := generator.CreateDataDir(); err != nil {
 		return err
 	}
 
@@ -74,9 +76,6 @@ var (
 		"--rm",
 		"--name", dockerx.Topaz,
 		"--platform=linux/amd64",
-		"-v", "$TOPAZ_CERTS_DIR/certs:/certs:rw",
-		"-v", "$TOPAZ_CFG_DIR/cfg:/config:ro",
-		"-v", "$TOPAZ_EDS_DIR/db:/db:rw",
 	}
 
 	daemonArgs = []string{
@@ -107,6 +106,13 @@ func (cmd *StartCmd) dockerArgs(rootPath string) ([]string, error) {
 	for _, env := range cmd.Env {
 		args = append(args, "--env", env)
 	}
+
+	volumes, err := getVolumes(rootPath)
+	if err != nil {
+		return nil, err
+	}
+	args = append(args, volumes...)
+
 	ports, err := getPorts(rootPath)
 	if err != nil {
 		return nil, err
@@ -133,55 +139,18 @@ func (cmd *StartCmd) env(rootPath string) map[string]string {
 
 func getPorts(rootPath string) ([]string, error) {
 	portMap := make(map[string]string)
-	content, err := os.ReadFile(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
+	configLoader, err := config.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
 	if err != nil {
 		return nil, err
 	}
 
-	var api map[string]interface{}
-	err = yaml.Unmarshal(content, &api)
+	portArray, err := configLoader.GetPorts()
 	if err != nil {
 		return nil, err
 	}
 
-	healthConfig := getValueByKey(api["api"], "health")
-	if healthConfig != nil {
-		port, err := getPort(healthConfig)
-		if err != nil {
-			return nil, err
-		}
-		portMap[port] = fmt.Sprintf("%s:%s", port, port)
-	}
-
-	metricsConfig := getValueByKey(api["api"], "metrics")
-	if metricsConfig != nil {
-		port, err := getPort(metricsConfig)
-		if err != nil {
-			return nil, err
-		}
-		portMap[port] = fmt.Sprintf("%s:%s", port, port)
-	}
-
-	servicesConfig, ok := getValueByKey(api["api"], "services").(map[interface{}]interface{})
-	if ok {
-		for _, value := range servicesConfig {
-			grpcConfig := getValueByKey(value, "grpc")
-			if grpcConfig != nil {
-				port, err := getPort(grpcConfig)
-				if err != nil {
-					return nil, err
-				}
-				portMap[port] = fmt.Sprintf("%s:%s", port, port)
-			}
-			gatewayConfig := getValueByKey(value, "gateway")
-			if gatewayConfig != nil {
-				port, err := getPort(gatewayConfig)
-				if err != nil {
-					return nil, err
-				}
-				portMap[port] = fmt.Sprintf("%s:%s", port, port)
-			}
-		}
+	for i := range portArray {
+		portMap[portArray[i]] = fmt.Sprintf("%s:%s", portArray[i], portArray[i])
 	}
 
 	// ensure unique assignment for each port
@@ -192,28 +161,30 @@ func getPorts(rootPath string) ([]string, error) {
 	return args, nil
 }
 
-func getPort(obj interface{}) (string, error) {
-	address := getValueByKey(obj, "listen_address")
-	if address != nil {
-		_, port, err := net.SplitHostPort(address.(string))
-		if err != nil {
-			return "", err
-		}
-		return port, nil
+func getVolumes(rootPath string) ([]string, error) {
+	volumeMap := make(map[string]string)
+	configLoader, err := config.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
+	if err != nil {
+		return nil, err
 	}
 
-	return "", fmt.Errorf("listen_address not found")
-}
+	paths, err := configLoader.GetPaths()
+	if err != nil {
+		return nil, err
+	}
 
-func getValueByKey(obj interface{}, key string) interface{} {
-	mobj, ok := obj.(map[interface{}]interface{})
-	if !ok {
-		return nil
+	for i := range paths {
+
+		mountPath := strings.Split(paths[i], string(os.PathSeparator))
+		mountPath[0] = "" // replace root path from generated config for container
+		directory := filepath.Dir(paths[i])
+		volumeMap[directory] = fmt.Sprintf("%s:%s", directory, filepath.Dir(strings.Join(mountPath, "/")))
 	}
-	for k, v := range mobj {
-		if k == key {
-			return v
-		}
+
+	// manually attach the configuration folder
+	args := []string{"-v", "$TOPAZ_CFG_DIR/cfg:/config:ro"}
+	for _, v := range volumeMap {
+		args = append(args, "-v", v)
 	}
-	return nil
+	return args, nil
 }

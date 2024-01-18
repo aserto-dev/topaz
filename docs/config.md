@@ -189,9 +189,11 @@ By default Topaz does not initiate a decision logger, however if you need to kee
 Example configuration:
 ```
 decision_logger:
-  log_file_path: /tmp/mytopaz.log
-  max_file_size_mb: 50
-  max_file_count: 2
+  type: "file"
+  config:
+    log_file_path: /tmp/mytopaz.log
+    max_file_size_mb: 50
+    max_file_count: 2
 ```
 
 To use the decision logger the OPA configuration must contain the [configuration information](https://github.com/aserto-dev/topaz/blob/main/decision_log/plugin/plugin.go#L23) for the decision log plugin.
@@ -215,7 +217,6 @@ opa:
 ```
 
 When deploying topaz as an [Aserto Edge Authorizer](https://docs.aserto.com/docs/edge-authorizers/overview) you can configure the decision logger to send the logs to the upstream Aserto policy instance. For configuration details see: https://docs.aserto.com/docs/edge-authorizers/decision-logs 
-
 
 ## 4. Controller configuration (optional)
 

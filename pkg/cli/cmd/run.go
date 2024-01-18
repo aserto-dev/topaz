@@ -60,6 +60,12 @@ func (cmd *RunCmd) dockerArgs(path string) ([]string, error) {
 		args = append(args, "--env", env)
 	}
 
+	volumes, err := getVolumes(path)
+	if err != nil {
+		return nil, err
+	}
+	args = append(args, volumes...)
+
 	ports, err := getPorts(path)
 	if err != nil {
 		return nil, err
