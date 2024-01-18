@@ -1,0 +1,20 @@
+{
+    "name": "github",
+    "description": "Github",
+    "assets": {
+        "manifest": "github/manifest.yaml",
+        "policy": {
+            "name": "gdrive",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [          
+        ],
+        "domain_data": [
+            "github/github_objects.json",
+            "github/github_relations.json"
+        ],
+        "assertions": [
+            "/templates/github/test/github_assertions.json"
+        ]
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "objects": [
+        {
+            "type": "user",
+            "id": "erik",
+            "display_name": "",
+            "properties": {}
+        },
+        {
+            "type": "user",
+            "id": "anne",
+            "display_name": "",
+            "properties": {}
+        },
+        {
+            "type": "user",
+            "id": "beth",
+            "display_name": "",
+            "properties": {}
+        },
+        {
+            "type": "user",
+            "id": "diane",
+            "display_name": "",
+            "properties": {}
+        },
+        {
+            "type": "user",
+            "id": "charles",
+            "display_name": "",
+            "properties": {}
+        },
+        {
+            "type": "team",
+            "id": "openfga/core",
+            "display_name": "Open FGA Core Team",
+            "properties": {}
+        },
+        {
+            "type": "team",
+            "id": "openfga/backend",
+            "display_name": "Open FGA Backend Team",
+            "properties": {}
+        },
+        {
+            "type": "organization",
+            "id": "openfga",
+            "display_name": "Open FGA",
+            "properties": {}
+        },
+        {
+            "type": "repo",
+            "id": "openfga/openfga",
+            "display_name": "Open FGA Repository",
+            "properties": {}
+        }
+    ]
+}
