@@ -1,0 +1,18 @@
+{
+    "name": "iot",
+    "description": "IOT devices management",
+    "assets": {
+        "manifest": "iot/manifest.yaml",
+        "policy": {
+            "name": "iot",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [],
+        "domain_data": [
+            "iot/iot_relations.json"
+        ],
+        "assertions": [
+            "iot/test/iot_assertions.json"
+        ]
+    }
+}

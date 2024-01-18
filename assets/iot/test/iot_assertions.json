@@ -1,0 +1,20 @@
+{
+    "assertions": [
+      {"check":
+        {"object_type": "device", "object_id": "1", "relation": "it_admin", "subject_type": "user", "subject_id": "anne"},
+        "expected": false
+      },
+      {"check":
+        {"object_type": "device", "object_id": "1", "relation": "can_view_recorded_video", "subject_type": "user", "subject_id": "anne"},
+        "expected": true
+      },
+      {"check":
+        {"object_type": "device", "object_id": "2", "relation": "can_rename_device", "subject_type": "user", "subject_id": "dianne"},
+        "expected": true
+      },
+      {"check":
+        {"object_type": "device", "object_id": "2", "relation": "can_rename_device", "subject_type": "user", "subject_id": "charles"},
+        "expected": false
+      }
+    ]
+}

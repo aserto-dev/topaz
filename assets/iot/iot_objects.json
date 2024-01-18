@@ -1,0 +1,46 @@
+{
+    "objects": [
+      {
+        "type": "user",
+        "id": "beth",
+        "display_name": "Beth",
+        "properties": {}
+      },
+      {
+        "type": "device",
+        "id": "1",
+        "display_name": "Device 1",
+        "properties": {}
+      },
+      {
+        "type": "device",
+        "id": "2",
+        "display_name": "Device 2",
+        "properties": {}
+      },    
+      {
+        "type": "device",
+        "id": "3",
+        "display_name": "Device 3",
+        "properties": {}
+      },      
+      {
+        "type": "user",
+        "id": "dianne",
+        "display_name": "Dianne",
+        "properties": {}
+      },
+      {
+        "type": "user",
+        "id": "charles",
+        "display_name": "Charles",
+        "properties": {}
+      },
+      {
+        "type": "device_group",
+        "id": "group1",
+        "display_name": "Group 1",
+        "properties": {}
+      }
+    ]
+}
