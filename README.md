@@ -126,9 +126,10 @@ The configuration file is generated in `$(HOME)/.config/topaz/cfg`.
 
 If you have a policy image in the local OCI store of your policy CLI that you want to use with topaz you can create a configuration to use that image from the local store. 
 
+```shell
+topaz configure -d -l ghcr.io/default:latest
 ```
-topaz configure -d -s -l ghcr.io/default:latest
-```
+
 The configuration file is generated in `$(HOME)/.config/topaz/cfg`.
 * the config instructs Topaz to create a local directory instance (`-d`)
 * when started, Topaz will seed the directory with default object types (`-s`)
