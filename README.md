@@ -111,7 +111,7 @@ topaz install
 
 ### Create a configuration
 
-This command creates a configuration file for the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. The source code for the `ghcr.io/aserto-policies/policy-todo-rebac:latest` policy image can be found [here](https://github.com/aserto-templates/template-policy-todo-rebac/tree/main/content/src/policies).
+This command creates a configuration file for the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. The source code for the `ghcr.io/aserto-policies/policy-todo-rebac:latest` policy image can be found [here](https://github.com/aserto-templates/policy-todo-rebac/tree/main/content/src/policies).
 
 ```shell
 topaz configure -d -r ghcr.io/aserto-policies/policy-todo-rebac:latest -n todo
@@ -119,7 +119,7 @@ topaz configure -d -r ghcr.io/aserto-policies/policy-todo-rebac:latest -n todo
 
 The configuration file is generated in `$(HOME)/.config/topaz/cfg`.
 * the config instructs Topaz to create a local directory instance (`-d`)
-* the config references an authorization policy for a sample "Todo" app, retrieved from the Open Policy Registry as a container image
+* the config references an authorization policy for a sample "Todo" app, retrieved from GitHub Container Registry as a container image
 * the config is named "todo"
 
 #### Creating a configuration that uses a local policy CLI image
