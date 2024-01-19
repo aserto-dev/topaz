@@ -1,0 +1,23 @@
+---
+
+### filename: manifest.yaml ###
+### description: expenses manifest ###
+#
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+
+  employee:
+    relations:
+      manager: employee
+    permissions:
+      can_manage: manager | manager->can_manage
+
+  report:
+    relations:
+      submitter: employee
+    permissions:
+      can_approve: submitter->can_manage

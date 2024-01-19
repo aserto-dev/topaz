@@ -1,0 +1,40 @@
+{
+    "relations": [
+      {
+        "object_type": "employee",
+        "object_id": "daniel",
+        "relation": "manager",
+        "subject_type": "employee",
+        "subject_id": "matt"
+      },
+      {
+        "object_type": "employee",
+        "object_id": "matt",
+        "relation": "manager",
+        "subject_type": "employee",
+        "subject_id": "sam"
+      },
+      {
+        "object_type": "employee",
+        "object_id": "sam",
+        "relation": "manager",
+        "subject_type": "employee",
+        "subject_id": "emily"
+      },
+      {
+        "object_type": "report",
+        "object_id": "daniel-chair1",
+        "relation": "submitter",
+        "subject_type": "employee",
+        "subject_id": "daniel"
+      },
+      {
+        "object_type": "report",
+        "object_id": "sam-chair1",
+        "relation": "submitter",
+        "subject_type": "employee",
+        "subject_id": "sam"
+      }
+      
+    ]
+    }

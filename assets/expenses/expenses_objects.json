@@ -1,0 +1,35 @@
+{
+    "objects": [
+      {
+        "type": "employee",
+        "id": "daniel",
+        "properties": {}
+      },
+      {
+        "type": "employee",
+        "id": "matt",
+        "properties": {}
+      },
+      {
+        "type": "employee",
+        "id": "sam",
+        "properties": {}
+      },
+      {
+        "type": "employee",
+        "id": "emily",
+        "properties": {}
+      },
+      {
+        "type": "report",
+        "id": "daniel-chair1",
+        "properties": {}
+      },
+      {
+        "type": "report",
+        "id": "sam-chair1",
+        "properties": {}
+      }
+    ]
+  }
+  

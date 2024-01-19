@@ -1,0 +1,19 @@
+{
+    "name": "expenses",
+    "description": "Expenses",
+    "assets": {
+        "manifest": "expenses/manifest.yml",
+        "policy": {
+            "name": "expenses",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [],
+        "domain_data": [
+            "expenses/expenses_objects.json",
+            "expenses/expenses_relations.json"
+        ],
+        "assertions": [
+            "expenses/test/expenses_assertions.json"
+        ]
+    }
+}
