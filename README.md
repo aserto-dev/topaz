@@ -132,7 +132,6 @@ topaz configure -d -l ghcr.io/default:latest
 
 The configuration file is generated in `$(HOME)/.config/topaz/cfg`.
 * the config instructs Topaz to create a local directory instance (`-d`)
-* when started, Topaz will seed the directory with default object types (`-s`)
 * the config uses the opa local_bundles configuration to retrieve the policy image from the local policy CLI OCI store
 
 ### Start Topaz in interative mode
