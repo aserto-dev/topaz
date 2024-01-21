@@ -7,7 +7,6 @@ logging:
 
 directory:
   db_path: ${TOPAZ_DIR}/db/directory.db
-  seed_metadata: true
     
 api:
   health:
