@@ -9,7 +9,6 @@ logging:
 
 directory:
   db_path: ${TOPAZ_DIR}/db/directory.db
-  seed_metadata: true
 
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:

@@ -13,7 +13,6 @@ data:
     
     directory:
       db_path: /db/directory.db
-      seed_metadata: true
     
     # remote directory is used to resolve the identity for the authorizer.
     remote_directory:

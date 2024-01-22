@@ -58,7 +58,7 @@ logging:
 directory:
   db_path: ${TOPAZ_DIR}/db/directory.db
   request_timeout: 5s # set as default, 5 secs.
-  seed_metadata: false # deprecated in v3, with the introduction of manifest files, this always defaults to false.
+  enable_v2: {{ .EnableDirectoryV2 }} # enable directory version 2 services for backward compatibility, this defaults to false per topaz 0.31.0
 
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:

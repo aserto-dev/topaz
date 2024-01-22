@@ -11,7 +11,7 @@ logging:
 directory:
   db_path: ${TOPAZ_DIR}/db/directory.db
   request_timeout: "5s"
-  seed_metadata: false
+  enable_v2: false # enable directory version 2 services for backward compatibility, this defaults to false per topaz 0.31.0
 
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:

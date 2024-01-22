@@ -122,7 +122,7 @@ api:
 The directory section allows setting the configuration for the topaz [local edge directory](https://github.com/aserto-dev/go-edge-ds).
  - *db_path* - string - path to the bbolt database file
  - *request_timeout* - time.Duration - request timeout setting for the bbolt database connection
- - *seed_metadata* - bool - if set to true the bbolt database will be seeded with default metadata
+ - *enable_v2* - boolean - enable directory version 2 services for backward compatibility (default: false)
 
 ### d. Remote
 
