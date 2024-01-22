@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
@@ -45,7 +46,7 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 
 	args = append(args, cmdArgs...)
 
-	return dockerx.DockerWith(cmd.env(rootPath), args...)
+	return dockerx.DockerWith(cmd.env(), args...)
 }
 
 func (cmd *RunCmd) dockerArgs(path string) ([]string, error) {
@@ -56,21 +57,34 @@ func (cmd *RunCmd) dockerArgs(path string) ([]string, error) {
 	dockerArgs = append(dockerArgs, "-v", fmt.Sprintf("%s:/root/.policy:ro", policyRoot))
 	args = append(args, dockerArgs...)
 
-	for _, env := range cmd.Env {
-		args = append(args, "--env", env)
-	}
-
 	volumes, err := getVolumes(path)
 	if err != nil {
 		return nil, err
 	}
 	args = append(args, volumes...)
+	for i := range volumes {
+		switch {
+		case strings.Contains(volumes[i], "certs"):
+			mountedPath := strings.Split(volumes[i], ":")[1]
+			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CERTS_DIR=%s", mountedPath))
+		case strings.Contains(volumes[i], "db"):
+			mountedPath := strings.Split(volumes[i], ":")[1]
+			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_DB_DIR=%s", mountedPath))
+		case strings.Contains(volumes[i], "cfg"):
+			mountedPath := strings.Split(volumes[i], ":")[1]
+			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CFG_DIR=%s", mountedPath))
+		}
+	}
 
 	ports, err := getPorts(path)
 	if err != nil {
 		return nil, err
 	}
 	args = append(args, ports...)
+
+	for _, env := range cmd.Env {
+		args = append(args, "--env", env)
+	}
 
 	if cmd.Hostname != "" {
 		args = append(args, hostname...)
@@ -79,11 +93,11 @@ func (cmd *RunCmd) dockerArgs(path string) ([]string, error) {
 	return append(args, containerName...), nil
 }
 
-func (cmd *RunCmd) env(path string) map[string]string {
+func (cmd *RunCmd) env() map[string]string {
 	return map[string]string{
-		"TOPAZ_CERTS_DIR":    path,
-		"TOPAZ_CFG_DIR":      path,
-		"TOPAZ_EDS_DIR":      path,
+		"TOPAZ_CERTS_DIR":    cc.GetTopazCertsDir(),
+		"TOPAZ_CFG_DIR":      cc.GetTopazCfgDir(),
+		"TOPAZ_DB_DIR":       cc.GetTopazDataDir(),
 		"CONTAINER_NAME":     cmd.ContainerName,
 		"CONTAINER_VERSION":  cmd.ContainerVersion,
 		"CONTAINER_HOSTNAME": cmd.Hostname,

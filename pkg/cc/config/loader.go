@@ -10,6 +10,7 @@ import (
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	builder "github.com/aserto-dev/service-host"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 )
@@ -43,7 +44,10 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 		return nil, err
 	}
 	cfg := new(Config)
-	subBuf := subEnvVars(string(fileContents))
+	subBuf, err := SetEnvVars(string(fileContents))
+	if err != nil {
+		return nil, err
+	}
 	r := bytes.NewReader([]byte(subBuf))
 
 	if err := v.ReadConfig(r); err != nil {
@@ -166,6 +170,26 @@ func (l *Loader) GetPorts() ([]string, error) {
 		args = append(args, k)
 	}
 	return args, nil
+}
+
+func SetEnvVars(fileContents string) (string, error) {
+	err := os.Setenv("TOPAZ_DIR", cc.GetTopazDir())
+	if err != nil {
+		return "", err
+	}
+	err = os.Setenv("TOPAZ_CFG_DIR", cc.GetTopazCfgDir())
+	if err != nil {
+		return "", err
+	}
+	err = os.Setenv("TOPAZ_CERTS_DIR", cc.GetTopazCertsDir())
+	if err != nil {
+		return "", err
+	}
+	err = os.Setenv("TOPAZ_DB_DIR", cc.GetTopazDataDir())
+	if err != nil {
+		return "", err
+	}
+	return subEnvVars(fileContents), nil
 }
 
 func getPortFromAddress(address string) (string, error) {
