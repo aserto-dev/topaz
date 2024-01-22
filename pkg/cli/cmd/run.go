@@ -81,9 +81,9 @@ func (cmd *RunCmd) dockerArgs(path string) ([]string, error) {
 
 func (cmd *RunCmd) env(path string) map[string]string {
 	return map[string]string{
-		"TOPAZ_CERTS_DIR":    path,
-		"TOPAZ_CFG_DIR":      path,
-		"TOPAZ_DB_DIR":       path,
+		"TOPAZ_CERTS_DIR":    cc.GetTopazCertsDir(),
+		"TOPAZ_CFG_DIR":      cc.GetTopazCfgDir(),
+		"TOPAZ_DB_DIR":       cc.GetTopazDataDir(),
 		"CONTAINER_NAME":     cmd.ContainerName,
 		"CONTAINER_VERSION":  cmd.ContainerVersion,
 		"CONTAINER_HOSTNAME": cmd.Hostname,

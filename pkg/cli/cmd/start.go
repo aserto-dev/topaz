@@ -5,7 +5,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -128,9 +127,9 @@ func (cmd *StartCmd) dockerArgs(rootPath string) ([]string, error) {
 
 func (cmd *StartCmd) env(rootPath string) map[string]string {
 	return map[string]string{
-		"TOPAZ_CERTS_DIR":    rootPath,
-		"TOPAZ_CFG_DIR":      rootPath,
-		"TOPAZ_DB_DIR":       rootPath,
+		"TOPAZ_CERTS_DIR":    cc.GetTopazCertsDir(),
+		"TOPAZ_CFG_DIR":      cc.GetTopazCfgDir(),
+		"TOPAZ_DB_DIR":       cc.GetTopazDataDir(),
 		"CONTAINER_NAME":     cmd.ContainerName,
 		"CONTAINER_VERSION":  cmd.ContainerVersion,
 		"CONTAINER_HOSTNAME": cmd.Hostname,
@@ -163,6 +162,14 @@ func getPorts(rootPath string) ([]string, error) {
 
 func getVolumes(rootPath string) ([]string, error) {
 	volumeMap := make(map[string]string)
+
+	if topazDir := os.Getenv("TOPAZ_DIR"); topazDir == "" {
+		err := os.Setenv("TOPAZ_DIR", cc.GetTopazDir())
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	configLoader, err := config.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
 	if err != nil {
 		return nil, err
@@ -174,15 +181,12 @@ func getVolumes(rootPath string) ([]string, error) {
 	}
 
 	for i := range paths {
-
-		mountPath := strings.Split(paths[i], string(os.PathSeparator))
-		mountPath[0] = "" // replace root path from generated config for container
 		directory := filepath.Dir(paths[i])
-		volumeMap[directory] = fmt.Sprintf("%s:%s", directory, filepath.Dir(strings.Join(mountPath, "/")))
+		volumeMap[directory] = fmt.Sprintf("%s:%s", directory, fmt.Sprintf("/%s", filepath.Base(directory)))
 	}
 
 	// manually attach the configuration folder
-	args := []string{"-v", "$TOPAZ_CFG_DIR/cfg:/config:ro"}
+	args := []string{"-v", "$TOPAZ_CFG_DIR:/config:ro"}
 	for _, v := range volumeMap {
 		args = append(args, "-v", v)
 	}
