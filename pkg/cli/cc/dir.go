@@ -36,6 +36,14 @@ func GetTopazCertsDir() string {
 	return filepath.Clean(filepath.Join(GetTopazDir(), "certs"))
 }
 
+// GetTopazDataDir returns the topaz db directory ($TOPAZ_DIR/db).
+func GetTopazDataDir() string {
+	if dataDir := os.Getenv("TOPAZ_DB_DIR"); dataDir != "" {
+		return dataDir
+	}
+	return filepath.Clean(filepath.Join(GetTopazDir(), "db"))
+}
+
 const (
 	fallback        = `~/.config/topaz`
 	darwinFallBack  = fallback

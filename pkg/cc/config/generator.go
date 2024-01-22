@@ -4,7 +4,6 @@ import (
 	"html/template"
 	"io"
 	"os"
-	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
@@ -69,8 +68,7 @@ func (g *Generator) CreateCertsDir() (string, error) {
 }
 
 func (g *Generator) CreateDataDir() (string, error) {
-	topazDir := cc.GetTopazDir()
-	dataDir := path.Join(topazDir, "db")
+	dataDir := cc.GetTopazDataDir()
 	if fi, err := os.Stat(dataDir); err == nil && fi.IsDir() {
 		return dataDir, nil
 	}

@@ -29,6 +29,7 @@ func main() {
 			"topaz_dir":       cc.GetTopazDir(),
 			"topaz_certs_dir": cc.GetTopazCertsDir(),
 			"topaz_cfg_dir":   cc.GetTopazCfgDir(),
+			"topaz_db_dir":    cc.GetTopazDataDir(),
 		},
 	)
 
