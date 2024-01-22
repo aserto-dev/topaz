@@ -83,7 +83,7 @@ func (cmd *RunCmd) env(path string) map[string]string {
 	return map[string]string{
 		"TOPAZ_CERTS_DIR":    path,
 		"TOPAZ_CFG_DIR":      path,
-		"TOPAZ_EDS_DIR":      path,
+		"TOPAZ_DB_DIR":       path,
 		"CONTAINER_NAME":     cmd.ContainerName,
 		"CONTAINER_VERSION":  cmd.ContainerVersion,
 		"CONTAINER_HOSTNAME": cmd.Hostname,
