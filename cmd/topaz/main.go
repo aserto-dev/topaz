@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -11,6 +12,8 @@ import (
 )
 
 func main() {
+	fmt.Println("platform", runtime.GOARCH)
+
 	cli := cmd.CLI{}
 	kongCtx := kong.Parse(&cli,
 		kong.Name(x.AppName),
