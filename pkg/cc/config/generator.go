@@ -59,7 +59,7 @@ func (g *Generator) CreateConfigDir() (string, error) {
 }
 
 func (g *Generator) CreateCertsDir() (string, error) {
-	certsDir := cc.GetTopazCfgDir()
+	certsDir := cc.GetTopazCertsDir()
 	if fi, err := os.Stat(certsDir); err == nil && fi.IsDir() {
 		return certsDir, nil
 	}
