@@ -25,7 +25,7 @@ type GetManifestCmd struct {
 }
 
 type SetManifestCmd struct {
-	Path  string `arg:"" help:"filepath to assertions file" type:"path" optional:""`
+	Path  string `arg:"" help:"filepath to manifest file" type:"path" optional:""`
 	Stdin bool   `flag:"" help:"set manifest from --stdin"`
 	clients.Config
 }
