@@ -64,14 +64,14 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 		w = c.UI.Output()
 	} else {
 		if !cmd.Force {
-			if _, err := os.Stat(path.Join(configDir, "config.yaml")); err == nil {
+			if _, err := os.Stat(path.Join(configDir, c.DefaultConfigFile)); err == nil {
 				c.UI.Exclamation().Msg("A configuration file already exists.")
 				if !promptYesNo("Do you want to continue?", false) {
 					return nil
 				}
 			}
 		}
-		w, err = os.Create(path.Join(configDir, "config.yaml"))
+		w, err = os.Create(path.Join(configDir, c.DefaultConfigFile))
 		if err != nil {
 			return err
 		}

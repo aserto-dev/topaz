@@ -17,7 +17,12 @@ import (
 )
 
 type CommonCtx struct {
-	Context context.Context
+	Context           context.Context
+	UI                *clui.UI
+	NoCheck           bool
+	DefaultConfigFile string
+}
+
 	UI      *clui.UI
 	NoCheck bool
 }
@@ -29,11 +34,12 @@ const (
 	StatusRunning
 )
 
-func NewCommonContext(noCheck bool) (*CommonCtx, error) {
+func NewCommonContext(noCheck bool, defaultConfig string) (*CommonCtx, error) {
 	return &CommonCtx{
-		Context: context.Background(),
-		UI:      iostream.NewUI(iostream.DefaultIO()),
-		NoCheck: noCheck,
+		Context:           context.Background(),
+		UI:                iostream.NewUI(iostream.DefaultIO()),
+		NoCheck:           noCheck,
+		DefaultConfigFile: defaultConfig,
 	}, nil
 }
 

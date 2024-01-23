@@ -17,6 +17,15 @@ type StartCmd struct {
 }
 
 func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
+	if running, err := dockerx.IsRunning(dockerx.Topaz); running || err != nil {
+		if !running {
+			return ErrNotRunning
+		}
+		if err != nil {
+			return err
+		}
+	}
+
 	cmdX := cmd.StartRunCmd
 
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {

@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -10,12 +12,19 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
+const (
+	CLIConfigurationFile = "cli_config.json"
+)
+
 func main() {
 	cli := cmd.CLI{}
+	cliConfig := filepath.Join(cc.GetTopazDir(), CLIConfigurationFile)
+
 	kongCtx := kong.Parse(&cli,
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
+		kong.Configuration(kong.JSON, cliConfig),
 		kong.ConfigureHelp(kong.HelpOptions{
 			NoAppSummary:        false,
 			Summary:             false,
@@ -38,7 +47,7 @@ func main() {
 		},
 	)
 
-	ctx, err := cc.NewCommonContext(cli.NoCheck)
+	ctx, err := cc.NewCommonContext(cli.NoCheck, cli.DefaultConfigFile)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
@@ -46,5 +55,16 @@ func main() {
 
 	if err := kongCtx.Run(ctx); err != nil {
 		kongCtx.FatalIfErrorf(err)
+	}
+
+	kongConfigBytes, err := json.Marshal(cli)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+	err = os.WriteFile(cliConfig, kongConfigBytes, 0666) // nolint
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
 	}
 }
