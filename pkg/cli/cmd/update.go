@@ -7,9 +7,10 @@ import (
 )
 
 type UpdateCmd struct {
-	ContainerName    string `optional:"" default:"topaz" help:"container name"`
-	ContainerVersion string `optional:"" default:"latest" help:"container version" `
-	Hostname         string `optional:"" help:"hostname for docker to set"`
+	ContainerName     string `optional:"" default:"${container_name}" help:"container name"`
+	ContainerVersion  string `optional:"" default:"${container_version}" help:"container version" `
+	ContainerPlatform string `optional:"" default:"${container_platform}" help:"container platform" `
+	ContainerHostname string `optional:"" name:"hostname" default:"${container_hostname}" help:"hostname for docker to set"`
 }
 
 func (cmd UpdateCmd) Run(c *cc.CommonCtx) error {
@@ -18,14 +19,15 @@ func (cmd UpdateCmd) Run(c *cc.CommonCtx) error {
 	args := []string{}
 	args = append(args, "pull")
 	args = append(args, platform...)
-	if cmd.Hostname != "" {
+	if cmd.ContainerHostname != "" {
 		args = append(args, hostname...)
 	}
 	args = append(args, containerName...)
 
 	return dockerx.DockerWith(map[string]string{
-		"CONTAINER_NAME":    cmd.ContainerName,
-		"CONTAINER_VERSION": cmd.ContainerVersion,
+		"CONTAINER_NAME":     cmd.ContainerName,
+		"CONTAINER_VERSION":  cmd.ContainerVersion,
+		"CONTAINER_PLATFORM": cmd.ContainerPlatform,
 	},
 		args...,
 	)

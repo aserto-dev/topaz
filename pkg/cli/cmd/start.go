@@ -16,10 +16,11 @@ import (
 )
 
 type StartCmd struct {
-	ContainerName    string   `optional:"" default:"topaz" help:"container name"`
-	ContainerVersion string   `optional:"" default:"latest" help:"container version" `
-	Hostname         string   `optional:"" help:"hostname for docker to set"`
-	Env              []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
+	ContainerName     string   `optional:"" default:"${container_name}" help:"container name"`
+	ContainerVersion  string   `optional:"" default:"${container_version}" help:"container version" `
+	ContainerPlatform string   `optional:"" default:"${container_platform}" help:"container platform"`
+	ContainerHostname string   `optional:"" name:"hostname" default:"${container_hostname}" help:"hostname for docker to set"`
+	Env               []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
 }
 
 func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
@@ -91,7 +92,7 @@ var (
 	}
 
 	platform = []string{
-		"--platform", "linux/amd64",
+		"--platform", "$CONTAINER_PLATFORM",
 	}
 )
 
@@ -132,7 +133,7 @@ func (cmd *StartCmd) dockerArgs(rootPath string) ([]string, error) {
 		args = append(args, "--env", env)
 	}
 
-	if cmd.Hostname != "" {
+	if cmd.ContainerHostname != "" {
 		args = append(args, hostname...)
 	}
 
@@ -146,7 +147,8 @@ func (cmd *StartCmd) env() map[string]string {
 		"TOPAZ_DB_DIR":       cc.GetTopazDataDir(),
 		"CONTAINER_NAME":     cmd.ContainerName,
 		"CONTAINER_VERSION":  cmd.ContainerVersion,
-		"CONTAINER_HOSTNAME": cmd.Hostname,
+		"CONTAINER_PLATFORM": cmd.ContainerPlatform,
+		"CONTAINER_HOSTNAME": cmd.ContainerHostname,
 	}
 }
 

@@ -10,10 +10,10 @@ import (
 )
 
 type VersionCmd struct {
-	Container        bool   `short:"c" help:"display topazd container version" default:"false"`
-	ContainerName    string `optional:"" default:"topaz" help:"container name"`
-	ContainerVersion string `optional:"" default:"latest" help:"container version"`
-	Platform         string `optional:"" default:"linux/amd64" help:"set platform if server is multi-platform capable"`
+	Container         bool   `short:"c" help:"display topazd container version" default:"false"`
+	ContainerName     string `optional:"" default:"${container_name}" help:"container name"`
+	ContainerVersion  string `optional:"" default:"${container_version}" help:"container version"`
+	ContainerPlatform string `optional:"" default:"${container_platform}" help:"container platform"`
 }
 
 func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
@@ -35,7 +35,7 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		"-ti",
 		"--rm",
 		"--name", "topazd-version",
-		"--platform=" + cmd.Platform,
+		"--platform=" + cmd.ContainerPlatform,
 		"ghcr.io/aserto-dev/" + cmd.ContainerName + ":" + cmd.ContainerVersion,
 		"version",
 	}

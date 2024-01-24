@@ -29,10 +29,11 @@ func main() {
 			NoExpandSubcommands: true,
 		}),
 		kong.Vars{
-			"topaz_dir":       cc.GetTopazDir(),
-			"topaz_certs_dir": cc.GetTopazCertsDir(),
-			"topaz_cfg_dir":   cc.GetTopazCfgDir(),
-			"topaz_db_dir":    cc.GetTopazDataDir(),
+			"topaz_dir":          cc.GetTopazDir(),
+			"topaz_certs_dir":    cc.GetTopazCertsDir(),
+			"topaz_cfg_dir":      cc.GetTopazCfgDir(),
+			"topaz_db_dir":       cc.GetTopazDataDir(),
+			"container_platform": cc.GetContainerPlatform(),
 		},
 	)
 
