@@ -1,4 +1,4 @@
-package cmd
+package directory
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ type ImportCmd struct {
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
-		return errors.Wrap(ErrNotServing, cmd.Host)
+		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	color.Green(">>> importing data from %s", cmd.Directory)
 

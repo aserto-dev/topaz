@@ -1,4 +1,4 @@
-package cmd
+package directory
 
 import (
 	"path/filepath"
@@ -18,7 +18,7 @@ type ExportCmd struct {
 
 func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
-		return errors.Wrap(ErrNotServing, cmd.Host)
+		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	color.Green(">>> exporting data to %s", cmd.Directory)
 

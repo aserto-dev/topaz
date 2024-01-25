@@ -3,6 +3,7 @@ package cc
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -16,6 +17,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
+)
+
+var (
+	ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
+	ErrIsRunning  = errors.New("topaz is already running, use 'topaz stop' to stop")
+	ErrNotServing = errors.New("topaz gRPC endpoint not SERVING")
 )
 
 type CommonCtx struct {
