@@ -31,7 +31,7 @@ type CLI struct {
 	Backup            BackupCmd    `cmd:"" help:"backup directory data"`
 	Restore           RestoreCmd   `cmd:"" help:"restore directory data"`
 	Install           InstallCmd   `cmd:"" help:"install topaz container"`
-	Configure         ConfigureCmd `cmd:"" help:"configure topaz service"`
+	Configure         ConfigCmd    `cmd:"" help:"configure topaz service"`
 	Certs             CertsCmd     `cmd:"" help:"cert commands"`
 	Update            UpdateCmd    `cmd:"" help:"update topaz container version"`
 	Uninstall         UninstallCmd `cmd:"" help:"uninstall topaz container"`
@@ -39,5 +39,5 @@ type CLI struct {
 	Save              SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)"`
 	Version           VersionCmd   `cmd:"" help:"version information"`
 	NoCheck           bool         `name:"no-check" json:"noCheck,omitempty" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
-	DefaultConfigFile string       `name:"config-file" json:"configFile,omitempty" default:"config.yaml" short:"c" help:"use topaz configuration file"`
+	DefaultConfigFile string       `name:"config" json:"configFile,omitempty" default:"config.yaml" short:"c" help:"use topaz configuration file"`
 }
