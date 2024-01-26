@@ -11,9 +11,9 @@ import (
 
 type VersionCmd struct {
 	Container         bool   `short:"c" help:"display topazd container version" default:"false"`
-	ContainerName     string `optional:"" default:"${container_name}" help:"container name"`
-	ContainerVersion  string `optional:"" default:"${container_version}" help:"container version"`
-	ContainerPlatform string `optional:"" default:"${container_platform}" help:"container platform"`
+	ContainerName     string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
+	ContainerVersion  string `optional:"" default:"${container_version}" env:"CONTAINER_VERSION" help:"container version"`
+	ContainerPlatform string `optional:"" default:"${container_platform}" env:"CONTAINER_PLATFORM" help:"container platform"`
 }
 
 func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
@@ -29,14 +29,19 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 	env := map[string]string{}
 
 	// default command
-	// docker run -ti --rm --name topazd-version --platform=linux/arm64 ghcr.io/aserto-dev/topaz:latest version
+	// docker run -ti --rm --name topazd-version --platform linux/arm64 ghcr.io/aserto-dev/topaz:latest version
 	args := []string{
 		"run",
 		"-ti",
 		"--rm",
 		"--name", "topazd-version",
-		"--platform=" + cmd.ContainerPlatform,
-		"ghcr.io/aserto-dev/" + cmd.ContainerName + ":" + cmd.ContainerVersion,
+		"--platform", cmd.ContainerPlatform,
+		cc.GetContainerImage(
+			cc.DefaultValue,      // service
+			cc.DefaultValue,      // org
+			cmd.ContainerName,    // name
+			cmd.ContainerVersion, // version
+		),
 		"version",
 	}
 

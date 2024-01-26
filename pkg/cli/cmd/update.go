@@ -7,28 +7,26 @@ import (
 )
 
 type UpdateCmd struct {
-	ContainerName     string `optional:"" default:"${container_name}" help:"container name"`
-	ContainerVersion  string `optional:"" default:"${container_version}" help:"container version" `
-	ContainerPlatform string `optional:"" default:"${container_platform}" help:"container platform" `
-	ContainerHostname string `optional:"" name:"hostname" default:"${container_hostname}" help:"hostname for docker to set"`
+	ContainerName     string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
+	ContainerVersion  string `optional:"" default:"${container_version}" env:"CONTAINER_VERSION" help:"container version"`
+	ContainerPlatform string `optional:"" default:"${container_platform}" env:"CONTAINER_PLATFORM" help:"container platform"`
 }
 
 func (cmd UpdateCmd) Run(c *cc.CommonCtx) error {
 	color.Green(">>> updating topaz...")
 
-	args := []string{}
-	args = append(args, "pull")
-	args = append(args, platform...)
-	if cmd.ContainerHostname != "" {
-		args = append(args, hostname...)
-	}
-	args = append(args, containerName...)
+	env := map[string]string{}
 
-	return dockerx.DockerWith(map[string]string{
-		"CONTAINER_NAME":     cmd.ContainerName,
-		"CONTAINER_VERSION":  cmd.ContainerVersion,
-		"CONTAINER_PLATFORM": cmd.ContainerPlatform,
-	},
-		args...,
-	)
+	args := []string{
+		"pull",
+		"--platform", cmd.ContainerPlatform,
+		cc.GetContainerImage(
+			cc.DefaultValue,      // service
+			cc.DefaultValue,      // org
+			cmd.ContainerName,    // name
+			cmd.ContainerVersion, // version
+		),
+	}
+
+	return dockerx.DockerWith(env, args...)
 }

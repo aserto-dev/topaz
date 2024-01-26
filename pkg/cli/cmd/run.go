@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 
@@ -11,11 +8,7 @@ import (
 )
 
 type RunCmd struct {
-	ContainerName     string   `optional:"" default:"${container_name}" help:"container name"`
-	ContainerVersion  string   `optional:"" default:"${container_version}" help:"container version" `
-	ContainerPlatform string   `optional:"" default:"${container_platform}" help:"container platform" `
-	ContainerHostname string   `optional:"" name:"hostname" default:"${container_hostname}" help:"hostname for docker to set"`
-	Env               []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
+	StartRunCmd
 }
 
 func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
@@ -34,8 +27,8 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	color.Green(">>> starting topaz...")
-
-	args, err := cmd.dockerArgs(rootPath)
+	cmdX := cmd.StartRunCmd
+	args, err := cmdX.dockerArgs(rootPath, true)
 	if err != nil {
 		return err
 	}
@@ -47,61 +40,5 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 
 	args = append(args, cmdArgs...)
 
-	return dockerx.DockerWith(cmd.env(), args...)
-}
-
-func (cmd *RunCmd) dockerArgs(path string) ([]string, error) {
-	args := append([]string{}, dockerCmd...)
-	args = append(args, "-ti")
-
-	policyRoot := dockerx.PolicyRoot()
-	dockerArgs = append(dockerArgs, "-v", fmt.Sprintf("%s:/root/.policy:ro", policyRoot))
-	args = append(args, dockerArgs...)
-
-	volumes, err := getVolumes(path)
-	if err != nil {
-		return nil, err
-	}
-	args = append(args, volumes...)
-	for i := range volumes {
-		switch {
-		case strings.Contains(volumes[i], "certs"):
-			mountedPath := strings.Split(volumes[i], ":")[1]
-			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CERTS_DIR=%s", mountedPath))
-		case strings.Contains(volumes[i], "db"):
-			mountedPath := strings.Split(volumes[i], ":")[1]
-			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_DB_DIR=%s", mountedPath))
-		case strings.Contains(volumes[i], "cfg"):
-			mountedPath := strings.Split(volumes[i], ":")[1]
-			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CFG_DIR=%s", mountedPath))
-		}
-	}
-
-	ports, err := getPorts(path)
-	if err != nil {
-		return nil, err
-	}
-	args = append(args, ports...)
-
-	for _, env := range cmd.Env {
-		args = append(args, "--env", env)
-	}
-
-	if cmd.ContainerHostname != "" {
-		args = append(args, hostname...)
-	}
-
-	return append(args, containerName...), nil
-}
-
-func (cmd *RunCmd) env() map[string]string {
-	return map[string]string{
-		"TOPAZ_CERTS_DIR":    cc.GetTopazCertsDir(),
-		"TOPAZ_CFG_DIR":      cc.GetTopazCfgDir(),
-		"TOPAZ_DB_DIR":       cc.GetTopazDataDir(),
-		"CONTAINER_NAME":     cc.GetContainerName(),
-		"CONTAINER_VERSION":  cc.GetContainerVersion(),
-		"CONTAINER_PLATFORM": cc.GetContainerPlatform(),
-		"CONTAINER_HOSTNAME": cc.GetContainerHostname(),
-	}
+	return dockerx.DockerWith(cmdX.env(), args...)
 }

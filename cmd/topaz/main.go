@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"runtime"
 
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -12,8 +11,6 @@ import (
 )
 
 func main() {
-	fmt.Println("platform", runtime.GOARCH)
-
 	cli := cmd.CLI{}
 	kongCtx := kong.Parse(&cli,
 		kong.Name(x.AppName),
@@ -33,6 +30,10 @@ func main() {
 			"topaz_certs_dir":    cc.GetTopazCertsDir(),
 			"topaz_cfg_dir":      cc.GetTopazCfgDir(),
 			"topaz_db_dir":       cc.GetTopazDataDir(),
+			"container_service":  cc.GetContainerService(),
+			"container_org":      cc.GetContainerOrg(),
+			"container_name":     cc.GetContainerName(),
+			"container_version":  cc.GetContainerVersion(),
 			"container_platform": cc.GetContainerPlatform(),
 		},
 	)
