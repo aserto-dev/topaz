@@ -15,6 +15,8 @@ type FormatVersion int
 const (
 	V2 FormatVersion = 2
 	V3 FormatVersion = 3
+
+	CLIConfigurationFile = "cli_config.json"
 )
 
 type CLI struct {

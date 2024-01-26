@@ -158,7 +158,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 
 	// 2 - topaz configure - generate a new configuration based on the requirements of the template
 	{
-		command := GenerateConfigCmd{
+		command := ConfigureCmd{
 			PolicyName: tmpl.Assets.Policy.Name,
 			Resource:   tmpl.Assets.Policy.Resource,
 			Force:      true,
