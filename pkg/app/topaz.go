@@ -60,7 +60,7 @@ func (e *Topaz) Start() error {
 		if len(cfg.Needs) > 0 {
 			for _, name := range cfg.Needs {
 				if dependencyConfig, ok := e.Configuration.APIConfig.Services[name]; ok {
-					if !contains(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) &&
+					if !Contains(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) &&
 						cfg.GRPC.ListenAddress != dependencyConfig.GRPC.ListenAddress {
 						e.Manager.DependencyMap[cfg.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
 					}
@@ -119,7 +119,7 @@ func (e *Topaz) ConfigServices() error {
 		for _, serv := range e.Services {
 			notAdded := true
 			for _, serviceName := range serv.AvailableServices() {
-				if contains(serviceConfig.registeredServices, serviceName) && notAdded {
+				if Contains(serviceConfig.registeredServices, serviceName) && notAdded {
 					grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
 					gateways = append(gateways, serv.GetGatewayRegistration(serviceConfig.registeredServices...))
 					cleanups = append(cleanups, serv.Cleanups()...)
@@ -263,7 +263,7 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 	return portMap
 }
 
-func contains[T comparable](slice []T, item T) bool {
+func Contains[T comparable](slice []T, item T) bool {
 	for i := range slice {
 		if slice[i] == item {
 			return true
@@ -333,7 +333,7 @@ func (e *Topaz) validateConfig() error {
 	for key := range e.Configuration.APIConfig.Services {
 		validKey := false
 		for _, service := range e.Services {
-			if contains(service.AvailableServices(), key) {
+			if Contains(service.AvailableServices(), key) {
 				validKey = true
 				break
 			}
