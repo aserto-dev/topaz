@@ -13,5 +13,7 @@ WORKDIR /app
 
 COPY dist/topaz*_linux_amd64_v1/topaz* /app/
 
-ENTRYPOINT ["./topazd"]
-CMD ["run", "-c", "/config/config.yaml"]
+ENV TOPAZ_DIR=/config
+
+ENTRYPOINT ["sh", "-c", "./topazd"]
+CMD ["run", "-c", "${TOPAZ_DIR}/config.yaml"]
