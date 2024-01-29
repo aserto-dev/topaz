@@ -11,10 +11,9 @@ VOLUME ["/data", "/config", "/certs", "/db", "/decisions"]
 
 WORKDIR /app
 
-COPY topaz* /app/
+COPY docker-entrypoint.sh topaz* /app/
 
 ENV TOPAZ_DIR=/config
 
-ENTRYPOINT ["sh", "-c", "./topazd"]
-CMD ["run", "-c", "${TOPAZ_DIR}/config.yaml"]
-
+ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD ["run", "-c", "@@TOPAZ_DIR@@/config.yaml"]
