@@ -20,6 +20,9 @@ type StartCmd struct {
 }
 
 func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
+	if cmd.ConfigFile != c.Config.DefaultConfigFile {
+		c.Config.DefaultConfigFile = cmd.ConfigFile
+	}
 	if running, err := dockerx.IsRunning(dockerx.Topaz); running || err != nil {
 		if !running {
 			return ErrNotRunning
@@ -37,23 +40,23 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 
 	color.Green(">>> starting topaz...")
 
-	args, err := cmd.dockerArgs(c.DefaultConfigFile)
+	args, err := cmd.dockerArgs(c.Config.DefaultConfigFile)
 	if err != nil {
 		return err
 	}
 
 	cmdArgs := []string{
 		"run",
-		"--config-file", "/config/config.yaml",
+		"--config-file", "/config/" + c.Config.DefaultConfigFile,
 	}
 
 	args = append(args, cmdArgs...)
 
-	if _, err := os.Stat(path.Join(cc.GetTopazCfgDir(), "config.yaml")); errors.Is(err, os.ErrNotExist) {
-		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(cc.GetTopazCfgDir(), "config.yaml"))
+	if _, err := os.Stat(path.Join(cc.GetTopazCfgDir(), c.Config.DefaultConfigFile)); errors.Is(err, os.ErrNotExist) {
+		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(cc.GetTopazCfgDir(), c.Config.DefaultConfigFile))
 	}
 
-	generator := config.NewGenerator(c.DefaultConfigFile)
+	generator := config.NewGenerator(c.Config.DefaultConfigFile)
 	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}

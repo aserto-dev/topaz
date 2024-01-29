@@ -17,8 +17,9 @@ type ConfigureCmd struct {
 	Resource          string `short:"r" help:"resource url"`
 	Stdout            bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
 	EdgeDirectory     bool   `short:"d" help:"enable edge directory" default:"false"`
-	Force             bool   `flag:"" default:"false" short:"f" help:"forcefully create configuration"`
-	EnableDirectoryV2 bool   `flag:"" name:"enable-v2" default:"false" help:"enable directory version 2 services for backward compatibility"`
+	Force             bool   `flag:"" default:"false" short:"f" required:"false" help:"forcefully create configuration"`
+	EnableDirectoryV2 bool   `flag:"" name:"enable-v2" hidden:"" default:"true" help:"enable directory version 2 services for backwards compatibility"`
+	ConfigFile        string `name:"config" json:"config,omitempty" default:"config.yaml" short:"c" help:"use topaz configuration file"`
 }
 
 func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
@@ -26,6 +27,9 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 		if cmd.LocalPolicyImage == "" {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
 		}
+	}
+	if cmd.ConfigFile != c.Config.DefaultConfigFile {
+		c.Config.DefaultConfigFile = cmd.ConfigFile
 	}
 	if !cmd.Stdout {
 		color.Green(">>> configure policy")
@@ -64,14 +68,14 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 		w = c.UI.Output()
 	} else {
 		if !cmd.Force {
-			if _, err := os.Stat(path.Join(configDir, c.DefaultConfigFile)); err == nil {
+			if _, err := os.Stat(path.Join(configDir, c.Config.DefaultConfigFile)); err == nil {
 				c.UI.Exclamation().Msg("A configuration file already exists.")
 				if !promptYesNo("Do you want to continue?", false) {
 					return nil
 				}
 			}
 		}
-		w, err = os.Create(path.Join(configDir, c.DefaultConfigFile))
+		w, err = os.Create(path.Join(configDir, c.Config.DefaultConfigFile))
 		if err != nil {
 			return err
 		}

@@ -12,6 +12,7 @@ type RunCmd struct {
 	ContainerVersion string   `optional:"" default:"latest" help:"container version" `
 	Hostname         string   `optional:"" help:"hostname for docker to set"`
 	Env              []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
+	ConfigFile       string   `name:"config" json:"config,omitempty" default:"config.yaml" short:"c" help:"use topaz configuration file"`
 }
 
 func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
@@ -21,14 +22,14 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 
 	color.Green(">>> starting topaz...")
 
-	args, err := cmd.dockerArgs(c.DefaultConfigFile)
+	args, err := cmd.dockerArgs(c.Config.DefaultConfigFile)
 	if err != nil {
 		return err
 	}
 
 	cmdArgs := []string{
 		"run",
-		"--config-file", "/config/" + c.DefaultConfigFile,
+		"--config-file", "/config/" + c.Config.DefaultConfigFile,
 	}
 
 	args = append(args, cmdArgs...)
