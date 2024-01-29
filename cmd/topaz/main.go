@@ -25,7 +25,6 @@ func main() {
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
-		kong.Configuration(kong.JSON, cliConfigFile),
 		kong.ConfigureHelp(kong.HelpOptions{
 			NoAppSummary:        false,
 			Summary:             false,
@@ -49,7 +48,7 @@ func main() {
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
 
-	ctx, err := cc.NewCommonContext(cli.NoCheck, cli.DefaultConfigFile)
+	ctx, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
@@ -61,7 +60,7 @@ func main() {
 
 	// only save on config change
 	if app.Contains(kongCtx.Args, "configure") || app.Contains(kongCtx.Args, "-c") || app.Contains(kongCtx.Args, "--config") {
-		if err := cli.SaveConfig(); err != nil {
+		if err := cli.SaveConfig(ctx); err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
 		}

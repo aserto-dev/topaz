@@ -22,7 +22,7 @@ func GetTopazCfgDir() string {
 	if cfgDir := os.Getenv("TOPAZ_CFG_DIR"); cfgDir != "" {
 		return cfgDir
 	}
-	return filepath.Clean(filepath.Join(xdg.ConfigHome, "topaz"))
+	return filepath.Clean(filepath.Join(xdg.ConfigHome, "topaz", "cfg"))
 }
 
 // GetTopazCertsDir returns the topaz certs directory ($TOPAZ_DIR/certs).

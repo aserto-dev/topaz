@@ -17,8 +17,12 @@ import (
 )
 
 type CommonCtx struct {
-	Context           context.Context
-	UI                *clui.UI
+	Context context.Context
+	UI      *clui.UI
+	Config  *CLIConfig
+}
+
+type CLIConfig struct {
 	NoCheck           bool
 	DefaultConfigFile string
 }
@@ -34,13 +38,28 @@ const (
 	StatusRunning
 )
 
-func NewCommonContext(noCheck bool, defaultConfig string) (*CommonCtx, error) {
-	return &CommonCtx{
-		Context:           context.Background(),
-		UI:                iostream.NewUI(iostream.DefaultIO()),
-		NoCheck:           noCheck,
-		DefaultConfigFile: defaultConfig,
-	}, nil
+func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
+	ctx := &CommonCtx{
+		Context: context.Background(),
+		UI:      iostream.NewUI(iostream.DefaultIO()),
+		Config: &CLIConfig{
+			NoCheck:           noCheck,
+			DefaultConfigFile: "config.yaml",
+		},
+	}
+
+	if _, err := os.Stat(configFilePath); err == nil {
+		data, err := os.ReadFile(configFilePath)
+		if err != nil {
+			return nil, err
+		}
+		err = json.Unmarshal(data, ctx.Config)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return ctx, nil
 }
 
 func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatus) bool {
