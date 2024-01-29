@@ -18,6 +18,9 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 	for i := range files {
+		if files[i].Name() == CLIConfigurationFile {
+			continue
+		}
 		active := false
 		if files[i].Name() == c.DefaultConfigFile {
 			active = true
