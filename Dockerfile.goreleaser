@@ -2,11 +2,12 @@ FROM alpine
 
 RUN apk add --no-cache bash tzdata
 
-RUN mkdir /config && \
+RUN mkdir /data && \
+    mkdir /config && \
     mkdir /certs && \
     mkdir /db && \
     mkdir /decisions
-VOLUME ["/config", "/certs", "/db", "/decisions"]
+VOLUME ["/data", "/config", "/certs", "/db", "/decisions"]
 
 WORKDIR /app
 
