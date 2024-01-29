@@ -19,14 +19,9 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 		return ErrIsRunning
 	}
 
-	rootPath, err := dockerx.DefaultRoots()
-	if err != nil {
-		return err
-	}
-
 	color.Green(">>> starting topaz...")
 
-	args, err := cmd.dockerArgs(rootPath, c.DefaultConfigFile)
+	args, err := cmd.dockerArgs(c.DefaultConfigFile)
 	if err != nil {
 		return err
 	}
@@ -41,7 +36,7 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 	return dockerx.DockerWith(cmd.env(), args...)
 }
 
-func (cmd *RunCmd) dockerArgs(path, defaultConfigFile string) ([]string, error) {
+func (cmd *RunCmd) dockerArgs(defaultConfigFile string) ([]string, error) {
 	args := append([]string{}, dockerCmd...)
 	args = append(args, "-ti")
 
@@ -49,7 +44,7 @@ func (cmd *RunCmd) dockerArgs(path, defaultConfigFile string) ([]string, error) 
 	dockerArgs = append(dockerArgs, "-v", fmt.Sprintf("%s:/root/.policy:ro", policyRoot))
 	args = append(args, dockerArgs...)
 
-	volumes, err := getVolumes(path, defaultConfigFile)
+	volumes, err := getVolumes(defaultConfigFile)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +63,7 @@ func (cmd *RunCmd) dockerArgs(path, defaultConfigFile string) ([]string, error) 
 		}
 	}
 
-	ports, err := getPorts(path, defaultConfigFile)
+	ports, err := getPorts(defaultConfigFile)
 	if err != nil {
 		return nil, err
 	}

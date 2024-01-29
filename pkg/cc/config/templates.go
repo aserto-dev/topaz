@@ -56,7 +56,7 @@ logging:
   log_level: info
 
 directory:
-  db_path: '${TOPAZ_DB_DIR}/directory.db'
+  db_path: '${TOPAZ_DB_DIR}/{{ .PolicyName }}.db'
   request_timeout: 5s # set as default, 5 secs.
   enable_v2: {{ .EnableDirectoryV2 }} # enable directory version 2 services for backward compatibility, this defaults to false per topaz 0.31.0
 

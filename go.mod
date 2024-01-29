@@ -13,6 +13,7 @@ go 1.20
 // replace github.com/aserto-dev/runtime => ../runtime
 
 require (
+	github.com/adrg/xdg v0.4.0
 	github.com/alecthomas/kong v0.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.4

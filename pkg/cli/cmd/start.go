@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path"
+	"path/filepath"
+	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -33,7 +36,8 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	color.Green(">>> starting topaz...")
-	args, err := cmdX.dockerArgs(cc.GetTopazDir(), false)
+
+	args, err := cmd.dockerArgs(c.DefaultConfigFile)
 	if err != nil {
 		return err
 	}
@@ -49,7 +53,7 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(cc.GetTopazCfgDir(), "config.yaml"))
 	}
 
-	generator := config.NewGenerator("config.yaml")
+	generator := config.NewGenerator(c.DefaultConfigFile)
 	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}
