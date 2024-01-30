@@ -1,0 +1,242 @@
+# yaml-language-server: $schema=https://topaz.sh/schema/config.json
+---
+# config schema version
+version: 2
+
+logging:
+  prod: true
+  log_level: info
+
+directory:
+  db_path: "${TOPAZ_DIR}/db/directory.db"
+  seed_metadata: false
+
+# remote directory is used to resolve the identity for the authorizer.
+remote_directory:
+  address: 0.0.0.0:8282
+  insecure: true
+
+# default jwt validation configuration
+jwt:
+  acceptable_time_skew_seconds: 5 # set as default, 5 secs
+
+api:
+  health:
+    listen_address: "0.0.0.0:8484"
+  metrics:
+    listen_address: "0.0.0.0:8686"
+    zpages: true
+  services:
+    console:
+      gateway:
+        listen_address: "0.0.0.0:8383"
+        allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://0.0.0.0:*
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+      grpc:
+        listen_address: "0.0.0.0:8282"
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+    reader:
+      grpc:
+        listen_address: "0.0.0.0:8282"
+        # if certs are not specified default certs will be generate with the format reader_grpc.*
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+      gateway:
+        listen_address: "0.0.0.0:8383"
+        # if not specified, the allowed_origins includes localhost by default
+        allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://0.0.0.0:*
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
+        # if no certs are specified, the gateway will have the http flag enabled (http: true)
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+        http: false
+        read_timeout: 2s # default 2 seconds
+        read_header_timeout: 2s
+        write_timeout: 2s
+        idle_timeout: 30s # default 30 seconds      
+    writer:
+      grpc:
+        listen_address: "0.0.0.0:8282"
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+      gateway:
+        listen_address: "0.0.0.0:8383"
+        allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+        http: false
+        read_timeout: 2s
+        read_header_timeout: 2s
+        write_timeout: 2s
+        idle_timeout: 30s
+    model:
+      grpc:
+        listen_address: "0.0.0.0:8282"
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+      gateway:
+        listen_address: "0.0.0.0:8383"
+        allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+        http: false
+        read_timeout: 2s
+        read_header_timeout: 2s
+        write_timeout: 2s
+        idle_timeout: 30s
+    exporter:
+      grpc:
+        listen_address: "0.0.0.0:8282"
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+      gateway:
+        listen_address: "0.0.0.0:8383"
+        allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+        http: false
+        read_timeout: 2s
+        read_header_timeout: 2s
+        write_timeout: 2s
+        idle_timeout: 30s
+    importer:
+      grpc:
+        listen_address: "0.0.0.0:8282"
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+      gateway:
+        listen_address: "0.0.0.0:8383"
+        allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+        http: false
+        read_timeout: 2s
+        read_header_timeout: 2s
+        write_timeout: 2s
+        idle_timeout: 30s
+  
+    authorizer:
+      needs:
+        - reader
+      grpc:
+        connection_timeout_seconds: 2
+        listen_address: "0.0.0.0:8282"
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+      gateway:
+        listen_address: "0.0.0.0:8383"
+        allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://0.0.0.0:*
+        - https://20.232.247.139:*
+        - https://*.eastus.azurecontainer.io:*
+        certs:
+          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
+          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+        http: false
+        read_timeout: 2s
+        read_header_timeout: 2s
+        write_timeout: 2s
+        idle_timeout: 30s
+
+opa:
+  instance_id: "${TENANT_ID}"
+  graceful_shutdown_period_seconds: 2
+  max_plugin_wait_time_seconds: 30
+  local_bundles:
+    paths: []
+    skip_verification: true
+  config:
+    services:
+      ghcr:
+        url: https://ghcr.io
+        type: "oci"
+        response_header_timeout_seconds: 10
+    bundles:
+      rebac:
+        service: ghcr
+        resource: "ghcr.io/aserto-policies/policy-rebac:latest"
+        persist: false
+        config:
+          polling:
+            min_delay_seconds: 60
+            max_delay_seconds: 120
+    plugins:
+      aserto_edge:
+        addr: "${DIRECTORY_SVC}"
+        tenant_id: "${TENANT_ID}"
+        apikey: "${DIRECTORY_KEY}"
+        enabled: true
+        insecure: false
+        page_size: 100
+        sync_interval: 1
+        timeout: 5
