@@ -14,6 +14,8 @@ func (cmd *StatusCmd) Run(c *cc.CommonCtx) error {
 		color.Green(">>> topaz is running")
 	} else {
 		color.Yellow(">>> topaz is not running")
+	} else {
+		color.Green(">>> topaz is running")
 	}
 	return nil
 }

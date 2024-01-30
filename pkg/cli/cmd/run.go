@@ -12,10 +12,13 @@ type RunCmd struct {
 	ContainerVersion string   `optional:"" default:"latest" help:"container version" `
 	Hostname         string   `optional:"" help:"hostname for docker to set"`
 	Env              []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
-	ConfigFile       string   `name:"config" json:"config,omitempty" default:"config.yaml" short:"c" help:"use topaz configuration file"`
+	ConfigFile       string   `name:"config" json:"config,omitempty" default:"" short:"c" help:"use topaz configuration file"`
 }
 
 func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
+	if cmd.ConfigFile != "" {
+		c.Config.DefaultConfigFile = cmd.ConfigFile
+	}
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
 		return ErrIsRunning
 	}
