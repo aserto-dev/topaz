@@ -12,7 +12,7 @@ type RunCmd struct {
 }
 
 func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
-	if running, err := dockerx.IsRunning(dockerx.Topaz); running || err != nil {
+	if running, err := dockerx.IsRunning(cc.ContainerInstanceName()); running || err != nil {
 		if !running {
 			return ErrNotRunning
 		}
@@ -21,14 +21,9 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
-	rootPath, err := dockerx.DefaultRoots()
-	if err != nil {
-		return err
-	}
-
 	color.Green(">>> starting topaz...")
 	cmdX := cmd.StartRunCmd
-	args, err := cmdX.dockerArgs(rootPath, true)
+	args, err := cmdX.dockerArgs(cc.GetTopazDir(), true)
 	if err != nil {
 		return err
 	}

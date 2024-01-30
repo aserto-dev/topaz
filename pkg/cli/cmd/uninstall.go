@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
@@ -10,43 +11,51 @@ import (
 	"github.com/pkg/errors"
 )
 
-type UninstallCmd struct{}
+type UninstallCmd struct {
+	ContainerName    string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
+	ContainerVersion string `optional:"" default:"${container_version}" env:"CONTAINER_VERSION" help:"container version"`
+}
 
 func (cmd UninstallCmd) Run(c *cc.CommonCtx) error {
 	color.Green(">>> uninstalling topaz...")
 
-	var err error
-
-	//nolint :gocritic // tbd
-	if err = (StopCmd{}).Run(c); err != nil {
+	if err := (StopCmd{}).Run(c); err != nil {
 		return err
 	}
 
-	path, err := dockerx.DefaultRoots()
-	if err != nil {
-		return err
-	}
+	env := map[string]string{}
 
-	if err = os.RemoveAll(path); err != nil {
-		return errors.Wrap(err, "failed to delete topaz directory")
-	}
-
-	str, err := dockerx.DockerWithOut(map[string]string{
-		"NAME": "topaz",
-	},
+	args := []string{
 		"images",
-		"ghcr.io/aserto-dev/$NAME",
+		cc.ContainerImage(
+			cc.DefaultValue,      // service
+			cc.DefaultValue,      // org
+			cmd.ContainerName,    // name
+			cmd.ContainerVersion, // version
+		),
 		"--filter", "label=org.opencontainers.image.source=https://github.com/aserto-dev/topaz",
 		"-q",
-	)
+	}
+
+	str, err := dockerx.DockerWithOut(env, args...)
 	if err != nil {
 		return err
 	}
 
 	if str != "" {
 		fmt.Fprintf(c.UI.Output(), "removing %s\n", "aserto-dev/topaz")
-		err = dockerx.DockerRun("rmi", str)
+		if err := dockerx.DockerRun("rmi", str); err != nil {
+			fmt.Fprintf(c.UI.Err(), "%s", err.Error())
+		}
 	}
 
-	return err
+	// remove config file last
+	configFile := filepath.Join(cc.GetTopazCfgDir(), "config.yaml")
+	if fi, err := os.Stat(configFile); err == nil && !fi.IsDir() {
+		if err := os.Remove(configFile); err != nil {
+			return errors.Wrap(err, "failed to delete topaz directory")
+		}
+	}
+
+	return nil
 }

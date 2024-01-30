@@ -7,8 +7,9 @@ import (
 )
 
 type InstallCmd struct {
-	ContainerName    string `optional:""  default:"topaz" help:"container name"`
-	ContainerVersion string `optional:""  default:"latest" help:"container version"`
+	ContainerName     string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
+	ContainerVersion  string `optional:"" default:"${container_version}" env:"CONTAINER_VERSION" help:"container version"`
+	ContainerPlatform string `optional:"" default:"${container_platform}" env:"CONTAINER_PLATFORM" help:"container platform"`
 }
 
 func (cmd InstallCmd) Run(c *cc.CommonCtx) error {
@@ -19,10 +20,19 @@ func (cmd InstallCmd) Run(c *cc.CommonCtx) error {
 
 	color.Green(">>> installing topaz...")
 
-	return dockerx.DockerWith(map[string]string{
-		"CONTAINER_NAME":    cmd.ContainerName,
-		"CONTAINER_VERSION": cmd.ContainerVersion,
-	},
-		"pull", "ghcr.io/aserto-dev/$CONTAINER_NAME:$CONTAINER_VERSION",
-	)
+	env := map[string]string{}
+
+	args := []string{
+		"pull",
+		"--platform", cmd.ContainerPlatform,
+		"--quiet",
+		cc.ContainerImage(
+			cc.DefaultValue,      // service
+			cc.DefaultValue,      // org
+			cmd.ContainerName,    // name
+			cmd.ContainerVersion, // version
+		),
+	}
+
+	return dockerx.DockerWith(env, args...)
 }

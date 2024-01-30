@@ -6,17 +6,19 @@ import (
 	"github.com/fatih/color"
 )
 
-type StopCmd struct{}
+type StopCmd struct {
+	ContainerName string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
+}
 
 func (cmd StopCmd) Run(c *cc.CommonCtx) error {
-	running, err := dockerx.IsRunning(dockerx.Topaz)
+	running, err := dockerx.IsRunning(cc.ContainerInstanceName())
 	if err != nil {
 		return err
 	}
 
 	if running {
 		color.Green(">>> stopping topaz...")
-		return dockerx.DockerRun("stop", dockerx.Topaz)
+		return dockerx.DockerRun("stop", cc.ContainerInstanceName())
 	}
 
 	return nil

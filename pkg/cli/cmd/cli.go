@@ -45,7 +45,7 @@ func CheckRunning(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
+	if running, err := dockerx.IsRunning(cc.ContainerInstanceName()); !running || err != nil {
 		if !running {
 			return ErrNotRunning
 		}

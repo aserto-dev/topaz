@@ -23,7 +23,7 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 	args := []string{
 		"run",
 		"--rm",
-		"--name", dockerx.Topaz,
+		"--name", cc.ContainerInstanceName(),
 		g.Iff(interactive, "-ti", "-d"),
 	}
 
@@ -64,11 +64,11 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 	}
 
 	return append(args,
-		cc.GetContainerImage(
-			cc.DefaultValue,          // service
-			cc.DefaultValue,          // org
-			cc.GetContainerName(),    // name
-			cc.GetContainerVersion(), // version
+		cc.ContainerImage(
+			cc.DefaultValue,    // service
+			cc.DefaultValue,    // org
+			cc.ContainerName(), // name
+			cc.ContainerVTag(), // version
 		),
 	), nil
 }

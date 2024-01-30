@@ -36,7 +36,8 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		"--rm",
 		"--name", "topazd-version",
 		"--platform", cmd.ContainerPlatform,
-		cc.GetContainerImage(
+		"--quiet",
+		cc.ContainerImage(
 			cc.DefaultValue,      // service
 			cc.DefaultValue,      // org
 			cmd.ContainerName,    // name

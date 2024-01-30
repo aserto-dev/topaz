@@ -20,7 +20,8 @@ func (cmd UpdateCmd) Run(c *cc.CommonCtx) error {
 	args := []string{
 		"pull",
 		"--platform", cmd.ContainerPlatform,
-		cc.GetContainerImage(
+		"--quiet",
+		cc.ContainerImage(
 			cc.DefaultValue,      // service
 			cc.DefaultValue,      // org
 			cmd.ContainerName,    // name

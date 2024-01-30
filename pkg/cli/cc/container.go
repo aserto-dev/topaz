@@ -8,52 +8,66 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/g"
 )
 
-const DefaultValue string = ""
+const (
+	DefaultValue                 string = ""
+	defaultContainerInstanceName string = "topaz"
+)
 
-func GetContainerImage(service, org, name, version string) string {
+// ContainerImage.
+func ContainerImage(service, org, name, version string) string {
 	if containerImage := os.Getenv("CONTAINER_IMAGE"); containerImage != "" {
 		return containerImage
 	}
 
 	return fmt.Sprintf("%s/%s/%s:%s",
-		g.Iff(service != "", service, GetContainerService()),
-		g.Iff(org != "", org, GetContainerOrg()),
-		g.Iff(name != "", name, GetContainerName()),
-		g.Iff(version != "", version, GetContainerVersion()),
+		g.Iff(service != "", service, ContainerRegistry()),
+		g.Iff(org != "", org, ContainerOrg()),
+		g.Iff(name != "", name, ContainerName()),
+		g.Iff(version != "", version, ContainerVTag()),
 	)
 }
 
-func GetContainerService() string {
+// ContainerRegistry.
+func ContainerRegistry() string {
 	if containerService := os.Getenv("CONTAINER_SERVICE"); containerService != "" {
 		return containerService
 	}
 	return "ghcr.io"
 }
 
-func GetContainerOrg() string {
+// ContainerOrg.
+func ContainerOrg() string {
 	if containerOrg := os.Getenv("CONTAINER_ORG"); containerOrg != "" {
 		return containerOrg
 	}
 	return "aserto-dev"
 }
 
-func GetContainerName() string {
+// ContainerName.
+func ContainerName() string {
 	if containerName := os.Getenv("CONTAINER_NAME"); containerName != "" {
 		return containerName
 	}
 	return "topaz"
 }
 
-func GetContainerVersion() string {
+// ContainerVTag.
+func ContainerVTag() string {
 	if containerVersion := os.Getenv("CONTAINER_VERSION"); containerVersion != "" {
 		return containerVersion
 	}
 	return "latest"
 }
 
-func GetContainerPlatform() string {
+// ContainerPlatform.
+func ContainerPlatform() string {
 	if containerPlatform := os.Getenv("CONTAINER_PLATFORM"); containerPlatform != "" {
 		return containerPlatform
 	}
 	return "linux/" + runtime.GOARCH
+}
+
+// ContainerInstanceName.
+func ContainerInstanceName() string {
+	return defaultContainerInstanceName
 }
