@@ -5,7 +5,7 @@
         "manifest": "todo/manifest.yaml",
         "policy": {
             "name": "todo",
-            "resource": "ghcr.io/aserto-policies/policy-todo-rebac:3.0.0-prerelease"
+            "resource": "ghcr.io/aserto-policies/policy-todo-rebac:3.0.0"
         },
         "idp_data": [
             "citadel/citadel_objects.json",
