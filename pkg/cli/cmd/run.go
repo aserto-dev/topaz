@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"path/filepath"
+
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
 
