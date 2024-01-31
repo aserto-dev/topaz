@@ -193,7 +193,7 @@ opa:
     bundles:
       todo:
         service: ghcr
-        resource: "ghcr.io/aserto-policies/policy-todo-rebac:latest"
+        resource: "ghcr.io/aserto-policies/policy-todo:latest"
         persist: false
         config:
           polling:
