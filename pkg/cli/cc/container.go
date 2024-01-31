@@ -3,7 +3,9 @@ package cc
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/samber/lo"
 )
@@ -62,11 +64,11 @@ func ContainerPlatform() string {
 }
 
 // ContainerName returns the container instance name (docker run --name CONTAINER_NAME).
-func ContainerName() string {
+func ContainerName(defaultConfigFile string) string {
 	if containerName := os.Getenv("CONTAINER_NAME"); containerName != "" {
 		return containerName
 	}
-	return defaultContainerName
+	return fmt.Sprintf("%s-%s", defaultContainerName, strings.Split(filepath.Base(defaultConfigFile), ".")[0])
 }
 
 // ContainerVersionTag consolidates the old --container-version with the --container-tag value,

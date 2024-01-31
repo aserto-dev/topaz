@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"time"
+	"path/filepath"
 
 	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
@@ -25,6 +26,10 @@ type CommonCtx struct {
 type CLIConfig struct {
 	NoCheck           bool
 	DefaultConfigFile string
+	ContainerName     string
+	ContainerRegistry string
+	ContainerImage    string
+	ContainerTag      string
 }
 
 	UI      *clui.UI
@@ -44,7 +49,11 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 		UI:      iostream.NewUI(iostream.DefaultIO()),
 		Config: &CLIConfig{
 			NoCheck:           noCheck,
-			DefaultConfigFile: "config.yaml",
+			DefaultConfigFile: filepath.Join(GetTopazCfgDir(), "config.yaml"),
+			ContainerName:     ContainerName(filepath.Join(GetTopazCfgDir(), "config.yaml")),
+			ContainerRegistry: ContainerRegistry(),
+			ContainerImage:    ContainerImage(),
+			ContainerTag:      ContainerTag(),
 		},
 	}
 

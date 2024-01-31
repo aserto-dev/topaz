@@ -20,10 +20,11 @@ type StartRunCmd struct {
 	ContainerName     string   `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
 	ContainerHostname string   `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	Env               []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
-	ContainerVersion  string   `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
+    ContainerVersion  string   `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
+	ConfigFile        string   `name:"config" json:"config,omitempty" default:"" short:"c" help:"use topaz configuration file"`
 }
 
-func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string, error) {
+func (cmd *StartRunCmd) dockerArgs(configFilePath string, interactive bool) ([]string, error) {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
 	args := []string{
@@ -36,7 +37,7 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 	policyRoot := dockerx.PolicyRoot()
 	args = append(args, "-v", fmt.Sprintf("%s:/root/.policy:ro", policyRoot))
 
-	volumes, err := getVolumes(rootPath)
+	volumes, err := getVolumes(configFilePath)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +58,7 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 		}
 	}
 
-	ports, err := getPorts(rootPath)
+	ports, err := getPorts(configFilePath)
 	if err != nil {
 		return nil, err
 	}
@@ -88,9 +89,9 @@ func (cmd *StartRunCmd) env() map[string]string {
 	}
 }
 
-func getPorts(rootPath string) ([]string, error) {
+func getPorts(configFilePath string) ([]string, error) {
 	portMap := make(map[string]string)
-	configLoader, err := config.LoadConfiguration(fmt.Sprintf("%s/cfg/config.yaml", rootPath))
+	configLoader, err := config.LoadConfiguration(configFilePath)
 	if err != nil {
 		return nil, err
 	}
@@ -112,15 +113,9 @@ func getPorts(rootPath string) ([]string, error) {
 	return args, nil
 }
 
-func getVolumes(rootPath string) ([]string, error) {
+func getVolumes(configFilePath string) ([]string, error) {
 	volumeMap := make(map[string]string)
-	configPath := fmt.Sprintf("%s/cfg/config.yaml", rootPath)
-	err := os.Setenv("TOPAZ_DIR", cc.GetTopazDir())
-	if err != nil {
-		return nil, err
-	}
-
-	configLoader, err := config.LoadConfiguration(configPath)
+	configLoader, err := config.LoadConfiguration(configFilePath)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +131,7 @@ func getVolumes(rootPath string) ([]string, error) {
 	}
 
 	// manually attach the configuration folder
-	args := []string{"-v", fmt.Sprintf("%s:/config:ro", filepath.Dir(configPath))}
+	args := []string{"-v", fmt.Sprintf("%s:/config:ro", filepath.Dir(configFilePath))}
 	for _, v := range volumeMap {
 		args = append(args, "-v", v)
 	}

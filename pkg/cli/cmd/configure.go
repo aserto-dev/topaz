@@ -4,7 +4,7 @@ import (
 	"errors"
 	"io"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -29,7 +29,8 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 	if cmd.ConfigFile != c.Config.DefaultConfigFile {
-		c.Config.DefaultConfigFile = cmd.ConfigFile
+		c.Config.DefaultConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
+		c.Config.ContainerName = cc.ContainerName(c.Config.DefaultConfigFile)
 	}
 	if !cmd.Stdout {
 		color.Green(">>> configure policy")
@@ -43,7 +44,7 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 		WithEdgeDirectory(cmd.EdgeDirectory).
 		WithEnableDirectoryV2(cmd.EnableDirectoryV2)
 
-	configDir, err := configGenerator.CreateConfigDir()
+	_, err := configGenerator.CreateConfigDir()
 	if err != nil {
 		return err
 	}
@@ -68,14 +69,14 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 		w = c.UI.Output()
 	} else {
 		if !cmd.Force {
-			if _, err := os.Stat(path.Join(configDir, c.Config.DefaultConfigFile)); err == nil {
+			if _, err := os.Stat(c.Config.DefaultConfigFile); err == nil {
 				c.UI.Exclamation().Msg("A configuration file already exists.")
 				if !promptYesNo("Do you want to continue?", false) {
 					return nil
 				}
 			}
 		}
-		w, err = os.Create(path.Join(configDir, c.Config.DefaultConfigFile))
+		w, err = os.Create(c.Config.DefaultConfigFile)
 		if err != nil {
 			return err
 		}
