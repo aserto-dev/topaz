@@ -16,12 +16,15 @@ type UninstallCmd struct {
 	ContainerImage    string `optional:"" default:"${container_image}" env:"CONTAINER_IMAGE" help:"container image name"`
 	ContainerTag      string `optional:"" default:"${container_tag}" env:"CONTAINER_TAG" help:"container tag"`
 	ContainerName     string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
+	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 }
 
-func (cmd UninstallCmd) Run(c *cc.CommonCtx) error {
+func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
+	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
+
 	color.Green(">>> uninstalling topaz...")
 
-	if err := (StopCmd{ContainerName: cmd.ContainerName}).Run(c); err != nil {
+	if err := (&StopCmd{ContainerName: cmd.ContainerName}).Run(c); err != nil {
 		return err
 	}
 

@@ -10,7 +10,7 @@ type StopCmd struct {
 	ContainerName string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
 }
 
-func (cmd StopCmd) Run(c *cc.CommonCtx) error {
+func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 	running, err := dockerx.IsRunning(cmd.ContainerName)
 	if err != nil {
 		return err

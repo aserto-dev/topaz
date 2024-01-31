@@ -21,7 +21,7 @@ type ConfigureCmd struct {
 	EnableDirectoryV2 bool   `flag:"" name:"enable-v2" hidden:"" default:"true" help:"enable directory version 2 services for backwards compatibility"`
 }
 
-func (cmd ConfigureCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 	if cmd.PolicyName == "" && cmd.Resource == "" {
 		if cmd.LocalPolicyImage == "" {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")

@@ -69,3 +69,15 @@ func ContainerName() string {
 	}
 	return defaultContainerName
 }
+
+// ContainerVersionTag consolidates the old --container-version with the --container-tag value,
+// the command handlers will read the environment variable versions $CONTAINER_VERSION and $CONTAINER_TAG,
+// which is why they are not explicitly handled in this function.
+func ContainerVersionTag(version, tag string) string {
+	if version != "" && version != tag {
+		fmt.Fprintf(os.Stderr, "!!! --container-version incl $CONTAINER_VERSION are obsolete, use: --container-tag and $CONTAINER_TAG instead\n")
+		fmt.Fprintf(os.Stderr, "!!! --container-version value %q it propagated to --container-tag\n", version)
+		return version
+	}
+	return tag
+}

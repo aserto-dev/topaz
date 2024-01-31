@@ -69,11 +69,14 @@ type InstallTemplateCmd struct {
 	ContainerName     string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
 	ContainerHostname string `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	TemplatesURL      string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
+	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 
 	clients.Config
 }
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
+	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
+
 	tmpl, err := getTemplate(cmd.Name, cmd.TemplatesURL)
 	if err != nil {
 		return err

@@ -19,9 +19,12 @@ type StartRunCmd struct {
 	ContainerName     string   `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
 	ContainerHostname string   `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	Env               []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
+	ContainerVersion  string   `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 }
 
 func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string, error) {
+	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
+
 	args := []string{
 		"run",
 		"--rm",
