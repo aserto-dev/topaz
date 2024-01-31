@@ -9,7 +9,7 @@ import (
 type StatusCmd struct{}
 
 func (cmd StatusCmd) Run(c *cc.CommonCtx) error {
-	running, err := dockerx.IsRunning(cc.ContainerInstanceName())
+	running, err := dockerx.IsRunning(cc.ContainerName())
 	if err != nil {
 		return err
 	}

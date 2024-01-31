@@ -9,57 +9,52 @@ import (
 )
 
 const (
-	DefaultValue                 string = ""
-	defaultContainerInstanceName string = "topaz"
+	DefaultValue             string = ""
+	defaultContainerRegistry string = "ghcr.io/aserto-dev"
+	defaultContainerImage    string = "topaz"
+	defaultContainerTag      string = "latest"
+	defaultContainerName     string = "topaz"
 )
 
-// ContainerImage.
-func ContainerImage(service, org, name, version string) string {
-	if containerImage := os.Getenv("CONTAINER_IMAGE"); containerImage != "" {
-		return containerImage
+// Container returns the fully qualified container name (registry/image:tag).
+func Container(registry, image, tag string) string {
+	if container := os.Getenv("CONTAINER"); container != "" {
+		return container
 	}
 
-	return fmt.Sprintf("%s/%s/%s:%s",
-		g.Iff(service != "", service, ContainerRegistry()),
-		g.Iff(org != "", org, ContainerOrg()),
-		g.Iff(name != "", name, ContainerName()),
-		g.Iff(version != "", version, ContainerVTag()),
+	return fmt.Sprintf("%s/%s:%s",
+
+		g.Iff(registry != "", registry, ContainerRegistry()),
+		g.Iff(image != "", image, ContainerImage()),
+		g.Iff(tag != "", tag, ContainerTag()),
 	)
 }
 
-// ContainerRegistry.
+// ContainerRegistry returns the container registry (host[:port]/repo).
 func ContainerRegistry() string {
-	if containerService := os.Getenv("CONTAINER_SERVICE"); containerService != "" {
-		return containerService
+	if containerRegistry := os.Getenv("CONTAINER_REGISTRY"); containerRegistry != "" {
+		return containerRegistry
 	}
-	return "ghcr.io"
+	return defaultContainerRegistry
 }
 
-// ContainerOrg.
-func ContainerOrg() string {
-	if containerOrg := os.Getenv("CONTAINER_ORG"); containerOrg != "" {
-		return containerOrg
+// ContainerImage returns the container image name.
+func ContainerImage() string {
+	if containerImage := os.Getenv("CONTAINER_IMAGE"); containerImage != "" {
+		return containerImage
 	}
-	return "aserto-dev"
+	return defaultContainerImage
 }
 
-// ContainerName.
-func ContainerName() string {
-	if containerName := os.Getenv("CONTAINER_NAME"); containerName != "" {
-		return containerName
+// ContainerTag returns the container tag (label or semantic version).
+func ContainerTag() string {
+	if containerTag := os.Getenv("CONTAINER_TAG"); containerTag != "" {
+		return containerTag
 	}
-	return "topaz"
+	return defaultContainerTag
 }
 
-// ContainerVTag.
-func ContainerVTag() string {
-	if containerVersion := os.Getenv("CONTAINER_VERSION"); containerVersion != "" {
-		return containerVersion
-	}
-	return "latest"
-}
-
-// ContainerPlatform.
+// ContainerPlatform, returns the container platform for multi-platform capable servers.
 func ContainerPlatform() string {
 	if containerPlatform := os.Getenv("CONTAINER_PLATFORM"); containerPlatform != "" {
 		return containerPlatform
@@ -67,7 +62,10 @@ func ContainerPlatform() string {
 	return "linux/" + runtime.GOARCH
 }
 
-// ContainerInstanceName.
-func ContainerInstanceName() string {
-	return defaultContainerInstanceName
+// ContainerName returns the container instance name (docker run --name CONTAINER_NAME).
+func ContainerName() string {
+	if containerName := os.Getenv("CONTAINER_NAME"); containerName != "" {
+		return containerName
+	}
+	return defaultContainerName
 }

@@ -11,14 +11,14 @@ type StopCmd struct {
 }
 
 func (cmd StopCmd) Run(c *cc.CommonCtx) error {
-	running, err := dockerx.IsRunning(cc.ContainerInstanceName())
+	running, err := dockerx.IsRunning(cmd.ContainerName)
 	if err != nil {
 		return err
 	}
 
 	if running {
 		color.Green(">>> stopping topaz...")
-		return dockerx.DockerRun("stop", cc.ContainerInstanceName())
+		return dockerx.DockerRun("stop", cmd.ContainerName)
 	}
 
 	return nil

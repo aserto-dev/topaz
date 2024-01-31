@@ -12,9 +12,11 @@ import (
 )
 
 type StartRunCmd struct {
-	ContainerName     string   `optional:"" default:"${container_name}" env:"CONTAINER_VERSION" help:"container name"`
-	ContainerVersion  string   `optional:"" default:"${container_version}" env:"CONTAINER_VERSION" help:"container version" `
-	ContainerPlatform string   `optional:"" default:"${container_platform}" env:"CONTAINER_PLATFORM" help:"container platform" `
+	ContainerRegistry string   `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
+	ContainerImage    string   `optional:"" default:"${container_image}" env:"CONTAINER_IMAGE" help:"container image name"`
+	ContainerTag      string   `optional:"" default:"${container_tag}" env:"CONTAINER_TAG" help:"container tag"`
+	ContainerPlatform string   `optional:"" default:"${container_platform}" env:"CONTAINER_PLATFORM" help:"container platform"`
+	ContainerName     string   `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
 	ContainerHostname string   `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	Env               []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
 }
@@ -23,7 +25,7 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 	args := []string{
 		"run",
 		"--rm",
-		"--name", cc.ContainerInstanceName(),
+		"--name", cc.ContainerName(),
 		g.Iff(interactive, "-ti", "-d"),
 	}
 
@@ -64,11 +66,10 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 	}
 
 	return append(args,
-		cc.ContainerImage(
-			cc.DefaultValue,    // service
-			cc.DefaultValue,    // org
-			cc.ContainerName(), // name
-			cc.ContainerVTag(), // version
+		cc.Container(
+			cc.ContainerRegistry(), // registry
+			cc.ContainerImage(),    // image
+			cc.ContainerTag(),      // tag
 		),
 	), nil
 }

@@ -7,8 +7,9 @@ import (
 )
 
 type UpdateCmd struct {
-	ContainerName     string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
-	ContainerVersion  string `optional:"" default:"${container_version}" env:"CONTAINER_VERSION" help:"container version"`
+	ContainerRegistry string `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
+	ContainerImage    string `optional:"" default:"${container_image}" env:"CONTAINER_IMAGE" help:"container image name"`
+	ContainerTag      string `optional:"" default:"${container_tag}" env:"CONTAINER_TAG" help:"container tag"`
 	ContainerPlatform string `optional:"" default:"${container_platform}" env:"CONTAINER_PLATFORM" help:"container platform"`
 }
 
@@ -21,11 +22,10 @@ func (cmd UpdateCmd) Run(c *cc.CommonCtx) error {
 		"pull",
 		"--platform", cmd.ContainerPlatform,
 		"--quiet",
-		cc.ContainerImage(
-			cc.DefaultValue,      // service
-			cc.DefaultValue,      // org
-			cmd.ContainerName,    // name
-			cmd.ContainerVersion, // version
+		cc.Container(
+			cmd.ContainerRegistry, // registry
+			cmd.ContainerImage,    // image
+			cmd.ContainerTag,      // tag
 		),
 	}
 

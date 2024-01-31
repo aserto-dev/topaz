@@ -30,11 +30,11 @@ func main() {
 			"topaz_certs_dir":    cc.GetTopazCertsDir(),
 			"topaz_cfg_dir":      cc.GetTopazCfgDir(),
 			"topaz_db_dir":       cc.GetTopazDataDir(),
-			"container_service":  cc.ContainerRegistry(),
-			"container_org":      cc.ContainerOrg(),
-			"container_name":     cc.ContainerName(),
-			"container_version":  cc.ContainerVTag(),
+			"container_registry": cc.ContainerRegistry(),
+			"container_image":    cc.ContainerImage(),
+			"container_tag":      cc.ContainerTag(),
 			"container_platform": cc.ContainerPlatform(),
+			"container_name":     cc.ContainerName(),
 		},
 	)
 

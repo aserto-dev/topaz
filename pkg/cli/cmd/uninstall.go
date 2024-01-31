@@ -12,14 +12,16 @@ import (
 )
 
 type UninstallCmd struct {
-	ContainerName    string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
-	ContainerVersion string `optional:"" default:"${container_version}" env:"CONTAINER_VERSION" help:"container version"`
+	ContainerRegistry string `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
+	ContainerImage    string `optional:"" default:"${container_image}" env:"CONTAINER_IMAGE" help:"container image name"`
+	ContainerTag      string `optional:"" default:"${container_tag}" env:"CONTAINER_TAG" help:"container tag"`
+	ContainerName     string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
 }
 
 func (cmd UninstallCmd) Run(c *cc.CommonCtx) error {
 	color.Green(">>> uninstalling topaz...")
 
-	if err := (StopCmd{}).Run(c); err != nil {
+	if err := (StopCmd{ContainerName: cmd.ContainerName}).Run(c); err != nil {
 		return err
 	}
 
@@ -27,11 +29,10 @@ func (cmd UninstallCmd) Run(c *cc.CommonCtx) error {
 
 	args := []string{
 		"images",
-		cc.ContainerImage(
-			cc.DefaultValue,      // service
-			cc.DefaultValue,      // org
-			cmd.ContainerName,    // name
-			cmd.ContainerVersion, // version
+		cc.Container(
+			cmd.ContainerRegistry, // registry
+			cmd.ContainerImage,    // image
+			cmd.ContainerTag,      // tag
 		),
 		"--filter", "label=org.opencontainers.image.source=https://github.com/aserto-dev/topaz",
 		"-q",
@@ -49,13 +50,27 @@ func (cmd UninstallCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
-	// remove config file last
-	configFile := filepath.Join(cc.GetTopazCfgDir(), "config.yaml")
-	if fi, err := os.Stat(configFile); err == nil && !fi.IsDir() {
-		if err := os.Remove(configFile); err != nil {
-			return errors.Wrap(err, "failed to delete topaz directory")
-		}
+	// remove directory.db file.
+	if err := removeFile(filepath.Join(cc.GetTopazDataDir(), "directory.db")); err != nil {
+		return err
+	}
+	// remove directory.db.sync file.
+	if err := removeFile(filepath.Join(cc.GetTopazDataDir(), "directory.db.sync")); err != nil {
+		return err
+	}
+	// remove config.yaml file last.
+	if err := removeFile(filepath.Join(cc.GetTopazCfgDir(), "config.yaml")); err != nil {
+		return err
 	}
 
+	return nil
+}
+
+func removeFile(fpath string) error {
+	if fi, err := os.Stat(fpath); err == nil && !fi.IsDir() {
+		if err := os.Remove(fpath); err != nil {
+			return errors.Wrapf(err, "failed to delete %s", fpath)
+		}
+	}
 	return nil
 }
