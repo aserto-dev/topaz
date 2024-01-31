@@ -146,7 +146,7 @@ tree $HOME/.config/topaz
 ```
 
 * `certs/` contains a set of generated self-signed certificates for Topaz.
-* `cfg/config.yaml` contains a Topaz configuration file which references the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. For the Todo template, this is the public GHCR image `ghcr.io/aserto-policies/policy-todo-rebac:latest`. The source code for the policy image can be found [here](https://github.com/aserto-templates/policy-todo-rebac/tree/main/content/src/policies).
+* `cfg/config.yaml` contains a Topaz configuration file which references the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. For the Todo template, this is the public GHCR image `ghcr.io/aserto-policies/policy-todo:latest`. The source code for the policy image can be found [here](https://github.com/aserto-templates/policy-todo/tree/main/content/src/policies).
 * `data/` contains the objects and relations for the Todo template - in this case, a set of 5 users and 4 groups that are based on the "Rick & Morty" cartoon.
 * `db/directory.db` contains the embedded database which houses the model and data.
 * `model/manifest.yaml` contains the manifest file which describes the domain model.
