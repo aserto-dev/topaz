@@ -21,6 +21,12 @@ func main() {
 
 	cliConfigFile := filepath.Join(cc.GetTopazDir(), cmd.CLIConfigurationFile)
 
+	ctx, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+
 	kongCtx := kong.Parse(&cli,
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
@@ -43,16 +49,10 @@ func main() {
 			"container_image":    cc.ContainerImage(),
 			"container_tag":      cc.ContainerTag(),
 			"container_platform": cc.ContainerPlatform(),
-			"container_name":     cc.ContainerName(),
+			"container_name":     cc.ContainerName(ctx.Config.DefaultConfigFile),
 		},
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
-
-	ctx, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
-	}
 
 	if err := kongCtx.Run(ctx); err != nil {
 		kongCtx.FatalIfErrorf(err)
