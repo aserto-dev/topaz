@@ -28,11 +28,11 @@ type Config struct {
 
 type Plugin struct {
 	ctx         context.Context
+	cancel      context.CancelFunc
 	manager     *plugins.Manager
 	logger      *zerolog.Logger
 	config      *Config
 	topazConfig *topaz.Config
-	cancel      context.CancelFunc
 	syncNow     chan bool
 }
 
@@ -41,6 +41,7 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 
 	cfg.SessionID = uuid.NewString()
 
+	// sync context, lifetime management for scheduler.
 	syncContext, cancel := context.WithCancel(context.Background())
 
 	if topazConfig == nil {
@@ -49,13 +50,17 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 
 	return &Plugin{
 		ctx:         syncContext,
+		cancel:      cancel,
 		logger:      &newLogger,
 		manager:     manager,
 		config:      cfg,
 		topazConfig: topazConfig,
-		cancel:      cancel,
 		syncNow:     make(chan bool),
 	}
+}
+
+func (p *Plugin) resetContext() {
+	p.ctx, p.cancel = context.WithCancel(context.Background())
 }
 
 func (p *Plugin) Start(ctx context.Context) error {
@@ -84,6 +89,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 	if p.config.Enabled != newConfig.Enabled {
 		p.logger.Info().Str("id", p.manager.ID).Bool("old", p.config.Enabled).Bool("new", newConfig.Enabled).Msg("sync enabled changed")
 		if newConfig.Enabled {
+			p.resetContext()
 			go p.scheduler()
 		} else {
 			p.cancel()
@@ -102,12 +108,7 @@ func (p *Plugin) SyncNow() {
 const cycles int = 4
 
 func (p *Plugin) scheduler() {
-	// p.config.SyncInterval 1m-60m
-	// 1m -> 60s -> 15s interval
-	// 5m -> 300s -> 75s interval
-	// 60m -> 3600s -> 900s interval
-	waitInSec := (p.config.SyncInterval * 60) / cycles
-
+	// scheduler startup delay 15s
 	interval := time.NewTicker(15 * time.Second)
 	defer interval.Stop()
 
@@ -138,6 +139,14 @@ func (p *Plugin) scheduler() {
 			p.task(false) // watermark sync
 			p.task(true)  // full-diff sync
 		}
+
+		// calculate the interval in secs
+		//
+		// p.config.SyncInterval 1m-60m
+		// 1m -> 60s -> 15s interval
+		// 5m -> 300s -> 75s interval
+		// 60m -> 3600s -> 900s interval
+		waitInSec := (p.config.SyncInterval * 60) / cycles
 
 		wait := time.Duration(waitInSec) * time.Second
 		interval.Reset(wait)
