@@ -82,6 +82,21 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
+	// reset defaults on template install
+	c.Config.DefaultConfigFile = filepath.Join(cc.GetTopazCfgDir(), fmt.Sprintf("%s.yaml", tmpl.Name))
+	c.Config.ContainerName = cc.ContainerName(c.Config.DefaultConfigFile)
+
+	cliConfig := filepath.Join(cc.GetTopazDir(), CLIConfigurationFile)
+
+	kongConfigBytes, err := json.Marshal(c.Config)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(cliConfig, kongConfigBytes, 0666) // nolint
+	if err != nil {
+		return err
+	}
+
 	return cmd.installTemplate(c, tmpl)
 }
 
@@ -156,6 +171,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	// 2 - topaz configure - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
 		command := ConfigureCmd{
+			ConfigFile: fmt.Sprintf("%s.yaml", tmpl.Name),
 			PolicyName: tmpl.Assets.Policy.Name,
 			Resource:   tmpl.Assets.Policy.Resource,
 			Force:      true,
@@ -168,6 +184,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	{
 		command := &StartCmd{
 			StartRunCmd: StartRunCmd{
+				ConfigFile:        fmt.Sprintf("%s.yaml", tmpl.Name),
 				ContainerRegistry: cmd.ContainerRegistry,
 				ContainerImage:    cmd.ContainerImage,
 				ContainerTag:      cmd.ContainerTag,
