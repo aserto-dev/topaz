@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"testing"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/pkg/errors"
@@ -20,9 +21,11 @@ func AssetsDir() string {
 
 // AssetAcmeDBFilePath returns the path of the test contoso EDS database file.
 func AssetAcmeDBFilePath() string {
+
 	const filename = "eds-acmecorp.db"
+	t := testing.T{}
 	srcFile := filepath.Join(AssetsDir(), filename)
-	dstFile := filepath.Join(os.TempDir(), filename)
+	dstFile := filepath.Join(t.TempDir(), filename)
 
 	if err := fcopy(srcFile, dstFile, true); err != nil {
 		panic(err)
