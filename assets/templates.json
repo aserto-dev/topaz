@@ -19,7 +19,7 @@
         "title": "Simple RBAC",
         "short_description": "Simple RBAC authorization template",
         "description": "The Simple RBAC template defines a resource type, with read, write, and delete permissions, that are granted through the reader, writer, and owner roles. You can evolve it to fit your needs.",
-        "docs_url": "",
+        "docs_url": "https://docs.aserto.com/docs/quickstarts/simple-rbac/overview",
         "topaz_url": "simple-rbac.json",
         "hosted_url": "hosted/simple-rbac.json"
     }
