@@ -7,7 +7,10 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 )
 
-var ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
+var (
+	ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
+	ErrIsRunning  = errors.New("topaz is already running, use 'topaz stop' to stop")
+)
 
 type FormatVersion int
 
@@ -45,7 +48,7 @@ func CheckRunning(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
+	if running, err := dockerx.IsRunning(cc.ContainerName()); !running || err != nil {
 		if !running {
 			return ErrNotRunning
 		}

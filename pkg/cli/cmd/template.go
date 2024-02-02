@@ -60,16 +60,23 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 }
 
 type InstallTemplateCmd struct {
-	Name             string `arg:"" required:"" help:"template name"`
-	Force            bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
-	ContainerName    string `optional:"" default:"topaz" help:"container name"`
-	ContainerVersion string `optional:"" default:"latest" help:"container version" `
-	TemplatesURL     string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
+	Name              string `arg:"" required:"" help:"template name"`
+	Force             bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
+	ContainerRegistry string `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
+	ContainerImage    string `optional:"" default:"${container_image}" env:"CONTAINER_IMAGE" help:"container image name"`
+	ContainerTag      string `optional:"" default:"${container_tag}" env:"CONTAINER_TAG" help:"container tag"`
+	ContainerPlatform string `optional:"" default:"${container_platform}" env:"CONTAINER_PLATFORM" help:"container platform"`
+	ContainerName     string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
+	ContainerHostname string `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
+	TemplatesURL      string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
+	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 
 	clients.Config
 }
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
+	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
+
 	tmpl, err := getTemplate(cmd.Name, cmd.TemplatesURL)
 	if err != nil {
 		return err
@@ -134,7 +141,9 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 
 	// 1 - topaz stop - ensure topaz is not running, so we can reconfigure
 	{
-		command := &StopCmd{}
+		command := &StopCmd{
+			ContainerName: cmd.ContainerName,
+		}
 		if err := command.Run(c); err != nil {
 			return err
 		}
@@ -154,8 +163,14 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	// 3 - topaz start - start instance using new configuration
 	{
 		command := &StartCmd{
-			ContainerName:    cmd.ContainerName,
-			ContainerVersion: cmd.ContainerVersion,
+			StartRunCmd: StartRunCmd{
+				ContainerRegistry: cmd.ContainerRegistry,
+				ContainerImage:    cmd.ContainerImage,
+				ContainerTag:      cmd.ContainerTag,
+				ContainerPlatform: cmd.ContainerPlatform,
+				ContainerName:     cmd.ContainerName,
+				ContainerHostname: cmd.ContainerHostname,
+			},
 		}
 		if err := command.Run(c); err != nil {
 			return err

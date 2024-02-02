@@ -4,7 +4,8 @@ import (
 	"html/template"
 	"io"
 	"os"
-	"path"
+
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
 
 type Generator struct {
@@ -49,12 +50,7 @@ func (g *Generator) GenerateConfig(w io.Writer, templateData string) error {
 }
 
 func (g *Generator) CreateConfigDir() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	configDir := path.Join(home, "/.config/topaz/cfg")
+	configDir := cc.GetTopazCfgDir()
 	if fi, err := os.Stat(configDir); err == nil && fi.IsDir() {
 		return configDir, nil
 	}
@@ -63,12 +59,7 @@ func (g *Generator) CreateConfigDir() (string, error) {
 }
 
 func (g *Generator) CreateCertsDir() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	certsDir := path.Join(home, "/.config/topaz/certs")
+	certsDir := cc.GetTopazCertsDir()
 	if fi, err := os.Stat(certsDir); err == nil && fi.IsDir() {
 		return certsDir, nil
 	}
@@ -77,12 +68,7 @@ func (g *Generator) CreateCertsDir() (string, error) {
 }
 
 func (g *Generator) CreateDataDir() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	dataDir := path.Join(home, "/.config/topaz/db")
+	dataDir := cc.GetTopazDataDir()
 	if fi, err := os.Stat(dataDir); err == nil && fi.IsDir() {
 		return dataDir, nil
 	}

@@ -1,0 +1,46 @@
+[
+  {
+    "objects": [
+      {
+        "type": "resource-creator",
+        "key": "resource-creators",
+        "displayName": "Resource creators"
+      }
+    ],
+    "relations": [
+      {
+        "object": {
+          "type": "resource-creator",
+          "key": "resource-creators"
+        },
+        "relation": "member",
+        "subject": {
+          "type": "user",
+          "key": "morty@the-citadel.com"
+        }
+      },
+      {
+        "object": {
+          "type": "resource-creator",
+          "key": "resource-creators"
+        },
+        "relation": "member",
+        "subject": {
+          "type": "user",
+          "key": "rick@the-citadel.com"
+        }
+      },
+      {
+        "object": {
+          "type": "resource-creator",
+          "key": "resource-creators"
+        },
+        "relation": "member",
+        "subject": {
+          "type": "user",
+          "key": "summer@the-smiths.com"
+        }
+      }
+    ]
+  }
+]

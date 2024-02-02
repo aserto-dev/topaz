@@ -7,11 +7,16 @@ import (
 )
 
 type InstallCmd struct {
-	ContainerName    string `optional:""  default:"topaz" help:"container name"`
-	ContainerVersion string `optional:""  default:"latest" help:"container version"`
+	ContainerRegistry string `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
+	ContainerImage    string `optional:"" default:"${container_image}" env:"CONTAINER_IMAGE" help:"container image name"`
+	ContainerTag      string `optional:"" default:"${container_tag}" env:"CONTAINER_TAG" help:"container tag"`
+	ContainerPlatform string `optional:"" default:"${container_platform}" env:"CONTAINER_PLATFORM" help:"container platform"`
+	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 }
 
-func (cmd InstallCmd) Run(c *cc.CommonCtx) error {
+func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
+	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
+
 	if err := CheckRunning(c); err == nil {
 		color.Yellow("!!! topaz is already running")
 		return nil
@@ -19,10 +24,18 @@ func (cmd InstallCmd) Run(c *cc.CommonCtx) error {
 
 	color.Green(">>> installing topaz...")
 
-	return dockerx.DockerWith(map[string]string{
-		"CONTAINER_NAME":    cmd.ContainerName,
-		"CONTAINER_VERSION": cmd.ContainerVersion,
-	},
-		"pull", "ghcr.io/aserto-dev/$CONTAINER_NAME:$CONTAINER_VERSION",
-	)
+	env := map[string]string{}
+
+	args := []string{
+		"pull",
+		"--platform", cmd.ContainerPlatform,
+		"--quiet",
+		cc.Container(
+			cmd.ContainerRegistry, // registry
+			cmd.ContainerImage,    // image name
+			cmd.ContainerTag,      // tag
+		),
+	}
+
+	return dockerx.DockerWith(env, args...)
 }

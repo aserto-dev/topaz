@@ -6,10 +6,12 @@ import (
 	"github.com/fatih/color"
 )
 
-type StatusCmd struct{}
+type StatusCmd struct {
+	ContainerName string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
+}
 
-func (cmd StatusCmd) Run(c *cc.CommonCtx) error {
-	running, err := dockerx.IsRunning(dockerx.Topaz)
+func (cmd *StatusCmd) Run(c *cc.CommonCtx) error {
+	running, err := dockerx.IsRunning(cmd.ContainerName)
 	if err != nil {
 		return err
 	}

@@ -45,11 +45,9 @@ Join the community [Slack channel](https://www.aserto.com/slack) for questions a
     - [Running with Docker](#running-with-docker)
 - [Quickstart](#quickstart)
     - [Install container image](#install-topaz-authorizer-container-image)
-    - [Create config for Todo policy](#create-a-configuration)
-    - [Start in interactive mode](#start-topaz-in-interative-mode)
-    - [Import sample data](#import-sample-data)
+    - [Install Todo template](#install-the-todo-template)
     - [Issue an API call](#issue-an-api-call)
-    - [Issue a query](#issue-a-query)
+    - [Issue authorization request](#issue-an-authorization-request)
     - [Run the sample application](#run-the-sample-application)
 - [Command Line](#command-line-options)
 - [gRPC Endpoints](#grpc-endpoints)
@@ -109,57 +107,62 @@ The Topaz authorizer is packaged as a Docker container. You can get the latest i
 topaz install
 ```
 
-### Create a configuration
+### Install the todo template
 
-This command creates a configuration file for the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. The source code for the `ghcr.io/aserto-policies/policy-todo-rebac:latest` policy image can be found [here](https://github.com/aserto-templates/template-policy-todo-rebac/tree/main/content/src/policies).
+Topaz has a set of pre-built templates that contain three types of artifacts:
+* an authorization policy
+* a domain model (in the form of a manifest file)
+* sample data (users, groups, objects, relationships)
 
-```shell
-topaz configure -d -r ghcr.io/aserto-policies/policy-todo-rebac:latest -n todo
-```
-
-The configuration file is generated in `$(HOME)/.config/topaz/cfg`.
-* the config instructs Topaz to create a local directory instance (`-d`)
-* the config references an authorization policy for a sample "Todo" app, retrieved from the Open Policy Registry as a container image
-* the config is named "todo"
-
-#### Creating a configuration that uses a local policy CLI image
-
-If you have a policy image in the local OCI store of your policy CLI that you want to use with topaz you can create a configuration to use that image from the local store. 
-
-```
-topaz configure -d -s -l ghcr.io/default:latest
-```
-The configuration file is generated in `$(HOME)/.config/topaz/cfg`.
-* the config instructs Topaz to create a local directory instance (`-d`)
-* when started, Topaz will seed the directory with default object types (`-s`)
-* the config uses the opa local_bundles configuration to retrieve the policy image from the local policy CLI OCI store
-
-### Start Topaz in interative mode
+You can use the CLI to install the todo template:
 
 ```shell
-topaz run
+topaz templates install todo
 ```
 
-### Import sample data
+#### Artifacts
 
-Retrieve the "Citadel" json files, placing them in the current directory:
+This command will install the following artifacts in `$HOME/.config/topaz/`:
 
 ```shell
-curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel/citadel_objects.json >./citadel_objects.json
-curl https://raw.githubusercontent.com/aserto-dev/topaz/main/assets/citadel/citadel_relations.json >./citadel_relations.json
+tree $HOME/.config/topaz
+/Users/ogazitt/.config/topaz
+├── certs
+│   ├── gateway-ca.crt
+│   ├── gateway.crt
+│   ├── gateway.key
+│   ├── grpc-ca.crt
+│   ├── grpc.crt
+│   └── grpc.key
+├── cfg
+│   └── config.yaml
+├── data
+│   ├── citadel_objects.json
+│   └── citadel_relations.json
+├── db
+│   └── directory.db
+└── model
+    └── manifest.yaml
 ```
 
-Import the contents of the file into Topaz directory. This creates the sample users (Rick, Morty, and friends); groups; and relations.
+* `certs/` contains a set of generated self-signed certificates for Topaz.
+* `cfg/config.yaml` contains a Topaz configuration file which references the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. For the Todo template, this is the public GHCR image `ghcr.io/aserto-policies/policy-todo:latest`. The source code for the policy image can be found [here](https://github.com/aserto-templates/policy-todo/tree/main/content/src/policies).
+* `data/` contains the objects and relations for the Todo template - in this case, a set of 5 users and 4 groups that are based on the "Rick & Morty" cartoon.
+* `db/directory.db` contains the embedded database which houses the model and data.
+* `model/manifest.yaml` contains the manifest file which describes the domain model.
 
-```shell
-topaz import -i -d .
-```
+For a deeper overview of the `cfg/config.yaml` file, see [topaz config](https://github.com/aserto-dev/topaz/blob/main/docs/config.md).
 
-### Bring up the console
+#### What just happened?
 
-```shell
-topaz console
-```
+Besides laying down the artifacts mentioned, installing the Todo template did the following things:
+
+* started Topaz in daemon (background) mode (see `topaz start --help`).
+* set the manifest found in `model/manifest.yaml` (see `topaz set manifest --help`).
+* imported the objects and relations found in `data/` (see `topaz import --help`).
+* opened a browser window to the Topaz [console](https://localhost:8080/ui/directory) (see `topaz console --help`).
+
+Feel free to play around with the Topaz console! Or follow the next few steps to interact with the Topaz policy and authorization endpoints.
 
 ### Issue an API call
 
@@ -171,9 +174,9 @@ This API call retrieves the set of policies that Topaz has loaded:
 curl -k https://localhost:8383/api/v2/policies
 ```
 
-### Issue a query
+### Issue an authorization request
 
-Issue a query using the `is` REST API to verify that the user Rick is allowed to GET the list of todos:
+Issue an authorization request using the `is` REST API to verify that the user Rick is allowed to GET the list of todos:
 
 ```shell
 curl -k -X POST 'https://localhost:8383/api/v2/authz/is' \
@@ -192,9 +195,9 @@ curl -k -X POST 'https://localhost:8383/api/v2/authz/is' \
 
 ### Run the sample application
 
-To run the sample Todo app in the language of your choice, and see how Topaz is used to authorize requests, refer to the [docs](https://www.topaz.sh/docs/getting-started/samples).
+To run the sample Todo backend in the language of your choice, and see how Topaz is used to authorize requests, refer to the [docs](https://www.topaz.sh/docs/getting-started/samples).
 
-To start an interactive session with the Topaz endpoints, see the [gRPC endpoints](#grpc-endpoints) section.
+To start an interactive session with the Topaz endpoints over gRPC, see the [gRPC endpoints](#grpc-endpoints) section.
 
 ## Command line options
 
@@ -220,6 +223,8 @@ Commands:
   restore            restore directory data
   test exec          execute assertions
   test template      output assertions template
+  templates list     list template
+  templates install  install template
   install            install topaz container
   configure          configure topaz service
   update             update topaz container version

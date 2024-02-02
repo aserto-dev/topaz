@@ -32,7 +32,7 @@ type ListCertsCmd struct {
 	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
 }
 
-func (cmd ListCertsCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
 		return fmt.Errorf("directory %s not found", certsDir)
@@ -100,7 +100,7 @@ type GenerateCertsCmd struct {
 }
 
 // Generate a pair of gateway and grpc certificates.
-func (cmd GenerateCertsCmd) Run(c *cc.CommonCtx) error {
+func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(certsDir, 0755); err != nil {
@@ -143,7 +143,7 @@ type TrustCertsCmd struct {
 	Remove   bool   `flag:"" default:"false" help:"remove dev cert from trust store"`
 }
 
-func (cmd TrustCertsCmd) Run(c *cc.CommonCtx) error {
+func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
 		return fmt.Errorf("directory %s not found", certsDir)
@@ -203,7 +203,7 @@ type RemoveCertFileCmd struct {
 	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
 }
 
-func (cmd RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
+func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
 		return fmt.Errorf("directory %s not found", certsDir)

@@ -1,0 +1,10 @@
+{
+  "objects": [
+    {
+      "type": "resource-creator",
+      "key": "resource-creators",
+      "displayName": "Resource creators"
+    }
+  ]
+}
+

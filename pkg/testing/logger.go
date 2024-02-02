@@ -22,7 +22,7 @@ func NewLogDebugger(t *testing.T, logName string) *LogDebugger {
 	}
 	outLogPath := outLog.Name()
 
-	t.Logf(">> Log output for %s: %s\n", logName, outLogPath)
+	t.Logf(">>> Log output for %s: %s\n", logName, outLogPath)
 
 	return &LogDebugger{
 		t:          t,

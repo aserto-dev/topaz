@@ -14,9 +14,9 @@ The main configuration for Topaz can be devided in 3 main sections:
 If you use topaz CLI to generate your configuration file by default it will add the TOPAZ_DIR environment variable to the path configurations. By default this is empty and considered an NOP addition, but it can easily allow you to specify the desired value to the run/start topaz CLI command with the `-e` flag. 
 
 By default if you run/start the topaz container using the topaz CLI the following environment variables will be set in your topaz container:
-- TOPAZ_CERTS_DIR - default $HOME/.config/topaz - the directory where topaz will load/generate the certs
-- TOPAZ_CFG_DIR - default $HOME/.config/topaz - the directory from where topaz will load the configuration file
-- TOPAZ_EDS_DIR - default $HOME/.config/topaz - the directory where topaz will store the edge directory DB
+- TOPAZ_CERTS_DIR - default $HOME/.config/topaz/certs - the directory where topaz will load/generate the certs
+- TOPAZ_CFG_DIR - default $HOME/.config/topaz/cfg - the directory from where topaz will load the configuration file
+- TOPAZ_DB_DIR - default $HOME/.config/topaz/db - the directory where topaz will store the edge directory DB
 
 Both run and start topaz CLI commands allow passing optional environment variables to your running container using the -e flag. This will allow you to use any desired environment variable in your configuration file as long as you pass it to the container. 
 
