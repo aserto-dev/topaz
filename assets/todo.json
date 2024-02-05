@@ -12,6 +12,8 @@
             "citadel/citadel_relations.json"
         ],
         "domain_data": [
+          "todo/todo_objects.json",
+          "todo/todo_relations.json"
         ],
         "assertions": []
     }

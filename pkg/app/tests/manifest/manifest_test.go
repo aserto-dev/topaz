@@ -18,7 +18,7 @@ import (
 )
 
 func TestManifest(t *testing.T) {
-	tempDir := os.TempDir()
+	tempDir := t.TempDir()
 	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
 		cfg.Edge.DBPath = path.Join(tempDir, "test.db")
 	})
