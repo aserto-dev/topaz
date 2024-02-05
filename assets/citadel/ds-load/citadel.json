@@ -285,6 +285,22 @@
       },
       {
         "object_type": "group",
+        "object_id": "editor",
+        "relation": "member",
+        "subject_type": "group",
+        "subject_id": "admin",
+        "subject_relation": "member"
+      },
+      {
+        "object_type": "group",
+        "object_id": "viewer",
+        "relation": "member",
+        "subject_type": "group",
+        "subject_id": "editor",
+        "subject_relation": "member"
+      },
+      {
+        "object_type": "group",
         "object_id": "admin",
         "relation": "member",
         "subject_type": "user",
