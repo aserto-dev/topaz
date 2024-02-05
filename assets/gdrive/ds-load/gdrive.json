@@ -2,155 +2,6 @@
   {
     "objects": [
       {
-        "type": "identity",
-        "id": "1",
-        "properties": {
-          "kind": "IDENTITY_KIND_PID",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "2",
-        "properties": {
-          "kind": "IDENTITY_KIND_PID",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "3",
-        "properties": {
-          "kind": "IDENTITY_KIND_PID",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "4",
-        "properties": {
-          "kind": "IDENTITY_KIND_PID",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "5",
-        "properties": {
-          "kind": "IDENTITY_KIND_PID",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "6",
-        "properties": {
-          "kind": "IDENTITY_KIND_PID",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "luke@yavin4base.mil",
-        "properties": {
-          "kind": "IDENTITY_KIND_EMAIL",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "leia@yavin4base.mil",
-        "properties": {
-          "kind": "IDENTITY_KIND_EMAIL",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "han@yavin4base.mil",
-        "properties": {
-          "kind": "IDENTITY_KIND_EMAIL",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "r2d2@droids.yavin4base.mil",
-        "properties": {
-          "kind": "IDENTITY_KIND_EMAIL",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "identity",
-        "id": "c3po@droids.yavin4base.mil",
-        "properties": {
-          "kind": "IDENTITY_KIND_EMAIL",
-          "provider": "local",
-          "verified": true
-        }
-      },
-      {
-        "type": "user",
-        "id": "luke@yavin4base.mil",
-        "display_name": "Luke Skywalker",
-        "properties": {
-          "email": "luke@yavin4base.mil",
-          "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/luke.jpg",
-          "status": "USER_STATUS_ACTIVE"
-        }
-      },
-      {
-        "type": "user",
-        "id": "leia@yavin4base.mil",
-        "display_name": "Leia Skywalker",
-        "properties": {
-          "email": "leia@yavin4base.mil",
-          "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/leia.jpg",
-          "status": "USER_STATUS_ACTIVE"
-        }
-      },
-      {
-        "type": "user",
-        "id": "han@yavin4base.mil",
-        "display_name": "Han Solo",
-        "properties": {
-          "email": "han@yavin4base.mil",
-          "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/han.jpg",
-          "status": "USER_STATUS_ACTIVE"
-        }
-      },
-      {
-        "type": "user",
-        "id": "r2d2@droids.yavin4base.mil",
-        "display_name": "R2D2",
-        "properties": {
-          "email": "r2d2@droids.yavin4base.mil",
-          "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/r2d2.jpg",
-          "status": "USER_STATUS_ACTIVE"
-        }
-      },
-      {
-        "type": "user",
-        "id": "r2d2@droids.yavin4base.mil",
-        "display_name": "C3PO",
-        "properties": {
-          "email": "c3po@droids.yavin4base.mil",
-          "picture": "https://github.com/aserto-demo/gdrive-images/raw/main/c3po.jpg",
-          "status": "USER_STATUS_ACTIVE"
-        }
-      },
-      {
         "type": "group",
         "id": "everyone",
         "display_name": "everyone-group",
@@ -158,8 +9,8 @@
       },
       {
         "type": "group",
-        "id": "strike-team",
-        "display_name": "strike-team-group",
+        "id": "adventurers",
+        "display_name": "adventurers-group",
         "properties": {}
       },
       {
@@ -176,26 +27,20 @@
       },
       {
         "type": "folder",
-        "id": "death-star",
-        "display_name": "death-star",
+        "id": "dimension-35c",
+        "display_name": "dimension-35c-folder",
         "properties": {}
       },
       {
         "type": "folder",
-        "id": "clone-wars",
-        "display_name": "clone-wars-folder",
+        "id": "cromulons",
+        "display_name": "cromulons-folder",
         "properties": {}
       },
       {
         "type": "folder",
         "id": "general",
         "display_name": "general-folder",
-        "properties": {}
-      },
-      {
-        "type": "folder",
-        "id": "clone-wars",
-        "display_name": "clone-wars-folder",
         "properties": {}
       },
       {
@@ -206,8 +51,8 @@
       },
       {
         "type": "document",
-        "id": "striketeam.xls",
-        "display_name": "striketeam.xls-document",
+        "id": "megatree.xls",
+        "display_name": "megatree.xls-document",
         "properties": {}
       },
       {
@@ -215,140 +60,57 @@
         "id": "dining-menu.pdf",
         "display_name": "dining-menu.pdf-document",
         "properties": {}
-      },
-      {
-        "type": "document",
-        "id": "rebel-handbook.pdf",
-        "display_name": "rebel-handbook.pdf-document",
-        "properties": {}
       }
     ],
     "relations": [
       {
-        "object_type": "identity",
-        "object_id": "1",
-        "relation": "identifier",
+        "object_type": "group",
+        "object_id": "everyone",
+        "relation": "member",
         "subject_type": "user",
-        "subject_id": "luke@yavin4base.mil"
-      },
-      {
-        "object_type": "identity",
-        "object_id": "2",
-        "relation": "identifier",
-        "subject_type": "user",
-        "subject_id": "leia@yavin4base.mil"
-      },
-      {
-        "object_type": "identity",
-        "object_id": "3",
-        "relation": "identifier",
-        "subject_type": "user",
-        "subject_id": "han@yavin4base.mil"
-      },
-      {
-        "object_type": "identity",
-        "object_id": "4",
-        "relation": "identifier",
-        "subject_type": "user",
-        "subject_id": "r2d2@droids.yavin4base.mil"
-      },
-      {
-        "object_type": "identity",
-        "object_id": "3",
-        "relation": "identifier",
-        "subject_type": "user",
-        "subject_id": "c3po@droids.yavin4base.mil"
-      },
-      {
-        "object_type": "identity",
-        "object_id": "luke@yavin4base.mil",
-        "relation": "identifier",
-        "subject_type": "user",
-        "subject_id": "luke@yavin4base.mil"
-      },
-      {
-        "object_type": "identity",
-        "object_id": "2",
-        "relation": "identifier",
-        "subject_type": "user",
-        "subject_id": "leia@yavin4base.mil"
-      },
-      {
-        "object_type": "identity",
-        "object_id": "leia@yavin4base.mil",
-        "relation": "identifier",
-        "subject_type": "user",
-        "subject_id": "han@yavin4base.mil"
-      },
-      {
-        "object_type": "identity",
-        "object_id": "r2d2@yavin4base.mil",
-        "relation": "identifier",
-        "subject_type": "user",
-        "subject_id": "r2d2@droids.yavin4base.mil"
-      },
-      {
-        "object_type": "identity",
-        "object_id": "c3po@yavin4base.mil",
-        "relation": "identifier",
-        "subject_type": "user",
-        "subject_id": "c3po@droids.yavin4base.mil"
+        "subject_id": "beth@the-smiths.com"
       },
       {
         "object_type": "group",
         "object_id": "everyone",
         "relation": "member",
         "subject_type": "user",
-        "subject_id": "luke.yavin4base.mil"
+        "subject_id": "jerry@the-smiths.com"
       },
       {
         "object_type": "group",
         "object_id": "everyone",
         "relation": "member",
         "subject_type": "user",
-        "subject_id": "leia.yavin4base.mil"
+        "subject_id": "summer@the-smiths.com"
       },
       {
         "object_type": "group",
         "object_id": "everyone",
         "relation": "member",
         "subject_type": "user",
-        "subject_id": "han.yavin4base.mil"
+        "subject_id": "morty@the-citadel.com"
       },
       {
         "object_type": "group",
         "object_id": "everyone",
         "relation": "member",
         "subject_type": "user",
-        "subject_id": "r2d2.droids.yavin4base.mil"
+        "subject_id": "rick@the-citadel.com"
       },
       {
         "object_type": "group",
-        "object_id": "everyone",
+        "object_id": "adventurers",
         "relation": "member",
         "subject_type": "user",
-        "subject_id": "c3po.droids.yavin4base.mil"
+        "subject_id": "rick@the-citadel.com"
       },
       {
         "object_type": "group",
-        "object_id": "strike-team",
+        "object_id": "adventurers",
         "relation": "member",
         "subject_type": "user",
-        "subject_id": "luke.yavin4base.mil"
-      },
-      {
-        "object_type": "group",
-        "object_id": "strike-team",
-        "relation": "member",
-        "subject_type": "user",
-        "subject_id": "leia.yavin4base.mil"
-      },
-      {
-        "object_type": "group",
-        "object_id": "strike-team",
-        "relation": "member",
-        "subject_type": "user",
-        "subject_id": "han.yavin4base.mil"
+        "subject_id": "morty@the-citadel.com"
       },
       {
         "object_type": "folder",
@@ -359,7 +121,7 @@
       },
       {
         "object_type": "folder",
-        "object_id": "death-star",
+        "object_id": "dimension-35c",
         "relation": "parent",
         "subject_type": "folder",
         "subject_id": "missions"
@@ -369,35 +131,35 @@
         "object_id": "siteplan.png",
         "relation": "parent",
         "subject_type": "folder",
-        "subject_id": "death-star"
+        "subject_id": "dimension-35c"
       },
       {
         "object_type": "document",
-        "object_id": "striketeam.xls",
+        "object_id": "megatree.xls",
         "relation": "parent",
         "subject_type": "folder",
-        "subject_id": "death-star"
+        "subject_id": "dimension-35c"
       },
       {
         "object_type": "folder",
         "object_id": "missions",
         "relation": "parent",
         "subject_type": "folder",
-        "subject_id": "clone-wars"
+        "subject_id": "cromulons"
       },
       {
         "object_type": "folder",
         "object_id": "missions",
         "relation": "editor",
         "subject_type": "group",
-        "subject_id": "strike-team"
+        "subject_id": "adventurers"
       },
       {
         "object_type": "folder",
-        "object_id": "death-star",
+        "object_id": "dimension-35c",
         "relation": "editor",
         "subject_type": "group",
-        "subject_id": "strike-team"
+        "subject_id": "adventurers"
       },
       {
         "object_type": "folder",
@@ -409,13 +171,6 @@
       {
         "object_type": "folder",
         "object_id": "general",
-        "relation": "viewer",
-        "subject_type": "user",
-        "subject_id": "lea@yavin4base.mil"
-      },
-      {
-        "object_type": "folder",
-        "object_id": "general",
         "relation": "parent",
         "subject_type": "folder",
         "subject_id": "root"
@@ -423,13 +178,6 @@
       {
         "object_type": "document",
         "object_id": "dining-menu.pdf",
-        "relation": "parent",
-        "subject_type": "folder",
-        "subject_id": "general"
-      },
-      {
-        "object_type": "document",
-        "object_id": "rebel-handbook.pdf",
         "relation": "parent",
         "subject_type": "folder",
         "subject_id": "general"

@@ -1,4 +1,12 @@
 {
+    "gdrive":{
+        "title": "GDrive",
+        "short_description": "GDrive application end-to-end sample",
+        "description": "A simple Google Drive application that exemplify how the authorization to folders and documents can be managed using Aserto.",
+        "docs_url": "https://docs.aserto.com/docs/quickstarts/gdrive/overview",
+        "topaz_url": "gdrive.json",
+        "hosted_url": "hosted/gdrive.json"
+    },
     "peoplefinder":{
         "title": "PeopleFinder",
         "short_description": "Corporate directory end-to-end sample",

@@ -5,12 +5,19 @@ model:
 # object type definitions
 types:
   # user represents any rebel that has access to the system
-  user: {}
+  user:
+    relations:
+      manager: user
 
   # group represents a collection of users and/or (nested) groups
   group:
     relations:
       member: user | group#member
+
+  # identity represents a collection of identities for users
+  identity:
+    relations:
+      identifier: user
 
   # author represents a user or member of a group that can create a document
   author:
