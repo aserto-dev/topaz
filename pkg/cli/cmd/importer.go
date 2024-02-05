@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -21,6 +23,15 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	color.Green(">>> importing data from %s", cmd.Directory)
+
+	if fi, err := os.Stat(cmd.Directory); err != nil || !fi.IsDir() {
+		if err != nil {
+			return err
+		}
+		if !fi.IsDir() {
+			return fmt.Errorf("--directory argument %q is not a directory", cmd.Directory)
+		}
+	}
 
 	files, err := filepath.Glob(filepath.Join(cmd.Directory, "*.json"))
 	if err != nil {
