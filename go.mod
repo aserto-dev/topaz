@@ -1,8 +1,7 @@
 module github.com/aserto-dev/topaz
 
-go 1.21
+go 1.20
 
-toolchain go1.21.6
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
