@@ -1,12 +1,12 @@
 module github.com/aserto-dev/topaz
 
-go 1.20
+go 1.21
+
+toolchain go1.21.6
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
 // replace github.com/aserto-dev/azm => ../azm
-
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
@@ -21,9 +21,9 @@ require (
 	github.com/aserto-dev/go-aserto v0.31.0
 	github.com/aserto-dev/go-authorizer v0.20.5
 	github.com/aserto-dev/go-directory v0.30.10
-	github.com/aserto-dev/go-directory-cli v0.30.1
+	github.com/aserto-dev/go-directory-cli v0.30.2
 	github.com/aserto-dev/go-edge-ds v0.30.12-0.20240126235511-b23846831d9f
-	github.com/aserto-dev/go-grpc v0.8.60
+	github.com/aserto-dev/go-grpc v0.8.62
 	github.com/aserto-dev/go-topaz-ui v0.0.5
 	github.com/aserto-dev/header v0.0.6
 	github.com/aserto-dev/logger v0.0.4
@@ -38,7 +38,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1
 	github.com/lestrrat-go/jwx v1.2.28
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.2.1
@@ -46,7 +46,7 @@ require (
 	github.com/open-policy-agent/opa v0.58.0
 	github.com/panmari/cuckoofilter v1.0.6
 	github.com/pkg/errors v0.9.1
-	github.com/rs/zerolog v1.31.0
+	github.com/rs/zerolog v1.32.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4
@@ -55,7 +55,7 @@ require (
 	google.golang.org/grpc v1.61.0
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
-	sigs.k8s.io/controller-runtime v0.16.3
+	sigs.k8s.io/controller-runtime v0.17.0
 )
 
 require (
@@ -129,13 +129,11 @@ require (
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/onsi/ginkgo/v2 v2.13.2 // indirect
-	github.com/onsi/gomega v1.30.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc5 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/prometheus/client_golang v1.17.0 // indirect
+	github.com/prometheus/client_golang v1.18.0 // indirect
 	github.com/prometheus/client_model v0.5.0 // indirect
 	github.com/prometheus/common v0.45.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
