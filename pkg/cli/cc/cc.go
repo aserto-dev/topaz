@@ -120,3 +120,17 @@ func (c *CommonCtx) IsServing(grpcAddress string) bool {
 
 	return err == nil
 }
+
+func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
+	cliConfig := filepath.Join(GetTopazDir(), configurationFile)
+
+	kongConfigBytes, err := json.Marshal(c.Config)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(cliConfig, kongConfigBytes, 0666) // nolint
+	if err != nil {
+		return err
+	}
+	return nil
+}
