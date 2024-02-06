@@ -16,6 +16,9 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 	table := c.UI.Normal().WithTable("Available Config Files", "Is Default")
 	files, err := os.ReadDir(cmd.ConfigDir)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
 		return err
 	}
 	for i := range files {
