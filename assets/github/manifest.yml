@@ -10,7 +10,20 @@ model:
   version: 3
 
 types:
-  user: {}
+  # user represents a user that can be granted role(s)
+  user:
+    relations:
+      manager: user
+
+  # group represents a collection of users and/or (nested) groups
+  group:
+    relations:
+      member: user | group#member
+
+  # identity represents a collection of identities for users
+  identity:
+    relations:
+      identifier: user
 
   team:
     relations:
@@ -25,6 +38,9 @@ types:
       repo_writer: user | organization#member
     permissions:
       is_member: member | owner
+      can_administer: repo_admin | owner
+      can_write: repo_writer | can_administer
+      can_read: repo_reader | can_write
   
   repo:
     relations:
@@ -35,8 +51,8 @@ types:
       triager: user | team#member
       writer: user | team#member    
     permissions:
-      can_administer: admin | owner->repo_admin
+      can_administer: admin | owner->can_administer
       can_maintain: maintainer | can_administer
-      can_read: reader | can_triage | owner->repo_reader
-      can_write: writer | can_maintain | owner->repo_writer
+      can_read: reader | can_triage | owner->can_read
+      can_write: writer | can_maintain | owner->can_write
       can_triage: triager | can_write 
