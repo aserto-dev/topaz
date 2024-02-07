@@ -1,0 +1,120 @@
+[
+    {
+        "objects": [
+            {
+              "type": "channel",
+              "id": "general",
+              "properties": {}
+            },
+            {
+              "type": "workspace",
+              "id": "the-smiths",
+              "properties": {}
+            },
+            {
+              "type": "channel",
+              "id": "citadel-adventures",
+              "properties": {}
+            },
+            {
+              "type": "channel",
+              "id": "neighborhood-gossips",
+              "properties": {}
+            }
+          ],
+        "relations": [
+            {
+              "object_type": "channel",
+              "object_id": "general",
+              "relation": "parent_workspace",
+              "subject_type": "workspace",
+              "subject_id": "the-smiths"
+            },
+            {
+              "object_type": "channel",
+              "object_id": "general",
+              "relation": "writer",
+              "subject_type": "user",
+              "subject_id": "beth@the-smiths.com"
+            },
+            {
+              "object_type": "channel",
+              "object_id": "citadel-adventures",
+              "relation": "parent_workspace",
+              "subject_type": "workspace",
+              "subject_id": "the-smiths"
+            },
+            {
+              "object_type": "channel",
+              "object_id": "citadel-adventures",
+              "relation": "writer",
+              "subject_type": "user",
+              "subject_id": "rick@the-citadel.com"
+            },
+            {
+              "object_type": "channel",
+              "object_id": "citadel-adventures",
+              "relation": "writer",
+              "subject_type": "user",
+              "subject_id": "morty@the-citadel.com"
+            },
+            {
+              "object_type": "channel",
+              "object_id": "neighborhood-gossips",
+              "relation": "parent_workspace",
+              "subject_type": "workspace",
+              "subject_id": "the-smiths"
+            },
+            {
+              "object_type": "channel",
+              "object_id": "neighborhood-gossips",
+              "relation": "writer",
+              "subject_type": "user",
+              "subject_id": "jerry@the-smiths.com"
+            },
+            {
+              "object_type": "channel",
+              "object_id": "neighborhood-gossips",
+              "relation": "writer",
+              "subject_type": "workspace",
+              "subject_id": "the-smiths",
+              "subject_relation": "member"
+            },
+            {
+              "object_type": "workspace",
+              "object_id": "the-smiths",
+              "relation": "channels_admin",
+              "subject_type": "user",
+              "subject_id": "rick@the-citadel.com"
+            },
+            {
+              "object_type": "workspace",
+              "object_id": "the-smiths",
+              "relation": "guest",
+              "subject_type": "user",
+              "subject_id": "summer@the-smiths.com"
+            },
+            {
+              "object_type": "workspace",
+              "object_id": "the-smiths",
+              "relation": "legacy_admin",
+              "subject_type": "user",
+              "subject_id": "morty@the-citadel.com"
+            },
+            {
+              "object_type": "workspace",
+              "object_id": "the-smiths",
+              "relation": "member",
+              "subject_type": "user",
+              "subject_id": "morty@the-citadel.com"
+            },
+            {
+              "object_type": "workspace",
+              "object_id": "the-smiths",
+              "relation": "member",
+              "subject_type": "user",
+              "subject_id": "jerry@the-smiths.com"
+            }
+          ]        
+    }
+]

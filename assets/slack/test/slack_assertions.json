@@ -3,50 +3,50 @@
     {
       "check": {
         "object_type": "workspace",
-        "object_id": "sandcastle",
+        "object_id": "the-smiths",
         "relation": "channels_admin",
         "subject_type": "user",
-        "subject_id": "amy"
+        "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
         "object_type": "workspace",
-        "object_id": "sandcastle",
+        "object_id": "the-smiths",
         "relation": "channels_admin",
         "subject_type": "user",
-        "subject_id": "david"
+        "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
         "object_type": "channel",
-        "object_id": "marketing_internal",
+        "object_id": "citadel-adventures",
         "relation": "writer",
         "subject_type": "user",
-        "subject_id": "emily"
+        "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
         "object_type": "channel",
-        "object_id": "marketing_internal",
+        "object_id": "citadel-adventures",
         "relation": "writer",
         "subject_type": "user",
-        "subject_id": "david"
+        "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
         "object_type": "channel",
-        "object_id": "proj_marketing_campaign",
+        "object_id": "neighborhood-gossips",
         "relation": "writer",
         "subject_type": "user",
-        "subject_id": "david"
+        "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
@@ -56,7 +56,17 @@
         "object_id": "general",
         "relation": "writer",
         "subject_type": "user",
-        "subject_id": "bob"
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "channel",
+        "object_id": "general",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     }

@@ -7,42 +7,17 @@
     },
     {
       "type": "workspace",
-      "id": "sandcastle",
-      "properties": {}
-    },
-    {
-      "type": "user",
-      "id": "emily",
-      "properties": {}
-    },
-    {
-      "type": "user",
-      "id": "bob",
-      "properties": {}
-    },
-    {
-      "type": "user",
-      "id": "david",
-      "properties": {}
-    },
-    {
-      "type": "user",
-      "id": "amy",
-      "properties": {}
-    },
-    {
-      "type": "user",
-      "id": "catherine",
+      "id": "the-smiths",
       "properties": {}
     },
     {
       "type": "channel",
-      "id": "marketing_internal",
+      "id": "citadel-adventures",
       "properties": {}
     },
     {
       "type": "channel",
-      "id": "proj_marketing_campaign",
+      "id": "neighborhood-gossips",
       "properties": {}
     }
   ]
