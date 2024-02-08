@@ -30,5 +30,13 @@
         "docs_url": "",
         "topaz_url": "gdrive.json",
         "hosted_url": "hosted/gdrive.json"
+    },
+    "slack": {
+        "title": "Slack",
+        "short_description": "Authorization template for workspaces and channels",
+        "description": "The Slack template defines workspaces and channels, with can_administer_channel and can_comment permissions. Channels reader/writer can be members of an workspace. You can evolve it to fit your needs.",
+        "docs_url": "",
+        "topaz_url": "slack.json",
+        "hosted_url": "hosted/slack.json"
     }
 }
