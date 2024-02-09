@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	builder "github.com/aserto-dev/service-host"
-	"github.com/aserto-dev/topaz/pkg/app/ui"
+	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -41,7 +41,7 @@ func (e *ConsoleService) Cleanups() []func() {
 	return nil
 }
 
-func (e *ConsoleService) PrepareConfig(cfg *config.Config) *ui.ConsoleCfg {
+func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.ConsoleCfg {
 	authorizerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		authorizerURL = getGatewayAddress(serviceConfig)
@@ -62,7 +62,7 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *ui.ConsoleCfg {
 	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
 		modelURL = getGatewayAddress(serviceConfig)
 	}
-	return &ui.ConsoleCfg{
+	return &handlers.ConsoleCfg{
 		AsertoDirectoryURL:       readerURL,
 		DirectoryAPIKey:          cfg.DirectoryResolver.APIKey,
 		DirectoryTenantID:        cfg.DirectoryResolver.TenantID,
@@ -74,9 +74,15 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *ui.ConsoleCfg {
 }
 
 func getGatewayAddress(serviceConfig *builder.API) string {
+	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
+
 	if serviceConfig.Gateway.HTTP {
-		return fmt.Sprintf("http://%s", serviceConfig.Gateway.ListenAddress)
+		return fmt.Sprintf("http://%s", addr)
 	} else {
-		return fmt.Sprintf("https://%s", serviceConfig.Gateway.ListenAddress)
+		return fmt.Sprintf("https://%s", addr)
 	}
+}
+
+func serviceAddress(listenAddress string) string {
+	return strings.Replace(listenAddress, "0.0.0.0", "localhost", 1)
 }
