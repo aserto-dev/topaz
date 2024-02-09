@@ -18,9 +18,9 @@ type ConsoleCfg struct {
 }
 
 type ConsoleCfgV2 struct {
-	ConfigType string `json:"configType"`
-	Name       string `json:"name"`
-	Address    string `json:"address"`
+	Type    string `json:"configType"`
+	Name    string `json:"name"`
+	Address string `json:"address"`
 	*ConsoleCfg
 }
 
@@ -38,10 +38,10 @@ func ConfigHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http
 
 func ConfigHandlerV2(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http.Request) {
 	cfgV2 := &ConsoleCfgV2{
-		ConsoleCfg: confServices,
-		ConfigType: "auto",
-		Name:       "randomName",
+		Type:       "auto",
+		Name:       "Topaz Config",
 		Address:    "https://localhost:4321/api/v2/config",
+		ConsoleCfg: confServices,
 	}
 
 	cfgV2Response := &CfgV2Response{
