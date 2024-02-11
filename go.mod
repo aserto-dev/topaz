@@ -28,7 +28,7 @@ require (
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.30.3
-	github.com/aserto-dev/runtime v0.58.1
+	github.com/aserto-dev/runtime v0.60.0
 	github.com/aserto-dev/self-decision-logger v0.0.5
 	github.com/aserto-dev/service-host v0.0.9
 	github.com/cli/browser v1.3.0
@@ -42,7 +42,7 @@ require (
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.2.1
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/open-policy-agent/opa v0.58.0
+	github.com/open-policy-agent/opa v0.60.0
 	github.com/panmari/cuckoofilter v1.0.6
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.32.0
