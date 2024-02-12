@@ -46,5 +46,13 @@
         "docs_url": "https://docs.aserto.com/docs/quickstarts/github/overview",
         "topaz_url": "github.json",
         "hosted_url": "hosted/github.json"
+    },
+    "multi-tenant": {
+        "title": "Multi-tenant",
+        "short_description": "Authorization template for multi-tenant.",
+        "description": "",
+        "docs_url": "",
+        "topaz_url": "multi-tenant.json",
+        "hosted_url": "hosted/multi-tenant.json"
     }
 }
