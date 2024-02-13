@@ -18,10 +18,17 @@ type ConsoleCfg struct {
 }
 
 type ConsoleCfgV2 struct {
-	Type    string `json:"configType"`
-	Name    string `json:"name"`
-	Address string `json:"address"`
-	*ConsoleCfg
+	Type                      string  `json:"configType"`
+	Name                      string  `json:"name"`
+	Address                   string  `json:"address"`
+	AuthorizerServiceURL      string  `json:"authorizerServiceUrl"`
+	AuthorizerAPIKey          string  `json:"authorizerApiKey"`
+	DirectoryServiceURL       *string `json:"directoryServiceUrl,omitempty"`
+	DirectoryAPIKey           string  `json:"directoryApiKey"`
+	DirectoryTenantID         string  `json:"directoryTenantId"`
+	DirectoryReaderServiceURL *string `json:"directoryReaderServiceUrl,omitempty"`
+	DirectoryWriterServiceURL *string `json:"directoryWriterServiceUrl,omitempty"`
+	DirectoryModelServiceURL  *string `json:"directoryModelServiceUrl,omitempty"`
 }
 
 type CfgV2Response struct {
@@ -38,10 +45,16 @@ func ConfigHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http
 
 func ConfigHandlerV2(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http.Request) {
 	cfgV2 := &ConsoleCfgV2{
-		Type:       "auto",
-		Name:       "Topaz Config",
-		Address:    "https://localhost:4321/api/v2/config",
-		ConsoleCfg: confServices,
+		Type:                      "auto",
+		Name:                      "Topaz Config",
+		Address:                   "https://localhost:4321/api/v2/config",
+		AuthorizerServiceURL:      confServices.AuthorizerServiceURL,
+		AuthorizerAPIKey:          confServices.AuthorizerAPIKey,
+		DirectoryAPIKey:           confServices.DirectoryAPIKey,
+		DirectoryTenantID:         confServices.DirectoryTenantID,
+		DirectoryReaderServiceURL: confServices.AsertoDirectoryReaderURL,
+		DirectoryWriterServiceURL: confServices.AsertoDirectoryWriterURL,
+		DirectoryModelServiceURL:  confServices.AsertoDirectoryModelURL,
 	}
 
 	cfgV2Response := &CfgV2Response{
