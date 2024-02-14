@@ -1,3 +1,4 @@
+#see https://www.topaz.sh/docs/deployment/docker-compose for instructions
 version: "3.5"
 services:
   topaz:
@@ -7,35 +8,27 @@ services:
       - /config/local.yaml
     container_name: topaz
     environment:
-      - TOPAZ_POLICIES_PATH=/policies
+      - TOPAZ_POLICIES_DIR=/policies
+      - TOPAZ_CERTS_DIR=/certs
+      - TOPAZ_DB_DIR=/db
     image: ghcr.io/aserto-dev/topaz:latest
     ports:
-      - 8081:8081
-      - 8282:8282
-      - 8383:8383
-      - 9292:9292
-      - 9393:9393
-      - 9494:9494
-      - 9595:9595
+      - 8080:8080 # console http
+      - 8081:8081 # console grpc
+      - 8282:8282 # authorizer grpc
+      - 8383:8383 # authoirzer http
+      - 9292:9292 # directory grpc
+      - 9393:9393 # directory http
+      - 9494:9494 # healthcheck
+      - 9696:9696 # metrics
     networks:
       - my-network
     volumes:
       - ./config:/config
       - ./policies:/policies
       - ./certs:/certs
-      - ./data:/data
       - ./db:/db
-  topaz-console:
-    container_name: topaz-console
-    image: ghcr.io/aserto-dev/self-hosted-console:0.0.6
-    ports:
-      - 8080:8080
-    environment:
-      - AUTHORIZER_SERVICE_URL=http://localhost:8383
-      - ASERTO_DIRECTORY_URL=http://localhost:9393
-      - STORAGE_PATH=/config
-    volumes:
-      - ./config:/config
+      - ./data:/data
 networks:
   my-network:
     driver: bridge
