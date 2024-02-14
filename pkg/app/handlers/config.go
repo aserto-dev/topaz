@@ -32,8 +32,10 @@ type ConsoleCfgV2 struct {
 }
 
 type CfgV2Response struct {
-	ReadOnly bool            `json:"readOnly"`
-	Configs  []*ConsoleCfgV2 `json:"configs"`
+	ReadOnly              bool            `json:"readOnly"`
+	AuthenticationEnabled bool            `json:"authenticationEnabled"`
+	AuthenticatedUser     bool            `json:"authenticateUser"`
+	Configs               []*ConsoleCfgV2 `json:"configs"`
 }
 
 func ConfigHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http.Request) {
@@ -43,14 +45,14 @@ func ConfigHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http
 	}
 }
 
-func ConfigHandlerV2(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http.Request) {
+func ConfigHandlerV2(confServices *ConsoleCfg) http.Handler {
 	cfgV2 := &ConsoleCfgV2{
 		Type:                      "auto",
 		Name:                      "Topaz Config",
 		Address:                   "https://localhost:4321/api/v2/config",
 		AuthorizerServiceURL:      confServices.AuthorizerServiceURL,
-		AuthorizerAPIKey:          confServices.AuthorizerAPIKey,
-		DirectoryAPIKey:           confServices.DirectoryAPIKey,
+		AuthorizerAPIKey:          "",
+		DirectoryAPIKey:           "",
 		DirectoryTenantID:         confServices.DirectoryTenantID,
 		DirectoryReaderServiceURL: confServices.AsertoDirectoryReaderURL,
 		DirectoryWriterServiceURL: confServices.AsertoDirectoryWriterURL,
@@ -62,10 +64,24 @@ func ConfigHandlerV2(confServices *ConsoleCfg) func(w http.ResponseWriter, r *ht
 		ReadOnly: true,
 	}
 
-	return func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authEnabled := r.Context().Value("AuthEnabled")
+		if authEnabled != nil {
+			cfgV2Response.AuthenticationEnabled = authEnabled.(bool)
+		} else {
+			cfgV2Response.AuthenticationEnabled = false
+		}
+
+		authenticateUser := r.Context().Value("AuthenticatedUser")
+		if authenticateUser != nil && authenticateUser.(bool) {
+			cfgV2Response.AuthenticatedUser = true
+			cfgV2Response.Configs[0].AuthorizerAPIKey = confServices.AuthorizerAPIKey
+			cfgV2Response.Configs[0].DirectoryAPIKey = confServices.DirectoryAPIKey
+		}
+
 		buf, _ := json.Marshal(cfgV2Response)
 		writeJSON(buf, w, r)
-	}
+	})
 }
 
 func writeJSON(buf []byte, w http.ResponseWriter, _ *http.Request) {
