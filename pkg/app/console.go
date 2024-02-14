@@ -63,21 +63,30 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.ConsoleCfg 
 		modelURL = getGatewayAddress(serviceConfig)
 	}
 
-	authorizerAPiKey := ""
-	if _, ok := cfg.APIConfig.Services[modelService]; ok {
+	authorizerApiKey := ""
+	if _, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		for key, _ := range cfg.Auth.APIKeys {
 			// we only need a key
-			authorizerAPiKey = key
+			authorizerApiKey = key
+			break
+		}
+	}
+
+	directoryApiKey := ""
+	if _, ok := cfg.APIConfig.Services[readerService]; ok {
+		for key, _ := range cfg.Auth.APIKeys {
+			// we only need a key
+			directoryApiKey = key
 			break
 		}
 	}
 
 	return &handlers.ConsoleCfg{
 		AsertoDirectoryURL:       readerURL,
-		DirectoryAPIKey:          cfg.DirectoryResolver.APIKey,
-		DirectoryTenantID:        cfg.DirectoryResolver.TenantID,
+		DirectoryAPIKey:          directoryApiKey,
+		DirectoryTenantID:        cfg.DirectoryResolver.APIKey,
 		AuthorizerServiceURL:     authorizerURL,
-		AuthorizerAPIKey:         authorizerAPiKey,
+		AuthorizerAPIKey:         authorizerApiKey,
 		AsertoDirectoryReaderURL: &readerURL,
 		AsertoDirectoryWriterURL: &writerURL,
 		AsertoDirectoryModelURL:  &modelURL,
