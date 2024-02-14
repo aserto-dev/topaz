@@ -4,6 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	"github.com/aserto-dev/header"
+)
+
+var (
+	AuthEnabled       = header.CtxKey("AuthEnabled")
+	AuthenticatedUser = header.CtxKey("AuthenticatedUser")
 )
 
 type ConsoleCfg struct {
@@ -65,14 +72,14 @@ func ConfigHandlerV2(confServices *ConsoleCfg) http.Handler {
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authEnabled := r.Context().Value("AuthEnabled")
+		authEnabled := r.Context().Value(AuthEnabled)
 		if authEnabled != nil {
 			cfgV2Response.AuthenticationEnabled = authEnabled.(bool)
 		} else {
 			cfgV2Response.AuthenticationEnabled = false
 		}
 
-		authenticateUser := r.Context().Value("AuthenticatedUser")
+		authenticateUser := r.Context().Value(AuthenticatedUser)
 		if authenticateUser != nil && authenticateUser.(bool) {
 			cfgV2Response.AuthenticatedUser = true
 			cfgV2Response.Configs[0].AuthorizerAPIKey = confServices.AuthorizerAPIKey

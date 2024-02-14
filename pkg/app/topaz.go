@@ -193,8 +193,7 @@ func (e *Topaz) apiKeyAuth(h http.Handler, authCfg config.AuthnConfig) http.Hand
 		}
 
 		// if we reached this point, auth is enabled
-		newCtx := context.WithValue(r.Context(), "AuthEnabled", true)
-
+		newCtx := context.WithValue(r.Context(), handlers.AuthEnabled, true)
 		authHeader := httpAuthHeader(r)
 		if authHeader == "" {
 			// auth header is not present =>  the user is unauthenticated and did not provide a token
@@ -204,24 +203,27 @@ func (e *Topaz) apiKeyAuth(h http.Handler, authCfg config.AuthnConfig) http.Hand
 
 		basicAPIKey, err := parseAuthHeader(authHeader, "basic")
 		if err != nil {
-			returnStatusUnauthorized(w, "Failed to parse basic auth header!")
+			returnStatusUnauthorized(w, "Failed to parse basic auth header!", e.Logger)
 			return
 		}
 
 		if _, ok := authCfg.APIKeys[basicAPIKey]; ok {
-			newCtx = context.WithValue(newCtx, "AuthenticatedUser", true)
+			newCtx = context.WithValue(newCtx, handlers.AuthenticatedUser, true)
 			h.ServeHTTP(w, r.WithContext(newCtx))
 			return
 		}
 
 		// the user is not authenticated because the key they provided is incorrect
-		returnStatusUnauthorized(w, "The API key is invalid!")
+		returnStatusUnauthorized(w, "The API key is invalid!", e.Logger)
 	})
 }
 
-func returnStatusUnauthorized(w http.ResponseWriter, errMsg string) {
+func returnStatusUnauthorized(w http.ResponseWriter, errMsg string, log *zerolog.Logger) {
 	w.WriteHeader(http.StatusUnauthorized)
-	w.Write([]byte(errMsg))
+	_, err := w.Write([]byte(errMsg))
+	if err != nil {
+		log.Error().Err(err).Msg("could not write response message")
+	}
 }
 
 func httpAuthHeader(r *http.Request) string {
