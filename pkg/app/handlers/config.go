@@ -41,7 +41,7 @@ type ConsoleCfgV2 struct {
 type CfgV2Response struct {
 	ReadOnly              bool            `json:"readOnly"`
 	AuthenticationEnabled bool            `json:"authenticationEnabled"`
-	AuthenticatedUser     bool            `json:"authenticateUser"`
+	AuthenticatedUser     bool            `json:"authenticatedUser"`
 	Configs               []*ConsoleCfgV2 `json:"configs"`
 }
 
@@ -79,8 +79,8 @@ func ConfigHandlerV2(confServices *ConsoleCfg) http.Handler {
 			cfgV2Response.AuthenticationEnabled = false
 		}
 
-		authenticateUser := r.Context().Value(AuthenticatedUser)
-		if authenticateUser != nil && authenticateUser.(bool) {
+		authenticatedUser := r.Context().Value(AuthenticatedUser)
+		if authenticatedUser != nil && authenticatedUser.(bool) {
 			cfgV2Response.AuthenticatedUser = true
 			cfgV2Response.Configs[0].AuthorizerAPIKey = confServices.AuthorizerAPIKey
 			cfgV2Response.Configs[0].DirectoryAPIKey = confServices.DirectoryAPIKey
