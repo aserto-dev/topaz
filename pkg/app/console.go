@@ -54,6 +54,16 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.ConsoleCfg 
 	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
 		writerURL = getGatewayAddress(serviceConfig)
 	}
+	importerURL := ""
+	if serviceConfig, ok := cfg.APIConfig.Services[importerService]; ok {
+		importerURL = getGatewayAddress(serviceConfig)
+	}
+
+	exporterURL := ""
+	if serviceConfig, ok := cfg.APIConfig.Services[exporterService]; ok {
+		exporterURL = getGatewayAddress(serviceConfig)
+	}
+
 	modelURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
 		modelURL = getGatewayAddress(serviceConfig)
@@ -78,14 +88,16 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.ConsoleCfg 
 	}
 
 	return &handlers.ConsoleCfg{
-		AsertoDirectoryURL:       readerURL,
-		DirectoryAPIKey:          directoryAPIKey,
-		DirectoryTenantID:        cfg.DirectoryResolver.APIKey,
-		AuthorizerServiceURL:     authorizerURL,
-		AuthorizerAPIKey:         authorizerAPIKey,
-		AsertoDirectoryReaderURL: &readerURL,
-		AsertoDirectoryWriterURL: &writerURL,
-		AsertoDirectoryModelURL:  &modelURL,
+		AuthorizerServiceURL:        authorizerURL,
+		AuthorizerAPIKey:            authorizerAPIKey,
+		DirectoryServiceURL:         readerURL,
+		DirectoryAPIKey:             directoryAPIKey,
+		DirectoryTenantID:           cfg.DirectoryResolver.TenantID,
+		DirectoryReaderServiceURL:   &readerURL,
+		DirectoryWriterServiceURL:   &writerURL,
+		DirectoryImporterServiceURL: &importerURL,
+		DirectoryExporterServiceURL: &exporterURL,
+		DirectoryModelServiceURL:    &modelURL,
 	}
 }
 
