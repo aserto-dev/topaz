@@ -79,14 +79,14 @@ var builtinHelptests = []struct {
 		query: "x = ds.graph({})",
 		expected: map[string]interface{}{
 			"ds.graph": map[string]interface{}{
-				"anchor_type":      "",
-				"anchor_id":        "",
 				"object_type":      "",
 				"object_id":        "",
 				"relation":         "",
 				"subject_type":     "",
 				"subject_id":       "",
 				"subject_relation": "",
+				"explain":          false,
+				"trace":            false,
 			}},
 	},
 	{
