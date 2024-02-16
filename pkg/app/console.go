@@ -50,10 +50,6 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.ConsoleCfg 
 	if serviceConfig, ok := cfg.APIConfig.Services[readerService]; ok {
 		readerURL = getGatewayAddress(serviceConfig)
 	}
-	if readerURL == "" {
-		host := strings.Split(cfg.DirectoryResolver.Address, ":")[0]
-		readerURL = fmt.Sprintf("https://%s", host)
-	}
 	writerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
 		writerURL = getGatewayAddress(serviceConfig)
