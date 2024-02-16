@@ -21,9 +21,9 @@ require (
 	github.com/aserto-dev/errors v0.0.6
 	github.com/aserto-dev/go-aserto v0.31.0
 	github.com/aserto-dev/go-authorizer v0.20.5
-	github.com/aserto-dev/go-directory v0.30.12-0.20240216170044-f77a10fc9bd2
+	github.com/aserto-dev/go-directory v0.31.0
 	github.com/aserto-dev/go-directory-cli v0.30.2
-	github.com/aserto-dev/go-edge-ds v0.30.12-0.20240216171219-54f6a8b2be32
+	github.com/aserto-dev/go-edge-ds v0.30.12-0.20240216192453-abf408a03a75
 	github.com/aserto-dev/go-grpc v0.8.62
 	github.com/aserto-dev/go-topaz-ui v0.0.5
 	github.com/aserto-dev/header v0.0.6
@@ -68,7 +68,7 @@ require (
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
-	github.com/aserto-dev/azm v0.1.1-0.20240216170218-7eeb5d86f8e3 // indirect
+	github.com/aserto-dev/azm v0.1.1 // indirect
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
 	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
