@@ -4,17 +4,16 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
 	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/go-aserto/client"
-	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	eds "github.com/aserto-dev/go-edge-ds"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
+	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
 
@@ -158,12 +157,17 @@ func (e *Topaz) ConfigServices() error {
 		}
 
 		if con, ok := e.Services[consoleService]; ok {
+			apiKeyAuthMiddleware, err := auth.NewAPIKeyAuthMiddleware(e.Context, &e.Configuration.Auth, e.Logger)
+			if err != nil {
+				return err
+			}
+
 			consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
 			if contains(serviceConfig.registeredServices, "console") {
 				server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))
 				server.Gateway.Mux.Handle("/public/", handlers.UIHandler(http.FS(console.FS)))
 				server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
-				server.Gateway.Mux.Handle("/api/v2/config", e.apiKeyAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
+				server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAPIKeyAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
 				server.Gateway.Mux.HandleFunc("/api/v1/authorizers", handlers.AuthorizersHandler(consoleConfig))
 			}
 		}
@@ -175,73 +179,6 @@ func (e *Topaz) ConfigServices() error {
 	}
 
 	return nil
-}
-
-func (e *Topaz) apiKeyAuth(h http.Handler, authCfg config.AuthnConfig) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// if no API keys are defined or EnableAPIKey is not set, allow the request
-		options := authCfg.Options.ForPath(r.URL.Path)
-
-		if options.EnableAnonymous {
-			ctx := context.WithValue(r.Context(), handlers.AuthenticatedUser, true)
-			h.ServeHTTP(w, r.WithContext(ctx))
-			return
-		}
-
-		if (len(authCfg.APIKeys) == 0) || !options.EnableAPIKey {
-			ctx := context.WithValue(r.Context(), handlers.AuthenticatedUser, true)
-			h.ServeHTTP(w, r.WithContext(ctx))
-			return
-		}
-
-		// if we reached this point, auth is enabled
-		ctx := context.WithValue(r.Context(), handlers.AuthEnabled, true)
-		authHeader := httpAuthHeader(r)
-		if authHeader == "" {
-			// auth header is not present =>  the user is unauthenticated and did not provide a token
-			ctx = context.WithValue(ctx, handlers.AuthenticatedUser, false)
-			h.ServeHTTP(w, r.WithContext(ctx))
-			return
-		}
-
-		basicAPIKey, err := parseAuthHeader(authHeader, "basic")
-		if err != nil {
-			returnStatusUnauthorized(w, "Failed to parse basic auth header!", e.Logger)
-			return
-		}
-
-		if _, ok := authCfg.APIKeys[basicAPIKey]; ok {
-			ctx = context.WithValue(ctx, handlers.AuthenticatedUser, true)
-			h.ServeHTTP(w, r.WithContext(ctx))
-			return
-		}
-
-		// the user is not authenticated because the key they provided is incorrect
-		returnStatusUnauthorized(w, "The API key is invalid!", e.Logger)
-	})
-}
-
-func returnStatusUnauthorized(w http.ResponseWriter, errMsg string, log *zerolog.Logger) {
-	w.WriteHeader(http.StatusUnauthorized)
-	_, err := w.Write([]byte(errMsg))
-	if err != nil {
-		log.Error().Err(err).Msg("could not write response message")
-	}
-}
-
-func httpAuthHeader(r *http.Request) string {
-	return r.Header.Get("Authorization")
-}
-
-func parseAuthHeader(val, expectedScheme string) (string, error) {
-	splits := strings.SplitN(val, " ", 2)
-	if len(splits) < 2 {
-		return "", aerr.ErrAuthenticationFailed.Msg("Bad authorization string")
-	}
-	if !strings.EqualFold(splits[0], expectedScheme) {
-		return "", aerr.ErrAuthenticationFailed.Msgf("Request unauthenticated with expected scheme, expected: %s", expectedScheme)
-	}
-	return splits[1], nil
 }
 
 func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
