@@ -183,21 +183,24 @@ func (e *Topaz) apiKeyAuth(h http.Handler, authCfg config.AuthnConfig) http.Hand
 		options := authCfg.Options.ForPath(r.URL.Path)
 
 		if options.EnableAnonymous {
-			h.ServeHTTP(w, r)
+			ctx := context.WithValue(r.Context(), handlers.AuthenticatedUser, true)
+			h.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
 
 		if (len(authCfg.APIKeys) == 0) || !options.EnableAPIKey {
-			h.ServeHTTP(w, r)
+			ctx := context.WithValue(r.Context(), handlers.AuthenticatedUser, true)
+			h.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
 
 		// if we reached this point, auth is enabled
-		newCtx := context.WithValue(r.Context(), handlers.AuthEnabled, true)
+		ctx := context.WithValue(r.Context(), handlers.AuthEnabled, true)
 		authHeader := httpAuthHeader(r)
 		if authHeader == "" {
 			// auth header is not present =>  the user is unauthenticated and did not provide a token
-			h.ServeHTTP(w, r.WithContext(newCtx))
+			ctx = context.WithValue(ctx, handlers.AuthenticatedUser, false)
+			h.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
 
@@ -208,8 +211,8 @@ func (e *Topaz) apiKeyAuth(h http.Handler, authCfg config.AuthnConfig) http.Hand
 		}
 
 		if _, ok := authCfg.APIKeys[basicAPIKey]; ok {
-			newCtx = context.WithValue(newCtx, handlers.AuthenticatedUser, true)
-			h.ServeHTTP(w, r.WithContext(newCtx))
+			ctx = context.WithValue(ctx, handlers.AuthenticatedUser, true)
+			h.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
 

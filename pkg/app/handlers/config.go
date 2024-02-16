@@ -30,7 +30,7 @@ type ConsoleCfgV2 struct {
 	Address                   string  `json:"address"`
 	AuthorizerServiceURL      string  `json:"authorizerServiceUrl"`
 	AuthorizerAPIKey          string  `json:"authorizerApiKey"`
-	DirectoryServiceURL       *string `json:"directoryServiceUrl,omitempty"`
+	DirectoryServiceURL       string  `json:"directoryServiceUrl"`
 	DirectoryAPIKey           string  `json:"directoryApiKey"`
 	DirectoryTenantID         string  `json:"directoryTenantId"`
 	DirectoryReaderServiceURL *string `json:"directoryReaderServiceUrl,omitempty"`
@@ -53,25 +53,26 @@ func ConfigHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http
 }
 
 func ConfigHandlerV2(confServices *ConsoleCfg) http.Handler {
-	cfgV2 := &ConsoleCfgV2{
-		Type:                      "auto",
-		Name:                      "Topaz Config",
-		Address:                   "https://localhost:4321/api/v2/config",
-		AuthorizerServiceURL:      confServices.AuthorizerServiceURL,
-		AuthorizerAPIKey:          "",
-		DirectoryAPIKey:           "",
-		DirectoryTenantID:         confServices.DirectoryTenantID,
-		DirectoryReaderServiceURL: confServices.AsertoDirectoryReaderURL,
-		DirectoryWriterServiceURL: confServices.AsertoDirectoryWriterURL,
-		DirectoryModelServiceURL:  confServices.AsertoDirectoryModelURL,
-	}
-
-	cfgV2Response := &CfgV2Response{
-		Configs:  []*ConsoleCfgV2{cfgV2},
-		ReadOnly: true,
-	}
-
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cfgV2 := &ConsoleCfgV2{
+			Type:                      "auto",
+			Name:                      "Topaz Config",
+			Address:                   "https://localhost:4321/api/v2/config",
+			AuthorizerServiceURL:      confServices.AuthorizerServiceURL,
+			AuthorizerAPIKey:          "",
+			DirectoryAPIKey:           "",
+			DirectoryTenantID:         "",
+			DirectoryServiceURL:       confServices.AsertoDirectoryURL,
+			DirectoryReaderServiceURL: confServices.AsertoDirectoryReaderURL,
+			DirectoryWriterServiceURL: confServices.AsertoDirectoryWriterURL,
+			DirectoryModelServiceURL:  confServices.AsertoDirectoryModelURL,
+		}
+
+		cfgV2Response := &CfgV2Response{
+			Configs:  []*ConsoleCfgV2{cfgV2},
+			ReadOnly: true,
+		}
+
 		authEnabled := r.Context().Value(AuthEnabled)
 		if authEnabled != nil {
 			cfgV2Response.AuthenticationEnabled = authEnabled.(bool)
