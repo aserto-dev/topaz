@@ -70,9 +70,9 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 
 	return append(args,
 		cc.Container(
-			cc.ContainerRegistry(), // registry
-			cc.ContainerImage(),    // image
-			cc.ContainerTag(),      // tag
+			cmd.ContainerRegistry, // registry
+			cmd.ContainerImage,    // image
+			cmd.ContainerTag,      // tag
 		),
 	), nil
 }
