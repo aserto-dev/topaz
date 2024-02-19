@@ -1,0 +1,24 @@
+{
+  "objects": [
+    {
+      "type": "channel",
+      "id": "general",
+      "properties": {}
+    },
+    {
+      "type": "workspace",
+      "id": "the-smiths",
+      "properties": {}
+    },
+    {
+      "type": "channel",
+      "id": "citadel-adventures",
+      "properties": {}
+    },
+    {
+      "type": "channel",
+      "id": "neighborhood-gossips",
+      "properties": {}
+    }
+  ]
+}
