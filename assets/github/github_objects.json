@@ -1,0 +1,28 @@
+{
+    "objects": [
+        {
+            "type": "organization",
+            "id": "smith-family",
+            "display_name": "The smiths family",
+            "properties": {}
+        },
+        {
+            "type": "organization",
+            "id": "citadel",
+            "display_name": "The Citadel organization",
+            "properties": {}
+        },
+        {
+            "type": "repo",
+            "id": "smith-family.buget",
+            "display_name": "Buget Repository",
+            "properties": {}
+        },
+        {
+            "type": "repo",
+            "id": "citadel.missions",
+            "display_name": "The Citadel Missions Repository",
+            "properties": {}
+        }
+    ]
+}

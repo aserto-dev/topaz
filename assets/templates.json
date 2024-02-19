@@ -38,5 +38,13 @@
         "docs_url": "",
         "topaz_url": "slack.json",
         "hosted_url": "hosted/slack.json"
+    },
+    "github": {
+        "title": "Github",
+        "short_description": "Authorization template for repositories, organizations and teams.",
+        "description": "The Github template defines repositories, organization and teams. You can evolve it to fit your needs.",
+        "docs_url": "",
+        "topaz_url": "github.json",
+        "hosted_url": "hosted/github.json"
     }
 }

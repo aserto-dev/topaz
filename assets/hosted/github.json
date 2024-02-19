@@ -1,0 +1,18 @@
+{
+    "idp_data": [
+        {
+            "name": "Citadel",
+            "description": "Demo Citadel IDP",
+            "provider_id": "6dd707ac-e7bd-11ec-808a-049ec1ced886",
+            "ds_load": "/assets/templates/citadel/ds-load/citadel.json"
+        }
+    ],
+    "domain_data": [
+        {
+            "name": "Github data",
+            "description": "Sample data for github template",
+            "provider_id": "8eeeb772-c67e-11ee-9473-04406f1dc471",
+            "ds_load":"/assets/templates/github/ds-load/github.json"
+        }
+    ]
+}

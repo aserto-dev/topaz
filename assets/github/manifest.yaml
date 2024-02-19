@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+### filename: manifest.yaml ###
+### datetime: 2023-12-19T00:00:00-00:00 ###
+### description: github manifest ###
+#
+# model
+model:
+  version: 3
+
+types:
+  # user represents a user that can be granted role(s)
+  user:
+    relations:
+      manager: user
+
+  # group represents a collection of users and/or (nested) groups
+  group:
+    relations:
+      member: user | group#member
+
+  # identity represents a collection of identities for users
+  identity:
+    relations:
+      identifier: user
+
+  team:
+    relations:
+      member: user | team#member
+  
+  organization:
+    relations:
+      member: user 
+      owner: user    
+      repo_admin: user | organization#member
+      repo_reader: user | organization#member
+      repo_writer: user | organization#member
+    permissions:
+      is_member: member | owner
+      can_administer: repo_admin | owner
+      can_write: repo_writer | can_administer
+      can_read: repo_reader | can_write
+  
+  repo:
+    relations:
+      admin: user | team#member
+      maintainer: user | team#member
+      owner: organization
+      reader: user | team#member
+      triager: user | team#member
+      writer: user | team#member    
+    permissions:
+      can_administer: admin | owner->can_administer
+      can_maintain: maintainer | can_administer
+      can_read: reader | can_triage | owner->can_read
+      can_write: writer | can_maintain | owner->can_write
+      can_triage: triager | can_write 
