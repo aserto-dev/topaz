@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func (a *APIKeyAuthMiddleware) ConfigAPIKeyAuth(h http.Handler, authCfg config.AuthnConfig) http.Handler {
+func (a *APIKeyAuthMiddleware) ConfigAuth(h http.Handler, authCfg config.AuthnConfig) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// if no API keys are defined or EnableAPIKey is not set, allow the request
 		options := authCfg.Options.ForPath(r.URL.Path)
@@ -38,7 +38,7 @@ func (a *APIKeyAuthMiddleware) ConfigAPIKeyAuth(h http.Handler, authCfg config.A
 
 		basicAPIKey, err := parseAuthHeader(authHeader, "basic")
 		if err != nil {
-			returnStatusUnauthorized(w, "Failed to parse basic auth header!", a.logger)
+			returnStatusUnauthorized(w, "Invalid authorization header. expected 'basic' scheme.", a.logger)
 			return
 		}
 
