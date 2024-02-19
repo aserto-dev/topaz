@@ -45,9 +45,8 @@ type ConsoleCfgV2 struct {
 }
 
 type CfgV2Response struct {
-	ReadOnly              bool            `json:"readOnly"`
-	AuthenticationEnabled bool            `json:"authenticationEnabled"`
-	Configs               []*ConsoleCfgV2 `json:"configs"`
+	ReadOnly bool            `json:"readOnly"`
+	Configs  []*ConsoleCfgV2 `json:"configs"`
 }
 
 func ConfigHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http.Request) {
@@ -101,13 +100,6 @@ func ConfigHandlerV2(confServices *ConsoleCfg) http.Handler {
 		cfgV2Response := &CfgV2Response{
 			Configs:  []*ConsoleCfgV2{cfgV2},
 			ReadOnly: true,
-		}
-
-		authEnabled := r.Context().Value(AuthEnabled)
-		if authEnabled != nil {
-			cfgV2Response.AuthenticationEnabled = authEnabled.(bool)
-		} else {
-			cfgV2Response.AuthenticationEnabled = false
 		}
 
 		buf, _ := json.Marshal(cfgV2Response)
