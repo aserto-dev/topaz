@@ -24,6 +24,7 @@ type TopazCfg struct {
 	DirectoryImporterServiceURL string `json:"directoryImporterServiceUrl,omitempty"`
 	DirectoryExporterServiceURL string `json:"directoryExporterServiceUrl,omitempty"`
 	DirectoryModelServiceURL    string `json:"directoryModelServiceUrl,omitempty"`
+	ConsoleURL                  string `json:"-"`
 }
 
 type TopazCfgV1 struct {
@@ -93,7 +94,7 @@ func ConfigHandlerV2(confServices *TopazCfg) http.Handler {
 		cfgV2 := &TopazCfgV2{
 			Type:     "auto",
 			Name:     "Topaz Config",
-			Address:  "https://localhost:4321/api/v2/config",
+			Address:  confServices.ConsoleURL + "/api/v2/config",
 			TopazCfg: cfg,
 		}
 

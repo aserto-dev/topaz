@@ -69,6 +69,11 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 		modelURL = getGatewayAddress(serviceConfig)
 	}
 
+	consoleURL := ""
+	if serviceConfig, ok := cfg.APIConfig.Services[consoleService]; ok {
+		consoleURL = getGatewayAddress(serviceConfig)
+	}
+
 	authorizerAPIKey := ""
 	if _, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		for key := range cfg.Auth.APIKeys {
@@ -98,6 +103,7 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 		DirectoryImporterServiceURL: importerURL,
 		DirectoryExporterServiceURL: exporterURL,
 		DirectoryModelServiceURL:    modelURL,
+		ConsoleURL:                  consoleURL,
 	}
 }
 
