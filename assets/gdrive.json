@@ -2,7 +2,7 @@
     "name": "gdrive",
     "description": "Google Drive",
     "assets": {
-        "manifest": "simple-rbac/manifest.yaml",
+        "manifest": "gdrive/manifest.yaml",
         "policy": {
             "name": "gdrive",
             "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
@@ -16,7 +16,7 @@
             "gdrive/gdrive_relations.json"
         ],
         "assertions": [
-            "/assets/templates/gdrive/test/gdrive_assertions.json"
+            "gdrive/test/gdrive_assertions.json"
         ]
     }
 }
