@@ -41,7 +41,7 @@ func (e *ConsoleService) Cleanups() []func() {
 	return nil
 }
 
-func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.ConsoleCfg {
+func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 	authorizerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		authorizerURL = getGatewayAddress(serviceConfig)
@@ -87,7 +87,7 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.ConsoleCfg 
 		}
 	}
 
-	return &handlers.ConsoleCfg{
+	return &handlers.TopazCfg{
 		AuthorizerServiceURL:        authorizerURL,
 		AuthorizerAPIKey:            authorizerAPIKey,
 		DirectoryServiceURL:         readerURL,

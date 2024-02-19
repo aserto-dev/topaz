@@ -13,7 +13,7 @@ var (
 	AuthenticatedUser = header.CtxKey("AuthenticatedUser")
 )
 
-type ConsoleCfg struct {
+type TopazCfg struct {
 	AuthorizerServiceURL        string `json:"authorizerServiceUrl"`
 	AuthorizerAPIKey            string `json:"authorizerApiKey"`
 	DirectoryServiceURL         string `json:"directoryServiceUrl"`
@@ -26,7 +26,7 @@ type ConsoleCfg struct {
 	DirectoryModelServiceURL    string `json:"directoryModelServiceUrl,omitempty"`
 }
 
-type ConsoleCfgV1 struct {
+type TopazCfgV1 struct {
 	AsertoDirectoryURL       string `json:"asertoDirectoryUrl"`
 	AuthorizerServiceURL     string `json:"authorizerServiceUrl"`
 	AuthorizerAPIKey         string `json:"authorizerApiKey"`
@@ -37,21 +37,21 @@ type ConsoleCfgV1 struct {
 	AsertoDirectoryModelURL  string `json:"asertoDirectoryModelUrl,omitempty"`
 }
 
-type ConsoleCfgV2 struct {
+type TopazCfgV2 struct {
 	Type    string `json:"configType"`
 	Name    string `json:"name"`
 	Address string `json:"address"`
-	*ConsoleCfg
+	*TopazCfg
 }
 
 type CfgV2Response struct {
-	ReadOnly bool            `json:"readOnly"`
-	Configs  []*ConsoleCfgV2 `json:"configs"`
+	ReadOnly bool          `json:"readOnly"`
+	Configs  []*TopazCfgV2 `json:"configs"`
 }
 
-func ConfigHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http.Request) {
+func ConfigHandler(confServices *TopazCfg) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		v1Cfg := &ConsoleCfgV1{
+		v1Cfg := &TopazCfgV1{
 			AsertoDirectoryURL:       confServices.DirectoryServiceURL,
 			AuthorizerServiceURL:     confServices.AuthorizerServiceURL,
 			AuthorizerAPIKey:         confServices.AuthorizerAPIKey,
@@ -67,7 +67,7 @@ func ConfigHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http
 	}
 }
 
-func ConfigHandlerV2(confServices *ConsoleCfg) http.Handler {
+func ConfigHandlerV2(confServices *TopazCfg) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorizerAPIKey := ""
 		directoryAPIKey := ""
@@ -77,7 +77,7 @@ func ConfigHandlerV2(confServices *ConsoleCfg) http.Handler {
 			directoryAPIKey = confServices.DirectoryAPIKey
 		}
 
-		cfg := &ConsoleCfg{
+		cfg := &TopazCfg{
 			AuthorizerServiceURL:        confServices.AuthorizerServiceURL,
 			AuthorizerAPIKey:            authorizerAPIKey,
 			DirectoryServiceURL:         confServices.DirectoryServiceURL,
@@ -90,15 +90,15 @@ func ConfigHandlerV2(confServices *ConsoleCfg) http.Handler {
 			DirectoryModelServiceURL:    confServices.DirectoryModelServiceURL,
 		}
 
-		cfgV2 := &ConsoleCfgV2{
-			Type:       "auto",
-			Name:       "Topaz Config",
-			Address:    "https://localhost:4321/api/v2/config",
-			ConsoleCfg: cfg,
+		cfgV2 := &TopazCfgV2{
+			Type:     "auto",
+			Name:     "Topaz Config",
+			Address:  "https://localhost:4321/api/v2/config",
+			TopazCfg: cfg,
 		}
 
 		cfgV2Response := &CfgV2Response{
-			Configs:  []*ConsoleCfgV2{cfgV2},
+			Configs:  []*TopazCfgV2{cfgV2},
 			ReadOnly: true,
 		}
 

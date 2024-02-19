@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func AuthorizersHandler(confServices *ConsoleCfg) func(w http.ResponseWriter, r *http.Request) {
+func AuthorizersHandler(confServices *TopazCfg) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		type AuthorizerInstance struct {
 			Name   string `json:"name"`
