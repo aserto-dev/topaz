@@ -49,7 +49,7 @@ func (a *APIKeyAuthMiddleware) ConfigAuth(h http.Handler, authCfg config.AuthnCo
 		}
 
 		// the user is not authenticated because the key they provided is incorrect
-		returnStatusUnauthorized(w, "The API key is invalid!", a.logger)
+		returnStatusUnauthorized(w, "The API key is invalid.", a.logger)
 	})
 }
 

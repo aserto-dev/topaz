@@ -14,27 +14,27 @@ var (
 )
 
 type ConsoleCfg struct {
-	AuthorizerServiceURL        string  `json:"authorizerServiceUrl"`
-	AuthorizerAPIKey            string  `json:"authorizerApiKey"`
-	DirectoryServiceURL         string  `json:"directoryServiceUrl"`
-	DirectoryAPIKey             string  `json:"directoryApiKey"`
-	DirectoryTenantID           string  `json:"directoryTenantId"`
-	DirectoryReaderServiceURL   *string `json:"directoryReaderServiceUrl,omitempty"`
-	DirectoryWriterServiceURL   *string `json:"directoryWriterServiceUrl,omitempty"`
-	DirectoryImporterServiceURL *string `json:"directoryImporterServiceUrl,omitempty"`
-	DirectoryExporterServiceURL *string `json:"directoryExporterServiceUrl,omitempty"`
-	DirectoryModelServiceURL    *string `json:"directoryModelServiceUrl,omitempty"`
+	AuthorizerServiceURL        string `json:"authorizerServiceUrl"`
+	AuthorizerAPIKey            string `json:"authorizerApiKey"`
+	DirectoryServiceURL         string `json:"directoryServiceUrl"`
+	DirectoryAPIKey             string `json:"directoryApiKey"`
+	DirectoryTenantID           string `json:"directoryTenantId"`
+	DirectoryReaderServiceURL   string `json:"directoryReaderServiceUrl,omitempty"`
+	DirectoryWriterServiceURL   string `json:"directoryWriterServiceUrl,omitempty"`
+	DirectoryImporterServiceURL string `json:"directoryImporterServiceUrl,omitempty"`
+	DirectoryExporterServiceURL string `json:"directoryExporterServiceUrl,omitempty"`
+	DirectoryModelServiceURL    string `json:"directoryModelServiceUrl,omitempty"`
 }
 
 type ConsoleCfgV1 struct {
-	AsertoDirectoryURL       string  `json:"asertoDirectoryUrl"`
-	AuthorizerServiceURL     string  `json:"authorizerServiceUrl"`
-	AuthorizerAPIKey         string  `json:"authorizerApiKey"`
-	DirectoryAPIKey          string  `json:"directoryApiKey"`
-	DirectoryTenantID        string  `json:"directoryTenantId"`
-	AsertoDirectoryReaderURL *string `json:"asertoDirectoryReaderUrl,omitempty"`
-	AsertoDirectoryWriterURL *string `json:"asertoDirectoryWriterUrl,omitempty"`
-	AsertoDirectoryModelURL  *string `json:"asertoDirectoryModelUrl,omitempty"`
+	AsertoDirectoryURL       string `json:"asertoDirectoryUrl"`
+	AuthorizerServiceURL     string `json:"authorizerServiceUrl"`
+	AuthorizerAPIKey         string `json:"authorizerApiKey"`
+	DirectoryAPIKey          string `json:"directoryApiKey"`
+	DirectoryTenantID        string `json:"directoryTenantId"`
+	AsertoDirectoryReaderURL string `json:"asertoDirectoryReaderUrl,omitempty"`
+	AsertoDirectoryWriterURL string `json:"asertoDirectoryWriterUrl,omitempty"`
+	AsertoDirectoryModelURL  string `json:"asertoDirectoryModelUrl,omitempty"`
 }
 
 type ConsoleCfgV2 struct {

@@ -93,11 +93,11 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.ConsoleCfg 
 		DirectoryServiceURL:         readerURL,
 		DirectoryAPIKey:             directoryAPIKey,
 		DirectoryTenantID:           cfg.DirectoryResolver.TenantID,
-		DirectoryReaderServiceURL:   &readerURL,
-		DirectoryWriterServiceURL:   &writerURL,
-		DirectoryImporterServiceURL: &importerURL,
-		DirectoryExporterServiceURL: &exporterURL,
-		DirectoryModelServiceURL:    &modelURL,
+		DirectoryReaderServiceURL:   readerURL,
+		DirectoryWriterServiceURL:   writerURL,
+		DirectoryImporterServiceURL: importerURL,
+		DirectoryExporterServiceURL: exporterURL,
+		DirectoryModelServiceURL:    modelURL,
 	}
 }
 
