@@ -599,7 +599,9 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 			table.WithTableRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
 		}
 		{
-			assets := append(tmpl.Assets.Assertions, tmpl.Assets.IdentityData...)
+			assets := []string{}
+			assets = append(assets, tmpl.Assets.Assertions...)
+			assets = append(assets, tmpl.Assets.IdentityData...)
 			assets = append(assets, tmpl.Assets.DomainData...)
 
 			for _, assetURL := range assets {
@@ -619,7 +621,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	return nil
 }
 
-func validateManifest(absURL string) (exists bool, parsed bool, err error) {
+func validateManifest(absURL string) (exists, parsed bool, err error) {
 	b, err := getBytes(absURL)
 	if err != nil {
 		return false, false, err
@@ -632,7 +634,7 @@ func validateManifest(absURL string) (exists bool, parsed bool, err error) {
 	return true, true, nil
 }
 
-func validateJSON(absURL string) (exists bool, parsed bool, err error) {
+func validateJSON(absURL string) (exists, parsed bool, err error) {
 	b, err := getBytes(absURL)
 	if err != nil {
 		return false, false, err
