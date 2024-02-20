@@ -37,8 +37,8 @@ type CLI struct {
 	Certs     CertsCmd     `cmd:"" help:"cert commands"`
 	Update    UpdateCmd    `cmd:"" help:"update topaz container version"`
 	Uninstall UninstallCmd `cmd:"" help:"uninstall topaz container"`
-	Load      LoadCmd      `cmd:"" help:"load manifest from file (DEPRECATED)"`
-	Save      SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)"`
+	Load      LoadCmd      `cmd:"" help:"load manifest from file (DEPRECATED)" hidden:""`
+	Save      SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)" hidden:""`
 	Version   VersionCmd   `cmd:"" help:"version information"`
 	NoCheck   bool         `name:"no-check" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
 }
