@@ -450,6 +450,8 @@ github.com/aserto-dev/openapi-directory v0.30.3 h1:4j8+NZq5MyN2ra7iAUO6+9CUXg+cy
 github.com/aserto-dev/openapi-directory v0.30.3/go.mod h1:j7VK2dM9ELaI5xI5q53+EpHbvrheHz41yDhZ5rjw+tE=
 github.com/aserto-dev/runtime v0.60.0 h1:eu5fogBV/dLkV47/auOs94CjsIwG2TLftlmpsADL0aQ=
 github.com/aserto-dev/runtime v0.60.0/go.mod h1:MUmzeZ4t+IqdDXeVxjzdTta5bPUIejV/ufjZr2RVPQY=
+github.com/aserto-dev/runtime v0.60.1 h1:S5WCFL76nP24iUUiU2G9ebsiY+25u1shnYIqYtlFYjg=
+github.com/aserto-dev/runtime v0.60.1/go.mod h1:MUmzeZ4t+IqdDXeVxjzdTta5bPUIejV/ufjZr2RVPQY=
 github.com/aserto-dev/self-decision-logger v0.0.5 h1:SXEo984ZasskvrRZ4LrLwqDOvQMNHD3iM4vRMaJRRnQ=
 github.com/aserto-dev/self-decision-logger v0.0.5/go.mod h1:CJUe5pfaaHzemWr7LqMOA8b9fuf/n0V2ekKsH7X28R4=
 github.com/aserto-dev/service-host v0.0.9 h1:RwSkFtD5CRacVnj1CxYjA3HMpJfmOESmUk+VJjUr0HY=
