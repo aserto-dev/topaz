@@ -34,7 +34,10 @@ types:
       writer: user | workspace#member
       parent_workspace: workspace
     permissions:
-      can_comment: commenter | writer
+      can_delete: parent_workspace->can_administer_channel
+      can_write: writer | can_delete
+      can_comment: commenter | can_write
+      can_read: can_comment
 
   workspace:
     relations:
