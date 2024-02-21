@@ -2,14 +2,14 @@
   "relations": [
     {
       "object_type": "channel",
-      "object_id": "general",
+      "object_id": "smiths.general",
       "relation": "parent_workspace",
       "subject_type": "workspace",
       "subject_id": "smiths"
     },
     {
       "object_type": "channel",
-      "object_id": "general",
+      "object_id": "smiths.general",
       "relation": "writer",
       "subject_type": "user",
       "subject_id": "beth@the-smiths.com"
