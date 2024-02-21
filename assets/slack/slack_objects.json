@@ -1,23 +1,27 @@
 {
   "objects": [
     {
-      "type": "channel",
-      "id": "general",
-      "properties": {}
-    },
-    {
       "type": "workspace",
-      "id": "the-smiths",
+      "id": "smiths",
+      "display_name": "The Smiths workspace",
       "properties": {}
     },
     {
       "type": "channel",
-      "id": "citadel-adventures",
+      "id": "smiths.general",
+      "display_name": "general",
       "properties": {}
     },
     {
       "type": "channel",
-      "id": "neighborhood-gossips",
+      "id": "smiths.citadel",
+      "display_name": "citadel",
+      "properties": {}
+    },
+    {
+      "type": "channel",
+      "id": "smiths.gossip",
+      "display_name": "gossip",
       "properties": {}
     }
   ]

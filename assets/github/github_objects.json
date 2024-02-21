@@ -2,8 +2,8 @@
     "objects": [
         {
             "type": "organization",
-            "id": "smith-family",
-            "display_name": "The smiths family",
+            "id": "smiths",
+            "display_name": "The Smiths organization",
             "properties": {}
         },
         {
@@ -14,14 +14,14 @@
         },
         {
             "type": "repo",
-            "id": "smith-family.buget",
-            "display_name": "Buget Repository",
+            "id": "smiths.budget",
+            "display_name": "The Smith's budget repository",
             "properties": {}
         },
         {
             "type": "repo",
             "id": "citadel.missions",
-            "display_name": "The Citadel Missions Repository",
+            "display_name": "The citadel missions repository",
             "properties": {}
         }
     ]

@@ -45,31 +45,31 @@
       },
       {
         "type": "doc",
-        "id": "secrets.txt",
+        "id": "secrets",
         "display_name": "Family secrets",
         "properties": {}
       },
       {
         "type": "doc",
-        "id": "groceries.txt",
+        "id": "groceries",
         "display_name": "Grocery list",
         "properties": {}
       },
       {
         "type": "doc",
-        "id": "inventions.txt",
+        "id": "rick.inventions",
         "display_name": "Rick's inventions",
         "properties": {}
       },
       {
         "type": "doc",
-        "id": "morty_private.pdf",
-        "display_name": "Morty's private notes",
+        "id": "morty.journal",
+        "display_name": "Morty's private journal",
         "properties": {}
       },
       {
         "type": "doc",
-        "id": "morty_shared.pdf",
+        "id": "morty.shared.notes",
         "display_name": "Morty's shared notes",
         "properties": {}
       }
@@ -84,35 +84,35 @@
       },
       {
         "object_type": "doc",
-        "object_id": "secrets.txt",
+        "object_id": "secrets",
         "relation": "parent",
         "subject_type": "folder",
         "subject_id": "root"
       },
       {
         "object_type": "doc",
-        "object_id": "secrets.txt",
+        "object_id": "secrets",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
       },
       {
         "object_type": "doc",
-        "object_id": "groceries.txt",
+        "object_id": "groceries",
         "relation": "parent",
         "subject_type": "folder",
         "subject_id": "root"
       },
       {
         "object_type": "doc",
-        "object_id": "groceries.txt",
+        "object_id": "groceries",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
       },
       {
         "object_type": "doc",
-        "object_id": "groceries.txt",
+        "object_id": "groceries",
         "relation": "viewer",
         "subject_type": "user",
         "subject_id": "*"
@@ -133,14 +133,14 @@
       },
       {
         "object_type": "doc",
-        "object_id": "inventions.txt",
+        "object_id": "rick.inventions",
         "relation": "parent",
         "subject_type": "folder",
         "subject_id": "rick"
       },
       {
         "object_type": "doc",
-        "object_id": "inventions.txt",
+        "object_id": "rick.inventions",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -161,7 +161,7 @@
       },
       {
         "object_type": "doc",
-        "object_id": "morty_private.pdf",
+        "object_id": "morty.journal",
         "relation": "parent",
         "subject_type": "folder",
         "subject_id": "morty"
@@ -191,14 +191,14 @@
       },
       {
         "object_type": "doc",
-        "object_id": "morty_shared.pdf",
+        "object_id": "morty.shared.notes",
         "relation": "parent",
         "subject_type": "folder",
         "subject_id": "morty.shared"
       },
       {
         "object_type": "doc",
-        "object_id": "morty_shared.pdf",
+        "object_id": "morty.shared.notes",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
