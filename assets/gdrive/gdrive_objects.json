@@ -62,13 +62,13 @@
     },
     {
       "type": "doc",
-      "id": "morty_private.pdf",
+      "id": "morty-private.pdf",
       "display_name": "Morty's private notes",
       "properties": {}
     },
     {
       "type": "doc",
-      "id": "morty_shared.pdf",
+      "id": "morty-shared.pdf",
       "display_name": "Morty's shared notes",
       "properties": {}
     }

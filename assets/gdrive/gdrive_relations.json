@@ -86,7 +86,7 @@
     },
     {
       "object_type": "doc",
-      "object_id": "morty_private.pdf",
+      "object_id": "morty-private.pdf",
       "relation": "parent",
       "subject_type": "folder",
       "subject_id": "morty"
@@ -116,14 +116,14 @@
     },
     {
       "object_type": "doc",
-      "object_id": "morty_shared.pdf",
+      "object_id": "morty-shared.pdf",
       "relation": "parent",
       "subject_type": "folder",
       "subject_id": "morty.shared"
     },
     {
       "object_type": "doc",
-      "object_id": "morty_shared.pdf",
+      "object_id": "morty-shared.pdf",
       "relation": "owner",
       "subject_type": "user",
       "subject_id": "morty@the-citadel.com"
