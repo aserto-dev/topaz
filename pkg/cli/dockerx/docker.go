@@ -1,12 +1,14 @@
 package dockerx
 
 import (
-	"fmt"
+	"context"
 	"os"
 	"path"
 
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/client"
 	"github.com/magefile/mage/sh"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -27,11 +29,31 @@ func DockerWithOut(env map[string]string, args ...string) (string, error) {
 }
 
 func IsRunning(name string) (bool, error) {
-	if name == "" {
-		return false, errors.Errorf("instance name not specified")
+	cli, err := client.NewClientWithOpts(
+		client.FromEnv,
+		client.WithAPIVersionNegotiation())
+	if err != nil {
+		return false, err
 	}
-	str, err := DockerOut("ps", "-q", "-f", fmt.Sprintf("name=%s", name))
-	return str != "", err
+
+	containers, err := cli.ContainerList(context.Background(), container.ListOptions{
+		Filters: filters.NewArgs(
+			filters.KeyValuePair{
+				Key: "status", Value: "running"},
+			filters.KeyValuePair{
+				Key: "name", Value: name,
+			}),
+	})
+	if err != nil {
+		return false, err
+	}
+
+	rc := false
+	if len(containers) == 1 {
+		rc = containers[0].State == "running"
+	}
+
+	return rc, nil
 }
 
 func PolicyRoot() string {
