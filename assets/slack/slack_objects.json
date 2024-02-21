@@ -7,17 +7,17 @@
     },
     {
       "type": "workspace",
-      "id": "the-smiths",
+      "id": "smiths",
       "properties": {}
     },
     {
       "type": "channel",
-      "id": "citadel-adventures",
+      "id": "smiths.citadel",
       "properties": {}
     },
     {
       "type": "channel",
-      "id": "neighborhood-gossips",
+      "id": "smiths.gossip",
       "properties": {}
     }
   ]

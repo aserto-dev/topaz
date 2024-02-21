@@ -2,7 +2,7 @@
     "objects": [
         {
             "type": "organization",
-            "id": "smith-family",
+            "id": "smiths",
             "display_name": "The smiths family",
             "properties": {}
         },
@@ -14,7 +14,7 @@
         },
         {
             "type": "repo",
-            "id": "smith-family.budget",
+            "id": "smiths.budget",
             "display_name": "Budget Repository",
             "properties": {}
         },
