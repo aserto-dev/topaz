@@ -12,7 +12,7 @@ type RunCmd struct {
 }
 
 func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
-	if running, err := dockerx.IsRunning(cc.ContainerName()); running || err != nil {
+	if running, err := dockerx.IsRunning(cmd.ContainerName); running || err != nil {
 		if !running {
 			return ErrNotRunning
 		}
