@@ -4,7 +4,7 @@
             {
                 "type": "organization",
                 "id": "smiths",
-                "display_name": "The smiths family",
+                "display_name": "The Smiths organization",
                 "properties": {}
             },
             {
@@ -16,13 +16,13 @@
             {
                 "type": "repo",
                 "id": "smiths.budget",
-                "display_name": "Budget Repository",
+                "display_name": "The Smith's budget repository",
                 "properties": {}
             },
             {
                 "type": "repo",
                 "id": "citadel.missions",
-                "display_name": "The Citadel Missions Repository",
+                "display_name": "The citadel missions repository",
                 "properties": {}
             }
         ],
