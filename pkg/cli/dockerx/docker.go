@@ -49,9 +49,8 @@ func IsRunning(name string) (bool, error) {
 	}
 
 	rc := false
-	for _, container := range containers {
-		rc = container.State == "running"
-		break
+	if len(containers) == 1 {
+		rc = containers[0].State == "running"
 	}
 
 	return rc, nil
