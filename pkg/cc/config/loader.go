@@ -257,7 +257,7 @@ func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) 
 // subEnvVars will look for any environment variables in the passed in string
 // with the syntax of ${VAR_NAME} and replace that string with ENV[VAR_NAME].
 func subEnvVars(s string) string {
-	updatedConfig := envRegex.ReplaceAllStringFunc(s, func(s string) string {
+	updatedConfig := envRegex.ReplaceAllStringFunc(strings.ReplaceAll(s, `"`, `'`), func(s string) string {
 		// Trim off the '${' and '}'
 		if len(s) <= 3 {
 			// This should never happen..
