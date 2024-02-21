@@ -41,15 +41,17 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 	}
 	args = append(args, volumes...)
 	for i := range volumes {
+		if volumes[i] == "-v" {
+			continue
+		}
+		destination := strings.Split(volumes[i], ":")
+		mountedPath := fmt.Sprintf("/%s", filepath.Base(destination[len(destination)-1])) // last value from split.
 		switch {
 		case strings.Contains(volumes[i], "certs"):
-			mountedPath := strings.Split(volumes[i], ":")[1]
 			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CERTS_DIR=%s", mountedPath))
 		case strings.Contains(volumes[i], "db"):
-			mountedPath := strings.Split(volumes[i], ":")[1]
 			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_DB_DIR=%s", mountedPath))
 		case strings.Contains(volumes[i], "cfg"):
-			mountedPath := strings.Split(volumes[i], ":")[1]
 			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CFG_DIR=%s", mountedPath))
 		}
 	}
