@@ -44,7 +44,7 @@
       },
       {
         "object_type": "repo",
-        "object_id": "smith-family.buget",
+        "object_id": "smith-family.bugdet",
         "relation": "owner",
         "subject_type": "organization",
         "subject_id": "smith-family"

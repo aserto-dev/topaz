@@ -15,8 +15,8 @@
             },
             {
                 "type": "repo",
-                "id": "smith-family.buget",
-                "display_name": "Buget Repository",
+                "id": "smith-family.budget",
+                "display_name": "Budget Repository",
                 "properties": {}
             },
             {
@@ -71,7 +71,7 @@
             },
             {
               "object_type": "repo",
-              "object_id": "smith-family.buget",
+              "object_id": "smith-family.budget",
               "relation": "owner",
               "subject_type": "organization",
               "subject_id": "smith-family"

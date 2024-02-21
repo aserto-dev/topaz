@@ -14,8 +14,8 @@
         },
         {
             "type": "repo",
-            "id": "smith-family.buget",
-            "display_name": "Buget Repository",
+            "id": "smith-family.budget",
+            "display_name": "Budget Repository",
             "properties": {}
         },
         {
