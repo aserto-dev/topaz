@@ -12,6 +12,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/header"
+	"github.com/lestrrat-go/jwx/v2/jwk"
 
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decision_log"
@@ -42,8 +43,10 @@ const (
 )
 
 type AuthorizerServer struct {
-	cfg    *config.Common
-	logger *zerolog.Logger
+	cfg      *config.Common
+	logger   *zerolog.Logger
+	issuers  map[string]string
+	jwtCache *jwk.Cache
 
 	resolver *resolvers.Resolvers
 }
@@ -55,10 +58,18 @@ func NewAuthorizerServer(
 ) *AuthorizerServer {
 	newLogger := logger.With().Str("component", "api.grpc").Logger()
 
+	const certs = `https://citadel.demo.aserto.com/dex/keys`
+
+	// TODO: get context
+	ctx := context.Background()
+	jwtCache := jwk.NewCache(ctx)
+
 	return &AuthorizerServer{
 		cfg:      cfg,
 		logger:   &newLogger,
 		resolver: rf,
+		issuers:  make(map[string]string),
+		jwtCache: jwtCache,
 	}
 }
 
