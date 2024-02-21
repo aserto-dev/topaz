@@ -36,10 +36,9 @@ type DeleteManifestCmd struct {
 }
 
 func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return ErrNotServing
 	}
-
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
@@ -70,10 +69,9 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return ErrNotServing
 	}
-
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
@@ -93,10 +91,9 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return ErrNotServing
 	}
-
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err

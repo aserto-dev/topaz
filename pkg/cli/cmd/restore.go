@@ -17,10 +17,9 @@ type RestoreCmd struct {
 }
 
 func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return ErrNotServing
 	}
-
 	cmd.Config.SessionID = uuid.NewString()
 
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)

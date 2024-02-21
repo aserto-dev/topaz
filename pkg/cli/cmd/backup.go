@@ -18,8 +18,8 @@ type BackupCmd struct {
 const defaultFileName = "backup.tar.gz"
 
 func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return ErrNotServing
 	}
 
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)

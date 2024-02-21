@@ -16,10 +16,9 @@ type ExportCmd struct {
 }
 
 func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return ErrNotServing
 	}
-
 	color.Green(">>> exporting data to %s", cmd.Directory)
 
 	objectsFile := filepath.Join(cmd.Directory, "objects.json")

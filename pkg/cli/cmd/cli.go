@@ -1,15 +1,22 @@
 package cmd
 
 import (
+	"context"
 	"errors"
+	"time"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/fullstorydev/grpcurl"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var (
 	ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
 	ErrIsRunning  = errors.New("topaz is already running, use 'topaz stop' to stop")
+	ErrNotServing = errors.New("topaz gRPC endpoint not SERVING")
 )
 
 type FormatVersion int
@@ -43,12 +50,17 @@ type CLI struct {
 	NoCheck   bool         `name:"no-check" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
 }
 
-func CheckRunning(c *cc.CommonCtx) error {
+func checkRunning(c *cc.CommonCtx, containerName string) error {
 	if c.NoCheck {
 		return nil
 	}
 
-	if running, err := dockerx.IsRunning(cc.ContainerName()); !running || err != nil {
+	// set default container name if not specified.
+	if containerName == "" {
+		containerName = cc.ContainerName()
+	}
+
+	if running, err := dockerx.IsRunning(containerName); !running || err != nil {
 		if !running {
 			return ErrNotRunning
 		}
@@ -57,5 +69,26 @@ func CheckRunning(c *cc.CommonCtx) error {
 		}
 	}
 
-	return nil
+	return ErrIsRunning
+}
+
+func isServiceUp(grpcAddress string) bool {
+	tlsConf, err := grpcurl.ClientTLSConfig(true, "", "", "")
+	if err != nil {
+		return false
+	}
+
+	creds := credentials.NewTLS(tlsConf)
+
+	opts := []grpc.DialOption{
+		grpc.WithUserAgent("topaz/dev-build (no version set)"),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	_, err = grpcurl.BlockingDial(ctx, "tcp", grpcAddress, creds, opts...)
+
+	return err == nil
 }

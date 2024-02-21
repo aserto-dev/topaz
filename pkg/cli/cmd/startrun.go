@@ -29,7 +29,7 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 	args := []string{
 		"run",
 		"--rm",
-		"--name", cc.ContainerName(),
+		"--name", cmd.ContainerName,
 		g.Iff(interactive, "-ti", "-d"),
 	}
 
