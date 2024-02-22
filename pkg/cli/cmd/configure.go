@@ -15,11 +15,11 @@ type ConfigureCmd struct {
 	PolicyName        string `short:"n" help:"policy name"`
 	LocalPolicyImage  string `short:"l" help:"local policy image name"`
 	Resource          string `short:"r" help:"resource url"`
-	Stdout            bool   `short:"p" help:"generated configuration is printed to stdout but not saved"`
+	Stdout            bool   `short:"p" help:"print to stdout"`
 	EdgeDirectory     bool   `short:"d" help:"enable edge directory" default:"false"`
-	Force             bool   `flag:"" default:"false" short:"f" required:"false" help:"forcefully create configuration"`
+	Force             bool   `flag:"" default:"false" short:"f" required:"false" help:"skip confirmation prompt"`
 	EnableDirectoryV2 bool   `flag:"" name:"enable-v2" hidden:"" default:"true" help:"enable directory version 2 services for backwards compatibility"`
-	ConfigFile        string `name:"config" json:"config,omitempty" default:"config.yaml" short:"c" help:"use topaz configuration file"`
+	ConfigFile        string `name:"config" json:"config,omitempty" default:"config.yaml" short:"c" help:"topaz configuration file"`
 }
 
 func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
