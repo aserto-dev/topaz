@@ -27,5 +27,5 @@ types:
   group:
     relations:
       ### display_name: group#member ###
-      member: user
+      member: user | group#member
 
