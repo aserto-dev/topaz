@@ -6,6 +6,7 @@ import (
 	"fmt"
 	goruntime "runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
@@ -45,8 +46,8 @@ const (
 type AuthorizerServer struct {
 	cfg      *config.Common
 	logger   *zerolog.Logger
-	issuers  map[string]string
-	jwtCache *jwk.Cache
+	issuers  sync.Map
+	jwkCache *jwk.Cache
 
 	resolver *resolvers.Resolvers
 }
@@ -58,18 +59,14 @@ func NewAuthorizerServer(
 ) *AuthorizerServer {
 	newLogger := logger.With().Str("component", "api.grpc").Logger()
 
-	const certs = `https://citadel.demo.aserto.com/dex/keys`
-
-	// TODO: get context
 	ctx := context.Background()
-	jwtCache := jwk.NewCache(ctx)
+	jwkCache := jwk.NewCache(ctx)
 
 	return &AuthorizerServer{
 		cfg:      cfg,
 		logger:   &newLogger,
 		resolver: rf,
-		issuers:  make(map[string]string),
-		jwtCache: jwtCache,
+		jwkCache: jwkCache,
 	}
 }
 
