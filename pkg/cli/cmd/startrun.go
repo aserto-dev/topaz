@@ -81,7 +81,6 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 
 func (cmd *StartRunCmd) env() map[string]string {
 	return map[string]string{
-		"TOPAZ_DIR":       cc.GetTopazDir(),
 		"TOPAZ_CERTS_DIR": cc.GetTopazCertsDir(),
 		"TOPAZ_CFG_DIR":   cc.GetTopazCfgDir(),
 		"TOPAZ_DB_DIR":    cc.GetTopazDataDir(),
