@@ -220,7 +220,7 @@ func (e *Topaz) prepareServices() error {
 	}
 
 	if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
-		authorizer, err := NewAuthorizer(serviceConfig, &e.Configuration.Common, nil, e.Logger)
+		authorizer, err := NewAuthorizer(e.Context, serviceConfig, &e.Configuration.Common, nil, e.Logger)
 		if err != nil {
 			return err
 		}

@@ -53,13 +53,13 @@ type AuthorizerServer struct {
 }
 
 func NewAuthorizerServer(
+	ctx context.Context,
 	logger *zerolog.Logger,
 	cfg *config.Common,
 	rf *resolvers.Resolvers,
 ) *AuthorizerServer {
 	newLogger := logger.With().Str("component", "api.grpc").Logger()
 
-	ctx := context.Background()
 	jwkCache := jwk.NewCache(ctx)
 
 	return &AuthorizerServer{
