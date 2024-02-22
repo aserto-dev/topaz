@@ -88,17 +88,17 @@ func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken j
 		jwt.WithAcceptableSkew(time.Duration(s.cfg.JWT.AcceptableTimeSkewSeconds) * time.Second),
 	}
 
-	jwtKeysUrl, err := s.jwksURLFromCache(ctx, jwtToken.Issuer())
+	jwtKeysURL, err := s.jwksURLFromCache(ctx, jwtToken.Issuer())
 
 	if err != nil {
 		log.Debug().Str("issuer", jwtToken.Issuer()).Msg("token didn't have a JWKS endpoint we could use for verification")
 	} else {
-		err := registerJWKSURL(ctx, s.jwkCache, jwtKeysUrl)
+		err := registerJWKSURL(ctx, s.jwkCache, jwtKeysURL)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to register JWKS URL")
 		}
 
-		jwkSet, errX := s.jwkCache.Get(ctx, jwtKeysUrl)
+		jwkSet, errX := s.jwkCache.Get(ctx, jwtKeysURL)
 		if errX != nil {
 			return nil, errors.Wrap(errX, "failed to fetch JWK set for validation")
 		}
