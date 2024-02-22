@@ -27,7 +27,7 @@ types:
   group:
     relations:
       ### display_name: group#member ###
-      member: user
+      member: user | group#member
 
   # folder represents a collection of documents and/or other folders
   folder:
