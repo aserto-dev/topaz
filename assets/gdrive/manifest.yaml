@@ -32,25 +32,28 @@ types:
   # folder represents a collection of documents and/or other folders
   folder:
     relations:
-      owner: user
+      parent: folder
+
+      owner:  user
       editor: user | group#member
       viewer: user | group#member
-      parent: folder
+
     permissions:
-      can_read: viewer | editor | owner | parent->can_read
-      can_write: editor | owner | parent->can_write
-      can_share: owner | parent->can_share
+      can_share: owner  | parent->can_share
+      can_write: editor | can_share | parent->can_write
+      can_read:  viewer | can_write | parent->can_read
 
   # doc represents a document within a folder
   doc:
     relations:
-      owner: user
-      editor: user | group#member
-      viewer: user | user:* | group#member
       parent: folder
 
+      owner:  user
+      editor: user | group#member
+      viewer: user | user:* | group#member
+
     permissions:
-      can_read: viewer | editor | owner | parent->can_read
-      can_write: editor | owner | parent->can_write
-      can_delete: owner | parent->can_write
-      can_share: owner | parent->can_share
+      can_share:  owner     | parent->can_share
+      can_delete: can_share | parent->can_write
+      can_write:  editor | can_delete | parent->can_write
+      can_read:   viewer | can_write  | parent->can_read

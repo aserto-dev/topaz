@@ -74,21 +74,14 @@
     {
       "object_type": "workspace",
       "object_id": "smiths",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "workspace",
+      "object_id": "smiths",
       "relation": "legacy_admin",
-      "subject_type": "user",
-      "subject_id": "morty@the-citadel.com"
-    },
-    {
-      "object_type": "workspace",
-      "object_id": "smiths",
-      "relation": "member",
-      "subject_type": "user",
-      "subject_id": "morty@the-citadel.com"
-    },
-    {
-      "object_type": "workspace",
-      "object_id": "smiths",
-      "relation": "member",
       "subject_type": "user",
       "subject_id": "jerry@the-smiths.com"
     }
