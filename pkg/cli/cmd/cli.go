@@ -5,8 +5,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/fullstorydev/grpcurl"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -48,28 +46,6 @@ type CLI struct {
 	Save      SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)" hidden:""`
 	Version   VersionCmd   `cmd:"" help:"version information"`
 	NoCheck   bool         `name:"no-check" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
-}
-
-func checkRunning(c *cc.CommonCtx, containerName string) error {
-	if c.NoCheck {
-		return nil
-	}
-
-	// set default container name if not specified.
-	if containerName == "" {
-		containerName = cc.ContainerName()
-	}
-
-	if running, err := dockerx.IsRunning(containerName); !running || err != nil {
-		if !running {
-			return ErrNotRunning
-		}
-		if err != nil {
-			return err
-		}
-	}
-
-	return ErrIsRunning
 }
 
 func isServiceUp(grpcAddress string) bool {

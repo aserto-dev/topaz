@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"errors"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/fatih/color"
 )
@@ -12,8 +10,7 @@ type StatusCmd struct {
 }
 
 func (cmd *StatusCmd) Run(c *cc.CommonCtx) error {
-	err := checkRunning(c, cmd.ContainerName)
-	if errors.Is(err, ErrIsRunning) {
+	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
 		color.Green(">>> topaz is running")
 	} else {
 		color.Yellow(">>> topaz is not running")

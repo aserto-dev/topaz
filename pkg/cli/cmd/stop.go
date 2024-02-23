@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"errors"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/fatih/color"
@@ -13,9 +11,8 @@ type StopCmd struct {
 }
 
 func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
-	err := checkRunning(c, cmd.ContainerName)
-	if err != nil && !errors.Is(err, ErrIsRunning) {
-		return err
+	if c.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
+		return ErrNotRunning
 	}
 
 	color.Green(">>> stopping topaz...")

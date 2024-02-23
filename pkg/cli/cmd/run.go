@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"errors"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 
@@ -14,9 +12,8 @@ type RunCmd struct {
 }
 
 func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
-	err := checkRunning(c, cmd.ContainerName)
-	if err != nil && !errors.Is(err, ErrNotRunning) {
-		return err
+	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
+		return ErrIsRunning
 	}
 
 	color.Green(">>> starting topaz...")

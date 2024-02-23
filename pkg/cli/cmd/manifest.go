@@ -10,6 +10,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/fatih/color"
+	"github.com/pkg/errors"
 )
 
 type ManifestCmd struct {
@@ -37,7 +38,7 @@ type DeleteManifestCmd struct {
 
 func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 	if !isServiceUp(cmd.Host) {
-		return ErrNotServing
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
@@ -70,7 +71,7 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 
 func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 	if !isServiceUp(cmd.Host) {
-		return ErrNotServing
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
@@ -92,7 +93,7 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 	if !isServiceUp(cmd.Host) {
-		return ErrNotServing
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {

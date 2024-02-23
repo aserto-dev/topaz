@@ -19,10 +19,8 @@ type StartCmd struct {
 func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 	cmdX := cmd.StartRunCmd
 
-	err := checkRunning(c, cmd.ContainerName)
-
-	if err != nil && !errors.Is(err, ErrNotRunning) {
-		return err
+	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
+		return ErrIsRunning
 	}
 
 	color.Green(">>> starting topaz...")

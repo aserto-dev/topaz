@@ -7,6 +7,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/fatih/color"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 )
 
 type ExportCmd struct {
@@ -17,7 +18,7 @@ type ExportCmd struct {
 
 func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
 	if !isServiceUp(cmd.Host) {
-		return ErrNotServing
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
 	color.Green(">>> exporting data to %s", cmd.Directory)
 

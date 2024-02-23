@@ -9,6 +9,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/fatih/color"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 )
 
 type ImportCmd struct {
@@ -19,7 +20,7 @@ type ImportCmd struct {
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 	if !isServiceUp(cmd.Host) {
-		return ErrNotServing
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
 	color.Green(">>> importing data from %s", cmd.Directory)
 

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"errors"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/fatih/color"
@@ -19,9 +17,8 @@ type InstallCmd struct {
 func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	err := checkRunning(c, cc.ContainerName())
-	if err != nil && !errors.Is(err, ErrNotRunning) {
-		return err
+	if c.CheckRunStatus(cc.ContainerName(), cc.StatusRunning) {
+		return ErrIsRunning
 	}
 
 	color.Green(">>> installing topaz...")
