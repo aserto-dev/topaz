@@ -12,7 +12,7 @@ type StopCmd struct {
 
 func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
-		return ErrNotRunning
+		return nil
 	}
 
 	color.Green(">>> stopping topaz...")
