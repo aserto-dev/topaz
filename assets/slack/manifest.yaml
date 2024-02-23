@@ -30,20 +30,23 @@ types:
 
   channel:
     relations:
-      commenter: user | workspace#member
-      writer: user | workspace#member
       parent_workspace: workspace
+
+      commenter: user | workspace#member
+      writer:    user | workspace#member
+
     permissions:
-      can_delete: parent_workspace->can_administer_channel
-      can_write: writer | can_delete
+      can_delete:  parent_workspace->can_administer_channel
+      can_write:   writer    | can_delete
       can_comment: commenter | can_write
-      can_read: can_comment
+      can_read:    can_comment
 
   workspace:
     relations:
       channels_admin: user
-      guest: user
-      legacy_admin: user
-      member: user
+      guest:          user
+      legacy_admin:   user
+      member:         user
+
     permissions:
       can_administer_channel: channels_admin | legacy_admin

@@ -81,7 +81,7 @@
     {
       "object_type": "workspace",
       "object_id": "smiths",
-      "relation": "member",
+      "relation": "legacy_admin",
       "subject_type": "user",
       "subject_id": "jerry@the-smiths.com"
     }
