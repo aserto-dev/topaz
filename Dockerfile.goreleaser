@@ -2,8 +2,15 @@ FROM alpine
 
 RUN apk add --no-cache bash tzdata
 
+RUN mkdir /config && \
+    mkdir /certs && \
+    mkdir /db && \
+    mkdir /decisions
+VOLUME ["/config", "/certs", "/db", "/decisions"]
+
 WORKDIR /app
 
 COPY topaz* /app/
 
 ENTRYPOINT ["./topazd"]
+CMD ["run", "-c", "/config/config.yaml"]

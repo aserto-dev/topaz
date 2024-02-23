@@ -1,12 +1,15 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/fatih/color"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 )
 
 type ImportCmd struct {
@@ -16,11 +19,19 @@ type ImportCmd struct {
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
-
 	color.Green(">>> importing data from %s", cmd.Directory)
+
+	if fi, err := os.Stat(cmd.Directory); err != nil || !fi.IsDir() {
+		if err != nil {
+			return err
+		}
+		if !fi.IsDir() {
+			return fmt.Errorf("--directory argument %q is not a directory", cmd.Directory)
+		}
+	}
 
 	files, err := filepath.Glob(filepath.Join(cmd.Directory, "*.json"))
 	if err != nil {

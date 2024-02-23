@@ -94,9 +94,9 @@
                     "description": "edge directory request timeout in seconds",
                     "default": "5s"
                 },
-                "seed_metadata": {
+                "enable_v2": {
                     "type": "boolean",
-                    "description": "seed edge directory with the default metadata objects",
+                    "description": "enable directory version 2 services for backward compatibility",
                     "default": "false"
                 }
             }

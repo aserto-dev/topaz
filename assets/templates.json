@@ -22,5 +22,29 @@
         "docs_url": "https://docs.aserto.com/docs/quickstarts/simple-rbac/overview",
         "topaz_url": "simple-rbac.json",
         "hosted_url": "hosted/simple-rbac.json"
+    },
+    "gdrive": {
+        "title": "Google Drive",
+        "short_description": "Authorization template for nested folders and documents",
+        "description": "The Google Drive template defines folder and document types, with read, write, share, and delete permissions. Folders can contain documents or other folders and access to a parent folder grants access to its children. You can evolve it to fit your needs.",
+        "docs_url": "https://docs.aserto.com/docs/quickstarts/gdrive/overview",
+        "topaz_url": "gdrive.json",
+        "hosted_url": "hosted/gdrive.json"
+    },
+    "slack": {
+        "title": "Slack",
+        "short_description": "Authorization template for workspaces and channels",
+        "description": "The Slack template defines workspaces with channel admin permissions, and channels inside of a workspace, with read, write, comment, and delete permissions. Channel commenters/writers can be members of an workspace. You can evolve it to fit your needs.",
+        "docs_url": "https://docs.aserto.com/docs/quickstarts/slack/overview",
+        "topaz_url": "slack.json",
+        "hosted_url": "hosted/slack.json"
+    },
+    "github": {
+        "title": "GitHub",
+        "short_description": "Authorization template for repositories, organizations and teams.",
+        "description": "The GitHub template defines repositories, organization and teams. Repos are owned by organizations, and their permissions are either assigned directly through relations, or inherited from the organization. You can evolve it to fit your needs.",
+        "docs_url": "https://docs.aserto.com/docs/quickstarts/github/overview",
+        "topaz_url": "github.json",
+        "hosted_url": "hosted/github.json"
     }
 }

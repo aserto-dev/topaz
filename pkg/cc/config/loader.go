@@ -173,11 +173,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 }
 
 func SetEnvVars(fileContents string) (string, error) {
-	err := os.Setenv("TOPAZ_DIR", cc.GetTopazDir())
-	if err != nil {
-		return "", err
-	}
-	err = os.Setenv("TOPAZ_CFG_DIR", cc.GetTopazCfgDir())
+	err := os.Setenv("TOPAZ_CFG_DIR", cc.GetTopazCfgDir())
 	if err != nil {
 		return "", err
 	}
@@ -257,7 +253,7 @@ func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) 
 // subEnvVars will look for any environment variables in the passed in string
 // with the syntax of ${VAR_NAME} and replace that string with ENV[VAR_NAME].
 func subEnvVars(s string) string {
-	updatedConfig := envRegex.ReplaceAllStringFunc(s, func(s string) string {
+	updatedConfig := envRegex.ReplaceAllStringFunc(strings.ReplaceAll(s, `"`, `'`), func(s string) string {
 		// Trim off the '${' and '}'
 		if len(s) <= 3 {
 			// This should never happen..

@@ -10,7 +10,6 @@ logging:
 
 directory:
   db_path: ${TOPAZ_DIR}/db/directory.db
-  seed_metadata: true
     
 remote_directory:
   address: "localhost:9292"

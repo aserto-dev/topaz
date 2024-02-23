@@ -1,13 +1,21 @@
 package cmd
 
 import (
+	"context"
 	"errors"
+	"time"
 
-	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/fullstorydev/grpcurl"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
-var ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
+var (
+	ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
+	ErrIsRunning  = errors.New("topaz is already running, use 'topaz stop' to stop")
+	ErrNotServing = errors.New("topaz gRPC endpoint not SERVING")
+)
 
 type FormatVersion int
 
@@ -34,25 +42,29 @@ type CLI struct {
 	Certs     CertsCmd     `cmd:"" help:"cert commands"`
 	Update    UpdateCmd    `cmd:"" help:"update topaz container version"`
 	Uninstall UninstallCmd `cmd:"" help:"uninstall topaz container"`
-	Load      LoadCmd      `cmd:"" help:"load manifest from file (DEPRECATED)"`
-	Save      SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)"`
+	Load      LoadCmd      `cmd:"" help:"load manifest from file (DEPRECATED)" hidden:""`
+	Save      SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)" hidden:""`
 	Version   VersionCmd   `cmd:"" help:"version information"`
 	NoCheck   bool         `name:"no-check" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
 }
 
-func CheckRunning(c *cc.CommonCtx) error {
-	if c.NoCheck {
-		return nil
+func isServiceUp(grpcAddress string) bool {
+	tlsConf, err := grpcurl.ClientTLSConfig(true, "", "", "")
+	if err != nil {
+		return false
 	}
 
-	if running, err := dockerx.IsRunning(dockerx.Topaz); !running || err != nil {
-		if !running {
-			return ErrNotRunning
-		}
-		if err != nil {
-			return err
-		}
+	creds := credentials.NewTLS(tlsConf)
+
+	opts := []grpc.DialOption{
+		grpc.WithUserAgent("topaz/dev-build (no version set)"),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 
-	return nil
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	_, err = grpcurl.BlockingDial(ctx, "tcp", grpcAddress, creds, opts...)
+
+	return err == nil
 }

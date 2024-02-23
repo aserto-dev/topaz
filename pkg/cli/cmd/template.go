@@ -13,11 +13,13 @@ import (
 	"strings"
 	"time"
 
+	v3 "github.com/aserto-dev/azm/v3"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
@@ -26,6 +28,7 @@ import (
 type TemplateCmd struct {
 	List    ListTemplatesCmd   `cmd:"" help:"list template"`
 	Install InstallTemplateCmd `cmd:"" help:"install template"`
+	Verify  VerifyTemplateCmd  `cmd:"" help:"verify template content links" hidden:""`
 }
 
 type ListTemplatesCmd struct {
@@ -33,14 +36,8 @@ type ListTemplatesCmd struct {
 }
 
 func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
-	buf, err := getBytes(cmd.TemplatesURL)
+	ctlg, err := getCatalog(cmd.TemplatesURL)
 	if err != nil {
-		return err
-	}
-
-	var ctlg tmplCatalog
-
-	if err := json.Unmarshal(buf, &ctlg); err != nil {
 		return err
 	}
 
@@ -60,16 +57,23 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 }
 
 type InstallTemplateCmd struct {
-	Name             string `arg:"" required:"" help:"template name"`
-	Force            bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
-	ContainerName    string `optional:"" default:"topaz" help:"container name"`
-	ContainerVersion string `optional:"" default:"latest" help:"container version" `
-	TemplatesURL     string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
+	Name              string `arg:"" required:"" help:"template name"`
+	Force             bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
+	ContainerRegistry string `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
+	ContainerImage    string `optional:"" default:"${container_image}" env:"CONTAINER_IMAGE" help:"container image name"`
+	ContainerTag      string `optional:"" default:"${container_tag}" env:"CONTAINER_TAG" help:"container tag"`
+	ContainerPlatform string `optional:"" default:"${container_platform}" env:"CONTAINER_PLATFORM" help:"container platform"`
+	ContainerName     string `optional:"" default:"${container_name}" env:"CONTAINER_NAME" help:"container name"`
+	ContainerHostname string `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
+	TemplatesURL      string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
+	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 
 	clients.Config
 }
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
+	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
+
 	tmpl, err := getTemplate(cmd.Name, cmd.TemplatesURL)
 	if err != nil {
 		return err
@@ -134,7 +138,9 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 
 	// 1 - topaz stop - ensure topaz is not running, so we can reconfigure
 	{
-		command := &StopCmd{}
+		command := &StopCmd{
+			ContainerName: cmd.ContainerName,
+		}
 		if err := command.Run(c); err != nil {
 			return err
 		}
@@ -154,8 +160,14 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	// 3 - topaz start - start instance using new configuration
 	{
 		command := &StartCmd{
-			ContainerName:    cmd.ContainerName,
-			ContainerVersion: cmd.ContainerVersion,
+			StartRunCmd: StartRunCmd{
+				ContainerRegistry: cmd.ContainerRegistry,
+				ContainerImage:    cmd.ContainerImage,
+				ContainerTag:      cmd.ContainerTag,
+				ContainerPlatform: cmd.ContainerPlatform,
+				ContainerName:     cmd.ContainerName,
+				ContainerHostname: cmd.ContainerHostname,
+			},
 		}
 		if err := command.Run(c); err != nil {
 			return err
@@ -553,4 +565,85 @@ func Retry(timeout, interval time.Duration, f func() error) (err error) {
 			time.Sleep(interval)
 		}
 	}
+}
+
+type VerifyTemplateCmd struct {
+	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
+}
+
+func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
+	ctlg, err := getCatalog(cmd.TemplatesURL)
+	if err != nil {
+		return err
+	}
+
+	// limit the amount of noise from the azm parser.
+	zerolog.SetGlobalLevel(zerolog.Disabled)
+
+	table := c.UI.Normal().WithTable("template", "asset", "exists", "parsed", "error")
+	table.WithTableNoAutoWrapText()
+
+	for tmplName := range ctlg {
+
+		tmpl, err := getTemplate(tmplName, cmd.TemplatesURL)
+		if err != nil {
+			return err
+		}
+		{
+			absURL := tmpl.AbsURL(tmpl.Assets.Manifest)
+			exists, parsed, err := validateManifest(absURL)
+			errStr := ""
+			if err != nil {
+				errStr = err.Error()
+			}
+			table.WithTableRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+		}
+		{
+			assets := []string{}
+			assets = append(assets, tmpl.Assets.Assertions...)
+			assets = append(assets, tmpl.Assets.IdentityData...)
+			assets = append(assets, tmpl.Assets.DomainData...)
+
+			for _, assetURL := range assets {
+				absURL := tmpl.AbsURL(assetURL)
+				exists, parsed, err := validateJSON(absURL)
+				errStr := ""
+				if err != nil {
+					errStr = err.Error()
+				}
+				table.WithTableRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+			}
+		}
+	}
+
+	table.Do()
+
+	return nil
+}
+
+func validateManifest(absURL string) (exists, parsed bool, err error) {
+	b, err := getBytes(absURL)
+	if err != nil {
+		return false, false, err
+	}
+
+	if _, err := v3.Load(bytes.NewReader(b)); err != nil {
+		return true, false, err
+	}
+
+	return true, true, nil
+}
+
+func validateJSON(absURL string) (exists, parsed bool, err error) {
+	b, err := getBytes(absURL)
+	if err != nil {
+		return false, false, err
+	}
+
+	var v map[string]interface{}
+	if err := json.NewDecoder(bytes.NewReader(b)).Decode(&v); err != nil {
+		return true, false, err
+	}
+
+	return true, true, nil
 }

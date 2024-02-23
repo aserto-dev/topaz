@@ -10,6 +10,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/fatih/color"
+	"github.com/pkg/errors"
 )
 
 type ManifestCmd struct {
@@ -36,10 +37,9 @@ type DeleteManifestCmd struct {
 }
 
 func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
-
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
@@ -70,10 +70,9 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
-
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err
@@ -93,10 +92,9 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
-
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
 		return err

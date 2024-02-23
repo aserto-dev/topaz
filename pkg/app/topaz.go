@@ -13,6 +13,8 @@ import (
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
+	"github.com/aserto-dev/topaz/pkg/app/auth"
+	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -26,7 +28,6 @@ import (
 
 	console "github.com/aserto-dev/go-topaz-ui"
 	builder "github.com/aserto-dev/service-host"
-	"github.com/aserto-dev/topaz/pkg/app/ui"
 )
 
 // Topaz is an authorizer service instance, responsible for managing
@@ -156,13 +157,18 @@ func (e *Topaz) ConfigServices() error {
 		}
 
 		if con, ok := e.Services[consoleService]; ok {
-			consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
+			apiKeyAuthMiddleware, err := auth.NewAPIKeyAuthMiddleware(e.Context, &e.Configuration.Auth, e.Logger)
+			if err != nil {
+				return err
+			}
 
+			consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
 			if contains(serviceConfig.registeredServices, "console") {
-				server.Gateway.Mux.Handle("/ui/", ui.UIHandler(http.FS(console.FS)))
-				server.Gateway.Mux.Handle("/public/", ui.UIHandler(http.FS(console.FS)))
-				server.Gateway.Mux.HandleFunc("/api/v1/config", ui.ConfigHandler(consoleConfig))
-				server.Gateway.Mux.HandleFunc("/api/v1/authorizers", ui.AuthorizersHandler(consoleConfig))
+				server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))
+				server.Gateway.Mux.Handle("/public/", handlers.UIHandler(http.FS(console.FS)))
+				server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
+				server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
+				server.Gateway.Mux.HandleFunc("/api/v1/authorizers", handlers.AuthorizersHandler(consoleConfig))
 			}
 		}
 

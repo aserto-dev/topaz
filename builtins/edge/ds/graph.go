@@ -21,14 +21,14 @@ import (
 //	v3 (latest) request format:
 //
 //	ds.graph({
-//	    "anchor_type": "",
-//	    "anchor_id": "",
 //	    "object_type": "",
 //	    "object_id": "",
 //	    "relation": "",
 //	    "subject_type": "",
-//	    "subject_id": ""
-//	    "subject_relation": ""
+//	    "subject_id": "",
+//	    "subject_relation": "",
+//	    "explain": false,
+//	    "trace": false
 //	}
 //
 //	v2 request format:
@@ -76,8 +76,6 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				}
 
 				args = dsr3.GetGraphRequest{
-					AnchorType:  a2.Anchor.GetType(),
-					AnchorId:    a2.Anchor.GetKey(),
 					ObjectType:  a2.Object.GetType(),
 					ObjectId:    a2.Object.GetKey(),
 					Relation:    a2.Relation.GetName(),
@@ -88,14 +86,14 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 
 			if proto.Equal(&args, &dsr3.GetGraphRequest{}) {
 				return helpMsg(fnName, &dsr3.GetGraphRequest{
-					AnchorType:      "",
-					AnchorId:        "",
 					ObjectType:      "",
 					ObjectId:        "",
 					Relation:        "",
 					SubjectType:     "",
 					SubjectId:       "",
 					SubjectRelation: "",
+					Explain:         false,
+					Trace:           false,
 				})
 			}
 

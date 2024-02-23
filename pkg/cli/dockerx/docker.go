@@ -1,47 +1,59 @@
 package dockerx
 
 import (
-	"fmt"
+	"context"
 	"os"
 	"path"
 
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/client"
 	"github.com/magefile/mage/sh"
-	"github.com/pkg/errors"
 )
 
 const (
-	Topaz             = "topaz"
-	DefaultConfigRoot = ".config/topaz"
+	docker string = "docker"
 )
 
 var (
-	DockerRun = sh.RunCmd("docker")
-	DockerOut = sh.OutCmd("docker")
+	DockerRun = sh.RunCmd(docker)
+	DockerOut = sh.OutCmd(docker)
 )
 
 func DockerWith(env map[string]string, args ...string) error {
-	return sh.RunWithV(env, "docker", args...)
+	return sh.RunWithV(env, docker, args...)
 }
 
 func DockerWithOut(env map[string]string, args ...string) (string, error) {
-	return sh.OutputWith(env, "docker", args...)
+	return sh.OutputWith(env, docker, args...)
 }
 
 func IsRunning(name string) (bool, error) {
-	if name == "" {
-		return false, errors.Errorf("instance name not specified")
-	}
-	str, err := DockerOut("ps", "-q", "-f", fmt.Sprintf("name=%s", name))
-	return str != "", err
-}
-
-func DefaultRoots() (confRoot string, err error) {
-	home, err := os.UserHomeDir()
+	cli, err := client.NewClientWithOpts(
+		client.FromEnv,
+		client.WithAPIVersionNegotiation())
 	if err != nil {
-		return "", err
+		return false, err
 	}
 
-	return path.Join(home, DefaultConfigRoot), nil
+	containers, err := cli.ContainerList(context.Background(), container.ListOptions{
+		Filters: filters.NewArgs(
+			filters.KeyValuePair{
+				Key: "status", Value: "running"},
+			filters.KeyValuePair{
+				Key: "name", Value: name,
+			}),
+	})
+	if err != nil {
+		return false, err
+	}
+
+	rc := false
+	if len(containers) == 1 {
+		rc = containers[0].State == "running"
+	}
+
+	return rc, nil
 }
 
 func PolicyRoot() string {

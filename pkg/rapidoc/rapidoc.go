@@ -97,7 +97,7 @@ const (
 	show-header = "true"
 	allow-spec-url-load = "false"
 	allow-spec-file-load = "false"
-	allow-server-selection = "false"
+	allow-server-selection = "true"
   >
   <div slot="logo" style="display: flex; align-items: center; justify-content: center;">
   	<img src = "https://www.aserto.com/images/Aserto-logo-color-120px.png" style="width:120px; margin-right: 40px"> <span style="color:#fff"></span>

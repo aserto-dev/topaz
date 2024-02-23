@@ -8,6 +8,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/fatih/color"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 )
 
 type RestoreCmd struct {
@@ -17,10 +18,9 @@ type RestoreCmd struct {
 }
 
 func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
-
 	cmd.Config.SessionID = uuid.NewString()
 
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)

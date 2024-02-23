@@ -77,7 +77,7 @@ api:
         read_timeout: 2s # default 2 seconds
         read_header_timeout: 2s
         write_timeout: 2s
-        idle_timeout: 30s # default 30 seconds      
+        idle_timeout: 30s # default 30 seconds
     writer:
       grpc:
         listen_address: "0.0.0.0:9292"
@@ -178,7 +178,7 @@ api:
         read_header_timeout: 2s
         write_timeout: 2s
         idle_timeout: 30s
-  
+
     authorizer:
       needs:
         - reader
