@@ -21,13 +21,29 @@ type Loader struct {
 
 var envRegex = regexp.MustCompile(`(?U:\${.*})`)
 
+type replacer struct {
+	r *strings.Replacer
+}
+
+func newReplacer() *replacer {
+	return &replacer{r: strings.NewReplacer(".", "_")}
+}
+
+func (r replacer) Replace(s string) string {
+	if s == "TOPAZ_VERSION" {
+		// Prevent the `version` field from be overridden by env vars.
+		return ""
+	}
+
+	return r.r.Replace(s)
+}
+
 func LoadConfiguration(fileName string) (*Loader, error) {
-	v := viper.New()
+	v := viper.NewWithOptions(viper.EnvKeyReplacer(newReplacer()))
 	v.SetConfigType("yaml")
 	v.AddConfigPath(".")
 	v.SetConfigFile(fileName)
 	v.SetEnvPrefix("TOPAZ")
-	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	// Set defaults
 	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
