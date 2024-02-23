@@ -8,6 +8,7 @@ import (
 	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/samber/lo"
 )
 
 type CommonCtx struct {
@@ -41,18 +42,11 @@ func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatu
 		containerName = ContainerName()
 	}
 
-	var status runStatus
 	running, err := dockerx.IsRunning(containerName)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		return false
 	}
 
-	if running {
-		status = StatusRunning
-	} else {
-		status = StatusNotRunning
-	}
-
-	return status == expectedStatus
+	return lo.Ternary(running, StatusRunning, StatusNotRunning) == expectedStatus
 }
