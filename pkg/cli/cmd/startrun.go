@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -114,6 +115,11 @@ func getPorts(rootPath string) ([]string, error) {
 func getVolumes(rootPath string) ([]string, error) {
 	volumeMap := make(map[string]string)
 	configPath := fmt.Sprintf("%s/cfg/config.yaml", rootPath)
+	err := os.Setenv("TOPAZ_DIR", cc.GetTopazDir())
+	if err != nil {
+		return nil, err
+	}
+
 	configLoader, err := config.LoadConfiguration(configPath)
 	if err != nil {
 		return nil, err
