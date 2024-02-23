@@ -5,7 +5,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/aserto-dev/topaz/pkg/cli/g"
+	"github.com/samber/lo"
 )
 
 const (
@@ -23,10 +23,9 @@ func Container(registry, image, tag string) string {
 	}
 
 	return fmt.Sprintf("%s/%s:%s",
-
-		g.Iff(registry != "", registry, ContainerRegistry()),
-		g.Iff(image != "", image, ContainerImage()),
-		g.Iff(tag != "", tag, ContainerTag()),
+		lo.Ternary(registry != "", registry, ContainerRegistry()),
+		lo.Ternary(image != "", image, ContainerImage()),
+		lo.Ternary(tag != "", tag, ContainerTag()),
 	)
 }
 

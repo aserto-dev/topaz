@@ -9,7 +9,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/aserto-dev/topaz/pkg/cli/g"
+	"github.com/samber/lo"
 )
 
 type StartRunCmd struct {
@@ -30,7 +30,7 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 		"run",
 		"--rm",
 		"--name", cmd.ContainerName,
-		g.Iff(interactive, "-ti", "-d"),
+		lo.Ternary(interactive, "-ti", "-d"),
 	}
 
 	policyRoot := dockerx.PolicyRoot()
