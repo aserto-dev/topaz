@@ -81,8 +81,6 @@ func (s *AuthorizerServer) getIdentityFromJWT(ctx context.Context, bearerJWT str
 }
 
 func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken jwt.Token) ([]jwt.ParseOption, error) {
-	log := s.logger
-
 	options := []jwt.ParseOption{
 		jwt.WithValidate(true),
 		jwt.WithAcceptableSkew(time.Duration(s.cfg.JWT.AcceptableTimeSkewSeconds) * time.Second),
@@ -91,7 +89,7 @@ func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken j
 	jwtKeysURL, err := s.jwksURLFromCache(ctx, jwtToken.Issuer())
 
 	if err != nil {
-		log.Debug().Str("issuer", jwtToken.Issuer()).Msg("token didn't have a JWKS endpoint we could use for verification")
+		return nil, errors.Wrap(err, "token didn't have a JWKS endpoint we could use for verification")
 	} else {
 		err := registerJWKSURL(ctx, s.jwkCache, jwtKeysURL)
 		if err != nil {
