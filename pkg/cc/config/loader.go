@@ -173,11 +173,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 }
 
 func SetEnvVars(fileContents string) (string, error) {
-	err := os.Setenv("TOPAZ_DIR", cc.GetTopazDir())
-	if err != nil {
-		return "", err
-	}
-	err = os.Setenv("TOPAZ_CFG_DIR", cc.GetTopazCfgDir())
+	err := os.Setenv("TOPAZ_CFG_DIR", cc.GetTopazCfgDir())
 	if err != nil {
 		return "", err
 	}

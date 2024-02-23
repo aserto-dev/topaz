@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -81,7 +82,6 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 
 func (cmd *StartRunCmd) env() map[string]string {
 	return map[string]string{
-		"TOPAZ_DIR":       cc.GetTopazDir(),
 		"TOPAZ_CERTS_DIR": cc.GetTopazCertsDir(),
 		"TOPAZ_CFG_DIR":   cc.GetTopazCfgDir(),
 		"TOPAZ_DB_DIR":    cc.GetTopazDataDir(),
@@ -115,6 +115,11 @@ func getPorts(rootPath string) ([]string, error) {
 func getVolumes(rootPath string) ([]string, error) {
 	volumeMap := make(map[string]string)
 	configPath := fmt.Sprintf("%s/cfg/config.yaml", rootPath)
+	err := os.Setenv("TOPAZ_DIR", cc.GetTopazDir())
+	if err != nil {
+		return nil, err
+	}
+
 	configLoader, err := config.LoadConfiguration(configPath)
 	if err != nil {
 		return nil, err
