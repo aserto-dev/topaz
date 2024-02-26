@@ -21,8 +21,9 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 	if cmd.ConfigFile != "" {
 		c.Config.DefaultConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
 		c.Config.ContainerName = cc.ContainerName(c.Config.DefaultConfigFile)
+		cmdX.ContainerName = c.Config.ContainerName
 	}
-	if err := CheckRunning(c); err == nil {
+	if c.CheckRunStatus(c.Config.ContainerName, cc.StatusRunning) {
 		return ErrIsRunning
 	}
 	color.Green(">>> starting topaz...")

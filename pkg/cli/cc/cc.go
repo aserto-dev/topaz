@@ -2,6 +2,7 @@ package cc
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -30,10 +31,6 @@ type CLIConfig struct {
 	ContainerRegistry string
 	ContainerImage    string
 	ContainerTag      string
-}
-
-	UI      *clui.UI
-	NoCheck bool
 }
 
 type runStatus int
@@ -72,13 +69,13 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 }
 
 func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatus) bool {
-	if c.NoCheck {
+	if c.Config.NoCheck {
 		return false
 	}
 
 	// set default container name if not specified.
 	if containerName == "" {
-		containerName = ContainerName()
+		containerName = ContainerName(c.Config.DefaultConfigFile)
 	}
 
 	running, err := dockerx.IsRunning(containerName)
