@@ -6,12 +6,14 @@ import (
 	"fmt"
 	goruntime "runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/header"
+	"github.com/lestrrat-go/jwx/v2/jwk"
 
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decision_log"
@@ -42,23 +44,29 @@ const (
 )
 
 type AuthorizerServer struct {
-	cfg    *config.Common
-	logger *zerolog.Logger
+	cfg      *config.Common
+	logger   *zerolog.Logger
+	issuers  sync.Map
+	jwkCache *jwk.Cache
 
 	resolver *resolvers.Resolvers
 }
 
 func NewAuthorizerServer(
+	ctx context.Context,
 	logger *zerolog.Logger,
 	cfg *config.Common,
 	rf *resolvers.Resolvers,
 ) *AuthorizerServer {
 	newLogger := logger.With().Str("component", "api.grpc").Logger()
 
+	jwkCache := jwk.NewCache(ctx)
+
 	return &AuthorizerServer{
 		cfg:      cfg,
 		logger:   &newLogger,
 		resolver: rf,
+		jwkCache: jwkCache,
 	}
 }
 

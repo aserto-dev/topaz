@@ -16,8 +16,8 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/pb"
-	"github.com/lestrrat-go/jwx/jwk"
-	"github.com/lestrrat-go/jwx/jwt"
+	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -55,27 +55,15 @@ func (s *AuthorizerServer) getUserFromJWT(ctx context.Context, bearerJWT string)
 func (s *AuthorizerServer) getIdentityFromJWT(ctx context.Context, bearerJWT string) (string, error) {
 	log := s.logger
 
-	jwtTemp, err := jwt.ParseString(bearerJWT, jwt.WithValidate(false))
+	jwtTemp, err := jwt.ParseString(bearerJWT, jwt.WithVerify(false))
 	if err != nil {
 		log.Error().Err(err).Msg("jwt parse without validation")
 		return "", err
 	}
 
-	options := []jwt.ParseOption{
-		jwt.WithValidate(true),
-		jwt.WithAcceptableSkew(time.Duration(s.cfg.JWT.AcceptableTimeSkewSeconds) * time.Second),
-	}
-
-	jwksURL, err := s.jwksURL(ctx, jwtTemp.Issuer())
+	options, err := s.jwtParseStringOptions(ctx, jwtTemp)
 	if err != nil {
-		log.Debug().Str("issuer", jwtTemp.Issuer()).Msg("token didn't have a JWKS endpoint we could use for verification")
-	} else {
-		jwkSet, errX := jwk.Fetch(ctx, jwksURL.String())
-		if errX != nil {
-			return "", errors.Wrap(errX, "failed to fetch JWK set for validation")
-		}
-
-		options = append(options, jwt.WithKeySet(jwkSet))
+		return "", err
 	}
 
 	jwtToken, err := jwt.ParseString(
@@ -90,6 +78,65 @@ func (s *AuthorizerServer) getIdentityFromJWT(ctx context.Context, bearerJWT str
 	ident := jwtToken.Subject()
 
 	return ident, nil
+}
+
+func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken jwt.Token) ([]jwt.ParseOption, error) {
+	options := []jwt.ParseOption{
+		jwt.WithValidate(true),
+		jwt.WithAcceptableSkew(time.Duration(s.cfg.JWT.AcceptableTimeSkewSeconds) * time.Second),
+	}
+
+	jwtKeysURL, err := s.jwksURLFromCache(ctx, jwtToken.Issuer())
+
+	if err != nil {
+		return nil, errors.Wrap(err, "token didn't have a JWKS endpoint we could use for verification")
+	} else {
+		err := registerJWKSURL(ctx, s.jwkCache, jwtKeysURL)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to register JWKS URL")
+		}
+
+		jwkSet, errX := s.jwkCache.Get(ctx, jwtKeysURL)
+		if errX != nil {
+			return nil, errors.Wrap(errX, "failed to fetch JWK set for validation")
+		}
+		options = append(options, jwt.WithKeySet(jwkSet))
+	}
+
+	return options, nil
+}
+
+func registerJWKSURL(ctx context.Context, jwkCache *jwk.Cache, jwksURL string) error {
+	if !jwkCache.IsRegistered(jwksURL) {
+		err := jwkCache.Register(jwksURL, jwk.WithMinRefreshInterval(15*time.Minute))
+		if err != nil {
+			return err
+		}
+
+		_, err = jwkCache.Refresh(ctx, jwksURL)
+		if err != nil {
+			fmt.Printf("failed to refresh JWKS: %s\n", err)
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *AuthorizerServer) jwksURLFromCache(ctx context.Context, issuer string) (string, error) {
+	var jwksURL string
+	if val, ok := s.issuers.Load(issuer); ok {
+		jwksURL = val.(string)
+	} else {
+		jk, err := s.jwksURL(ctx, issuer)
+		if err != nil {
+			return "", err
+		}
+		jwksURL = jk.String()
+		s.issuers.Store(issuer, jwksURL)
+	}
+
+	return jwksURL, nil
 }
 
 // jwksURL.

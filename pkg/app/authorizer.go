@@ -34,7 +34,7 @@ const (
 	authorizerService = "authorizer"
 )
 
-func NewAuthorizer(cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
+func NewAuthorizer(ctx context.Context, cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
 	if cfg.GRPC.Certs.TLSCertPath != "" {
 		tlsCreds, err := certs.GRPCServerTLSCreds(cfg.GRPC.Certs)
 		if err != nil {
@@ -51,7 +51,7 @@ func NewAuthorizer(cfg *builder.API, commonConfig *config.Common, authorizerOpts
 
 	authResolvers := resolvers.New()
 
-	authServer := impl.NewAuthorizerServer(logger, commonConfig, authResolvers)
+	authServer := impl.NewAuthorizerServer(ctx, logger, commonConfig, authResolvers)
 
 	return &Authorizer{
 		cfg:              cfg,
