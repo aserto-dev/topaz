@@ -24,6 +24,7 @@ type StartRunCmd struct {
 	ContainerHostname string   `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	Env               []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
 	ContainerVersion  string   `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
+	ConfigFile        string   `name:"config" json:"config,omitempty" default:"" short:"c" help:"topaz configuration file"`
 }
 
 type runMode int
