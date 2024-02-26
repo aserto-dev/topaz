@@ -2,8 +2,8 @@ package testing
 
 import (
 	"context"
-	"errors"
 	"os"
+	"path"
 	"testing"
 	"time"
 
@@ -23,9 +23,9 @@ const (
 type EngineHarness struct {
 	Engine      *app.Topaz
 	LogDebugger *LogDebugger
-
-	cleanup func()
-	t       *testing.T
+	cleanup     func()
+	t           *testing.T
+	topazDir    string
 }
 
 // Cleanup releases all resources the harness uses and
@@ -49,19 +49,36 @@ func (h *EngineHarness) Cleanup() {
 	assert.Eventually(func() bool {
 		return !PortOpen("0.0.0.0:9292")
 	}, ten*time.Second, ten*time.Millisecond)
-}
+	assert.Eventually(func() bool {
+		return !PortOpen("0.0.0.0:9393")
+	}, ten*time.Second, ten*time.Millisecond)
+	assert.Eventually(func() bool {
+		return !PortOpen("0.0.0.0:9494")
+	}, ten*time.Second, ten*time.Millisecond)
+	assert.Eventually(func() bool {
+		return !PortOpen("0.0.0.0:9696")
+	}, ten*time.Second, ten*time.Millisecond)
 
-// func (h *EngineHarness) Runtime() *runtime.Runtime {
-// 	if _, ok := h.Engine.Services["authorizer"]; ok {
-// 		result, err := h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.GetRuntimeResolver().RuntimeFromContext(h.Engine.Context, "", "")
-// 		require.NoError(h.t, err)
-// 		return result
-// 	}
-// 	return nil
-// }
+}
 
 func (h *EngineHarness) Context() context.Context {
 	return context.Background()
+}
+
+func (h *EngineHarness) TopazDir() string {
+	return h.topazDir
+}
+
+func (h *EngineHarness) TopazCfgDir() string {
+	return path.Join(h.topazDir, "cfg")
+}
+
+func (h *EngineHarness) TopazCertsDir() string {
+	return path.Join(h.topazDir, "certs")
+}
+
+func (h *EngineHarness) TopazDataDir() string {
+	return path.Join(h.topazDir, "db")
 }
 
 // SetupOffline sets up an engine that uses a runtime that loads offline bundles,
@@ -77,12 +94,20 @@ func SetupOnline(t *testing.T, configOverrides func(*config.Config)) *EngineHarn
 }
 
 func setup(t *testing.T, configOverrides func(*config.Config), online bool) *EngineHarness {
-	assert := require.New(t)
+	require := require.New(t)
 
-	var err error
+	topazDir := path.Join(t.TempDir(), "topaz")
+	err := os.MkdirAll(topazDir, 0777)
+	require.NoError(err)
+	require.DirExists(topazDir)
+
+	err = os.Setenv("TOPAZ_DIR", topazDir)
+	require.NoError(err)
+
 	h := &EngineHarness{
 		t:           t,
 		LogDebugger: NewLogDebugger(t, "topaz"),
+		topazDir:    topazDir,
 	}
 
 	configFile := AssetDefaultConfigLocal()
@@ -90,44 +115,41 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 		configFile = AssetDefaultConfigOnline()
 	}
 
-	err = os.Setenv("TOPAZ_DIR", "/tmp/topaz/test")
-	assert.NoError(err)
-	if _, err := os.Stat("/tmp/topaz/test"); errors.Is(err, os.ErrNotExist) {
-		err = os.MkdirAll("/tmp/topaz/test", 0777)
-		assert.NoError(err)
-		err = os.MkdirAll("/tmp/topaz/test/certs", 0777)
-		assert.NoError(err)
-	}
+	topazCertsDir := path.Join(topazDir, "certs")
+	err = os.MkdirAll(topazCertsDir, 0777)
+	require.NoError(err)
+	require.DirExists(topazCertsDir)
+
 	h.Engine, h.cleanup, err = topaz.BuildTestApp(
 		h.LogDebugger,
 		h.LogDebugger,
 		configFile,
 		configOverrides,
 	)
-	assert.NoError(err)
+	require.NoError(err)
 	directory := topaz.DirectoryResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration)
 	decisionlog, err := h.Engine.GetDecisionLogger(h.Engine.Configuration.DecisionLogger)
-	assert.NoError(err)
+	require.NoError(err)
 	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, nil, decisionlog, directory)
-	assert.NoError(err)
+	require.NoError(err)
 	err = h.Engine.ConfigServices()
-	assert.NoError(err)
+	require.NoError(err)
 	if _, ok := h.Engine.Services["authorizer"]; ok {
 		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(rt)
 		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
 	}
 	err = h.Engine.Start()
-	assert.NoError(err)
+	require.NoError(err)
 
 	if online {
 		for i := 0; i < 2; i++ {
-			assert.Eventually(func() bool {
+			require.Eventually(func() bool {
 				return h.LogDebugger.Contains("Bundle loaded and activated successfully")
 			}, ten*time.Second, ten*time.Millisecond)
 		}
 	}
 
-	assert.Eventually(func() bool {
+	require.Eventually(func() bool {
 		return PortOpen("127.0.0.1:8383")
 	}, ten*time.Second, ten*time.Millisecond)
 
