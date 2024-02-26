@@ -94,15 +94,15 @@ func SetupOnline(t *testing.T, configOverrides func(*config.Config)) *EngineHarn
 }
 
 func setup(t *testing.T, configOverrides func(*config.Config), online bool) *EngineHarness {
-	require := require.New(t)
+	assert := require.New(t)
 
 	topazDir := path.Join(t.TempDir(), "topaz")
 	err := os.MkdirAll(topazDir, 0777)
-	require.NoError(err)
-	require.DirExists(topazDir)
+	assert.NoError(err)
+	assert.DirExists(topazDir)
 
 	err = os.Setenv("TOPAZ_DIR", topazDir)
-	require.NoError(err)
+	assert.NoError(err)
 
 	h := &EngineHarness{
 		t:           t,
@@ -117,8 +117,8 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 
 	topazCertsDir := path.Join(topazDir, "certs")
 	err = os.MkdirAll(topazCertsDir, 0777)
-	require.NoError(err)
-	require.DirExists(topazCertsDir)
+	assert.NoError(err)
+	assert.DirExists(topazCertsDir)
 
 	h.Engine, h.cleanup, err = topaz.BuildTestApp(
 		h.LogDebugger,
@@ -126,30 +126,30 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 		configFile,
 		configOverrides,
 	)
-	require.NoError(err)
+	assert.NoError(err)
 	directory := topaz.DirectoryResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration)
 	decisionlog, err := h.Engine.GetDecisionLogger(h.Engine.Configuration.DecisionLogger)
-	require.NoError(err)
+	assert.NoError(err)
 	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, nil, decisionlog, directory)
-	require.NoError(err)
+	assert.NoError(err)
 	err = h.Engine.ConfigServices()
-	require.NoError(err)
+	assert.NoError(err)
 	if _, ok := h.Engine.Services["authorizer"]; ok {
 		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(rt)
 		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
 	}
 	err = h.Engine.Start()
-	require.NoError(err)
+	assert.NoError(err)
 
 	if online {
 		for i := 0; i < 2; i++ {
-			require.Eventually(func() bool {
+			assert.Eventually(func() bool {
 				return h.LogDebugger.Contains("Bundle loaded and activated successfully")
 			}, ten*time.Second, ten*time.Millisecond)
 		}
 	}
 
-	require.Eventually(func() bool {
+	assert.Eventually(func() bool {
 		return PortOpen("127.0.0.1:8383")
 	}, ten*time.Second, ten*time.Millisecond)
 
