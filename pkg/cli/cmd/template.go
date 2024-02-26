@@ -59,6 +59,8 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 type InstallTemplateCmd struct {
 	Name              string `arg:"" required:"" help:"template name"`
 	Force             bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
+	NoTests           bool   `optional:"" default:"false" help:"do not execute assertions as part of template installation"`
+	NoConsole         bool   `optional:"" default:"false" help:"do not open console when template installation is finished"`
 	ContainerRegistry string `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
 	ContainerImage    string `optional:"" default:"${container_image}" env:"CONTAINER_IMAGE" help:"container image name"`
 	ContainerTag      string `optional:"" default:"${container_tag}" env:"CONTAINER_TAG" help:"container tag"`
@@ -67,7 +69,6 @@ type InstallTemplateCmd struct {
 	ContainerHostname string `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	TemplatesURL      string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
-
 	clients.Config
 }
 
@@ -118,17 +119,26 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 		return fmt.Errorf("gRPC endpoint not SERVING")
 	}
 
-	// 5-8 - reset directory, apply template, and run tests.
-	if err := installTemplate(c, tmpl, topazDir, &cmd.Config); err != nil {
+	// 5-7 - reset directory, apply (manifest, IDP and domain data) template.
+	if err := installTemplate(c, tmpl, topazDir, &cmd.Config).Install(); err != nil {
 		return err
 	}
 
-	// 9 - topaz console, launch console so the user start exploring the template artifacts
-	command := ConsoleCmd{
-		ConsoleAddress: "https://localhost:8080/ui/directory",
+	// 8 - run tests
+	if !cmd.NoTests {
+		if err := installTemplate(c, tmpl, topazDir, &cmd.Config).Test(); err != nil {
+			return err
+		}
 	}
-	if err := command.Run(c); err != nil {
-		return err
+
+	// 9 - topaz console, launch console so the user start exploring the template artifacts
+	if !cmd.NoConsole {
+		command := ConsoleCmd{
+			ConsoleAddress: "https://localhost:8080/ui/directory",
+		}
+		if err := command.Run(c); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -217,14 +227,13 @@ func (t *template) AbsURL(relative string) string {
 	return abs.String()
 }
 
-func installTemplate(c *cc.CommonCtx, tmpl *template, topazDir string, cfg *clients.Config) error {
-	installer := &tmplInstaller{
+func installTemplate(c *cc.CommonCtx, tmpl *template, topazDir string, cfg *clients.Config) *tmplInstaller {
+	return &tmplInstaller{
 		c:        c,
 		tmpl:     tmpl,
 		topazDir: topazDir,
 		cfg:      cfg,
 	}
-	return installer.Install()
 }
 
 type tmplInstaller struct {
@@ -250,6 +259,10 @@ func (i *tmplInstaller) Install() error {
 		return err
 	}
 
+	return nil
+}
+
+func (i *tmplInstaller) Test() error {
 	// 8 - topaz test exec, execute assertions when part of template
 	return i.runTemplateTests()
 }
