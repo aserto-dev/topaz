@@ -182,7 +182,6 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, erro
 func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator) error {
 	existingFiles := []string{}
 	for serviceName, config := range c.APIConfig.Services {
-		log.Info().Msgf("setting up certs for %s", serviceName)
 		for _, file := range []string{
 			config.GRPC.Certs.TLSCACertPath,
 			config.GRPC.Certs.TLSCertPath,
@@ -193,7 +192,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 		} {
 			exists, err := FileExists(file)
 			if err != nil {
-				return errors.Wrapf(err, "failed to determine if file '%s' exists", file)
+				return errors.Wrapf(err, "failed to determine if file '%s' exists (%s)", file, serviceName)
 			}
 
 			if !exists {
@@ -212,7 +211,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 				DefaultTLSGenDir: DefaultTLSGenDir,
 			})
 			if err != nil {
-				return errors.Wrap(err, "failed to generate grpc certs")
+				return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
 			}
 
 			err = certsGenerator.MakeDevCert(&certs.CertGenConfig{
@@ -223,15 +222,10 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 				DefaultTLSGenDir: DefaultTLSGenDir,
 			})
 			if err != nil {
-				return errors.Wrap(err, "failed to generate gateway certs")
+				return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
 			}
-		} else {
-			msg := zerolog.Arr()
-			for _, f := range existingFiles {
-				msg.Str(f)
-			}
-			log.Info().Array("existing-files", msg).Msg("some cert files already exist, skipping generation")
 		}
+		log.Info().Str("service", serviceName).Msg("certs configured")
 	}
 	return nil
 }
