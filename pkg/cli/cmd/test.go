@@ -13,12 +13,12 @@ import (
 	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/samber/lo"
 
 	v2 "github.com/aserto-dev/go-directory-cli/client/v2"
 	client "github.com/aserto-dev/go-directory-cli/client/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/aserto-dev/topaz/pkg/cli/g"
 
 	"github.com/fatih/color"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -64,8 +64,8 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	azc, err := clients.NewAuthorizerClient(c, &clients.AuthorizerConfig{
-		Host:     g.Iff(os.Getenv(clients.EnvTopazAuthorizerSvc) != "", os.Getenv(clients.EnvTopazAuthorizerSvc), ""),
-		APIKey:   g.Iff(os.Getenv(clients.EnvTopazAuthorizerKey) != "", os.Getenv(clients.EnvTopazAuthorizerKey), ""),
+		Host:     lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerSvc) != "", os.Getenv(clients.EnvTopazAuthorizerSvc), ""),
+		APIKey:   lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerKey) != "", os.Getenv(clients.EnvTopazAuthorizerKey), ""),
 		Insecure: cmd.Config.Insecure,
 		TenantID: cmd.Config.TenantID,
 	})
@@ -141,9 +141,9 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		fmt.Printf("%04d %-16s %v  %s [%s] (%s)\n",
 			i+1,
 			checkTypeMapStr[checkType],
-			g.Iff(expected == result.Outcome, color.GreenString(passed), color.RedString(failed)),
+			lo.Ternary(expected == result.Outcome, color.GreenString(passed), color.RedString(failed)),
 			result.Str,
-			g.Iff(result.Outcome, color.BlueString("%t", result.Outcome), color.YellowString("%t", result.Outcome)),
+			lo.Ternary(result.Outcome, color.BlueString("%t", result.Outcome), color.YellowString("%t", result.Outcome)),
 			result.Duration,
 		)
 	}
@@ -365,7 +365,7 @@ func checkDecisionV2(ctx context.Context, c az2.AuthorizerClient, msg *structpb.
 	}
 
 	return &checkResult{
-		Outcome:  g.Iff(err != nil, false, resp.Decisions[0].GetIs()),
+		Outcome:  lo.Ternary(err != nil, false, resp.Decisions[0].GetIs()),
 		Duration: duration,
 		Err:      err,
 		Str:      checkDecisionStringV2(&req),
@@ -475,7 +475,7 @@ const assertionsTemplateV3 string = `{
 
 func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	if !cmd.Pretty {
-		fmt.Fprintf(c.UI.Output(), "%s\n", g.Iff(cmd.V2, assertionsTemplateV2, assertionsTemplateV3))
+		fmt.Fprintf(c.UI.Output(), "%s\n", lo.Ternary(cmd.V2, assertionsTemplateV2, assertionsTemplateV3))
 		return nil
 	}
 

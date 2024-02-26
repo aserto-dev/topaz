@@ -20,17 +20,17 @@ require (
 	github.com/aserto-dev/certs v0.0.5
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.6
-	github.com/aserto-dev/go-aserto v0.31.0
+	github.com/aserto-dev/go-aserto v0.31.1
 	github.com/aserto-dev/go-authorizer v0.20.5
 	github.com/aserto-dev/go-directory v0.31.0
-	github.com/aserto-dev/go-directory-cli v0.30.2
+	github.com/aserto-dev/go-directory-cli v0.31.0
 	github.com/aserto-dev/go-edge-ds v0.31.0
-	github.com/aserto-dev/go-grpc v0.8.62
+	github.com/aserto-dev/go-grpc v0.8.63
 	github.com/aserto-dev/go-topaz-ui v0.1.2
 	github.com/aserto-dev/header v0.0.6
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
-	github.com/aserto-dev/openapi-directory v0.30.3
+	github.com/aserto-dev/openapi-directory v0.31.0
 	github.com/aserto-dev/runtime v0.58.1
 	github.com/aserto-dev/self-decision-logger v0.0.5
 	github.com/aserto-dev/service-host v0.0.9
@@ -42,23 +42,24 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1
-	github.com/lestrrat-go/jwx/v2 v2.0.19
+	github.com/lestrrat-go/jwx/v2 v2.0.20
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.2.1
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/open-policy-agent/opa v0.60.0
+	github.com/open-policy-agent/opa v0.58.0
 	github.com/panmari/cuckoofilter v1.0.6
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.32.0
+	github.com/samber/lo v1.39.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.6.0
-	google.golang.org/grpc v1.61.0
+	google.golang.org/grpc v1.62.0
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
-	sigs.k8s.io/controller-runtime v0.17.0
+	sigs.k8s.io/controller-runtime v0.17.2
 )
 
 require (
@@ -152,7 +153,6 @@ require (
 	github.com/rs/cors v1.10.1 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
-	github.com/samber/lo v1.39.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
@@ -172,12 +172,12 @@ require (
 	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
 	go.opentelemetry.io/otel/trace v1.21.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.18.0 // indirect
+	golang.org/x/crypto v0.19.0 // indirect
 	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.20.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
-	golang.org/x/term v0.16.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
+	golang.org/x/term v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.17.0 // indirect

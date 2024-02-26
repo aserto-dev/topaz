@@ -7,6 +7,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/fatih/color"
+	"github.com/pkg/errors"
 )
 
 type BackupCmd struct {
@@ -18,8 +19,8 @@ type BackupCmd struct {
 const defaultFileName = "backup.tar.gz"
 
 func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
-	if err := CheckRunning(c); err != nil {
-		return err
+	if !isServiceUp(cmd.Host) {
+		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
 
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)

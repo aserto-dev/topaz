@@ -17,9 +17,8 @@ type InstallCmd struct {
 func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	if err := CheckRunning(c); err == nil {
-		color.Yellow("!!! topaz is already running")
-		return nil
+	if c.CheckRunStatus(cc.ContainerName(), cc.StatusRunning) {
+		return ErrIsRunning
 	}
 
 	color.Green(">>> installing topaz...")

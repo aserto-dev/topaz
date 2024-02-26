@@ -2,13 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/aserto-dev/topaz/pkg/cli/g"
+	"github.com/samber/lo"
 )
 
 type StartRunCmd struct {
@@ -28,8 +29,8 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 	args := []string{
 		"run",
 		"--rm",
-		"--name", cc.ContainerName(),
-		g.Iff(interactive, "-ti", "-d"),
+		"--name", cmd.ContainerName,
+		lo.Ternary(interactive, "-ti", "-d"),
 	}
 
 	policyRoot := dockerx.PolicyRoot()
@@ -81,7 +82,6 @@ func (cmd *StartRunCmd) dockerArgs(rootPath string, interactive bool) ([]string,
 
 func (cmd *StartRunCmd) env() map[string]string {
 	return map[string]string{
-		"TOPAZ_DIR":       cc.GetTopazDir(),
 		"TOPAZ_CERTS_DIR": cc.GetTopazCertsDir(),
 		"TOPAZ_CFG_DIR":   cc.GetTopazCfgDir(),
 		"TOPAZ_DB_DIR":    cc.GetTopazDataDir(),
@@ -115,6 +115,11 @@ func getPorts(rootPath string) ([]string, error) {
 func getVolumes(rootPath string) ([]string, error) {
 	volumeMap := make(map[string]string)
 	configPath := fmt.Sprintf("%s/cfg/config.yaml", rootPath)
+	err := os.Setenv("TOPAZ_DIR", cc.GetTopazDir())
+	if err != nil {
+		return nil, err
+	}
+
 	configLoader, err := config.LoadConfiguration(configPath)
 	if err != nil {
 		return nil, err

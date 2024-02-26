@@ -44,7 +44,7 @@
       },
       {
         "object_type": "repo",
-        "object_id": "smiths.bugdet",
+        "object_id": "smiths.budget",
         "relation": "owner",
         "subject_type": "organization",
         "subject_id": "smiths"
