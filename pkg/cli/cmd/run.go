@@ -16,8 +16,8 @@ type RunCmd struct {
 func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 	cmdX := cmd.StartRunCmd
 	if cmd.ConfigFile != "" {
-		c.Config.DefaultConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
-		c.Config.ContainerName = cc.ContainerName(c.Config.DefaultConfigFile)
+		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
+		c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
 		cmdX.ContainerName = c.Config.ContainerName
 	}
 	if c.CheckRunStatus(c.Config.ContainerName, cc.StatusRunning) {
@@ -26,14 +26,14 @@ func (cmd *RunCmd) Run(c *cc.CommonCtx) error {
 
 	color.Green(">>> starting topaz...")
 
-	args, err := cmdX.dockerArgs(c.Config.DefaultConfigFile, true)
+	args, err := cmdX.dockerArgs(c.Config.TopazConfigFile, true)
 	if err != nil {
 		return err
 	}
 
 	cmdArgs := []string{
 		"run",
-		"--config-file", "/config/" + filepath.Base(c.Config.DefaultConfigFile),
+		"--config-file", "/config/" + filepath.Base(c.Config.TopazConfigFile),
 	}
 
 	args = append(args, cmdArgs...)

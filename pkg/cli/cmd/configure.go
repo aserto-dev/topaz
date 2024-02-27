@@ -28,9 +28,9 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
 		}
 	}
-	if cmd.ConfigFile != c.Config.DefaultConfigFile {
-		c.Config.DefaultConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
-		c.Config.ContainerName = cc.ContainerName(c.Config.DefaultConfigFile)
+	if cmd.ConfigFile != c.Config.TopazConfigFile {
+		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
+		c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
 	}
 	if !cmd.Stdout {
 		color.Green(">>> configure policy")
@@ -69,14 +69,14 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 		w = c.UI.Output()
 	} else {
 		if !cmd.Force {
-			if _, err := os.Stat(c.Config.DefaultConfigFile); err == nil {
+			if _, err := os.Stat(c.Config.TopazConfigFile); err == nil {
 				c.UI.Exclamation().Msg("A configuration file already exists.")
 				if !promptYesNo("Do you want to continue?", false) {
 					return nil
 				}
 			}
 		}
-		w, err = os.Create(c.Config.DefaultConfigFile)
+		w, err = os.Create(c.Config.TopazConfigFile)
 		if err != nil {
 			return err
 		}

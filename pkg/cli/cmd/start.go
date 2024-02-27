@@ -19,8 +19,8 @@ type StartCmd struct {
 func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 	cmdX := cmd.StartRunCmd
 	if cmd.ConfigFile != "" {
-		c.Config.DefaultConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
-		c.Config.ContainerName = cc.ContainerName(c.Config.DefaultConfigFile)
+		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
+		c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
 		cmdX.ContainerName = c.Config.ContainerName
 	}
 	if c.CheckRunStatus(c.Config.ContainerName, cc.StatusRunning) {
@@ -28,23 +28,23 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 	}
 	color.Green(">>> starting topaz...")
 
-	args, err := cmdX.dockerArgs(c.Config.DefaultConfigFile, false)
+	args, err := cmdX.dockerArgs(c.Config.TopazConfigFile, false)
 	if err != nil {
 		return err
 	}
 
 	cmdArgs := []string{
 		"run",
-		"--config-file", "/config/" + filepath.Base(c.Config.DefaultConfigFile),
+		"--config-file", "/config/" + filepath.Base(c.Config.TopazConfigFile),
 	}
 
 	args = append(args, cmdArgs...)
 
-	if _, err := os.Stat(c.Config.DefaultConfigFile); errors.Is(err, os.ErrNotExist) {
-		return errors.Errorf("%s does not exist, please run 'topaz configure'", c.Config.DefaultConfigFile)
+	if _, err := os.Stat(c.Config.TopazConfigFile); errors.Is(err, os.ErrNotExist) {
+		return errors.Errorf("%s does not exist, please run 'topaz configure'", c.Config.TopazConfigFile)
 	}
 
-	generator := config.NewGenerator(filepath.Base(c.Config.DefaultConfigFile))
+	generator := config.NewGenerator(filepath.Base(c.Config.TopazConfigFile))
 	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}
