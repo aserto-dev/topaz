@@ -17,7 +17,7 @@ type ExportCmd struct {
 }
 
 func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
-	if !isServiceUp(cmd.Host) {
+	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
 	color.Green(">>> exporting data to %s", cmd.Directory)

@@ -1,14 +1,7 @@
 package cmd
 
 import (
-	"context"
 	"errors"
-	"time"
-
-	"github.com/fullstorydev/grpcurl"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 var (
@@ -46,25 +39,4 @@ type CLI struct {
 	Save      SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)" hidden:""`
 	Version   VersionCmd   `cmd:"" help:"version information"`
 	NoCheck   bool         `name:"no-check" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
-}
-
-func isServiceUp(grpcAddress string) bool {
-	tlsConf, err := grpcurl.ClientTLSConfig(true, "", "", "")
-	if err != nil {
-		return false
-	}
-
-	creds := credentials.NewTLS(tlsConf)
-
-	opts := []grpc.DialOption{
-		grpc.WithUserAgent("topaz/dev-build (no version set)"),
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	_, err = grpcurl.BlockingDial(ctx, "tcp", grpcAddress, creds, opts...)
-
-	return err == nil
 }

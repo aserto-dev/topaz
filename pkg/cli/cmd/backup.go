@@ -19,7 +19,7 @@ type BackupCmd struct {
 const defaultFileName = "backup.tar.gz"
 
 func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
-	if !isServiceUp(cmd.Host) {
+	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
 
