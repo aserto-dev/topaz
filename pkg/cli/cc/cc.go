@@ -58,7 +58,7 @@ func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatu
 
 func (c *CommonCtx) IsServing(grpcAddress string) bool {
 	if c.NoCheck {
-		return false
+		return true
 	}
 
 	tlsConf, err := grpcurl.ClientTLSConfig(true, "", "", "")
