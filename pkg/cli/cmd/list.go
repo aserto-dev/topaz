@@ -23,7 +23,7 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 	for i := range files {
 		active := false
-		if files[i].Name() == filepath.Base(c.Config.DefaultConfigFile) {
+		if files[i].Name() == filepath.Base(c.Config.TopazConfigFile) {
 			active = true
 		}
 		table.WithTableRow(files[i].Name(), fmt.Sprintf("%v", active))

@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"github.com/alecthomas/kong"
-	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
@@ -49,7 +48,7 @@ func main() {
 			"container_image":    cc.ContainerImage(),
 			"container_tag":      cc.ContainerTag(),
 			"container_platform": cc.ContainerPlatform(),
-			"container_name":     cc.ContainerName(ctx.Config.DefaultConfigFile),
+			"container_name":     cc.ContainerName(ctx.Config.TopazConfigFile),
 		},
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
@@ -58,11 +57,14 @@ func main() {
 		kongCtx.FatalIfErrorf(err)
 	}
 
-	// only save on config change
-	if app.Contains(kongCtx.Args, "configure") || app.Contains(kongCtx.Args, "-c") || app.Contains(kongCtx.Args, "--config") {
-		if err := cli.SaveConfig(ctx); err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
-			os.Exit(1)
+	// only if not version command used.
+	if !lo.Contains(kongCtx.Args, "version") {
+		// only save on config change.
+		if lo.Contains(kongCtx.Args, "configure") || lo.Contains(kongCtx.Args, "-c") || lo.Contains(kongCtx.Args, "--config") {
+			if err := cli.SaveConfig(ctx); err != nil {
+				fmt.Fprintln(os.Stderr, err.Error())
+				os.Exit(1)
+			}
 		}
 	}
 }
