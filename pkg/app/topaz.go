@@ -16,6 +16,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
+	"github.com/samber/lo"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
@@ -60,7 +61,7 @@ func (e *Topaz) Start() error {
 		if len(cfg.Needs) > 0 {
 			for _, name := range cfg.Needs {
 				if dependencyConfig, ok := e.Configuration.APIConfig.Services[name]; ok {
-					if !Contains(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) &&
+					if !lo.Contains(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress) &&
 						cfg.GRPC.ListenAddress != dependencyConfig.GRPC.ListenAddress {
 						e.Manager.DependencyMap[cfg.GRPC.ListenAddress] = append(e.Manager.DependencyMap[cfg.GRPC.ListenAddress], dependencyConfig.GRPC.ListenAddress)
 					}
@@ -119,7 +120,7 @@ func (e *Topaz) ConfigServices() error {
 		for _, serv := range e.Services {
 			notAdded := true
 			for _, serviceName := range serv.AvailableServices() {
-				if Contains(serviceConfig.registeredServices, serviceName) && notAdded {
+				if lo.Contains(serviceConfig.registeredServices, serviceName) && notAdded {
 					grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
 					gateways = append(gateways, serv.GetGatewayRegistration(serviceConfig.registeredServices...))
 					cleanups = append(cleanups, serv.Cleanups()...)
@@ -163,7 +164,7 @@ func (e *Topaz) ConfigServices() error {
 			}
 
 			consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
-			if Contains(serviceConfig.registeredServices, "console") {
+			if lo.Contains(serviceConfig.registeredServices, "console") {
 				server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))
 				server.Gateway.Mux.Handle("/public/", handlers.UIHandler(http.FS(console.FS)))
 				server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
@@ -263,15 +264,6 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 	return portMap
 }
 
-func Contains[T comparable](slice []T, item T) bool {
-	for i := range slice {
-		if slice[i] == item {
-			return true
-		}
-	}
-	return false
-}
-
 func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
 	var decisionlogger decisionlog.DecisionLogger
 	var err error
@@ -333,7 +325,7 @@ func (e *Topaz) validateConfig() error {
 	for key := range e.Configuration.APIConfig.Services {
 		validKey := false
 		for _, service := range e.Services {
-			if Contains(service.AvailableServices(), key) {
+			if lo.Contains(service.AvailableServices(), key) {
 				validKey = true
 				break
 			}

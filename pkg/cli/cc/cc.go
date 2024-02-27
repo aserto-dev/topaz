@@ -26,7 +26,7 @@ type CommonCtx struct {
 
 type CLIConfig struct {
 	NoCheck           bool
-	DefaultConfigFile string
+	TopazConfigFile   string
 	ContainerName     string
 	ContainerRegistry string
 	ContainerImage    string
@@ -46,7 +46,7 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 		UI:      iostream.NewUI(iostream.DefaultIO()),
 		Config: &CLIConfig{
 			NoCheck:           noCheck,
-			DefaultConfigFile: filepath.Join(GetTopazCfgDir(), "config.yaml"),
+			TopazConfigFile:   filepath.Join(GetTopazCfgDir(), "config.yaml"),
 			ContainerName:     ContainerName(filepath.Join(GetTopazCfgDir(), "config.yaml")),
 			ContainerRegistry: ContainerRegistry(),
 			ContainerImage:    ContainerImage(),
@@ -75,7 +75,7 @@ func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatu
 
 	// set default container name if not specified.
 	if containerName == "" {
-		containerName = ContainerName(c.Config.DefaultConfigFile)
+		containerName = ContainerName(c.Config.TopazConfigFile)
 	}
 
 	dc, err := dockerx.New()
