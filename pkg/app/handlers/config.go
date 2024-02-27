@@ -46,8 +46,9 @@ type TopazCfgV2 struct {
 }
 
 type CfgV2Response struct {
-	ReadOnly bool          `json:"readOnly"`
-	Configs  []*TopazCfgV2 `json:"configs"`
+	ReadOnly           bool          `json:"readOnly"`
+	AuthenticationType string        `json:"authenticationType"`
+	Configs            []*TopazCfgV2 `json:"configs"`
 }
 
 func ConfigHandler(confServices *TopazCfg) func(w http.ResponseWriter, r *http.Request) {
@@ -99,13 +100,23 @@ func ConfigHandlerV2(confServices *TopazCfg) http.Handler {
 		}
 
 		cfgV2Response := &CfgV2Response{
-			Configs:  []*TopazCfgV2{cfgV2},
-			ReadOnly: true,
+			Configs:            []*TopazCfgV2{cfgV2},
+			ReadOnly:           true,
+			AuthenticationType: authType(r),
 		}
 
 		buf, _ := json.Marshal(cfgV2Response)
 		writeJSON(buf, w, r)
 	})
+}
+
+func authType(r *http.Request) string {
+	authEnabled := r.Context().Value(AuthEnabled)
+	if authEnabled != nil && authEnabled.(bool) {
+		return "apiKey"
+	} else {
+		return "anonymous"
+	}
 }
 
 func writeJSON(buf []byte, w http.ResponseWriter, _ *http.Request) {
