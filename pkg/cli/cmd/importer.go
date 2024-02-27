@@ -19,7 +19,7 @@ type ImportCmd struct {
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
-	if !isServiceUp(cmd.Host) {
+	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(ErrNotServing, cmd.Host)
 	}
 	color.Green(">>> importing data from %s", cmd.Directory)
