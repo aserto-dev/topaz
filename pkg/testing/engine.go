@@ -2,8 +2,8 @@ package testing
 
 import (
 	"context"
-	"errors"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -90,14 +90,13 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 		configFile = AssetDefaultConfigOnline()
 	}
 
-	err = os.Setenv("TOPAZ_DIR", "/tmp/topaz/test")
+	testDir := t.TempDir()
+	err = os.Mkdir(filepath.Join(testDir, "certs"), 0777)
 	assert.NoError(err)
-	if _, err := os.Stat("/tmp/topaz/test"); errors.Is(err, os.ErrNotExist) {
-		err = os.MkdirAll("/tmp/topaz/test", 0777)
-		assert.NoError(err)
-		err = os.MkdirAll("/tmp/topaz/test/certs", 0777)
-		assert.NoError(err)
-	}
+
+	err = os.Setenv("TOPAZ_DIR", testDir)
+	assert.NoError(err)
+
 	h.Engine, h.cleanup, err = topaz.BuildTestApp(
 		h.LogDebugger,
 		h.LogDebugger,
@@ -105,13 +104,17 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 		configOverrides,
 	)
 	assert.NoError(err)
+
 	directory := topaz.DirectoryResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration)
 	decisionlog, err := h.Engine.GetDecisionLogger(h.Engine.Configuration.DecisionLogger)
 	assert.NoError(err)
+
 	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, nil, decisionlog, directory)
 	assert.NoError(err)
+
 	err = h.Engine.ConfigServices()
 	assert.NoError(err)
+
 	if _, ok := h.Engine.Services["authorizer"]; ok {
 		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(rt)
 		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
