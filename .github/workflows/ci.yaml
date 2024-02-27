@@ -74,7 +74,7 @@ jobs:
     steps:
       -
         name: Read Configuration
-        uses: hashicorp/vault-action@v2
+        uses: hashicorp/vault-action@v3
         id: vault
         with:
           url: https://vault.eng.aserto.com/
@@ -90,15 +90,15 @@ jobs:
           fetch-depth: 0
       -
         name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
       -
         name: Setup QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       -
         name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: https://ghcr.io
           username: ${{ env.DOCKER_USERNAME }}
@@ -128,7 +128,7 @@ jobs:
         run: exit 1
       -
         name: Push image to GitHub Container Registry
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser
           version: ${{ env.GO_RELEASER_VERSION }}
@@ -144,7 +144,7 @@ jobs:
     steps:
       -
         name: Read Configuration
-        uses: hashicorp/vault-action@v2
+        uses: hashicorp/vault-action@v3
         id: vault
         with:
           url: https://vault.eng.aserto.com/
@@ -162,15 +162,15 @@ jobs:
           fetch-depth: 0
       -
         name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
       -
         name: Setup QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       -
         name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: https://ghcr.io
           username: ${{ env.DOCKER_USERNAME }}
@@ -196,7 +196,7 @@ jobs:
           git describe --tags > VERSION.txt
       -
         name: Release
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP: ${{ secrets.GITHUB_TOKEN }}
@@ -230,7 +230,7 @@ jobs:
           fetch-depth: 0
       - 
         name: Read Configuration
-        uses: hashicorp/vault-action@v2
+        uses: hashicorp/vault-action@v3
         id: vault
         with:
           url: ${{ env.VAULT_ADDR }}

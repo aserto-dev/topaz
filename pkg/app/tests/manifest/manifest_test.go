@@ -18,9 +18,7 @@ import (
 )
 
 func TestManifest(t *testing.T) {
-	tempDir := t.TempDir()
 	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Edge.DBPath = path.Join(tempDir, "test.db")
 	})
 	defer harness.Cleanup()
 
@@ -36,7 +34,7 @@ func TestManifest(t *testing.T) {
 	bytesSend, err := setManifest(ctx, client.Model, r)
 	require.NoError(t, err)
 
-	w, err := os.Create(path.Join(tempDir, "manifest.new.yaml"))
+	w, err := os.Create(path.Join(harness.TopazDir(), "manifest.new.yaml"))
 	require.NoError(t, err)
 	defer w.Close()
 

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Read Configuration
-        uses: hashicorp/vault-action@v2.7.2
+        uses: hashicorp/vault-action@v3
         id: vault
         with:
           url: https://vault.eng.aserto.com/
