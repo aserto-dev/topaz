@@ -34,6 +34,7 @@ type CLI struct {
 	Restore           RestoreCmd   `cmd:"" help:"restore directory data"`
 	Install           InstallCmd   `cmd:"" help:"install topaz container"`
 	Configure         ConfigCmd    `cmd:"" help:"configure topaz service"`
+	List              ListConfigCmd `cmd:"" help:"list available configuration files"`
 	Certs             CertsCmd     `cmd:"" help:"cert commands"`
 	Update            UpdateCmd    `cmd:"" help:"update topaz container version"`
 	Uninstall         UninstallCmd `cmd:"" help:"uninstall topaz container"`
