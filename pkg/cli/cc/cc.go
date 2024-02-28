@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"time"
 	"path/filepath"
+	"time"
 
 	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
@@ -88,7 +88,7 @@ func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatu
 }
 
 func (c *CommonCtx) IsServing(grpcAddress string) bool {
-	if c.NoCheck {
+	if c.Config.NoCheck {
 		return true
 	}
 

@@ -57,7 +57,7 @@ func main() {
 	if !lo.Contains(kongCtx.Args, "version") {
 		// only save on config change.
 		if lo.Contains(kongCtx.Args, "configure") || lo.Contains(kongCtx.Args, "-c") || lo.Contains(kongCtx.Args, "--config") {
-			if err := cli.SaveConfig(ctx); err != nil {
+			if err := ctx.SaveContextConfig(cmd.CLIConfigurationFile); err != nil {
 				fmt.Fprintln(os.Stderr, err.Error())
 				os.Exit(1)
 			}
