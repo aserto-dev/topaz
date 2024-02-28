@@ -107,6 +107,12 @@ The Topaz authorizer is packaged as a Docker container. You can get the latest i
 topaz install
 ```
 
+**NOTE:** If you get the following errors/warnings from Topaz commands:
+
+`Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?`
+
+Be sure to allow the default Docker socket to be used in your Docker Desktop Advanced settings.
+
 ### Install the todo template
 
 Topaz has a set of pre-built templates that contain three types of artifacts:
