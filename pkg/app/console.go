@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"strings"
 
 	builder "github.com/aserto-dev/service-host"
@@ -33,7 +34,9 @@ func (e *ConsoleService) GetGRPCRegistrations(services ...string) builder.GRPCRe
 
 func (e *ConsoleService) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-		return nil
+		return mux.HandlePath("GET", "/", runtime.HandlerFunc(func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			http.Redirect(w, r, "/ui/directory/model", http.StatusSeeOther)
+		}))
 	}
 }
 
