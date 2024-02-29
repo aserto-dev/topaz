@@ -13,18 +13,14 @@ import (
 	"google.golang.org/grpc"
 )
 
-type ConsoleService struct {
-	cfg *builder.API
-}
+type ConsoleService struct{}
 
 const (
 	consoleService = "console"
 )
 
-func NewConsole(cfg *builder.API) ServiceTypes {
-	return &ConsoleService{
-		cfg: cfg,
-	}
+func NewConsole() ServiceTypes {
+	return &ConsoleService{}
 }
 
 func (e *ConsoleService) AvailableServices() []string {
@@ -39,14 +35,7 @@ func (e *ConsoleService) GetGRPCRegistrations(services ...string) builder.GRPCRe
 func (e *ConsoleService) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		return mux.HandlePath("GET", "/", runtime.HandlerFunc(func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-			var httpType string
-			if e.cfg.Gateway.HTTP {
-				httpType = "http"
-			} else {
-				httpType = "https"
-			}
-			redirectURL := fmt.Sprintf("%s://%s/ui/directory/model", httpType, e.cfg.Gateway.ListenAddress)
-			http.Redirect(w, r, redirectURL, http.StatusSeeOther)
+			http.Redirect(w, r, "/ui/directory/model", http.StatusSeeOther)
 		}))
 	}
 }

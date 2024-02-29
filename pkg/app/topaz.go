@@ -227,8 +227,8 @@ func (e *Topaz) prepareServices() error {
 		e.Services["authorizer"] = authorizer
 	}
 
-	if cfg, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
-		e.Services["console"] = NewConsole(cfg)
+	if _, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
+		e.Services["console"] = NewConsole()
 	}
 	return nil
 }
