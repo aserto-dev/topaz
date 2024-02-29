@@ -59,6 +59,7 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 type InstallTemplateCmd struct {
 	Name              string `arg:"" required:"" help:"template name"`
 	Force             bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
+	NoConfigure       bool   `optional:"" default:"false" help:"do not run configure step, to prevent changes to the config .yaml file"`
 	NoTests           bool   `optional:"" default:"false" help:"do not execute assertions as part of template installation"`
 	NoConsole         bool   `optional:"" default:"false" help:"do not open console when template installation is finished"`
 	ContainerRegistry string `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
@@ -157,7 +158,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	}
 
 	// 2 - topaz configure - generate a new configuration based on the requirements of the template
-	{
+	if !cmd.NoConfigure {
 		command := ConfigureCmd{
 			PolicyName: tmpl.Assets.Policy.Name,
 			Resource:   tmpl.Assets.Policy.Resource,
