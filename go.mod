@@ -9,7 +9,7 @@ go 1.20
 // replace github.com/aserto-dev/azm => ../azm
 
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
-replace github.com/aserto-dev/service-host => github.com/aserto-dev/service-host andrew/uiredirect
+//replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
 
 require (

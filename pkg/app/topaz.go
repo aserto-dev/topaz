@@ -164,7 +164,6 @@ func (e *Topaz) ConfigServices() error {
 
 			consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
 			if contains(serviceConfig.registeredServices, "console") {
-				server.Gateway.Mux.Handle("/", http.RedirectHandler("/ui/directory/model", http.StatusSeeOther))
 				server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))
 				server.Gateway.Mux.Handle("/public/", handlers.UIHandler(http.FS(console.FS)))
 				server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
@@ -228,8 +227,8 @@ func (e *Topaz) prepareServices() error {
 		e.Services["authorizer"] = authorizer
 	}
 
-	if _, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
-		e.Services["console"] = NewConsole()
+	if cfg, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
+		e.Services["console"] = NewConsole(cfg)
 	}
 	return nil
 }
