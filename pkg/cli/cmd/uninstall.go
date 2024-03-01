@@ -28,8 +28,6 @@ func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	env := map[string]string{}
-
 	args := []string{
 		"images",
 		cc.Container(
@@ -41,7 +39,7 @@ func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
 		"-q",
 	}
 
-	str, err := dockerx.DockerWithOut(env, args...)
+	str, err := dockerx.DockerOut(args...)
 	if err != nil {
 		return err
 	}
