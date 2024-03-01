@@ -11,6 +11,7 @@ type StopCmd struct {
 }
 
 func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
+	c.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
 		return nil
 	}
