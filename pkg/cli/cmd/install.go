@@ -23,8 +23,6 @@ func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 
 	color.Green(">>> installing topaz...")
 
-	env := map[string]string{}
-
 	args := []string{
 		"pull",
 		"--platform", cmd.ContainerPlatform,
@@ -36,5 +34,5 @@ func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 		),
 	}
 
-	return dockerx.DockerWith(env, args...)
+	return dockerx.DockerV(args...)
 }

@@ -20,12 +20,8 @@ var (
 	DockerOut = sh.OutCmd(docker)
 )
 
-func DockerWith(env map[string]string, args ...string) error {
-	return sh.RunWithV(env, docker, args...)
-}
-
-func DockerWithOut(env map[string]string, args ...string) (string, error) {
-	return sh.OutputWith(env, docker, args...)
+func DockerV(args ...string) error {
+	return sh.RunV(docker, args...)
 }
 
 func IsRunning(name string) (bool, error) {

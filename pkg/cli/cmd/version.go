@@ -30,8 +30,6 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	env := map[string]string{}
-
 	// default command
 	// docker run -ti --rm --name topazd-version --platform linux/arm64 ghcr.io/aserto-dev/topaz:latest version
 	args := []string{
@@ -49,7 +47,7 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		"version",
 	}
 
-	result, err := dockerx.DockerWithOut(env, args...)
+	result, err := dockerx.DockerOut(args...)
 	if err != nil {
 		return err
 	}
