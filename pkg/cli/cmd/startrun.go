@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -89,6 +90,22 @@ func (cmd *StartRunCmd) dockerArgs(cfg *config.Loader, mode runMode) ([]string, 
 		return nil, err
 	}
 	args = append(args, volumes...)
+
+	for i := range volumes {
+		if volumes[i] == "-v" {
+			continue
+		}
+		destination := strings.Split(volumes[i], ":")
+		mountedPath := fmt.Sprintf("/%s", filepath.Base(destination[1])) // last value from split.
+		switch {
+		case strings.Contains(volumes[i], "certs"):
+			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CERTS_DIR=%s", mountedPath))
+		case strings.Contains(volumes[i], "db"):
+			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_DB_DIR=%s", mountedPath))
+		case strings.Contains(volumes[i], "cfg"):
+			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CFG_DIR=%s", mountedPath))
+		}
+	}
 
 	ports, err := getPorts(cfg)
 	if err != nil {
