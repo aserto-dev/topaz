@@ -8,23 +8,19 @@ type RestartCmd struct {
 }
 
 func (cmd *RestartCmd) Run(c *cc.CommonCtx) error {
-	{
-		cmd := &StopCmd{
-			ContainerName: cmd.ContainerName,
-			Wait:          cmd.Wait,
-		}
-		if err := cmd.Run(c); err != nil {
-			return err
-		}
+	if err := (&StopCmd{
+		ContainerName: cmd.ContainerName,
+		Wait:          cmd.Wait,
+	}).Run(c); err != nil {
+		return err
 	}
-	{
-		cmd := &StartCmd{
-			StartRunCmd: cmd.StartRunCmd,
-			Wait:        cmd.Wait,
-		}
-		if err := cmd.Run(c); err != nil {
-			return err
-		}
+
+	if err := (&StartCmd{
+		StartRunCmd: cmd.StartRunCmd,
+		Wait:        cmd.Wait,
+	}).Run(c); err != nil {
+		return err
 	}
+
 	return nil
 }

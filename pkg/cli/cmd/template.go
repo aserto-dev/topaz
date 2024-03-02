@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,18 +10,13 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-	"time"
 
 	v3 "github.com/aserto-dev/azm/v3"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
 type TemplateCmd struct {
@@ -116,7 +110,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 
 	// 4 - wait for health endpoint to be in serving state
-	if !isServing() {
+	if !cc.ServiceHealthStatus("") {
 		return fmt.Errorf("gRPC endpoint not SERVING")
 	}
 
@@ -516,69 +510,6 @@ func getTopazDir() (string, error) {
 		return "", err
 	}
 	return filepath.Clean(path.Join(homeDir, ".config", "topaz")), nil
-}
-
-// isServing adopted from grpc-health-probe cli implementation https://github.com/grpc-ecosystem/grpc-health-probe/blob/master/main.go.
-func isServing() bool {
-	addr := "localhost:9494"
-	connTimeout := time.Second * 30
-	rpcTimeout := time.Second * 30
-
-	bCtx := context.Background()
-	dialCtx, dialCancel := context.WithTimeout(bCtx, connTimeout)
-	defer dialCancel()
-
-	dialOpts := []grpc.DialOption{
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	}
-
-	conn, err := grpc.DialContext(dialCtx, addr, dialOpts...)
-	if err != nil {
-		return false
-	}
-	defer conn.Close()
-
-	rpcCtx, rpcCancel := context.WithTimeout(bCtx, rpcTimeout)
-	defer rpcCancel()
-
-	if err := Retry(rpcTimeout, time.Millisecond*100, func() error {
-		resp, err := healthpb.NewHealthClient(conn).Check(rpcCtx, &healthpb.HealthCheckRequest{Service: ""})
-		if err != nil {
-			return err
-		}
-
-		if resp.GetStatus() != healthpb.HealthCheckResponse_SERVING {
-			return fmt.Errorf("gRPC endpoint not SERVING")
-		}
-
-		return nil
-	}); err != nil {
-		return false
-	}
-
-	return true
-}
-
-var errTimeout = errors.New("timeout")
-
-func Retry(timeout, interval time.Duration, f func() error) (err error) {
-	err = errTimeout
-	for t := time.After(timeout); ; {
-		select {
-		case <-t:
-			return
-		default:
-		}
-
-		err = f()
-		if err == nil {
-			return
-		}
-
-		if timeout > 0 {
-			time.Sleep(interval)
-		}
-	}
 }
 
 type VerifyTemplateCmd struct {
