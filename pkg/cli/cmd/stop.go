@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"path/filepath"
-
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
@@ -26,16 +24,10 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.Wait {
-		cfg, err := config.LoadConfiguration(filepath.Join(cc.GetTopazCfgDir(), "config.yaml"))
+		ports, err := config.CurrentConfig().Ports()
 		if err != nil {
 			return err
 		}
-
-		ports, err := cfg.GetPorts()
-		if err != nil {
-			return err
-		}
-
 		if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
 			return err
 		}
