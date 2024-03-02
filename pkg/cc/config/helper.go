@@ -10,29 +10,29 @@ import (
 
 type currentConfig struct {
 	*Loader
-	lErr error
+	err error
 }
 
 func CurrentConfig() *currentConfig {
 	cfg, err := LoadConfiguration(filepath.Join(cc.GetTopazCfgDir(), "config.yaml"))
 	if err != nil {
-		return &currentConfig{Loader: nil, lErr: err}
+		return &currentConfig{Loader: nil, err: err}
 	}
 
-	return &currentConfig{Loader: cfg, lErr: nil}
+	return &currentConfig{Loader: cfg, err: nil}
 }
 
 func (c *currentConfig) Ports() ([]string, error) {
-	if c.lErr != nil {
-		return []string{}, c.lErr
+	if c.err != nil {
+		return []string{}, c.err
 	}
 
 	return c.GetPorts()
 }
 
 func (c *currentConfig) Services() ([]string, error) {
-	if c.lErr != nil {
-		return []string{}, c.lErr
+	if c.err != nil {
+		return []string{}, c.err
 	}
 
 	return lo.MapToSlice(c.Configuration.APIConfig.Services, func(k string, v *builder.API) string {
@@ -41,8 +41,8 @@ func (c *currentConfig) Services() ([]string, error) {
 }
 
 func (c *currentConfig) HealthService() (string, error) {
-	if c.lErr != nil {
-		return "", c.lErr
+	if c.err != nil {
+		return "", c.err
 	}
 
 	return c.Configuration.APIConfig.Health.ListenAddress, nil
