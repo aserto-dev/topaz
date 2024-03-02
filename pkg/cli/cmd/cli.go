@@ -20,6 +20,7 @@ const (
 type CLI struct {
 	Start     StartCmd     `cmd:"" help:"start topaz in daemon mode"`
 	Stop      StopCmd      `cmd:"" help:"stop topaz instance"`
+	Restart   RestartCmd   `cmd:"" help:"restart topaz instance"`
 	Status    StatusCmd    `cmd:"" help:"status of topaz daemon process"`
 	Run       RunCmd       `cmd:"" help:"run topaz in console mode"`
 	Manifest  ManifestCmd  `cmd:"" help:"manifest commands"`
@@ -39,4 +40,5 @@ type CLI struct {
 	Save      SaveCmd      `cmd:"" help:"save manifest to file  (DEPRECATED)" hidden:""`
 	Version   VersionCmd   `cmd:"" help:"version information"`
 	NoCheck   bool         `name:"no-check" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
+	LogLevel  int          `name:"log" type:"counter" default:"0" help:"log level"`
 }

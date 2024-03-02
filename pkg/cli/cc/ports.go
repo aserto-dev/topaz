@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 type portStatus int
@@ -32,13 +34,27 @@ const (
 )
 
 func WaitForPorts(ports []string, expectedStatus portStatus) error {
+	t0 := time.Now().UTC()
+	log.Debug().Time("started", t0).Msg("WaitForPorts")
+
+	defer func() {
+		t1 := time.Now().UTC()
+		log.Debug().Time("stopped", t1).Msg("WaitForPorts")
+
+		diff := t1.Sub(t0)
+		log.Debug().Str("elapsed", diff.String()).Msg("WaitForPorts")
+	}()
+
 	for _, port := range ports {
 		listenAddress := fmt.Sprintf("%s:%s", address, port)
 
 		if err := Retry(timeout, interval, func() error {
-			if status := PortStatus(listenAddress); status != expectedStatus {
+			status := PortStatus(listenAddress)
+			if status != expectedStatus {
+				log.Debug().Str("addr", listenAddress).Stringer("status", status).Stringer("expected", expectedStatus).Msg("WaitForPorts")
 				return fmt.Errorf("%s %s", listenAddress, status)
 			}
+			log.Debug().Str("addr", listenAddress).Stringer("status", status).Stringer("expected", expectedStatus).Msg("WaitForPorts")
 			return nil
 		}); err != nil {
 			return err
