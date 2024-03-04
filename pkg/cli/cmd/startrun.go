@@ -38,26 +38,13 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return ErrIsRunning
 	}
 
+	if _, err := os.Stat(path.Join(cc.GetTopazCfgDir(), "config.yaml")); errors.Is(err, os.ErrNotExist) {
+		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(cc.GetTopazCfgDir(), "config.yaml"))
+	}
+
 	cfg, err := config.LoadConfiguration(filepath.Join(cc.GetTopazCfgDir(), "config.yaml"))
 	if err != nil {
 		return err
-	}
-
-	color.Green(">>> starting topaz...")
-	args, err := cmd.dockerArgs(cfg, mode)
-	if err != nil {
-		return err
-	}
-
-	cmdArgs := []string{
-		"run",
-		"--config-file", "/config/config.yaml",
-	}
-
-	args = append(args, cmdArgs...)
-
-	if _, err := os.Stat(path.Join(cc.GetTopazCfgDir(), "config.yaml")); errors.Is(err, os.ErrNotExist) {
-		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(cc.GetTopazCfgDir(), "config.yaml"))
 	}
 
 	generator := config.NewGenerator("config.yaml")
@@ -69,65 +56,59 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return err
 	}
 
-	return dockerx.DockerV(args...)
-}
-
-func (cmd *StartRunCmd) dockerArgs(cfg *config.Loader, mode runMode) ([]string, error) {
-	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
-
-	args := []string{
-		"run",
-		"--rm",
-		"--name", cmd.ContainerName,
-		lo.Ternary(mode == modeInteractive, "-ti", "-d"),
+	ports, err := getPorts(cfg)
+	if err != nil {
+		return err
 	}
-
-	policyRoot := dockerx.PolicyRoot()
-	args = append(args, "-v", fmt.Sprintf("%s:/root/.policy:ro", policyRoot))
 
 	volumes, err := getVolumes(cfg)
 	if err != nil {
-		return nil, err
-	}
-	args = append(args, volumes...)
-
-	for i := range volumes {
-		if volumes[i] == "-v" {
-			continue
-		}
-		destination := strings.Split(volumes[i], ":")
-		mountedPath := fmt.Sprintf("/%s", filepath.Base(destination[1])) // last value from split.
-		switch {
-		case strings.Contains(volumes[i], "certs"):
-			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CERTS_DIR=%s", mountedPath))
-		case strings.Contains(volumes[i], "db"):
-			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_DB_DIR=%s", mountedPath))
-		case strings.Contains(volumes[i], "cfg"):
-			cmd.Env = append(cmd.Env, fmt.Sprintf("TOPAZ_CFG_DIR=%s", mountedPath))
-		}
+		return err
 	}
 
-	ports, err := getPorts(cfg)
+	color.Green(">>> starting topaz...")
+
+	dc, err := dockerx.New()
 	if err != nil {
-		return nil, err
-	}
-	args = append(args, ports...)
-
-	for _, env := range cmd.Env {
-		args = append(args, "--env", env)
+		return err
 	}
 
-	if cmd.ContainerHostname != "" {
-		args = append(args, "--hostname", cmd.ContainerHostname)
-	}
-
-	return append(args,
-		cc.Container(
+	opts := []dockerx.RunOption{
+		dockerx.WithContainerImage(cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image
 			cmd.ContainerTag,      // tag
-		),
-	), nil
+		)),
+		dockerx.WithContainerPlatform("linux", strings.TrimPrefix(cmd.ContainerPlatform, "linux/")),
+		dockerx.WithContainerName("topaz"),
+		dockerx.WithContainerHostname(cmd.ContainerHostname),
+		dockerx.WithWorkingDir("/app"),
+		dockerx.WithEntrypoint([]string{"./topazd"}),
+		dockerx.WithCmd([]string{"run", "--config-file", "/config/config.yaml"}),
+		dockerx.WithAutoRemove(),
+		dockerx.WithEnvs(getEnvFromVolumes(volumes)),
+		dockerx.WithEnvs(cmd.Env),
+		dockerx.WithPorts(ports),
+		dockerx.WithVolumes(volumes),
+		dockerx.WithOutput(c.UI.Output()),
+		dockerx.WithError(c.UI.Err()),
+	}
+
+	if mode == modeInteractive {
+		if err := dc.Run(opts...); err != nil {
+			return err
+		}
+	}
+
+	if mode == modeDaemon {
+		if err := dc.Start(opts...); err != nil {
+			return err
+		}
+	}
+
+	fmt.Fprintf(c.UI.Output(), "\n")
+
+	return nil
 }
 
 func getPorts(cfg *config.Loader) ([]string, error) {
@@ -138,14 +119,15 @@ func getPorts(cfg *config.Loader) ([]string, error) {
 
 	// ensure unique assignment for each port
 	portMap := lo.Associate(portArray, func(port string) (string, string) {
-		return port, fmt.Sprintf("%s:%s", port, port)
+		return port, fmt.Sprintf("%s:%s/tcp", port, port)
 	})
 
-	var args []string
+	var ports []string
 	for _, v := range portMap {
-		args = append(args, "-p", v)
+		ports = append(ports, v)
 	}
-	return args, nil
+
+	return ports, nil
 }
 
 func getVolumes(cfg *config.Loader) ([]string, error) {
@@ -160,9 +142,26 @@ func getVolumes(cfg *config.Loader) ([]string, error) {
 	})
 
 	// manually attach the configuration folder
-	args := []string{"-v", fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir())}
+	volumes := []string{fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir())}
 	for _, v := range volumeMap {
-		args = append(args, "-v", v)
+		volumes = append(volumes, v)
 	}
-	return args, nil
+	return volumes, nil
+}
+
+func getEnvFromVolumes(volumes []string) []string {
+	envs := []string{}
+	for i := range volumes {
+		destination := strings.Split(volumes[i], ":")
+		mountedPath := fmt.Sprintf("/%s", filepath.Base(destination[1])) // last value from split.
+		switch {
+		case strings.Contains(volumes[i], "certs"):
+			envs = append(envs, fmt.Sprintf("TOPAZ_CERTS_DIR=%s", mountedPath))
+		case strings.Contains(volumes[i], "db"):
+			envs = append(envs, fmt.Sprintf("TOPAZ_DB_DIR=%s", mountedPath))
+		case strings.Contains(volumes[i], "cfg"):
+			envs = append(envs, fmt.Sprintf("TOPAZ_CFG_DIR=%s", mountedPath))
+		}
+	}
+	return envs
 }

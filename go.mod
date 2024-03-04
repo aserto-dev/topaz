@@ -36,6 +36,7 @@ require (
 	github.com/aserto-dev/service-host v0.0.9
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v25.0.3+incompatible
+	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.16.0
 	github.com/fullstorydev/grpcurl v1.8.9
 	github.com/google/uuid v1.6.0
@@ -47,6 +48,7 @@ require (
 	github.com/mennanov/fmutils v0.2.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/open-policy-agent/opa v0.60.0
+	github.com/opencontainers/image-spec v1.1.0-rc5
 	github.com/panmari/cuckoofilter v1.0.6
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.32.0
@@ -86,7 +88,6 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/dgryski/go-metro v0.0.0-20211217172704-adc40b04c140 // indirect
 	github.com/distribution/reference v0.5.0 // indirect
-	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
@@ -140,7 +141,6 @@ require (
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
-	github.com/opencontainers/image-spec v1.1.0-rc5 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/prometheus/client_golang v1.18.0 // indirect
