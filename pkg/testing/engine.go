@@ -39,37 +39,12 @@ type EngineHarness struct {
 func (h *EngineHarness) Cleanup() {
 	assert := require.New(h.t)
 
-	h.Engine.Manager.StopServers(h.Context())
-
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	h.Engine.Manager.StopServers(ctx)
+	cancel()
 	h.cleanup()
 
-	old := zerolog.GlobalLevel()
-	zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	assert.NoError(h.WaitForPorts(cc.PortClosed))
-	zerolog.SetGlobalLevel(old)
-
-	// assert.Eventually(func() bool {
-	// 	return !PortOpen("0.0.0.0:9494")
-	// }, ten*time.Second, ten*time.Millisecond)
-	// assert.Eventually(func() bool {
-	// 	return !PortOpen("0.0.0.0:8383")
-	// }, ten*time.Second, ten*time.Millisecond)
-	// assert.Eventually(func() bool {
-	// 	return !PortOpen("0.0.0.0:8282")
-	// }, ten*time.Second, ten*time.Millisecond)
-	// assert.Eventually(func() bool {
-	// 	return !PortOpen("0.0.0.0:9292")
-	// }, ten*time.Second, ten*time.Millisecond)
-	// assert.Eventually(func() bool {
-	// 	return !PortOpen("0.0.0.0:9393")
-	// }, ten*time.Second, ten*time.Millisecond)
-	// assert.Eventually(func() bool {
-	// 	return !PortOpen("0.0.0.0:9494")
-	// }, ten*time.Second, ten*time.Millisecond)
-	// assert.Eventually(func() bool {
-	// 	return !PortOpen("0.0.0.0:9696")
-	// }, ten*time.Second, ten*time.Millisecond)
-
 }
 
 func (h *EngineHarness) Context() context.Context {
@@ -131,8 +106,6 @@ func (h *EngineHarness) WaitForPorts(expectedStatus cc.PortStatus) error {
 	})
 
 	wErr := cc.WaitForPorts(ports, expectedStatus)
-
-	time.Sleep(10 * time.Second)
 
 	return wErr
 }
@@ -201,16 +174,20 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	err = h.Engine.Start()
 	assert.NoError(err)
 
+	curLevel := zerolog.GlobalLevel()
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	t.Cleanup(func() {
+		zerolog.SetGlobalLevel(curLevel)
+	})
+
+	assert.NoError(h.WaitForPorts(cc.PortOpened))
+
 	if online {
 		for i := 0; i < 2; i++ {
 			assert.Eventually(func() bool {
 				return h.LogDebugger.Contains("Bundle loaded and activated successfully")
 			}, ten*time.Second, ten*time.Millisecond)
 		}
-	}
-
-	if err := h.WaitForPorts(cc.PortOpened); err != nil {
-		assert.NoError(err)
 	}
 
 	return h

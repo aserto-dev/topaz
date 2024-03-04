@@ -20,10 +20,10 @@ import (
 func TestManifest(t *testing.T) {
 	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
 	})
-	defer harness.Cleanup()
+	t.Cleanup(harness.Cleanup)
 
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	t.Cleanup(cancel)
 
 	client := harness.CreateDirectoryClient(ctx)
 
@@ -36,7 +36,7 @@ func TestManifest(t *testing.T) {
 
 	w, err := os.Create(path.Join(harness.TopazDir(), "manifest.new.yaml"))
 	require.NoError(t, err)
-	defer w.Close()
+	t.Cleanup(func() { _ = w.Close() })
 
 	// get manifest from store
 	metadata, body, err := getManifest(ctx, client.Model)
