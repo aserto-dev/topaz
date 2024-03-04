@@ -11,14 +11,14 @@ import (
 
 var errTimeout = errors.New("timeout")
 
-type portStatus int
+type PortStatus int
 
 const (
-	PortOpened portStatus = iota
+	PortOpened PortStatus = iota
 	PortClosed
 )
 
-func (p portStatus) String() string {
+func (p PortStatus) String() string {
 	switch p {
 	case PortClosed:
 		return "closed"
@@ -35,7 +35,7 @@ const (
 	address  = "0.0.0.0"
 )
 
-func WaitForPorts(ports []string, expectedStatus portStatus) error {
+func WaitForPorts(ports []string, expectedStatus PortStatus) error {
 	t0 := time.Now().UTC()
 	log.Debug().Time("started", t0).Msg("WaitForPorts")
 
@@ -51,7 +51,7 @@ func WaitForPorts(ports []string, expectedStatus portStatus) error {
 		listenAddress := fmt.Sprintf("%s:%s", address, port)
 
 		if err := Retry(timeout, interval, func() error {
-			status := PortStatus(listenAddress)
+			status := portStatus(listenAddress)
 			if status != expectedStatus {
 				log.Debug().Str("addr", listenAddress).Stringer("status", status).Stringer("expected", expectedStatus).Msg("WaitForPorts")
 				return fmt.Errorf("%s %s", listenAddress, status)
@@ -66,7 +66,7 @@ func WaitForPorts(ports []string, expectedStatus portStatus) error {
 }
 
 // PortStatus returns true if there's a socket listening on the specified listenAddress.
-func PortStatus(listenAddress string) portStatus {
+func portStatus(listenAddress string) PortStatus {
 	timeout := time.Second
 	conn, err := net.DialTimeout("tcp", listenAddress, timeout)
 	if err != nil {

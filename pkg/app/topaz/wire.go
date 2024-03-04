@@ -10,7 +10,6 @@ import (
 	"github.com/aserto-dev/logger"
 	builder "github.com/aserto-dev/service-host"
 	"github.com/aserto-dev/topaz/pkg/app"
-	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -19,7 +18,6 @@ import (
 var (
 	commonSet = wire.NewSet(
 		resolvers.New,
-		impl.NewAuthorizerServer,
 
 		builder.NewServiceFactory,
 		builder.NewServiceManager,

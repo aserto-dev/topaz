@@ -9,7 +9,7 @@ logging:
   log_level: info
 
 directory:
-  db_path: ${TOPAZ_DIR}/db/directory.db
+  db_path: ${TOPAZ_DB_DIR}/directory.db
     
 remote_directory:
   address: "localhost:9292"
@@ -24,18 +24,18 @@ api:
         connection_timeout_seconds: 2
         listen_address: "localhost:8282"
         certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
+          tls_key_path: "${TOPAZ_CERTS_DIR}/grpc.key"
+          tls_cert_path: "${TOPAZ_CERTS_DIR}/grpc.crt"
+          tls_ca_cert_path: "${TOPAZ_CERTS_DIR}/grpc-ca.crt"
       gateway:
         listen_address: "localhost:8383"
         allowed_origins:
         - https://*.aserto.com
         - https://*aserto-console.netlify.app
         certs:
-          tls_key_path: "${TOPAZ_DIR}/certs/gateway.key"
-          tls_cert_path: "${TOPAZ_DIR}/certs/gateway.crt"
-          tls_ca_cert_path: "${TOPAZ_DIR}/certs/gateway-ca.crt"
+          tls_key_path: "${TOPAZ_CERTS_DIR}/gateway.key"
+          tls_cert_path: "${TOPAZ_CERTS_DIR}/gateway.crt"
+          tls_ca_cert_path: "${TOPAZ_CERTS_DIR}/gateway-ca.crt"
     
 opa:
   instance_id: "-"
