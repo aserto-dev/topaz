@@ -82,7 +82,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 
 	if !cmd.Force {
 		c.UI.Exclamation().Msg("Installing this template will completely reset your topaz configuration.")
-		if !promptYesNo("Do you want to continue?", false) {
+		if !PromptYesNo("Do you want to continue?", false) {
 			return nil
 		}
 	}

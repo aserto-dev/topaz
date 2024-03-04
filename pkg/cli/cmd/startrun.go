@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -125,7 +126,16 @@ func getVolumes(configFilePath string) ([]string, error) {
 	}
 
 	for i := range paths {
-		directory := filepath.Dir(paths[i])
+		directory := paths[i]
+		info, err := os.Stat(directory)
+		if err != nil {
+			return nil, err
+		}
+		// if is a file path extract dir.
+		if !info.IsDir() {
+			directory = filepath.Dir(directory)
+		}
+
 		volumeMap[directory] = fmt.Sprintf("%s:%s", directory, fmt.Sprintf("/%s", filepath.Base(directory)))
 	}
 

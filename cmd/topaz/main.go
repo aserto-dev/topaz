@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,10 +10,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/samber/lo"
-)
-
-const (
-	CLIConfigurationFile = "cli_config.json"
 )
 
 func main() {
@@ -32,7 +27,6 @@ func main() {
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
-		kong.Configuration(kong.JSON, cliConfig),
 		kong.ConfigureHelp(kong.HelpOptions{
 			NoAppSummary:        false,
 			Summary:             false,
