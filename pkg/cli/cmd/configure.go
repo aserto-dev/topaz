@@ -71,7 +71,7 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 		if !cmd.Force {
 			if _, err := os.Stat(c.Config.TopazConfigFile); err == nil {
 				c.UI.Exclamation().Msg("A configuration file already exists.")
-				if !promptYesNo("Do you want to continue?", false) {
+				if !PromptYesNo("Do you want to continue?", false) {
 					return nil
 				}
 			}
