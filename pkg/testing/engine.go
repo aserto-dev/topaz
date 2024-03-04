@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"path"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -102,6 +103,10 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	assert.DirExists(topazDir)
 
 	err = os.Setenv("TOPAZ_DIR", topazDir)
+	assert.NoError(err)
+	err = os.Setenv("TOPAZ_CERTS_DIR", filepath.Join(topazDir, "certs"))
+	assert.NoError(err)
+	err = os.Setenv("TOPAZ_DB_DIR", filepath.Join(topazDir, "db"))
 	assert.NoError(err)
 
 	h := &EngineHarness{
