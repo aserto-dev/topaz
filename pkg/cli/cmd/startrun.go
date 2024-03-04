@@ -80,7 +80,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 			cmd.ContainerTag,      // tag
 		)),
 		dockerx.WithContainerPlatform("linux", strings.TrimPrefix(cmd.ContainerPlatform, "linux/")),
-		dockerx.WithContainerName("topaz"),
+		dockerx.WithContainerName(cmd.ContainerName),
 		dockerx.WithContainerHostname(cmd.ContainerHostname),
 		dockerx.WithWorkingDir("/app"),
 		dockerx.WithEntrypoint([]string{"./topazd"}),
