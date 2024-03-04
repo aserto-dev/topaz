@@ -136,11 +136,7 @@ func (l *Loader) GetPaths() ([]string, error) {
 		paths[decisionLogPaths[i]] = true
 	}
 
-	var args []string
-	for k := range paths {
-		args = append(args, k)
-	}
-	return args, nil
+	return filterPaths(paths), nil
 }
 
 func (l *Loader) GetPorts() ([]string, error) {
@@ -204,6 +200,16 @@ func SetEnvVars(fileContents string) (string, error) {
 	return subEnvVars(fileContents), nil
 }
 
+func filterPaths(paths map[string]bool) []string {
+	var args []string
+	for k := range paths {
+		if k != "" { // append only not empty paths.
+			args = append(args, k)
+		}
+	}
+	return args
+}
+
 func getPortFromAddress(address string) (string, error) {
 	_, port, err := net.SplitHostPort(address)
 	if err != nil {
@@ -255,7 +261,7 @@ func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) 
 		if err != nil {
 			return nil, err
 		}
-		err = dec.Decode(decisionLogConfig)
+		err = dec.Decode(decisionLogConfig.Config)
 		if err != nil {
 			return nil, err
 		}
