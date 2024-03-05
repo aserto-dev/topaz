@@ -12,8 +12,7 @@ import (
 
 // ServiceHealthStatus adopted from grpc-health-probe cli implementation
 // https://github.com/grpc-ecosystem/grpc-health-probe/blob/master/main.go.
-func ServiceHealthStatus(service string) bool {
-	addr := "0.0.0.0:9494"
+func ServiceHealthStatus(addr, service string) bool {
 	connTimeout := time.Second * 30
 	rpcTimeout := time.Second * 30
 
