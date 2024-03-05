@@ -11,9 +11,10 @@ import (
 
 type CompileCmd struct {
 	AuthParams `embed:""`
-	Statement  string `arg:"stmt" name:"stmt" required:"" help:"query statement"`
-	Path       string `name:"path" help:"policy package to evaluate"`
-	Input      string `name:"input" help:"query input context"`
+	Statement  string   `arg:"stmt" name:"stmt" required:"" help:"query statement"`
+	Path       string   `name:"path" help:"policy package to evaluate"`
+	Input      string   `name:"input" help:"query input context"`
+	Unknowns   []string `name:"unknowns" help:"compile unknowns"`
 	clients.AuthorizerConfig
 }
 
