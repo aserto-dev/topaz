@@ -141,8 +141,11 @@ func getVolumes(cfg *config.Loader) ([]string, error) {
 		return dir, fmt.Sprintf("%s:%s", dir, fmt.Sprintf("/%s", filepath.Base(dir)))
 	})
 
-	// manually attach the configuration folder
-	volumes := []string{fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir())}
+	volumes := []string{
+		fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir()),        // manually attach the configuration folder
+		fmt.Sprintf("%s:/root/.policy:ro", dockerx.PolicyRoot()), // manually attache policy store
+	}
+
 	for _, v := range volumeMap {
 		volumes = append(volumes, v)
 	}
