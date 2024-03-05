@@ -7,8 +7,10 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"runtime"
 
+	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/mage-loot/common"
 	"github.com/aserto-dev/mage-loot/deps"
 	"github.com/magefile/mage/mg"
@@ -46,7 +48,32 @@ func Lint() error {
 
 // Test runs all tests and generates a code coverage report.
 func Test() error {
-	return common.Test("-timeout", "240s", "-parallel=1")
+	testPkgs := []string{
+		"github.com/aserto-dev/topaz/pkg/app/tests/authz",
+		"github.com/aserto-dev/topaz/pkg/app/tests/builtin",
+		"github.com/aserto-dev/topaz/pkg/app/tests/manifest",
+		"github.com/aserto-dev/topaz/pkg/app/tests/policy",
+		"github.com/aserto-dev/topaz/pkg/app/tests/query",
+	}
+
+	for _, testPkg := range testPkgs {
+		if err := test(testPkg); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func test(pkg string, args ...string) error {
+	UI := clui.NewUI()
+	UI.Normal().Msg("Running tests.")
+
+	return deps.GoDep("gotestsum")(
+		append([]string{"--format", "short-verbose", "--"},
+			append(args, "-count=1", "-v", pkg, "-coverprofile=cover.out", fmt.Sprintf("-coverpkg=%s", pkg), filepath.Join(common.WorkDir(), "..."))...,
+		)...,
+	)
 }
 
 // DockerImage builds the docker image for the project.

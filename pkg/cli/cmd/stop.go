@@ -19,7 +19,11 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	color.Green(">>> stopping topaz...")
-	if err := dockerx.DockerRun("stop", cmd.ContainerName); err != nil {
+	dc, err := dockerx.New()
+	if err != nil {
+		return err
+	}
+	if err := dc.Stop(cmd.ContainerName); err != nil {
 		return err
 	}
 

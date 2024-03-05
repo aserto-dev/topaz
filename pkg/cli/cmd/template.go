@@ -110,7 +110,9 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 
 	// 4 - wait for health endpoint to be in serving state
-	if !cc.ServiceHealthStatus("") {
+	cfg := config.CurrentConfig()
+	addr, _ := cfg.HealthService()
+	if !cc.ServiceHealthStatus(addr, "") {
 		return fmt.Errorf("gRPC endpoint not SERVING")
 	}
 

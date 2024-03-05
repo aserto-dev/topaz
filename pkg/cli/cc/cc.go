@@ -47,7 +47,13 @@ func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatu
 		containerName = ContainerName()
 	}
 
-	running, err := dockerx.IsRunning(containerName)
+	dc, err := dockerx.New()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		return false
+	}
+
+	running, err := dc.IsRunning(containerName)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		return false
