@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -20,35 +19,31 @@ type UninstallCmd struct {
 }
 
 func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
-	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
-
-	color.Green(">>> uninstalling topaz...")
-
+	// stop container instance, if running.
 	if err := (&StopCmd{ContainerName: cmd.ContainerName}).Run(c); err != nil {
 		return err
 	}
 
-	args := []string{
-		"images",
+	color.Green(">>> uninstalling %s...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
-			cmd.ContainerImage,    // image
+			cmd.ContainerImage,    // image name
 			cmd.ContainerTag,      // tag
 		),
-		"--filter", "label=org.opencontainers.image.source=https://github.com/aserto-dev/topaz",
-		"-q",
-	}
+	)
 
-	str, err := dockerx.DockerOut(args...)
+	dc, err := dockerx.New()
 	if err != nil {
 		return err
 	}
 
-	if str != "" {
-		fmt.Fprintf(c.UI.Output(), "removing %s\n", "aserto-dev/topaz")
-		if err := dockerx.DockerRun("rmi", str); err != nil {
-			fmt.Fprintf(c.UI.Err(), "%s", err.Error())
-		}
+	// remove container image when exists.
+	if err := dc.RemoveImage(cc.Container(
+		cmd.ContainerRegistry,
+		cmd.ContainerImage,
+		cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag),
+	)); err != nil {
+		return err
 	}
 
 	// remove directory.db file.

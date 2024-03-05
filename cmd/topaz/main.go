@@ -4,13 +4,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+
+	"github.com/alecthomas/kong"
+	"github.com/rs/zerolog"
 )
 
 func main() {
+
 	cli := cmd.CLI{}
 	kongCtx := kong.Parse(&cli,
 		kong.Name(x.AppName),
@@ -38,6 +41,8 @@ func main() {
 		},
 	)
 
+	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
+
 	ctx, err := cc.NewCommonContext(cli.NoCheck)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -46,5 +51,24 @@ func main() {
 
 	if err := kongCtx.Run(ctx); err != nil {
 		kongCtx.FatalIfErrorf(err)
+	}
+}
+
+func logLevel(level int) zerolog.Level {
+	switch level {
+	case 0:
+		return zerolog.Disabled
+	case 1:
+		return zerolog.InfoLevel
+	case 2:
+		return zerolog.WarnLevel
+	case 3:
+		return zerolog.ErrorLevel
+	case 4:
+		return zerolog.DebugLevel
+	case 5:
+		return zerolog.TraceLevel
+	default:
+		return zerolog.Disabled
 	}
 }

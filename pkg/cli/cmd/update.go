@@ -17,18 +17,26 @@ type UpdateCmd struct {
 func (cmd *UpdateCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	color.Green(">>> updating topaz...")
-
-	args := []string{
-		"pull",
-		"--platform", cmd.ContainerPlatform,
-		"--quiet",
+	color.Green(">>> updating %s (%s)...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image
 			cmd.ContainerTag,      // tag
 		),
+		cmd.ContainerPlatform,
+	)
+
+	dc, err := dockerx.New()
+	if err != nil {
+		return err
 	}
 
-	return dockerx.DockerV(args...)
+	return dc.Pull(
+		cc.Container(
+			cmd.ContainerRegistry, // registry
+			cmd.ContainerImage,    // image
+			cmd.ContainerTag,      // tag
+		),
+		cmd.ContainerPlatform,
+	)
 }

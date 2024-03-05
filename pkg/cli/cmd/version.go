@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
@@ -30,28 +31,27 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	// default command
-	// docker run -ti --rm --name topazd-version --platform linux/arm64 ghcr.io/aserto-dev/topaz:latest version
-	args := []string{
-		"run",
-		"-ti",
-		"--rm",
-		"--name", "topazd-version",
-		"--platform", cmd.ContainerPlatform,
-		"--quiet",
-		cc.Container(
-			cmd.ContainerRegistry, // registry
-			cmd.ContainerImage,    // image
-			cmd.ContainerTag,      // tag
-		),
-		"version",
-	}
-
-	result, err := dockerx.DockerOut(args...)
+	dc, err := dockerx.New()
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(c.UI.Output(), "%s\n", result)
+
+	if err := dc.Run(
+		dockerx.WithContainerImage(cc.Container(
+			cmd.ContainerRegistry, // registry
+			cmd.ContainerImage,    // image
+			cmd.ContainerTag,      // tag
+		)),
+		dockerx.WithEntrypoint([]string{"/app/topazd", "version"}),
+		dockerx.WithContainerPlatform("linux", strings.TrimPrefix(cmd.ContainerPlatform, "linux/")),
+		dockerx.WithContainerName("topazd-version"),
+		dockerx.WithOutput(c.UI.Output()),
+		dockerx.WithError(c.UI.Err()),
+	); err != nil {
+		return err
+	}
+
+	fmt.Fprintf(c.UI.Output(), "\n")
 
 	return nil
 }

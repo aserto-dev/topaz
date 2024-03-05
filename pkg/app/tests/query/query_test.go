@@ -18,12 +18,12 @@ func TestQuery(t *testing.T) {
 		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
 		cfg.OPA.LocalBundles.Paths = []string{atesting.AssetLocalBundle()}
 	})
-	defer harness.Cleanup()
+	t.Cleanup(harness.Cleanup)
 
 	client := harness.CreateGRPCClient()
 
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	t.Cleanup(cancel)
 
 	for _, tc := range queryTests {
 		f := func(t *testing.T) {

@@ -20,10 +20,10 @@ func TestMigrate003(t *testing.T) {
 	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
 		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
 	})
-	defer harness.Cleanup()
+	t.Cleanup(harness.Cleanup)
 
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	t.Cleanup(cancel)
 
 	client := harness.CreateDirectoryClient(ctx)
 	token := ""

@@ -2,17 +2,22 @@ package testing
 
 import (
 	"context"
+	"net"
 	"os"
 	"path"
 	"path/filepath"
+	"strconv"
 	"testing"
 	"time"
 
+	"github.com/rs/zerolog"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/require"
 
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
 
 const (
@@ -34,32 +39,12 @@ type EngineHarness struct {
 func (h *EngineHarness) Cleanup() {
 	assert := require.New(h.t)
 
-	h.Engine.Manager.StopServers(h.Context())
-
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	h.Engine.Manager.StopServers(ctx)
+	cancel()
 	h.cleanup()
 
-	assert.Eventually(func() bool {
-		return !PortOpen("0.0.0.0:9494")
-	}, ten*time.Second, ten*time.Millisecond)
-	assert.Eventually(func() bool {
-		return !PortOpen("0.0.0.0:8383")
-	}, ten*time.Second, ten*time.Millisecond)
-	assert.Eventually(func() bool {
-		return !PortOpen("0.0.0.0:8282")
-	}, ten*time.Second, ten*time.Millisecond)
-	assert.Eventually(func() bool {
-		return !PortOpen("0.0.0.0:9292")
-	}, ten*time.Second, ten*time.Millisecond)
-	assert.Eventually(func() bool {
-		return !PortOpen("0.0.0.0:9393")
-	}, ten*time.Second, ten*time.Millisecond)
-	assert.Eventually(func() bool {
-		return !PortOpen("0.0.0.0:9494")
-	}, ten*time.Second, ten*time.Millisecond)
-	assert.Eventually(func() bool {
-		return !PortOpen("0.0.0.0:9696")
-	}, ten*time.Second, ten*time.Millisecond)
-
+	assert.NoError(h.WaitForPorts(cc.PortClosed))
 }
 
 func (h *EngineHarness) Context() context.Context {
@@ -80,6 +65,49 @@ func (h *EngineHarness) TopazCertsDir() string {
 
 func (h *EngineHarness) TopazDataDir() string {
 	return path.Join(h.topazDir, "db")
+}
+
+func (h *EngineHarness) WaitForPorts(expectedStatus cc.PortStatus) error {
+	portMap := map[int]struct{}{}
+
+	for _, svc := range h.Engine.Configuration.APIConfig.Services {
+
+		grpcAddr, err := net.ResolveTCPAddr("tcp", svc.GRPC.ListenAddress)
+		if err == nil && grpcAddr.Port != 0 {
+			if _, ok := portMap[grpcAddr.Port]; !ok {
+				portMap[grpcAddr.Port] = struct{}{}
+			}
+		}
+
+		gtwAddr, err := net.ResolveTCPAddr("tcp", svc.Gateway.ListenAddress)
+		if err == nil && gtwAddr.Port != 0 {
+			if _, ok := portMap[gtwAddr.Port]; !ok {
+				portMap[gtwAddr.Port] = struct{}{}
+			}
+		}
+	}
+
+	healthAddr, err := net.ResolveTCPAddr("tcp", h.Engine.Configuration.APIConfig.Health.ListenAddress)
+	if err == nil && healthAddr.Port != 0 {
+		if _, ok := portMap[healthAddr.Port]; !ok {
+			portMap[healthAddr.Port] = struct{}{}
+		}
+	}
+
+	metricsAddr, err := net.ResolveTCPAddr("tcp", h.Engine.Configuration.APIConfig.Metrics.ListenAddress)
+	if err == nil && metricsAddr.Port != 0 {
+		if _, ok := portMap[metricsAddr.Port]; !ok {
+			portMap[metricsAddr.Port] = struct{}{}
+		}
+	}
+
+	ports := lo.MapToSlice(portMap, func(port int, _ struct{}) string {
+		return strconv.Itoa(port)
+	})
+
+	wErr := cc.WaitForPorts(ports, expectedStatus)
+
+	return wErr
 }
 
 // SetupOffline sets up an engine that uses a runtime that loads offline bundles,
@@ -146,6 +174,14 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	err = h.Engine.Start()
 	assert.NoError(err)
 
+	curLevel := zerolog.GlobalLevel()
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	t.Cleanup(func() {
+		zerolog.SetGlobalLevel(curLevel)
+	})
+
+	assert.NoError(h.WaitForPorts(cc.PortOpened))
+
 	if online {
 		for i := 0; i < 2; i++ {
 			assert.Eventually(func() bool {
@@ -153,10 +189,6 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 			}, ten*time.Second, ten*time.Millisecond)
 		}
 	}
-
-	assert.Eventually(func() bool {
-		return PortOpen("127.0.0.1:8383")
-	}, ten*time.Second, ten*time.Millisecond)
 
 	return h
 }

@@ -21,18 +21,26 @@ func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 		return ErrIsRunning
 	}
 
-	color.Green(">>> installing topaz...")
-
-	args := []string{
-		"pull",
-		"--platform", cmd.ContainerPlatform,
-		"--quiet",
+	color.Green(">>> installing %s (%s)...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name
 			cmd.ContainerTag,      // tag
 		),
+		cmd.ContainerPlatform, // os/arch
+	)
+
+	dc, err := dockerx.New()
+	if err != nil {
+		return err
 	}
 
-	return dockerx.DockerV(args...)
+	return dc.Pull(
+		cc.Container(
+			cmd.ContainerRegistry, // registry
+			cmd.ContainerImage,    // image name
+			cmd.ContainerTag,      // tag
+		),
+		cmd.ContainerPlatform, // os/arch
+	)
 }
