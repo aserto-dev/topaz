@@ -16,10 +16,10 @@ import (
 type Config struct {
 	Host      string `flag:"host" short:"H" help:"directory service address" env:"TOPAZ_DIRECTORY_SVC" default:"localhost:9292"`
 	APIKey    string `flag:"api-key" short:"k" help:"directory API key" env:"TOPAZ_DIRECTORY_KEY"`
-	Token     string `flag:"token" short:"t" help:"token used for connection" env:"TOPAZ_DIRECTORY_TOKEN"`
-	Insecure  bool   `flag:"insecure" short:"i" help:"skip TLS verification"`
-	SessionID string `flag:"session-id"  help:""`
-	TenantID  string `flag:"tenant-id" help:""`
+	Token     string `flag:"token" short:"t" help:"JWT used for connection" env:"TOPAZ_DIRECTORY_TOKEN"`
+	Insecure  bool   `flag:"insecure" short:"i" help:"skip TLS verification" env:"TOPAZ_DIRECTORY_INSECURE"`
+	SessionID string `flag:"session-id"  help:"" env:"TOPAZ_SESSION_ID"`
+	TenantID  string `flag:"tenant-id" help:"" env:"TOPAZ_TENANT_ID"`
 }
 
 func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dsc.Client, error) {

@@ -17,9 +17,9 @@ import (
 type AuthorizerConfig struct {
 	Host     string `flag:"host" short:"H" help:"authorizer service address" env:"TOPAZ_AUTHORIZER_SVC" default:"localhost:8282"`
 	APIKey   string `flag:"api-key" short:"k" help:"authorizer API key" env:"TOPAZ_AUTHORIZER_KEY"`
-	Token    string `flag:"token" short:"t" help:"token used for connection" env:"TOPAZ_AUTHORIZER_TOKEN"`
-	Insecure bool   `flag:"insecure" short:"i" help:"skip TLS verification"`
-	TenantID string `flag:"tenant-id" help:""`
+	Token    string `flag:"token" short:"t" help:"JWT used for connection" env:"TOPAZ_AUTHORIZER_TOKEN"`
+	Insecure bool   `flag:"insecure" short:"i" help:"skip TLS verification" env:"TOPAZ_AUTHORIZER_INSECURE"`
+	TenantID string `flag:"tenant-id" help:"" env:"TOPAZ_TENANT_ID"`
 }
 
 func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.AuthorizerClient, error) {

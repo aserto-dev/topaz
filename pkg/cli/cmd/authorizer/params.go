@@ -22,7 +22,6 @@ type AuthParams struct {
 	Identity     string       `name:"identity" help:"caller identity" default:""`
 	IdentityType IdentityType `name:"identity-type" enum:"sub,jwt,none" help:"type of identity [sub|jwt|none]"  default:"none"`
 	Resource     string       `name:"resource" help:"a JSON object to include as resource context"`
-	PolicyID     string       `name:"policy-id" required:"" help:"policy id"`
 }
 
 func (a AuthParams) IdentityContext() *api.IdentityContext {
