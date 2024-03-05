@@ -328,7 +328,7 @@ func (dc *DockerClient) Run(opts ...RunOption) error {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		<-sigs
-		dc.cli.ContainerStop(dc.ctx, cont.ID, container.StopOptions{})
+		_ = dc.cli.ContainerStop(dc.ctx, cont.ID, container.StopOptions{})
 	}()
 
 	go func() {
