@@ -1,18 +1,20 @@
 package dockerx
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"io"
 	"os"
+	"os/signal"
 	"path"
+	"syscall"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
-	"github.com/docker/docker/pkg/stdcopy"
 	"github.com/docker/go-connections/nat"
 	"github.com/magefile/mage/sh"
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
@@ -286,7 +288,14 @@ func WithError(e io.Writer) RunOption {
 // Run starts a container like `docker run` using the provided settings.
 func (dc *DockerClient) Run(opts ...RunOption) error {
 	r := &runner{
-		config:           &container.Config{},
+		config: &container.Config{
+			AttachStdin:  true,
+			AttachStdout: true,
+			AttachStderr: true,
+			OpenStdin:    true,
+			StdinOnce:    true,
+			Tty:          true,
+		},
 		hostConfig:       &container.HostConfig{},
 		networkingConfig: &network.NetworkingConfig{},
 		platform:         &v1.Platform{},
@@ -315,6 +324,32 @@ func (dc *DockerClient) Run(opts ...RunOption) error {
 		_ = dc.cli.ContainerRemove(dc.ctx, cont.ID, container.RemoveOptions{Force: true})
 	}()
 
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-sigs
+		dc.cli.ContainerStop(dc.ctx, cont.ID, container.StopOptions{})
+	}()
+
+	go func() {
+		reader, err := dc.cli.ContainerLogs(dc.ctx, cont.ID,
+			container.LogsOptions{
+				ShowStdout: true,
+				ShowStderr: true,
+				Follow:     true,
+				Timestamps: false,
+			})
+		if err != nil {
+			panic(err)
+		}
+		defer reader.Close()
+
+		scanner := bufio.NewScanner(reader)
+		for scanner.Scan() {
+			fmt.Println(scanner.Text())
+		}
+	}()
+
 	statusCh, errCh := dc.cli.ContainerWait(dc.ctx, cont.ID, container.WaitConditionNotRunning)
 	select {
 	case err := <-errCh:
@@ -323,13 +358,6 @@ func (dc *DockerClient) Run(opts ...RunOption) error {
 		}
 	case <-statusCh:
 	}
-
-	out, err := dc.cli.ContainerLogs(dc.ctx, cont.ID, container.LogsOptions{ShowStdout: true})
-	if err != nil {
-		return err
-	}
-
-	_, _ = stdcopy.StdCopy(r.runOut, r.runErr, out)
 
 	return nil
 }
