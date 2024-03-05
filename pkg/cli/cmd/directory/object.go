@@ -18,7 +18,7 @@ import (
 )
 
 type GetObjectCmd struct {
-	Request  string `arg:""  type:"existingfile" name:"request" optional:"" help:"file path to get object request or '-' to read from stdin"`
+	Request  string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to get object request or '-' to read from stdin"`
 	Template bool   `name:"template" help:"prints a get object request template on stdout"`
 	clients.Config
 }
@@ -46,14 +46,17 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 			return errors.Wrap(err, "failed to unmarshal request from stdin")
 		}
 	} else {
-		dat, err := os.ReadFile(cmd.Request)
+		err = protojson.Unmarshal([]byte(cmd.Request), &req)
 		if err != nil {
-			return errors.Wrapf(err, "opening file [%s]", cmd.Request)
-		}
+			dat, err := os.ReadFile(cmd.Request)
+			if err != nil {
+				return errors.Wrapf(err, "opening file [%s]", cmd.Request)
+			}
 
-		err = protojson.Unmarshal(dat, &req)
-		if err != nil {
-			return errors.Wrapf(err, "failed to unmarshal request from file [%s]", cmd.Request)
+			err = protojson.Unmarshal(dat, &req)
+			if err != nil {
+				return errors.Wrapf(err, "failed to unmarshal request from file [%s]", cmd.Request)
+			}
 		}
 	}
 
