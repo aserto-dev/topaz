@@ -1,7 +1,11 @@
 package cmd
 
 import (
+	"bufio"
 	"errors"
+	"fmt"
+	"os"
+	"strings"
 )
 
 var (
@@ -44,4 +48,30 @@ type CLI struct {
 	NoCheck           bool         `name:"no-check" json:"noCheck,omitempty" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
 	LogLevel  int          `name:"log" short:"L" type:"counter" default:"0" help:"log level"`
 	DefaultConfigFile string       `name:"config-file" json:"configFile,omitempty" default:"config.yaml" short:"c" help:"use topaz configuration file"`
+}
+
+func PromptYesNo(label string, def bool) bool {
+	choices := "Y/n"
+	if !def {
+		choices = "y/N"
+	}
+
+	r := bufio.NewReader(os.Stdin)
+	var s string
+
+	for {
+		fmt.Fprintf(os.Stderr, "%s (%s) ", label, choices)
+		s, _ = r.ReadString('\n')
+		s = strings.TrimSpace(s)
+		if s == "" {
+			return def
+		}
+		s = strings.ToLower(s)
+		if s == "y" || s == "yes" {
+			return true
+		}
+		if s == "n" || s == "no" {
+			return false
+		}
+	}
 }
