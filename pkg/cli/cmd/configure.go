@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"errors"
 	"io"
 	"os"
@@ -12,34 +13,34 @@ import (
 )
 
 type ConfigureCmd struct {
-	PolicyName        string `short:"n" help:"policy name"`
+	Name              string `short:"n" help:"config name"`
 	LocalPolicyImage  string `short:"l" help:"local policy image name"`
 	Resource          string `short:"r" help:"resource url"`
 	Stdout            bool   `short:"p" help:"print to stdout"`
 	EdgeDirectory     bool   `short:"d" help:"enable edge directory" default:"false"`
 	Force             bool   `flag:"" default:"false" short:"f" required:"false" help:"skip confirmation prompt"`
 	EnableDirectoryV2 bool   `flag:"" name:"enable-v2" hidden:"" default:"true" help:"enable directory version 2 services for backwards compatibility"`
-	ConfigFile        string `name:"config" json:"config,omitempty" default:"config.yaml" short:"c" help:"topaz configuration file"`
 }
 
 func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
-	if cmd.PolicyName == "" && cmd.Resource == "" {
+	if cmd.Name == "" && cmd.Resource == "" {
 		if cmd.LocalPolicyImage == "" {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
 		}
 	}
-	if cmd.ConfigFile != c.Config.TopazConfigFile {
-		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
+	configFile := cmd.Name + ".yaml"
+	if configFile != c.Config.TopazConfigFile {
+		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), configFile)
 		c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
 	}
 	if !cmd.Stdout {
 		color.Green(">>> configure policy")
 	}
 
-	configGenerator := config.NewGenerator(cmd.PolicyName).
+	configGenerator := config.NewGenerator(cmd.Name).
 		WithVersion(config.ConfigFileVersion).
 		WithLocalPolicyImage(cmd.LocalPolicyImage).
-		WithPolicyName(cmd.PolicyName).
+		WithPolicyName(cmd.Name).
 		WithResource(cmd.Resource).
 		WithEdgeDirectory(cmd.EdgeDirectory).
 		WithEnableDirectoryV2(cmd.EnableDirectoryV2)
@@ -88,8 +89,10 @@ func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
 			return configGenerator.GenerateConfig(w, config.LocalImageTemplate)
 		}
 
-		color.Green("policy name: %s", cmd.PolicyName)
+		color.Green("policy name: %s", cmd.Name)
 	}
+
+	c.Context = context.WithValue(c.Context, Save, true)
 
 	return configGenerator.GenerateConfig(w, config.Template)
 }

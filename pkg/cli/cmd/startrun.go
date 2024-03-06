@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path"
@@ -24,7 +25,7 @@ type StartRunCmd struct {
 	ContainerHostname string   `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	Env               []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
 	ContainerVersion  string   `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
-	ConfigFile        string   `name:"config" json:"config,omitempty" default:"" short:"c" help:"topaz configuration file"`
+	Name              string   `short:"n" help:"config name"`
 }
 
 type runMode int
@@ -38,8 +39,13 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
 		return cc.ErrIsRunning
 	}
-	if cmd.ConfigFile != "" && cmd.ConfigFile != filepath.Base(c.Config.TopazConfigFile) {
-		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
+	configFile := ""
+	if cmd.Name != "" {
+		configFile = fmt.Sprintf("%s.yaml", cmd.Name)
+	}
+
+	if configFile != "" && configFile != filepath.Base(c.Config.TopazConfigFile) {
+		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), configFile)
 		cmd.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
 	}
 
@@ -112,7 +118,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	}
 
 	fmt.Fprintf(c.UI.Output(), "\n")
-
+	c.Context = context.WithValue(c.Context, Save, true)
 	return nil
 }
 
