@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
@@ -13,7 +14,7 @@ type ListConfigCmd struct {
 }
 
 func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
-	table := c.UI.Normal().WithTable("Available Config Files", "Is Default")
+	table := c.UI.Normal().WithTable("Name", "Config File", "Is Default")
 	files, err := os.ReadDir(cmd.ConfigDir)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -26,7 +27,7 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 		if files[i].Name() == filepath.Base(c.Config.TopazConfigFile) {
 			active = true
 		}
-		table.WithTableRow(files[i].Name(), fmt.Sprintf("%v", active))
+		table.WithTableRow(strings.Replace(files[i].Name(), ".yaml", "", -1), files[i].Name(), fmt.Sprintf("%v", active))
 	}
 	table.Do()
 

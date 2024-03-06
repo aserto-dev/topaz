@@ -10,8 +10,14 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 )
 
+type SaveContext bool
+
 const (
 	CLIConfigurationFile = "cli_config.json"
+)
+
+var (
+	Save SaveContext
 )
 
 type CLI struct {
