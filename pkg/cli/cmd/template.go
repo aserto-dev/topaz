@@ -17,7 +17,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
