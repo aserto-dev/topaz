@@ -38,17 +38,21 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
 		return ErrIsRunning
 	}
-
-	if _, err := os.Stat(path.Join(cc.GetTopazCfgDir(), "config.yaml")); errors.Is(err, os.ErrNotExist) {
-		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(cc.GetTopazCfgDir(), "config.yaml"))
+	if cmd.ConfigFile != "" && cmd.ConfigFile != filepath.Base(c.Config.TopazConfigFile) {
+		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
+		cmd.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
 	}
 
-	cfg, err := config.LoadConfiguration(filepath.Join(cc.GetTopazCfgDir(), "config.yaml"))
+	if _, err := os.Stat(c.Config.TopazConfigFile); errors.Is(err, os.ErrNotExist) {
+		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(c.Config.TopazConfigFile))
+	}
+
+	cfg, err := config.LoadConfiguration(c.Config.TopazConfigFile)
 	if err != nil {
 		return err
 	}
 
-	generator := config.NewGenerator("config.yaml")
+	generator := config.NewGenerator(filepath.Base(c.Config.TopazConfigFile))
 	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}
@@ -93,7 +97,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithContainerHostname(cmd.ContainerHostname),
 		dockerx.WithWorkingDir("/app"),
 		dockerx.WithEntrypoint([]string{"./topazd"}),
-		dockerx.WithCmd([]string{"run", "--config-file", "/config/config.yaml"}),
+		dockerx.WithCmd([]string{"run", "--config-file", fmt.Sprintf("/config/%s", filepath.Base(c.Config.TopazConfigFile))}),
 		dockerx.WithAutoRemove(),
 		dockerx.WithEnvs(getEnvFromVolumes(volumes)),
 		dockerx.WithEnvs(cmd.Env),

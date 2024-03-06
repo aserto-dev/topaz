@@ -5,10 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/samber/lo"
 
 	"github.com/alecthomas/kong"
 	"github.com/rs/zerolog"
