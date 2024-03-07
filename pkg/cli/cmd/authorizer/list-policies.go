@@ -10,13 +10,13 @@ import (
 )
 
 type ListPoliciesCmd struct {
-	PolicyName    string `name:"policy-name" default:"" required:"false" help:"policy name"`
-	InstanceLabel string `name:"instance-label" default:"" required:"false" help:"policy's instance label"`
-	clients.AuthorizerConfig
+	PolicyName     string `name:"policy-name" default:"" required:"false" help:"policy name"`
+	InstanceLabel  string `name:"instance-label" default:"" required:"false" help:"policy's instance label"`
+	clients.Config `envprefix:"TOPAZ_AUTHORIZER_"`
 }
 
 func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
-	client, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
+	client, err := clients.NewAuthorizerClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get authorizer client")
 	}

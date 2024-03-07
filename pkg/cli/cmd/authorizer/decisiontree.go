@@ -11,14 +11,14 @@ import (
 )
 
 type DecisionTreeCmd struct {
-	AuthParams `embed:""`
-	Path       string   `name:"path" help:"policy package to evaluate"`
-	Decisions  []string `name:"decisions" default:"*" help:"policy decisions to return"`
-	clients.AuthorizerConfig
+	AuthParams     `embed:""`
+	Path           string   `name:"path" help:"policy package to evaluate"`
+	Decisions      []string `name:"decisions" default:"*" help:"policy decisions to return"`
+	clients.Config `envprefix:"TOPAZ_AUTHORIZER_"`
 }
 
 func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
-	client, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
+	client, err := clients.NewAuthorizerClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get authorizer client")
 	}

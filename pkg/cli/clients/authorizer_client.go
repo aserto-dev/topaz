@@ -1,33 +1,18 @@
 package clients
 
 import (
-	"context"
-
 	azc "github.com/aserto-dev/go-aserto/client"
-	"github.com/fullstorydev/grpcurl"
-	"github.com/pkg/errors"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
 
-type AuthorizerConfig struct {
-	Host     string `flag:"host" short:"H" help:"authorizer service address" env:"TOPAZ_AUTHORIZER_SVC" default:"localhost:8282"`
-	APIKey   string `flag:"api-key" short:"k" help:"authorizer API key" env:"TOPAZ_AUTHORIZER_KEY"`
-	Token    string `flag:"token" short:"t" help:"JWT used for connection" env:"TOPAZ_AUTHORIZER_TOKEN"`
-	Insecure bool   `flag:"insecure" short:"i" help:"skip TLS verification" env:"TOPAZ_AUTHORIZER_INSECURE"`
-	TenantID string `flag:"tenant-id" help:"" env:"TOPAZ_TENANT_ID"`
-}
-
-func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.AuthorizerClient, error) {
+func NewAuthorizerClient(c *cc.CommonCtx, cfg *Config) (authorizer.AuthorizerClient, error) {
 	if cfg.Host == "" {
 		cfg.Host = localhostAuthorizer
 	}
 
-	if err := cfg.validate(); err != nil {
+	if err := validate(cfg); err != nil {
 		return nil, err
 	}
 
@@ -54,26 +39,4 @@ func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.Aut
 	}
 
 	return authorizer.NewAuthorizerClient(conn), nil
-}
-
-func (cfg *AuthorizerConfig) validate() error {
-	ctx := context.Background()
-
-	tlsConf, err := grpcurl.ClientTLSConfig(cfg.Insecure, "", "", "")
-	if err != nil {
-		return errors.Wrap(err, "failed to create TLS config")
-	}
-
-	creds := credentials.NewTLS(tlsConf)
-
-	opts := []grpc.DialOption{
-		grpc.WithUserAgent("topaz/dev-build (no version set)"),
-	}
-	if cfg.Insecure {
-		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	}
-	if _, err := grpcurl.BlockingDial(ctx, "tcp", cfg.Host, creds, opts...); err != nil {
-		return err
-	}
-	return nil
 }

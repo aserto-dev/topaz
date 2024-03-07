@@ -1,22 +1,18 @@
 package directory
 
 import (
-	"encoding/json"
-	"os"
-
 	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type CheckCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to check permission request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a check permission request template on stdout"`
-	clients.Config
+	Request        string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to check permission request or '-' to read from stdin"`
+	Template       bool   `name:"template" help:"prints a check permission request template on stdout"`
+	clients.Config `envprefix:"TOPAZ_DIRECTORY_"`
 }
 
 func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
@@ -34,26 +30,9 @@ func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.CheckRequest
-	if cmd.Request == "-" {
-		decoder := json.NewDecoder(os.Stdin)
-
-		err = decoder.Decode(&req)
-		if err != nil {
-			return errors.Wrap(err, "failed to unmarshal request from stdin")
-		}
-	} else {
-		err = protojson.Unmarshal([]byte(cmd.Request), &req)
-		if err != nil {
-			dat, err := os.ReadFile(cmd.Request)
-			if err != nil {
-				return errors.Wrapf(err, "opening file [%s]", cmd.Request)
-			}
-
-			err = protojson.Unmarshal(dat, &req)
-			if err != nil {
-				return errors.Wrapf(err, "failed to unmarshal request from file [%s]", cmd.Request)
-			}
-		}
+	err = UnmarshalRequest(cmd.Request, &req)
+	if err != nil {
+		return err
 	}
 
 	resp, err := client.V3.Reader.Check(c.Context, &req)

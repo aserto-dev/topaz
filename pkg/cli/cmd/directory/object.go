@@ -1,9 +1,6 @@
 package directory
 
 import (
-	"encoding/json"
-	"os"
-
 	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
@@ -12,15 +9,14 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type GetObjectCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to get object request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a get object request template on stdout"`
-	clients.Config
+	Request        string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to get object request or '-' to read from stdin"`
+	Template       bool   `name:"template" help:"prints a get object request template on stdout"`
+	clients.Config `envprefix:"TOPAZ_DIRECTORY_"`
 }
 
 func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
@@ -38,26 +34,9 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetObjectRequest
-	if cmd.Request == "-" {
-		decoder := json.NewDecoder(os.Stdin)
-
-		err = decoder.Decode(&req)
-		if err != nil {
-			return errors.Wrap(err, "failed to unmarshal request from stdin")
-		}
-	} else {
-		err = protojson.Unmarshal([]byte(cmd.Request), &req)
-		if err != nil {
-			dat, err := os.ReadFile(cmd.Request)
-			if err != nil {
-				return errors.Wrapf(err, "opening file [%s]", cmd.Request)
-			}
-
-			err = protojson.Unmarshal(dat, &req)
-			if err != nil {
-				return errors.Wrapf(err, "failed to unmarshal request from file [%s]", cmd.Request)
-			}
-		}
+	err = UnmarshalRequest(cmd.Request, &req)
+	if err != nil {
+		return err
 	}
 
 	resp, err := client.V3.Reader.GetObject(c.Context, &req)
@@ -79,9 +58,9 @@ func printGetObjectRequest(ui *clui.UI) error {
 }
 
 type SetObjectCmd struct {
-	Request  string `arg:""  type:"existingfile" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a set object request template on stdout"`
-	clients.Config
+	Request        string `arg:""  type:"string" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`
+	Template       bool   `name:"template" help:"prints a set object request template on stdout"`
+	clients.Config `envprefix:"TOPAZ_DIRECTORY_"`
 }
 
 func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
@@ -99,23 +78,9 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.SetObjectRequest
-	if cmd.Request == "-" {
-		decoder := json.NewDecoder(os.Stdin)
-
-		err = decoder.Decode(&req)
-		if err != nil {
-			return errors.Wrap(err, "failed to unmarshal request from stdin")
-		}
-	} else {
-		dat, err := os.ReadFile(cmd.Request)
-		if err != nil {
-			return errors.Wrapf(err, "opening file [%s]", cmd.Request)
-		}
-
-		err = protojson.Unmarshal(dat, &req)
-		if err != nil {
-			return errors.Wrapf(err, "failed to unmarshal request from file [%s]", cmd.Request)
-		}
+	err = UnmarshalRequest(cmd.Request, &req)
+	if err != nil {
+		return err
 	}
 
 	resp, err := client.V3.Writer.SetObject(c.Context, &req)
@@ -143,9 +108,9 @@ func printSetObjectRequest(ui *clui.UI) error {
 }
 
 type DeleteObjectCmd struct {
-	Request  string `arg:""  type:"existingfile" name:"request" optional:"" help:"file path to delete object request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a delete object request template on stdout"`
-	clients.Config
+	Request        string `arg:""  type:"string" name:"request" optional:"" help:"file path to delete object request or '-' to read from stdin"`
+	Template       bool   `name:"template" help:"prints a delete object request template on stdout"`
+	clients.Config `envprefix:"TOPAZ_DIRECTORY_"`
 }
 
 func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
@@ -163,23 +128,9 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.DeleteObjectRequest
-	if cmd.Request == "-" {
-		decoder := json.NewDecoder(os.Stdin)
-
-		err = decoder.Decode(&req)
-		if err != nil {
-			return errors.Wrap(err, "failed to unmarshal request from stdin")
-		}
-	} else {
-		dat, err := os.ReadFile(cmd.Request)
-		if err != nil {
-			return errors.Wrapf(err, "opening file [%s]", cmd.Request)
-		}
-
-		err = protojson.Unmarshal(dat, &req)
-		if err != nil {
-			return errors.Wrapf(err, "failed to unmarshal request from file [%s]", cmd.Request)
-		}
+	err = UnmarshalRequest(cmd.Request, &req)
+	if err != nil {
+		return err
 	}
 
 	resp, err := client.V3.Writer.DeleteObject(c.Context, &req)
@@ -200,9 +151,9 @@ func printDeleteObjectRequest(ui *clui.UI) error {
 }
 
 type ListObjectsCmd struct {
-	Request  string `arg:""  type:"existingfile" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a list objects request template on stdout"`
-	clients.Config
+	Request        string `arg:""  type:"string" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
+	Template       bool   `name:"template" help:"prints a list objects request template on stdout"`
+	clients.Config `envprefix:"TOPAZ_DIRECTORY_"`
 }
 
 func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
@@ -220,23 +171,9 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetObjectsRequest
-	if cmd.Request == "-" {
-		decoder := json.NewDecoder(os.Stdin)
-
-		err = decoder.Decode(&req)
-		if err != nil {
-			return errors.Wrap(err, "failed to unmarshal request from stdin")
-		}
-	} else {
-		dat, err := os.ReadFile(cmd.Request)
-		if err != nil {
-			return errors.Wrapf(err, "opening file [%s]", cmd.Request)
-		}
-
-		err = protojson.Unmarshal(dat, &req)
-		if err != nil {
-			return errors.Wrapf(err, "failed to unmarshal request from file [%s]", cmd.Request)
-		}
+	err = UnmarshalRequest(cmd.Request, &req)
+	if err != nil {
+		return err
 	}
 
 	resp, err := client.V3.Reader.GetObjects(c.Context, &req)
