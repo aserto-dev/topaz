@@ -38,38 +38,24 @@ type Message[T any] interface {
 }
 
 func UnmarshalRequest[T any, M Message[T]](src string, msg M) error {
+	var bytes []byte
+
 	if src == "-" {
 		reader := bufio.NewReader(os.Stdin)
-		var bytes []byte
-		for {
-			data, err := reader.ReadByte()
-			if err != nil {
-				// Read until EOF provided
-				if err == io.EOF {
-					break
-				}
-				return err
-			}
-			bytes = append(bytes, data)
+		if b, err := io.ReadAll(reader); err == nil {
+			bytes = b
+		} else {
+			return errors.Wrap(err, "failed to read from stdin")
 		}
-
-		err := protojson.Unmarshal(bytes, msg)
-		if err != nil {
-			return errors.Wrap(err, "failed to unmarshal request from stdin")
-		}
+	} else if _, err := os.Stat(src); errors.Is(err, os.ErrNotExist) {
+		bytes = []byte(src)
 	} else {
-		err := protojson.Unmarshal([]byte(src), msg)
-		if err != nil {
-			dat, err := os.ReadFile(src)
-			if err != nil {
-				return errors.Wrapf(err, "opening file [%s]", src)
-			}
-
-			err = protojson.Unmarshal(dat, msg)
-			if err != nil {
-				return errors.Wrapf(err, "failed to unmarshal request from file [%s]", src)
-			}
+		if b, err := os.ReadFile(src); err == nil {
+			bytes = b
+		} else {
+			return errors.Wrapf(err, "opening file [%s]", src)
 		}
 	}
-	return nil
+
+	return protojson.Unmarshal(bytes, msg)
 }
