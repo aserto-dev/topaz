@@ -10,15 +10,15 @@ import (
 )
 
 type ExecQueryCmd struct {
-	AuthParams `embed:""`
-	Statement  string `arg:"stmt" name:"stmt" required:"" help:"query statement"`
-	Path       string `name:"path" help:"policy package to evaluate"`
-	Input      string `name:"input" help:"query input context"`
-	clients.AuthorizerConfig
+	AuthParams     `embed:""`
+	Statement      string `arg:"stmt" name:"stmt" required:"" help:"query statement"`
+	Path           string `name:"path" help:"policy package to evaluate"`
+	Input          string `name:"input" help:"query input context"`
+	clients.Config `envprefix:"TOPAZ_AUTHORIZER_"`
 }
 
 func (cmd *ExecQueryCmd) Run(c *cc.CommonCtx) error {
-	client, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
+	client, err := clients.NewAuthorizerClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get authorizer client")
 	}

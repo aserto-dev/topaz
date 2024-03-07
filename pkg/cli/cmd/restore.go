@@ -8,7 +8,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/fatih/color"
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )
 
@@ -22,7 +21,6 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
-	cmd.Config.SessionID = uuid.NewString()
 
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
