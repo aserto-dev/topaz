@@ -173,10 +173,9 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	// 2 - topaz configure - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
 		command := ConfigureCmd{
-			ConfigFile: fmt.Sprintf("%s.yaml", tmpl.Name),
-			PolicyName: tmpl.Assets.Policy.Name,
-			Resource:   tmpl.Assets.Policy.Resource,
-			Force:      true,
+			Name:     tmpl.Assets.Policy.Name,
+			Resource: tmpl.Assets.Policy.Resource,
+			Force:    true,
 			EnableDirectoryV2: false,
 		}
 		if err := command.Run(c); err != nil {
@@ -187,7 +186,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	{
 		command := &StartCmd{
 			StartRunCmd: StartRunCmd{
-				ConfigFile:        fmt.Sprintf("%s.yaml", tmpl.Name),
+				Name:              tmpl.Name,
 				ContainerRegistry: cmd.ContainerRegistry,
 				ContainerImage:    cmd.ContainerImage,
 				ContainerTag:      cmd.ContainerTag,
