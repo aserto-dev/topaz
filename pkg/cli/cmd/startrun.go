@@ -36,7 +36,7 @@ const (
 
 func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
-		return ErrIsRunning
+		return cc.ErrIsRunning
 	}
 	if cmd.ConfigFile != "" && cmd.ConfigFile != filepath.Base(c.Config.TopazConfigFile) {
 		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), cmd.ConfigFile)
