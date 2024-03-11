@@ -21,8 +21,8 @@ var (
 )
 
 type CLI struct {
-	Authorizer authorizer.AuthorizerCmd `cmd:"" help:"authorizer commands"`
-	Directory  directory.DirectoryCmd   `cmd:"" help:"directory commands"`
+	Authorizer authorizer.AuthorizerCmd `cmd:"" aliases:"az" help:"authorizer commands"`
+	Directory  directory.DirectoryCmd   `cmd:"" aliases:"ds" help:"directory commands"`
 	Start      StartCmd                 `cmd:"" help:"start topaz in daemon mode"`
 	Stop       StopCmd                  `cmd:"" help:"stop topaz instance"`
 	Status     StatusCmd                `cmd:"" help:"status of topaz daemon process"`
