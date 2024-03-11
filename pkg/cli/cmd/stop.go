@@ -28,7 +28,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.Wait {
-		ports, err := config.CurrentConfig().Ports()
+		ports, err := config.GetConfig(c.Config.TopazConfigFile).Ports()
 		if err != nil {
 			return err
 		}

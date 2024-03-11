@@ -126,10 +126,15 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 
 	// 4 - wait for health endpoint to be in serving state
-	cfg := config.CurrentConfig()
+	cfg := config.GetConfig(c.Config.TopazConfigFile)
 	addr, _ := cfg.HealthService()
 	if !cc.ServiceHealthStatus(addr, "") {
 		return fmt.Errorf("gRPC endpoint not SERVING")
+	}
+	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
+		return fmt.Errorf("model service not configured")
+	} else {
+		cmd.Config.Host = model.GRPC.ListenAddress
 	}
 
 	// 5-7 - reset directory, apply (manifest, IDP and domain data) template.
@@ -182,6 +187,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 			return err
 		}
 	}
+
 	// 3 - topaz start - start instance using new configuration
 	{
 		command := &StartCmd{
@@ -200,6 +206,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 			return err
 		}
 	}
+
 	return nil
 }
 
