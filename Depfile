@@ -11,10 +11,10 @@ go:
     version: "v1.20.0"
   gotestsum:
     importPath: "gotest.tools/gotestsum"
-    version: "v1.10.1"
+    version: "v1.11.0"
   golangci-lint:
     importPath: "github.com/golangci/golangci-lint/cmd/golangci-lint"
-    version: "v1.53.3"
+    version: "v1.56.2"
   goimports:
     importPath: "golang.org/x/tools/cmd/goimports"
     version: "latest"
