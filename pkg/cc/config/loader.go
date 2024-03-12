@@ -17,6 +17,7 @@ import (
 
 type Loader struct {
 	Configuration *Config
+	HasTopazDir   bool
 }
 
 var envRegex = regexp.MustCompile(`(?U:\${.*})`)
@@ -59,6 +60,10 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 	if err != nil {
 		return nil, err
 	}
+	withTopazDir := false
+	if strings.Contains(string(fileContents), "TOPAZ_DIR") {
+		withTopazDir = true
+	}
 	cfg := new(Config)
 	subBuf, err := SetEnvVars(string(fileContents))
 	if err != nil {
@@ -78,6 +83,7 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 
 	return &Loader{
 		Configuration: cfg,
+		HasTopazDir:   withTopazDir,
 	}, nil
 }
 

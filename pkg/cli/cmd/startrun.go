@@ -57,6 +57,9 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	if err != nil {
 		return err
 	}
+	if cfg.HasTopazDir {
+		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+	}
 
 	generator := config.NewGenerator(filepath.Base(c.Config.TopazConfigFile))
 	if _, err := generator.CreateCertsDir(); err != nil {

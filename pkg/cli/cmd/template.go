@@ -127,6 +127,9 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 
 	// 4 - wait for health endpoint to be in serving state
 	cfg := config.GetConfig(c.Config.TopazConfigFile)
+	if cfg.HasTopazDir {
+		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+	}
 	addr, _ := cfg.HealthService()
 	if !cc.ServiceHealthStatus(addr, "") {
 		return fmt.Errorf("gRPC endpoint not SERVING")
