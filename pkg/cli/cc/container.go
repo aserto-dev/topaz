@@ -5,7 +5,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/aserto-dev/topaz/pkg/version"
+	ver "github.com/aserto-dev/topaz/pkg/version"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/samber/lo"
@@ -54,7 +54,7 @@ func ContainerTag() string {
 		return containerTag
 	}
 
-	v, err := semver.NewVersion(version.GetInfo().Version)
+	v, err := semver.NewVersion(ver.GetInfo().Version)
 	if err != nil {
 		return defaultContainerTag
 	}

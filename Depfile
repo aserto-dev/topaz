@@ -5,22 +5,22 @@ go:
     version: "v1.3.13"
   wire:
     importPath: "github.com/google/wire/cmd/wire"
-    version: "v0.5.0"
+    version: "v0.6.0"
   goreleaser:
     importPath: github.com/goreleaser/goreleaser
-    version: "v1.20.0"
+    version: "v1.24.0"
   gotestsum:
     importPath: "gotest.tools/gotestsum"
-    version: "v1.10.1"
+    version: "v1.11.0"
   golangci-lint:
     importPath: "github.com/golangci/golangci-lint/cmd/golangci-lint"
-    version: "v1.53.3"
+    version: "v1.56.2"
   goimports:
     importPath: "golang.org/x/tools/cmd/goimports"
     version: "latest"
   grpcui:
     importPath: "github.com/fullstorydev/grpcui/cmd/grpcui"
-    version: "v1.3.1"
+    version: "v1.3.3"
   grpcurl:
     importPath: "github.com/fullstorydev/grpcurl/cmd/grpcurl"
-    version: "v1.8.8"
+    version: "v1.8.9"
