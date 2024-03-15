@@ -8,7 +8,7 @@ go:
     version: "v0.5.0"
   goreleaser:
     importPath: github.com/goreleaser/goreleaser
-    version: "v1.20.0"
+    version: "v1.24.0"
   gotestsum:
     importPath: "gotest.tools/gotestsum"
     version: "v1.11.0"
