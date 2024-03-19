@@ -421,8 +421,8 @@ github.com/aserto-dev/aserto-grpc v0.2.2 h1:i6rWdvydyqs7eBqsZHYdPPCC+xVwQve8KrBg
 github.com/aserto-dev/aserto-grpc v0.2.2/go.mod h1:uDMB5njLdoCa0Hr+TOg6A4gH85uNqTvufkM5sKtEjcE=
 github.com/aserto-dev/aserto-management v0.9.4 h1:GiBWkTwn2mgvbS3ftsmro2RS0oiORjlNzLsY9Q5j0vQ=
 github.com/aserto-dev/aserto-management v0.9.4/go.mod h1:gc2e123PnLdDrVv6H9r3sl8yU5qegAwR3aAwXcmaBJM=
-github.com/aserto-dev/azm v0.1.3 h1:+pZLj7Q7QrNgHzie1HKqCQYKvZSyyJpM74+155kMaog=
-github.com/aserto-dev/azm v0.1.3/go.mod h1:bx9BXRPGGolRag7TBuHyTUhtx/YhjohYlGzwMb6MpSI=
+github.com/aserto-dev/azm v0.1.4-0.20240322202320-adb1321e1ad0 h1:2P33tpTpgczDt1U+09pYd9FA7QO9pgTWkbJ3G4gtPqU=
+github.com/aserto-dev/azm v0.1.4-0.20240322202320-adb1321e1ad0/go.mod h1:bx9BXRPGGolRag7TBuHyTUhtx/YhjohYlGzwMb6MpSI=
 github.com/aserto-dev/certs v0.0.5 h1:URZEN3DMUIqob3pf78NtTpe7sYPrR2oJYV5MbJ91YKA=
 github.com/aserto-dev/certs v0.0.5/go.mod h1:BGRgkJ4GB7XoETzDtnMxQySk5IVpJIa18aWuylvAsac=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
@@ -439,8 +439,8 @@ github.com/aserto-dev/go-directory v0.31.2 h1:1nu4GLXRHXmbrDNp85R4IxEZ9yrf1FvhmQ
 github.com/aserto-dev/go-directory v0.31.2/go.mod h1:6bykeUiFPmgtsP0jnHBUxKLBFPwrcX/j5/uCGKc2Oy0=
 github.com/aserto-dev/go-directory-cli v0.31.0 h1:GXsHFfpZ/AuMW8+plL9GomXKNgwvVZLb1ylvNSobbm8=
 github.com/aserto-dev/go-directory-cli v0.31.0/go.mod h1:xjBCfDFxOzRO8KnV5V/7vNT4u6XRvJUF3M9HQU0o7Zg=
-github.com/aserto-dev/go-edge-ds v0.31.0 h1:1Nx8BlSsacs2xCaMJxrytRwJGnQXqjgCJHfZasnb1+8=
-github.com/aserto-dev/go-edge-ds v0.31.0/go.mod h1:BOP9wPr/VF8nvKuVUw5yLzY/wzRcYcfxo1QfyVeICcs=
+github.com/aserto-dev/go-edge-ds v0.31.1-0.20240322204411-09cc8a6c9b8f h1:BJVY2B26SBDQMikBbDAGCpVDeOR86m4TgLYnW4F8V94=
+github.com/aserto-dev/go-edge-ds v0.31.1-0.20240322204411-09cc8a6c9b8f/go.mod h1:fw7Nl3UEpI2jR/gtNFbRIRFTI19fIJv2hYhNFFphGoE=
 github.com/aserto-dev/go-grpc v0.8.63 h1:/8t5JSWb7nR1uF3SUuxZxt/mvhz+9mI5juZLP06wElU=
 github.com/aserto-dev/go-grpc v0.8.63/go.mod h1:ZAlsa2ooMcXuEWhUvAsrANm6lpMHFKJsIEhvpqydn+Y=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
