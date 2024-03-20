@@ -83,7 +83,7 @@ var cmdRun = &cobra.Command{
 	},
 }
 
-// nolint: gochecknoinits
+// nolint: gochecknoinits, errcheck
 func init() {
 	cmdRun.Flags().StringVarP(
 		&flagRunConfigFile,
