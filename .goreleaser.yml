@@ -1,9 +1,16 @@
 project_name: topaz
 
 env:
+  # https://goreleaser.com/customization/env/
   - REGISTRY=ghcr.io
   - ORG=aserto-dev
   - REPO=topaz
+  - DESCRIPTION="Topaz Authorization Service"
+  - LICENSE=Apache-2.0
+
+before:
+  # https://goreleaser.com/customization/hooks/
+  hooks:
 
 builds:
   # https://goreleaser.com/customization/build/
@@ -91,7 +98,7 @@ release:
     name: "{{ .Env.REPO }}"
 
   draft: false
-  prerelease: false
+  prerelease: "false"
   name_template: "{{.ProjectName}} {{.Tag}}"
 
 blobs:
@@ -156,8 +163,8 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
-      - "--label=org.opencontainers.image.description=Topaz"
-      - "--label=org.opencontainers.image.licenses=Apache-2.0"
+      - "--label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}"
+      - "--label=org.opencontainers.image.licenses={{ .Env.LICENSE }}"
 
   - use: buildx
     goos: linux
@@ -173,8 +180,8 @@ dockers:
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
-      - "--label=org.opencontainers.image.description=Topaz"
-      - "--label=org.opencontainers.image.licenses=Apache-2.0"
+      - "--label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}"
+      - "--label=org.opencontainers.image.licenses={{ .Env.LICENSE }}"
 
 docker_manifests:
   # https://goreleaser.com/customization/docker_manifest/

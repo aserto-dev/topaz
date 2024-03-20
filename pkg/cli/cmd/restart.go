@@ -10,7 +10,7 @@ type RestartCmd struct {
 func (cmd *RestartCmd) Run(c *cc.CommonCtx) error {
 	if err := (&StopCmd{
 		ContainerName: cmd.ContainerName,
-		Wait:          cmd.Wait,
+		Wait:          true, // force wait, to prevent errors running start.
 	}).Run(c); err != nil {
 		return err
 	}

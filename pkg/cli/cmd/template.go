@@ -147,6 +147,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	{
 		command := &StopCmd{
 			ContainerName: cmd.ContainerName,
+			Wait:          true,
 		}
 		if err := command.Run(c); err != nil {
 			return err
@@ -156,9 +157,10 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	// 2 - topaz configure - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
 		command := ConfigureCmd{
-			PolicyName: tmpl.Assets.Policy.Name,
-			Resource:   tmpl.Assets.Policy.Resource,
-			Force:      true,
+			PolicyName:        tmpl.Assets.Policy.Name,
+			Resource:          tmpl.Assets.Policy.Resource,
+			Force:             true,
+			EnableDirectoryV2: false,
 		}
 		if err := command.Run(c); err != nil {
 			return err
@@ -175,6 +177,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 				ContainerName:     cmd.ContainerName,
 				ContainerHostname: cmd.ContainerHostname,
 			},
+			Wait: true,
 		}
 		if err := command.Run(c); err != nil {
 			return err
