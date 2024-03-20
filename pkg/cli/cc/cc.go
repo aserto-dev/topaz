@@ -32,12 +32,13 @@ type CommonCtx struct {
 }
 
 type CLIConfig struct {
-	NoCheck           bool
-	TopazConfigFile   string
-	ContainerName     string
-	ContainerRegistry string
-	ContainerImage    string
-	ContainerTag      string
+	NoCheck           bool   `json:"no_check"`
+	TopazConfigFile   string `json:"topaz_config_file"`
+	ContainerName     string `json:"container_name"`
+	ContainerRegistry string `json:"container_registry"`
+	ContainerImage    string `json:"container_image"`
+	ContainerTag      string `json:"container_tag"`
+	ContainerPlatform string `json:"container_platform"`
 }
 
 type runStatus int
@@ -58,6 +59,7 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 			ContainerRegistry: ContainerRegistry(),
 			ContainerImage:    ContainerImage(),
 			ContainerTag:      ContainerTag(),
+			ContainerPlatform: ContainerPlatform(),
 		},
 	}
 

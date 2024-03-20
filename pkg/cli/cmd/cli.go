@@ -13,7 +13,7 @@ import (
 type SaveContext bool
 
 const (
-	CLIConfigurationFile = "cli_config.json"
+	CLIConfigurationFile = "topaz.json"
 )
 
 var (
