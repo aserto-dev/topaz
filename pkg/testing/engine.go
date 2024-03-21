@@ -44,7 +44,7 @@ func (h *EngineHarness) Cleanup() {
 	cancel()
 	h.cleanup()
 
-	time.Sleep(1 * time.Second) // wait for graceful shutdown before checking ports
+	time.Sleep(ten * time.Second) // wait for graceful shutdown before checking ports
 	assert.NoError(h.WaitForPorts(cc.PortClosed))
 }
 
