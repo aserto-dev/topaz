@@ -1,0 +1,30 @@
+{
+    "objects": [
+      {
+        "type": "tenant",
+        "id": "the-citadel",
+        "display_name": "The Citadel tenant",
+        "properties": {}
+      },
+      {
+        "type": "tenant",
+        "id": "the-smiths",
+        "display_name": "The Smiths tenant",
+        "properties": {}
+      },
+      {
+        "type": "resource",
+        "id": "adventures",
+        "display_name": "The Citadel Adventures resource",
+        "properties": {}
+      },
+      {
+        "type": "resource",
+        "id": "buget",
+        "display_name": "The Smiths family's buget",
+        "properties": {}
+      }
+    ]
+  }
+  
+  
