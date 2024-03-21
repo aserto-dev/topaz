@@ -83,7 +83,7 @@ var cmdRun = &cobra.Command{
 	},
 }
 
-// nolint: gochecknoinits
+// nolint: gochecknoinits, errcheck
 func init() {
 	cmdRun.Flags().StringVarP(
 		&flagRunConfigFile,
@@ -101,6 +101,6 @@ func init() {
 		&flagRunIgnorePaths,
 		"ignore", "", []string{},
 		"set file and directory names to ignore during loading local bundles (e.g., '.*' excludes hidden files)")
-
 	rootCmd.AddCommand(cmdRun)
+	cmdRun.MarkFlagRequired("config-file")
 }
