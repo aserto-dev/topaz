@@ -23,7 +23,7 @@ require (
 	github.com/aserto-dev/go-aserto v0.31.2
 	github.com/aserto-dev/go-authorizer v0.20.5
 	github.com/aserto-dev/go-directory v0.31.2
-	github.com/aserto-dev/go-directory-cli v0.31.0
+	github.com/aserto-dev/go-directory-cli v0.31.1
 	github.com/aserto-dev/go-edge-ds v0.31.1
 	github.com/aserto-dev/go-grpc v0.8.63
 	github.com/aserto-dev/go-topaz-ui v0.1.4
@@ -163,7 +163,7 @@ require (
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/yashtewari/glob-intersection v0.2.0 // indirect
-	go.etcd.io/bbolt v1.3.8 // indirect
+	go.etcd.io/bbolt v1.3.9 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.46.1 // indirect
 	go.opentelemetry.io/otel v1.21.0 // indirect
 	go.opentelemetry.io/otel/metric v1.21.0 // indirect
