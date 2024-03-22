@@ -11,6 +11,7 @@ import (
 	"time"
 
 	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	dsa3 "github.com/aserto-dev/go-directory/aserto/directory/assertion/v3"
 	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/samber/lo"
@@ -21,6 +22,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 
 	"github.com/fatih/color"
+	"github.com/rs/zerolog/log"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -40,6 +42,8 @@ const (
 type TestCmd struct {
 	Exec     TestExecCmd     `cmd:"" help:"execute assertions"`
 	Template TestTemplateCmd `cmd:"" help:"output assertions template"`
+	Import   TestImportCmd   `cmd:"" help:"import test assertions file into hosted directory instance"`
+	Export   TestExportCmd   `cmd:"" help:"export test assertions from hosted directory instance to assertion file"`
 }
 
 type TestExecCmd struct {
@@ -497,6 +501,178 @@ func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	if err := enc.Encode(template); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+type TestImportCmd struct {
+	File string `arg:""  required:"" type:"existingfile" help:"filepath to assertions file"`
+	clients.Config
+}
+
+func (cmd *TestImportCmd) Run(c *cc.CommonCtx) error {
+	r, err := os.Open(cmd.File)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+
+	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
+	if err != nil {
+		return err
+	}
+
+	var assertions struct {
+		Assertions []json.RawMessage `json:"assertions"`
+	}
+
+	dec := json.NewDecoder(r)
+	if err := dec.Decode(&assertions); err != nil {
+		return err
+	}
+	for i := 0; i < len(assertions.Assertions); i++ {
+		var msg structpb.Struct
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(assertions.Assertions[i], &msg)
+		if err != nil {
+			return err
+		}
+
+		expected, ok := getBool(&msg, expected)
+		if !ok {
+			return fmt.Errorf("no expected outcome of assertion defined")
+		}
+
+		checkType := getCheckType(&msg)
+		if checkType == CheckUnknown {
+			return fmt.Errorf("unknown check type")
+		}
+
+		reqVersion := getReqVersion(msg.Fields[checkTypeMapStr[checkType]])
+		if reqVersion == 0 {
+			return fmt.Errorf("unknown request version")
+		}
+
+		var assert *dsa3.Assert
+
+		switch {
+		case checkType == Check && reqVersion == 3:
+			var req dsr3.CheckRequest
+			if err := unmarshalReq(msg.Fields[checkTypeMapStr[checkType]], &req); err != nil {
+				return err
+			}
+
+			assert = &dsa3.Assert{
+				Expected: expected,
+				Msg: &dsa3.Assert_Check{
+					Check: &req,
+				},
+			}
+
+		case checkType == CheckPermission && reqVersion == 3:
+			var req dsr3.CheckPermissionRequest
+			if err := unmarshalReq(msg.Fields[checkTypeMapStr[checkType]], &req); err != nil {
+				return err
+			}
+
+			assert = &dsa3.Assert{
+				Expected: expected,
+				Msg: &dsa3.Assert_CheckPermission{
+					CheckPermission: &req,
+				},
+			}
+
+		case checkType == CheckRelation && reqVersion == 3:
+			var req dsr3.CheckRelationRequest
+			if err := unmarshalReq(msg.Fields[checkTypeMapStr[checkType]], &req); err != nil {
+				return err
+			}
+
+			assert = &dsa3.Assert{
+				Expected: expected,
+				Msg: &dsa3.Assert_CheckRelation{
+					CheckRelation: &req,
+				},
+			}
+
+		case checkType == CheckPermission && reqVersion == 2:
+			var req dsr2.CheckPermissionRequest
+			if err := unmarshalReq(msg.Fields[checkTypeMapStr[checkType]], &req); err != nil {
+				return err
+			}
+
+			assert = &dsa3.Assert{
+				Expected: expected,
+				Msg: &dsa3.Assert_CheckPermission{
+					CheckPermission: &dsr3.CheckPermissionRequest{
+						ObjectType:  req.Object.GetType(),
+						ObjectId:    req.Object.GetKey(),
+						Permission:  req.Permission.GetName(),
+						SubjectType: req.Subject.GetType(),
+						SubjectId:   req.Subject.GetKey(),
+					},
+				},
+			}
+
+		case checkType == CheckRelation && reqVersion == 2:
+			var req dsr2.CheckRelationRequest
+			if err := unmarshalReq(msg.Fields[checkTypeMapStr[checkType]], &req); err != nil {
+				return err
+			}
+
+			assert = &dsa3.Assert{
+				Expected: expected,
+				Msg: &dsa3.Assert_CheckRelation{
+					CheckRelation: &dsr3.CheckRelationRequest{
+						ObjectType:  req.Object.GetType(),
+						ObjectId:    req.Object.GetKey(),
+						Relation:    req.Relation.GetName(),
+						SubjectType: req.Subject.GetType(),
+						SubjectId:   req.Subject.GetKey(),
+					},
+				},
+			}
+
+		case checkType == CheckDecision:
+			// ignore
+			var req az2.IsRequest
+			if err := unmarshalReq(msg.Fields[checkTypeMapStr[checkType]], &req); err != nil {
+				return err
+			}
+			log.Warn().Any("SKIPPED", req).Msg("CheckDecision")
+			continue
+		}
+
+		resp, err := dirClient.V3.Assertion.SetAssertion(c.Context, &dsa3.SetAssertionRequest{Assert: assert})
+		if err != nil {
+			return err
+		}
+
+		log.Trace().Str("assert",
+			fmt.Sprintf("%d %s:%s#%s@%s:%s %t",
+				resp.Result.GetId(),
+				resp.Result.GetCheck().ObjectType,
+				resp.Result.GetCheck().ObjectId,
+				resp.Result.GetCheck().Relation,
+				resp.Result.GetCheck().SubjectType,
+				resp.Result.GetCheck().SubjectId,
+				resp.Result.Expected,
+			)).Msg("SetAssertion")
+	}
+
+	return nil
+}
+
+type TestExportCmd struct {
+	File  string `arg:""  default:"assertions.json" help:"filepath to assertions file"`
+	Force bool   `flag:"" default:"false" help:"force overwrite target file when exists"`
+	clients.Config
+}
+
+func (cmd *TestExportCmd) Run(c *cc.CommonCtx) error {
+	// dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
