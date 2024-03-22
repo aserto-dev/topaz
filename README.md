@@ -77,7 +77,7 @@ Join the community [Slack channel](https://www.aserto.com/slack) for questions a
 
 ### Building from source
 
- `topaz` is currently using go v1.17 or above. In order to build `topaz` from source you must:
+ `topaz` is currently using golang v1.22.* to compile, `go.mod` files are pinned to 1.21 or lower. In order to build `topaz` from source you must:
 
  1. Install [mage](https://magefile.org/)
  2. Clone the repo
@@ -208,39 +208,36 @@ To start an interactive session with the Topaz endpoints over gRPC, see the [gRP
 ## Command line options
 
 ```shell
-$ topaz --help
-Usage: topaz <command>
+topaz --help
+Usage: topaz <command> [flags]
 
 Topaz CLI
 
 Commands:
-  start              start topaz in daemon mode
-  stop               stop topaz instance
-  status             status of topaz daemon process
-  run                run topaz in console mode
-  manifest get       get manifest
-  manifest set       set manifest
-  manifest delete    delete manifest
-  load               load manifest from file
-  save               save manifest to file
-  import             import directory objects
-  export             export directory objects
-  backup             backup directory data
-  restore            restore directory data
-  test exec          execute assertions
-  test template      output assertions template
-  templates list     list template
-  templates install  install template
-  install            install topaz container
-  configure          configure topaz service
-  update             update topaz container version
-  uninstall          uninstall topaz container
-  version            version information
-  console            opens the console in the browser
+  start        start topaz in daemon mode
+  stop         stop topaz instance
+  restart      restart topaz instance
+  status       status of topaz daemon process
+  run          run topaz in console mode
+  manifest     manifest commands
+  test         test assertions commands
+  templates    template commands
+  console      open console in the browser
+  import       import directory objects
+  export       export directory objects
+  backup       backup directory data
+  restore      restore directory data
+  install      install topaz container
+  configure    configure topaz service
+  certs        cert commands
+  update       update topaz container version
+  uninstall    uninstall topaz container
+  version      version information
 
 Flags:
   -h, --help        Show context-sensitive help.
-      --no-check    disable local container status check ($TOPAZ_NO_CHECK)
+  -N, --no-check    disable local container status check ($TOPAZ_NO_CHECK)
+  -L, --log         log level
 
 Run "topaz <command> --help" for more information on a command.
 ```
