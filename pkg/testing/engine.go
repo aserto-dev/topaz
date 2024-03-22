@@ -172,7 +172,9 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(rt)
 		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
 	}
-	err = h.Engine.Start()
+
+	h.Engine.Manager = h.Engine.Manager.WithShutdownTimeout(ten) // set shutdown timeout in engine manager
+	err = h.Engine.Manager.StartServers(h.Context())
 	assert.NoError(err)
 
 	curLevel := zerolog.GlobalLevel()
