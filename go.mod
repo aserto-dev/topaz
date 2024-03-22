@@ -5,16 +5,14 @@ go 1.21
 toolchain go1.22.1
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
-
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
 // replace github.com/aserto-dev/azm => ../azm
-
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
 
 require (
+	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/alecthomas/kong v0.9.0
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.4
@@ -25,7 +23,7 @@ require (
 	github.com/aserto-dev/go-aserto v0.31.2
 	github.com/aserto-dev/go-authorizer v0.20.5
 	github.com/aserto-dev/go-directory v0.31.2
-	github.com/aserto-dev/go-directory-cli v0.31.1
+	github.com/aserto-dev/go-directory-cli v0.31.0
 	github.com/aserto-dev/go-edge-ds v0.31.0
 	github.com/aserto-dev/go-grpc v0.8.63
 	github.com/aserto-dev/go-topaz-ui v0.1.4
@@ -37,8 +35,8 @@ require (
 	github.com/aserto-dev/self-decision-logger v0.0.5
 	github.com/aserto-dev/service-host v0.0.9
 	github.com/cli/browser v1.3.0
-	github.com/docker/docker v25.0.3+incompatible
-	github.com/docker/go-connections v0.4.0
+	github.com/docker/docker v25.0.4+incompatible
+	github.com/docker/go-connections v0.5.0
 	github.com/fatih/color v1.16.0
 	github.com/fullstorydev/grpcurl v1.8.9
 	github.com/google/uuid v1.6.0

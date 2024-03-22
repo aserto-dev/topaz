@@ -5,6 +5,9 @@ import (
 	"os"
 	"runtime"
 
+	ver "github.com/aserto-dev/topaz/pkg/version"
+
+	"github.com/Masterminds/semver/v3"
 	"github.com/samber/lo"
 )
 
@@ -50,7 +53,12 @@ func ContainerTag() string {
 	if containerTag := os.Getenv("CONTAINER_TAG"); containerTag != "" {
 		return containerTag
 	}
-	return defaultContainerTag
+
+	v, err := semver.NewVersion(ver.GetInfo().Version)
+	if err != nil {
+		return defaultContainerTag
+	}
+	return v.String()
 }
 
 // ContainerPlatform, returns the container platform for multi-platform capable servers.
