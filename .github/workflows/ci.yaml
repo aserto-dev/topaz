@@ -52,7 +52,7 @@ jobs:
           args: --timeout=30m
       -
         name: Test Setup
-        uses: gertd/action-gotestsum@v2.0.0
+        uses: gertd/action-gotestsum@v3.0.0
         with:
           gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
       -
