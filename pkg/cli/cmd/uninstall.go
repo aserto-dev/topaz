@@ -20,7 +20,7 @@ type UninstallCmd struct {
 
 func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
 	// stop container instance, if running.
-	if err := (&StopCmd{ContainerName: cmd.ContainerName}).Run(c); err != nil {
+	if err := (&StopCmd{ContainerName: cmd.ContainerName, Wait: true}).Run(c); err != nil {
 		return err
 	}
 
