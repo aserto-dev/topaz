@@ -87,7 +87,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 
 	opts := []dockerx.RunOption{
 		dockerx.WithContainerImage(image),
-		dockerx.WithContainerPlatform("linux", strings.TrimPrefix(cmd.ContainerPlatform, "linux/")),
+		dockerx.WithContainerPlatform(cmd.ContainerPlatform),
 		dockerx.WithContainerName(cmd.ContainerName),
 		dockerx.WithContainerHostname(cmd.ContainerHostname),
 		dockerx.WithWorkingDir("/app"),
