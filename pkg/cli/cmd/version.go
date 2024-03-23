@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
@@ -51,7 +50,7 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 	if err := dc.Run(
 		dockerx.WithContainerImage(image),
 		dockerx.WithEntrypoint([]string{"/app/topazd", "version"}),
-		dockerx.WithContainerPlatform("linux", strings.TrimPrefix(cmd.ContainerPlatform, "linux/")),
+		dockerx.WithContainerPlatform(cmd.ContainerPlatform),
 		dockerx.WithContainerName("topazd-version"),
 		dockerx.WithOutput(c.UI.Output()),
 		dockerx.WithError(c.UI.Err()),

@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"path"
+	"strings"
 	"syscall"
 
 	"github.com/docker/docker/api/types"
@@ -189,7 +190,9 @@ func WithCmd(cmds []string) RunOption {
 	}
 }
 
-func WithContainerPlatform(goos, goarch string) RunOption {
+func WithContainerPlatform(platform string) RunOption {
+	goos, goarch := "linux", strings.TrimPrefix(platform, "linux/")
+
 	return func(r *runner) {
 		r.platform.OS = goos
 		r.platform.Architecture = goarch
