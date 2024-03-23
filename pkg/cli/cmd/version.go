@@ -43,8 +43,8 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 	)
 
 	if !dc.ImageExists(image) {
-		fmt.Fprintf(c.UI.Output(), "!!! image %s does not exist locally\n", image)
-		fmt.Fprint(c.UI.Output(), "!!! run `topaz install` to download\n", image)
+		fmt.Fprintf(c.UI.Output(), "!!! container image %q does not exist locally\n", image)
+		fmt.Fprint(c.UI.Output(), "!!! run 'topaz install' to download\n")
 		return nil
 	}
 
