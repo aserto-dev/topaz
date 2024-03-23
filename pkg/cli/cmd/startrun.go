@@ -73,12 +73,20 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return err
 	}
 
+	image := cc.Container(
+		cmd.ContainerRegistry, // registry
+		cmd.ContainerImage,    // image
+		cmd.ContainerTag,      // tag
+	)
+
+	if !dc.ImageExists(image) {
+		if err := dc.PullImage(image, cmd.ContainerPlatform); err != nil {
+			return err
+		}
+	}
+
 	opts := []dockerx.RunOption{
-		dockerx.WithContainerImage(cc.Container(
-			cmd.ContainerRegistry, // registry
-			cmd.ContainerImage,    // image
-			cmd.ContainerTag,      // tag
-		)),
+		dockerx.WithContainerImage(image),
 		dockerx.WithContainerPlatform("linux", strings.TrimPrefix(cmd.ContainerPlatform, "linux/")),
 		dockerx.WithContainerName(cmd.ContainerName),
 		dockerx.WithContainerHostname(cmd.ContainerHostname),

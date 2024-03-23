@@ -53,8 +53,8 @@ func New() (*DockerClient, error) {
 	}, nil
 }
 
-// Pull container image.
-func (dc *DockerClient) Pull(image, platform string) error {
+// PullImage container image.
+func (dc *DockerClient) PullImage(image, platform string) error {
 	out, err := dc.cli.ImagePull(dc.ctx, image, types.ImagePullOptions{
 		Platform: platform,
 	})
@@ -89,6 +89,22 @@ func (dc *DockerClient) RemoveImage(image string) error {
 	}
 
 	return nil
+}
+
+// Check if image exists in local container store.
+func (dc *DockerClient) ImageExists(image string) bool {
+	images, err := dc.cli.ImageList(dc.ctx, types.ImageListOptions{
+		Filters: filters.NewArgs(
+			filters.KeyValuePair{
+				Key: "reference", Value: image,
+			},
+		),
+	})
+	if err != nil {
+		return false
+	}
+
+	return len(images) == 1
 }
 
 // Stop container instance with `name`.

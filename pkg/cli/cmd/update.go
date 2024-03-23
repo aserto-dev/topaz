@@ -31,7 +31,7 @@ func (cmd *UpdateCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	return dc.Pull(
+	return dc.PullImage(
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image
