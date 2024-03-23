@@ -52,7 +52,7 @@ jobs:
           args: --timeout=30m
       -
         name: Test Setup
-        uses: autero1/action-gotestsum@v2.0.0
+        uses: gertd/action-gotestsum@v3.0.0
         with:
           gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
       -
@@ -120,7 +120,7 @@ jobs:
           ssh-add $HOME/.ssh/id_rsa
       -
         name: Wait for tests to succeed
-        uses: fountainhead/action-wait-for-check@v1.1.0
+        uses: fountainhead/action-wait-for-check@v1.2.0
         id: wait-for-tests
         with:
           token: ${{ env.READ_WRITE_TOKEN }}
