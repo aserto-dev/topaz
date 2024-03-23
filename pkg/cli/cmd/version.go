@@ -36,12 +36,20 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
+	image := cc.Container(
+		cmd.ContainerRegistry, // registry
+		cmd.ContainerImage,    // image
+		cmd.ContainerTag,      // tag
+	)
+
+	if !dc.ImageExists(image) {
+		fmt.Fprintf(c.UI.Output(), "!!! image %s does not exist locally\n", image)
+		fmt.Fprint(c.UI.Output(), "!!! run `topaz install` to download\n", image)
+		return nil
+	}
+
 	if err := dc.Run(
-		dockerx.WithContainerImage(cc.Container(
-			cmd.ContainerRegistry, // registry
-			cmd.ContainerImage,    // image
-			cmd.ContainerTag,      // tag
-		)),
+		dockerx.WithContainerImage(image),
 		dockerx.WithEntrypoint([]string{"/app/topazd", "version"}),
 		dockerx.WithContainerPlatform("linux", strings.TrimPrefix(cmd.ContainerPlatform, "linux/")),
 		dockerx.WithContainerName("topazd-version"),
