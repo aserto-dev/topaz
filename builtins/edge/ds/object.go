@@ -2,7 +2,9 @@ package ds
 
 import (
 	"bytes"
+	"encoding/json"
 
+	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/convert"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -17,6 +19,12 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 )
+
+type objResult struct {
+	ID        string           `json:"id"`
+	Type      string           `json:"type"`
+	Relations []*dsc3.Relation `json:"relations,omitempty"`
+}
 
 // RegisterObject - ds.object
 //
@@ -100,22 +108,23 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			buf := new(bytes.Buffer)
-			var result proto.Message
 
-			if resp.Result != nil {
-				switch {
-				case outputV2:
-					result = convert.ObjectToV2(resp.Result)
-				case args.WithRelations:
-					resp.Page = nil
-					result = resp
-				default:
-					result = resp.Result
+			switch {
+			case outputV2:
+				v2 := convert.ObjectToV2(resp.Result)
+				if err := ProtoToBuf(buf, v2); err != nil {
+					return nil, err
 				}
-			}
+			default:
+				v3 := &objResult{
+					ID:        resp.Result.Id,
+					Type:      resp.Result.Type,
+					Relations: resp.Relations,
+				}
 
-			if err := ProtoToBuf(buf, result); err != nil {
-				return nil, err
+				if err := json.NewEncoder(buf).Encode(v3); err != nil {
+					return nil, err
+				}
 			}
 
 			v, err := ast.ValueFromReader(buf)
