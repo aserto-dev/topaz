@@ -18,6 +18,7 @@ import (
 	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decision_log"
 	"github.com/aserto-dev/topaz/plugins/edge"
 	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/open-policy-agent/opa/ast"
 	"github.com/rs/zerolog"
 )
 
@@ -33,9 +34,10 @@ func NewRuntimeResolver(
 	cfg *config.Config,
 	ctrlf *controller.Factory,
 	decisionLogger decisionlog.DecisionLogger,
-	directoryResolver resolvers.DirectoryResolver) (resolvers.RuntimeResolver, func(), error) {
+	directoryResolver resolvers.DirectoryResolver,
+	regoVersion ast.RegoVersion) (resolvers.RuntimeResolver, func(), error) {
 
-	sidecarRuntime, cleanupRuntime, err := runtime.NewRuntime(ctx, logger, &cfg.OPA,
+	runtimeOptions := []runtime.Option{
 		// directory get functions
 		runtime.WithBuiltin1(ds.RegisterIdentity(logger, "ds.identity", directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterUser(logger, "ds.user", directoryResolver)),
@@ -52,6 +54,11 @@ func NewRuntimeResolver(
 		// plugins
 		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),
 		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
+		runtime.WithRegoVersion(regoVersion),
+	}
+
+	sidecarRuntime, cleanupRuntime, err := runtime.NewRuntime(ctx, logger, &cfg.OPA,
+		runtimeOptions...,
 	)
 	if err != nil {
 		return nil, cleanupRuntime, err

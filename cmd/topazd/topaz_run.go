@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/aserto-dev/aserto-management/controller"
@@ -8,6 +9,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/open-policy-agent/opa/ast"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +18,7 @@ var (
 	flagRunBundleFiles       []string
 	flagRunWatchLocalBundles bool
 	flagRunIgnorePaths       []string
+	flagRegoVersion          string
 )
 
 var cmdRun = &cobra.Command{
@@ -39,6 +42,14 @@ var cmdRun = &cobra.Command{
 				cfg.OPA.LocalBundles.Watch = true
 			}
 		})
+
+		regoVersion := ast.RegoV0
+		if flagRegoVersion != "default" && flagRegoVersion != "rego.v1" {
+			return fmt.Errorf("unknown rego version flag %s - allowed values: default or rego.v1", flagRegoVersion)
+		} else if flagRegoVersion == "rego.v1" {
+			regoVersion = ast.RegoV1
+		}
+
 		defer func() {
 			if cleanup != nil {
 				topazApp.Manager.StopServers(topazApp.Context)
@@ -61,7 +72,7 @@ var cmdRun = &cobra.Command{
 
 			controllerFactory := controller.NewFactory(topazApp.Logger, topazApp.Configuration.ControllerConfig, client.NewDialOptionsProvider())
 
-			runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(topazApp.Context, topazApp.Logger, topazApp.Configuration, controllerFactory, decisionlog, directory)
+			runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(topazApp.Context, topazApp.Logger, topazApp.Configuration, controllerFactory, decisionlog, directory, regoVersion)
 			if err != nil {
 				return err
 			}
@@ -101,6 +112,11 @@ func init() {
 		&flagRunIgnorePaths,
 		"ignore", "", []string{},
 		"set file and directory names to ignore during loading local bundles (e.g., '.*' excludes hidden files)")
+	cmdRun.Flags().StringVarP(
+		&flagRegoVersion,
+		"rego-version", "v", "default",
+		"rego version")
+
 	rootCmd.AddCommand(cmdRun)
 	cmdRun.MarkFlagRequired("config-file")
 }
