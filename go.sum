@@ -425,6 +425,8 @@ github.com/aserto-dev/azm v0.1.4-0.20240322202320-adb1321e1ad0 h1:2P33tpTpgczDt1
 github.com/aserto-dev/azm v0.1.4-0.20240322202320-adb1321e1ad0/go.mod h1:bx9BXRPGGolRag7TBuHyTUhtx/YhjohYlGzwMb6MpSI=
 github.com/aserto-dev/azm v0.1.4 h1:nqCO6bwbD5K4EwRA9kl2MHpPo3W7yiiU/e2TXkBDqAY=
 github.com/aserto-dev/azm v0.1.4/go.mod h1:bx9BXRPGGolRag7TBuHyTUhtx/YhjohYlGzwMb6MpSI=
+github.com/aserto-dev/azm v0.1.5 h1:x2DdiugjeA6od0KmW4yesDoc6D+7XNTMEafqPrYFItM=
+github.com/aserto-dev/azm v0.1.5/go.mod h1:bx9BXRPGGolRag7TBuHyTUhtx/YhjohYlGzwMb6MpSI=
 github.com/aserto-dev/certs v0.0.5 h1:URZEN3DMUIqob3pf78NtTpe7sYPrR2oJYV5MbJ91YKA=
 github.com/aserto-dev/certs v0.0.5/go.mod h1:BGRgkJ4GB7XoETzDtnMxQySk5IVpJIa18aWuylvAsac=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
@@ -445,6 +447,8 @@ github.com/aserto-dev/go-edge-ds v0.31.1-0.20240322204411-09cc8a6c9b8f h1:BJVY2B
 github.com/aserto-dev/go-edge-ds v0.31.1-0.20240322204411-09cc8a6c9b8f/go.mod h1:fw7Nl3UEpI2jR/gtNFbRIRFTI19fIJv2hYhNFFphGoE=
 github.com/aserto-dev/go-edge-ds v0.31.1 h1:hnioGCtVdMoWL6J0sPOYCG4bWtOyebs7OFslXqb7HlI=
 github.com/aserto-dev/go-edge-ds v0.31.1/go.mod h1:PRGcVSC+tLoYhgC7Dlz/ioRgJAFUvW6Zk5FzrSJvelI=
+github.com/aserto-dev/go-edge-ds v0.31.2 h1:Z/43dI4P2NEoDgn1swGuGXFf2aeRwURbN4M94Ln7mpE=
+github.com/aserto-dev/go-edge-ds v0.31.2/go.mod h1:dYh5JbyK2e2po95Wh6ROAUN2cxR4l2yt3f6+K+bc0gs=
 github.com/aserto-dev/go-grpc v0.8.63 h1:/8t5JSWb7nR1uF3SUuxZxt/mvhz+9mI5juZLP06wElU=
 github.com/aserto-dev/go-grpc v0.8.63/go.mod h1:ZAlsa2ooMcXuEWhUvAsrANm6lpMHFKJsIEhvpqydn+Y=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
