@@ -103,9 +103,14 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			var result proto.Message
 
 			if resp.Result != nil {
-				result = resp.Result
-				if outputV2 {
+				switch {
+				case outputV2:
 					result = convert.ObjectToV2(resp.Result)
+				case args.WithRelations:
+					resp.Page = nil
+					result = resp
+				default:
+					result = resp.Result
 				}
 			}
 
