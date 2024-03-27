@@ -21,8 +21,7 @@ import (
 )
 
 type objResult struct {
-	ID        string           `json:"id"`
-	Type      string           `json:"type"`
+	*dsc3.Object
 	Relations []*dsc3.Relation `json:"relations,omitempty"`
 }
 
@@ -116,9 +115,8 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 					return nil, err
 				}
 			default:
-				v3 := &objResult{
-					ID:        resp.Result.Id,
-					Type:      resp.Result.Type,
+				v3 := objResult{
+					Object:    resp.Result,
 					Relations: resp.Relations,
 				}
 
