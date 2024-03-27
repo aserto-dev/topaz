@@ -21,15 +21,6 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type objResult struct {
-	*dsc3.Object
-	Relations []*dsc3.Relation `json:"relations,omitempty"`
-}
-
-func (i objResult) MarshalJSON() ([]byte, error) {
-	return []byte{}, nil
-}
-
 // RegisterObject - ds.object
 //
 // v3 (latest) request format:
@@ -111,29 +102,8 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			buf := new(bytes.Buffer)
-
-			switch {
-			case outputV2:
-				v2 := convert.ObjectToV2(resp.Result)
-				if err := ProtoToBuf(buf, v2); err != nil {
-					return nil, err
-				}
-			default:
-				if err := ProtoToBuf(buf, resp); err != nil {
-					return nil, err
-				}
-
-				pbs := structpb.Struct{}
-				if err := protojson.Unmarshal(buf.Bytes(), &pbs); err != nil {
-					return nil, err
-				}
-
-				result := pbs.Fields["result"].AsInterface().(map[string]interface{})
-				relations := pbs.Fields["relations"].AsInterface()
-				result["relations"] = relations
-
-				v, err := ast.InterfaceToValue(result)
+			if outputV2 {
+				v, err := v2Value(resp.Result)
 				if err != nil {
 					return nil, err
 				}
@@ -141,11 +111,36 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return ast.NewTerm(v), nil
 			}
 
-			v, err := ast.ValueFromReader(buf)
+			buf := new(bytes.Buffer)
+			if err := ProtoToBuf(buf, resp); err != nil {
+				return nil, err
+			}
+
+			pbs := structpb.Struct{}
+			if err := protojson.Unmarshal(buf.Bytes(), &pbs); err != nil {
+				return nil, err
+			}
+
+			result := pbs.Fields["result"].AsInterface().(map[string]interface{})
+			relations := pbs.Fields["relations"].AsInterface()
+			result["relations"] = relations
+
+			v, err := ast.InterfaceToValue(result)
 			if err != nil {
 				return nil, err
 			}
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+func v2Value(obj *dsc3.Object) (ast.Value, error) {
+	buf := new(bytes.Buffer)
+
+	v2 := convert.ObjectToV2(obj)
+	if err := ProtoToBuf(buf, v2); err != nil {
+		return nil, err
+	}
+
+	return ast.ValueFromReader(buf)
 }
