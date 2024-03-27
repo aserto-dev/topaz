@@ -2,12 +2,12 @@ package ds
 
 import (
 	"bytes"
-	"encoding/json"
 
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/convert"
 	"github.com/aserto-dev/topaz/resolvers"
+	"google.golang.org/protobuf/encoding/protojson"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -18,11 +18,16 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type objResult struct {
 	*dsc3.Object
 	Relations []*dsc3.Relation `json:"relations,omitempty"`
+}
+
+func (i objResult) MarshalJSON() ([]byte, error) {
+	return []byte{}, nil
 }
 
 // RegisterObject - ds.object
@@ -115,14 +120,25 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 					return nil, err
 				}
 			default:
-				v3 := objResult{
-					Object:    resp.Result,
-					Relations: resp.Relations,
-				}
-
-				if err := json.NewEncoder(buf).Encode(v3); err != nil {
+				if err := ProtoToBuf(buf, resp); err != nil {
 					return nil, err
 				}
+
+				pbs := structpb.Struct{}
+				if err := protojson.Unmarshal(buf.Bytes(), &pbs); err != nil {
+					return nil, err
+				}
+
+				result := pbs.Fields["result"].AsInterface().(map[string]interface{})
+				relations := pbs.Fields["relations"].AsInterface()
+				result["relations"] = relations
+
+				v, err := ast.InterfaceToValue(result)
+				if err != nil {
+					return nil, err
+				}
+
+				return ast.NewTerm(v), nil
 			}
 
 			v, err := ast.ValueFromReader(buf)
