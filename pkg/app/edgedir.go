@@ -21,6 +21,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/rapidoc"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/samber/lo"
 	"google.golang.org/grpc"
 )
 
@@ -55,28 +56,28 @@ func (e *EdgeDir) AvailableServices() []string {
 
 func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
-		if contains(services, modelService) {
+		if lo.Contains(services, modelService) {
 			dsm3.RegisterModelServer(server, e.dir.Model3())
 		}
-		if contains(services, readerService) {
+		if lo.Contains(services, readerService) {
 			if e.dir.Config().EnableV2 {
 				dsr2.RegisterReaderServer(server, e.dir.Reader2())
 			}
 			dsr3.RegisterReaderServer(server, e.dir.Reader3())
 		}
-		if contains(services, writerService) {
+		if lo.Contains(services, writerService) {
 			if e.dir.Config().EnableV2 {
 				dsw2.RegisterWriterServer(server, e.dir.Writer2())
 			}
 			dsw3.RegisterWriterServer(server, e.dir.Writer3())
 		}
-		if contains(services, importerService) {
+		if lo.Contains(services, importerService) {
 			if e.dir.Config().EnableV2 {
 				dsi2.RegisterImporterServer(server, e.dir.Importer2())
 			}
 			dsi3.RegisterImporterServer(server, e.dir.Importer3())
 		}
-		if contains(services, exporterService) {
+		if lo.Contains(services, exporterService) {
 			if e.dir.Config().EnableV2 {
 				dse2.RegisterExporterServer(server, e.dir.Exporter2())
 			}
@@ -87,7 +88,7 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 
 func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-		if contains(services, modelService) {
+		if lo.Contains(services, modelService) {
 			err := dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
@@ -96,25 +97,25 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 				return err
 			}
 		}
-		if contains(services, readerService) {
+		if lo.Contains(services, readerService) {
 			err := dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
 			}
 		}
-		if contains(services, writerService) {
+		if lo.Contains(services, writerService) {
 			err := dsw3.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
 			}
 		}
-		if contains(services, importerService) {
+		if lo.Contains(services, importerService) {
 			err := dsi3.RegisterImporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
 			}
 		}
-		if contains(services, exporterService) {
+		if lo.Contains(services, exporterService) {
 			err := dse3.RegisterExporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err

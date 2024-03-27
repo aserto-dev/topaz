@@ -17,8 +17,8 @@ import (
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	"github.com/aserto-dev/go-edge-ds/pkg/ds"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/aserto-dev/go-aserto/client"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
@@ -605,7 +605,7 @@ func getObjectKey(obj *dsc3.Object) []byte {
 func getRelationKey(rel *dsc3.Relation) []byte {
 	return []byte(fmt.Sprintf("%s:%s#%s@%s:%s%s",
 		rel.ObjectType, rel.ObjectId, rel.Relation, rel.SubjectType, rel.SubjectId,
-		ds.Iff(rel.SubjectRelation == "", "", fmt.Sprintf("#%s", rel.SubjectRelation))))
+		lo.Ternary(rel.SubjectRelation == "", "", fmt.Sprintf("#%s", rel.SubjectRelation))))
 }
 
 func fullSync(wm *watermark) bool {
