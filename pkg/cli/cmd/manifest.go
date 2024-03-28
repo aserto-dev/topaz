@@ -1,11 +1,8 @@
 package cmd
 
 import (
-	"bufio"
-	"fmt"
 	"io"
 	"os"
-	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
@@ -38,7 +35,7 @@ type DeleteManifestCmd struct {
 
 func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
-		return errors.Wrap(ErrNotServing, cmd.Host)
+		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
@@ -71,7 +68,7 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 
 func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
-		return errors.Wrap(ErrNotServing, cmd.Host)
+		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
@@ -93,7 +90,7 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
-		return errors.Wrap(ErrNotServing, cmd.Host)
+		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
 	if err != nil {
@@ -101,35 +98,9 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	c.UI.Exclamation().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
-	if cmd.Force || promptYesNo("Do you want to continue?", false) {
+	if cmd.Force || PromptYesNo("Do you want to continue?", false) {
 		color.Green(">>> delete manifest")
 		return dirClient.V3.DeleteManifest(c.Context)
 	}
 	return nil
-}
-
-func promptYesNo(label string, def bool) bool {
-	choices := "Y/n"
-	if !def {
-		choices = "y/N"
-	}
-
-	r := bufio.NewReader(os.Stdin)
-	var s string
-
-	for {
-		fmt.Fprintf(os.Stderr, "%s (%s) ", label, choices)
-		s, _ = r.ReadString('\n')
-		s = strings.TrimSpace(s)
-		if s == "" {
-			return def
-		}
-		s = strings.ToLower(s)
-		if s == "y" || s == "yes" {
-			return true
-		}
-		if s == "n" || s == "no" {
-			return false
-		}
-	}
 }

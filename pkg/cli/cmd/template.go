@@ -16,6 +16,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/rs/zerolog"
 )
 
@@ -77,9 +78,24 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 
 	if !cmd.Force {
 		c.UI.Exclamation().Msg("Installing this template will completely reset your topaz configuration.")
-		if !promptYesNo("Do you want to continue?", false) {
+		if !PromptYesNo("Do you want to continue?", false) {
 			return nil
 		}
+	}
+
+	// reset defaults on template install
+	c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), fmt.Sprintf("%s.yaml", tmpl.Name))
+	c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
+
+	cliConfig := filepath.Join(cc.GetTopazDir(), CLIConfigurationFile)
+
+	kongConfigBytes, err := json.Marshal(c.Config)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(cliConfig, kongConfigBytes, 0666) // nolint
+	if err != nil {
+		return err
 	}
 
 	return cmd.installTemplate(c, tmpl)
@@ -110,10 +126,18 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 
 	// 4 - wait for health endpoint to be in serving state
-	cfg := config.CurrentConfig()
+	cfg := config.GetConfig(c.Config.TopazConfigFile)
+	if cfg.HasTopazDir {
+		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+	}
 	addr, _ := cfg.HealthService()
 	if !cc.ServiceHealthStatus(addr, "") {
 		return fmt.Errorf("gRPC endpoint not SERVING")
+	}
+	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
+		return fmt.Errorf("model service not configured")
+	} else {
+		cmd.Config.Host = model.GRPC.ListenAddress
 	}
 
 	// 5-7 - reset directory, apply (manifest, IDP and domain data) template.
@@ -157,7 +181,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	// 2 - topaz configure - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
 		command := ConfigureCmd{
-			PolicyName:        tmpl.Assets.Policy.Name,
+			Name:              tmpl.Assets.Policy.Name,
 			Resource:          tmpl.Assets.Policy.Resource,
 			Force:             true,
 			EnableDirectoryV2: false,
@@ -166,10 +190,12 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 			return err
 		}
 	}
+
 	// 3 - topaz start - start instance using new configuration
 	{
 		command := &StartCmd{
 			StartRunCmd: StartRunCmd{
+				Name:              tmpl.Name,
 				ContainerRegistry: cmd.ContainerRegistry,
 				ContainerImage:    cmd.ContainerImage,
 				ContainerTag:      cmd.ContainerTag,
@@ -183,6 +209,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -314,7 +341,7 @@ func (i *tmplInstaller) importData() error {
 	}
 
 	for dir := range dataDirs {
-		command := ImportCmd{
+		command := directory.ImportCmd{
 			Directory: dir,
 			Config:    *i.cfg,
 		}

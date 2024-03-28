@@ -63,7 +63,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	azc, err := clients.NewAuthorizerClient(c, &clients.AuthorizerConfig{
+	azc, err := clients.NewAuthorizerClient(c, &clients.Config{
 		Host:     lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerSvc) != "", os.Getenv(clients.EnvTopazAuthorizerSvc), ""),
 		APIKey:   lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerKey) != "", os.Getenv(clients.EnvTopazAuthorizerKey), ""),
 		Insecure: cmd.Config.Insecure,
