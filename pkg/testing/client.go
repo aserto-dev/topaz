@@ -89,7 +89,7 @@ func (h *EngineHarness) CreateGRPCClient() authz2.AuthorizerClient {
 
 	opts = append(opts, grpc.WithTransportCredentials(credentials.NewTLS(&tlsConf)))
 
-	conn, err := grpc.Dial("127.0.0.1:8282", opts...)
+	conn, err := grpc.NewClient("127.0.0.1:8282", opts...)
 	if err != nil {
 		h.t.Fatal(err)
 	}

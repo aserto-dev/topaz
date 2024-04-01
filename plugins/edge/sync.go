@@ -17,8 +17,8 @@ import (
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	"github.com/aserto-dev/go-edge-ds/pkg/ds"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/aserto-dev/go-aserto/client"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
@@ -40,6 +40,7 @@ const (
 	syncSubscriber string = "subscriber"
 	status         string = "status"
 	started        string = "started"
+	stage          string = "stage"
 	finished       string = "finished"
 	channelSize    int    = 10000
 	localHost      string = "localhost:9292"
@@ -62,7 +63,6 @@ type Sync struct {
 	exportChan  chan *dse3.ExportResponse
 	errChan     chan error
 	filter      *cuckoo.Filter
-	counts      *Counter
 }
 
 type Counter struct {
@@ -73,11 +73,6 @@ type Counter struct {
 	Manifests int32
 	Objects   int32
 	Relations int32
-}
-
-type Result struct {
-	Counts *Counter
-	Err    error
 }
 
 func NewSyncMgr(ctx context.Context, c *Config, topazConfig *topaz.Config, logger *zerolog.Logger) *Sync {
@@ -106,10 +101,8 @@ func (s *Sync) Run(fs bool) {
 		}
 	}()
 
-	s.counts = &Counter{}
-
 	if err := s.syncManifest(); err != nil {
-		s.log.Error().Str("sync-manifest", "").Err(err).Msg(syncRun)
+		s.log.Error().Str(stage, "sync_manifest").Err(err).Msg(syncRun)
 	}
 
 	g := new(errgroup.Group)
@@ -119,21 +112,28 @@ func (s *Sync) Run(fs bool) {
 	s.filter = cuckoo.NewFilter(wm.getFilterSize())
 
 	g.Go(func() error {
-		return s.subscriber(wm)
+		err := s.subscriber(wm)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "subscriber").Msg(syncRun)
+		}
+		return err
 	})
 
 	g.Go(func() error {
-		return s.producer(wm)
+		err := s.producer(wm)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "producer").Msg(syncRun)
+		}
+		return err
 	})
 
-	err := g.Wait()
-	if err != nil {
-		s.log.Error().Err(err).Msg("sync run failed")
+	if err := g.Wait(); err != nil {
+		s.log.Debug().Err(err).Msg(syncRun)
 	}
 
 	if fs {
 		if err := s.diff(); err != nil {
-			s.log.Error().Err(err).Msg("failed to diff")
+			s.log.Error().Err(err).Str(stage, "diff").Msg(syncRun)
 		}
 	}
 
@@ -142,6 +142,8 @@ func (s *Sync) Run(fs bool) {
 }
 
 func (s *Sync) producer(wm *watermark) error {
+	s.log.Info().Str(status, started).Msg(syncProducer)
+
 	defer func() {
 		s.log.Debug().Msg("producer closed export channel")
 		close(s.exportChan)
@@ -160,7 +162,6 @@ func (s *Sync) producer(wm *watermark) error {
 	defer dsc.conn.Close()
 
 	counts := Counter{}
-	s.log.Info().Str(status, started).Msg(syncProducer)
 
 	stream, err := dsc.Exporter.Export(ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
@@ -207,27 +208,63 @@ func (s *Sync) producer(wm *watermark) error {
 }
 
 func (s *Sync) subscriber(wm *watermark) error {
-	ctx, cancel := context.WithCancel(s.ctx)
-	defer cancel()
+	s.log.Info().Str(status, started).Msg(syncSubscriber)
 
-	fs := fullSync(wm)
-	ts := &timestamppb.Timestamp{Seconds: wm.Timestamp.Seconds, Nanos: wm.Timestamp.Nanos}
-
-	dsc, err := s.getLocalDirectoryClient(ctx)
+	dsc, err := s.getLocalDirectoryClient(s.ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to get directory connection")
 		return err
 	}
 	defer dsc.conn.Close()
 
-	counts := Counter{}
-	s.log.Info().Str(status, started).Msg(syncSubscriber)
-
-	writer, err := dsc.Importer.Import(ctx)
+	writer, err := dsc.Importer.Import(s.ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to setup import stream")
 		return err
 	}
+	ctx := writer.Context()
+
+	g := new(errgroup.Group)
+
+	counts := Counter{}
+
+	g.Go(func() error {
+		err := s.subscriberRecvHandler(writer)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "recv_handler").Msg(syncSubscriber)
+		}
+		return err
+	})
+
+	g.Go(func() error {
+		err := s.subscriberSendHandler(writer, wm, &counts)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "send_handler").Msg(syncSubscriber)
+		}
+		return err
+	})
+
+	g.Go(func() error {
+		err := s.subscriberDoneHandler(ctx)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "done_handler").Msg(syncSubscriber)
+		}
+		return err
+	})
+
+	if err := g.Wait(); err != nil {
+		s.log.Debug().Err(err).Msg(syncSubscriber)
+	}
+
+	s.log.Info().Str(status, finished).Int32("received", counts.Received).Int32("objects", counts.Objects).
+		Int32("relations", counts.Relations).Int32("errors", counts.Errors).Msg(syncSubscriber)
+
+	return nil
+}
+
+func (s *Sync) subscriberSendHandler(writer dsi3.Importer_ImportClient, wm *watermark, counts *Counter) error {
+	fs := fullSync(wm)
+	ts := &timestamppb.Timestamp{Seconds: wm.Timestamp.Seconds, Nanos: wm.Timestamp.Nanos}
 
 	for {
 		msg, ok := <-s.exportChan
@@ -288,9 +325,30 @@ func (s *Sync) subscriber(wm *watermark) error {
 		s.log.Error().Err(err).Msg("failed to save watermark")
 	}
 
-	s.log.Info().Str(status, finished).Int32("received", counts.Received).Int32("objects", counts.Objects).
-		Int32("relations", counts.Relations).Int32("errors", counts.Errors).Msg(syncSubscriber)
+	return nil
+}
 
+func (s *Sync) subscriberRecvHandler(writer dsi3.Importer_ImportClient) error {
+	for {
+		resp, err := writer.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			s.log.Error().Err(err).Msg("subscriber-recv")
+			return err
+		}
+		s.log.Trace().Any("recv", resp).Msg("subscriber-recv")
+	}
+}
+
+func (s *Sync) subscriberDoneHandler(ctx context.Context) error {
+	<-ctx.Done()
+	err := ctx.Err()
+	if err != nil && !errors.Is(err, context.Canceled) {
+		s.log.Trace().Err(err).Msg("subscriber-done")
+		return err
+	}
 	return nil
 }
 
@@ -309,7 +367,7 @@ func (s *Sync) getLocalDirectoryClient(ctx context.Context) (*directoryClient, e
 		}
 	}
 	// if reader api configured separately.
-	if conf, ok := s.topazConfig.Common.APIConfig.Services["writer"]; ok {
+	if conf, ok := s.topazConfig.Common.APIConfig.Services["importer"]; ok {
 		host = conf.GRPC.ListenAddress
 		caCertPath = conf.GRPC.Certs.TLSCACertPath
 	}
@@ -605,7 +663,7 @@ func getObjectKey(obj *dsc3.Object) []byte {
 func getRelationKey(rel *dsc3.Relation) []byte {
 	return []byte(fmt.Sprintf("%s:%s#%s@%s:%s%s",
 		rel.ObjectType, rel.ObjectId, rel.Relation, rel.SubjectType, rel.SubjectId,
-		ds.Iff(rel.SubjectRelation == "", "", fmt.Sprintf("#%s", rel.SubjectRelation))))
+		lo.Ternary(rel.SubjectRelation == "", "", fmt.Sprintf("#%s", rel.SubjectRelation))))
 }
 
 func fullSync(wm *watermark) bool {
@@ -633,6 +691,7 @@ func (s *Sync) diff() error {
 		return err
 	}
 
+	counts := Counter{}
 	objDeleted := 0
 	relDeleted := 0
 
@@ -658,12 +717,12 @@ func (s *Sync) diff() error {
 					OpCode: dsi3.Opcode_OPCODE_DELETE,
 					Msg:    &dsi3.ImportRequest_Object{Object: obj},
 				}); err == nil {
-					atomic.AddInt32(&s.counts.Deletes, 1)
+					atomic.AddInt32(&counts.Deletes, 1)
 					objDeleted++
 				} else {
 					s.log.Error().Err(err).Msgf("failed to delete object %v", obj)
 					s.errChan <- err
-					atomic.AddInt32(&s.counts.Errors, 1)
+					atomic.AddInt32(&counts.Errors, 1)
 				}
 			}
 		}
@@ -690,12 +749,12 @@ func (s *Sync) diff() error {
 					OpCode: dsi3.Opcode_OPCODE_DELETE,
 					Msg:    &dsi3.ImportRequest_Relation{Relation: rel},
 				}); err == nil {
-					atomic.AddInt32(&s.counts.Deletes, 1)
+					atomic.AddInt32(&counts.Deletes, 1)
 					relDeleted++
 				} else {
 					s.log.Error().Err(err).Msgf("failed to delete relation %v", rel)
 					s.errChan <- err
-					atomic.AddInt32(&s.counts.Errors, 1)
+					atomic.AddInt32(&counts.Errors, 1)
 				}
 			}
 		}

@@ -12,6 +12,7 @@ import (
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
 	builder "github.com/aserto-dev/service-host"
+	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
@@ -48,6 +49,7 @@ type ServicesConfig struct {
 type Common struct {
 	Version int           `json:"version"`
 	Logging logger.Config `json:"logging"`
+	Debug   debug.Config  `json:"debug"`
 
 	Command struct {
 		Mode CommandMode
