@@ -18,18 +18,20 @@ const (
 )
 
 type DirectoryCmd struct {
+	Check          CheckCmd          `cmd:"" help:"check"`
+	Search         SearchCmd         `cmd:"" name:"search" help:"search relation graph"`
+	GetObject      GetObjectCmd      `cmd:"" help:"get object"`
+	SetObject      SetObjectCmd      `cmd:"" help:"set object"`
+	DeleteObject   DeleteObjectCmd   `cmd:"" help:"delete object"`
+	ListObjects    ListObjectsCmd    `cmd:"" help:"list objects"`
+	GetRelation    GetRelationCmd    `cmd:"" help:"get relation"`
+	SetRelation    SetRelationCmd    `cmd:"" help:"set relation"`
+	DeleteRelation DeleteRelationCmd `cmd:"" help:"delete relation"`
+	ListRelations  ListRelationsCmd  `cmd:"" help:"list relations"`
 	Import         ImportCmd         `cmd:"" help:"import data into directory"`
 	Export         ExportCmd         `cmd:"" help:"export directory data"`
-	GetObject      GetObjectCmd      `cmd:"" help:"get object" group:"directory"`
-	SetObject      SetObjectCmd      `cmd:"" help:"set object" group:"directory"`
-	DeleteObject   DeleteObjectCmd   `cmd:"" help:"delete object" group:"directory"`
-	ListObjects    ListObjectsCmd    `cmd:"" help:"list objects" group:"directory"`
-	GetRelation    GetRelationCmd    `cmd:"" help:"get relation" group:"directory"`
-	SetRelation    SetRelationCmd    `cmd:"" help:"set relation" group:"directory"`
-	DeleteRelation DeleteRelationCmd `cmd:"" help:"delete relation" group:"directory"`
-	ListRelations  ListRelationsCmd  `cmd:"" help:"list relations" group:"directory"`
-	Check          CheckCmd          `cmd:"" help:"check" group:"directory"`
-	GetGraph       GetGraphCmd       `cmd:"" help:"get relation graph" group:"directory"`
+	Backup         BackupCmd         `cmd:"" help:"backup directory data"`
+	Restore        RestoreCmd        `cmd:"" help:"restore directory data"`
 }
 
 type Message[T any] interface {

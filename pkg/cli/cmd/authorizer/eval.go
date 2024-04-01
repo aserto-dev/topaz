@@ -9,14 +9,14 @@ import (
 	"github.com/pkg/errors"
 )
 
-type CheckDecisionCmd struct {
+type EvalCmd struct {
 	AuthParams     `embed:""`
 	Path           string   `name:"path" required:"" help:"policy package to evaluate"`
 	Decisions      []string `name:"decisions" required:"" help:"policy decisions to return"`
 	clients.Config `envprefix:"TOPAZ_AUTHORIZER_"`
 }
 
-func (cmd *CheckDecisionCmd) Run(c *cc.CommonCtx) error {
+func (cmd *EvalCmd) Run(c *cc.CommonCtx) error {
 	client, err := clients.NewAuthorizerClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get authorizer client")

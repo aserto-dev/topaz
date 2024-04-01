@@ -9,13 +9,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-type GetGraphCmd struct {
+type SearchCmd struct {
 	Request        string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to get graph request or '-' to read from stdin"`
 	Template       bool   `name:"template" help:"prints a get graph request template on stdout"`
 	clients.Config `envprefix:"TOPAZ_DIRECTORY_"`
 }
 
-func (cmd *GetGraphCmd) Run(c *cc.CommonCtx) error {
+func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
 		return printGetGraphRequest(c.UI)
 	}

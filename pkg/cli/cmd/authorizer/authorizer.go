@@ -1,9 +1,9 @@
 package authorizer
 
 type AuthorizerCmd struct {
-	CheckDecision CheckDecisionCmd `cmd:"" help:"evaluate policy decision" group:"authorizer"`
-	DecisionTree  DecisionTreeCmd  `cmd:"" help:"get decision tree" group:"authorizer"`
-	ExecQuery     ExecQueryCmd     `cmd:"" help:"execute query" group:"authorizer"`
-	GetPolicy     GetPolicyCmd     `cmd:"" help:"get policy" group:"authorizer"`
-	ListPolicies  ListPoliciesCmd  `cmd:"" help:"list policies" group:"authorizer"`
+	CheckDecision EvalCmd         `cmd:"" name:"eval" help:"evaluate policy decision"`
+	DecisionTree  DecisionTreeCmd `cmd:"" name:"decisiontree" help:"get decision tree"`
+	ExecQuery     QueryCmd        `cmd:"" name:"query" help:"execute query"`
+	GetPolicy     GetPolicyCmd    `cmd:"" help:"get policy"`
+	ListPolicies  ListPoliciesCmd `cmd:"" help:"list policies"`
 }

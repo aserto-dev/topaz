@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type ExecQueryCmd struct {
+type QueryCmd struct {
 	AuthParams     `embed:""`
 	Statement      string `arg:"stmt" name:"stmt" required:"" help:"query statement"`
 	Path           string `name:"path" help:"policy package to evaluate"`
@@ -17,7 +17,7 @@ type ExecQueryCmd struct {
 	clients.Config `envprefix:"TOPAZ_AUTHORIZER_"`
 }
 
-func (cmd *ExecQueryCmd) Run(c *cc.CommonCtx) error {
+func (cmd *QueryCmd) Run(c *cc.CommonCtx) error {
 	client, err := clients.NewAuthorizerClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get authorizer client")
