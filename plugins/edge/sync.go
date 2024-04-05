@@ -17,8 +17,8 @@ import (
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	"github.com/aserto-dev/go-edge-ds/pkg/ds"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/aserto-dev/go-aserto/client"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
@@ -62,7 +62,6 @@ type Sync struct {
 	exportChan  chan *dse3.ExportResponse
 	errChan     chan error
 	filter      *cuckoo.Filter
-	counts      *Counter
 }
 
 type Counter struct {
@@ -73,11 +72,6 @@ type Counter struct {
 	Manifests int32
 	Objects   int32
 	Relations int32
-}
-
-type Result struct {
-	Counts *Counter
-	Err    error
 }
 
 func NewSyncMgr(ctx context.Context, c *Config, topazConfig *topaz.Config, logger *zerolog.Logger) *Sync {
@@ -106,8 +100,6 @@ func (s *Sync) Run(fs bool) {
 		}
 	}()
 
-	s.counts = &Counter{}
-
 	if err := s.syncManifest(); err != nil {
 		s.log.Error().Str("sync-manifest", "").Err(err).Msg(syncRun)
 	}
@@ -126,8 +118,7 @@ func (s *Sync) Run(fs bool) {
 		return s.producer(wm)
 	})
 
-	err := g.Wait()
-	if err != nil {
+	if err := g.Wait(); err != nil {
 		s.log.Error().Err(err).Msg("sync run failed")
 	}
 
@@ -142,6 +133,8 @@ func (s *Sync) Run(fs bool) {
 }
 
 func (s *Sync) producer(wm *watermark) error {
+	s.log.Info().Str(status, started).Msg(syncProducer)
+
 	defer func() {
 		s.log.Debug().Msg("producer closed export channel")
 		close(s.exportChan)
@@ -160,7 +153,6 @@ func (s *Sync) producer(wm *watermark) error {
 	defer dsc.conn.Close()
 
 	counts := Counter{}
-	s.log.Info().Str(status, started).Msg(syncProducer)
 
 	stream, err := dsc.Exporter.Export(ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
@@ -207,27 +199,49 @@ func (s *Sync) producer(wm *watermark) error {
 }
 
 func (s *Sync) subscriber(wm *watermark) error {
-	ctx, cancel := context.WithCancel(s.ctx)
-	defer cancel()
+	s.log.Info().Str(status, started).Msg(syncSubscriber)
 
-	fs := fullSync(wm)
-	ts := &timestamppb.Timestamp{Seconds: wm.Timestamp.Seconds, Nanos: wm.Timestamp.Nanos}
-
-	dsc, err := s.getLocalDirectoryClient(ctx)
+	dsc, err := s.getLocalDirectoryClient(s.ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to get directory connection")
 		return err
 	}
 	defer dsc.conn.Close()
 
-	counts := Counter{}
-	s.log.Info().Str(status, started).Msg(syncSubscriber)
-
-	writer, err := dsc.Importer.Import(ctx)
+	writer, err := dsc.Importer.Import(s.ctx)
 	if err != nil {
 		s.log.Error().Err(err).Msgf("subscriber - failed to setup import stream")
 		return err
 	}
+	ctx := writer.Context()
+
+	g := new(errgroup.Group)
+
+	counts := Counter{}
+
+	g.Go(func() error {
+		return s.subscriberRecvHandler(writer)
+	})
+
+	g.Go(func() error {
+		return s.subscriberSendHandler(writer, wm, &counts)
+	})
+
+	g.Go(func() error {
+		return s.subscriberDoneHandler(ctx)
+	})
+
+	_ = g.Wait()
+
+	s.log.Info().Str(status, finished).Int32("received", counts.Received).Int32("objects", counts.Objects).
+		Int32("relations", counts.Relations).Int32("errors", counts.Errors).Msg(syncSubscriber)
+
+	return nil
+}
+
+func (s *Sync) subscriberSendHandler(writer dsi3.Importer_ImportClient, wm *watermark, counts *Counter) error {
+	fs := fullSync(wm)
+	ts := &timestamppb.Timestamp{Seconds: wm.Timestamp.Seconds, Nanos: wm.Timestamp.Nanos}
 
 	for {
 		msg, ok := <-s.exportChan
@@ -288,10 +302,26 @@ func (s *Sync) subscriber(wm *watermark) error {
 		s.log.Error().Err(err).Msg("failed to save watermark")
 	}
 
-	s.log.Info().Str(status, finished).Int32("received", counts.Received).Int32("objects", counts.Objects).
-		Int32("relations", counts.Relations).Int32("errors", counts.Errors).Msg(syncSubscriber)
-
 	return nil
+}
+
+func (s *Sync) subscriberRecvHandler(writer dsi3.Importer_ImportClient) error {
+	for {
+		resp, err := writer.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			s.log.Error().Err(err).Msg("subscriber-recv")
+			return err
+		}
+		s.log.Trace().Any("recv", resp).Msg("subscriber-recv")
+	}
+}
+
+func (s *Sync) subscriberDoneHandler(ctx context.Context) error {
+	<-ctx.Done()
+	return ctx.Err()
 }
 
 func (s *Sync) getLocalDirectoryClient(ctx context.Context) (*directoryClient, error) {
@@ -300,35 +330,35 @@ func (s *Sync) getLocalDirectoryClient(ctx context.Context) (*directoryClient, e
 		host = s.topazConfig.DirectoryResolver.Address
 	}
 
-	caCertPath := ""
-	// when reader registered to same port as authorizer.
-	if conf, ok := s.topazConfig.Common.APIConfig.Services["authorizer"]; ok {
-		if conf.GRPC.ListenAddress == s.topazConfig.DirectoryResolver.Address {
-			caCertPath = conf.GRPC.Certs.TLSCACertPath
-			host = conf.GRPC.ListenAddress
-		}
-	}
-	// if reader api configured separately.
-	if conf, ok := s.topazConfig.Common.APIConfig.Services["writer"]; ok {
-		host = conf.GRPC.ListenAddress
-		caCertPath = conf.GRPC.Certs.TLSCACertPath
-	}
+	// caCertPath := ""
+	// // when reader registered to same port as authorizer.
+	// if conf, ok := s.topazConfig.Common.APIConfig.Services["authorizer"]; ok {
+	// 	if conf.GRPC.ListenAddress == s.topazConfig.DirectoryResolver.Address {
+	// 		caCertPath = conf.GRPC.Certs.TLSCACertPath
+	// 		host = conf.GRPC.ListenAddress
+	// 	}
+	// }
+	// // if reader api configured separately.
+	// if conf, ok := s.topazConfig.Common.APIConfig.Services["writer"]; ok {
+	// 	host = conf.GRPC.ListenAddress
+	// 	caCertPath = conf.GRPC.Certs.TLSCACertPath
+	// }
 
 	opts := []client.ConnectionOption{
 		client.WithAddr(host),
 		client.WithInsecure(s.topazConfig.DirectoryResolver.Insecure),
-		client.WithCACertPath(caCertPath),
+		// client.WithCACertPath(caCertPath),
 	}
 
-	if s.topazConfig.DirectoryResolver.APIKey != "" {
-		opts = append(opts, client.WithAPIKeyAuth(s.topazConfig.DirectoryResolver.APIKey))
-	}
+	// if s.topazConfig.DirectoryResolver.APIKey != "" {
+	// 	opts = append(opts, client.WithAPIKeyAuth(s.topazConfig.DirectoryResolver.APIKey))
+	// }
 
-	opts = append(opts, client.WithSessionID(s.cfg.SessionID))
+	// opts = append(opts, client.WithSessionID(s.cfg.SessionID))
 
-	if s.topazConfig.DirectoryResolver.TenantID != "" {
-		opts = append(opts, client.WithTenantID(s.topazConfig.DirectoryResolver.TenantID))
-	}
+	// if s.topazConfig.DirectoryResolver.TenantID != "" {
+	// 	opts = append(opts, client.WithTenantID(s.topazConfig.DirectoryResolver.TenantID))
+	// }
 
 	conn, err := client.NewConnection(ctx, opts...)
 	if err != nil {
@@ -605,7 +635,7 @@ func getObjectKey(obj *dsc3.Object) []byte {
 func getRelationKey(rel *dsc3.Relation) []byte {
 	return []byte(fmt.Sprintf("%s:%s#%s@%s:%s%s",
 		rel.ObjectType, rel.ObjectId, rel.Relation, rel.SubjectType, rel.SubjectId,
-		ds.Iff(rel.SubjectRelation == "", "", fmt.Sprintf("#%s", rel.SubjectRelation))))
+		lo.Ternary(rel.SubjectRelation == "", "", fmt.Sprintf("#%s", rel.SubjectRelation))))
 }
 
 func fullSync(wm *watermark) bool {
@@ -633,6 +663,7 @@ func (s *Sync) diff() error {
 		return err
 	}
 
+	counts := Counter{}
 	objDeleted := 0
 	relDeleted := 0
 
@@ -658,12 +689,12 @@ func (s *Sync) diff() error {
 					OpCode: dsi3.Opcode_OPCODE_DELETE,
 					Msg:    &dsi3.ImportRequest_Object{Object: obj},
 				}); err == nil {
-					atomic.AddInt32(&s.counts.Deletes, 1)
+					atomic.AddInt32(&counts.Deletes, 1)
 					objDeleted++
 				} else {
 					s.log.Error().Err(err).Msgf("failed to delete object %v", obj)
 					s.errChan <- err
-					atomic.AddInt32(&s.counts.Errors, 1)
+					atomic.AddInt32(&counts.Errors, 1)
 				}
 			}
 		}
@@ -690,12 +721,12 @@ func (s *Sync) diff() error {
 					OpCode: dsi3.Opcode_OPCODE_DELETE,
 					Msg:    &dsi3.ImportRequest_Relation{Relation: rel},
 				}); err == nil {
-					atomic.AddInt32(&s.counts.Deletes, 1)
+					atomic.AddInt32(&counts.Deletes, 1)
 					relDeleted++
 				} else {
 					s.log.Error().Err(err).Msgf("failed to delete relation %v", rel)
 					s.errChan <- err
-					atomic.AddInt32(&s.counts.Errors, 1)
+					atomic.AddInt32(&counts.Errors, 1)
 				}
 			}
 		}

@@ -11,9 +11,9 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
@@ -55,8 +55,8 @@ func New() (*DockerClient, error) {
 }
 
 // PullImage container image.
-func (dc *DockerClient) PullImage(image, platform string) error {
-	out, err := dc.cli.ImagePull(dc.ctx, image, types.ImagePullOptions{
+func (dc *DockerClient) PullImage(img, platform string) error {
+	out, err := dc.cli.ImagePull(dc.ctx, img, image.PullOptions{
 		Platform: platform,
 	})
 	if err != nil {
@@ -70,11 +70,11 @@ func (dc *DockerClient) PullImage(image, platform string) error {
 }
 
 // Remove container image as image-name:tag.
-func (dc *DockerClient) RemoveImage(image string) error {
-	images, err := dc.cli.ImageList(dc.ctx, types.ImageListOptions{
+func (dc *DockerClient) RemoveImage(img string) error {
+	images, err := dc.cli.ImageList(dc.ctx, image.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "reference", Value: image,
+				Key: "reference", Value: img,
 			},
 		),
 	})
@@ -83,7 +83,7 @@ func (dc *DockerClient) RemoveImage(image string) error {
 	}
 
 	for i := 0; i < len(images); i++ {
-		_, err := dc.cli.ImageRemove(dc.ctx, images[i].ID, types.ImageRemoveOptions{})
+		_, err := dc.cli.ImageRemove(dc.ctx, images[i].ID, image.RemoveOptions{})
 		if err != nil {
 			return err
 		}
@@ -93,11 +93,11 @@ func (dc *DockerClient) RemoveImage(image string) error {
 }
 
 // Check if image exists in local container store.
-func (dc *DockerClient) ImageExists(image string) bool {
-	images, err := dc.cli.ImageList(dc.ctx, types.ImageListOptions{
+func (dc *DockerClient) ImageExists(img string) bool {
+	images, err := dc.cli.ImageList(dc.ctx, image.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "reference", Value: image,
+				Key: "reference", Value: img,
 			},
 		),
 	})
@@ -166,9 +166,9 @@ type runner struct {
 
 type RunOption func(*runner)
 
-func WithContainerImage(image string) RunOption {
+func WithContainerImage(img string) RunOption {
 	return func(r *runner) {
-		r.config.Image = image
+		r.config.Image = img
 	}
 }
 
