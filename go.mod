@@ -2,12 +2,10 @@ module github.com/aserto-dev/topaz
 
 go 1.21
 
-// replace github.com/aserto-dev/certs => ../certs
-
-replace github.com/aserto-dev/go-directory => ../go-directory
-
 replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
+// replace github.com/aserto-dev/certs => ../certs
+// replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/runtime => ../runtime
