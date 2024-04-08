@@ -2,11 +2,12 @@ module github.com/aserto-dev/topaz
 
 go 1.21
 
-replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
+// replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/certs => ../certs
 // replace github.com/aserto-dev/go-directory => ../go-directory
-// replace github.com/aserto-dev/azm => ../azm
+
+replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/runtime => ../runtime
 // replace github.com/aserto-dev/service-host => ../service-host
@@ -20,7 +21,7 @@ require (
 	github.com/aserto-dev/certs v0.0.6-0.20240408175307-94a019e3a1b4
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.7
-	github.com/aserto-dev/go-aserto v0.31.2
+	github.com/aserto-dev/go-aserto v0.31.3-0.20240408193015-8277f361079d
 	github.com/aserto-dev/go-authorizer v0.20.5
 	github.com/aserto-dev/go-directory v0.31.3-0.20240408164215-c780aaf1f43a
 	github.com/aserto-dev/go-directory-cli v0.31.1
