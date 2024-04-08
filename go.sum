@@ -453,6 +453,8 @@ github.com/aserto-dev/runtime v0.62.1 h1:dGDPIw19RgsGN/MjnLc3KHvb742356zG43zS3Rt
 github.com/aserto-dev/runtime v0.62.1/go.mod h1:/hY6RXv6joCvcqQXh4K/69+dwkODrVYF3kHt8wkYdP0=
 github.com/aserto-dev/self-decision-logger v0.0.5 h1:SXEo984ZasskvrRZ4LrLwqDOvQMNHD3iM4vRMaJRRnQ=
 github.com/aserto-dev/self-decision-logger v0.0.5/go.mod h1:CJUe5pfaaHzemWr7LqMOA8b9fuf/n0V2ekKsH7X28R4=
+github.com/aserto-dev/service-host v0.0.10-0.20240408172348-6079507c4382 h1:xlhhQOdjzOYCHpEdU/90ttWJCltO4P7q0L6vwRXnOIE=
+github.com/aserto-dev/service-host v0.0.10-0.20240408172348-6079507c4382/go.mod h1:83RpMvQLdSspZ6BOQA2pro7XiUn35hpZqwvTs2Dzo+s=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=

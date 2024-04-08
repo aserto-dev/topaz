@@ -8,11 +8,10 @@ replace github.com/aserto-dev/go-directory => ../go-directory
 
 replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
-replace github.com/aserto-dev/service-host => ../service-host
-
 // replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/runtime => ../runtime
+// replace github.com/aserto-dev/service-host => ../service-host
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
@@ -36,7 +35,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.31.1
 	github.com/aserto-dev/runtime v0.62.1
 	github.com/aserto-dev/self-decision-logger v0.0.5
-	github.com/aserto-dev/service-host v0.0.9
+	github.com/aserto-dev/service-host v0.0.10-0.20240408172348-6079507c4382
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v26.0.0+incompatible
 	github.com/docker/go-connections v0.5.0
