@@ -24,7 +24,7 @@ require (
 	github.com/aserto-dev/errors v0.0.7
 	github.com/aserto-dev/go-aserto v0.31.2
 	github.com/aserto-dev/go-authorizer v0.20.5
-	github.com/aserto-dev/go-directory v0.31.2
+	github.com/aserto-dev/go-directory v0.31.3-0.20240408164215-c780aaf1f43a
 	github.com/aserto-dev/go-directory-cli v0.31.1
 	github.com/aserto-dev/go-edge-ds v0.31.3
 	github.com/aserto-dev/go-grpc v0.8.63
