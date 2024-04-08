@@ -423,6 +423,8 @@ github.com/aserto-dev/aserto-management v0.9.4 h1:GiBWkTwn2mgvbS3ftsmro2RS0oiORj
 github.com/aserto-dev/aserto-management v0.9.4/go.mod h1:gc2e123PnLdDrVv6H9r3sl8yU5qegAwR3aAwXcmaBJM=
 github.com/aserto-dev/azm v0.1.6 h1:6Ou+/rqOINJzbd2ziyt/GdkuFr2ZKrncHRk5emFOgN4=
 github.com/aserto-dev/azm v0.1.6/go.mod h1:qWp/M1EXpyLnqHBgwgYoE390XONvgSpOT3XSmQWN2nM=
+github.com/aserto-dev/certs v0.0.6-0.20240408175307-94a019e3a1b4 h1:NTTeV2feAEotF0t5sSQ9/Z2/CGT+TisfHF1aMiBJer8=
+github.com/aserto-dev/certs v0.0.6-0.20240408175307-94a019e3a1b4/go.mod h1:nmMPw/GiwSogEEZ+iZxHLMF9Waf2gLMTW+ZlVlwHheg=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
 github.com/aserto-dev/clui v0.8.3/go.mod h1:KsL/g2x5LAbkEE4ofW/ZoA4FDOIdAyLes/5ullvzUt8=
 github.com/aserto-dev/errors v0.0.7 h1:pBn9RhP2iiDl30oAWsf8aLxvt4yCpLKZOCJRIaeRMUs=

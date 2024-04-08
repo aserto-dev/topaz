@@ -2,7 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.21
 
-replace github.com/aserto-dev/certs => ../certs
+// replace github.com/aserto-dev/certs => ../certs
 
 replace github.com/aserto-dev/go-directory => ../go-directory
 
@@ -19,7 +19,7 @@ require (
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.4
 	github.com/aserto-dev/azm v0.1.6
-	github.com/aserto-dev/certs v0.0.5
+	github.com/aserto-dev/certs v0.0.6-0.20240408175307-94a019e3a1b4
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.7
 	github.com/aserto-dev/go-aserto v0.31.2
