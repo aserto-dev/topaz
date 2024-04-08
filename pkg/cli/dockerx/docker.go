@@ -20,6 +20,10 @@ import (
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
+const (
+	running = "running"
+)
+
 func PolicyRoot() string {
 	const defaultPolicyRoot = ".policy"
 
@@ -113,7 +117,7 @@ func (dc *DockerClient) Stop(name string) error {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: "running"},
+				Key: "status", Value: running},
 			filters.KeyValuePair{
 				Key: "name", Value: name,
 			}),
@@ -137,7 +141,7 @@ func (dc *DockerClient) IsRunning(name string) (bool, error) {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: "running"},
+				Key: "status", Value: running},
 			filters.KeyValuePair{
 				Key: "name", Value: name,
 			}),
@@ -148,10 +152,30 @@ func (dc *DockerClient) IsRunning(name string) (bool, error) {
 
 	rc := false
 	if len(containers) == 1 {
-		rc = containers[0].State == "running"
+		rc = containers[0].State == running
 	}
 
 	return rc, nil
+}
+
+func (dc *DockerClient) GetRunningTopazContainers() ([]*types.Container, error) {
+	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
+		Filters: filters.NewArgs(
+			filters.KeyValuePair{
+				Key: "status", Value: running},
+		),
+	})
+	if err != nil {
+		return nil, err
+	}
+	var topazContainers []*types.Container
+
+	for i := range containers {
+		if strings.Contains(containers[i].Image, "ghcr.io/aserto-dev/topaz") && containers[i].State == running {
+			topazContainers = append(topazContainers, &containers[i])
+		}
+	}
+	return topazContainers, nil
 }
 
 type runner struct {

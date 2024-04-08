@@ -170,8 +170,8 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 	// 1 - topaz stop - ensure topaz is not running, so we can reconfigure
 	{
 		command := &StopCmd{
-			ContainerName: cmd.ContainerName,
-			Wait:          true,
+			ContainerName: "topaz*",
+			Wait:          false, // cannot wait if using wildcard.
 		}
 		if err := command.Run(c); err != nil {
 			return err

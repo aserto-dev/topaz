@@ -12,6 +12,7 @@ import (
 	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/docker/docker/api/types"
 	"github.com/fullstorydev/grpcurl"
 	"github.com/samber/lo"
 	"google.golang.org/grpc"
@@ -100,6 +101,18 @@ func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatu
 	}
 
 	return lo.Ternary(running, StatusRunning, StatusNotRunning) == expectedStatus
+}
+
+func (c *CommonCtx) GetRunningContainers() ([]*types.Container, error) {
+	dc, err := dockerx.New()
+	if err != nil {
+		return nil, err
+	}
+	topazContainers, err := dc.GetRunningTopazContainers()
+	if err != nil {
+		return nil, err
+	}
+	return topazContainers, nil
 }
 
 func (c *CommonCtx) IsServing(grpcAddress string) bool {
