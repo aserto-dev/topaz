@@ -13,12 +13,7 @@ import (
 // ServiceHealthStatus adopted from grpc-health-probe cli implementation
 // https://github.com/grpc-ecosystem/grpc-health-probe/blob/master/main.go.
 func ServiceHealthStatus(addr, service string) bool {
-	// connTimeout := time.Second * 30
 	rpcTimeout := time.Second * 30
-
-	bCtx := context.Background()
-	// dialCtx, dialCancel := context.WithTimeout(bCtx, connTimeout)
-	// defer dialCancel()
 
 	dialOpts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -30,7 +25,7 @@ func ServiceHealthStatus(addr, service string) bool {
 	}
 	defer conn.Close()
 
-	rpcCtx, rpcCancel := context.WithTimeout(bCtx, rpcTimeout)
+	rpcCtx, rpcCancel := context.WithTimeout(context.Background(), rpcTimeout)
 	defer rpcCancel()
 
 	if err := Retry(rpcTimeout, time.Millisecond*100, func() error {

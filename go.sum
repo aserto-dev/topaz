@@ -429,8 +429,6 @@ github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg
 github.com/aserto-dev/clui v0.8.3/go.mod h1:KsL/g2x5LAbkEE4ofW/ZoA4FDOIdAyLes/5ullvzUt8=
 github.com/aserto-dev/errors v0.0.7 h1:pBn9RhP2iiDl30oAWsf8aLxvt4yCpLKZOCJRIaeRMUs=
 github.com/aserto-dev/errors v0.0.7/go.mod h1:wiQ68oKTyAQVAv+SvB5GyuAD6PewalA/D6Fq30gNUbQ=
-github.com/aserto-dev/go-aserto v0.31.2 h1:5kr8RskTmb3Zlto+oYmu5GMX6AwDLSlxgBtMNhEH8aA=
-github.com/aserto-dev/go-aserto v0.31.2/go.mod h1:zxuHxDIyfdS/Kc11ESiUbcAitCQxxJt4PVIlFbAZgiA=
 github.com/aserto-dev/go-aserto v0.31.3-0.20240408193015-8277f361079d h1:dadH4TsMKs/XtRP+5sgCRkMoHui8rdJf0UnKmjJyvaw=
 github.com/aserto-dev/go-aserto v0.31.3-0.20240408193015-8277f361079d/go.mod h1:Tivsv5mhqzkp+x/VzLVQXmMkCq0w7ijftdeEAvpDb60=
 github.com/aserto-dev/go-authorizer v0.20.5 h1:ne5EvWO8Yqs7lMgZom7nGuGNMP5TOftHu0rS7ws1HSw=
@@ -441,6 +439,8 @@ github.com/aserto-dev/go-directory v0.31.3-0.20240408164215-c780aaf1f43a h1:TAkM
 github.com/aserto-dev/go-directory v0.31.3-0.20240408164215-c780aaf1f43a/go.mod h1:IRbWuhDwrl23zN7AM0i52EGg+OQZFPy4KrddXU6MLuc=
 github.com/aserto-dev/go-directory-cli v0.31.1 h1:bajldwElZHcCisBIP6QE0VI9VbxCrhm2SW4wQnAWIrY=
 github.com/aserto-dev/go-directory-cli v0.31.1/go.mod h1:lTFABO1yjQjCLXeMW4Zq2wnfKj6o8XAY+1w95gnM6lI=
+github.com/aserto-dev/go-edge-ds v0.31.3 h1:ZNdrseEKZqKczhMiHC/3/JnP84VhAxnsF1EX7a4VpFc=
+github.com/aserto-dev/go-edge-ds v0.31.3/go.mod h1:Hlf+j9Zz/gX10MyPJdvxUr6phREsEQLn+eFLVLzv6uU=
 github.com/aserto-dev/go-grpc v0.8.63 h1:/8t5JSWb7nR1uF3SUuxZxt/mvhz+9mI5juZLP06wElU=
 github.com/aserto-dev/go-grpc v0.8.63/go.mod h1:ZAlsa2ooMcXuEWhUvAsrANm6lpMHFKJsIEhvpqydn+Y=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=

@@ -330,35 +330,35 @@ func (s *Sync) getLocalDirectoryClient(ctx context.Context) (*directoryClient, e
 		host = s.topazConfig.DirectoryResolver.Address
 	}
 
-	// caCertPath := ""
-	// // when reader registered to same port as authorizer.
-	// if conf, ok := s.topazConfig.Common.APIConfig.Services["authorizer"]; ok {
-	// 	if conf.GRPC.ListenAddress == s.topazConfig.DirectoryResolver.Address {
-	// 		caCertPath = conf.GRPC.Certs.TLSCACertPath
-	// 		host = conf.GRPC.ListenAddress
-	// 	}
-	// }
-	// // if reader api configured separately.
-	// if conf, ok := s.topazConfig.Common.APIConfig.Services["writer"]; ok {
-	// 	host = conf.GRPC.ListenAddress
-	// 	caCertPath = conf.GRPC.Certs.TLSCACertPath
-	// }
+	caCertPath := ""
+	// when reader registered to same port as authorizer.
+	if conf, ok := s.topazConfig.Common.APIConfig.Services["authorizer"]; ok {
+		if conf.GRPC.ListenAddress == s.topazConfig.DirectoryResolver.Address {
+			caCertPath = conf.GRPC.Certs.TLSCACertPath
+			host = conf.GRPC.ListenAddress
+		}
+	}
+	// if reader api configured separately.
+	if conf, ok := s.topazConfig.Common.APIConfig.Services["importer"]; ok {
+		host = conf.GRPC.ListenAddress
+		caCertPath = conf.GRPC.Certs.TLSCACertPath
+	}
 
 	opts := []client.ConnectionOption{
 		client.WithAddr(host),
 		client.WithInsecure(s.topazConfig.DirectoryResolver.Insecure),
-		// client.WithCACertPath(caCertPath),
+		client.WithCACertPath(caCertPath),
 	}
 
-	// if s.topazConfig.DirectoryResolver.APIKey != "" {
-	// 	opts = append(opts, client.WithAPIKeyAuth(s.topazConfig.DirectoryResolver.APIKey))
-	// }
+	if s.topazConfig.DirectoryResolver.APIKey != "" {
+		opts = append(opts, client.WithAPIKeyAuth(s.topazConfig.DirectoryResolver.APIKey))
+	}
 
-	// opts = append(opts, client.WithSessionID(s.cfg.SessionID))
+	opts = append(opts, client.WithSessionID(s.cfg.SessionID))
 
-	// if s.topazConfig.DirectoryResolver.TenantID != "" {
-	// 	opts = append(opts, client.WithTenantID(s.topazConfig.DirectoryResolver.TenantID))
-	// }
+	if s.topazConfig.DirectoryResolver.TenantID != "" {
+		opts = append(opts, client.WithTenantID(s.topazConfig.DirectoryResolver.TenantID))
+	}
 
 	conn, err := client.NewConnection(ctx, opts...)
 	if err != nil {
