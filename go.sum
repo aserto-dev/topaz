@@ -441,6 +441,8 @@ github.com/aserto-dev/go-directory-cli v0.31.1 h1:bajldwElZHcCisBIP6QE0VI9VbxCrh
 github.com/aserto-dev/go-directory-cli v0.31.1/go.mod h1:lTFABO1yjQjCLXeMW4Zq2wnfKj6o8XAY+1w95gnM6lI=
 github.com/aserto-dev/go-edge-ds v0.31.3 h1:ZNdrseEKZqKczhMiHC/3/JnP84VhAxnsF1EX7a4VpFc=
 github.com/aserto-dev/go-edge-ds v0.31.3/go.mod h1:Hlf+j9Zz/gX10MyPJdvxUr6phREsEQLn+eFLVLzv6uU=
+github.com/aserto-dev/go-edge-ds v0.31.4-0.20240408205502-2fea5b71ac02 h1:OsD7aiJmeFojR1egDdI075GbCg9/aGBPLKXd5z9/lPs=
+github.com/aserto-dev/go-edge-ds v0.31.4-0.20240408205502-2fea5b71ac02/go.mod h1:46Y3KqQ6UcROZ1Eqhwr8SKX/laSczacETOdZ36Hwo4s=
 github.com/aserto-dev/go-grpc v0.8.63 h1:/8t5JSWb7nR1uF3SUuxZxt/mvhz+9mI5juZLP06wElU=
 github.com/aserto-dev/go-grpc v0.8.63/go.mod h1:ZAlsa2ooMcXuEWhUvAsrANm6lpMHFKJsIEhvpqydn+Y=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
