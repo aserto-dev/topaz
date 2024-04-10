@@ -40,6 +40,7 @@ const (
 	syncSubscriber string = "subscriber"
 	status         string = "status"
 	started        string = "started"
+	stage          string = "stage"
 	finished       string = "finished"
 	channelSize    int    = 10000
 	localHost      string = "localhost:9292"
@@ -101,7 +102,7 @@ func (s *Sync) Run(fs bool) {
 	}()
 
 	if err := s.syncManifest(); err != nil {
-		s.log.Error().Str("sync-manifest", "").Err(err).Msg(syncRun)
+		s.log.Error().Str(stage, "sync_manifest").Err(err).Msg(syncRun)
 	}
 
 	g := new(errgroup.Group)
@@ -111,20 +112,28 @@ func (s *Sync) Run(fs bool) {
 	s.filter = cuckoo.NewFilter(wm.getFilterSize())
 
 	g.Go(func() error {
-		return s.subscriber(wm)
+		err := s.subscriber(wm)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "subscriber").Msg(syncRun)
+		}
+		return err
 	})
 
 	g.Go(func() error {
-		return s.producer(wm)
+		err := s.producer(wm)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "producer").Msg(syncRun)
+		}
+		return err
 	})
 
 	if err := g.Wait(); err != nil {
-		s.log.Error().Err(err).Msg("sync run failed")
+		s.log.Debug().Err(err).Msg(syncRun)
 	}
 
 	if fs {
 		if err := s.diff(); err != nil {
-			s.log.Error().Err(err).Msg("failed to diff")
+			s.log.Error().Err(err).Str(stage, "diff").Msg(syncRun)
 		}
 	}
 
@@ -220,19 +229,31 @@ func (s *Sync) subscriber(wm *watermark) error {
 	counts := Counter{}
 
 	g.Go(func() error {
-		return s.subscriberRecvHandler(writer)
+		err := s.subscriberRecvHandler(writer)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "recv_handler").Msg(syncSubscriber)
+		}
+		return err
 	})
 
 	g.Go(func() error {
-		return s.subscriberSendHandler(writer, wm, &counts)
+		err := s.subscriberSendHandler(writer, wm, &counts)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "send_handler").Msg(syncSubscriber)
+		}
+		return err
 	})
 
 	g.Go(func() error {
-		return s.subscriberDoneHandler(ctx)
+		err := s.subscriberDoneHandler(ctx)
+		if err != nil {
+			s.log.Error().Err(err).Str(stage, "done_handler").Msg(syncSubscriber)
+		}
+		return err
 	})
 
 	if err := g.Wait(); err != nil {
-		s.log.Error().Err(err).Msg(syncSubscriber)
+		s.log.Debug().Err(err).Msg(syncSubscriber)
 	}
 
 	s.log.Info().Str(status, finished).Int32("received", counts.Received).Int32("objects", counts.Objects).
@@ -323,7 +344,12 @@ func (s *Sync) subscriberRecvHandler(writer dsi3.Importer_ImportClient) error {
 
 func (s *Sync) subscriberDoneHandler(ctx context.Context) error {
 	<-ctx.Done()
-	return ctx.Err()
+	err := ctx.Err()
+	if err != nil && !errors.Is(err, context.Canceled) {
+		s.log.Trace().Err(err).Msg("subscriber-done")
+		return err
+	}
+	return nil
 }
 
 func (s *Sync) getLocalDirectoryClient(ctx context.Context) (*directoryClient, error) {

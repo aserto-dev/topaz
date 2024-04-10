@@ -8,7 +8,9 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/spf13/cobra"
+	"golang.org/x/sync/errgroup"
 )
 
 var (
@@ -16,6 +18,9 @@ var (
 	flagRunBundleFiles       []string
 	flagRunWatchLocalBundles bool
 	flagRunIgnorePaths       []string
+	flagRunDebug             bool
+	debugService             *debug.Server
+	errGroup                 *errgroup.Group
 )
 
 var cmdRun = &cobra.Command{
@@ -38,6 +43,13 @@ var cmdRun = &cobra.Command{
 			if flagRunWatchLocalBundles {
 				cfg.OPA.LocalBundles.Watch = true
 			}
+
+			if flagRunDebug {
+				cfg.Debug.Enabled = true
+				cfg.Debug.ListenAddress = "localhost:6060"
+				cfg.Debug.ShutdownTimeout = 5
+			}
+
 		})
 		defer func() {
 			if cleanup != nil {
@@ -52,6 +64,13 @@ var cmdRun = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		if topazApp.Configuration.Debug.Enabled {
+			errGroup = new(errgroup.Group)
+			debugService = debug.NewServer(&topazApp.Configuration.Debug, topazApp.Logger, errGroup)
+			debugService.Start()
+		}
+
 		if _, ok := topazApp.Services["authorizer"]; ok {
 			directory := topaz.DirectoryResolver(topazApp.Context, topazApp.Logger, topazApp.Configuration)
 			decisionlog, err := topazApp.GetDecisionLogger(topazApp.Configuration.DecisionLogger)
@@ -79,6 +98,8 @@ var cmdRun = &cobra.Command{
 
 		<-topazApp.Context.Done()
 
+		debugService.Stop()
+
 		return nil
 	},
 }
@@ -101,6 +122,10 @@ func init() {
 		&flagRunIgnorePaths,
 		"ignore", "", []string{},
 		"set file and directory names to ignore during loading local bundles (e.g., '.*' excludes hidden files)")
+	cmdRun.Flags().BoolVarP(
+		&flagRunDebug,
+		"debug", "", false,
+		"start debug service")
 	rootCmd.AddCommand(cmdRun)
 	cmdRun.MarkFlagRequired("config-file")
 }
