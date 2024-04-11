@@ -76,6 +76,9 @@ func ContainerName(defaultConfigFile string) string {
 	if containerName := os.Getenv("CONTAINER_NAME"); containerName != "" {
 		return containerName
 	}
+	if strings.Contains(defaultConfigFile, "config.yaml") {
+		return defaultContainerName
+	}
 	return fmt.Sprintf("%s-%s", defaultContainerName, strings.Split(filepath.Base(defaultConfigFile), ".")[0])
 }
 

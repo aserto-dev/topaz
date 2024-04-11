@@ -56,7 +56,7 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 		Config: &CLIConfig{
 			NoCheck:           noCheck,
 			TopazConfigFile:   filepath.Join(GetTopazCfgDir(), "config.yaml"),
-			ContainerName:     ContainerName(filepath.Join(GetTopazCfgDir(), "config.yaml")),
+			ContainerName:     defaultContainerName,
 			ContainerRegistry: ContainerRegistry(),
 			ContainerImage:    ContainerImage(),
 			ContainerTag:      ContainerTag(),

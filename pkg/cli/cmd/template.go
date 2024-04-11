@@ -85,6 +85,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	// reset defaults on template install
 	c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), fmt.Sprintf("%s.yaml", tmpl.Name))
 	c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
+	cmd.ContainerName = c.Config.ContainerName
 
 	cliConfig := filepath.Join(cc.GetTopazDir(), CLIConfigurationFile)
 
