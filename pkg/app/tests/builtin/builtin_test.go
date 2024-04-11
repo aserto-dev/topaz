@@ -11,7 +11,59 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var builtinHelptests = []struct {
+func TestBuiltins(t *testing.T) {
+	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
+		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
+	})
+	t.Cleanup(harness.Cleanup)
+
+	client := harness.CreateGRPCClient()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	t.Cleanup(cancel)
+
+	// BuiltinHelptests(ctx, client)
+	for _, tc := range BuiltinHelpTests {
+		f := func(t *testing.T) {
+			resp, err := client.Query(ctx, &authz2.QueryRequest{
+				Query: tc.query,
+			})
+			require.NoError(t, err)
+			require.NotNil(t, resp)
+			require.NotNil(t, resp.Response)
+
+			r := resp.Response.AsMap()
+
+			v1 := r["result"].([]interface{})
+			v2 := v1[0].(map[string]interface{})
+			v3 := v2["bindings"].(map[string]interface{})
+			v := v3["x"]
+
+			assert.Equal(t, v, tc.expected)
+		}
+
+		t.Run(tc.name, f)
+	}
+
+	// BuiltinNotFoundErrTests
+	for _, tc := range BuiltinNotFoundErrTests {
+		f := func(t *testing.T) {
+			resp, err := client.Query(ctx, &authz2.QueryRequest{
+				Query: tc.query,
+			})
+			require.NoError(t, err)
+			require.NotNil(t, resp)
+			require.NotNil(t, resp.Response)
+
+			r := resp.Response.AsMap()
+			require.NotNil(t, r)
+		}
+
+		t.Run(tc.name, f)
+	}
+}
+
+var BuiltinHelpTests = []struct {
 	name     string
 	query    string
 	expected map[string]interface{}
@@ -132,41 +184,7 @@ var builtinHelptests = []struct {
 	},
 }
 
-func TestBuiltinsHelp(t *testing.T) {
-	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
-	})
-	t.Cleanup(harness.Cleanup)
-
-	client := harness.CreateGRPCClient()
-
-	ctx, cancel := context.WithCancel(context.Background())
-	t.Cleanup(cancel)
-
-	for _, tc := range builtinHelptests {
-		f := func(t *testing.T) {
-			resp, err := client.Query(ctx, &authz2.QueryRequest{
-				Query: tc.query,
-			})
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
-
-			r := resp.Response.AsMap()
-
-			v1 := r["result"].([]interface{})
-			v2 := v1[0].(map[string]interface{})
-			v3 := v2["bindings"].(map[string]interface{})
-			v := v3["x"]
-
-			assert.Equal(t, v, tc.expected)
-		}
-
-		t.Run(tc.name, f)
-	}
-}
-
-var builtinNotFoundErrTests = []struct {
+var BuiltinNotFoundErrTests = []struct {
 	name     string
 	query    string
 	expected map[string]interface{}
@@ -204,32 +222,4 @@ var builtinNotFoundErrTests = []struct {
 			"subject_relation": "none_existing_subject_relation",
 			})`,
 	},
-}
-
-func TestBuiltinsNotFoundErr(t *testing.T) {
-	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
-	})
-	defer harness.Cleanup()
-
-	client := harness.CreateGRPCClient()
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	for _, tc := range builtinNotFoundErrTests {
-		f := func(t *testing.T) {
-			resp, err := client.Query(ctx, &authz2.QueryRequest{
-				Query: tc.query,
-			})
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
-
-			r := resp.Response.AsMap()
-			require.NotNil(t, r)
-		}
-
-		t.Run(tc.name, f)
-	}
 }
