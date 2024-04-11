@@ -257,7 +257,7 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 			serv.API.Gateway.WriteTimeout = 2 * time.Second
 		}
 		if serv.API.Gateway.IdleTimeout == 0 {
-			serv.API.Gateway.WriteTimeout = 30 * time.Second
+			serv.API.Gateway.IdleTimeout = 30 * time.Second
 		}
 		portMap[config.GRPC.ListenAddress] = serv
 	}
