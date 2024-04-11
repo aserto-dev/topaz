@@ -19,7 +19,6 @@ import (
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
 	builder "github.com/aserto-dev/service-host"
 	"github.com/aserto-dev/topaz/pkg/rapidoc"
-	"github.com/samber/lo"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/samber/lo"

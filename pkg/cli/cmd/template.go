@@ -16,7 +16,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/rs/zerolog"
 )
 
@@ -341,7 +340,7 @@ func (i *tmplInstaller) importData() error {
 	}
 
 	for dir := range dataDirs {
-		command := directory.ImportCmd{
+		command := ImportCmd{
 			Directory: dir,
 			Config:    *i.cfg,
 		}

@@ -1,4 +1,4 @@
-package directory
+package cmd
 
 import (
 	"fmt"
@@ -12,9 +12,9 @@ import (
 )
 
 type ImportCmd struct {
-	Directory      string        `short:"d" required:"" help:"directory containing .json data"`
-	Format         FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
-	clients.Config `envprefix:"TOPAZ_DIRECTORY_"`
+	Directory string        `short:"d" required:"" help:"directory containing .json data"`
+	Format    FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
+	clients.Config
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {

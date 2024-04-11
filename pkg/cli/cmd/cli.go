@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/aserto-dev/topaz/pkg/cli/cmd/authorizer"
-	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 )
 
 type SaveContext bool
@@ -20,27 +17,32 @@ var (
 	Save SaveContext
 )
 
+type FormatVersion int
+
+const (
+	V2 FormatVersion = 2
+	V3 FormatVersion = 3
+)
+
 type CLI struct {
-	Run        RunCmd                   `cmd:"" help:"run topaz in console mode"`
-	Start      StartCmd                 `cmd:"" help:"start topaz in daemon mode"`
-	Stop       StopCmd                  `cmd:"" help:"stop topaz instance"`
-	Restart    RestartCmd               `cmd:"" help:"restart topaz instance"`
-	Status     StatusCmd                `cmd:"" help:"status of topaz daemon process"`
-	Manifest   ManifestCmd              `cmd:"" help:"manifest commands"`
-	Templates  TemplateCmd              `cmd:"" help:"template commands"`
-	Test       TestCmd                  `cmd:"" help:"test assertions commands"`
-	Console    ConsoleCmd               `cmd:"" help:"open console in the browser"`
-	Authorizer authorizer.AuthorizerCmd `cmd:"" aliases:"az" help:"authorizer commands"`
-	Directory  directory.DirectoryCmd   `cmd:"" aliases:"ds" help:"directory commands"`
-	Configure  ConfigureCmd             `cmd:"" help:"configure topaz service"`
-	List       ListConfigCmd            `cmd:"" help:"list available configuration files"`
-	Certs      CertsCmd                 `cmd:"" help:"cert commands"`
-	Install    InstallCmd               `cmd:"" help:"install topaz container"`
-	Uninstall  UninstallCmd             `cmd:"" help:"uninstall topaz container"`
-	Update     UpdateCmd                `cmd:"" help:"update topaz container version"`
-	Version    VersionCmd               `cmd:"" help:"version information"`
-	NoCheck    bool                     `name:"no-check" json:"noCheck,omitempty" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
-	LogLevel   int                      `name:"log" short:"L" type:"counter" default:"0" help:"log level"`
+	Run       RunCmd        `cmd:"" help:"run topaz in console mode"`
+	Start     StartCmd      `cmd:"" help:"start topaz in daemon mode"`
+	Stop      StopCmd       `cmd:"" help:"stop topaz instance"`
+	Restart   RestartCmd    `cmd:"" help:"restart topaz instance"`
+	Status    StatusCmd     `cmd:"" help:"status of topaz daemon process"`
+	Manifest  ManifestCmd   `cmd:"" help:"manifest commands"`
+	Templates TemplateCmd   `cmd:"" help:"template commands"`
+	Test      TestCmd       `cmd:"" help:"test assertions commands"`
+	Console   ConsoleCmd    `cmd:"" help:"open console in the browser"`
+	Configure ConfigureCmd  `cmd:"" help:"configure topaz service"`
+	List      ListConfigCmd `cmd:"" help:"list available configuration files"`
+	Certs     CertsCmd      `cmd:"" help:"cert commands"`
+	Install   InstallCmd    `cmd:"" help:"install topaz container"`
+	Uninstall UninstallCmd  `cmd:"" help:"uninstall topaz container"`
+	Update    UpdateCmd     `cmd:"" help:"update topaz container version"`
+	Version   VersionCmd    `cmd:"" help:"version information"`
+	NoCheck   bool          `name:"no-check" json:"noCheck,omitempty" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
+	LogLevel  int           `name:"log" short:"L" type:"counter" default:"0" help:"log level"`
 }
 
 func PromptYesNo(label string, def bool) bool {
