@@ -4,8 +4,7 @@ go 1.21
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace aserto-dev/go-directory-cli => ../go-directory-cli
-replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
+// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/service-host => ../service-host
@@ -16,7 +15,7 @@ require (
 	github.com/alecthomas/kong v0.9.0
 	github.com/aserto-dev/aserto-grpc v0.2.2
 	github.com/aserto-dev/aserto-management v0.9.4
-	github.com/aserto-dev/azm v0.1.8
+	github.com/aserto-dev/azm v0.1.6
 	github.com/aserto-dev/certs v0.0.6
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.7
@@ -24,7 +23,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.5
 	github.com/aserto-dev/go-directory v0.31.3
 	github.com/aserto-dev/go-directory-cli v0.31.1
-	github.com/aserto-dev/go-edge-ds v0.31.4-0.20240410234242-842c4a3c6803
+	github.com/aserto-dev/go-edge-ds v0.31.3
 	github.com/aserto-dev/go-grpc v0.8.63
 	github.com/aserto-dev/go-topaz-ui v0.1.4
 	github.com/aserto-dev/header v0.0.7
@@ -33,7 +32,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.31.1
 	github.com/aserto-dev/runtime v0.62.1
 	github.com/aserto-dev/self-decision-logger v0.0.5
-	github.com/aserto-dev/service-host v0.0.9
+	github.com/aserto-dev/service-host v0.0.10
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v26.0.0+incompatible
 	github.com/docker/go-connections v0.5.0

@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"net/http/pprof"
-	_ "net/http/pprof"
 	"time"
 
 	"github.com/rs/zerolog"

@@ -423,8 +423,6 @@ github.com/aserto-dev/aserto-management v0.9.4 h1:GiBWkTwn2mgvbS3ftsmro2RS0oiORj
 github.com/aserto-dev/aserto-management v0.9.4/go.mod h1:gc2e123PnLdDrVv6H9r3sl8yU5qegAwR3aAwXcmaBJM=
 github.com/aserto-dev/azm v0.1.6 h1:6Ou+/rqOINJzbd2ziyt/GdkuFr2ZKrncHRk5emFOgN4=
 github.com/aserto-dev/azm v0.1.6/go.mod h1:qWp/M1EXpyLnqHBgwgYoE390XONvgSpOT3XSmQWN2nM=
-github.com/aserto-dev/azm v0.1.8 h1:NDhTCUoumEfbMd+Dg/KkW+vgXgoo9ESOQTJ8Lr15qKg=
-github.com/aserto-dev/azm v0.1.8/go.mod h1:q9hcNvUbhvy3JvGYOwRq/UT8JKRFBV2aA/3UtcQunzg=
 github.com/aserto-dev/certs v0.0.6 h1:V79JptXMvgePJ2rgktu8QdgbEQsIXxF1kXqQhPM76NI=
 github.com/aserto-dev/certs v0.0.6/go.mod h1:ppJ/GVSerB8EsikJeQP71LJBuHiUW2avS2f84oC/75c=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
@@ -441,6 +439,7 @@ github.com/aserto-dev/go-directory v0.31.3 h1:Twiulwykm+ivko+H73TMVSvSlE2urIN3Xi
 github.com/aserto-dev/go-directory v0.31.3/go.mod h1:Pjb9QcswMnuIPl8iDexG4d2AcFtLWDpVisGodrKuvC0=
 github.com/aserto-dev/go-directory-cli v0.31.1 h1:bajldwElZHcCisBIP6QE0VI9VbxCrhm2SW4wQnAWIrY=
 github.com/aserto-dev/go-directory-cli v0.31.1/go.mod h1:lTFABO1yjQjCLXeMW4Zq2wnfKj6o8XAY+1w95gnM6lI=
+github.com/aserto-dev/go-edge-ds v0.31.3 h1:ZNdrseEKZqKczhMiHC/3/JnP84VhAxnsF1EX7a4VpFc=
 github.com/aserto-dev/go-edge-ds v0.31.3/go.mod h1:Hlf+j9Zz/gX10MyPJdvxUr6phREsEQLn+eFLVLzv6uU=
 github.com/aserto-dev/go-grpc v0.8.63 h1:/8t5JSWb7nR1uF3SUuxZxt/mvhz+9mI5juZLP06wElU=
 github.com/aserto-dev/go-grpc v0.8.63/go.mod h1:ZAlsa2ooMcXuEWhUvAsrANm6lpMHFKJsIEhvpqydn+Y=
@@ -460,8 +459,6 @@ github.com/aserto-dev/runtime v0.62.1 h1:dGDPIw19RgsGN/MjnLc3KHvb742356zG43zS3Rt
 github.com/aserto-dev/runtime v0.62.1/go.mod h1:/hY6RXv6joCvcqQXh4K/69+dwkODrVYF3kHt8wkYdP0=
 github.com/aserto-dev/self-decision-logger v0.0.5 h1:SXEo984ZasskvrRZ4LrLwqDOvQMNHD3iM4vRMaJRRnQ=
 github.com/aserto-dev/self-decision-logger v0.0.5/go.mod h1:CJUe5pfaaHzemWr7LqMOA8b9fuf/n0V2ekKsH7X28R4=
-github.com/aserto-dev/service-host v0.0.9 h1:RwSkFtD5CRacVnj1CxYjA3HMpJfmOESmUk+VJjUr0HY=
-github.com/aserto-dev/service-host v0.0.9/go.mod h1:NfLZZW2Y3+1Adgfaw/BAoW8ttPTvFuyapJAow9YdvHU=
 github.com/aserto-dev/service-host v0.0.10 h1:GXuwOfJ6a2/25uI/ggi/RSTqdeb4UoOezh6STcM/bJI=
 github.com/aserto-dev/service-host v0.0.10/go.mod h1:NfLZZW2Y3+1Adgfaw/BAoW8ttPTvFuyapJAow9YdvHU=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
