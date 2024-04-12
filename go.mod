@@ -25,7 +25,7 @@ require (
 	github.com/aserto-dev/go-directory-cli v0.31.1
 	github.com/aserto-dev/go-edge-ds v0.31.4
 	github.com/aserto-dev/go-grpc v0.8.63
-	github.com/aserto-dev/go-topaz-ui v0.1.4
+	github.com/aserto-dev/go-topaz-ui v0.1.5
 	github.com/aserto-dev/header v0.0.7
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
