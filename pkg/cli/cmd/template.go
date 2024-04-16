@@ -312,7 +312,7 @@ func (i *tmplInstaller) setManifest() error {
 	manifest := i.tmpl.AbsURL(i.tmpl.Assets.Manifest)
 
 	if exists, _ := config.FileExists(manifest); !exists {
-		manifestDir := path.Join(i.topazDir, "model")
+		manifestDir := path.Join(i.topazDir, i.tmpl.Name, "model")
 		switch m, err := download(manifest, manifestDir); {
 		case err != nil:
 			return err
@@ -330,7 +330,7 @@ func (i *tmplInstaller) setManifest() error {
 }
 
 func (i *tmplInstaller) importData() error {
-	defaultDataDir := path.Join(i.topazDir, "data")
+	defaultDataDir := path.Join(i.topazDir, i.tmpl.Name, "data")
 
 	dataDirs := map[string]struct{}{}
 	for _, v := range append(i.tmpl.Assets.IdentityData, i.tmpl.Assets.DomainData...) {
@@ -361,7 +361,7 @@ func (i *tmplInstaller) importData() error {
 }
 
 func (i *tmplInstaller) runTemplateTests() error {
-	assertionsDir := path.Join(i.topazDir, "assertions")
+	assertionsDir := path.Join(i.topazDir, i.tmpl.Name, "assertions")
 
 	tests := []string{}
 	for _, v := range i.tmpl.Assets.Assertions {
