@@ -69,14 +69,6 @@ func main() {
 	if err := kongCtx.Run(ctx); err != nil {
 		kongCtx.FatalIfErrorf(err)
 	}
-
-	// only save on config change.
-	if _, ok := ctx.Context.Value(cmd.Save).(bool); ok {
-		if err := ctx.SaveContextConfig(cmd.CLIConfigurationFile); err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
-			os.Exit(1)
-		}
-	}
 }
 
 func logLevel(level int) zerolog.Level {

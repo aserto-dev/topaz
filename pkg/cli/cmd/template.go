@@ -189,13 +189,19 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 		if err := command.Run(c); err != nil {
 			return err
 		}
+		use := UseConfigCmd{
+			Name:      tmpl.Name,
+			ConfigDir: cc.GetTopazCfgDir(),
+		}
+		if err := use.Run(c); err != nil {
+			return err
+		}
 	}
 
 	// 3 - topaz start - start instance using new configuration
 	{
 		command := &StartCmd{
 			StartRunCmd: StartRunCmd{
-				Name:              tmpl.Name,
 				ContainerRegistry: cmd.ContainerRegistry,
 				ContainerImage:    cmd.ContainerImage,
 				ContainerTag:      cmd.ContainerTag,
