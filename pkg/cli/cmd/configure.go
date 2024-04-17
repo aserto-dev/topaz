@@ -35,6 +35,7 @@ func (cmd *DeleteConfigCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Name == "" {
 		return errors.New("configuration name must be provided")
 	}
+	c.UI.Normal().Msgf("Removing configuration %s", fmt.Sprintf("%s.yaml", cmd.Name))
 	filename := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 
 	return os.Remove(filename)
@@ -50,7 +51,7 @@ func (cmd *RenameConfigCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Name == "" || cmd.NewName == "" {
 		return errors.New("old configuration name and new configuration name must be provided")
 	}
-
+	c.UI.Normal().Msgf("Renamig configuration %s to %s", fmt.Sprintf("%s.yaml", cmd.Name), fmt.Sprintf("%s.yaml", cmd.NewName))
 	oldFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	newFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.NewName))
 
@@ -68,6 +69,7 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 	c.Config.TopazConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
+	c.UI.Normal().Msgf("Using configuration %s", fmt.Sprintf("%s.yaml", cmd.Name))
 
 	if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
