@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"io"
 	"os"
 
@@ -42,7 +43,7 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	color.Green(">>> get manifest to %s", cmd.Path)
+	_, _ = fmt.Fprint(color.Error, color.GreenString(">>> get manifest to %s", cmd.Path))
 
 	r, err := dirClient.V3.GetManifest(c.Context)
 	if err != nil {
@@ -83,7 +84,7 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
-	color.Green(">>> set manifest from %s", cmd.Path)
+	_, _ = fmt.Fprint(color.Error, color.GreenString(">>> set manifest to %s", cmd.Path))
 
 	return dirClient.V3.SetManifest(c.Context, r)
 }
@@ -99,7 +100,7 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 
 	c.UI.Exclamation().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
 	if cmd.Force || PromptYesNo("Do you want to continue?", false) {
-		color.Green(">>> delete manifest")
+		_, _ = fmt.Fprint(color.Error, color.GreenString(">>> delete manifest"))
 		return dirClient.V3.DeleteManifest(c.Context)
 	}
 	return nil

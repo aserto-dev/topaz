@@ -94,13 +94,15 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
 		}
 	}
+
 	configFile := cmd.Name + ".yaml"
 	if configFile != c.Config.TopazConfigFile {
 		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), configFile)
 		c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
 	}
+
 	if !cmd.Stdout {
-		color.Green(">>> configure policy")
+		_, _ = fmt.Fprint(color.Error, color.GreenString(">>> configure policy"))
 	}
 
 	configGenerator := config.NewGenerator(cmd.Name).
