@@ -445,8 +445,8 @@ github.com/aserto-dev/go-grpc v0.8.63 h1:/8t5JSWb7nR1uF3SUuxZxt/mvhz+9mI5juZLP06
 github.com/aserto-dev/go-grpc v0.8.63/go.mod h1:ZAlsa2ooMcXuEWhUvAsrANm6lpMHFKJsIEhvpqydn+Y=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1/go.mod h1:QnWF5/X2U/kmbu7GEw+zupvqX2hIthDjyXlRTwt2zEI=
-github.com/aserto-dev/go-topaz-ui v0.1.5 h1:qqsCLJwPU8+sjOp4lCttVdFQM1QDx+9JL21aKyg5zWk=
-github.com/aserto-dev/go-topaz-ui v0.1.5/go.mod h1:BdW4vOhuG0HkjNH4L4omcNa/RJJ4LaxFzbw92qc+pc8=
+github.com/aserto-dev/go-topaz-ui v0.1.6 h1:EZTE8gqr+vHRIOC2zH6Qr6rVW0TK+5n2TkLsbdrYeSM=
+github.com/aserto-dev/go-topaz-ui v0.1.6/go.mod h1:BdW4vOhuG0HkjNH4L4omcNa/RJJ4LaxFzbw92qc+pc8=
 github.com/aserto-dev/header v0.0.7 h1:hlo5/zYsBOsxzPxtve7LRbXyBbQmKSPAyOfmPhGgirM=
 github.com/aserto-dev/header v0.0.7/go.mod h1:wDF2S9k2q3lbilNb9q20vPpX8uvlSLYGa4F7p9GtGy4=
 github.com/aserto-dev/logger v0.0.4 h1:GF+17mhn03ZnE5KHCszrzGRcZULgczsql+y+PCHjgpI=
