@@ -16,7 +16,7 @@ import (
 
 type ConfigCmd struct {
 	Use    UseConfigCmd    `cmd:"" help:"set active configuration"`
-	New    ConfigureCmd    `cmd:"" help:"generate new configuration"`
+	New    NewConfigCmd    `cmd:"" help:"create new configuration"`
 	List   ListConfigCmd   `cmd:"" help:"list configurations"`
 	Rename RenameConfigCmd `cmd:"" help:"rename configuration"`
 	Delete DeleteConfigCmd `cmd:"" help:"delete configuration"`
@@ -78,7 +78,7 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 	return nil
 }
 
-type ConfigureCmd struct {
+type NewConfigCmd struct {
 	Name              string `short:"n" help:"config name"`
 	LocalPolicyImage  string `short:"l" help:"local policy image name"`
 	Resource          string `short:"r" help:"resource url"`
@@ -88,7 +88,7 @@ type ConfigureCmd struct {
 	EnableDirectoryV2 bool   `flag:"" name:"enable-v2" hidden:"" default:"true" help:"enable directory version 2 services for backwards compatibility"`
 }
 
-func (cmd *ConfigureCmd) Run(c *cc.CommonCtx) error {
+func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Name == "" && cmd.Resource == "" {
 		if cmd.LocalPolicyImage == "" {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")

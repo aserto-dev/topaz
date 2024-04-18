@@ -1,4 +1,4 @@
-package cmd
+package directory
 
 import (
 	"os"
@@ -10,15 +10,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-type BackupCmd struct {
-	File   string        `arg:""  default:"backup.tar.gz" help:"absolute file path to make backup to"`
+type RestoreCmd struct {
+	File   string        `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
 	Format FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
 	clients.Config
 }
 
-const defaultFileName = "backup.tar.gz"
-
-func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
+func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
@@ -28,18 +26,17 @@ func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if cmd.File == defaultFileName {
+	if cmd.File == "backup.tar.gz" {
 		currentDir, err := os.Getwd()
 		if err != nil {
 			return err
 		}
-		cmd.File = path.Join(currentDir, defaultFileName)
+		cmd.File = path.Join(currentDir, "backup.tar.gz")
 	}
 
-	color.Green(">>> backup to %s", cmd.File)
-
+	color.Green(">>> restore from %s", cmd.File)
 	if cmd.Format == V2 {
-		return dirClient.V2.Backup(c.Context, cmd.File)
+		return dirClient.V2.Restore(c.Context, cmd.File)
 	}
-	return dirClient.V3.Backup(c.Context, cmd.File)
+	return dirClient.V3.Restore(c.Context, cmd.File)
 }

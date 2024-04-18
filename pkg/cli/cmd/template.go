@@ -16,6 +16,8 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
+
 	"github.com/rs/zerolog"
 )
 
@@ -64,7 +66,7 @@ type InstallTemplateCmd struct {
 	ContainerHostname string `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	TemplatesURL      string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
-	ConfigName        string `optional:"" help:"set config name for template"`
+	ConfigName        string `optional:"" help:"set config name"`
 	clients.Config
 }
 
@@ -197,7 +199,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 
 	// 2 - topaz configure - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
-		command := ConfigureCmd{
+		command := NewConfigCmd{
 			Name:              name,
 			Resource:          tmpl.Assets.Policy.Resource,
 			Force:             true,
@@ -377,7 +379,7 @@ func (i *tmplInstaller) importData() error {
 	}
 
 	for dir := range dataDirs {
-		command := ImportCmd{
+		command := directory.ImportCmd{
 			Directory: dir,
 			Config:    *i.cfg,
 		}
