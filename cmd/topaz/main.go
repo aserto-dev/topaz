@@ -35,8 +35,10 @@ func main() {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
-	if warn {
-		ctx.UI.Exclamation().Msgf("You still have old db files in %s ! \nPlease see documentation on how to update your configuration: %s", oldDBPath, docLink)
+
+	if warn && len(os.Args) == 1 {
+		ctx.UI.Exclamation().Msgf("Detected directory db files in the old data location %q\nCheck the documentation on how to update your configuration:\n%s\n",
+			oldDBPath, docLink)
 	}
 
 	kongCtx := kong.Parse(&cli,
