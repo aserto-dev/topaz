@@ -92,6 +92,13 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
 	cmd.ContainerName = c.Config.ContainerName
 
+	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
+		err = os.MkdirAll(cc.GetTopazDir(), 0700)
+		if err != nil {
+			return err
+		}
+	}
+
 	cliConfig := filepath.Join(cc.GetTopazDir(), CLIConfigurationFile)
 
 	kongConfigBytes, err := json.Marshal(c.Config)
