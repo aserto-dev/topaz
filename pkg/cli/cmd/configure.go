@@ -15,11 +15,11 @@ import (
 )
 
 type ConfigCmd struct {
-	Use    UseConfigCmd    `cmd:"" help:"set topaz CLI to use a configuration file"`
-	New    ConfigureCmd    `cmd:"" help:"generate new configuration file"`
-	List   ListConfigCmd   `cmd:"" help:"list configuration files"`
-	Rename RenameConfigCmd `cmd:"" help:"rename a topaz configuration"`
-	Delete DeleteConfigCmd `cmd:"" help:"delete a topaz configuration"`
+	Use    UseConfigCmd    `cmd:"" help:"set active configuration"`
+	New    ConfigureCmd    `cmd:"" help:"generate new configuration"`
+	List   ListConfigCmd   `cmd:"" help:"list configurations"`
+	Rename RenameConfigCmd `cmd:"" help:"rename configuration"`
+	Delete DeleteConfigCmd `cmd:"" help:"delete configuration"`
 }
 
 func (cmd *ConfigCmd) Run(c *cc.CommonCtx) error {
@@ -168,7 +168,7 @@ type ListConfigCmd struct {
 }
 
 func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
-	table := c.UI.Normal().WithTable("Name", "Config File", "Is Default")
+	table := c.UI.Normal().WithTable("", "Name", "Config File")
 	files, err := os.ReadDir(cmd.ConfigDir)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -177,11 +177,13 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 	for i := range files {
-		active := false
+		name := strings.Split(files[i].Name(), ".")[0]
+		active := ""
 		if files[i].Name() == filepath.Base(c.Config.TopazConfigFile) {
-			active = true
+			active = "*"
 		}
-		table.WithTableRow(strings.Replace(files[i].Name(), ".yaml", "", -1), files[i].Name(), fmt.Sprintf("%v", active))
+
+		table.WithTableRow(active, name, files[i].Name())
 	}
 	table.Do()
 

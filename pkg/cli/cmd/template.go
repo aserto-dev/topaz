@@ -64,7 +64,7 @@ type InstallTemplateCmd struct {
 	ContainerHostname string `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	TemplatesURL      string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
-	CustomName        string `optional:"" help:"set custom name for template"`
+	ConfigName        string `optional:"" help:"set config name for template"`
 	clients.Config
 }
 
@@ -83,8 +83,8 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 	fileName := fmt.Sprintf("%s.yaml", tmpl.Name)
-	if cmd.CustomName != "" {
-		fileName = fmt.Sprintf("%s.yaml", cmd.CustomName)
+	if cmd.ConfigName != "" {
+		fileName = fmt.Sprintf("%s.yaml", cmd.ConfigName)
 	}
 
 	// reset defaults on template install
@@ -132,7 +132,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 
 	cmd.Config.Insecure = true
 	// 1-3 - stop topaz, configure, start
-	err = cmd.prepareTopaz(c, tmpl, cmd.CustomName)
+	err = cmd.prepareTopaz(c, tmpl, cmd.ConfigName)
 	if err != nil {
 		return err
 	}
@@ -153,13 +153,13 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 
 	// 5-7 - reset directory, apply (manifest, IDP and domain data) template.
-	if err := installTemplate(c, tmpl, topazDir, &cmd.Config, cmd.CustomName).Install(); err != nil {
+	if err := installTemplate(c, tmpl, topazDir, &cmd.Config, cmd.ConfigName).Install(); err != nil {
 		return err
 	}
 
 	// 8 - run tests
 	if !cmd.NoTests {
-		if err := installTemplate(c, tmpl, topazDir, &cmd.Config, cmd.CustomName).Test(); err != nil {
+		if err := installTemplate(c, tmpl, topazDir, &cmd.Config, cmd.ConfigName).Test(); err != nil {
 			return err
 		}
 	}
