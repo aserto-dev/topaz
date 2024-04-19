@@ -1,5 +1,5 @@
 # Topaz configuration
-The main configuration for Topaz can be devided in 3 main sections:
+The main configuration for Topaz can be divided in 3 main sections:
 1. Common configuration
 2. Auth configuration - optional
 3. Decision logger configuration - optional

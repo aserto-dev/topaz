@@ -57,7 +57,7 @@ func (cmd *RenameConfigCmd) Run(c *cc.CommonCtx) error {
 	if c.CheckRunStatus(cc.ContainerName(fmt.Sprintf("%s.yaml", cmd.Name)), cc.StatusRunning) {
 		return cc.ErrIsRunning
 	}
-	c.UI.Normal().Msgf("Renamig configuration %s to %s", fmt.Sprintf("%s.yaml", cmd.Name), fmt.Sprintf("%s.yaml", cmd.NewName))
+	c.UI.Normal().Msgf("Renaming configuration %s to %s", fmt.Sprintf("%s.yaml", cmd.Name), fmt.Sprintf("%s.yaml", cmd.NewName))
 	oldFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	newFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.NewName))
 
