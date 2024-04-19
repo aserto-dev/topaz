@@ -117,7 +117,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 
 // installTemplate steps:
 // 1 - topaz stop - ensure topaz is not running, so we can reconfigure
-// 2 - topaz configure - generate a new configuration based on the requirements of the template
+// 2 - topaz config new - generate a new configuration based on the requirements of the template
 // 3 - topaz start - start instance using new configuration
 // 4 - wait for health endpoint to be in serving state
 // 5 - topaz manifest delete --force, reset the directory store
@@ -197,7 +197,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 		name = customName
 	}
 
-	// 2 - topaz configure - generate a new configuration based on the requirements of the template
+	// 2 - topaz config new - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
 		command := NewConfigCmd{
 			Name:              name,

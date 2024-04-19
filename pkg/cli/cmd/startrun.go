@@ -40,7 +40,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	}
 
 	if _, err := os.Stat(c.Config.TopazConfigFile); errors.Is(err, os.ErrNotExist) {
-		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(c.Config.TopazConfigFile))
+		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(c.Config.TopazConfigFile))
 	}
 
 	cfg, err := config.LoadConfiguration(c.Config.TopazConfigFile)
