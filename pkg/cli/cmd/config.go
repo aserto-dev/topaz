@@ -35,6 +35,9 @@ func (cmd *DeleteConfigCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Name == "" {
 		return errors.New("configuration name must be provided")
 	}
+	if c.CheckRunStatus(cc.ContainerName(fmt.Sprintf("%s.yaml", cmd.Name)), cc.StatusRunning) {
+		return cc.ErrIsRunning
+	}
 	c.UI.Normal().Msgf("Removing configuration %s", fmt.Sprintf("%s.yaml", cmd.Name))
 	filename := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 
@@ -50,6 +53,9 @@ type RenameConfigCmd struct {
 func (cmd *RenameConfigCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Name == "" || cmd.NewName == "" {
 		return errors.New("old configuration name and new configuration name must be provided")
+	}
+	if c.CheckRunStatus(cc.ContainerName(fmt.Sprintf("%s.yaml", cmd.Name)), cc.StatusRunning) {
+		return cc.ErrIsRunning
 	}
 	c.UI.Normal().Msgf("Renamig configuration %s to %s", fmt.Sprintf("%s.yaml", cmd.Name), fmt.Sprintf("%s.yaml", cmd.NewName))
 	oldFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
@@ -67,6 +73,10 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Name == "" {
 		return errors.New("configuration name must be provided")
 	}
+	if _, err := os.Stat(filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))); err != nil {
+		return err
+	}
+
 	c.Config.TopazConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
 	c.UI.Normal().Msgf("Using configuration %s", fmt.Sprintf("%s.yaml", cmd.Name))
@@ -75,6 +85,7 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
+
 	return nil
 }
 
