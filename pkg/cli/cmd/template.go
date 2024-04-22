@@ -86,6 +86,9 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	}
 	fileName := fmt.Sprintf("%s.yaml", tmpl.Name)
 	if cmd.ConfigName != "" {
+		if !restrictedNamePattern.MatchString(cmd.ConfigName) {
+			return fmt.Errorf("%s must match pattern %s", cmd.Name, restrictedNamePattern.String())
+		}
 		fileName = fmt.Sprintf("%s.yaml", cmd.ConfigName)
 	}
 

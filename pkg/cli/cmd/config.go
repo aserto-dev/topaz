@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -21,6 +22,8 @@ type ConfigCmd struct {
 	Rename RenameConfigCmd `cmd:"" help:"rename configuration"`
 	Delete DeleteConfigCmd `cmd:"" help:"delete configuration"`
 }
+
+var restrictedNamePattern = regexp.MustCompile(`^[a-z0-9][a-z0-9_.-]*$`)
 
 func (cmd *ConfigCmd) Run(c *cc.CommonCtx) error {
 	return nil
@@ -54,6 +57,9 @@ func (cmd *RenameConfigCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Name == "" || cmd.NewName == "" {
 		return errors.New("old configuration name and new configuration name must be provided")
 	}
+	if !restrictedNamePattern.MatchString(cmd.NewName) {
+		return fmt.Errorf("%s must match pattern %s", cmd.NewName, restrictedNamePattern.String())
+	}
 	if c.CheckRunStatus(cc.ContainerName(fmt.Sprintf("%s.yaml", cmd.Name)), cc.StatusRunning) {
 		return cc.ErrIsRunning
 	}
@@ -75,6 +81,13 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 	if _, err := os.Stat(filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))); err != nil {
 		return err
+	}
+	topazContainers, err := c.GetRunningContainers()
+	if err != nil {
+		return err
+	}
+	if len(topazContainers) > 0 {
+		return cc.ErrIsRunning
 	}
 
 	c.Config.TopazConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
@@ -104,6 +117,9 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		if cmd.LocalPolicyImage == "" {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
 		}
+	}
+	if !restrictedNamePattern.MatchString(cmd.Name) {
+		return fmt.Errorf("%s must match pattern %s", cmd.Name, restrictedNamePattern.String())
 	}
 
 	configFile := cmd.Name + ".yaml"
