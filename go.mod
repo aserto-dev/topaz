@@ -32,7 +32,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.31.1
 	github.com/aserto-dev/runtime v0.62.1
 	github.com/aserto-dev/self-decision-logger v0.0.5
-	github.com/aserto-dev/service-host v0.0.10
+	github.com/aserto-dev/service-host v0.0.11-0.20240422155049-7011101427e7
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v26.0.0+incompatible
 	github.com/docker/go-connections v0.5.0
