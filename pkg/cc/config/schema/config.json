@@ -23,8 +23,17 @@
                 "jwt": {
                     "#ref": "#definitions/JSONWebToken"
                 },
+                "auth": {
+                    "#ref": "#definitions/Authentication"
+                },
                 "api": {
                     "$ref": "#definitions/Services"
+                },
+                "controller": {
+                    "$ref": "#definitions/Controller"
+                },
+                "decision_logger": {
+                    "$ref": "#definitions/DecisionLogger"
                 },
                 "opa": {
                     "$ref": "#definitions/OpenPolicyAgent"
@@ -87,7 +96,7 @@
                 "db_path": {
                     "type": "string",
                     "description": "file path of edge directory database file",
-                    "default": "${TOPAZ_DIR}/db/directory.db"
+                    "default": "${TOPAZ_DB_DIR}/directory.db"
                 },
                 "request_timeout": {
                     "type": "string",
@@ -168,6 +177,14 @@
             "description": "Services type config",
             "uniqueItems": true,
             "properties": {
+                "console": {
+                    "description": "console service",
+                    "$ref": "#/definitions/ServiceInstance"
+                },
+                "model": {
+                    "description": "directory model service",
+                    "$ref": "#/definitions/ServiceInstance"
+                },
                 "reader": {
                     "description": "directory reader service",
                     "$ref": "#/definitions/ServiceInstance"
@@ -182,10 +199,6 @@
                 },
                 "exporter": {
                     "description": "directory exporter service",
-                    "$ref": "#/definitions/ServiceInstance"
-                },
-                "model": {
-                    "description": "directory model service",
                     "$ref": "#/definitions/ServiceInstance"
                 },
                 "authorizer": {
@@ -225,6 +238,10 @@
         },
         "ServiceGRPC": {
             "properties": {
+                "fqdn": {
+                    "description": "fully qualified domain name",
+                    "type": "string"
+                },
                 "listen_address": {
                     "description": "gRPC host address and port",
                     "type": "string"
@@ -241,6 +258,10 @@
         },
         "ServiceGateway": {
             "properties": {
+                "fqdn": {
+                    "description": "fully qualified domain name",
+                    "type": "string"
+                },
                 "listen_address": {
                     "description": "REST gateway host address and port",
                     "type": "string"
@@ -345,6 +366,15 @@
         },
         "OpenPolicyAgentConfig": {
             "description": "OPA config block"
+        },
+        "Authentication": {
+            "description": "Authentication configuration"
+        },
+        "Controller": {
+            "description": "Controller configuration"
+        },
+        "DecisionLogger": {
+            "description": "Decision Logger configuration"
         }
     }
 }
