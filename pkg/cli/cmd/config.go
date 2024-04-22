@@ -90,8 +90,8 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 		return cc.ErrIsRunning
 	}
 
-	c.Config.TopazConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
-	c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
+	c.Config.Active.Config = cmd.Name
+	c.Config.Active.ConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	c.UI.Normal().Msgf("Using configuration %s", fmt.Sprintf("%s.yaml", cmd.Name))
 
 	if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
@@ -123,9 +123,9 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	configFile := cmd.Name + ".yaml"
-	if configFile != c.Config.TopazConfigFile {
-		c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), configFile)
-		c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
+	if configFile != c.Config.Active.ConfigFile {
+		c.Config.Active.Config = cmd.Name
+		c.Config.Active.ConfigFile = filepath.Join(cc.GetTopazCfgDir(), configFile)
 	}
 
 	if !cmd.Stdout {
@@ -165,14 +165,14 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		w = c.UI.Output()
 	} else {
 		if !cmd.Force {
-			if _, err := os.Stat(c.Config.TopazConfigFile); err == nil {
+			if _, err := os.Stat(c.Config.Active.ConfigFile); err == nil {
 				c.UI.Exclamation().Msg("A configuration file already exists.")
 				if !PromptYesNo("Do you want to continue?", false) {
 					return nil
 				}
 			}
 		}
-		w, err = os.Create(c.Config.TopazConfigFile)
+		w, err = os.Create(c.Config.Active.ConfigFile)
 		if err != nil {
 			return err
 		}
@@ -208,7 +208,7 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 	for i := range files {
 		name := strings.Split(files[i].Name(), ".")[0]
 		active := ""
-		if files[i].Name() == filepath.Base(c.Config.TopazConfigFile) {
+		if files[i].Name() == filepath.Base(c.Config.Active.ConfigFile) {
 			active = "*"
 		}
 

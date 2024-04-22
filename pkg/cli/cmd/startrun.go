@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"path"
@@ -39,19 +38,24 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return cc.ErrIsRunning
 	}
 
-	if _, err := os.Stat(c.Config.TopazConfigFile); errors.Is(err, os.ErrNotExist) {
-		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(c.Config.TopazConfigFile))
+	if _, err := os.Stat(c.Config.Active.ConfigFile); errors.Is(err, os.ErrNotExist) {
+		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(c.Config.Active.ConfigFile))
 	}
 
-	cfg, err := config.LoadConfiguration(c.Config.TopazConfigFile)
+	cfg, err := config.LoadConfiguration(c.Config.Active.ConfigFile)
 	if err != nil {
 		return err
 	}
+
+	c.Config.Running.Config = c.Config.Active.Config
+	c.Config.Running.ConfigFile = c.Config.Active.ConfigFile
+	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
+
 	if cfg.HasTopazDir {
 		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}
 
-	generator := config.NewGenerator(filepath.Base(c.Config.TopazConfigFile))
+	generator := config.NewGenerator(filepath.Base(c.Config.Active.ConfigFile))
 	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}
@@ -96,7 +100,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithContainerHostname(cmd.ContainerHostname),
 		dockerx.WithWorkingDir("/app"),
 		dockerx.WithEntrypoint([]string{"./topazd"}),
-		dockerx.WithCmd([]string{"run", "--config-file", fmt.Sprintf("/config/%s", filepath.Base(c.Config.TopazConfigFile))}),
+		dockerx.WithCmd([]string{"run", "--config-file", fmt.Sprintf("/config/%s", filepath.Base(c.Config.Active.ConfigFile))}),
 		dockerx.WithAutoRemove(),
 		dockerx.WithEnvs(getEnvFromVolumes(volumes)),
 		dockerx.WithEnvs(cmd.Env),
@@ -119,7 +123,11 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	}
 
 	fmt.Fprintf(c.UI.Output(), "\n")
-	c.Context = context.WithValue(c.Context, Save, true)
+
+	if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
 	return nil
 }
 

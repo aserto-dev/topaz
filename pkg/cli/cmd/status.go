@@ -10,7 +10,7 @@ type StatusCmd struct {
 }
 
 func (cmd *StatusCmd) Run(c *cc.CommonCtx) error {
-	containerName := c.Config.ContainerName
+	containerName := c.Config.Running.ContainerName
 	if cmd.ContainerName != containerName {
 		containerName = cmd.ContainerName
 	}

@@ -85,17 +85,20 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 	fileName := fmt.Sprintf("%s.yaml", tmpl.Name)
+	c.Config.Active.Config = tmpl.Name
 	if cmd.ConfigName != "" {
 		if !restrictedNamePattern.MatchString(cmd.ConfigName) {
 			return fmt.Errorf("%s must match pattern %s", cmd.Name, restrictedNamePattern.String())
 		}
 		fileName = fmt.Sprintf("%s.yaml", cmd.ConfigName)
+		c.Config.Active.Config = cmd.ConfigName
 	}
 
 	// reset defaults on template install
-	c.Config.TopazConfigFile = filepath.Join(cc.GetTopazCfgDir(), fileName)
-	c.Config.ContainerName = cc.ContainerName(c.Config.TopazConfigFile)
-	cmd.ContainerName = c.Config.ContainerName
+	c.Config.Active.ConfigFile = filepath.Join(cc.GetTopazCfgDir(), fileName)
+	c.Config.Running.ActiveConfig = c.Config.Active
+	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
+	cmd.ContainerName = c.Config.Running.ContainerName
 
 	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
 		err = os.MkdirAll(cc.GetTopazDir(), 0700)
@@ -143,7 +146,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 
 	// 4 - wait for health endpoint to be in serving state
-	cfg := config.GetConfig(c.Config.TopazConfigFile)
+	cfg := config.GetConfig(c.Config.Active.ConfigFile)
 	if cfg.HasTopazDir {
 		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}

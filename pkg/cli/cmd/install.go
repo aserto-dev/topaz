@@ -17,7 +17,7 @@ type InstallCmd struct {
 func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	if c.CheckRunStatus(cc.ContainerName(c.Config.TopazConfigFile), cc.StatusRunning) {
+	if c.CheckRunStatus(cc.ContainerName(c.Config.Active.Config), cc.StatusRunning) {
 		return cc.ErrIsRunning
 	}
 

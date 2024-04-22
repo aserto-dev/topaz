@@ -33,9 +33,23 @@ type CommonCtx struct {
 }
 
 type CLIConfig struct {
+	Version  int            `json:"version"`
+	Active   ActiveConfig   `json:"active"`
+	Running  RunningConfig  `json:"running"`
+	Defaults DefaultsConfig `json:"defaults"`
+}
+
+type ActiveConfig struct {
+	Config     string `json:"config"`
+	ConfigFile string `json:"config_file"`
+}
+type RunningConfig struct {
+	ActiveConfig
+	ContainerName string `json:"container_name"`
+}
+
+type DefaultsConfig struct {
 	NoCheck           bool   `json:"no_check"`
-	TopazConfigFile   string `json:"topaz_config_file"`
-	ContainerName     string `json:"container_name"`
 	ContainerRegistry string `json:"container_registry"`
 	ContainerImage    string `json:"container_image"`
 	ContainerTag      string `json:"container_tag"`
@@ -54,13 +68,19 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 		Context: context.Background(),
 		UI:      iostream.NewUI(iostream.DefaultIO()),
 		Config: &CLIConfig{
-			NoCheck:           noCheck,
-			TopazConfigFile:   filepath.Join(GetTopazCfgDir(), "config.yaml"),
-			ContainerName:     defaultContainerName,
-			ContainerRegistry: ContainerRegistry(),
-			ContainerImage:    ContainerImage(),
-			ContainerTag:      ContainerTag(),
-			ContainerPlatform: ContainerPlatform(),
+			Version: 1,
+			Active: ActiveConfig{
+				ConfigFile: filepath.Join(GetTopazCfgDir(), "config.yaml"),
+				Config:     "config.yaml",
+			},
+			Defaults: DefaultsConfig{
+				NoCheck:           noCheck,
+				ContainerRegistry: ContainerRegistry(),
+				ContainerImage:    ContainerImage(),
+				ContainerTag:      ContainerTag(),
+				ContainerPlatform: ContainerPlatform(),
+			},
+			Running: RunningConfig{},
 		},
 	}
 
@@ -79,13 +99,13 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 }
 
 func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatus) bool {
-	if c.Config.NoCheck {
+	if c.Config.Defaults.NoCheck {
 		return false
 	}
 
 	// set default container name if not specified.
 	if containerName == "" {
-		containerName = ContainerName(c.Config.TopazConfigFile)
+		containerName = ContainerName(c.Config.Active.ConfigFile)
 	}
 
 	dc, err := dockerx.New()
@@ -116,7 +136,7 @@ func (c *CommonCtx) GetRunningContainers() ([]*types.Container, error) {
 }
 
 func (c *CommonCtx) IsServing(grpcAddress string) bool {
-	if c.Config.NoCheck {
+	if c.Config.Defaults.NoCheck {
 		return true
 	}
 

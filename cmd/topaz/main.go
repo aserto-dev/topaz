@@ -63,7 +63,7 @@ func main() {
 			"container_image":    cc.ContainerImage(),
 			"container_tag":      cc.ContainerTag(),
 			"container_platform": cc.ContainerPlatform(),
-			"container_name":     cc.ContainerName(ctx.Config.TopazConfigFile),
+			"container_name":     cc.ContainerName(ctx.Config.Active.ConfigFile),
 		},
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))

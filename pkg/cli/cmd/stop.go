@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -43,7 +44,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 
 		}
 	} else {
-		c.Config.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.
+		c.Config.Defaults.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.
 		if c.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
 			return nil
 		}
@@ -55,7 +56,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 		}
 
 		if cmd.Wait {
-			ports, err := config.GetConfig(c.Config.TopazConfigFile).Ports()
+			ports, err := config.GetConfig(c.Config.Running.ConfigFile).Ports()
 			if err != nil {
 				return err
 			}
@@ -65,5 +66,12 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
+	// empty running config
+	c.Config.Running = cc.RunningConfig{}
+
+	if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
 	return nil
 }
