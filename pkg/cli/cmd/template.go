@@ -191,8 +191,16 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 	{
 		command := &StopCmd{
 			ContainerName: "topaz*",
-			Wait:          false, // cannot wait if using wildcard.
+			Wait:          true,
 		}
+		if err := command.Run(c); err != nil {
+			return err
+		}
+	}
+
+	// topaz status, output status
+	{
+		command := &StatusCmd{}
 		if err := command.Run(c); err != nil {
 			return err
 		}
@@ -214,6 +222,10 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 		if err := command.Run(c); err != nil {
 			return err
 		}
+	}
+
+	// topaz config use - activate configuration (new or existing)
+	{
 		use := UseConfigCmd{
 			Name:      ConfigName(name),
 			ConfigDir: cc.GetTopazCfgDir(),
