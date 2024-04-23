@@ -10,7 +10,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	// az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/samber/lo"
