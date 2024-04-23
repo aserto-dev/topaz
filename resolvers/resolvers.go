@@ -3,6 +3,7 @@ package resolvers
 type Resolvers struct {
 	runtimeResolver   RuntimeResolver
 	directoryResolver DirectoryResolver
+	edgeSyncResolver  EdgeSyncResolver
 }
 
 func New() *Resolvers {
@@ -23,4 +24,12 @@ func (s *Resolvers) SetDirectoryResolver(resolver DirectoryResolver) {
 
 func (s *Resolvers) GetDirectoryResolver() DirectoryResolver {
 	return s.directoryResolver
+}
+
+func (s *Resolvers) SetEdgeSyncResolver(resolver EdgeSyncResolver) {
+	s.edgeSyncResolver = resolver
+}
+
+func (s *Resolvers) GetEdgeSyncResolver() EdgeSyncResolver {
+	return s.edgeSyncResolver
 }

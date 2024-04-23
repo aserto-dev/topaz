@@ -25,6 +25,7 @@ jwt:
 api:
   model:
     grpc:
+      fqdn: ""
       listen_address: "0.0.0.0:9292"
       # if certs are not specified default certs will be generate with the format reader_grpc.*
       certs:
@@ -32,6 +33,7 @@ api:
         tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     gateway:
+      fqdn: ""
       listen_address: "0.0.0.0:9393"
       # allowed_origins include localhost by default
       allowed_origins:
