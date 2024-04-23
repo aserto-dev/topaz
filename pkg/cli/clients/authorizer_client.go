@@ -73,13 +73,16 @@ func (cfg *AuthorizerConfig) validate() error {
 	creds := credentials.NewTLS(tlsConf)
 
 	opts := []grpc.DialOption{
-		grpc.WithUserAgent("topaz/dev-build (no version set)"),
+		grpc.WithUserAgent("topaz/dev-build (no version set)"), // TODO: verify user-agent value
 	}
+
 	if cfg.Insecure {
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
+
 	if _, err := grpcurl.BlockingDial(ctx, "tcp", cfg.Host, creds, opts...); err != nil {
 		return err
 	}
+
 	return nil
 }
