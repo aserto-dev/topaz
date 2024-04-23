@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -10,9 +9,11 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/fatih/color"
+	"github.com/pkg/errors"
 )
 
 type ConfigCmd struct {
@@ -25,72 +26,99 @@ type ConfigCmd struct {
 
 var restrictedNamePattern = regexp.MustCompile(`^[a-z0-9][a-z0-9_.-]*$`)
 
+type ConfigName string
+
+func (c ConfigName) AfterApply(ctx *kong.Context) error {
+	if string(c) == "" {
+		return fmt.Errorf("no configuration name value provided")
+	}
+
+	if !restrictedNamePattern.MatchString(string(c)) {
+		return fmt.Errorf("configuration name is invalid, must match pattern %q", restrictedNamePattern.String())
+	}
+
+	return nil
+}
+
+func (c ConfigName) String() string {
+	return string(c)
+}
+
 func (cmd *ConfigCmd) Run(c *cc.CommonCtx) error {
 	return nil
 }
 
 type DeleteConfigCmd struct {
-	ConfigDir string `flag:"" required:"false" default:"${topaz_cfg_dir}" help:"path to config folder" `
-	Name      string `arg:"" required:"" help:"topaz config name"`
+	Name      ConfigName `arg:"" required:"" help:"topaz config name"`
+	ConfigDir string     `flag:"" required:"false" default:"${topaz_cfg_dir}" help:"path to config folder" `
 }
 
 func (cmd *DeleteConfigCmd) Run(c *cc.CommonCtx) error {
-	if cmd.Name == "" {
-		return errors.New("configuration name must be provided")
-	}
 	if c.CheckRunStatus(cc.ContainerName(fmt.Sprintf("%s.yaml", cmd.Name)), cc.StatusRunning) {
-		return cc.ErrIsRunning
+		return fmt.Errorf("configuration %q is running, use 'topaz stop' to stop, before deleting", cmd.Name)
 	}
+
 	c.UI.Normal().Msgf("Removing configuration %s", fmt.Sprintf("%s.yaml", cmd.Name))
 	filename := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 
+	if c.Config.Active.Config == cmd.Name.String() {
+		c.Config.Active.Config = ""
+		c.Config.Active.ConfigFile = ""
+		if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
+			return errors.Wrap(err, "failed to update active context")
+		}
+	}
+
 	return os.Remove(filename)
+
 }
 
 type RenameConfigCmd struct {
-	ConfigDir string `flag:"" required:"false" default:"${topaz_cfg_dir}" help:"path to config folder" `
-	Name      string `arg:"" required:"" help:"topaz config name"`
-	NewName   string `arg:"" required:"" help:"topaz new config name"`
+	Name      ConfigName `arg:"" required:"" help:"topaz config name"`
+	NewName   ConfigName `arg:"" required:"" help:"topaz new config name"`
+	ConfigDir string     `flag:"" required:"false" default:"${topaz_cfg_dir}" help:"path to config folder" `
 }
 
 func (cmd *RenameConfigCmd) Run(c *cc.CommonCtx) error {
-	if cmd.Name == "" || cmd.NewName == "" {
-		return errors.New("old configuration name and new configuration name must be provided")
-	}
-	if !restrictedNamePattern.MatchString(cmd.NewName) {
-		return fmt.Errorf("%s must match pattern %s", cmd.NewName, restrictedNamePattern.String())
-	}
 	if c.CheckRunStatus(cc.ContainerName(fmt.Sprintf("%s.yaml", cmd.Name)), cc.StatusRunning) {
-		return cc.ErrIsRunning
+		return fmt.Errorf("configuration %q is running, use 'topaz stop' to stop, before renaming", cmd.Name)
 	}
+
 	c.UI.Normal().Msgf("Renaming configuration %s to %s", fmt.Sprintf("%s.yaml", cmd.Name), fmt.Sprintf("%s.yaml", cmd.NewName))
 	oldFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	newFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.NewName))
+
+	if c.Config.Active.Config == cmd.Name.String() {
+		c.Config.Active.Config = cmd.NewName.String()
+		c.Config.Active.ConfigFile = newFile
+		if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
+			return errors.Wrap(err, "failed to update active context")
+		}
+	}
 
 	return os.Rename(oldFile, newFile)
 }
 
 type UseConfigCmd struct {
-	ConfigDir string `flag:"" required:"false" default:"${topaz_cfg_dir}" help:"path to config folder" `
-	Name      string `arg:"" required:"" help:"topaz config name"`
+	Name      ConfigName `arg:"" required:"" help:"topaz config name"`
+	ConfigDir string     `flag:"" required:"false" default:"${topaz_cfg_dir}" help:"path to config folder" `
 }
 
 func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
-	if cmd.Name == "" {
-		return errors.New("configuration name must be provided")
-	}
 	if _, err := os.Stat(filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))); err != nil {
 		return err
 	}
+
 	topazContainers, err := c.GetRunningContainers()
 	if err != nil {
 		return err
 	}
+
 	if len(topazContainers) > 0 {
 		return cc.ErrIsRunning
 	}
 
-	c.Config.Active.Config = cmd.Name
+	c.Config.Active.Config = cmd.Name.String()
 	c.Config.Active.ConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	c.UI.Normal().Msgf("Using configuration %s", fmt.Sprintf("%s.yaml", cmd.Name))
 
@@ -103,13 +131,13 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 }
 
 type NewConfigCmd struct {
-	Name              string `short:"n" help:"config name"`
-	LocalPolicyImage  string `short:"l" help:"local policy image name"`
-	Resource          string `short:"r" help:"resource url"`
-	Stdout            bool   `short:"p" help:"print to stdout"`
-	EdgeDirectory     bool   `short:"d" help:"enable edge directory" default:"false"`
-	Force             bool   `flag:"" default:"false" short:"f" required:"false" help:"skip confirmation prompt"`
-	EnableDirectoryV2 bool   `flag:"" name:"enable-v2" hidden:"" default:"true" help:"enable directory version 2 services for backwards compatibility"`
+	Name              ConfigName `short:"n" help:"config name"`
+	LocalPolicyImage  string     `short:"l" help:"local policy image name"`
+	Resource          string     `short:"r" help:"resource url"`
+	Stdout            bool       `short:"p" help:"print to stdout"`
+	EdgeDirectory     bool       `short:"d" help:"enable edge directory" default:"false"`
+	Force             bool       `flag:"" default:"false" short:"f" required:"false" help:"skip confirmation prompt"`
+	EnableDirectoryV2 bool       `flag:"" name:"enable-v2" default:"false" help:"enable directory version 2 services for backwards compatibility"`
 }
 
 func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
@@ -118,13 +146,14 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
 		}
 	}
-	if !restrictedNamePattern.MatchString(cmd.Name) {
+
+	if !restrictedNamePattern.MatchString(cmd.Name.String()) {
 		return fmt.Errorf("%s must match pattern %s", cmd.Name, restrictedNamePattern.String())
 	}
 
-	configFile := cmd.Name + ".yaml"
+	configFile := cmd.Name.String() + ".yaml"
 	if configFile != c.Config.Active.ConfigFile {
-		c.Config.Active.Config = cmd.Name
+		c.Config.Active.Config = cmd.Name.String()
 		c.Config.Active.ConfigFile = filepath.Join(cc.GetTopazCfgDir(), configFile)
 	}
 
@@ -132,10 +161,10 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		_, _ = fmt.Fprint(color.Error, color.GreenString(">>> configure policy"))
 	}
 
-	configGenerator := config.NewGenerator(cmd.Name).
+	configGenerator := config.NewGenerator(cmd.Name.String()).
 		WithVersion(config.ConfigFileVersion).
 		WithLocalPolicyImage(cmd.LocalPolicyImage).
-		WithPolicyName(cmd.Name).
+		WithPolicyName(cmd.Name.String()).
 		WithResource(cmd.Resource).
 		WithEdgeDirectory(cmd.EdgeDirectory).
 		WithEnableDirectoryV2(cmd.EnableDirectoryV2)
@@ -198,6 +227,7 @@ type ListConfigCmd struct {
 
 func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 	table := c.UI.Normal().WithTable("", "Name", "Config File")
+
 	files, err := os.ReadDir(cmd.ConfigDir)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -205,6 +235,7 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 		}
 		return err
 	}
+
 	for i := range files {
 		name := strings.Split(files[i].Name(), ".")[0]
 		active := ""

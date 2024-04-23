@@ -206,7 +206,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 	// 2 - topaz config new - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
 		command := NewConfigCmd{
-			Name:              name,
+			Name:              ConfigName(name),
 			Resource:          tmpl.Assets.Policy.Resource,
 			Force:             true,
 			EnableDirectoryV2: false,
@@ -215,7 +215,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 			return err
 		}
 		use := UseConfigCmd{
-			Name:      name,
+			Name:      ConfigName(name),
 			ConfigDir: cc.GetTopazCfgDir(),
 		}
 		if err := use.Run(c); err != nil {
