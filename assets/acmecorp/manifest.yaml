@@ -16,9 +16,11 @@ types:
     relations:
       ### display_name: user#manager ###
       manager: user
+
     permissions:
       ### display_name: user#in_management_chain ###
       in_management_chain: manager | manager->in_management_chain
+
 
   ### display_name: Identity ###
   identity:
@@ -26,9 +28,10 @@ types:
       ### display_name: identity#identifier ###
       identifier: user
 
+
   ### display_name: Group ###
   group:
     relations:
       ### display_name: group#member ###
-      member: user
+      member: user | group#member
 
