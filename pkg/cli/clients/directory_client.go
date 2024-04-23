@@ -13,13 +13,27 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dsc.Client, error) {
+const (
+	localhostDirectory   string = "localhost:9292"
+	EnvTopazDirectorySvc string = "TOPAZ_DIRECTORY_SVC"
+	EnvTopazDirectoryKey string = "TOPAZ_DIRECTORY_KEY"
+)
+
+type DirectoryConfig struct {
+	Host     string `flag:"host" short:"H" env:"TOPAZ_DIRECTORY_SVC" help:"directory service address"`
+	APIKey   string `flag:"api-key" short:"k" env:"TOPAZ_DIRECTORY_KEY" help:"directory API key"`
+	Token    string `flag:"token" short:"t" env:"TOPAZ_DIRECTORY_TOKEN" help:"directory OAuth2.0 token" hidden:""`
+	Insecure bool   `flag:"insecure" short:"i" env:"INSECURE" help:"skip TLS verification"`
+	TenantID string `flag:"tenant-id" help:"" env:"ASERTO_TENANT_ID" `
+}
+
+func NewDirectoryClient(c *cc.CommonCtx, cfg *DirectoryConfig) (*dsc.Client, error) {
 
 	if cfg.Host == "" {
 		cfg.Host = localhostDirectory
 	}
 
-	if err := validate(cfg); err != nil {
+	if err := cfg.validate(); err != nil {
 		return nil, err
 	}
 
@@ -48,7 +62,7 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dsc.Client, error) {
 	return dsc.New(conn, c.UI)
 }
 
-func validate(cfg *Config) error {
+func (cfg *DirectoryConfig) validate() error {
 	ctx := context.Background()
 
 	tlsConf, err := grpcurl.ClientTLSConfig(cfg.Insecure, "", "", "")

@@ -47,7 +47,7 @@ type TestExecCmd struct {
 	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
 	Summary bool   `flag:"" default:"false" help:"display test summary"`
 	results *testResults
-	clients.Config
+	clients.DirectoryConfig
 }
 
 // nolint: funlen,gocyclo
@@ -58,16 +58,17 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 	defer r.Close()
 
-	dsc, err := clients.NewDirectoryClient(c, &cmd.Config)
+	dsc, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return err
 	}
 
-	azc, err := clients.NewAuthorizerClient(c, &clients.Config{
+	// TODO: move check decisions to authorizer (az) check subcommand.
+	azc, err := clients.NewAuthorizerClient(c, &clients.AuthorizerConfig{
 		Host:     lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerSvc) != "", os.Getenv(clients.EnvTopazAuthorizerSvc), ""),
 		APIKey:   lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerKey) != "", os.Getenv(clients.EnvTopazAuthorizerKey), ""),
-		Insecure: cmd.Config.Insecure,
-		TenantID: cmd.Config.TenantID,
+		Insecure: cmd.DirectoryConfig.Insecure,
+		TenantID: cmd.DirectoryConfig.TenantID,
 	})
 	if err != nil {
 		return err

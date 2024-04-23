@@ -12,7 +12,7 @@ import (
 type ExportCmd struct {
 	Directory string        `short:"d" required:"" help:"directory to write .json data"`
 	Format    FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
-	clients.Config
+	clients.DirectoryConfig
 }
 
 func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
@@ -24,7 +24,7 @@ func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
 	objectsFile := filepath.Join(cmd.Directory, "objects.json")
 	relationsFile := filepath.Join(cmd.Directory, "relations.json")
 
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
+	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return err
 	}

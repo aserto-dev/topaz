@@ -13,7 +13,7 @@ import (
 type RestoreCmd struct {
 	File   string        `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
 	Format FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
-	clients.Config
+	clients.DirectoryConfig
 }
 
 func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
@@ -21,7 +21,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
+	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return err
 	}
