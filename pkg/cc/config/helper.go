@@ -1,10 +1,7 @@
 package config
 
 import (
-	"path/filepath"
-
 	builder "github.com/aserto-dev/service-host"
-	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/samber/lo"
 )
 
@@ -13,8 +10,8 @@ type currentConfig struct {
 	err error
 }
 
-func CurrentConfig() *currentConfig {
-	cfg, err := LoadConfiguration(filepath.Join(cc.GetTopazCfgDir(), "config.yaml"))
+func GetConfig(configFilePath string) *currentConfig {
+	cfg, err := LoadConfiguration(configFilePath)
 	if err != nil {
 		return &currentConfig{Loader: nil, err: err}
 	}

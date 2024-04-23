@@ -1,4 +1,4 @@
-package cmd
+package directory
 
 import (
 	"os"
@@ -13,17 +13,17 @@ import (
 type BackupCmd struct {
 	File   string        `arg:""  default:"backup.tar.gz" help:"absolute file path to make backup to"`
 	Format FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
-	clients.Config
+	clients.DirectoryConfig
 }
 
 const defaultFileName = "backup.tar.gz"
 
 func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
-		return errors.Wrap(ErrNotServing, cmd.Host)
+		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
+	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return err
 	}

@@ -17,8 +17,8 @@ type InstallCmd struct {
 func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	if c.CheckRunStatus(cc.ContainerName(), cc.StatusRunning) {
-		return ErrIsRunning
+	if c.CheckRunStatus(cc.ContainerName(c.Config.Active.Config), cc.StatusRunning) {
+		return cc.ErrIsRunning
 	}
 
 	color.Green(">>> installing %s (%s)...",

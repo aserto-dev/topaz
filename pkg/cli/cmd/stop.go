@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+	"strings"
+
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
@@ -13,29 +17,63 @@ type StopCmd struct {
 }
 
 func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
-	c.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.
-	if c.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
-		return nil
-	}
-
-	color.Green(">>> stopping topaz...")
 	dc, err := dockerx.New()
 	if err != nil {
 		return err
 	}
-	if err := dc.Stop(cmd.ContainerName); err != nil {
-		return err
-	}
-
-	if cmd.Wait {
-		ports, err := config.CurrentConfig().Ports()
+	if strings.ContainsAny(cmd.ContainerName, "*") {
+		topazContainers, err := c.GetRunningContainers()
 		if err != nil {
 			return err
 		}
-		if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
+
+		color.Green(">>> stopping topaz...")
+		for _, container := range topazContainers {
+			color.Green(">>> stopping topaz %q...", c.Config.Running.Config)
+
+			if err := dc.Stop(container.Names[0]); err != nil {
+				return err
+			}
+			if cmd.Wait {
+				var ports []string
+				for _, port := range container.Ports {
+					ports = append(ports, fmt.Sprintf("%d", port.PublicPort))
+				}
+				if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
+					return err
+				}
+			}
+
+		}
+	} else {
+		c.Config.Defaults.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.
+		if c.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
+			return nil
+		}
+
+		color.Green(">>> stopping topaz %q...", c.Config.Running.Config)
+
+		if err := dc.Stop(cmd.ContainerName); err != nil {
 			return err
+		}
+
+		if cmd.Wait {
+			ports, err := config.GetConfig(c.Config.Running.ConfigFile).Ports()
+			if err != nil {
+				return err
+			}
+			if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
+				return err
+			}
 		}
 	}
 
+	// empty running config
+	c.Config.Running = cc.RunningConfig{}
+
+	if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
 	return nil
 }

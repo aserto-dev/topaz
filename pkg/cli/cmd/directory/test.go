@@ -1,4 +1,4 @@
-package cmd
+package directory
 
 import (
 	"context"
@@ -10,7 +10,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/samber/lo"
@@ -30,7 +29,6 @@ const (
 	check           string = "check"
 	checkRelation   string = "check_relation"
 	checkPermission string = "check_permission"
-	checkDecision   string = "check_decision"
 	expected        string = "expected"
 	passed          string = "PASS"
 	failed          string = "FAIL"
@@ -47,7 +45,7 @@ type TestExecCmd struct {
 	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
 	Summary bool   `flag:"" default:"false" help:"display test summary"`
 	results *testResults
-	clients.Config
+	clients.DirectoryConfig
 }
 
 // nolint: funlen,gocyclo
@@ -58,17 +56,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 	defer r.Close()
 
-	dsc, err := clients.NewDirectoryClient(c, &cmd.Config)
-	if err != nil {
-		return err
-	}
-
-	azc, err := clients.NewAuthorizerClient(c, &clients.AuthorizerConfig{
-		Host:     lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerSvc) != "", os.Getenv(clients.EnvTopazAuthorizerSvc), ""),
-		APIKey:   lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerKey) != "", os.Getenv(clients.EnvTopazAuthorizerKey), ""),
-		Insecure: cmd.Config.Insecure,
-		TenantID: cmd.Config.TenantID,
-	})
+	dsc, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return err
 	}
@@ -128,8 +116,8 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 			result = checkPermissionV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckRelation && reqVersion == 2:
 			result = checkRelationV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
-		case checkType == CheckDecision:
-			result = checkDecisionV2(c.Context, azc, msg.Fields[checkTypeMapStr[checkType]])
+		default:
+			continue
 		}
 
 		cmd.results.Passed(result.Outcome == expected)
@@ -191,14 +179,12 @@ var checkTypeMap = map[string]checkType{
 	check:           Check,
 	checkRelation:   CheckRelation,
 	checkPermission: CheckPermission,
-	checkDecision:   CheckDecision,
 }
 
 var checkTypeMapStr = map[checkType]string{
 	Check:           check,
 	CheckRelation:   checkRelation,
 	CheckPermission: checkPermission,
-	CheckDecision:   checkDecision,
 }
 
 func getCheckType(msg *structpb.Struct) checkType {
@@ -343,35 +329,6 @@ func checkRelationV2(ctx context.Context, c *v2.Client, msg *structpb.Value) *ch
 	}
 }
 
-func checkDecisionV2(ctx context.Context, c az2.AuthorizerClient, msg *structpb.Value) *checkResult {
-	var req az2.IsRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Is(ctx, &req)
-
-	duration := time.Since(start)
-
-	if err != nil {
-		return &checkResult{
-			Outcome:  false,
-			Duration: duration,
-			Err:      err,
-			Str:      checkDecisionStringV2(&req),
-		}
-	}
-
-	return &checkResult{
-		Outcome:  lo.Ternary(err != nil, false, resp.Decisions[0].GetIs()),
-		Duration: duration,
-		Err:      err,
-		Str:      checkDecisionStringV2(&req),
-	}
-}
-
 func checkStringV3(req *dsr3.CheckRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
@@ -409,14 +366,6 @@ func checkPermissionStringV3(req *dsr3.CheckPermissionRequest) string {
 		req.GetObjectType(), req.GetObjectId(),
 		req.GetPermission(),
 		req.GetSubjectType(), req.GetSubjectId(),
-	)
-}
-
-func checkDecisionStringV2(req *az2.IsRequest) string {
-	return fmt.Sprintf("%s/%s:%s",
-		req.PolicyContext.GetPath(),
-		req.PolicyContext.GetDecisions()[0],
-		req.IdentityContext.Identity,
 	)
 }
 
@@ -460,7 +409,6 @@ const assertionsTemplateV2 string = `{
   "assertions": [
     {"check_relation": {"object": {"type": "", "key": ""}, "relation": {"name": ""}, "subject": {"type": "", "key": ""}}, "expected": true},
     {"check_permission": {"object": {"type": "", "key": ""}, "permission": {"name": ""}, "subject": {"type": "", "key": ""}}, "expected": true},
-	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true},
   ]
 }`
 
@@ -469,7 +417,6 @@ const assertionsTemplateV3 string = `{
 	{"check": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true},
 	{"check_relation": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true},
 	{"check_permission": {"object_type": "", "object_id": "", "permission": "", "subject_type": "", "subject_id": ""}, "expected": true},
-	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true},
   ]
 }`
 

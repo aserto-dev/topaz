@@ -13,21 +13,27 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-type Config struct {
-	Host      string `flag:"host" short:"H" help:"directory service address" env:"TOPAZ_DIRECTORY_SVC" default:"localhost:9292"`
-	APIKey    string `flag:"api-key" short:"k" help:"directory API key" env:"TOPAZ_DIRECTORY_KEY"`
-	Insecure  bool   `flag:"insecure" short:"i" help:"skip TLS verification"`
-	SessionID string `flag:"session-id"  help:""`
-	TenantID  string `flag:"tenant-id" help:""`
+const (
+	localhostDirectory   string = "localhost:9292"
+	EnvTopazDirectorySvc string = "TOPAZ_DIRECTORY_SVC"
+	EnvTopazDirectoryKey string = "TOPAZ_DIRECTORY_KEY"
+)
+
+type DirectoryConfig struct {
+	Host     string `flag:"host" short:"H" env:"TOPAZ_DIRECTORY_SVC" help:"directory service address"`
+	APIKey   string `flag:"api-key" short:"k" env:"TOPAZ_DIRECTORY_KEY" help:"directory API key"`
+	Token    string `flag:"token" short:"t" env:"TOPAZ_DIRECTORY_TOKEN" help:"directory OAuth2.0 token" hidden:""`
+	Insecure bool   `flag:"insecure" short:"i" env:"INSECURE" help:"skip TLS verification"`
+	TenantID string `flag:"tenant-id" help:"" env:"ASERTO_TENANT_ID" `
 }
 
-func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dsc.Client, error) {
+func NewDirectoryClient(c *cc.CommonCtx, cfg *DirectoryConfig) (*dsc.Client, error) {
 
 	if cfg.Host == "" {
 		cfg.Host = localhostDirectory
 	}
 
-	if err := validate(cfg); err != nil {
+	if err := cfg.validate(); err != nil {
 		return nil, err
 	}
 
@@ -40,8 +46,8 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dsc.Client, error) {
 		opts = append(opts, client.WithAPIKeyAuth(cfg.APIKey))
 	}
 
-	if cfg.SessionID != "" {
-		opts = append(opts, client.WithSessionID(cfg.SessionID))
+	if cfg.Token != "" {
+		opts = append(opts, client.WithTokenAuth(cfg.Token))
 	}
 
 	if cfg.TenantID != "" {
@@ -56,7 +62,7 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *Config) (*dsc.Client, error) {
 	return dsc.New(conn, c.UI)
 }
 
-func validate(cfg *Config) error {
+func (cfg *DirectoryConfig) validate() error {
 	ctx := context.Background()
 
 	tlsConf, err := grpcurl.ClientTLSConfig(cfg.Insecure, "", "", "")
@@ -67,13 +73,16 @@ func validate(cfg *Config) error {
 	creds := credentials.NewTLS(tlsConf)
 
 	opts := []grpc.DialOption{
-		grpc.WithUserAgent("topaz/dev-build (no version set)"),
+		grpc.WithUserAgent("topaz/dev-build (no version set)"), // TODO: verify user-agent value
 	}
+
 	if cfg.Insecure {
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
+
 	if _, err := grpcurl.BlockingDial(ctx, "tcp", cfg.Host, creds, opts...); err != nil {
 		return err
 	}
+
 	return nil
 }

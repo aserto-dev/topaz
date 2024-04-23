@@ -16,6 +16,8 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
+
 	"github.com/rs/zerolog"
 )
 
@@ -64,7 +66,8 @@ type InstallTemplateCmd struct {
 	ContainerHostname string `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	TemplatesURL      string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
-	clients.Config
+	ConfigName        string `optional:"" help:"set config name"`
+	clients.DirectoryConfig
 }
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
@@ -77,9 +80,42 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 
 	if !cmd.Force {
 		c.UI.Exclamation().Msg("Installing this template will completely reset your topaz configuration.")
-		if !promptYesNo("Do you want to continue?", false) {
+		if !PromptYesNo("Do you want to continue?", false) {
 			return nil
 		}
+	}
+	fileName := fmt.Sprintf("%s.yaml", tmpl.Name)
+	c.Config.Active.Config = tmpl.Name
+	if cmd.ConfigName != "" {
+		if !restrictedNamePattern.MatchString(cmd.ConfigName) {
+			return fmt.Errorf("%s must match pattern %s", cmd.Name, restrictedNamePattern.String())
+		}
+		fileName = fmt.Sprintf("%s.yaml", cmd.ConfigName)
+		c.Config.Active.Config = cmd.ConfigName
+	}
+
+	// reset defaults on template install
+	c.Config.Active.ConfigFile = filepath.Join(cc.GetTopazCfgDir(), fileName)
+	c.Config.Running.ActiveConfig = c.Config.Active
+	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
+	cmd.ContainerName = c.Config.Running.ContainerName
+
+	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
+		err = os.MkdirAll(cc.GetTopazDir(), 0700)
+		if err != nil {
+			return err
+		}
+	}
+
+	cliConfig := filepath.Join(cc.GetTopazDir(), CLIConfigurationFile)
+
+	kongConfigBytes, err := json.Marshal(c.Config)
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(cliConfig, kongConfigBytes, 0666) // nolint
+	if err != nil {
+		return err
 	}
 
 	return cmd.installTemplate(c, tmpl)
@@ -87,7 +123,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 
 // installTemplate steps:
 // 1 - topaz stop - ensure topaz is not running, so we can reconfigure
-// 2 - topaz configure - generate a new configuration based on the requirements of the template
+// 2 - topaz config new - generate a new configuration based on the requirements of the template
 // 3 - topaz start - start instance using new configuration
 // 4 - wait for health endpoint to be in serving state
 // 5 - topaz manifest delete --force, reset the directory store
@@ -102,28 +138,36 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 	os.Setenv("TOPAZ_DIR", topazDir)
 
-	cmd.Config.Insecure = true
+	cmd.DirectoryConfig.Insecure = true
 	// 1-3 - stop topaz, configure, start
-	err = cmd.prepareTopaz(c, tmpl)
+	err = cmd.prepareTopaz(c, tmpl, cmd.ConfigName)
 	if err != nil {
 		return err
 	}
 
 	// 4 - wait for health endpoint to be in serving state
-	cfg := config.CurrentConfig()
+	cfg := config.GetConfig(c.Config.Active.ConfigFile)
+	if cfg.HasTopazDir {
+		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+	}
 	addr, _ := cfg.HealthService()
 	if !cc.ServiceHealthStatus(addr, "") {
 		return fmt.Errorf("gRPC endpoint not SERVING")
 	}
+	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
+		return fmt.Errorf("model service not configured")
+	} else {
+		cmd.DirectoryConfig.Host = model.GRPC.ListenAddress
+	}
 
 	// 5-7 - reset directory, apply (manifest, IDP and domain data) template.
-	if err := installTemplate(c, tmpl, topazDir, &cmd.Config).Install(); err != nil {
+	if err := installTemplate(c, tmpl, topazDir, &cmd.DirectoryConfig, cmd.ConfigName).Install(); err != nil {
 		return err
 	}
 
 	// 8 - run tests
 	if !cmd.NoTests {
-		if err := installTemplate(c, tmpl, topazDir, &cmd.Config).Test(); err != nil {
+		if err := installTemplate(c, tmpl, topazDir, &cmd.DirectoryConfig, cmd.ConfigName).Test(); err != nil {
 			return err
 		}
 	}
@@ -141,12 +185,12 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	return nil
 }
 
-func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) error {
+func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, customName string) error {
 
 	// 1 - topaz stop - ensure topaz is not running, so we can reconfigure
 	{
 		command := &StopCmd{
-			ContainerName: cmd.ContainerName,
+			ContainerName: "topaz*",
 			Wait:          true,
 		}
 		if err := command.Run(c); err != nil {
@@ -154,18 +198,42 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 		}
 	}
 
-	// 2 - topaz configure - generate a new configuration based on the requirements of the template
+	// topaz status, output status
+	{
+		command := &StatusCmd{}
+		if err := command.Run(c); err != nil {
+			return err
+		}
+	}
+
+	name := tmpl.Assets.Policy.Name
+	if customName != "" {
+		name = customName
+	}
+
+	// 2 - topaz config new - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
-		command := ConfigureCmd{
-			PolicyName:        tmpl.Assets.Policy.Name,
-			Resource:          tmpl.Assets.Policy.Resource,
-			Force:             true,
-			EnableDirectoryV2: false,
+		command := NewConfigCmd{
+			Name:     ConfigName(name),
+			Resource: tmpl.Assets.Policy.Resource,
+			Force:    true,
 		}
 		if err := command.Run(c); err != nil {
 			return err
 		}
 	}
+
+	// topaz config use - activate configuration (new or existing)
+	{
+		use := UseConfigCmd{
+			Name:      ConfigName(name),
+			ConfigDir: cc.GetTopazCfgDir(),
+		}
+		if err := use.Run(c); err != nil {
+			return err
+		}
+	}
+
 	// 3 - topaz start - start instance using new configuration
 	{
 		command := &StartCmd{
@@ -183,6 +251,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template) err
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -227,20 +296,22 @@ func (t *template) AbsURL(relative string) string {
 	return abs.String()
 }
 
-func installTemplate(c *cc.CommonCtx, tmpl *template, topazDir string, cfg *clients.Config) *tmplInstaller {
+func installTemplate(c *cc.CommonCtx, tmpl *template, topazDir string, cfg *clients.DirectoryConfig, customName string) *tmplInstaller {
 	return &tmplInstaller{
-		c:        c,
-		tmpl:     tmpl,
-		topazDir: topazDir,
-		cfg:      cfg,
+		c:          c,
+		tmpl:       tmpl,
+		topazDir:   topazDir,
+		cfg:        cfg,
+		customName: customName,
 	}
 }
 
 type tmplInstaller struct {
-	c        *cc.CommonCtx
-	tmpl     *template
-	topazDir string
-	cfg      *clients.Config
+	c          *cc.CommonCtx
+	tmpl       *template
+	topazDir   string
+	cfg        *clients.DirectoryConfig
+	customName string
 }
 
 func (i *tmplInstaller) Install() error {
@@ -269,8 +340,8 @@ func (i *tmplInstaller) Test() error {
 
 func (i *tmplInstaller) deleteManifest() error {
 	command := DeleteManifestCmd{
-		Force:  true,
-		Config: *i.cfg,
+		Force:           true,
+		DirectoryConfig: *i.cfg,
 	}
 	return command.Run(i.c)
 }
@@ -278,8 +349,13 @@ func (i *tmplInstaller) deleteManifest() error {
 func (i *tmplInstaller) setManifest() error {
 	manifest := i.tmpl.AbsURL(i.tmpl.Assets.Manifest)
 
+	name := i.tmpl.Name
+	if i.customName != "" {
+		name = i.customName
+	}
+
 	if exists, _ := config.FileExists(manifest); !exists {
-		manifestDir := path.Join(i.topazDir, "model")
+		manifestDir := path.Join(i.topazDir, name, "model")
 		switch m, err := download(manifest, manifestDir); {
 		case err != nil:
 			return err
@@ -289,15 +365,21 @@ func (i *tmplInstaller) setManifest() error {
 	}
 
 	command := SetManifestCmd{
-		Path:   manifest,
-		Config: *i.cfg,
+		Path:            manifest,
+		DirectoryConfig: *i.cfg,
 	}
 
 	return command.Run(i.c)
 }
 
 func (i *tmplInstaller) importData() error {
-	defaultDataDir := path.Join(i.topazDir, "data")
+
+	name := i.tmpl.Name
+	if i.customName != "" {
+		name = i.customName
+	}
+
+	defaultDataDir := path.Join(i.topazDir, name, "data")
 
 	dataDirs := map[string]struct{}{}
 	for _, v := range append(i.tmpl.Assets.IdentityData, i.tmpl.Assets.DomainData...) {
@@ -314,9 +396,9 @@ func (i *tmplInstaller) importData() error {
 	}
 
 	for dir := range dataDirs {
-		command := ImportCmd{
-			Directory: dir,
-			Config:    *i.cfg,
+		command := directory.ImportCmd{
+			Directory:       dir,
+			DirectoryConfig: *i.cfg,
 		}
 
 		if err := command.Run(i.c); err != nil {
@@ -328,7 +410,11 @@ func (i *tmplInstaller) importData() error {
 }
 
 func (i *tmplInstaller) runTemplateTests() error {
-	assertionsDir := path.Join(i.topazDir, "assertions")
+	name := i.tmpl.Name
+	if i.customName != "" {
+		name = i.customName
+	}
+	assertionsDir := path.Join(i.topazDir, name, "assertions")
 
 	tests := []string{}
 	for _, v := range i.tmpl.Assets.Assertions {
@@ -346,11 +432,11 @@ func (i *tmplInstaller) runTemplateTests() error {
 	}
 
 	for _, v := range tests {
-		command := TestExecCmd{
-			File:    v,
-			NoColor: false,
-			Summary: true,
-			Config:  *i.cfg,
+		command := directory.TestExecCmd{
+			File:            v,
+			NoColor:         false,
+			Summary:         true,
+			DirectoryConfig: *i.cfg,
 		}
 
 		if err := command.Run(i.c); err != nil {
