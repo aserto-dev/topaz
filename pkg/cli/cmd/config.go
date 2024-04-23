@@ -58,7 +58,7 @@ func (cmd *DeleteConfigCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("configuration %q is running, use 'topaz stop' to stop, before deleting", cmd.Name)
 	}
 
-	c.UI.Normal().Msgf("Removing configuration %s", fmt.Sprintf("%s.yaml", cmd.Name))
+	c.UI.Normal().Msgf("Removing configuration %q", cmd.Name)
 	filename := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 
 	if c.Config.Active.Config == cmd.Name.String() {
@@ -84,7 +84,7 @@ func (cmd *RenameConfigCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("configuration %q is running, use 'topaz stop' to stop, before renaming", cmd.Name)
 	}
 
-	c.UI.Normal().Msgf("Renaming configuration %s to %s", fmt.Sprintf("%s.yaml", cmd.Name), fmt.Sprintf("%s.yaml", cmd.NewName))
+	c.UI.Normal().Msgf("Renaming configuration %q to %q", cmd.Name, cmd.NewName)
 	oldFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	newFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.NewName))
 
@@ -120,7 +120,7 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 
 	c.Config.Active.Config = cmd.Name.String()
 	c.Config.Active.ConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
-	c.UI.Normal().Msgf("Using configuration %s", fmt.Sprintf("%s.yaml", cmd.Name))
+	c.UI.Normal().Msgf("Using configuration %q", cmd.Name)
 
 	if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -145,10 +145,6 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		if cmd.LocalPolicyImage == "" {
 			return errors.New("you either need to provide a local policy image or the resource and the policy name for the configuration")
 		}
-	}
-
-	if !restrictedNamePattern.MatchString(cmd.Name.String()) {
-		return fmt.Errorf("%s must match pattern %s", cmd.Name, restrictedNamePattern.String())
 	}
 
 	configFile := cmd.Name.String() + ".yaml"
