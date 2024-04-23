@@ -17,14 +17,52 @@ directory:
 remote_directory:
   address: "0.0.0.0:9292" # set as default, it should be the same as the reader as we resolve the identity from the local directory service.
   insecure: true
+  api_key: ""
 
 # JWT validation configuration
 jwt:
   acceptable_time_skew_seconds: 5 # set as default, 5 secs
 
+auth:
+  api_keys:
+    {{ vault "topaz-demo" "CONSOLE_KEY" }}: admin
+  options:
+    default:
+      enable_api_key: true
+      enable_anonymous: false
+    overrides:
+      paths:
+        - /aserto.authorizer.v2.Authorizer/Info
+        - /grpc.reflection.v1.ServerReflection/ServerReflectionInfo
+        - /grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo
+      override:
+        enable_anonymous: true
+        enable_api_key: false
+
 api:
+  console:
+    grpc:
+      fqdn: ""
+      listen_address: "0.0.0.0:8282"
+      certs:
+        tls_key_path: '/certs/grpc.key'
+        tls_cert_path: '/certs/grpc.crt'
+        tls_ca_cert_path: '/certs/grpc-ca.crt'
+    gateway:
+      fqdn: "https://topaz.demo.aserto.com"
+      listen_address: "0.0.0.0:8383"
+      certs:
+        tls_key_path: '/certs/gateway.key'
+        tls_cert_path: '/certs/gateway.crt'
+        tls_ca_cert_path: '/certs/gateway-ca.crt'
+      allowed_origins:
+      - https://localhost:*
+      - https://0.0.0.0:*
+      - https://*demo.aserto.com
+      - https://topaz.demo.aserto.com
   model:
     grpc:
+      fqdn: ""
       listen_address: "0.0.0.0:9292"
       # if certs are not specified default certs will be generate with the format reader_grpc.*
       certs:
@@ -32,6 +70,7 @@ api:
         tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     gateway:
+      fqdn: ""
       listen_address: "0.0.0.0:9393"
       # allowed_origins include localhost by default
       allowed_origins:
@@ -51,6 +90,7 @@ api:
       listen_address: "0.0.0.0:9494"
   reader:
     grpc:
+      fqdn: ""
       listen_address: "0.0.0.0:9292"
       # if certs are not specified default certs will be generate with the format reader_grpc.*
       certs:
@@ -58,6 +98,7 @@ api:
         tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     gateway:
+      fqdn: ""
       listen_address: "0.0.0.0:9393"
       # allowed_origins include localhost by default
       allowed_origins:
@@ -77,12 +118,14 @@ api:
       listen_address: "0.0.0.0:9494"
   writer:
     grpc:
+      fqdn: ""
       listen_address: "0.0.0.0:9292"
       certs:
         tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
         tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     gateway:
+      fqdn: ""
       listen_address: "0.0.0.0:9393"
       allowed_origins:
       - https://*.aserto.com
@@ -100,12 +143,14 @@ api:
       listen_address: "0.0.0.0:9494"
   exporter:
     grpc:
+      fqdn: ""
       listen_address: "0.0.0.0:9292"
       certs:
         tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
         tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     gateway:
+      fqdn: ""
       listen_address: "0.0.0.0:9393"
       allowed_origins:
       - https://*.aserto.com
@@ -123,12 +168,14 @@ api:
       listen_address: "0.0.0.0:9494"
   importer:
     grpc:
+      fqdn: ""
       listen_address: "0.0.0.0:9292"
       certs:
         tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
         tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     gateway:
+      fqdn: ""
       listen_address: "0.0.0.0:9393"
       allowed_origins:
       - https://*.aserto.com
@@ -150,12 +197,14 @@ api:
       - reader
     grpc:
       connection_timeout_seconds: 2
+      fqdn: ""
       listen_address: "0.0.0.0:8282"
       certs:
         tls_key_path: "${TOPAZ_DIR}/certs/grpc.key"
         tls_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
         tls_ca_cert_path: "${TOPAZ_DIR}/certs/grpc-ca.crt"
     gateway:
+      fqdn: ""
       listen_address: "0.0.0.0:8383"
       allowed_origins:
       - https://*.aserto.com
@@ -194,3 +243,24 @@ opa:
           polling:
             min_delay_seconds: 60
             max_delay_seconds: 120
+
+controller:
+  enabled: true
+  server:
+    address: relay.prod.aserto.com:8443
+    client_cert_path: "/sidecar/sidecar.cert"
+    client_key_path: "/sidecar/sidecar.key"
+
+decision_logger:
+  type: self
+  config:
+    store_directory: "/decisions"
+    scribe:
+      address: ems.prod.aserto.com:8443
+      client_cert_path: "/sidecar/sidecar.cert"
+      client_key_path: "/sidecar/sidecar.key"
+      ack_wait_seconds: 30
+      headers:
+        Aserto-Tenant-Id: {{ vault "topaz-demo" "ASERTO_TENANT_ID" }}
+    shipper:
+      publish_timeout_seconds: 2
