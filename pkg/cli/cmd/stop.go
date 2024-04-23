@@ -29,6 +29,8 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 
 		color.Green(">>> stopping topaz...")
 		for _, container := range topazContainers {
+			color.Green(">>> stopping topaz %q...", c.Config.Running.Config)
+
 			if err := dc.Stop(container.Names[0]); err != nil {
 				return err
 			}
@@ -49,7 +51,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 			return nil
 		}
 
-		color.Green(">>> stopping topaz...")
+		color.Green(">>> stopping topaz %q...", c.Config.Running.Config)
 
 		if err := dc.Stop(cmd.ContainerName); err != nil {
 			return err
