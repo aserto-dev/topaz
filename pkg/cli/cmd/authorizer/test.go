@@ -1,4 +1,4 @@
-package cmd
+package authorizer
 
 import (
 	"context"
@@ -11,12 +11,8 @@ import (
 	"time"
 
 	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/samber/lo"
 
-	v2 "github.com/aserto-dev/go-directory-cli/client/v2"
-	client "github.com/aserto-dev/go-directory-cli/client/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 
@@ -27,14 +23,11 @@ import (
 )
 
 const (
-	check           string = "check"
-	checkRelation   string = "check_relation"
-	checkPermission string = "check_permission"
-	checkDecision   string = "check_decision"
-	expected        string = "expected"
-	passed          string = "PASS"
-	failed          string = "FAIL"
-	errored         string = "ERR "
+	checkDecision string = "check_decision"
+	expected      string = "expected"
+	passed        string = "PASS"
+	failed        string = "FAIL"
+	errored       string = "ERR "
 )
 
 type TestCmd struct {
@@ -47,7 +40,7 @@ type TestExecCmd struct {
 	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
 	Summary bool   `flag:"" default:"false" help:"display test summary"`
 	results *testResults
-	clients.DirectoryConfig
+	clients.AuthorizerConfig
 }
 
 // nolint: funlen,gocyclo
@@ -58,18 +51,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 	defer r.Close()
 
-	dsc, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
-	if err != nil {
-		return err
-	}
-
-	// TODO: move check decisions to authorizer (az) check subcommand.
-	azc, err := clients.NewAuthorizerClient(c, &clients.AuthorizerConfig{
-		Host:     lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerSvc) != "", os.Getenv(clients.EnvTopazAuthorizerSvc), ""),
-		APIKey:   lo.Ternary(os.Getenv(clients.EnvTopazAuthorizerKey) != "", os.Getenv(clients.EnvTopazAuthorizerKey), ""),
-		Insecure: cmd.DirectoryConfig.Insecure,
-		TenantID: cmd.DirectoryConfig.TenantID,
-	})
+	azc, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
 	if err != nil {
 		return err
 	}
@@ -119,18 +101,10 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		var result *checkResult
 
 		switch {
-		case checkType == Check && reqVersion == 3:
-			result = checkV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
-		case checkType == CheckPermission && reqVersion == 3:
-			result = checkPermissionV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
-		case checkType == CheckRelation && reqVersion == 3:
-			result = checkRelationV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
-		case checkType == CheckPermission && reqVersion == 2:
-			result = checkPermissionV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
-		case checkType == CheckRelation && reqVersion == 2:
-			result = checkRelationV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckDecision:
 			result = checkDecisionV2(c.Context, azc, msg.Fields[checkTypeMapStr[checkType]])
+		default:
+			continue
 		}
 
 		cmd.results.Passed(result.Outcome == expected)
@@ -182,24 +156,15 @@ type checkType int
 
 const (
 	CheckUnknown checkType = iota
-	Check
-	CheckRelation
-	CheckPermission
 	CheckDecision
 )
 
 var checkTypeMap = map[string]checkType{
-	check:           Check,
-	checkRelation:   CheckRelation,
-	checkPermission: CheckPermission,
-	checkDecision:   CheckDecision,
+	checkDecision: CheckDecision,
 }
 
 var checkTypeMapStr = map[checkType]string{
-	Check:           check,
-	CheckRelation:   checkRelation,
-	CheckPermission: checkPermission,
-	CheckDecision:   checkDecision,
+	CheckDecision: checkDecision,
 }
 
 func getCheckType(msg *structpb.Struct) checkType {
@@ -244,106 +209,6 @@ func unmarshalReq(value *structpb.Value, msg proto.Message) error {
 	return nil
 }
 
-func checkV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
-	var req dsr3.CheckRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Reader.Check(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &checkResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkStringV3(&req),
-	}
-}
-
-func checkPermissionV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
-	var req dsr3.CheckPermissionRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Reader.CheckPermission(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &checkResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkPermissionStringV3(&req),
-	}
-}
-
-func checkRelationV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
-	var req dsr3.CheckRelationRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Reader.CheckRelation(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &checkResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkRelationStringV3(&req),
-	}
-}
-
-func checkPermissionV2(ctx context.Context, c *v2.Client, msg *structpb.Value) *checkResult {
-	var req dsr2.CheckPermissionRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Reader.CheckPermission(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &checkResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkPermissionStringV2(&req),
-	}
-}
-
-func checkRelationV2(ctx context.Context, c *v2.Client, msg *structpb.Value) *checkResult {
-	var req dsr2.CheckRelationRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Reader.CheckRelation(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &checkResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkRelationStringV2(&req),
-	}
-}
-
 func checkDecisionV2(ctx context.Context, c az2.AuthorizerClient, msg *structpb.Value) *checkResult {
 	var req az2.IsRequest
 	if err := unmarshalReq(msg, &req); err != nil {
@@ -371,46 +236,6 @@ func checkDecisionV2(ctx context.Context, c az2.AuthorizerClient, msg *structpb.
 		Err:      err,
 		Str:      checkDecisionStringV2(&req),
 	}
-}
-
-func checkStringV3(req *dsr3.CheckRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.GetObjectType(), req.GetObjectId(),
-		req.GetRelation(),
-		req.GetSubjectType(), req.GetSubjectId(),
-	)
-}
-
-func checkRelationStringV2(req *dsr2.CheckRelationRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.Object.GetType(), req.Object.GetKey(),
-		req.Relation.GetName(),
-		req.Subject.GetType(), req.Subject.GetKey(),
-	)
-}
-
-func checkRelationStringV3(req *dsr3.CheckRelationRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.GetObjectType(), req.GetObjectId(),
-		req.GetRelation(),
-		req.GetSubjectType(), req.GetSubjectId(),
-	)
-}
-
-func checkPermissionStringV2(req *dsr2.CheckPermissionRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.Object.GetType(), req.Object.GetKey(),
-		req.Permission.GetName(),
-		req.Subject.GetType(), req.Subject.GetKey(),
-	)
-}
-
-func checkPermissionStringV3(req *dsr3.CheckPermissionRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.GetObjectType(), req.GetObjectId(),
-		req.GetPermission(),
-		req.GetSubjectType(), req.GetSubjectId(),
-	)
 }
 
 func checkDecisionStringV2(req *az2.IsRequest) string {
@@ -459,17 +284,12 @@ type TestTemplateCmd struct {
 
 const assertionsTemplateV2 string = `{
   "assertions": [
-    {"check_relation": {"object": {"type": "", "key": ""}, "relation": {"name": ""}, "subject": {"type": "", "key": ""}}, "expected": true},
-    {"check_permission": {"object": {"type": "", "key": ""}, "permission": {"name": ""}, "subject": {"type": "", "key": ""}}, "expected": true},
 	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true},
   ]
 }`
 
 const assertionsTemplateV3 string = `{
   "assertions": [
-	{"check": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true},
-	{"check_relation": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true},
-	{"check_permission": {"object_type": "", "object_id": "", "permission": "", "subject_type": "", "subject_id": ""}, "expected": true},
 	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true},
   ]
 }`

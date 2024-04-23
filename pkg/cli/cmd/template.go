@@ -421,7 +421,7 @@ func (i *tmplInstaller) runTemplateTests() error {
 	}
 
 	for _, v := range tests {
-		command := TestExecCmd{
+		command := directory.TestExecCmd{
 			File:            v,
 			NoColor:         false,
 			Summary:         true,

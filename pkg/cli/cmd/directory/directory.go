@@ -22,6 +22,7 @@ type DirectoryCmd struct {
 	Export  ExportCmd  `cmd:"" help:"export directory data"`
 	Backup  BackupCmd  `cmd:"" help:"backup directory data"`
 	Restore RestoreCmd `cmd:"" help:"restore directory data"`
+	Test    TestCmd    `cmd:"" help:"execute directory assertions"`
 }
 
 type Message[T any] interface {
