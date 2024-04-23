@@ -131,13 +131,12 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 }
 
 type NewConfigCmd struct {
-	Name              ConfigName `short:"n" help:"config name"`
-	LocalPolicyImage  string     `short:"l" help:"local policy image name"`
-	Resource          string     `short:"r" help:"resource url"`
-	Stdout            bool       `short:"p" help:"print to stdout"`
-	EdgeDirectory     bool       `short:"d" help:"enable edge directory" default:"false"`
-	Force             bool       `flag:"" default:"false" short:"f" required:"false" help:"skip confirmation prompt"`
-	EnableDirectoryV2 bool       `flag:"" name:"enable-v2" default:"false" help:"enable directory version 2 services for backwards compatibility"`
+	Name             ConfigName `short:"n" help:"config name"`
+	LocalPolicyImage string     `short:"l" help:"local policy image name"`
+	Resource         string     `short:"r" help:"resource url"`
+	Stdout           bool       `short:"p" help:"print to stdout"`
+	EdgeDirectory    bool       `short:"d" help:"enable edge directory" default:"false"`
+	Force            bool       `flag:"" default:"false" short:"f" required:"false" help:"skip confirmation prompt"`
 }
 
 func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
@@ -162,8 +161,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		WithLocalPolicyImage(cmd.LocalPolicyImage).
 		WithPolicyName(cmd.Name.String()).
 		WithResource(cmd.Resource).
-		WithEdgeDirectory(cmd.EdgeDirectory).
-		WithEnableDirectoryV2(cmd.EnableDirectoryV2)
+		WithEdgeDirectory(cmd.EdgeDirectory)
 
 	_, err := configGenerator.CreateConfigDir()
 	if err != nil {

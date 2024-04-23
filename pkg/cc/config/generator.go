@@ -41,7 +41,7 @@ func (g *Generator) WithEdgeDirectory(enabled bool) *Generator {
 }
 
 func (g *Generator) WithEnableDirectoryV2(enabled bool) *Generator {
-	g.EnableDirectoryV2 = enabled
+	g.EnableDirectoryV2 = false
 	return g
 }
 
@@ -56,7 +56,7 @@ func (g *Generator) WithDiscovery(url, key string) *Generator {
 	return g
 }
 
-func (g *Generator) WithContoller(url, clientCertPath, clientKeyPath string) *Generator {
+func (g *Generator) WithController(url, clientCertPath, clientKeyPath string) *Generator {
 	g.ControlPlane.Enabled = true
 	g.ControlPlane.Address = url
 	g.ControlPlane.ClientCertPath = clientCertPath
