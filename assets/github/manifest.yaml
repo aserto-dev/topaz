@@ -15,19 +15,27 @@ types:
     relations:
       manager: user
 
+    permissions:
+      ### display_name: user#in_management_chain ###
+      in_management_chain: manager | manager->in_management_chain
+
+
   # group represents a collection of users and/or (nested) groups
   group:
     relations:
       member: user | group#member
+
 
   # identity represents a collection of identities for users
   identity:
     relations:
       identifier: user
 
+
   team:
     relations:
-      member: user | team#member
+      member: user | team#member | group#member
+
 
   organization:
     relations:
@@ -43,6 +51,7 @@ types:
       can_administer: repo_admin | owner
       can_write:      repo_writer | can_administer
       can_read:       repo_reader | can_write
+
 
   repo:
     relations:

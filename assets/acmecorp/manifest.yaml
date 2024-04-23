@@ -17,15 +17,21 @@ types:
       ### display_name: user#manager ###
       manager: user
 
+    permissions:
+      ### display_name: user#in_management_chain ###
+      in_management_chain: manager | manager->in_management_chain
+
+
   ### display_name: Identity ###
   identity:
     relations:
       ### display_name: identity#identifier ###
       identifier: user
 
+
   ### display_name: Group ###
   group:
     relations:
       ### display_name: group#member ###
-      member: user
+      member: user | group#member
 

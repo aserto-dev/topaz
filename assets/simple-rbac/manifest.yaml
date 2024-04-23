@@ -12,15 +12,22 @@ types:
     relations:
       manager: user
 
+    permissions:
+      ### display_name: user#in_management_chain ###
+      in_management_chain: manager | manager->in_management_chain
+
+
   # group represents a collection of users and/or (nested) groups
   group:
     relations:
       member: user | group#member
 
+
   # identity represents a collection of identities for users
   identity:
     relations:
       identifier: user
+
 
   # resource creator represents a user type that can create new resources
   resource-creator:
@@ -29,6 +36,7 @@ types:
 
     permissions:
       can_create_resource: member
+
 
   # resource represents a protected resource
   resource:
