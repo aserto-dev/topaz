@@ -16,7 +16,7 @@ func (cmd *StatusCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if c.CheckRunStatus(containerName, cc.StatusRunning) {
-		color.Green(">>> topaz is running")
+		color.Green(">>> topaz %q is running", c.Config.Running.Config)
 	} else {
 		color.Yellow(">>> topaz is not running")
 	}
