@@ -21,15 +21,21 @@ By default if you run/start the topaz container using the topaz CLI the followin
 - `TOPAZ_CFG_DIR` - default $HOME/.config/topaz/cfg - the directory from where topaz will load the configuration file
 - `TOPAZ_DB_DIR` - default $HOME/.config/topaz/db - the directory where topaz will store the edge directory DB
 
+- `TOPAZ_CERTS_DIR` - default $HOME/.config/topaz/certs - the directory where topaz will load/generate the certs
+- `TOPAZ_CFG_DIR` - default $HOME/.config/topaz/cfg - the directory from where topaz will load the configuration file
+- `TOPAZ_DB_DIR` - default $HOME/.config/topaz/db - the directory where topaz will store the edge directory DB
+
 Both run and start topaz CLI commands allow passing optional environment variables to your running container using the -e flag. This will allow you to use any desired environment variable in your configuration file as long as you pass it to the container. 
 
 ## 1. Common configuration
 
 ### a. Version
 
+
 The configuration version accepted by the version of topaz - current compatible version: 2
 
 ### b. Logging
+
 
 The [logging mechanism](https://github.com/aserto-dev/logger) for topaz is based on [zerolog](https://github.com/rs/zerolog) and has the following available settings:
 
@@ -45,18 +51,23 @@ logging:
 
 ### c. API
 
+
 The API section is defines the configuration for the health, metrics and services that topaz is able to spin up. 
 
 #### Health:
 
+
 The health configuration allows topaz to spin up a health server.
+
 
 - *listen_address* - string - allows the health service to spin up on the configured port (default: "0.0.0.0:9494") 
 - *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. By default the certificates are not configured.
 
 #### Metrics:
 
+
 The metrics configuration allows topaz to spin up a metric server.
+
 
 - *listen_address* - string - allows the metric service to spin up on the configured port (default: "0.0.0.0:9696") 
 - *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. By default the certificates are not configured. 
@@ -64,15 +75,20 @@ The metrics configuration allows topaz to spin up a metric server.
 
 #### Services APIs:
 
+
 #### 1. grpc
 
+
 The grpc section allows configuring the listen address, the connection timeout and the certificates. 
+
 
 - *listen_address* - string - allows the topaz GRPC server to spin up on the requested port (default: "0.0.0.0:8282")
 - *connection_timeout_seconds* - uint32 - sets the timeout for a [connection establishment](https://pkg.go.dev/google.golang.org/grpc#ConnectionTimeout) (default: 120)
 - *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. If you do not have your certificates in the specified paths, topaz will generate self-signed certificates for you. By default topaz will generate the certificates in ` ~/.config/topaz/certs/` path
 
+
 Example:
+
 
 ```
 grpc:
@@ -85,6 +101,7 @@ grpc:
 ```
 
 #### 2. gateway
+
 
 The gateway section allows configuring the [grpc gateway](https://github.com/grpc-ecosystem/grpc-gateway) for your topaz authorizer. 
 
@@ -102,6 +119,7 @@ Detailed information about the gateway http server timeout configuration is avai
 
 Example:
 
+
 ```
 gateway:
   listen_address: "localhost:8383"
@@ -118,9 +136,11 @@ gateway:
 
 #### 3. needs
 
+
 The `needs` section allows adding a dependency between the services started. For example when using an edge directory with a reader service it is recommended to set the authorizer services to be dependent on the reader spin-up to be able to resolve the identity for the authorization calls.
 
 Example:
+
 ```
 api:
   reader:
@@ -141,7 +161,9 @@ api:
 
 ### c. Directory
 
+
 The directory section allows setting the configuration for the topaz [local edge directory](https://github.com/aserto-dev/go-edge-ds).
+
 
  - *db_path* - string - path to the bbolt database file
  - *request_timeout* - time.Duration - request timeout setting for the bbolt database connection
@@ -153,11 +175,13 @@ Topaz is able to communicate with a directory service based on the [pb-directory
 
 The remote address can also be configured to a service that implements the proto definitions (for example, the Postgres-based Aserto directory service). In this case, Topaz will NOT spin-up a local edge directory service, and instead send all directory requests to this remote service.
 
+
 - *address* - string - address:port of the remote directory service
 - *api_key* - string - API key for the directory
 - *tenant_id* - string - the directory tenant ID 
 
 Example (using the hosted Aserto directory):
+
 
 ```
 remote_directory:
@@ -169,6 +193,7 @@ remote_directory:
 ### e. OPA
 
 The OPA configuration section represent the [runtime configuration](https://github.com/aserto-dev/runtime/blob/main/config.go). The main elements of the runtime configuration are:
+
 
 - *local_bundles* - runtime.LocalBundlesConfig - allows the runtime to run with a local bundle (local path or local policy OCI image)
 - *instance_id* - string - represent the unique identifier of the runtime 
@@ -186,11 +211,13 @@ The JWT section allows setting a custom *acceptable_time_skew_seconds* - int - t
 
 
 ## 2. Auth configuration (optional)
+
 By default Topaz authentication configuration is disabled, however if you want to configure API key basic authentication this section of the configuration allows you to set this up. 
 
 The options section allows you to specify overrides for specific paths if you want to enable the api key authentication or/and the anonymous authentication for these.
 
 Example:
+
 
 ```
 auth:
@@ -215,6 +242,7 @@ By default Topaz does not initiate a decision logger, however if you need to kee
 
 Example configuration:
 
+
 ```
 decision_logger:
   type: "file"
@@ -227,6 +255,7 @@ decision_logger:
 To use the decision logger the OPA configuration must contain the [configuration information](https://github.com/aserto-dev/topaz/blob/main/decision_log/plugin/plugin.go#L23) for the decision log plugin.
 
 Example of the decision log plugin configuration:
+
 
 ```
 opa:
@@ -261,3 +290,4 @@ controller:
     client_cert_path: <path to client certificate>
     client_key_path: <path to client key>
 ```
+

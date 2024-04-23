@@ -11063,84 +11063,945 @@
     "relations": [
       {
         "object_type": "user",
-        "object_id": "aaronp@acmecorp.com",
+        "object_id": "allisob@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "allisob@acmecorp.com"
+        "subject_id": "aaronp@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "aaronp@acmecorp.com",
+        "object_id": "jesuse@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "jesuse@acmecorp.com"
+        "subject_id": "aaronp@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "aaronp@acmecorp.com",
+        "object_id": "johne@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "johne@acmecorp.com"
+        "subject_id": "aaronp@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "aaronp@acmecorp.com",
+        "object_id": "lubork@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "lubork@acmecorp.com"
+        "subject_id": "aaronp@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "aaronp@acmecorp.com",
+        "object_id": "parnak@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "parnak@acmecorp.com"
+        "subject_id": "aaronp@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "aaronp@acmecorp.com",
+        "object_id": "reneel@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "reneel@acmecorp.com"
+        "subject_id": "aaronp@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "aaronp@acmecorp.com",
+        "object_id": "rolandw@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "rolandw@acmecorp.com"
+        "subject_id": "aaronp@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "aaronp@acmecorp.com",
+        "object_id": "syeda@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "syeda@acmecorp.com"
+        "subject_id": "aaronp@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "adamb@acmecorp.com",
+        "object_id": "alans@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "bens@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "cassieh@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "christk@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "danp@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "davidz@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "dianet@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "keithd@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "kellyk@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "kellyw@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "adamb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "davids@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "alanb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "andrewm@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
         "subject_id": "alans@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "adamb@acmecorp.com",
+        "object_id": "barryj@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "alans@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "chrisn@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "alans@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "miken@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "alans@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "scottb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "alans@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "stano@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "alans@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "iant@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "amya@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "dannio@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "andrewm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "ivos@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "andrewm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "richart@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "andrewm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "mollyc@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "annal@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "chrisjohns@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "davidb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "erikg@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "euang@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jennyl@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "lucad@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "lukaa@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "markoz@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "marus@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "neilo@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "rong@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "tinam@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "aprils@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "danh@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arthury@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "elizaba@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arthury@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "fabricc@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arthury@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "ginab@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arthury@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "kevinv@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arthury@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "luisb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arthury@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "svenb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arthury@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "tinal@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arthury@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "yex@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arthury@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "heinrif@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arturol@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "kaia@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arturol@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "kevink@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arturol@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "krisj@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arturol@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "maried@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arturol@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "roby@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "arturol@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "briang@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "barryj@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "denisd@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "barryj@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "manueam@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "barryj@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "raym@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "barryj@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "davidb1@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
         "subject_id": "bens@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "adamb@acmecorp.com",
+        "object_id": "erikac@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "cassieh@acmecorp.com"
+        "subject_id": "bens@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "adamb@acmecorp.com",
+        "object_id": "hansg@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "bens@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "job@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "bens@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "ibent@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "brads@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "idanr@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "brads@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jank@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "brads@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jonj@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "brads@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "kennetc@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "brads@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "lorik@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "brads@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "michaes@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "brads@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "alexans@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "andersm@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "andread@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "carlosg@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "chrism@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "danb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "danield@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "davidd@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "davids1@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "doughm@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "guidop@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "humbera@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jakas@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jessica@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "maurict@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "michaez@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "michiko@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "qiongw@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "scottr@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "stuartm@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "thomash@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "briang@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "allang@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "anud@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "aris@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "bernart@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "cheny@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "chrisg@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "chrisjohn@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "cliffd@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "corinnb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "erwinz@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "katet@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "michelf@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "olivief@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "pauld@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "simonp@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "stephed@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "sunilk@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "tonym@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "valeryu@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "carolt@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "annew@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "cesarg@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "junc@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "cesarg@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "lisam@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "cesarg@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "michael@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "cesarg@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "stevem@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "cesarg@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "treyp@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "cesarg@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "williav@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "cesarg@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "christr@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "daven@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "donf@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jespera@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "margara@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "miket@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "nedf@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "robb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "seanp@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "tedb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "chrisn@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "annal@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "christg@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "aaronp@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "christk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "brads@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "christk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "cesarg@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "christk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "davidm@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "christk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "ellena@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
         "subject_id": "christk@acmecorp.com"
@@ -11150,1813 +12011,952 @@
         "object_id": "adamb@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "danp@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "adamb@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "davidz@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "adamb@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "dianet@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "adamb@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "keithd@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "adamb@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kellyk@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "adamb@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kellyw@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "alanb@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "davids@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "alans@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "andrewm@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "alans@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "barryj@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "alans@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "chrisn@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "alans@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "miken@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "alans@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "scottb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "alans@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "stano@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "amya@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "iant@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "andrewm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "dannio@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "andrewm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "ivos@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "andrewm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "richart@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "annal@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "mollyc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "chrisjohns@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "davidb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "erikg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "euang@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jennyl@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "lucad@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "lukaa@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "markoz@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "marus@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "neilo@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "rong@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "aprils@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "tinam@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arthury@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "danh@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arthury@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "elizaba@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arthury@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "fabricc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arthury@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "ginab@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arthury@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kevinv@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arthury@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "luisb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arthury@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "svenb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arthury@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "tinal@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arthury@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "yex@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arturol@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "heinrif@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arturol@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kaia@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arturol@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kevink@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arturol@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "krisj@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arturol@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "maried@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "arturol@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "roby@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "barryj@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "briang@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "barryj@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "denisd@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "barryj@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "manueam@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "barryj@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "raym@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "bens@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "davidb1@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "bens@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "erikac@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "bens@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "hansg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "bens@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "job@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "brads@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "ibent@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "brads@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "idanr@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "brads@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jank@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "brads@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jonj@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "brads@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kennetc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "brads@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "lorik@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "brads@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "michaes@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "alexans@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "andersm@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "andread@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "carlosg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "chrism@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "danb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "danield@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "davidd@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "davids1@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "doughm@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "guidop@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "humbera@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jakas@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jessica@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "maurict@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "michaez@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "michiko@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "qiongw@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "scottr@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "stuartm@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "briang@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "thomash@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "allang@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "anud@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "aris@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "bernart@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "cheny@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "chrisg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "chrisjohn@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "cliffd@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "corinnb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "erwinz@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "katet@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "michelf@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "olivief@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "pauld@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "simonp@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "stephed@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "sunilk@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "tonym@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "carolt@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "valeryu@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "cesarg@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "annew@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "cesarg@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "junc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "cesarg@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "lisam@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "cesarg@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "michael@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "cesarg@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "stevem@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "cesarg@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "treyp@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "cesarg@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "williav@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "christr@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "daven@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "donf@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jespera@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "margara@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "miket@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "nedf@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "robb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "seanp@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "chrisn@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "tedb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "christg@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "annal@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "christk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "aaronp@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "christk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "brads@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "christk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "cesarg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "christk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "davidm@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "christk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "ellena@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "danj@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "adamb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "danj@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "frankm1@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "danj@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jimd@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "danj@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "sanjays@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "danj@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "tonip@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "danp@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jackc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davidm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "frankm@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davidm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jennim@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davidm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jimc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davidm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kimr@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davidm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "lolans@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davidm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "miker@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davidm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "rayc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "aliciat@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "davidw@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jamier@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kerimh@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "marcf@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "nunof@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "pavels@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "scottg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "shmuely@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davids@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "tomy@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "davidz@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "carolt@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "dianep@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "toddr@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "dianet@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "karimm@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "eduardd@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "aprils@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "ellena@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "blained@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "ellena@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "donh@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "ellena@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "johny@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "ellena@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kenm@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "ellena@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "michal1@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "ellena@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "sameert@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "ellena@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "tonyw@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "erikac@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jong@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "erikac@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "justint@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "erikac@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "kene@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "erikac@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "lukask@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "erikac@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "michaem@acmecorp.com"
+        "subject_id": "danj@acmecorp.com"
       },
       {
         "object_type": "user",
         "object_id": "frankm1@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "jeffh@acmecorp.com"
+        "subject_id": "danj@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "garthf@acmecorp.com",
+        "object_id": "jimd@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "amya@acmecorp.com"
+        "subject_id": "danj@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "sanjays@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "danj@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "tonip@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "danj@acmecorp.com"
       },
       {
         "object_type": "user",
         "object_id": "jackc@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "alanb@acmecorp.com"
+        "subject_id": "danp@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "jackc@acmecorp.com",
+        "object_id": "frankm@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "eduardd@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "jackc@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "larryz@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "jackc@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "spencel@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "jackc@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "stevel@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "jeffh@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "christg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "jeffh@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "gregw@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "jeffh@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "tail@acmecorp.com"
+        "subject_id": "davidm@acmecorp.com"
       },
       {
         "object_type": "user",
         "object_id": "jennim@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "arleneh@acmecorp.com"
+        "subject_id": "davidm@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "jennim@acmecorp.com",
+        "object_id": "jimc@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "hugog@acmecorp.com"
+        "subject_id": "davidm@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "jennim@acmecorp.com",
+        "object_id": "kimr@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "jeremyl@acmecorp.com"
+        "subject_id": "davidm@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "jennim@acmecorp.com",
+        "object_id": "lolans@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "johng@acmecorp.com"
+        "subject_id": "davidm@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "jennim@acmecorp.com",
+        "object_id": "miker@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "linaa@acmecorp.com"
+        "subject_id": "davidm@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "jennim@acmecorp.com",
+        "object_id": "rayc@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "markh@acmecorp.com"
+        "subject_id": "davidm@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "jennim@acmecorp.com",
+        "object_id": "aliciat@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "scottm@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "jennim@acmecorp.com",
+        "object_id": "davidw@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "stevenw@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "jennim@acmecorp.com",
+        "object_id": "jamier@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "terrenp@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "joses@acmecorp.com",
+        "object_id": "kerimh@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "anneliz@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "joses@acmecorp.com",
+        "object_id": "marcf@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "dominip@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "joses@acmecorp.com",
+        "object_id": "nunof@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "eranh@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "joses@acmecorp.com",
+        "object_id": "pavels@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "johnk@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "joses@acmecorp.com",
+        "object_id": "scottg@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "karif@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "joses@acmecorp.com",
+        "object_id": "shmuely@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "kima@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "joses@acmecorp.com",
+        "object_id": "tomy@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "kirkj@acmecorp.com"
+        "subject_id": "davids@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "joses@acmecorp.com",
+        "object_id": "carolt@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "marcelt@acmecorp.com"
+        "subject_id": "davidz@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "joses@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "michaeo@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "juliani@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "karenb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "karimm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "chasec@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "karimm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "chrisjoh@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "karimm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "garthf@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "karimm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jamesw@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "karimm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jillf@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "karimm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "joell@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "karimm@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "larsh@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "keithd@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "brianc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "keithd@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jellev@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "keithd@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "mchielw@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "kellyk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "chrisj@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "kellyk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "christj@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "kellyk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "felipem@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "kellyk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "johnev@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "kellyk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jordaom@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "kellyk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "phyllih@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "kellyk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "pieterw@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "kellyk@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "sunilu@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "kellyw@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "arturol@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "larryz@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "joses@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "lenea@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "ericg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "lenea@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "hazema@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "lenea@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "howardg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "lenea@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "joshe@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "lenea@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "manishc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "lenea@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "nates@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "lenea@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "patricd@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "lenea@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "tyc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "lenea@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "vernettp@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "miken@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "chrisb@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "miken@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "nuriag@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "miken@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "terrye@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "mollyc@acmecorp.com",
+        "object_id": "toddr@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
         "subject_id": "dianep@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "mollyc@acmecorp.com",
+        "object_id": "karimm@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "juliani@acmecorp.com"
+        "subject_id": "dianet@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "mollyc@acmecorp.com",
+        "object_id": "aprils@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "seanc@acmecorp.com"
+        "subject_id": "eduardd@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "scottb@acmecorp.com",
+        "object_id": "blained@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "alisal@acmecorp.com"
+        "subject_id": "ellena@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "scottb@acmecorp.com",
+        "object_id": "donh@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "andyj@acmecorp.com"
+        "subject_id": "ellena@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "scottb@acmecorp.com",
+        "object_id": "johny@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "aylak@acmecorp.com"
+        "subject_id": "ellena@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "scottb@acmecorp.com",
+        "object_id": "kenm@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "simonr@acmecorp.com"
+        "subject_id": "ellena@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "michal1@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "ellena@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "sameert@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "ellena@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "tonyw@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "ellena@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jong@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "erikac@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "justint@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "erikac@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "kene@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "erikac@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "lukask@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "erikac@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "michaem@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "erikac@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jeffh@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "frankm1@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "amya@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "garthf@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "alanb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jackc@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "eduardd@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jackc@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "larryz@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jackc@acmecorp.com"
       },
       {
         "object_type": "user",
         "object_id": "spencel@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "arthury@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "alfonsp@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "carid@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "davidh@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "dianeg@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "erica@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "estherv@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "garethc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "jiml@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "lisaa@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "magnush@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "maryc@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "matth@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "pedert@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "peters@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "reinac@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "roberto@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "robiny@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "sanjayp@acmecorp.com"
-      },
-      {
-        "object_type": "user",
-        "object_id": "stano@acmecorp.com",
-        "relation": "manager",
-        "subject_type": "user",
-        "subject_id": "vladime@acmecorp.com"
+        "subject_id": "jackc@acmecorp.com"
       },
       {
         "object_type": "user",
         "object_id": "stevel@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
+        "subject_id": "jackc@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "christg@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jeffh@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "gregw@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jeffh@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "tail@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jeffh@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "arleneh@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jennim@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "hugog@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jennim@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jeremyl@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jennim@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "johng@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jennim@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "linaa@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jennim@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "markh@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jennim@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "scottm@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jennim@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "stevenw@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jennim@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "terrenp@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "jennim@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "anneliz@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "joses@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "dominip@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "joses@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "eranh@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "joses@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "johnk@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "joses@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "karif@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "joses@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "kima@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "joses@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "kirkj@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "joses@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "marcelt@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "joses@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "michaeo@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "joses@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "karenb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "juliani@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "chasec@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "karimm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "chrisjoh@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "karimm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "garthf@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "karimm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jamesw@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "karimm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jillf@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "karimm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "joell@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "karimm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "larsh@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "karimm@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "brianc@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "keithd@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jellev@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "keithd@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "mchielw@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "keithd@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "chrisj@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "kellyk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "christj@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "kellyk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "felipem@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "kellyk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "johnev@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "kellyk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jordaom@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "kellyk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "phyllih@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "kellyk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "pieterw@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "kellyk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "sunilu@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "kellyk@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "arturol@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "kellyw@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "joses@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "larryz@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "ericg@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
         "subject_id": "lenea@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "syeda@acmecorp.com",
+        "object_id": "hazema@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "jasonc@acmecorp.com"
+        "subject_id": "lenea@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "syeda@acmecorp.com",
+        "object_id": "howardg@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "jeffw@acmecorp.com"
+        "subject_id": "lenea@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "syeda@acmecorp.com",
+        "object_id": "joshe@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "karinl@acmecorp.com"
+        "subject_id": "lenea@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "syeda@acmecorp.com",
+        "object_id": "manishc@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "lorrain@acmecorp.com"
+        "subject_id": "lenea@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "syeda@acmecorp.com",
+        "object_id": "nates@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "meravs@acmecorp.com"
+        "subject_id": "lenea@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "syeda@acmecorp.com",
+        "object_id": "patricd@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "tado@acmecorp.com"
+        "subject_id": "lenea@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "syeda@acmecorp.com",
+        "object_id": "tyc@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "tobyn@acmecorp.com"
+        "subject_id": "lenea@acmecorp.com"
       },
       {
         "object_type": "user",
-        "object_id": "syeda@acmecorp.com",
+        "object_id": "vernettp@acmecorp.com",
         "relation": "manager",
         "subject_type": "user",
-        "subject_id": "toshm@acmecorp.com"
+        "subject_id": "lenea@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "chrisb@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "miken@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "nuriag@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "miken@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "terrye@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "miken@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "dianep@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "mollyc@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "juliani@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "mollyc@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "seanc@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "mollyc@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "alisal@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "scottb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "andyj@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "scottb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "aylak@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "scottb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "simonr@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "scottb@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "arthury@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "spencel@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "alfonsp@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "carid@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "davidh@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "dianeg@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "erica@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "estherv@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "garethc@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jiml@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "lisaa@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "magnush@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "maryc@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "matth@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "pedert@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "peters@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "reinac@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "roberto@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "robiny@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "sanjayp@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "vladime@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stano@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "lenea@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "stevel@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jasonc@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "syeda@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "jeffw@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "syeda@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "karinl@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "syeda@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "lorrain@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "syeda@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "meravs@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "syeda@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "tado@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "syeda@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "tobyn@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "syeda@acmecorp.com"
+      },
+      {
+        "object_type": "user",
+        "object_id": "toshm@acmecorp.com",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "syeda@acmecorp.com"
       },
       {
         "object_type": "identity",

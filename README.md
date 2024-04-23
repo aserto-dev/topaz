@@ -79,12 +79,11 @@ Join the community [Slack channel](https://www.aserto.com/slack) for questions a
 
  `topaz` is currently using golang v1.22.* to compile, `go.mod` files are pinned to 1.21 or lower. In order to build `topaz` from source you must:
 
- 1. Install [mage](https://magefile.org/)
- 2. Clone the repo
- 3. Build and run the executable
+ 1. Clone the repo
+ 2. Build and run the executable
 
       ```shell
-      mage build && ./dist/build_linux_amd64/topaz
+      make build && ./dist/build_linux_amd64/topaz
       ```
 
 ### Running with Docker
@@ -133,39 +132,48 @@ This command will install the following artifacts in `$HOME/.config/topaz/`:
 ```shell
 tree $HOME/.config/topaz
 /Users/ogazitt/.config/topaz
-├── certs
-│   ├── gateway-ca.crt
-│   ├── gateway.crt
-│   ├── gateway.key
-│   ├── grpc-ca.crt
-│   ├── grpc.crt
-│   └── grpc.key
 ├── cfg
-│   └── config.yaml
-├── data
-│   ├── citadel_objects.json
-│   └── citadel_relations.json
-├── db
-│   └── directory.db
-└── model
-    └── manifest.yaml
+│   └── todo.yaml
+├── todo
+│   ├── data
+│   │   ├── citadel_objects.json
+│   │   ├── citadel_relations.json
+│   │   ├── todo_objects.json
+│   │   └── todo_relations.json
+│   └── model
+│       └── manifest.yaml
+└── topaz.json
+```
+* `cfg/todo.yaml` contains a Topaz configuration file which references the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. For the Todo template, this is the public GHCR image `ghcr.io/aserto-policies/policy-todo:latest`. The source code for the policy image can be found [here](https://github.com/aserto-templates/policy-todo/tree/main/content/src/policies).
+* `todo/data/` contains the objects and relations for the Todo template - in this case, a set of 5 users and 4 groups that are based on the "Rick & Morty" cartoon.
+* `todo/model/manifest.yaml` contains the manifest file which describes the domain model.
+
+```shell
+tree ~/.local/share/topaz
+/Users/ogazitt/.local/share/topaz
+├── certs
+│   ├── gateway-ca.crt
+│   ├── gateway.crt
+│   ├── gateway.key
+│   ├── grpc-ca.crt
+│   ├── grpc.crt
+│   └── grpc.key
+└── db
+    └── todo.db
 ```
 
 * `certs/` contains a set of generated self-signed certificates for Topaz.
-* `cfg/config.yaml` contains a Topaz configuration file which references the sample Todo **policy image**. A policy image is an OCI image that contains an OPA policy. For the Todo template, this is the public GHCR image `ghcr.io/aserto-policies/policy-todo:latest`. The source code for the policy image can be found [here](https://github.com/aserto-templates/policy-todo/tree/main/content/src/policies).
-* `data/` contains the objects and relations for the Todo template - in this case, a set of 5 users and 4 groups that are based on the "Rick & Morty" cartoon.
-* `db/directory.db` contains the embedded database which houses the model and data.
-* `model/manifest.yaml` contains the manifest file which describes the domain model.
+* `db/todo.db` contains the embedded database which houses the model and data.
 
-For a deeper overview of the `cfg/config.yaml` file, see [topaz config](https://github.com/aserto-dev/topaz/blob/main/docs/config.md).
+For a deeper overview of the `cfg/config.yaml` file, see [topaz configuration](https://github.com/aserto-dev/topaz/blob/main/docs/config.md).
 
 #### What just happened?
 
 Besides laying down the artifacts mentioned, installing the Todo template did the following things:
 
 * started Topaz in daemon (background) mode (see `topaz start --help`).
-* set the manifest found in `model/manifest.yaml` (see `topaz set manifest --help`).
-* imported the objects and relations found in `data/` (see `topaz import --help`).
+* set the manifest found in `model/manifest.yaml` (see `topaz manifest set --help`).
+* imported the objects and relations found in `data/` (see `topaz directory import --help`).
 * opened a browser window to the Topaz [console](https://localhost:8080/ui/directory) (see `topaz console --help`).
 
 Feel free to play around with the Topaz console! Or follow the next few steps to interact with the Topaz policy and authorization endpoints.
@@ -214,25 +222,22 @@ Usage: topaz <command> [flags]
 Topaz CLI
 
 Commands:
-  start        start topaz in daemon mode
-  stop         stop topaz instance
-  restart      restart topaz instance
-  status       status of topaz daemon process
-  run          run topaz in console mode
-  manifest     manifest commands
-  test         test assertions commands
-  templates    template commands
-  console      open console in the browser
-  import       import directory objects
-  export       export directory objects
-  backup       backup directory data
-  restore      restore directory data
-  install      install topaz container
-  configure    configure topaz service
-  certs        cert commands
-  update       update topaz container version
-  uninstall    uninstall topaz container
-  version      version information
+  run                run topaz in console mode
+  start              start topaz in daemon mode
+  stop               stop topaz instance
+  restart            restart topaz instance
+  status             status of topaz daemon process
+  manifest           manifest commands
+  templates          template commands
+  console            open console in the browser
+  directory (ds)     directory commands
+  authorizer (az)    authorizer commands
+  config             configure topaz service
+  certs              cert commands
+  install            install topaz container
+  uninstall          uninstall topaz container
+  update             update topaz container version
+  version            version information
 
 Flags:
   -h, --help        Show context-sensitive help.
@@ -244,7 +249,7 @@ Run "topaz <command> --help" for more information on a command.
 
 ## gRPC Endpoints
 
-To interact with the authorizer endpoint, install `grpcui` or `grpcurl` and point them to `localhost:8282`:
+To interact with the authorizer endpoint, install [grpcui](https://github.com/fullstorydev/grpcui) or [grpcurl](https://github.com/fullstorydev/grpcurl) and point them to `localhost:8282`:
 
 ```shell
 grpcui --insecure localhost:8282
