@@ -139,6 +139,10 @@
                     "type": "string",
                     "description": "path to gRPC key file"
                 },
+                "ca_cert_path": {
+                    "type": "string",
+                    "description": "path to CA certificate file"
+                },
                 "timeout_in_seconds": {
                     "type": "integer",
                     "description": "gRPC connection timeout in seconds"
