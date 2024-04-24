@@ -140,9 +140,9 @@ api:
         - https://*.aserto.com
         - https://*aserto-console.netlify.app
         certs:
-          tls_key_path: ${TOPAZ_CERTS_DIR}/gateway.key
-          tls_cert_path: ${TOPAZ_CERTS_DIR}/gateway.crt
-          tls_ca_cert_path: ${TOPAZ_CERTS_DIR}/gateway-ca.crt
+          tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+          tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
         http: false
         read_timeout: 2s
         read_header_timeout: 2s
@@ -190,9 +190,9 @@ api:
         - https://*.aserto.com
         - https://*aserto-console.netlify.app
         certs:
-          tls_key_path: ${TOPAZ_CERTS_DIR}/gateway.key
-          tls_cert_path: ${TOPAZ_CERTS_DIR}/gateway.crt
-          tls_ca_cert_path: ${TOPAZ_CERTS_DIR}/gateway-ca.crt
+          tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+          tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
         http: false
         read_timeout: 2s
         read_header_timeout: 2s
