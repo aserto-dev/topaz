@@ -40,3 +40,36 @@ func GetTopazDataDir() string {
 	}
 	return filepath.Clean(filepath.Join(xdg.DataHome, "topaz", "db"))
 }
+
+func EnsureDirs() error {
+	for _, f := range []func() error{EnsureTopazCfgDir, EnsureTopazCertsDir, EnsureTopazDataDir} {
+		if err := f(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func EnsureTopazCfgDir() error {
+	dir := GetTopazCfgDir()
+	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
+		return nil
+	}
+	return os.MkdirAll(dir, 0700)
+}
+
+func EnsureTopazCertsDir() error {
+	dir := GetTopazCertsDir()
+	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
+		return nil
+	}
+	return os.MkdirAll(dir, 0755)
+}
+
+func EnsureTopazDataDir() error {
+	dir := GetTopazDataDir()
+	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
+		return nil
+	}
+	return os.MkdirAll(dir, 0700)
+}
