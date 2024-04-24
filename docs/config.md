@@ -81,7 +81,7 @@ The metrics configuration allows topaz to spin up a metric server.
 
 The grpc section allows configuring the listen address, the connection timeout and the certificates. 
 
-
+- *fqdn* - string - optional value to set the fully qualified domain name for the service endpoint
 - *listen_address* - string - allows the topaz GRPC server to spin up on the requested port (default: "0.0.0.0:8282")
 - *connection_timeout_seconds* - uint32 - sets the timeout for a [connection establishment](https://pkg.go.dev/google.golang.org/grpc#ConnectionTimeout) (default: 120)
 - *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. If you do not have your certificates in the specified paths, topaz will generate self-signed certificates for you. By default topaz will generate the certificates in ` ~/.config/topaz/certs/` path
@@ -105,6 +105,7 @@ grpc:
 
 The gateway section allows configuring the [grpc gateway](https://github.com/grpc-ecosystem/grpc-gateway) for your topaz authorizer. 
 
+- *fqdn* - string - optional value to set the fully qualified domain name for the service endpoint
 - *listen_address* - string - allows the topaz Gateway server to spin up on the requested port (default: "0.0.0.0:8383")
 - *http* - boolean - when set to true it allows the gateway service to respond to plain http request (default: false)
 - *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. If you do not have your certificates in the specified paths, topaz will generate self-signed certificates for you. By default topaz will generate the certificates in ` ~/.config/topaz/certs/` path
@@ -124,6 +125,7 @@ Example:
 gateway:
   listen_address: "localhost:8383"
   http: false
+  fqdn: "https://mygateway.demo.org"
   certs:
     tls_cert_path: "/app/gateway.crt"
     tls_key_path: "/app/gateway.key"
