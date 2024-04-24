@@ -151,7 +151,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}
 	addr, _ := cfg.HealthService()
-	if !cc.ServiceHealthStatus(addr, "") {
+	if !cc.ServiceHealthStatus(addr, "model") {
 		return fmt.Errorf("gRPC endpoint not SERVING")
 	}
 	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
