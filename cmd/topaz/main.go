@@ -68,6 +68,10 @@ func main() {
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
 
+	if err := cc.EnsureDirs(); err != nil {
+		kongCtx.FatalIfErrorf(err)
+	}
+
 	if err := kongCtx.Run(ctx); err != nil {
 		kongCtx.FatalIfErrorf(err)
 	}
