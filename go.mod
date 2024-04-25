@@ -30,7 +30,7 @@ require (
 	github.com/aserto-dev/header v0.0.7
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
-	github.com/aserto-dev/openapi-directory v0.31.1
+	github.com/aserto-dev/openapi-directory v0.31.2
 	github.com/aserto-dev/runtime v0.62.1
 	github.com/aserto-dev/self-decision-logger v0.0.5
 	github.com/aserto-dev/service-host v0.0.11
