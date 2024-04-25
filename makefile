@@ -11,6 +11,11 @@ GOARCH			:= $(shell go env GOARCH)
 GOPRIVATE		:= "github.com/aserto-dev"
 DOCKER_BUILDKIT	:= 1
 
+BIN_DIR			:= ./bin
+EXT_DIR			:= ./.ext
+EXT_BIN_DIR		:= ${EXT_DIR}/bin
+EXT_TMP_DIR		:= ${EXT_DIR}/tmp
+
 VAULT_VERSION	:= 1.8.12
 SVU_VERSION 	:= 1.12.0
 GOTESTSUM_VERSION := 1.11.0
@@ -18,19 +23,16 @@ GOLANGCI-LINT_VERSION := 1.56.2
 GORELEASER_VERSION := 1.24.0
 WIRE_VERSION	:= 0.6.0
 
-BUF_USER		:= $(shell vault kv get -field ASERTO_BUF_USER kv/buf.build)
-BUF_TOKEN		:= $(shell vault kv get -field ASERTO_BUF_TOKEN kv/buf.build)
+BUF_USER		:= $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_USER kv/buf.build)
+BUF_TOKEN		:= $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_TOKEN kv/buf.build)
 BUF_REPO		:= "buf.build/aserto-dev/directory"
-BUF_LATEST		:= $(shell BUF_BETA_SUPPRESS_WARNINGS=1 buf beta registry tag list buf.build/aserto-dev/directory --format json --reverse | jq -r '.results[0].name')
+BUF_LATEST		:= $(shell BUF_BETA_SUPPRESS_WARNINGS=1 ${EXT_BIN_DIR}/buf beta registry tag list buf.build/aserto-dev/directory --format json --reverse | jq -r '.results[0].name')
 BUF_DEV_IMAGE	:= "../pb-directory/bin/directory.bin"
 BUF_VERSION 	:= 1.30.0
 
 RELEASE_TAG		:= $$(svu)
 
-BIN_DIR			:= ./bin
-EXT_DIR			:= ./.ext
-EXT_BIN_DIR		:= ${EXT_DIR}/bin
-EXT_TMP_DIR		:= ${EXT_DIR}/tmp
+.DEFAULT_GOAL 	:= build
 
 .PHONY: deps
 deps: info install-vault install-buf install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire 
@@ -200,8 +202,8 @@ install-wire: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 .PHONY: clean
 clean:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@rm -rf ./.ext
-	@rm -rf ./bin
+	@rm -rf ${EXT_DIR}
+	@rm -rf ${BIN_DIR}
 
 ${BIN_DIR}:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"

@@ -14,11 +14,18 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
 
+const (
+	localhostAuthorizer   string = "localhost:8282"
+	EnvTopazAuthorizerSvc string = "TOPAZ_AUTHORIZER_SVC"
+	EnvTopazAuthorizerKey string = "TOPAZ_AUTHORIZER_KEY"
+)
+
 type AuthorizerConfig struct {
-	Host     string
-	APIKey   string
-	Insecure bool
-	TenantID string
+	Host     string `flag:"host" short:"H" env:"TOPAZ_AUTHORIZER_SVC" help:"authorizer service address"`
+	APIKey   string `flag:"api-key" short:"k" env:"TOPAZ_AUTHORIZER_KEY" help:"authorizer API key"`
+	Token    string `flag:"token" short:"t" env:"TOPAZ_AUTHORIZER_TOKEN" help:"authorizer OAuth2.0 token" hidden:""`
+	Insecure bool   `flag:"insecure" short:"i" env:"INSECURE" help:"skip TLS verification"`
+	TenantID string `flag:"tenant-id" help:"" env:"ASERTO_TENANT_ID" `
 }
 
 func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.AuthorizerClient, error) {
@@ -37,6 +44,10 @@ func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.Aut
 
 	if cfg.APIKey != "" {
 		opts = append(opts, azc.WithAPIKeyAuth(cfg.APIKey))
+	}
+
+	if cfg.Token != "" {
+		opts = append(opts, azc.WithTokenAuth(cfg.Token))
 	}
 
 	if cfg.TenantID != "" {
@@ -62,13 +73,16 @@ func (cfg *AuthorizerConfig) validate() error {
 	creds := credentials.NewTLS(tlsConf)
 
 	opts := []grpc.DialOption{
-		grpc.WithUserAgent("topaz/dev-build (no version set)"),
+		grpc.WithUserAgent("topaz/dev-build (no version set)"), // TODO: verify user-agent value
 	}
+
 	if cfg.Insecure {
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
+
 	if _, err := grpcurl.BlockingDial(ctx, "tcp", cfg.Host, creds, opts...); err != nil {
 		return err
 	}
+
 	return nil
 }

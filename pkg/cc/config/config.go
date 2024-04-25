@@ -114,6 +114,9 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		if err != nil {
 			return nil, err
 		}
+		if configLoader.HasTopazDir {
+			log.Warn().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+		}
 
 		err = validateVersion(configLoader.Configuration.Version)
 		if err != nil {

@@ -111,6 +111,9 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 }
 
 func getGatewayAddress(serviceConfig *builder.API) string {
+	if serviceConfig.Gateway.FQDN != "" {
+		return serviceConfig.Gateway.FQDN
+	}
 	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
 
 	if serviceConfig.Gateway.HTTP {

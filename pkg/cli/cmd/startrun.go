@@ -35,19 +35,27 @@ const (
 
 func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
-		return ErrIsRunning
+		return cc.ErrIsRunning
 	}
 
-	if _, err := os.Stat(path.Join(cc.GetTopazCfgDir(), "config.yaml")); errors.Is(err, os.ErrNotExist) {
-		return errors.Errorf("%s does not exist, please run 'topaz configure'", path.Join(cc.GetTopazCfgDir(), "config.yaml"))
+	if _, err := os.Stat(c.Config.Active.ConfigFile); errors.Is(err, os.ErrNotExist) {
+		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(c.Config.Active.ConfigFile))
 	}
 
-	cfg, err := config.LoadConfiguration(filepath.Join(cc.GetTopazCfgDir(), "config.yaml"))
+	cfg, err := config.LoadConfiguration(c.Config.Active.ConfigFile)
 	if err != nil {
 		return err
 	}
 
-	generator := config.NewGenerator("config.yaml")
+	c.Config.Running.Config = c.Config.Active.Config
+	c.Config.Running.ConfigFile = c.Config.Active.ConfigFile
+	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
+
+	if cfg.HasTopazDir {
+		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+	}
+
+	generator := config.NewGenerator(filepath.Base(c.Config.Active.ConfigFile))
 	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}
@@ -66,7 +74,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return err
 	}
 
-	color.Green(">>> starting topaz...")
+	color.Green(">>> starting topaz %q...", c.Config.Running.Config)
 
 	dc, err := dockerx.New()
 	if err != nil {
@@ -92,7 +100,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithContainerHostname(cmd.ContainerHostname),
 		dockerx.WithWorkingDir("/app"),
 		dockerx.WithEntrypoint([]string{"./topazd"}),
-		dockerx.WithCmd([]string{"run", "--config-file", "/config/config.yaml"}),
+		dockerx.WithCmd([]string{"run", "--config-file", fmt.Sprintf("/config/%s", filepath.Base(c.Config.Active.ConfigFile))}),
 		dockerx.WithAutoRemove(),
 		dockerx.WithEnvs(getEnvFromVolumes(volumes)),
 		dockerx.WithEnvs(cmd.Env),
@@ -116,6 +124,10 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 
 	fmt.Fprintf(c.UI.Output(), "\n")
 
+	if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
 	return nil
 }
 

@@ -1,4 +1,4 @@
-package cmd
+package directory
 
 import (
 	"fmt"
@@ -8,19 +8,18 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/fatih/color"
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 )
 
 type ImportCmd struct {
 	Directory string        `short:"d" required:"" help:"directory containing .json data"`
 	Format    FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
-	clients.Config
+	clients.DirectoryConfig
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
-		return errors.Wrap(ErrNotServing, cmd.Host)
+		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	color.Green(">>> importing data from %s", cmd.Directory)
 
@@ -38,8 +37,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	cmd.Config.SessionID = uuid.NewString()
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.Config)
+	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return err
 	}
