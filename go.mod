@@ -1,8 +1,6 @@
 module github.com/aserto-dev/topaz
 
-go 1.22
-
-toolchain go1.22.1
+go 1.21
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace aserto-dev/go-directory-cli => ../go-directory-cli
@@ -33,11 +31,11 @@ require (
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.31.2
-	github.com/aserto-dev/runtime v0.62.2-0.20240430071606-0821547bee58
+	github.com/aserto-dev/runtime v0.64.0
 	github.com/aserto-dev/self-decision-logger v0.0.5
 	github.com/aserto-dev/service-host v0.0.11
 	github.com/cli/browser v1.3.0
-	github.com/docker/docker v26.0.0+incompatible
+	github.com/docker/docker v26.1.1+incompatible
 	github.com/docker/go-connections v0.5.0
 	github.com/fatih/color v1.16.0
 	github.com/fullstorydev/grpcurl v1.9.1
@@ -61,9 +59,9 @@ require (
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.7.0
 	google.golang.org/grpc v1.63.2
-	google.golang.org/protobuf v1.33.1-0.20240408130810-98873a205002
+	google.golang.org/protobuf v1.34.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
-	sigs.k8s.io/controller-runtime v0.17.3
+	sigs.k8s.io/controller-runtime v0.17.4
 )
 
 require (
@@ -177,7 +175,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.26.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.22.0 // indirect
-	golang.org/x/exp v0.0.0-20240409090435-93d18d7e34b8 // indirect
+	golang.org/x/exp v0.0.0-20240416160154-fe59bbe5cc7f // indirect
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/net v0.24.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
