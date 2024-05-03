@@ -22,6 +22,7 @@ type ConfigCmd struct {
 	List   ListConfigCmd   `cmd:"" help:"list configurations"`
 	Rename RenameConfigCmd `cmd:"" help:"rename configuration"`
 	Delete DeleteConfigCmd `cmd:"" help:"delete configuration"`
+	Info   InfoConfigCmd   `cmd:"" help:"display configuration information"`
 }
 
 var restrictedNamePattern = regexp.MustCompile(`^[a-z0-9][a-z0-9_.-]*$`)
@@ -241,5 +242,11 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 	table.Do()
 
+	return nil
+}
+
+type InfoConfigCmd struct{}
+
+func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 	return nil
 }
