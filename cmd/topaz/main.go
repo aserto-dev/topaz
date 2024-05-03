@@ -113,9 +113,10 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 	return len(files) > 0, nil
 }
 
-func exit(x int) {
+// set status code to 0 when executing with no arguments, help only output.
+func exit(rc int) {
 	if len(os.Args) == 1 {
 		os.Exit(0)
 	}
-	os.Exit(x)
+	os.Exit(rc)
 }
