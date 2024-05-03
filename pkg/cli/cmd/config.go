@@ -2,13 +2,16 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 
+	"github.com/adrg/xdg"
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -248,5 +251,42 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 type InfoConfigCmd struct{}
 
 func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
+	data := map[string]interface{}{
+		// environment values
+		"environment": map[string]interface{}{
+			"HOME":            xdg.Home,
+			"XDG_CONFIG_HOME": xdg.ConfigHome,
+			"XDG_DATA_HOME":   xdg.DataHome,
+		},
+		// config values
+		"config": map[string]interface{}{
+			"TOPAZ_CFG_DIR":   cc.GetTopazCfgDir(),
+			"TOPAZ_CERTS_DIR": cc.GetTopazCertsDir(),
+			"TOPAZ_DB_DIR":    cc.GetTopazDataDir(),
+			"TOPAZ_DIR":       cc.GetTopazDir(),
+		},
+		// runtime values
+		"runtime": map[string]interface{}{
+			"active.configuration.name":  c.Config.Active.Config,
+			"active.configuration.file":  c.Config.Active.ConfigFile,
+			"running.configuration.name": c.Config.Running.Config,
+			"running.configuration.file": c.Config.Running.ConfigFile,
+			"running.container.name":     c.Config.Running.ContainerName,
+			"topaz.json":                 filepath.Join(cc.GetTopazDir(), CLIConfigurationFile),
+		},
+		// default values
+		"default": map[string]interface{}{
+			"CONTAINER_IMAGE":    c.Config.Defaults.ContainerImage,
+			"CONTAINER_TAG":      c.Config.Defaults.ContainerTag,
+			"CONTAINER_PLATFORM": c.Config.Defaults.ContainerPlatform,
+			"TOPAZ_NO_CHECK":     strconv.FormatBool(c.Config.Defaults.NoCheck),
+		},
+	}
+
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	enc.SetEscapeHTML(false)
+	enc.Encode(data)
+
 	return nil
 }
