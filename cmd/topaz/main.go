@@ -45,6 +45,7 @@ func main() {
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
+		kong.Exit(exit),
 		kong.ConfigureHelp(kong.HelpOptions{
 			NoAppSummary:        false,
 			Summary:             false,
@@ -110,4 +111,11 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 	}
 
 	return len(files) > 0, nil
+}
+
+func exit(x int) {
+	if len(os.Args) == 1 {
+		os.Exit(0)
+	}
+	os.Exit(x)
 }
