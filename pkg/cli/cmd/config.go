@@ -286,7 +286,5 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
-	enc.Encode(data)
-
-	return nil
+	return enc.Encode(data)
 }
