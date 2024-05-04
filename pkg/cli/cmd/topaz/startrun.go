@@ -1,4 +1,4 @@
-package cmd
+package topaz
 
 import (
 	"fmt"
@@ -9,6 +9,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/fatih/color"
 	"github.com/pkg/errors"
@@ -124,7 +125,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 
 	fmt.Fprintf(c.UI.Output(), "\n")
 
-	if err := c.SaveContextConfig(CLIConfigurationFile); err != nil {
+	if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
