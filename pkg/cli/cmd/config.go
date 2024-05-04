@@ -250,58 +250,91 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 type InfoConfigCmd struct{}
 
 func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
-	data := map[string]interface{}{
-		// environment values
-		"environment": map[string]interface{}{
-			"HOME":            xdg.Home,
-			"XDG_CONFIG_HOME": xdg.ConfigHome,
-			"XDG_DATA_HOME":   xdg.DataHome,
-		},
-		// config values
-		"config": map[string]interface{}{
-			"TOPAZ_CFG_DIR":   cc.GetTopazCfgDir(),
-			"TOPAZ_CERTS_DIR": cc.GetTopazCertsDir(),
-			"TOPAZ_DB_DIR":    cc.GetTopazDataDir(),
-			"TOPAZ_DIR":       cc.GetTopazDir(),
-		},
-		// runtime values
-		"runtime": map[string]interface{}{
-			"active.configuration.name":  c.Config.Active.Config,
-			"active.configuration.file":  c.Config.Active.ConfigFile,
-			"running.configuration.name": c.Config.Running.Config,
-			"running.configuration.file": c.Config.Running.ConfigFile,
-			"running.container.name":     c.Config.Running.ContainerName,
-
-			"topaz.json": filepath.Join(cc.GetTopazDir(), CLIConfigurationFile),
-		},
-		// default values
-		"default": map[string]interface{}{
-			"CONTAINER_REGISTRY": cc.ContainerRegistry(),
-			"CONTAINER_IMAGE":    cc.ContainerImage(),
-			"CONTAINER_TAG":      cc.ContainerTag(),
-			"CONTAINER_PLATFORM": cc.ContainerPlatform(),
-			"TOPAZ_NO_CHECK":     cc.NoCheck(),
-		},
-		// directory values
-		"directory": map[string]interface{}{
-			"TOPAZ_DIRECTORY_SVC":   cc.DirectorySvc(),
-			"TOPAZ_DIRECTORY_KEY":   cc.DirectoryKey(),
-			"TOPAZ_DIRECTORY_TOKEN": cc.DirectoryToken(),
-			"TOPAZ_INSECURE":        cc.Insecure(),
-			"ASERTO_TENANT_ID":      cc.TenantID(),
-		},
-		// authorizer values
-		"authorizer": map[string]interface{}{
-			"TOPAZ_AUTHORIZER_SVC":   cc.AuthorizerSvc(),
-			"TOPAZ_AUTHORIZER_KEY":   cc.AuthorizerKey(),
-			"TOPAZ_AUTHORIZER_TOKEN": cc.AuthorizerToken(),
-			"TOPAZ_INSECURE":         cc.Insecure(),
-			"ASERTO_TENANT_ID":       cc.TenantID(),
-		},
-	}
-
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
-	return enc.Encode(data)
+	return enc.Encode(cmd.info(c))
+}
+
+type Info struct {
+	Environment struct {
+		Home          string `json:"home"`
+		XdgConfigHome string `json:"xdg_config_home"`
+		XdgDataHome   string `json:"xdg_data_home"`
+	} `json:"environment"`
+	Config struct {
+		TopazCfgDir   string `json:"topaz_cfg_dir"`
+		TopazCertsDir string `json:"topaz_certs_dir"`
+		TopazDataDir  string `json:"topaz_db_dir"`
+		TopazDir      string `json:"topaz_dir"`
+	} `json:"config"`
+	Runtime struct {
+		ActiveConfigurationName  string `json:"active_configuration_name"`
+		ActiveConfigurationFile  string `json:"active_configuration_file"`
+		RunningConfigurationName string `json:"running_configuration_name"`
+		RunningConfigurationFile string `json:"running_configuration_file"`
+		RunningContainerName     string `json:"running_container_name"`
+		TopazConfigFile          string `json:"topaz_json"`
+	} `json:"runtime"`
+	Default struct {
+		ContainerRegistry string `json:"container_registry"`
+		ContainerImage    string `json:"container_image"`
+		ContainerTag      string `json:"container_tag"`
+		ContainerPlatform string `json:"container_platform"`
+		NoCheck           bool   `json:"topaz_no_check"`
+	} `json:"default"`
+	Directory struct {
+		DirectorySvc   string `json:"topaz_directory_svc"`
+		DirectoryKey   string `json:"topaz_directory_key"`
+		DirectoryToken string `json:"topaz_directory_token"`
+		Insecure       bool   `json:"topaz_insecure"`
+		TenantID       string `json:"aserto_tenant_id"`
+	} `json:"directory"`
+	Authorizer struct {
+		AuthorizerSvc   string `json:"topaz_authorizer_svc"`
+		AuthorizerKey   string `json:"topaz_authorizer_key"`
+		AuthorizerToken string `json:"topaz_authorizer_token"`
+		Insecure        bool   `json:"topaz_insecure"`
+		TenantID        string `json:"aserto_tenant_id"`
+	} `json:"authorizer"`
+}
+
+func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
+	info := Info{}
+
+	info.Environment.Home = xdg.Home
+	info.Environment.XdgConfigHome = xdg.ConfigHome
+	info.Environment.XdgDataHome = xdg.DataHome
+
+	info.Config.TopazCfgDir = cc.GetTopazCfgDir()
+	info.Config.TopazCertsDir = cc.GetTopazCertsDir()
+	info.Config.TopazDataDir = cc.GetTopazDataDir()
+	info.Config.TopazDir = cc.GetTopazDir()
+
+	info.Runtime.ActiveConfigurationName = c.Config.Active.Config
+	info.Runtime.ActiveConfigurationFile = c.Config.Active.ConfigFile
+	info.Runtime.RunningConfigurationName = c.Config.Running.Config
+	info.Runtime.RunningConfigurationFile = c.Config.Running.ConfigFile
+	info.Runtime.RunningContainerName = c.Config.Running.ContainerName
+	info.Runtime.TopazConfigFile = filepath.Join(cc.GetTopazDir(), CLIConfigurationFile)
+
+	info.Default.ContainerRegistry = cc.ContainerRegistry()
+	info.Default.ContainerImage = cc.ContainerImage()
+	info.Default.ContainerTag = cc.ContainerTag()
+	info.Default.ContainerPlatform = cc.ContainerPlatform()
+	info.Default.NoCheck = cc.NoCheck()
+
+	info.Directory.DirectorySvc = cc.DirectorySvc()
+	info.Directory.DirectoryKey = cc.DirectoryKey()
+	info.Directory.DirectoryToken = cc.DirectoryToken()
+	info.Directory.Insecure = cc.Insecure()
+	info.Directory.TenantID = cc.TenantID()
+
+	info.Authorizer.AuthorizerSvc = cc.AuthorizerSvc()
+	info.Authorizer.AuthorizerKey = cc.AuthorizerKey()
+	info.Authorizer.AuthorizerToken = cc.AuthorizerToken()
+	info.Authorizer.Insecure = cc.Insecure()
+	info.Authorizer.TenantID = cc.TenantID()
+
+	return &info
 }
