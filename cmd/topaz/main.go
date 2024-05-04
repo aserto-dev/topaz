@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
@@ -65,6 +66,15 @@ func main() {
 			"container_tag":      cc.ContainerTag(),
 			"container_platform": cc.ContainerPlatform(),
 			"container_name":     cc.ContainerName(ctx.Config.Active.ConfigFile),
+			"directory_svc":      cc.DirectorySvc(),
+			"directory_key":      cc.DirectoryKey(),
+			"directory_token":    cc.DirectoryToken(),
+			"authorizer_svc":     cc.AuthorizerSvc(),
+			"authorizer_key":     cc.AuthorizerKey(),
+			"authorizer_token":   cc.AuthorizerToken(),
+			"tenant_id":          cc.TenantID(),
+			"insecure":           strconv.FormatBool(cc.Insecure()),
+			"no_check":           strconv.FormatBool(cc.NoCheck()),
 		},
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))

@@ -8,7 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/adrg/xdg"
@@ -272,14 +271,32 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 			"running.configuration.name": c.Config.Running.Config,
 			"running.configuration.file": c.Config.Running.ConfigFile,
 			"running.container.name":     c.Config.Running.ContainerName,
-			"topaz.json":                 filepath.Join(cc.GetTopazDir(), CLIConfigurationFile),
+
+			"topaz.json": filepath.Join(cc.GetTopazDir(), CLIConfigurationFile),
 		},
 		// default values
 		"default": map[string]interface{}{
-			"CONTAINER_IMAGE":    c.Config.Defaults.ContainerImage,
-			"CONTAINER_TAG":      c.Config.Defaults.ContainerTag,
-			"CONTAINER_PLATFORM": c.Config.Defaults.ContainerPlatform,
-			"TOPAZ_NO_CHECK":     strconv.FormatBool(c.Config.Defaults.NoCheck),
+			"CONTAINER_REGISTRY": cc.ContainerRegistry(),
+			"CONTAINER_IMAGE":    cc.ContainerImage(),
+			"CONTAINER_TAG":      cc.ContainerTag(),
+			"CONTAINER_PLATFORM": cc.ContainerPlatform(),
+			"TOPAZ_NO_CHECK":     cc.NoCheck(),
+		},
+		// directory values
+		"directory": map[string]interface{}{
+			"TOPAZ_DIRECTORY_SVC":   cc.DirectorySvc(),
+			"TOPAZ_DIRECTORY_KEY":   cc.DirectoryKey(),
+			"TOPAZ_DIRECTORY_TOKEN": cc.DirectoryToken(),
+			"TOPAZ_INSECURE":        cc.Insecure(),
+			"ASERTO_TENANT_ID":      cc.TenantID(),
+		},
+		// authorizer values
+		"authorizer": map[string]interface{}{
+			"TOPAZ_AUTHORIZER_SVC":   cc.AuthorizerSvc(),
+			"TOPAZ_AUTHORIZER_KEY":   cc.AuthorizerKey(),
+			"TOPAZ_AUTHORIZER_TOKEN": cc.AuthorizerToken(),
+			"TOPAZ_INSECURE":         cc.Insecure(),
+			"ASERTO_TENANT_ID":       cc.TenantID(),
 		},
 	}
 
