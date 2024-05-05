@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"fmt"
 
 	azc "github.com/aserto-dev/go-aserto/client"
 	"github.com/fullstorydev/grpcurl"
@@ -14,23 +15,17 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
 
-const (
-	localhostAuthorizer   string = "localhost:8282"
-	EnvTopazAuthorizerSvc string = "TOPAZ_AUTHORIZER_SVC"
-	EnvTopazAuthorizerKey string = "TOPAZ_AUTHORIZER_KEY"
-)
-
 type AuthorizerConfig struct {
-	Host     string `flag:"host" short:"H" env:"TOPAZ_AUTHORIZER_SVC" help:"authorizer service address"`
-	APIKey   string `flag:"api-key" short:"k" env:"TOPAZ_AUTHORIZER_KEY" help:"authorizer API key"`
-	Token    string `flag:"token" short:"t" env:"TOPAZ_AUTHORIZER_TOKEN" help:"authorizer OAuth2.0 token" hidden:""`
-	Insecure bool   `flag:"insecure" short:"i" env:"INSECURE" help:"skip TLS verification"`
-	TenantID string `flag:"tenant-id" help:"" env:"ASERTO_TENANT_ID" `
+	Host     string `flag:"host" short:"H" default:"${authorizer_svc}" env:"TOPAZ_AUTHORIZER_SVC" help:"authorizer service address"`
+	APIKey   string `flag:"api-key" short:"k" default:"${authorizer_key}" env:"TOPAZ_AUTHORIZER_KEY" help:"authorizer API key"`
+	Token    string `flag:"token" short:"t" default:"${authorizer_token}" env:"TOPAZ_AUTHORIZER_TOKEN" help:"authorizer OAuth2.0 token" hidden:""`
+	Insecure bool   `flag:"insecure" short:"i" default:"${insecure}" env:"TOPAZ_INSECURE" help:"skip TLS verification"`
+	TenantID string `flag:"tenant-id" help:"" default:"${tenant_id}" env:"ASERTO_TENANT_ID" `
 }
 
 func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.AuthorizerClient, error) {
 	if cfg.Host == "" {
-		cfg.Host = localhostAuthorizer
+		return nil, fmt.Errorf("no host specified")
 	}
 
 	if err := cfg.validate(); err != nil {
