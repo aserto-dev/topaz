@@ -315,7 +315,11 @@ func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.Dec
 func (e *Topaz) validateConfig() error {
 	if readerConfig, ok := e.Configuration.APIConfig.Services["reader"]; ok {
 		if readerConfig.GRPC.ListenAddress != e.Configuration.DirectoryResolver.Address {
-			return errors.New("remote directory resolver address is different from reader grpc address")
+			for _, serviceName := range e.Services["edge"].AvailableServices() {
+				delete(e.Configuration.APIConfig.Services, serviceName)
+			}
+			delete(e.Services, "edge")
+			e.Logger.Info().Msg("disabling local directory services")
 		}
 	}
 
