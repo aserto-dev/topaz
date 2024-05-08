@@ -431,8 +431,8 @@ github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg
 github.com/aserto-dev/clui v0.8.3/go.mod h1:KsL/g2x5LAbkEE4ofW/ZoA4FDOIdAyLes/5ullvzUt8=
 github.com/aserto-dev/errors v0.0.7 h1:pBn9RhP2iiDl30oAWsf8aLxvt4yCpLKZOCJRIaeRMUs=
 github.com/aserto-dev/errors v0.0.7/go.mod h1:wiQ68oKTyAQVAv+SvB5GyuAD6PewalA/D6Fq30gNUbQ=
-github.com/aserto-dev/go-aserto v0.31.3 h1:qBoh89FOTC3W2cgw8zVyHpLbJgivrMo7hG5iS4lmEuk=
-github.com/aserto-dev/go-aserto v0.31.3/go.mod h1:6mW3wUC62a8TbqYH64lq350MBj+W3WwtlxXNZRybbOY=
+github.com/aserto-dev/go-aserto v0.31.4 h1:i4EYTNwyARhEZrN00CU7OnXJCE5xwo6w67ncwJcxmBM=
+github.com/aserto-dev/go-aserto v0.31.4/go.mod h1:6mW3wUC62a8TbqYH64lq350MBj+W3WwtlxXNZRybbOY=
 github.com/aserto-dev/go-authorizer v0.20.6 h1:fSpnjQwz5k49dl9fBVyzMPbI/dxI/KXCuKpx3ztAv0U=
 github.com/aserto-dev/go-authorizer v0.20.6/go.mod h1:UYrV3teiX6KlShTzX7HC8KvAJsRI9QUyxJEWbVFYBFU=
 github.com/aserto-dev/go-decision-logs v0.0.4 h1:beu/mhqZ92ovhSIPOv2f4q0Ci7HWNLla/j/x+ZD5eHw=
