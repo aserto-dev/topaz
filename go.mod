@@ -20,7 +20,7 @@ require (
 	github.com/aserto-dev/certs v0.0.6
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.7
-	github.com/aserto-dev/go-aserto v0.31.3
+	github.com/aserto-dev/go-aserto v0.31.4
 	github.com/aserto-dev/go-authorizer v0.20.6
 	github.com/aserto-dev/go-directory v0.31.3
 	github.com/aserto-dev/go-directory-cli v0.31.1
