@@ -1,4 +1,4 @@
-package cmd
+package topaz
 
 import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"

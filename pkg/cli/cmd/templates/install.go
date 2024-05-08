@@ -1,56 +1,20 @@
-package cmd
+package templates
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"net/http"
-	"net/url"
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
 
-	v3 "github.com/aserto-dev/azm/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
-
-	"github.com/rs/zerolog"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/topaz"
 )
-
-type TemplateCmd struct {
-	List    ListTemplatesCmd   `cmd:"" help:"list template"`
-	Install InstallTemplateCmd `cmd:"" help:"install template"`
-	Verify  VerifyTemplateCmd  `cmd:"" help:"verify template content links" hidden:""`
-}
-
-type ListTemplatesCmd struct {
-	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
-}
-
-func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
-	ctlg, err := getCatalog(cmd.TemplatesURL)
-	if err != nil {
-		return err
-	}
-
-	maxWidth := 0
-	for n := range ctlg {
-		maxWidth = max(maxWidth, len(n)+1)
-	}
-
-	table := c.UI.Normal().WithTable(colName, colDescription, colDocumentation)
-	table.WithTableNoAutoWrapText()
-	for n, t := range ctlg {
-		table.WithTableRow(n, t.ShortDescription, t.DocumentationURL)
-	}
-	table.Do()
-
-	return nil
-}
 
 type InstallTemplateCmd struct {
 	Name              string `arg:"" required:"" help:"template name"`
@@ -80,15 +44,15 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 
 	if !cmd.Force {
 		c.UI.Exclamation().Msg("Installing this template will completely reset your topaz configuration.")
-		if !PromptYesNo("Do you want to continue?", false) {
+		if !common.PromptYesNo("Do you want to continue?", false) {
 			return nil
 		}
 	}
 	fileName := fmt.Sprintf("%s.yaml", tmpl.Name)
 	c.Config.Active.Config = tmpl.Name
 	if cmd.ConfigName != "" {
-		if !restrictedNamePattern.MatchString(cmd.ConfigName) {
-			return fmt.Errorf("%s must match pattern %s", cmd.Name, restrictedNamePattern.String())
+		if !common.RestrictedNamePattern.MatchString(cmd.ConfigName) {
+			return fmt.Errorf("%s must match pattern %s", cmd.Name, common.RestrictedNamePattern.String())
 		}
 		fileName = fmt.Sprintf("%s.yaml", cmd.ConfigName)
 		c.Config.Active.Config = cmd.ConfigName
@@ -107,7 +71,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
-	cliConfig := filepath.Join(cc.GetTopazDir(), CLIConfigurationFile)
+	cliConfig := filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
 
 	kongConfigBytes, err := json.Marshal(c.Config)
 	if err != nil {
@@ -132,16 +96,13 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 // 8 - topaz test exec, execute assertions when part of template
 // 9 - topaz console, launch console so the user start exploring the template artifacts.
 func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) error {
-	topazDir, err := getTopazDir()
-	if err != nil {
-		return err
-	}
-	os.Setenv("TOPAZ_DIR", topazDir)
+	topazDir := cc.GetTopazDir()
+
+	os.Setenv("TOPAZ_DIR", cc.GetTopazDir())
 
 	cmd.DirectoryConfig.Insecure = true
 	// 1-3 - stop topaz, configure, start
-	err = cmd.prepareTopaz(c, tmpl, cmd.ConfigName)
-	if err != nil {
+	if err := cmd.prepareTopaz(c, tmpl, cmd.ConfigName); err != nil {
 		return err
 	}
 
@@ -174,7 +135,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 
 	// 9 - topaz console, launch console so the user start exploring the template artifacts
 	if !cmd.NoConsole {
-		command := ConsoleCmd{
+		command := topaz.ConsoleCmd{
 			ConsoleAddress: "https://localhost:8080/ui/directory",
 		}
 		if err := command.Run(c); err != nil {
@@ -189,7 +150,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 
 	// 1 - topaz stop - ensure topaz is not running, so we can reconfigure
 	{
-		command := &StopCmd{
+		command := &topaz.StopCmd{
 			ContainerName: "topaz*",
 			Wait:          true,
 		}
@@ -200,7 +161,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 
 	// topaz status, output status
 	{
-		command := &StatusCmd{}
+		command := &topaz.StatusCmd{}
 		if err := command.Run(c); err != nil {
 			return err
 		}
@@ -213,8 +174,8 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 
 	// 2 - topaz config new - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
-		command := NewConfigCmd{
-			Name:     ConfigName(name),
+		command := configure.NewConfigCmd{
+			Name:     configure.ConfigName(name),
 			Resource: tmpl.Assets.Policy.Resource,
 			Force:    true,
 		}
@@ -225,8 +186,8 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 
 	// topaz config use - activate configuration (new or existing)
 	{
-		use := UseConfigCmd{
-			Name:      ConfigName(name),
+		use := configure.UseConfigCmd{
+			Name:      configure.ConfigName(name),
 			ConfigDir: cc.GetTopazCfgDir(),
 		}
 		if err := use.Run(c); err != nil {
@@ -236,8 +197,8 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 
 	// 3 - topaz start - start instance using new configuration
 	{
-		command := &StartCmd{
-			StartRunCmd: StartRunCmd{
+		command := &topaz.StartCmd{
+			StartRunCmd: topaz.StartRunCmd{
 				ContainerRegistry: cmd.ContainerRegistry,
 				ContainerImage:    cmd.ContainerImage,
 				ContainerTag:      cmd.ContainerTag,
@@ -253,47 +214,6 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 	}
 
 	return nil
-}
-
-const (
-	colName          string = "name"
-	colDescription   string = "description"
-	colDocumentation string = "documentation"
-)
-
-type tmplCatalog map[string]*tmplRef
-
-type tmplRef struct {
-	Title            string `json:"title,omitempty"`
-	ShortDescription string `json:"short_description,omitempty"`
-	Description      string `json:"description,omitempty"`
-	URL              string `json:"topaz_url,omitempty"`
-	DocumentationURL string `json:"docs_url,omitempty"`
-
-	absURL *url.URL
-}
-
-type template struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Assets      struct {
-		Manifest string `json:"manifest"`
-		Policy   struct {
-			Name     string `json:"name"`
-			Resource string `json:"resource"`
-		} `json:"policy,omitempty"`
-		IdentityData []string `json:"idp_data,omitempty"`
-		DomainData   []string `json:"domain_data,omitempty"`
-		Assertions   []string `json:"assertions,omitempty"`
-	} `json:"assets"`
-
-	base *url.URL
-}
-
-func (t *template) AbsURL(relative string) string {
-	abs := *t.base
-	abs.Path = path.Join(abs.Path, relative)
-	return abs.String()
 }
 
 func installTemplate(c *cc.CommonCtx, tmpl *template, topazDir string, cfg *clients.DirectoryConfig, customName string) *tmplInstaller {
@@ -339,7 +259,7 @@ func (i *tmplInstaller) Test() error {
 }
 
 func (i *tmplInstaller) deleteManifest() error {
-	command := DeleteManifestCmd{
+	command := directory.DeleteManifestCmd{
 		Force:           true,
 		DirectoryConfig: *i.cfg,
 	}
@@ -364,7 +284,7 @@ func (i *tmplInstaller) setManifest() error {
 		}
 	}
 
-	command := SetManifestCmd{
+	command := directory.SetManifestCmd{
 		Path:            manifest,
 		DirectoryConfig: *i.cfg,
 	}
@@ -444,242 +364,4 @@ func (i *tmplInstaller) runTemplateTests() error {
 		}
 	}
 	return nil
-}
-
-func download(src, dir string) (string, error) {
-	buf, err := getBytes(src)
-	if err != nil {
-		return "", err
-	}
-
-	if err := os.MkdirAll(dir, 0700); err != nil {
-		return "", err
-	}
-
-	f, err := os.Create(filepath.Join(dir, filepath.Base(src)))
-	if err != nil {
-		return "", err
-	}
-	defer f.Close()
-
-	if _, err := f.Write(buf); err != nil {
-		return "", err
-	}
-
-	return f.Name(), nil
-}
-
-func getBytes(fileURL string) ([]byte, error) {
-	if exists, _ := config.FileExists(fileURL); exists {
-		return os.ReadFile(fileURL)
-	}
-
-	resp, err := http.Get(fileURL) //nolint used to download the template files
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	buf := bytes.Buffer{}
-	if _, err := buf.ReadFrom(resp.Body); err != nil {
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
-}
-
-func getTemplate(name, templatesURL string) (*template, error) {
-	if exists, _ := config.FileExists(name); exists {
-		return getTemplateFromFile(name)
-	}
-
-	tmplURL, err := url.Parse(templatesURL)
-	if err != nil {
-		return nil, err
-	}
-
-	ref, err := getTemplateRef(name, tmplURL)
-	if err != nil {
-		return nil, err
-	}
-
-	tmpl, err := ref.getTemplate()
-	if err != nil {
-		return nil, err
-	}
-	tmpl.Name = name
-
-	return tmpl, nil
-}
-
-func getCatalog(templatesURL string) (tmplCatalog, error) {
-	buf, err := getBytes(templatesURL)
-	if err != nil {
-		return nil, err
-	}
-
-	var ctlg tmplCatalog
-	if err := json.Unmarshal(buf, &ctlg); err != nil {
-		return nil, err
-	}
-
-	return ctlg, nil
-}
-
-func getTemplateRef(name string, templatesURL *url.URL) (*tmplRef, error) {
-	list, err := getCatalog(templatesURL.String())
-	if err != nil {
-		return nil, err
-	}
-
-	if ref, ok := list[name]; ok {
-		parsed, err := url.Parse(ref.URL)
-		if err != nil {
-			return nil, err
-		}
-		if parsed.Scheme == "" {
-			absURL := *templatesURL
-			absURL.Path = path.Join(path.Dir(absURL.Path), parsed.Path)
-			ref.absURL = &absURL
-		}
-
-		return ref, nil
-	}
-
-	return nil, derr.ErrNotFound.Msgf("template %s", name)
-}
-
-func getTemplateFromFile(file string) (*template, error) {
-	b, err := os.ReadFile(file)
-	if err != nil {
-		return nil, err
-	}
-
-	tmpl := template{base: &url.URL{Path: path.Dir(file)}}
-	if err := json.Unmarshal(b, &tmpl); err != nil {
-		return nil, err
-	}
-
-	return &tmpl, nil
-}
-
-func (i *tmplRef) getTemplate() (*template, error) {
-	buf, err := getBytes(i.absURL.String())
-	if err != nil {
-		return nil, err
-	}
-
-	base := *i.absURL
-	base.Path = path.Dir(base.Path)
-	tmpl := template{base: &base}
-	if err := json.Unmarshal(buf, &tmpl); err != nil {
-		return nil, err
-	}
-
-	// TODO: remove after updating all templates to URLs relative to the template definition.
-	tmpl.Assets.Manifest = strings.TrimPrefix(tmpl.Assets.Manifest, base.Path)
-	for i, v := range tmpl.Assets.IdentityData {
-		tmpl.Assets.IdentityData[i] = strings.TrimPrefix(v, base.Path)
-	}
-	for i, v := range tmpl.Assets.DomainData {
-		tmpl.Assets.DomainData[i] = strings.TrimPrefix(v, base.Path)
-	}
-
-	return &tmpl, nil
-}
-
-func max(rhs, lhs int) int {
-	if rhs < lhs {
-		return lhs
-	}
-	return rhs
-}
-
-func getTopazDir() (string, error) {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-	return filepath.Clean(path.Join(homeDir, ".config", "topaz")), nil
-}
-
-type VerifyTemplateCmd struct {
-	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
-}
-
-func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
-	ctlg, err := getCatalog(cmd.TemplatesURL)
-	if err != nil {
-		return err
-	}
-
-	// limit the amount of noise from the azm parser.
-	zerolog.SetGlobalLevel(zerolog.Disabled)
-
-	table := c.UI.Normal().WithTable("template", "asset", "exists", "parsed", "error")
-	table.WithTableNoAutoWrapText()
-
-	for tmplName := range ctlg {
-
-		tmpl, err := getTemplate(tmplName, cmd.TemplatesURL)
-		if err != nil {
-			return err
-		}
-		{
-			absURL := tmpl.AbsURL(tmpl.Assets.Manifest)
-			exists, parsed, err := validateManifest(absURL)
-			errStr := ""
-			if err != nil {
-				errStr = err.Error()
-			}
-			table.WithTableRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
-		}
-		{
-			assets := []string{}
-			assets = append(assets, tmpl.Assets.Assertions...)
-			assets = append(assets, tmpl.Assets.IdentityData...)
-			assets = append(assets, tmpl.Assets.DomainData...)
-
-			for _, assetURL := range assets {
-				absURL := tmpl.AbsURL(assetURL)
-				exists, parsed, err := validateJSON(absURL)
-				errStr := ""
-				if err != nil {
-					errStr = err.Error()
-				}
-				table.WithTableRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
-			}
-		}
-	}
-
-	table.Do()
-
-	return nil
-}
-
-func validateManifest(absURL string) (exists, parsed bool, err error) {
-	b, err := getBytes(absURL)
-	if err != nil {
-		return false, false, err
-	}
-
-	if _, err := v3.Load(bytes.NewReader(b)); err != nil {
-		return true, false, err
-	}
-
-	return true, true, nil
-}
-
-func validateJSON(absURL string) (exists, parsed bool, err error) {
-	b, err := getBytes(absURL)
-	if err != nil {
-		return false, false, err
-	}
-
-	var v map[string]interface{}
-	if err := json.NewDecoder(bytes.NewReader(b)).Decode(&v); err != nil {
-		return true, false, err
-	}
-
-	return true, true, nil
 }
