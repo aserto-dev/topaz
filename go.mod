@@ -43,6 +43,7 @@ require (
 	github.com/google/wire v0.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1
+	github.com/itchyny/gojq v0.12.15
 	github.com/lestrrat-go/jwx/v2 v2.0.21
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.3.0
@@ -116,6 +117,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/itchyny/timefmt-go v0.1.5 // indirect
 	github.com/jhump/protoreflect v1.16.0 // indirect
 	github.com/klauspost/compress v1.17.8 // indirect
 	github.com/kyokomi/emoji v2.2.4+incompatible // indirect
