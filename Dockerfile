@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache bash tzdata
+RUN apk add --no-cache bash tzdata ca-certificates
 
 RUN mkdir /config && \
     mkdir /certs && \

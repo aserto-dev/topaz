@@ -68,6 +68,15 @@ func (p *Plugin) Start(ctx context.Context) error {
 
 	p.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateOK})
 
+	if p.hasLoopBack() {
+		p.logger.Warn().
+			Str("edge-directory", p.config.Addr).
+			Str("remote-directory", p.topazConfig.DirectoryResolver.Address).
+			Bool("has-loopback", p.hasLoopBack()).
+			Msg("EdgePlugin.Start")
+		return nil
+	}
+
 	go p.scheduler()
 
 	return nil
@@ -86,7 +95,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 	newConfig := config.(*Config)
 
 	// handle enabled status changed
-	if p.config.Enabled != newConfig.Enabled {
+	if p.config.Enabled != newConfig.Enabled && !p.hasLoopBack() {
 		p.logger.Info().Str("id", p.manager.ID).Bool("old", p.config.Enabled).Bool("new", newConfig.Enabled).Msg("sync enabled changed")
 		if newConfig.Enabled {
 			p.resetContext()
@@ -99,6 +108,17 @@ func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 	p.config = config.(*Config)
 	p.config.TenantID = strings.Split(p.manager.ID, "/")[0]
 	p.config.SessionID = uuid.NewString()
+}
+
+// A loopback configuration exists when Topaz is configured with a remote directory AND
+// an edge sync that points to the same directory instance and tenant as the edge-sync configuration.
+// The edge sync can be either explicitly configured in the Topaz configuration file or
+// implicitly contributed as part of the discovery response.
+// When a loopback is detected, the remote directory configuration takes precedence,
+// and the edge sync will be disabled.
+func (p *Plugin) hasLoopBack() bool {
+	return (p.config.Addr == p.topazConfig.DirectoryResolver.Address &&
+		p.config.TenantID == p.topazConfig.DirectoryResolver.TenantID)
 }
 
 func (p *Plugin) SyncNow() {

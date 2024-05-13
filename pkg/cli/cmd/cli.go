@@ -1,14 +1,13 @@
 package cmd
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/authorizer"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/certs"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/templates"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/topaz"
 	"github.com/pkg/errors"
 )
 
@@ -23,21 +22,21 @@ var (
 )
 
 type CLI struct {
-	Run        RunCmd                   `cmd:"" help:"run topaz in console mode"`
-	Start      StartCmd                 `cmd:"" help:"start topaz in daemon mode"`
-	Stop       StopCmd                  `cmd:"" help:"stop topaz instance"`
-	Restart    RestartCmd               `cmd:"" help:"restart topaz instance"`
-	Status     StatusCmd                `cmd:"" help:"status of topaz daemon process"`
-	Manifest   ManifestCmd              `cmd:"" help:"manifest commands"`
-	Templates  TemplateCmd              `cmd:"" help:"template commands"`
-	Console    ConsoleCmd               `cmd:"" help:"open console in the browser"`
+	Run        topaz.RunCmd             `cmd:"" help:"run topaz in console mode"`
+	Start      topaz.StartCmd           `cmd:"" help:"start topaz in daemon mode"`
+	Stop       topaz.StopCmd            `cmd:"" help:"stop topaz instance"`
+	Restart    topaz.RestartCmd         `cmd:"" help:"restart topaz instance"`
+	Status     topaz.StatusCmd          `cmd:"" help:"status of topaz daemon process"`
+	Manifest   directory.ManifestCmd    `cmd:"" help:"manifest commands"`
+	Templates  templates.TemplateCmd    `cmd:"" help:"template commands"`
+	Console    topaz.ConsoleCmd         `cmd:"" help:"open console in the browser"`
 	Directory  directory.DirectoryCmd   `cmd:"" aliases:"ds" help:"directory commands"`
 	Authorizer authorizer.AuthorizerCmd `cmd:"" aliases:"az" help:"authorizer commands"`
-	Config     ConfigCmd                `cmd:"" help:"configure topaz service"`
-	Certs      CertsCmd                 `cmd:"" help:"cert commands"`
-	Install    InstallCmd               `cmd:"" help:"install topaz container"`
-	Uninstall  UninstallCmd             `cmd:"" help:"uninstall topaz container"`
-	Update     UpdateCmd                `cmd:"" help:"update topaz container version"`
+	Config     configure.ConfigCmd      `cmd:"" help:"configure topaz service"`
+	Certs      certs.CertsCmd           `cmd:"" help:"cert commands"`
+	Install    topaz.InstallCmd         `cmd:"" help:"install topaz container"`
+	Uninstall  topaz.UninstallCmd       `cmd:"" help:"uninstall topaz container"`
+	Update     topaz.UpdateCmd          `cmd:"" help:"update topaz container version"`
 	Version    VersionCmd               `cmd:"" help:"version information"`
 	NoCheck    bool                     `name:"no-check" json:"noCheck,omitempty" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
 	LogLevel   int                      `name:"log" short:"L" type:"counter" default:"0" help:"log level"`
@@ -47,32 +46,6 @@ type CLI struct {
 	Restore    RestoreCmd               `cmd:"" help:"'topaz restore' was moved to 'topaz directory restore'" hidden:""`
 	Configure  ConfigureCmd             `cmd:"" help:"'topaz configure' was moved to 'topaz config new'" hidden:""`
 	Test       TestCmd                  `cmd:"" help:"'topaz test' was moved to 'topaz directory test'" hidden:""`
-}
-
-func PromptYesNo(label string, def bool) bool {
-	choices := "Y/n"
-	if !def {
-		choices = "y/N"
-	}
-
-	r := bufio.NewReader(os.Stdin)
-	var s string
-
-	for {
-		fmt.Fprintf(os.Stderr, "%s (%s) ", label, choices)
-		s, _ = r.ReadString('\n')
-		s = strings.TrimSpace(s)
-		if s == "" {
-			return def
-		}
-		s = strings.ToLower(s)
-		if s == "y" || s == "yes" {
-			return true
-		}
-		if s == "n" || s == "no" {
-			return false
-		}
-	}
 }
 
 type ImportCmd struct{}
