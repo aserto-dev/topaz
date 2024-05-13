@@ -33,7 +33,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetRelationRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.SetRelationRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
@@ -131,7 +131,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.DeleteRelationRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
@@ -177,7 +177,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetRelationsRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}

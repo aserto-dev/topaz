@@ -30,7 +30,7 @@ func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetGraphRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}

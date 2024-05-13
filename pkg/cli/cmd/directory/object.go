@@ -34,7 +34,7 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetObjectRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.SetObjectRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
@@ -128,7 +128,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.DeleteObjectRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
@@ -171,7 +171,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetObjectsRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}

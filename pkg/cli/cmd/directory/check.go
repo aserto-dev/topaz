@@ -30,7 +30,7 @@ func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.CheckRequest
-	err = UnmarshalRequest(cmd.Request, &req)
+	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
