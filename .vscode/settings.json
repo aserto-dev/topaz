@@ -139,6 +139,7 @@
     "pflag",
     "ppack",
     "printf",
+    "PROFIND",
     "PROPFIND",
     "protobuf",
     "protoiface",

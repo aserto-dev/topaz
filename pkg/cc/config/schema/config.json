@@ -14,6 +14,9 @@
                 "logging": {
                     "$ref": "#/definitions/Logging"
                 },
+                "debug": {
+                    "$ref": "#/definitions/Debug"
+                },
                 "directory": {
                     "$ref": "#definitions/Directory"
                 },
@@ -27,7 +30,7 @@
                     "#ref": "#definitions/Authentication"
                 },
                 "api": {
-                    "$ref": "#definitions/Services"
+                    "$ref": "#definitions/API"
                 },
                 "controller": {
                     "$ref": "#definitions/Controller"
@@ -88,6 +91,28 @@
                 }
             }
         },
+        "Debug": {
+            "description": "debug setting",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "enable debug service",
+                    "default": "false"
+                },
+                "listen_address": {
+                    "type": "string",
+                    "description": "",
+                    "default": "http://localhost:6060"
+                },
+                "shutdown_timeout": {
+                    "type": "integer",
+                    "description": "delay debugger shutdown",
+                    "default": 0
+                }
+            }
+        },
         "Directory": {
             "description": "edge directory config",
             "type": "object",
@@ -102,11 +127,6 @@
                     "type": "string",
                     "description": "edge directory request timeout in seconds",
                     "default": "5s"
-                },
-                "enable_v2": {
-                    "type": "boolean",
-                    "description": "enable directory version 2 services for backward compatibility",
-                    "default": "false"
                 }
             }
         },
@@ -173,6 +193,57 @@
                     "description": "allowed skew",
                     "minimum": 0,
                     "maximum": 60
+                }
+            }
+        },
+        "API":{
+            "type": "object",
+            "description": "",
+            "additionalProperties": false,
+            "properties": {
+                "health":{
+                    "$ref": "#definitions/Health"
+                },
+                "metrics": {
+                    "$ref": "#definitions/Metrics"
+                },
+                "services": {
+                    "$ref": "#definitions/Services"
+                }
+            }
+        },
+        "Health": {
+            "type": "object",
+            "description": "",
+            "additionalProperties": false,
+            "properties": {
+                "listen_address": {
+                    "description": "host address and port",
+                    "type": "string"
+                },
+                "certs": {
+                    "description": "TLS certificate configuration",
+                    "$ref": "#/definitions/ServiceTLSCertificates"
+                }
+            }
+        },
+        "Metrics": {
+            "type": "object",
+            "description": "",
+            "additionalProperties": false,
+            "properties": {
+                "listen_address": {
+                    "description": "host address and port",
+                    "type": "string"
+                },
+                "certs": {
+                    "description": "TLS certificate configuration",
+                    "$ref": "#/definitions/ServiceTLSCertificates"
+                },
+                "zpages": {
+                    "description": "enable zPages trace & metric endpoint",
+                    "type": "boolean",
+                    "default": "false"
                 }
             }
         },

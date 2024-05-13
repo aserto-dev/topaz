@@ -40,11 +40,6 @@ func (g *Generator) WithEdgeDirectory(enabled bool) *Generator {
 	return g
 }
 
-func (g *Generator) WithEnableDirectoryV2(enabled bool) *Generator {
-	g.EnableDirectoryV2 = false
-	return g
-}
-
 func (g *Generator) WithTenantID(tenantID string) *Generator {
 	g.TenantID = tenantID
 	return g

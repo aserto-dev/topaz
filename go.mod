@@ -12,6 +12,7 @@ go 1.21
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
+	github.com/Masterminds/sprig v2.22.0+incompatible
 	github.com/adrg/xdg v0.4.0
 	github.com/alecthomas/kong v0.9.0
 	github.com/aserto-dev/aserto-grpc v0.2.2
@@ -68,6 +69,7 @@ require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.33.0-20240401165935-b983156c5e99.1 // indirect
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
+	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/Microsoft/hcsshim v0.12.3 // indirect
@@ -115,6 +117,8 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/huandu/xstrings v1.4.0 // indirect
+	github.com/imdario/mergo v0.3.6 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jhump/protoreflect v1.16.0 // indirect
 	github.com/klauspost/compress v1.17.8 // indirect
