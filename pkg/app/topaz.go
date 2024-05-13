@@ -26,6 +26,7 @@ import (
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/keepalive"
 
 	console "github.com/aserto-dev/go-topaz-ui"
 	builder "github.com/aserto-dev/service-host"
@@ -264,13 +265,21 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 	return portMap
 }
 
+func KeepAliveDialOptionsProvider() client.DialOptionsProvider {
+	kacp := keepalive.ClientParameters{
+		Time:    30 * time.Second, // send pings every 30 seconds if there is no activity
+		Timeout: 5 * time.Second,  // wait 5 seconds for ping ack before considering the connection dead
+	}
+	return client.NewDialOptionsProvider(grpc.WithKeepaliveParams(kacp))
+}
+
 func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
 	var decisionlogger decisionlog.DecisionLogger
 	var err error
 
 	switch cfg.Type {
 	case "self":
-		decisionlogger, err = self.New(e.Context, cfg.Config, e.Logger, client.NewDialOptionsProvider())
+		decisionlogger, err = self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOptionsProvider())
 		if err != nil {
 			return nil, err
 		}
@@ -306,7 +315,11 @@ func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.Dec
 func (e *Topaz) validateConfig() error {
 	if readerConfig, ok := e.Configuration.APIConfig.Services["reader"]; ok {
 		if readerConfig.GRPC.ListenAddress != e.Configuration.DirectoryResolver.Address {
-			return errors.New("remote directory resolver address is different from reader grpc address")
+			for _, serviceName := range e.Services["edge"].AvailableServices() {
+				delete(e.Configuration.APIConfig.Services, serviceName)
+			}
+			delete(e.Services, "edge")
+			e.Logger.Info().Msg("disabling local directory services")
 		}
 	}
 

@@ -1,4 +1,4 @@
-package cmd
+package directory
 
 import (
 	"fmt"
@@ -7,6 +7,8 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+
 	"github.com/fatih/color"
 	"github.com/pkg/errors"
 )
@@ -99,7 +101,7 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	c.UI.Exclamation().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
-	if cmd.Force || PromptYesNo("Do you want to continue?", false) {
+	if cmd.Force || common.PromptYesNo("Do you want to continue?", false) {
 		_, _ = fmt.Fprint(color.Error, color.GreenString(">>> delete manifest"))
 		return dirClient.V3.DeleteManifest(c.Context)
 	}

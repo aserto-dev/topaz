@@ -45,13 +45,19 @@ func (e *ConsoleService) Cleanups() []func() {
 }
 
 func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
+	directoryServiceURL := serviceAddress(fmt.Sprintf("https://%s", strings.Split(cfg.DirectoryResolver.Address, ":")[0]))
+
 	authorizerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		authorizerURL = getGatewayAddress(serviceConfig)
 	}
+
 	readerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[readerService]; ok {
 		readerURL = getGatewayAddress(serviceConfig)
+		if cfg.DirectoryResolver.Address == serviceConfig.GRPC.ListenAddress {
+			directoryServiceURL = readerURL
+		}
 	}
 	writerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
@@ -86,19 +92,12 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 		}
 	}
 
-	directoryAPIKey := ""
-	if _, ok := cfg.APIConfig.Services[readerService]; ok {
-		for key := range cfg.Auth.APIKeys {
-			// we only need a key
-			directoryAPIKey = key
-			break
-		}
-	}
+	directoryAPIKey := cfg.DirectoryResolver.APIKey
 
 	return &handlers.TopazCfg{
 		AuthorizerServiceURL:        authorizerURL,
 		AuthorizerAPIKey:            authorizerAPIKey,
-		DirectoryServiceURL:         readerURL,
+		DirectoryServiceURL:         directoryServiceURL,
 		DirectoryAPIKey:             directoryAPIKey,
 		DirectoryTenantID:           cfg.DirectoryResolver.TenantID,
 		DirectoryReaderServiceURL:   readerURL,

@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aserto-dev/go-aserto/client"
 	dsc "github.com/aserto-dev/go-directory-cli/client"
@@ -13,24 +14,17 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-const (
-	localhostDirectory   string = "localhost:9292"
-	EnvTopazDirectorySvc string = "TOPAZ_DIRECTORY_SVC"
-	EnvTopazDirectoryKey string = "TOPAZ_DIRECTORY_KEY"
-)
-
 type DirectoryConfig struct {
-	Host     string `flag:"host" short:"H" env:"TOPAZ_DIRECTORY_SVC" help:"directory service address"`
-	APIKey   string `flag:"api-key" short:"k" env:"TOPAZ_DIRECTORY_KEY" help:"directory API key"`
-	Token    string `flag:"token" short:"t" env:"TOPAZ_DIRECTORY_TOKEN" help:"directory OAuth2.0 token" hidden:""`
-	Insecure bool   `flag:"insecure" short:"i" env:"INSECURE" help:"skip TLS verification"`
-	TenantID string `flag:"tenant-id" help:"" env:"ASERTO_TENANT_ID" `
+	Host     string `flag:"host" short:"H" default:"${directory_svc}" env:"TOPAZ_DIRECTORY_SVC" help:"directory service address"`
+	APIKey   string `flag:"api-key" short:"k" default:"${directory_key}" env:"TOPAZ_DIRECTORY_KEY" help:"directory API key"`
+	Token    string `flag:"token" short:"t" default:"${directory_token}" env:"TOPAZ_DIRECTORY_TOKEN" help:"directory OAuth2.0 token" hidden:""`
+	Insecure bool   `flag:"insecure" short:"i" default:"${insecure}" env:"TOPAZ_INSECURE" help:"skip TLS verification"`
+	TenantID string `flag:"tenant-id" help:"" default:"${tenant_id}" env:"ASERTO_TENANT_ID" `
 }
 
 func NewDirectoryClient(c *cc.CommonCtx, cfg *DirectoryConfig) (*dsc.Client, error) {
-
 	if cfg.Host == "" {
-		cfg.Host = localhostDirectory
+		return nil, fmt.Errorf("no host specified")
 	}
 
 	if err := cfg.validate(); err != nil {
