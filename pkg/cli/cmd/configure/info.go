@@ -48,7 +48,7 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 		if s, ok := v.(string); ok && cmd.Raw {
 			fmt.Fprintf(os.Stdout, "%s\n", s)
 		} else {
-			enc.Encode(v)
+			_ = enc.Encode(v)
 		}
 	}
 
