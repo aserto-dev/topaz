@@ -56,6 +56,40 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *DirectoryConfig) (*dsc.Client, err
 	return dsc.New(conn, c.UI)
 }
 
+func NewDirectoryConn(ctx context.Context, cfg *DirectoryConfig) (*grpc.ClientConn, error) {
+	if cfg.Host == "" {
+		return nil, fmt.Errorf("no host specified")
+	}
+
+	if err := cfg.validate(); err != nil {
+		return nil, err
+	}
+
+	opts := []client.ConnectionOption{
+		client.WithAddr(cfg.Host),
+		client.WithInsecure(cfg.Insecure),
+	}
+
+	if cfg.APIKey != "" {
+		opts = append(opts, client.WithAPIKeyAuth(cfg.APIKey))
+	}
+
+	if cfg.Token != "" {
+		opts = append(opts, client.WithTokenAuth(cfg.Token))
+	}
+
+	if cfg.TenantID != "" {
+		opts = append(opts, client.WithTenantID(cfg.TenantID))
+	}
+
+	conn, err := client.NewConnection(ctx, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
+}
+
 func (cfg *DirectoryConfig) validate() error {
 	ctx := context.Background()
 

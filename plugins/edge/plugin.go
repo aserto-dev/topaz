@@ -5,14 +5,28 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aserto-dev/go-aserto/client"
+	"github.com/aserto-dev/go-edge-ds/pkg/datasync"
+	"github.com/aserto-dev/go-edge-ds/pkg/directory"
+	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
+	"google.golang.org/grpc"
+
 	"github.com/google/uuid"
 	"github.com/open-policy-agent/opa/plugins"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
-const PluginName = "aserto_edge"
+const (
+	PluginName    string = "aserto_edge"
+	syncScheduler string = "scheduler"
+	syncOnDemand  string = "on-demand"
+	syncTask      string = "sync-task"
+	status        string = "status"
+	started       string = "started"
+	finished      string = "finished"
+)
 
 type Config struct {
 	Enabled      bool   `json:"enabled"`
@@ -33,7 +47,7 @@ type Plugin struct {
 	logger      *zerolog.Logger
 	config      *Config
 	topazConfig *topaz.Config
-	syncNow     chan bool
+	syncNow     chan api.SyncMode
 }
 
 func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Config, manager *plugins.Manager) *Plugin {
@@ -55,7 +69,7 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 		manager:     manager,
 		config:      cfg,
 		topazConfig: topazConfig,
-		syncNow:     make(chan bool),
+		syncNow:     make(chan api.SyncMode),
 	}
 }
 
@@ -121,8 +135,8 @@ func (p *Plugin) hasLoopBack() bool {
 		p.config.TenantID == p.topazConfig.DirectoryResolver.TenantID)
 }
 
-func (p *Plugin) SyncNow() {
-	p.syncNow <- true
+func (p *Plugin) SyncNow(mode api.SyncMode) {
+	p.syncNow <- mode
 }
 
 const cycles int = 4
@@ -144,20 +158,19 @@ func (p *Plugin) scheduler() {
 			p.logger.Info().Time("dispatch", t).Msg(syncScheduler)
 			interval.Stop()
 
-			p.task(false) // watermark sync
+			p.task(api.SyncMode_SYNC_MODE_WATERMARK) // watermark sync
 
 			if cycle%cycles == 0 {
-				p.task(cycle%cycles == 0)
+				p.task(api.SyncMode_SYNC_MODE_DIFF)
 				cycle = 0
 			}
 			cycle++
 
-		case <-p.syncNow:
+		case mode := <-p.syncNow:
 			p.logger.Warn().Time("dispatch", time.Now()).Msg(syncOnDemand)
 			interval.Stop()
 
-			p.task(false) // watermark sync
-			p.task(true)  // full-diff sync
+			p.task(mode)
 		}
 
 		// calculate the interval in secs
@@ -174,7 +187,7 @@ func (p *Plugin) scheduler() {
 	}
 }
 
-func (p *Plugin) task(fullSync bool) {
+func (p *Plugin) task(mode api.SyncMode) {
 	p.logger.Info().Str(status, started).Msg(syncTask)
 
 	defer func() {
@@ -193,9 +206,58 @@ func (p *Plugin) task(fullSync bool) {
 		cancel()
 	}()
 
-	sync := NewSyncMgr(ctx, p.config, p.topazConfig, p.logger)
-	sync.Run(fullSync)
-	sync = nil
+	conn, err := p.getRemoteDirectoryClient(ctx)
+	if err != nil {
+		p.logger.Error().Err(err).Msg(syncTask)
+		return
+	}
+	defer conn.Close()
+
+	opts := []datasync.Option{datasync.WithMode(datasync.Manifest)}
+	switch mode {
+	case api.SyncMode_SYNC_MODE_UNKNOWN:
+		opts = append(opts, datasync.WithMode(datasync.Full))
+	case api.SyncMode_SYNC_MODE_FULL:
+		opts = append(opts, datasync.WithMode(datasync.Full))
+	case api.SyncMode_SYNC_MODE_DIFF:
+		opts = append(opts, datasync.WithMode(datasync.Diff))
+	case api.SyncMode_SYNC_MODE_WATERMARK:
+		opts = append(opts, datasync.WithMode(datasync.Watermark))
+	default:
+	}
+
+	ds, err := directory.Get()
+	if err != nil {
+		p.logger.Error().Err(err).Msg(syncTask)
+		return
+	}
+
+	if err := ds.DataSyncClient().Sync(ctx, conn, opts...); err != nil {
+		p.logger.Error().Err(err).Msg(syncTask)
+	}
 
 	p.logger.Info().Str(status, finished).Msg(syncTask)
+}
+
+func (p *Plugin) getRemoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, error) {
+
+	opts := []client.ConnectionOption{
+		client.WithAddr(p.config.Addr),
+		client.WithInsecure(p.config.Insecure),
+	}
+
+	if p.config.APIKey != "" {
+		opts = append(opts, client.WithAPIKeyAuth(p.config.APIKey))
+	}
+
+	if p.config.TenantID != "" {
+		opts = append(opts, client.WithTenantID(p.config.TenantID))
+	}
+
+	conn, err := client.NewConnection(ctx, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
 }
