@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/aserto-dev/go-edge-ds/pkg/datasync"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 )
 
@@ -29,6 +28,5 @@ type LoadCmd struct {
 type SyncCmd struct {
 	DBFile string   `arg:"" help:"db file name" type:"existingfile"`
 	Mode   []string `flag:"" short:"m" enum:"manifest,full,diff,watermark" required:"" help:"sync mode"`
-	opts   []datasync.Option
 	clients.DirectoryConfig
 }

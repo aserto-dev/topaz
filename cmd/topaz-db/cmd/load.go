@@ -25,8 +25,8 @@ func (cmd *LoadCmd) Run() error {
 
 	logger := zerolog.New(io.Discard)
 
-	conn, close := inproc.NewServer(ctx, &logger, cfg)
-	defer close()
+	conn, cleanup := inproc.NewServer(ctx, &logger, cfg)
+	defer cleanup()
 
 	dsClient, err := dsc.New(conn, clui.NewUI())
 	if err != nil {

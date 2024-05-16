@@ -206,7 +206,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 		cancel()
 	}()
 
-	conn, err := p.getRemoteDirectoryClient(ctx)
+	conn, err := p.remoteDirectoryClient(ctx)
 	if err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
 		return
@@ -239,7 +239,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
 
-func (p *Plugin) getRemoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, error) {
+func (p *Plugin) remoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, error) {
 
 	opts := []client.ConnectionOption{
 		client.WithAddr(p.config.Addr),
