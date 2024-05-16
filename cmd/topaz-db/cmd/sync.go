@@ -14,7 +14,10 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func (cmd *SyncCmd) Run() error {
+func (cmd *SyncCmd) Run(ctx context.Context) error {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	opts := []datasync.Option{}
 
 	// validate modes
@@ -25,9 +28,6 @@ func (cmd *SyncCmd) Run() error {
 		}
 		opts = append(opts, datasync.WithMode(mode))
 	}
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	// create client conn
 	conn, err := clients.NewDirectoryConn(ctx, &cmd.DirectoryConfig)

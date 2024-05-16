@@ -14,16 +14,16 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func (cmd *InitCmd) Run() error {
+func (cmd *InitCmd) Run(ctx context.Context) error {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	if fi, err := os.Stat(cmd.DBFile); err == nil {
 		if fi.IsDir() {
 			return fmt.Errorf("%s is a directory", cmd.DBFile)
 		}
 		return fmt.Errorf("%s already exists", cmd.DBFile)
 	}
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	cfg := &directory.Config{
 		DBPath:         cmd.DBFile,

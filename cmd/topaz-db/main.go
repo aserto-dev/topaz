@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"os"
+	"os/signal"
 	"strconv"
 
 	"github.com/alecthomas/kong"
@@ -9,6 +11,9 @@ import (
 )
 
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
+
 	cli := cmd.CLI{}
 
 	kongCtx := kong.Parse(&cli,
@@ -34,7 +39,7 @@ func main() {
 		},
 	)
 
-	if err := kongCtx.Run(); err != nil {
+	if err := kongCtx.Run(ctx); err != nil {
 		kongCtx.FatalIfErrorf(err)
 	}
 }

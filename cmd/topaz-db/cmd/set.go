@@ -14,8 +14,8 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func (cmd *SetCmd) Run() error {
-	ctx, cancel := context.WithCancel(context.Background())
+func (cmd *SetCmd) Run(ctx context.Context) error {
+	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
 	cfg := &directory.Config{
