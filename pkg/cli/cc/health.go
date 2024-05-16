@@ -24,7 +24,7 @@ func ServiceHealthStatus(addr, service string) bool {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 
-	conn, err := grpc.DialContext(dialCtx, addr, dialOpts...)
+	conn, err := grpc.DialContext(dialCtx, addr, dialOpts...) //nolint: staticcheck
 	if err != nil {
 		return false
 	}
