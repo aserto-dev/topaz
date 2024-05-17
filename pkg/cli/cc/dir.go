@@ -42,12 +42,20 @@ func GetTopazDataDir() string {
 }
 
 func EnsureDirs() error {
-	for _, f := range []func() error{EnsureTopazCfgDir, EnsureTopazCertsDir, EnsureTopazDataDir} {
+	for _, f := range []func() error{EnsureTopazDir, EnsureTopazCfgDir, EnsureTopazCertsDir, EnsureTopazDataDir} {
 		if err := f(); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func EnsureTopazDir() error {
+	dir := GetTopazDir()
+	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
+		return nil
+	}
+	return os.MkdirAll(dir, 0700)
 }
 
 func EnsureTopazCfgDir() error {

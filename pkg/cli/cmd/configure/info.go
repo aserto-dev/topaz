@@ -2,21 +2,57 @@ package configure
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 
-	"github.com/adrg/xdg"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+
+	"github.com/adrg/xdg"
+	"github.com/itchyny/gojq"
 )
 
-type InfoConfigCmd struct{}
+type InfoConfigCmd struct {
+	Var string `arg:"" optional:"" help:"configuration variable"`
+	Raw bool   `flag:"" short:"r" help:"output raw strings"`
+}
 
 func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
-	return enc.Encode(cmd.info(c))
+
+	// use Info struct when output all, to preserve ordering of root objects.
+	if cmd.Var == "" {
+		return enc.Encode(cmd.info(c))
+	}
+
+	query, err := gojq.Parse("." + cmd.Var)
+	if err != nil {
+		return err
+	}
+
+	iter := query.Run(cmd.json(c))
+	for {
+		v, ok := iter.Next()
+		if !ok {
+			break
+		}
+		if err, ok := v.(error); ok {
+			if err, ok := err.(*gojq.HaltError); ok && err.Value() == nil {
+				break
+			}
+			return err
+		}
+		if s, ok := v.(string); ok && cmd.Raw {
+			fmt.Fprintf(os.Stdout, "%s\n", s)
+		} else {
+			_ = enc.Encode(v)
+		}
+	}
+
+	return nil
 }
 
 type Info struct {
@@ -100,4 +136,11 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 	info.Authorizer.TenantID = cc.TenantID()
 
 	return &info
+}
+
+func (cmd InfoConfigCmd) json(c *cc.CommonCtx) map[string]any {
+	var j map[string]any
+	buf, _ := json.Marshal(cmd.info(c))
+	_ = json.Unmarshal(buf, &j)
+	return j
 }
