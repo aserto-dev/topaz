@@ -213,16 +213,18 @@ func (p *Plugin) task(mode api.SyncMode) {
 	}
 	defer conn.Close()
 
-	opts := []datasync.Option{datasync.WithMode(datasync.Manifest)}
+	opts := []datasync.Option{}
 	switch mode {
 	case api.SyncMode_SYNC_MODE_UNKNOWN:
-		opts = append(opts, datasync.WithMode(datasync.Full))
+		opts = append(opts, datasync.WithMode(datasync.Manifest), datasync.WithMode(datasync.Full))
 	case api.SyncMode_SYNC_MODE_FULL:
-		opts = append(opts, datasync.WithMode(datasync.Full))
+		opts = append(opts, datasync.WithMode(datasync.Manifest), datasync.WithMode(datasync.Full))
 	case api.SyncMode_SYNC_MODE_DIFF:
-		opts = append(opts, datasync.WithMode(datasync.Diff))
+		opts = append(opts, datasync.WithMode(datasync.Manifest), datasync.WithMode(datasync.Diff))
 	case api.SyncMode_SYNC_MODE_WATERMARK:
-		opts = append(opts, datasync.WithMode(datasync.Watermark))
+		opts = append(opts, datasync.WithMode(datasync.Manifest), datasync.WithMode(datasync.Watermark))
+	case api.SyncMode_SYNC_MODE_MANIFEST:
+		opts = append(opts, datasync.WithMode(datasync.Manifest))
 	default:
 	}
 
