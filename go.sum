@@ -443,8 +443,8 @@ github.com/aserto-dev/go-directory-cli v0.31.1 h1:bajldwElZHcCisBIP6QE0VI9VbxCrh
 github.com/aserto-dev/go-directory-cli v0.31.1/go.mod h1:lTFABO1yjQjCLXeMW4Zq2wnfKj6o8XAY+1w95gnM6lI=
 github.com/aserto-dev/go-edge-ds v0.31.5 h1:72+LZPiiBoeUbeV0W7u0SeL73oiQ/tgav2fbSPrf7sI=
 github.com/aserto-dev/go-edge-ds v0.31.5/go.mod h1:/MFU1nUthS/4rYvM02zCX6yHCi7xfpbNoY7dvAzP3YI=
-github.com/aserto-dev/go-grpc v0.8.64 h1:o6MRnuG9KAY53KMhlB3b2xtURpaIwURHsfu4KzbYjT0=
-github.com/aserto-dev/go-grpc v0.8.64/go.mod h1:ezNdiKzZZCBwpANK6TYNKwe3qTbNFwZB7OEl+v2d/Gw=
+github.com/aserto-dev/go-grpc v0.8.65 h1:qj84Ps9nkjAk7SzS+53jrd9PGgmq3ALq8pad2WzYXDY=
+github.com/aserto-dev/go-grpc v0.8.65/go.mod h1:ezNdiKzZZCBwpANK6TYNKwe3qTbNFwZB7OEl+v2d/Gw=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1/go.mod h1:QnWF5/X2U/kmbu7GEw+zupvqX2hIthDjyXlRTwt2zEI=
 github.com/aserto-dev/go-topaz-ui v0.1.7 h1:mSJJ8ydlEkkuq+oNiiixEgTCpKizz7nBkvmEfaEHixI=
