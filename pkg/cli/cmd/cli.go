@@ -29,10 +29,10 @@ type CLI struct {
 	Config     configure.ConfigCmd      `cmd:"" help:"configure topaz instance"`
 	Run        topaz.RunCmd             `cmd:"" help:"start topaz instance (console mode)"`
 	Templates  templates.TemplateCmd    `cmd:"" help:"template commands"`
-	Console    topaz.ConsoleCmd         `cmd:"" help:"open console in the browser"`
+	Console    topaz.ConsoleCmd         `cmd:"" help:"open topaz console in the browser"`
 	Directory  directory.DirectoryCmd   `cmd:"" aliases:"ds" help:"directory commands"`
 	Authorizer authorizer.AuthorizerCmd `cmd:"" aliases:"az" help:"authorizer commands"`
-	Certs      certs.CertsCmd           `cmd:"" help:"cert commands"`
+	Certs      certs.CertsCmd           `cmd:"" help:"certificate management"`
 	Install    topaz.InstallCmd         `cmd:"" help:"install topaz container"`
 	Uninstall  topaz.UninstallCmd       `cmd:"" help:"uninstall topaz container"`
 	Update     topaz.UpdateCmd          `cmd:"" help:"update topaz container version"`
