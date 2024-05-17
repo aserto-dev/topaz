@@ -22,17 +22,16 @@ var (
 )
 
 type CLI struct {
-	Run        topaz.RunCmd             `cmd:"" help:"run topaz in console mode"`
-	Start      topaz.StartCmd           `cmd:"" help:"start topaz in daemon mode"`
+	Start      topaz.StartCmd           `cmd:"" help:"start topaz instance (daemon mode)"`
 	Stop       topaz.StopCmd            `cmd:"" help:"stop topaz instance"`
 	Restart    topaz.RestartCmd         `cmd:"" help:"restart topaz instance"`
 	Status     topaz.StatusCmd          `cmd:"" help:"status of topaz daemon process"`
-	Manifest   directory.ManifestCmd    `cmd:"" help:"manifest commands"`
+	Config     configure.ConfigCmd      `cmd:"" help:"configure topaz instance"`
+	Run        topaz.RunCmd             `cmd:"" help:"start topaz instance (console mode)"`
 	Templates  templates.TemplateCmd    `cmd:"" help:"template commands"`
 	Console    topaz.ConsoleCmd         `cmd:"" help:"open console in the browser"`
 	Directory  directory.DirectoryCmd   `cmd:"" aliases:"ds" help:"directory commands"`
 	Authorizer authorizer.AuthorizerCmd `cmd:"" aliases:"az" help:"authorizer commands"`
-	Config     configure.ConfigCmd      `cmd:"" help:"configure topaz service"`
 	Certs      certs.CertsCmd           `cmd:"" help:"cert commands"`
 	Install    topaz.InstallCmd         `cmd:"" help:"install topaz container"`
 	Uninstall  topaz.UninstallCmd       `cmd:"" help:"uninstall topaz container"`
@@ -46,6 +45,7 @@ type CLI struct {
 	Restore    RestoreCmd               `cmd:"" help:"'topaz restore' was moved to 'topaz directory restore'" hidden:""`
 	Configure  ConfigureCmd             `cmd:"" help:"'topaz configure' was moved to 'topaz config new'" hidden:""`
 	Test       TestCmd                  `cmd:"" help:"'topaz test' was moved to 'topaz directory test'" hidden:""`
+	Manifest   ManifestCmd              `cmd:"" help:"'topaz manifest ...' was moved to 'topaz directory get|set|delete manifest'" hidden:""`
 }
 
 type ImportCmd struct{}
@@ -97,6 +97,34 @@ type TestTemplateCmd struct{}
 
 func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	return movedErr("topaz test template", "topaz directory test template")
+}
+
+type ManifestCmd struct {
+	Get    GetManifestCmd    `cmd:"" help:"'topaz manifest get' was moved to 'topaz directory get manifest'" hidden:""`
+	Set    SetManifestCmd    `cmd:"" help:"'topaz manifest set' was moved to 'topaz directory set manifest'" hidden:""`
+	Delete DeleteManifestCmd `cmd:"" help:"'topaz manifest delete' was moved to 'topaz directory delete manifest'" hidden:""`
+}
+
+func (cmd *ManifestCmd) Run(c *cc.CommonCtx) error {
+	return movedErr("topaz manifest ...", "topaz directory get|set|delete manifest")
+}
+
+type GetManifestCmd struct{}
+
+func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
+	return movedErr("topaz manifest get", "topaz directory get manifest")
+}
+
+type SetManifestCmd struct{}
+
+func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
+	return movedErr("topaz manifest set", "topaz directory set manifest")
+}
+
+type DeleteManifestCmd struct{}
+
+func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
+	return movedErr("topaz manifest delete", "topaz directory delete manifest")
 }
 
 func movedErr(oldCmd, newCmd string) error {
