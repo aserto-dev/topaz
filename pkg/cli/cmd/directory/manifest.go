@@ -13,12 +13,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-type ManifestCmd struct {
-	Get    GetManifestCmd    `cmd:"" help:"get manifest"`
-	Set    SetManifestCmd    `cmd:"" help:"set manifest"`
-	Delete DeleteManifestCmd `cmd:"" help:"delete manifest"`
-}
-
 type GetManifestCmd struct {
 	Path   string `arg:"path" help:"filepath to manifest file" type:"path" optional:""`
 	Stdout bool   `flag:"" help:"output manifest to --stdout"`
