@@ -79,7 +79,7 @@
                 },
                 "grpc_log_level": {
                     "type": "string",
-                    "description": "gRPC log level, when not specified the `log_level` value is used",
+                    "description": "gRPC log level [trace|debug|info|warning|error], when not specified the `log_level` value is used",
                     "enum": [
                         "trace",
                         "debug",
@@ -103,7 +103,7 @@
                 },
                 "listen_address": {
                     "type": "string",
-                    "description": "",
+                    "description": "debug service listen address",
                     "default": "http://localhost:6060"
                 },
                 "shutdown_timeout": {
@@ -177,7 +177,7 @@
                     "description": "map of additional gRPC headers",
                     "examples": [
                         {
-                            "aserto-account-id": "a192e882-b648-4a57-89a4-029cfb1b7289"
+                            "aserto-account-id": "00000000-1111-2222-3333-444455556666"
                         }
                     ]
                 }
@@ -198,7 +198,7 @@
         },
         "API":{
             "type": "object",
-            "description": "",
+            "description": "API services",
             "additionalProperties": false,
             "properties": {
                 "health":{
@@ -214,7 +214,7 @@
         },
         "Health": {
             "type": "object",
-            "description": "",
+            "description": "Health service",
             "additionalProperties": false,
             "properties": {
                 "listen_address": {
@@ -229,7 +229,7 @@
         },
         "Metrics": {
             "type": "object",
-            "description": "",
+            "description": "Metrics service",
             "additionalProperties": false,
             "properties": {
                 "listen_address": {
@@ -296,14 +296,6 @@
                 "gateway": {
                     "description": "Service REST gateway endpoint configuration",
                     "$ref": "#/definitions/ServiceGateway"
-                },
-                "health": {
-                    "description": "Service health endpoint configuration",
-                    "$ref": "#/definitions/ServiceHealth"
-                },
-                "metrics": {
-                    "description": "Service metrics endpoint configuration",
-                    "$ref": "#/definitions/ServiceMetrics"
                 }
             }
         },
@@ -381,22 +373,6 @@
                 }
             }
         },
-        "ServiceHealth": {
-            "properties": {
-                "listen_address": {
-                    "description": "health host address and port",
-                    "type": "string"
-                }
-            }
-        },
-        "ServiceMetrics": {
-            "properties": {
-                "listen_address": {
-                    "description": "metrics host address and port",
-                    "type": "string"
-                }
-            }
-        },
         "ServiceTLSCertificates": {
             "properties": {
                 "tls_cert_path": {
@@ -446,10 +422,139 @@
             "description": "Authentication configuration"
         },
         "Controller": {
-            "description": "Controller configuration"
+            "description": "Control plane configuration",
+            "properties": {
+                "enabled": {
+                    "description": "enable connection to control plane",
+                    "type": "boolean"
+                },
+                "server": {
+                    "description":"control plane service configuration",
+                    "type": "object",
+                    "properties": {
+                        "address": { 
+                            "description": "address of relay service",
+                            "type": "string",
+                            "examples": [
+                                "relay.prod.aserto.com:8443"
+                            ]
+                        },
+                        "client_cert_path": {
+                            "description": "control plane mTLS certificate",
+                            "type": "string"
+                        },
+                        "client_key_path": {
+                            "description": "control plane mTLS key",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         },
         "DecisionLogger": {
-            "description": "Decision Logger configuration"
+            "description": "Decision Logger configuration",
+            "properties": {
+                "type": {
+                    "description": "decision log plugin name",
+                    "type": "string"
+                },
+                "config": {
+                    "description": "decision log plugin configuration",
+                    "type": "object", 
+                    "properties": {
+                        "store_directory": {
+                            "description": "path to mount point for decision logs buffer storage",
+                            "type": "string",
+                            "examples": ["/decisions"]
+                        },
+                        "scribe": {
+                            "description": "",
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "description": "",
+                                    "type": "string",
+                                    "default": ""
+                                },
+                                "client_cert_path": {
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                "client_key_path": {
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                "headers": {
+                                    "description": "map of additional gRPC headers",
+                                    "type": "object",
+                                    "examples": [
+                                        {
+                                            "aserto-tenant-id": "00000000-1111-2222-3333-444455556666"
+                                        }
+                                    ]
+                                },
+                                "max_inflight_batches": {
+                                    "description": "",
+                                    "type": "integer"
+                                },
+                                "ack_wait_seconds": {
+                                    "description": "",
+                                    "type": "integer",
+                                    "default": 10
+                                },
+                                "disable_tls": {
+                                    "description": "disable TLS verification",
+                                    "type": "boolean"
+                                }
+                            }
+                        },
+                        "shipper": {
+                            "description": "",
+                            "type": "object",
+                            "$comment": "https://github.com/aserto-dev/self-decision-logger/blob/main/shipper/config.go",
+                            "properties": {
+                                "max_bytes": {
+                                    "description": "max messa100mb (100*1024*1024)",
+                                    "type": "integer",
+                                    "default": 104857600
+                                },
+                                "max_batch_size": {
+                                    "description": "max batch size in messages",
+                                    "type": "integer",
+                                    "default": 512
+                                },
+                                "publish_timeout_seconds": {
+                                    "description": "publish timeout in seconds",
+                                    "type": "integer",
+                                    "default": 10
+                                },
+                                "max_inflight_batches": {
+                                    "description": "max number of inflight batches",
+                                    "type": "integer",
+                                    "default": 10
+                                },
+                                "ack_wait_seconds": {
+                                    "description": "ack wait time in seconds",
+                                    "type": "integer",
+                                    "default": 60
+                                },
+                                "delete_stream_on_done": {
+                                    "description": "delete stream when done",
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "backoff_seconds": {
+                                    "description": "backoff in seconds",
+                                    "type": "array",
+                                    "default": [
+                                        5, 10, 30, 60, 120, 300
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
