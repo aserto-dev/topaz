@@ -1,7 +1,8 @@
 package directory
 
 import (
-	"github.com/aserto-dev/clui"
+	"io"
+
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
@@ -9,19 +10,20 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/pkg/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type GetObjectCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to get object request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a get object request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get object request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a get object request template on stdout"`
 	clients.DirectoryConfig
 }
 
 func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printGetObjectRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -47,25 +49,28 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printGetObjectRequest(ui *clui.UI) error {
-	req := &reader.GetObjectRequest{
+func (cmd *GetObjectCmd) template() proto.Message {
+	return &reader.GetObjectRequest{
 		ObjectType:    "",
 		ObjectId:      "",
-		WithRelations: true,
-		Page:          &common.PaginationRequest{Size: 10, Token: ""},
+		WithRelations: false,
+		Page:          &common.PaginationRequest{Size: 100, Token: ""},
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *GetObjectCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }
 
 type SetObjectCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a set object request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a set object request template on stdout"`
 	clients.DirectoryConfig
 }
 
 func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printSetObjectRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -90,10 +95,10 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printSetObjectRequest(ui *clui.UI) error {
-	properties := map[string]interface{}{"property1": 123, "property2": ""}
+func (cmd *SetObjectCmd) template() proto.Message {
+	properties := map[string]interface{}{}
 	props, _ := structpb.NewStruct(properties)
-	req := &writer.SetObjectRequest{
+	return &writer.SetObjectRequest{
 		Object: &common.Object{
 			Type:        "",
 			Id:          "",
@@ -104,18 +109,21 @@ func printSetObjectRequest(ui *clui.UI) error {
 			Etag:        "",
 		},
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *SetObjectCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }
 
 type DeleteObjectCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"file path to delete object request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a delete object request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete object request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a delete object request template on stdout"`
 	clients.DirectoryConfig
 }
 
 func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printDeleteObjectRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -141,24 +149,27 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printDeleteObjectRequest(ui *clui.UI) error {
-	req := &writer.DeleteObjectRequest{
+func (cmd *DeleteObjectCmd) template() proto.Message {
+	return &writer.DeleteObjectRequest{
 		ObjectType:    "",
 		ObjectId:      "",
-		WithRelations: true,
+		WithRelations: false,
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *DeleteObjectCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }
 
 type ListObjectsCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a list objects request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a list objects request template on stdout"`
 	clients.DirectoryConfig
 }
 
 func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printListObjectsRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -184,10 +195,13 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printListObjectsRequest(ui *clui.UI) error {
-	req := &reader.GetObjectsRequest{
+func (cmd *ListObjectsCmd) template() proto.Message {
+	return &reader.GetObjectsRequest{
 		ObjectType: "",
-		Page:       &common.PaginationRequest{Size: 10, Token: ""},
+		Page:       &common.PaginationRequest{Size: 100, Token: ""},
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *ListObjectsCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }

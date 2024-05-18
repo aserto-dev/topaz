@@ -10,11 +10,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/samber/lo"
 
-	v2 "github.com/aserto-dev/go-directory-cli/client/v2"
 	client "github.com/aserto-dev/go-directory-cli/client/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
@@ -112,10 +110,6 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 			result = checkPermissionV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckRelation && reqVersion == 3:
 			result = checkRelationV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
-		case checkType == CheckPermission && reqVersion == 2:
-			result = checkPermissionV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
-		case checkType == CheckRelation && reqVersion == 2:
-			result = checkRelationV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
 		default:
 			continue
 		}
@@ -205,12 +199,6 @@ func getReqVersion(val *structpb.Value) int {
 		if _, ok := v.StructValue.Fields["object_type"]; ok {
 			return 3
 		}
-		if _, ok := v.StructValue.Fields["object"]; ok {
-			return 2
-		}
-		if _, ok := v.StructValue.Fields["identity_context"]; ok {
-			return 2
-		}
 	}
 	return 0
 }
@@ -289,46 +277,6 @@ func checkRelationV3(ctx context.Context, c *client.Client, msg *structpb.Value)
 	}
 }
 
-func checkPermissionV2(ctx context.Context, c *v2.Client, msg *structpb.Value) *checkResult {
-	var req dsr2.CheckPermissionRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Reader.CheckPermission(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &checkResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkPermissionStringV2(&req),
-	}
-}
-
-func checkRelationV2(ctx context.Context, c *v2.Client, msg *structpb.Value) *checkResult {
-	var req dsr2.CheckRelationRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Reader.CheckRelation(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &checkResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkRelationStringV2(&req),
-	}
-}
-
 func checkStringV3(req *dsr3.CheckRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
@@ -337,27 +285,11 @@ func checkStringV3(req *dsr3.CheckRequest) string {
 	)
 }
 
-func checkRelationStringV2(req *dsr2.CheckRelationRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.Object.GetType(), req.Object.GetKey(),
-		req.Relation.GetName(),
-		req.Subject.GetType(), req.Subject.GetKey(),
-	)
-}
-
 func checkRelationStringV3(req *dsr3.CheckRelationRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
 		req.GetRelation(),
 		req.GetSubjectType(), req.GetSubjectId(),
-	)
-}
-
-func checkPermissionStringV2(req *dsr2.CheckPermissionRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.Object.GetType(), req.Object.GetKey(),
-		req.Permission.GetName(),
-		req.Subject.GetType(), req.Subject.GetKey(),
 	)
 }
 
@@ -401,16 +333,8 @@ func (t *testResults) Passed(passed bool) {
 }
 
 type TestTemplateCmd struct {
-	V2     bool `flag:"" default:"false" help:"use v2 template"`
 	Pretty bool `flag:"" default:"false" help:"pretty print JSON"`
 }
-
-const assertionsTemplateV2 string = `{
-  "assertions": [
-    {"check_relation": {"object": {"type": "", "key": ""}, "relation": {"name": ""}, "subject": {"type": "", "key": ""}}, "expected": true},
-    {"check_permission": {"object": {"type": "", "key": ""}, "permission": {"name": ""}, "subject": {"type": "", "key": ""}}, "expected": true},
-  ]
-}`
 
 const assertionsTemplateV3 string = `{
   "assertions": [
@@ -422,15 +346,11 @@ const assertionsTemplateV3 string = `{
 
 func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	if !cmd.Pretty {
-		fmt.Fprintf(c.UI.Output(), "%s\n", lo.Ternary(cmd.V2, assertionsTemplateV2, assertionsTemplateV3))
+		fmt.Fprintf(c.UI.Output(), "%s\n", assertionsTemplateV3)
 		return nil
 	}
 
 	r := strings.NewReader(assertionsTemplateV3)
-	if cmd.V2 {
-		r = strings.NewReader(assertionsTemplateV2)
-	}
-
 	dec := json.NewDecoder(r)
 
 	var template interface{}

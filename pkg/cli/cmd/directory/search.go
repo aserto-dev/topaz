@@ -1,23 +1,26 @@
 package directory
 
 import (
-	"github.com/aserto-dev/clui"
+	"io"
+
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
+
 	"github.com/pkg/errors"
+	"google.golang.org/protobuf/proto"
 )
 
 type SearchCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to get graph request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a get graph request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get graph request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a get graph request template on stdout"`
 	clients.DirectoryConfig
 }
 
 func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printGetGraphRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -43,8 +46,8 @@ func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printGetGraphRequest(ui *clui.UI) error {
-	req := &reader.GetGraphRequest{
+func (cmd *SearchCmd) template() proto.Message {
+	return &reader.GetGraphRequest{
 		ObjectType:      "",
 		ObjectId:        "",
 		Relation:        "",
@@ -54,5 +57,8 @@ func printGetGraphRequest(ui *clui.UI) error {
 		Explain:         false,
 		Trace:           false,
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *SearchCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }

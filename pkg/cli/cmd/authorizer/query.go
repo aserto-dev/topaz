@@ -1,25 +1,27 @@
 package authorizer
 
 import (
-	"github.com/aserto-dev/clui"
+	"io"
+
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/pkg/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type QueryCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to check permission request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a check permission request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to check permission request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
 	clients.AuthorizerConfig
 }
 
 func (cmd *QueryCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printQueryRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
@@ -45,8 +47,8 @@ func (cmd *QueryCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printQueryRequest(ui *clui.UI) error {
-	req := &authorizer.QueryRequest{
+func (cmd *QueryCmd) template() proto.Message {
+	return &authorizer.QueryRequest{
 		Query: "",
 		Input: "",
 		Options: &authorizer.QueryOptions{
@@ -69,5 +71,8 @@ func printQueryRequest(ui *clui.UI) error {
 			InstanceLabel: "",
 		},
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *QueryCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }

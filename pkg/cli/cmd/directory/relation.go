@@ -1,7 +1,8 @@
 package directory
 
 import (
-	"github.com/aserto-dev/clui"
+	"io"
+
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
@@ -9,18 +10,19 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/pkg/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type GetRelationCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to get relation request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a get relation request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get relation request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a get relation request template on stdout"`
 	clients.DirectoryConfig
 }
 
 func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printGetRelationRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -46,8 +48,8 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printGetRelationRequest(ui *clui.UI) error {
-	req := &reader.GetRelationRequest{
+func (cmd *GetRelationCmd) template() proto.Message {
+	return &reader.GetRelationRequest{
 		ObjectType:      "",
 		ObjectId:        "",
 		Relation:        "",
@@ -56,18 +58,21 @@ func printGetRelationRequest(ui *clui.UI) error {
 		SubjectRelation: "",
 		WithObjects:     true,
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *GetRelationCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }
 
 type SetRelationCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"file path to set relation request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a set relation request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set relation request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a set relation request template on stdout"`
 	clients.DirectoryConfig
 }
 
 func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printSetRelationRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -93,8 +98,8 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printSetRelationRequest(ui *clui.UI) error {
-	req := &writer.SetRelationRequest{
+func (cmd *SetRelationCmd) template() proto.Message {
+	return &writer.SetRelationRequest{
 		Relation: &common.Relation{
 			ObjectType:      "",
 			ObjectId:        "",
@@ -107,18 +112,21 @@ func printSetRelationRequest(ui *clui.UI) error {
 			Etag:            "",
 		},
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *SetRelationCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }
 
 type DeleteRelationCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"file path to delete relation request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a delete relation request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete relation request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a delete relation request template on stdout"`
 	clients.DirectoryConfig
 }
 
 func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printDeleteRelationRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -144,8 +152,8 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printDeleteRelationRequest(ui *clui.UI) error {
-	req := &writer.DeleteRelationRequest{
+func (cmd *DeleteRelationCmd) template() proto.Message {
+	return &writer.DeleteRelationRequest{
 		ObjectType:      "",
 		ObjectId:        "",
 		Relation:        "",
@@ -153,18 +161,21 @@ func printDeleteRelationRequest(ui *clui.UI) error {
 		SubjectId:       "",
 		SubjectRelation: "",
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *DeleteRelationCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }
 
 type ListRelationsCmd struct {
-	Request  string `arg:""  type:"s" name:"request" optional:"" help:"file path to list relations request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a list relations request template on stdout"`
+	Request  string `arg:"" type:"s" name:"request" optional:"" help:"file path to list relations request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a list relations request template on stdout"`
 	clients.DirectoryConfig
 }
 
 func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printListRelationsRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -191,16 +202,19 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printListRelationsRequest(ui *clui.UI) error {
-	req := &reader.GetRelationsRequest{
+func (cmd *ListRelationsCmd) template() proto.Message {
+	return &reader.GetRelationsRequest{
 		ObjectType:      "",
 		ObjectId:        "",
 		Relation:        "",
 		SubjectType:     "",
 		SubjectId:       "",
 		SubjectRelation: "",
-		WithObjects:     true,
-		Page:            &common.PaginationRequest{Size: 10, Token: ""},
+		WithObjects:     false,
+		Page:            &common.PaginationRequest{Size: 100, Token: ""},
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *ListRelationsCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }

@@ -1,11 +1,13 @@
 package authorizer
 
 import (
-	"github.com/aserto-dev/clui"
+	"io"
+
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/pkg/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
@@ -13,14 +15,14 @@ import (
 )
 
 type DecisionTreeCmd struct {
-	Request  string `arg:""  type:"string" name:"request" optional:"" help:"json request or file path to decision tree request or '-' to read from stdin"`
-	Template bool   `name:"template" help:"prints a check permission request template on stdout"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to decision tree request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
 	clients.AuthorizerConfig
 }
 
 func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return printDecisionTreeRequest(c.UI)
+		return cmd.print(c.UI.Output())
 	}
 	client, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
 	if err != nil {
@@ -41,8 +43,8 @@ func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.UI.Output(), resp)
 }
 
-func printDecisionTreeRequest(ui *clui.UI) error {
-	req := &authorizer.DecisionTreeRequest{
+func (cmd *DecisionTreeCmd) template() proto.Message {
+	return &authorizer.DecisionTreeRequest{
 		PolicyContext: &api.PolicyContext{
 			Path:      "",
 			Decisions: []string{"allowed"},
@@ -60,5 +62,8 @@ func printDecisionTreeRequest(ui *clui.UI) error {
 			InstanceLabel: "",
 		},
 	}
-	return jsonx.OutputJSONPB(ui.Output(), req)
+}
+
+func (cmd *DecisionTreeCmd) print(w io.Writer) error {
+	return jsonx.OutputJSONPB(w, cmd.template())
 }

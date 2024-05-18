@@ -3,7 +3,7 @@ module github.com/aserto-dev/topaz
 go 1.21
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
-// replace aserto-dev/go-directory-cli => ../go-directory-cli
+// replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
@@ -19,11 +19,11 @@ require (
 	github.com/aserto-dev/azm v0.1.8
 	github.com/aserto-dev/certs v0.0.6
 	github.com/aserto-dev/clui v0.8.3
-	github.com/aserto-dev/errors v0.0.7
+	github.com/aserto-dev/errors v0.0.8
 	github.com/aserto-dev/go-aserto v0.31.4
 	github.com/aserto-dev/go-authorizer v0.20.6
-	github.com/aserto-dev/go-directory v0.31.3
-	github.com/aserto-dev/go-directory-cli v0.31.1
+	github.com/aserto-dev/go-directory v0.31.4
+	github.com/aserto-dev/go-directory-cli v0.31.2
 	github.com/aserto-dev/go-edge-ds v0.31.5
 	github.com/aserto-dev/go-grpc v0.8.65
 	github.com/aserto-dev/go-topaz-ui v0.1.7
@@ -65,7 +65,7 @@ require (
 )
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.33.0-20240401165935-b983156c5e99.1 // indirect
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.1-20240508200655-46a4cf4ba109.1 // indirect
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
