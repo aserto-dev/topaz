@@ -119,9 +119,11 @@ release:
     owner: "{{ .Env.ORG }}"
     name: "{{ .Env.REPO }}"
 
-  draft: false
-  prerelease: "false"
-  name_template: "{{.ProjectName}} {{.Tag}}"
+  draft: true
+  replace_existing_draft: true
+  prerelease: "true"
+  tag: "{{ .CurrentTag }}"
+  name_template: "{{.ProjectName}} {{.CurrentTag}}"
 
 blobs:
   # https://goreleaser.com/customization/blob/
