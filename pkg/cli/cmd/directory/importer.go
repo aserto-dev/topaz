@@ -12,8 +12,7 @@ import (
 )
 
 type ImportCmd struct {
-	Directory string        `short:"d" required:"" help:"directory containing .json data"`
-	Format    FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
+	Directory string `short:"d" required:"" help:"directory containing .json data"`
 	clients.DirectoryConfig
 }
 
@@ -42,8 +41,5 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if cmd.Format == V2 {
-		return dirClient.V2.Import(c.Context, files)
-	}
 	return dirClient.V3.Import(c.Context, files)
 }

@@ -62,10 +62,11 @@ type Info struct {
 		XdgDataHome   string `json:"xdg_data_home"`
 	} `json:"environment"`
 	Config struct {
-		TopazCfgDir   string `json:"topaz_cfg_dir"`
-		TopazCertsDir string `json:"topaz_certs_dir"`
-		TopazDataDir  string `json:"topaz_db_dir"`
-		TopazDir      string `json:"topaz_dir"`
+		TopazCfgDir      string `json:"topaz_cfg_dir"`
+		TopazCertsDir    string `json:"topaz_certs_dir"`
+		TopazDataDir     string `json:"topaz_db_dir"`
+		TopazTemplateDir string `json:"topaz_tmpl_dir"`
+		TopazDir         string `json:"topaz_dir"`
 	} `json:"config"`
 	Runtime struct {
 		ActiveConfigurationName  string `json:"active_configuration_name"`
@@ -108,6 +109,7 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 	info.Config.TopazCfgDir = cc.GetTopazCfgDir()
 	info.Config.TopazCertsDir = cc.GetTopazCertsDir()
 	info.Config.TopazDataDir = cc.GetTopazDataDir()
+	info.Config.TopazTemplateDir = cc.GetTopazTemplateDir()
 	info.Config.TopazDir = cc.GetTopazDir()
 
 	info.Runtime.ActiveConfigurationName = c.Config.Active.Config

@@ -11,8 +11,7 @@ import (
 )
 
 type RestoreCmd struct {
-	File   string        `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
-	Format FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
+	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
 	clients.DirectoryConfig
 }
 
@@ -35,8 +34,6 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	color.Green(">>> restore from %s", cmd.File)
-	if cmd.Format == V2 {
-		return dirClient.V2.Restore(c.Context, cmd.File)
-	}
+
 	return dirClient.V3.Restore(c.Context, cmd.File)
 }
