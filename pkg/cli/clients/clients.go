@@ -10,11 +10,6 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-const (
-	EnvTopazHeaderTenantID  string = "TOPAZ_HEADER_TENANT_ID"
-	EnvTopazHeaderSessionID string = "TOPAZ_HEADER_SESSION_ID"
-)
-
 type Message[T any] interface {
 	proto.Message
 	*T
