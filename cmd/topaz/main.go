@@ -61,6 +61,7 @@ func main() {
 			"topaz_certs_dir":    cc.GetTopazCertsDir(),
 			"topaz_cfg_dir":      cc.GetTopazCfgDir(),
 			"topaz_db_dir":       cc.GetTopazDataDir(),
+			"topaz_tmpl_dir":     cc.GetTopazTemplateDir(),
 			"container_registry": cc.ContainerRegistry(),
 			"container_image":    cc.ContainerImage(),
 			"container_tag":      cc.ContainerTag(),
