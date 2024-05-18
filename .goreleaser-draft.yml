@@ -126,18 +126,18 @@ release:
 
 blobs:
   # https://goreleaser.com/customization/blob/
-  -
-    provider: gs
-    bucket: topaz-cli
-    folder: "topaz/{{ .Version }}"
-    extra_files:
-      - glob: VERSION.txt
-  -
-    provider: gs
-    bucket: topaz-cli
-    folder: "topaz/latest"
-    extra_files:
-      - glob: VERSION.txt
+  # -
+  #   provider: gs
+  #   bucket: topaz-cli
+  #   folder: "topaz/{{ .Version }}"
+  #   extra_files:
+  #     - glob: VERSION.txt
+  # -
+  #   provider: gs
+  #   bucket: topaz-cli
+  #   folder: "topaz/latest"
+  #   extra_files:
+  #     - glob: VERSION.txt
 
 brews:
   # https://goreleaser.com/customization/homebrew/
