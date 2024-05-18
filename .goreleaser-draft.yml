@@ -146,7 +146,7 @@ brews:
 
     repository:
       owner: "{{ .Env.ORG }}"
-      name: homebrew-tap
+      name: aserto-tap
       token: "{{ .Env.ASERTO_TAP }}"
 
     url_template: "https://github.com/aserto-dev/topaz/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
@@ -208,11 +208,11 @@ dockers:
 
 docker_manifests:
   # https://goreleaser.com/customization/docker_manifest/
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:latest"
-    image_templates: [*amd64-image, *arm64-image]
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}"
-    image_templates: [*amd64-image, *arm64-image]
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}"
-    image_templates: [*amd64-image, *arm64-image]
-  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
-    image_templates: [*amd64-image, *arm64-image]
+  # - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:latest"
+  #   image_templates: [*amd64-image, *arm64-image]
+  # - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}"
+  #   image_templates: [*amd64-image, *arm64-image]
+  # - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}"
+  #   image_templates: [*amd64-image, *arm64-image]
+  # - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+  #   image_templates: [*amd64-image, *arm64-image]
