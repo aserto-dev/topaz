@@ -9,6 +9,7 @@ go 1.21
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
+replace github.com/adrg/xdg => ./pkg/cli/xdg
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
