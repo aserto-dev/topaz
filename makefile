@@ -66,10 +66,15 @@ lint:
 # github.com/aserto-dev/topaz/pkg/app/tests/$PKGS
 PKGS = authz builtin manifest policy query
 .PHONY: test
-test: $(PKGS)
+test: $(PKGS) test-xdg
 $(PKGS):
 	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/app/tests/$@/... $(NO_COLOR)"
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... github.com/aserto-dev/topaz/pkg/app/tests/$@/...;
+
+.PHONY: test-xdg
+test-xdg:
+	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/cli/xdg/... $(NO_COLOR)"
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... github.com/adrg/xdg/...;
 
 .PHONY: write-version
 write-version:
