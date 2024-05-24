@@ -53,10 +53,15 @@ release:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/goreleaser release --clean
 
+.PHONY: snapshot
+snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/goreleaser release --clean --snapshot
+
 .PHONY: generate
 generate:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@go generate ./...
+	@GOBIN=${PWD}/${EXT_BIN_DIR} go generate ./...
 
 .PHONY: lint
 lint:
