@@ -8,6 +8,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
+	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 
 	"github.com/alecthomas/kong"
@@ -19,6 +20,7 @@ const (
 )
 
 func main() {
+	fflag.Init()
 
 	cli := cmd.CLI{}
 
@@ -76,6 +78,7 @@ func main() {
 			"tenant_id":          cc.TenantID(),
 			"insecure":           strconv.FormatBool(cc.Insecure()),
 			"no_check":           strconv.FormatBool(cc.NoCheck()),
+			"active_config":      ctx.Config.Active.Config,
 		},
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))

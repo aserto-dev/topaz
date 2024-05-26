@@ -26,7 +26,6 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/editor/internal/term"
-	// "k8s.io/kubectl/pkg/util/term"
 )
 
 const (
@@ -40,7 +39,7 @@ const (
 	windowsShell  = "cmd"
 )
 
-// Editor holds the command-line args to fire up the editor
+// Editor holds the command-line args to fire up the editor.
 type Editor struct {
 	Args  []string
 	Shell bool
@@ -61,7 +60,7 @@ func NewDefaultEditor(envs []string) Editor {
 
 func defaultEnvShell() []string {
 	shell := os.Getenv("SHELL")
-	if len(shell) == 0 {
+	if shell == "" {
 		shell = platformize(defaultShell, windowsShell)
 	}
 	flag := "-c"
@@ -74,14 +73,14 @@ func defaultEnvShell() []string {
 func defaultEnvEditor(envs []string) ([]string, bool) {
 	var editor string
 	for _, env := range envs {
-		if len(env) > 0 {
+		if env != "" {
 			editor = os.Getenv(env)
 		}
-		if len(editor) > 0 {
+		if editor != "" {
 			break
 		}
 	}
-	if len(editor) == 0 {
+	if editor == "" {
 		editor = platformize(defaultEditor, windowsEditor)
 	}
 	if !strings.Contains(editor, " ") {
@@ -90,7 +89,7 @@ func defaultEnvEditor(envs []string) ([]string, bool) {
 	if !strings.ContainsAny(editor, "\"'\\") {
 		return strings.Split(editor, " "), false
 	}
-	// rather than parse the shell arguments ourselves, punt to the shell
+	// rather than parse the shell arguments ourselves, punt to the shell.
 	shell := defaultEnvShell()
 	return append(shell, editor), true
 }
@@ -118,13 +117,13 @@ func (e Editor) Launch(path string) error {
 		return err
 	}
 	args := e.args(abs)
-	cmd := exec.Command(args[0], args[1:]...)
+	cmd := exec.Command(args[0], args[1:]...) //nolint:gosec
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 
 	if err := (term.TTY{In: os.Stdin, TryDev: true}).Safe(cmd.Run); err != nil {
-		if err, ok := err.(*exec.Error); ok {
+		if err, ok := err.(*exec.Error); ok { //nolint:gosec
 			if err.Err == exec.ErrNotFound {
 				return fmt.Errorf("unable to launch the editor %q", strings.Join(e.Args, " "))
 			}

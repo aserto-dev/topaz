@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package editor
+package editor_test
 
 import (
 	"bytes"
@@ -22,25 +22,27 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/aserto-dev/topaz/pkg/cli/editor"
 )
 
 func TestArgs(t *testing.T) {
-	if e, a := []string{"/bin/bash", "-c \"test\""}, (Editor{Args: []string{"/bin/bash", "-c"}, Shell: true}).args("test"); !reflect.DeepEqual(e, a) {
+	if e, a := []string{"/bin/bash", "-c \"test\""}, (editor.Editor{Args: []string{"/bin/bash", "-c"}, Shell: true}).TestArgs("test"); !reflect.DeepEqual(e, a) {
 		t.Errorf("unexpected args: %v", a)
 	}
-	if e, a := []string{"/bin/bash", "-c", "test"}, (Editor{Args: []string{"/bin/bash", "-c"}, Shell: false}).args("test"); !reflect.DeepEqual(e, a) {
+	if e, a := []string{"/bin/bash", "-c", "test"}, (editor.Editor{Args: []string{"/bin/bash", "-c"}, Shell: false}).TestArgs("test"); !reflect.DeepEqual(e, a) {
 		t.Errorf("unexpected args: %v", a)
 	}
-	if e, a := []string{"/bin/bash", "-i -c \"test\""}, (Editor{Args: []string{"/bin/bash", "-i -c"}, Shell: true}).args("test"); !reflect.DeepEqual(e, a) {
+	if e, a := []string{"/bin/bash", "-i -c \"test\""}, (editor.Editor{Args: []string{"/bin/bash", "-i -c"}, Shell: true}).TestArgs("test"); !reflect.DeepEqual(e, a) {
 		t.Errorf("unexpected args: %v", a)
 	}
-	if e, a := []string{"/test", "test"}, (Editor{Args: []string{"/test"}}).args("test"); !reflect.DeepEqual(e, a) {
+	if e, a := []string{"/test", "test"}, (editor.Editor{Args: []string{"/test"}}).TestArgs("test"); !reflect.DeepEqual(e, a) {
 		t.Errorf("unexpected args: %v", a)
 	}
 }
 
 func TestEditor(t *testing.T) {
-	edit := Editor{Args: []string{"cat"}}
+	edit := editor.Editor{Args: []string{"cat"}}
 	testStr := "test something\n"
 	contents, path, err := edit.LaunchTempFile("", "someprefix", bytes.NewBufferString(testStr))
 	if err != nil {

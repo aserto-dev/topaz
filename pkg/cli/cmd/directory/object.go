@@ -1,14 +1,21 @@
 package directory
 
 import (
+	"bytes"
 	"io"
+	"os"
 
+	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/editor"
+	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
+	"github.com/aserto-dev/topaz/pkg/cli/prompter"
+
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -18,7 +25,16 @@ import (
 type GetObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a get object request template on stdout"`
+	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
+}
+
+func (cmd *GetObjectCmd) BeforeReset(ctx *kong.Context) error {
+	n := ctx.Selected()
+	if n != nil {
+		fflag.UnHideFlags(ctx)
+	}
+	return nil
 }
 
 func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
@@ -26,9 +42,20 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 		return cmd.print(c.UI.Output())
 	}
 
-	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
-	if err != nil {
-		return errors.Wrap(err, "failed to get directory client")
+	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
+		req, err := cmd.edit(cmd.template())
+		if err != nil {
+			return err
+		}
+		cmd.Request = req
+	}
+
+	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
+		p := prompter.New(cmd.template())
+		if err := p.Show(); err != nil {
+			return err
+		}
+		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
 	if cmd.Request == "" {
@@ -36,9 +63,13 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetObjectRequest
-	err = clients.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := clients.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
+	}
+
+	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	if err != nil {
+		return errors.Wrap(err, "failed to get directory client")
 	}
 
 	resp, err := client.V3.Reader.GetObject(c.Context, &req)
@@ -61,6 +92,33 @@ func (cmd *GetObjectCmd) template() proto.Message {
 func (cmd *GetObjectCmd) print(w io.Writer) error {
 	return jsonx.OutputJSONPB(w, cmd.template())
 }
+
+func (cmd *GetObjectCmd) edit(tmpl proto.Message) (string, error) {
+	tmp, err := jsonx.MarshalOpts(true).Marshal(tmpl)
+	if err != nil {
+		return "", err
+	}
+
+	e := editor.NewDefaultEditor([]string{"TOPAZ_EDITOR"})
+	name := string(proto.MessageName(cmd.template()).Name())
+
+	buf, path, err := e.LaunchTempFile("topaz", name, bytes.NewReader(tmp))
+	if err != nil {
+		return "", err
+	}
+	defer func() { _ = os.Remove(path) }()
+
+	return string(buf), nil
+}
+
+// func (cmd *GetObjectCmd) prompt(c *cc.CommonCtx) (string, error) {
+// 	request, err := input.Prompt(cmd.template())
+// 	if err != nil {
+// 		return "", err
+// 	}
+
+// 	return request, nil
+// }
 
 type SetObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`

@@ -14,12 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package term
+package term_test
 
 import (
 	"bytes"
 	"strings"
 	"testing"
+
+	"github.com/aserto-dev/topaz/pkg/cli/editor/internal/term"
 )
 
 const test = "Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube"
@@ -36,7 +38,7 @@ func TestWordWrapWriter(t *testing.T) {
 	}
 	for k, tc := range testcases {
 		b := bytes.NewBufferString("")
-		w := NewWordWrapWriter(b, tc.maxWidth)
+		w := term.NewWordWrapWriter(b, tc.maxWidth)
 		_, err := w.Write([]byte(tc.input))
 		if err != nil {
 			t.Errorf("%s: Unexpected error: %v", k, err)
@@ -73,7 +75,7 @@ func TestMaxWidthWriter(t *testing.T) {
 	}
 	for k, tc := range testcases {
 		b := bytes.NewBufferString("")
-		w := NewMaxWidthWriter(b, tc.maxWidth)
+		w := term.NewMaxWidthWriter(b, tc.maxWidth)
 		_, err := w.Write([]byte(tc.input))
 		if err != nil {
 			t.Errorf("%s: Unexpected error: %v", k, err)

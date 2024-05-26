@@ -17,9 +17,9 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/adrg/xdg v0.4.0
 	github.com/alecthomas/kong v0.9.0
-	github.com/aserto-dev/aserto-grpc v0.2.2
+	github.com/aserto-dev/aserto-grpc v0.2.3
 	github.com/aserto-dev/aserto-management v0.9.4
-	github.com/aserto-dev/azm v0.1.8
+	github.com/aserto-dev/azm v0.1.9
 	github.com/aserto-dev/certs v0.0.6
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.8
@@ -56,6 +56,7 @@ require (
 	github.com/open-policy-agent/opa v0.64.1
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/pkg/errors v0.9.1
+	github.com/rivo/tview v0.0.0-20240524063012-037df494fb76
 	github.com/rs/zerolog v1.32.0
 	github.com/samber/lo v1.39.0
 	github.com/spf13/cobra v1.8.0
@@ -102,6 +103,8 @@ require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.4 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/gdamore/encoding v1.0.0 // indirect
+	github.com/gdamore/tcell/v2 v2.7.1 // indirect
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
@@ -132,6 +135,7 @@ require (
 	github.com/lestrrat-go/httprc v1.0.5 // indirect
 	github.com/lestrrat-go/iter v1.0.2 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
+	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

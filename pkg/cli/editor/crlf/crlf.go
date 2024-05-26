@@ -38,7 +38,7 @@ func (w crlfWriter) Write(b []byte) (n int, err error) {
 			n, err := w.Writer.Write(b[i:])
 			return written + n, err
 		}
-		next = next + i
+		next += i
 		n, err := w.Writer.Write(b[i:next])
 		if err != nil {
 			return written + n, err

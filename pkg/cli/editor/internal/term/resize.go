@@ -17,6 +17,8 @@ limitations under the License.
 package term
 
 import (
+	"fmt"
+
 	"github.com/aserto-dev/topaz/pkg/cli/editor/internal/remotecommand"
 	"github.com/aserto-dev/topaz/pkg/cli/editor/internal/runtime"
 	"github.com/moby/term"
@@ -36,8 +38,7 @@ func (t TTY) GetSize() *remotecommand.TerminalSize {
 func GetSize(fd uintptr) *remotecommand.TerminalSize {
 	winsize, err := term.GetWinsize(fd)
 	if err != nil {
-		// runtime.HandleError(fmt.Errorf("unable to get terminal size: %v", err))
-		return nil
+		runtime.HandleError(fmt.Errorf("unable to get terminal size: %v", err))
 	}
 
 	return &remotecommand.TerminalSize{Width: winsize.Width, Height: winsize.Height}
@@ -64,7 +65,7 @@ func (t *TTY) MonitorSize(initialSizes ...*remotecommand.TerminalSize) remotecom
 	return t.sizeQueue
 }
 
-// sizeQueue implements remotecommand.TerminalSizeQueue
+// sizeQueue implements remotecommand.TerminalSizeQueue.
 type sizeQueue struct {
 	t TTY
 	// resizeChan receives a Size each time the user's terminal is resized.
@@ -72,7 +73,7 @@ type sizeQueue struct {
 	stopResizing chan struct{}
 }
 
-// make sure sizeQueue implements the resize.TerminalSizeQueue interface
+// make sure sizeQueue implements the resize.TerminalSizeQueue interface.
 var _ remotecommand.TerminalSizeQueue = &sizeQueue{}
 
 // monitorSize primes resizeChan with initialSizes and then monitors for resize events. With each

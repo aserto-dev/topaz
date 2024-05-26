@@ -42,7 +42,7 @@ func EscapeTerminal(in string) string {
 	return terminalEscaper.Replace(in)
 }
 
-// IsTerminal returns whether the passed object is a terminal or not
+// IsTerminal returns whether the passed object is a terminal or not.
 func IsTerminal(i interface{}) bool {
 	_, terminal := term.GetFdInfo(i)
 	return terminal
@@ -55,7 +55,7 @@ func AllowsColorOutput(w io.Writer) bool {
 		return false
 	}
 
-	// https://en.wikipedia.org/wiki/Computer_terminal#Dumb_terminals
+	// https://en.wikipedia.org/wiki/Computer_terminal#Dumb_terminals.
 	if os.Getenv("TERM") == "dumb" {
 		return false
 	}
