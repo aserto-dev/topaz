@@ -338,9 +338,7 @@ type TestTemplateCmd struct {
 
 const assertionsTemplateV3 string = `{
   "assertions": [
-	{"check": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true},
-	{"check_relation": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true},
-	{"check_permission": {"object_type": "", "object_id": "", "permission": "", "subject_type": "", "subject_id": ""}, "expected": true},
+  	{"check": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true}
   ]
 }`
 

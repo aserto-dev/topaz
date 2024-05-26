@@ -25,7 +25,7 @@ func initBaseDirs(home string, kf *knownFolders) {
 	// Initialize standard directories.
 	baseDirs.dataHome = xdgPath(envDataHome, kf.localAppData)
 	baseDirs.data = xdgPaths(envDataDirs, kf.roamingAppData, kf.programData)
-	baseDirs.configHome = xdgPath(envConfigHome, kf.localAppData)
+	baseDirs.configHome = xdgPath(envConfigHome, filepath.Join(home, ".config"))
 	baseDirs.config = xdgPaths(envConfigDirs, kf.programData, kf.roamingAppData)
 	baseDirs.stateHome = xdgPath(envStateHome, kf.localAppData)
 	baseDirs.cacheHome = xdgPath(envCacheHome, filepath.Join(kf.localAppData, "cache"))
