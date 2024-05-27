@@ -1,8 +1,6 @@
 package directory
 
 import (
-	"io"
-
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
@@ -34,11 +32,11 @@ func (cmd *GetObjectCmd) BeforeReset(ctx *kong.Context) error {
 
 func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return cmd.print(c.UI.Output())
+		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
 	}
 
 	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
-		req, err := cmd.edit(cmd.template())
+		req, err := edit.Msg(cmd.template())
 		if err != nil {
 			return err
 		}
@@ -84,14 +82,6 @@ func (cmd *GetObjectCmd) template() proto.Message {
 	}
 }
 
-func (cmd *GetObjectCmd) print(w io.Writer) error {
-	return jsonx.OutputJSONPB(w, cmd.template())
-}
-
-func (cmd *GetObjectCmd) edit(tmpl proto.Message) (string, error) {
-	return edit.Msg(tmpl)
-}
-
 type SetObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a set object request template on stdout"`
@@ -106,7 +96,7 @@ func (cmd *SetObjectCmd) BeforeReset(ctx *kong.Context) error {
 
 func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return cmd.print(c.UI.Output())
+		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -115,7 +105,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
-		req, err := cmd.edit(cmd.template())
+		req, err := edit.Msg(cmd.template())
 		if err != nil {
 			return err
 		}
@@ -161,14 +151,6 @@ func (cmd *SetObjectCmd) template() proto.Message {
 	}
 }
 
-func (cmd *SetObjectCmd) print(w io.Writer) error {
-	return jsonx.OutputJSONPB(w, cmd.template())
-}
-
-func (cmd *SetObjectCmd) edit(tmpl proto.Message) (string, error) {
-	return edit.Msg(tmpl)
-}
-
 type DeleteObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a delete object request template on stdout"`
@@ -183,7 +165,7 @@ func (cmd *DeleteObjectCmd) BeforeReset(ctx *kong.Context) error {
 
 func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return cmd.print(c.UI.Output())
+		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -192,7 +174,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
-		req, err := cmd.edit(cmd.template())
+		req, err := edit.Msg(cmd.template())
 		if err != nil {
 			return err
 		}
@@ -233,14 +215,6 @@ func (cmd *DeleteObjectCmd) template() proto.Message {
 	}
 }
 
-func (cmd *DeleteObjectCmd) print(w io.Writer) error {
-	return jsonx.OutputJSONPB(w, cmd.template())
-}
-
-func (cmd *DeleteObjectCmd) edit(tmpl proto.Message) (string, error) {
-	return edit.Msg(tmpl)
-}
-
 type ListObjectsCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a list objects request template on stdout"`
@@ -255,7 +229,7 @@ func (cmd *ListObjectsCmd) BeforeReset(ctx *kong.Context) error {
 
 func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return cmd.print(c.UI.Output())
+		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -264,7 +238,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
-		req, err := cmd.edit(cmd.template())
+		req, err := edit.Msg(cmd.template())
 		if err != nil {
 			return err
 		}
@@ -302,12 +276,4 @@ func (cmd *ListObjectsCmd) template() proto.Message {
 		ObjectType: "",
 		Page:       &common.PaginationRequest{Size: 100, Token: ""},
 	}
-}
-
-func (cmd *ListObjectsCmd) print(w io.Writer) error {
-	return jsonx.OutputJSONPB(w, cmd.template())
-}
-
-func (cmd *ListObjectsCmd) edit(tmpl proto.Message) (string, error) {
-	return edit.Msg(tmpl)
 }
