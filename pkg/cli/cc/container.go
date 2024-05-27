@@ -4,12 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
-	ver "github.com/aserto-dev/topaz/pkg/version"
-
-	"github.com/Masterminds/semver/v3"
 	"github.com/samber/lo"
 )
 
@@ -29,36 +25,36 @@ func defaultContainerTag() string {
 }
 
 // Container returns the fully qualified container name (registry/image:tag).
-func Container(registry, image, tag string) string {
+func (c *CommonCtx) Container(registry, image, tag string) string {
 	if container := os.Getenv("CONTAINER"); container != "" {
 		return container
 	}
 
 	return fmt.Sprintf("%s/%s:%s",
-		lo.Ternary(registry != "", registry, ContainerRegistry()),
-		lo.Ternary(image != "", image, ContainerImage()),
-		lo.Ternary(tag != "", tag, ContainerTag()),
+		lo.Ternary(registry != "", registry, c.ContainerRegistry()),
+		lo.Ternary(image != "", image, c.ContainerImage()),
+		lo.Ternary(tag != "", tag, c.ContainerTag()),
 	)
 }
 
 // ContainerRegistry returns the container registry (host[:port]/repo).
-func ContainerRegistry() string {
+func (c *CommonCtx) ContainerRegistry() string {
 	if containerRegistry := os.Getenv("CONTAINER_REGISTRY"); containerRegistry != "" {
 		return containerRegistry
 	}
-	return defaultContainerRegistry
+	return c.Config.Defaults.ContainerRegistry
 }
 
 // ContainerImage returns the container image name.
-func ContainerImage() string {
+func (c *CommonCtx) ContainerImage() string {
 	if containerImage := os.Getenv("CONTAINER_IMAGE"); containerImage != "" {
 		return containerImage
 	}
-	return defaultContainerImage
+	return c.Config.Defaults.ContainerImage
 }
 
 // ContainerTag returns the container tag (label or semantic version).
-func ContainerTag() string {
+func (c *CommonCtx) ContainerTag() string {
 	if containerTag := os.Getenv("CONTAINER_TAG"); containerTag != "" {
 		return containerTag
 	}
@@ -71,11 +67,11 @@ func ContainerTag() string {
 }
 
 // ContainerPlatform, returns the container platform for multi-platform capable servers.
-func ContainerPlatform() string {
+func (c *CommonCtx) ContainerPlatform() string {
 	if containerPlatform := os.Getenv("CONTAINER_PLATFORM"); containerPlatform != "" {
 		return containerPlatform
 	}
-	return "linux/" + runtime.GOARCH
+	return c.Config.Defaults.ContainerPlatform
 }
 
 // ContainerName returns the container instance name (docker run --name CONTAINER_NAME).

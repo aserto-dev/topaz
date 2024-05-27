@@ -18,7 +18,7 @@ func (cmd *UpdateCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
 	color.Green(">>> updating %s (%s)...",
-		cc.Container(
+		c.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image
 			cmd.ContainerTag,      // tag
@@ -32,7 +32,7 @@ func (cmd *UpdateCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	return dc.PullImage(
-		cc.Container(
+		c.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image
 			cmd.ContainerTag,      // tag

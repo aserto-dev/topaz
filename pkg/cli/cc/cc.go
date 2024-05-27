@@ -7,11 +7,14 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
 
+	"github.com/Masterminds/semver"
 	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/docker/docker/api/types"
 	"github.com/fullstorydev/grpcurl"
 	"github.com/samber/lo"
@@ -75,13 +78,17 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 			},
 			Defaults: DefaultsConfig{
 				NoCheck:           noCheck,
-				ContainerRegistry: ContainerRegistry(),
-				ContainerImage:    ContainerImage(),
-				ContainerTag:      ContainerTag(),
-				ContainerPlatform: ContainerPlatform(),
+				ContainerRegistry: defaultContainerRegistry,
+				ContainerImage:    defaultContainerImage,
+				ContainerTag:      defaultContainerTag,
+				ContainerPlatform: "linux/" + runtime.GOARCH,
 			},
 			Running: RunningConfig{},
 		},
+	}
+	v, err := semver.NewVersion(version.GetInfo().Version)
+	if err == nil {
+		ctx.Config.Defaults.ContainerTag = v.String()
 	}
 
 	if _, err := os.Stat(configFilePath); err == nil {

@@ -35,7 +35,7 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	image := cc.Container(
+	image := c.Container(
 		cmd.ContainerRegistry, // registry
 		cmd.ContainerImage,    // image
 		cmd.ContainerTag,      // tag
