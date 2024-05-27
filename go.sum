@@ -421,8 +421,8 @@ github.com/aserto-dev/aserto-grpc v0.2.3 h1:pimQD0nq57dSMrv+nT9hUnN9Uricpp+iJypz
 github.com/aserto-dev/aserto-grpc v0.2.3/go.mod h1:51Zoq1izr+qv8IXDw7a0J0lWC3gTPupWnDSGvqkd9sI=
 github.com/aserto-dev/aserto-management v0.9.4 h1:GiBWkTwn2mgvbS3ftsmro2RS0oiORjlNzLsY9Q5j0vQ=
 github.com/aserto-dev/aserto-management v0.9.4/go.mod h1:gc2e123PnLdDrVv6H9r3sl8yU5qegAwR3aAwXcmaBJM=
-github.com/aserto-dev/azm v0.1.9 h1:/vyG7gORYVJK5Huw5kLS+tXAr/pa6CjPIhQBG2oueVM=
-github.com/aserto-dev/azm v0.1.9/go.mod h1:q9hcNvUbhvy3JvGYOwRq/UT8JKRFBV2aA/3UtcQunzg=
+github.com/aserto-dev/azm v0.1.10 h1:5WflOnWKQgIlODeXvcZb5XD4eVUK+gIDN1j06b/M0do=
+github.com/aserto-dev/azm v0.1.10/go.mod h1:q9hcNvUbhvy3JvGYOwRq/UT8JKRFBV2aA/3UtcQunzg=
 github.com/aserto-dev/certs v0.0.6 h1:V79JptXMvgePJ2rgktu8QdgbEQsIXxF1kXqQhPM76NI=
 github.com/aserto-dev/certs v0.0.6/go.mod h1:ppJ/GVSerB8EsikJeQP71LJBuHiUW2avS2f84oC/75c=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
@@ -439,8 +439,8 @@ github.com/aserto-dev/go-directory v0.31.4 h1:UIs1ArjnyFSay24rJgpIrp4/ttk+xAIqgS
 github.com/aserto-dev/go-directory v0.31.4/go.mod h1:fgIT515NcK+4m1UyriBCPMwFHl3DHPaa8yBLbEb9r/I=
 github.com/aserto-dev/go-directory-cli v0.31.2 h1:hpJ2nvydHTQkiL6q3JCvaTY4q0DIrHh9Qd1U6X1hufI=
 github.com/aserto-dev/go-directory-cli v0.31.2/go.mod h1:C8ZqSxajstEBb699FuCxUpXN+CxD5MoO+pZ6DrnvbSY=
-github.com/aserto-dev/go-edge-ds v0.31.5 h1:72+LZPiiBoeUbeV0W7u0SeL73oiQ/tgav2fbSPrf7sI=
-github.com/aserto-dev/go-edge-ds v0.31.5/go.mod h1:/MFU1nUthS/4rYvM02zCX6yHCi7xfpbNoY7dvAzP3YI=
+github.com/aserto-dev/go-edge-ds v0.31.6 h1:jTAxb4yje4raucnWH9De4ybKx8NAAKk9U2S8WDmXn3g=
+github.com/aserto-dev/go-edge-ds v0.31.6/go.mod h1:q/XvJmP7H+BQxFw6eTpDBIJ2ySac9RQQ0ldYtPT/ds8=
 github.com/aserto-dev/go-grpc v0.8.65 h1:qj84Ps9nkjAk7SzS+53jrd9PGgmq3ALq8pad2WzYXDY=
 github.com/aserto-dev/go-grpc v0.8.65/go.mod h1:ezNdiKzZZCBwpANK6TYNKwe3qTbNFwZB7OEl+v2d/Gw=
 github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 h1:nONd24V5nyJ0IIw8QE+OKv30YuHOTNbJ4FsvczLaM8o=
