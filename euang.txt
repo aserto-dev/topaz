@@ -1,9 +1,0 @@
-{
-  "object_type":  "user",
-  "object_id":  "euang@acmecorp.com",
-  "with_relations":  true,
-  "page":  {
-    "size":  100,
-    "token":  ""
-  }
-}
