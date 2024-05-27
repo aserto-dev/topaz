@@ -16,7 +16,7 @@ import (
 type SearchCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get graph request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a get graph request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
 }
 

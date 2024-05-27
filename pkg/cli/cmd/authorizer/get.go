@@ -17,7 +17,7 @@ import (
 type GetPolicyCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get policy request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.AuthorizerConfig
 }
 

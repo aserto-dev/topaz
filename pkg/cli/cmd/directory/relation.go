@@ -18,7 +18,7 @@ import (
 type GetRelationCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get relation request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a get relation request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
 }
 
@@ -81,7 +81,7 @@ func (cmd *GetRelationCmd) template() proto.Message {
 type SetRelationCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set relation request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a set relation request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
 }
 
@@ -148,7 +148,7 @@ func (cmd *SetRelationCmd) template() proto.Message {
 type DeleteRelationCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete relation request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a delete relation request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
 }
 
@@ -210,7 +210,7 @@ func (cmd *DeleteRelationCmd) template() proto.Message {
 type ListRelationsCmd struct {
 	Request  string `arg:"" type:"s" name:"request" optional:"" help:"file path to list relations request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a list relations request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
 }
 
