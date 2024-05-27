@@ -92,9 +92,12 @@ var (
 func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor, parent []string) error {
 	fields := md.Fields()
 
+	var path []string
+	copy(path, parent)
+
 	for i := 0; i < fields.Len(); i++ {
 		c := i
-		path := append(parent, fields.Get(i).TextName())
+		path = append(path, fields.Get(i).TextName())
 		fieldName := strings.Join(path, ".")
 		fd := fields.Get(i)
 
