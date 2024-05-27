@@ -1,9 +1,7 @@
 package directory
 
 import (
-	"bytes"
 	"io"
-	"os"
 
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
@@ -11,7 +9,7 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/aserto-dev/topaz/pkg/cli/editor"
+	"github.com/aserto-dev/topaz/pkg/cli/edit"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
@@ -30,10 +28,7 @@ type GetObjectCmd struct {
 }
 
 func (cmd *GetObjectCmd) BeforeReset(ctx *kong.Context) error {
-	n := ctx.Selected()
-	if n != nil {
-		fflag.UnHideFlags(ctx)
-	}
+	fflag.UnHideFlags(ctx)
 	return nil
 }
 
@@ -94,36 +89,19 @@ func (cmd *GetObjectCmd) print(w io.Writer) error {
 }
 
 func (cmd *GetObjectCmd) edit(tmpl proto.Message) (string, error) {
-	tmp, err := jsonx.MarshalOpts(true).Marshal(tmpl)
-	if err != nil {
-		return "", err
-	}
-
-	e := editor.NewDefaultEditor([]string{"TOPAZ_EDITOR"})
-	name := string(proto.MessageName(cmd.template()).Name())
-
-	buf, path, err := e.LaunchTempFile("topaz", name, bytes.NewReader(tmp))
-	if err != nil {
-		return "", err
-	}
-	defer func() { _ = os.Remove(path) }()
-
-	return string(buf), nil
+	return edit.Msg(tmpl)
 }
-
-// func (cmd *GetObjectCmd) prompt(c *cc.CommonCtx) (string, error) {
-// 	request, err := input.Prompt(cmd.template())
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	return request, nil
-// }
 
 type SetObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a set object request template on stdout"`
+	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
+}
+
+func (cmd *SetObjectCmd) BeforeReset(ctx *kong.Context) error {
+	fflag.UnHideFlags(ctx)
+	return nil
 }
 
 func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
@@ -134,6 +112,22 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
+	}
+
+	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
+		req, err := cmd.edit(cmd.template())
+		if err != nil {
+			return err
+		}
+		cmd.Request = req
+	}
+
+	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
+		p := prompter.New(cmd.template())
+		if err := p.Show(); err != nil {
+			return err
+		}
+		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
 	if cmd.Request == "" {
@@ -154,16 +148,14 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *SetObjectCmd) template() proto.Message {
-	properties := map[string]interface{}{}
-	props, _ := structpb.NewStruct(properties)
 	return &writer.SetObjectRequest{
 		Object: &common.Object{
 			Type:        "",
 			Id:          "",
 			DisplayName: "",
-			Properties:  props,
-			CreatedAt:   timestamppb.Now(),
-			UpdatedAt:   timestamppb.Now(),
+			Properties:  &structpb.Struct{Fields: map[string]*structpb.Value{}},
+			CreatedAt:   &timestamppb.Timestamp{},
+			UpdatedAt:   &timestamppb.Timestamp{},
 			Etag:        "",
 		},
 	}
@@ -173,10 +165,20 @@ func (cmd *SetObjectCmd) print(w io.Writer) error {
 	return jsonx.OutputJSONPB(w, cmd.template())
 }
 
+func (cmd *SetObjectCmd) edit(tmpl proto.Message) (string, error) {
+	return edit.Msg(tmpl)
+}
+
 type DeleteObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a delete object request template on stdout"`
+	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
+}
+
+func (cmd *DeleteObjectCmd) BeforeReset(ctx *kong.Context) error {
+	fflag.UnHideFlags(ctx)
+	return nil
 }
 
 func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
@@ -187,6 +189,22 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
+	}
+
+	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
+		req, err := cmd.edit(cmd.template())
+		if err != nil {
+			return err
+		}
+		cmd.Request = req
+	}
+
+	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
+		p := prompter.New(cmd.template())
+		if err := p.Show(); err != nil {
+			return err
+		}
+		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
 	if cmd.Request == "" {
@@ -219,10 +237,20 @@ func (cmd *DeleteObjectCmd) print(w io.Writer) error {
 	return jsonx.OutputJSONPB(w, cmd.template())
 }
 
+func (cmd *DeleteObjectCmd) edit(tmpl proto.Message) (string, error) {
+	return edit.Msg(tmpl)
+}
+
 type ListObjectsCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a list objects request template on stdout"`
+	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
+}
+
+func (cmd *ListObjectsCmd) BeforeReset(ctx *kong.Context) error {
+	fflag.UnHideFlags(ctx)
+	return nil
 }
 
 func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
@@ -233,6 +261,22 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
+	}
+
+	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
+		req, err := cmd.edit(cmd.template())
+		if err != nil {
+			return err
+		}
+		cmd.Request = req
+	}
+
+	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
+		p := prompter.New(cmd.template())
+		if err := p.Show(); err != nil {
+			return err
+		}
+		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
 	if cmd.Request == "" {
@@ -262,4 +306,8 @@ func (cmd *ListObjectsCmd) template() proto.Message {
 
 func (cmd *ListObjectsCmd) print(w io.Writer) error {
 	return jsonx.OutputJSONPB(w, cmd.template())
+}
+
+func (cmd *ListObjectsCmd) edit(tmpl proto.Message) (string, error) {
+	return edit.Msg(tmpl)
 }

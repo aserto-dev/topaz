@@ -125,24 +125,21 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 
 		case protoreflect.MessageKind:
 			if strings.HasSuffix(string(fd.FullName()), ".properties") {
-				v := msg.ProtoReflect().Get(fd)
-				f.form.AddInputField(fieldName, v.String(), 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "{}", 64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
 				continue
 			}
 
 			if strings.HasSuffix(string(fd.FullName()), ".created_at") {
-				v := msg.ProtoReflect().Get(fd)
-				f.form.AddInputField(fieldName, v.String(), 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "", 64, nil, func(s string) {
 					_ = f.setTimestamp(msg.ProtoReflect(), fields.Get(c), s)
 				})
 				continue
 			}
 
 			if strings.HasSuffix(string(fd.FullName()), ".updated_at") {
-				v := msg.ProtoReflect().Get(fd)
-				f.form.AddInputField(fieldName, v.String(), 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "", 64, nil, func(s string) {
 					_ = f.setTimestamp(msg.ProtoReflect(), fields.Get(c), s)
 				})
 				continue
