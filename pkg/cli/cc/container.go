@@ -14,12 +14,19 @@ import (
 )
 
 const (
-	DefaultValue             string = ""
-	defaultContainerRegistry string = "ghcr.io/aserto-dev"
-	defaultContainerImage    string = "topaz"
-	defaultContainerTag      string = "latest"
-	defaultContainerName     string = "topaz"
+	defaultContainerRegistry    string = "ghcr.io/aserto-dev"
+	defaultContainerImage       string = "topaz"
+	defaultContainerTagFallback string = "latest"
+	defaultContainerName        string = "topaz"
 )
+
+func defaultContainerTag() string {
+	v, err := semver.NewVersion(ver.GetInfo().Version)
+	if err == nil {
+		return v.String()
+	}
+	return defaultContainerTagFallback
+}
 
 // Container returns the fully qualified container name (registry/image:tag).
 func Container(registry, image, tag string) string {
@@ -58,7 +65,7 @@ func ContainerTag() string {
 
 	v, err := semver.NewVersion(ver.GetInfo().Version)
 	if err != nil {
-		return defaultContainerTag
+		return defaultContainerTag()
 	}
 	return v.String()
 }
