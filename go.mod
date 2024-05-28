@@ -20,6 +20,7 @@ require (
 	github.com/aserto-dev/aserto-grpc v0.2.3
 	github.com/aserto-dev/aserto-management v0.9.4
 	github.com/aserto-dev/azm v0.1.10
+	github.com/aserto-dev/azm v0.1.10
 	github.com/aserto-dev/certs v0.0.6
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.8
