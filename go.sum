@@ -423,8 +423,6 @@ github.com/aserto-dev/aserto-management v0.9.4 h1:GiBWkTwn2mgvbS3ftsmro2RS0oiORj
 github.com/aserto-dev/aserto-management v0.9.4/go.mod h1:gc2e123PnLdDrVv6H9r3sl8yU5qegAwR3aAwXcmaBJM=
 github.com/aserto-dev/azm v0.1.10 h1:5WflOnWKQgIlODeXvcZb5XD4eVUK+gIDN1j06b/M0do=
 github.com/aserto-dev/azm v0.1.10/go.mod h1:q9hcNvUbhvy3JvGYOwRq/UT8JKRFBV2aA/3UtcQunzg=
-github.com/aserto-dev/azm v0.1.10 h1:5WflOnWKQgIlODeXvcZb5XD4eVUK+gIDN1j06b/M0do=
-github.com/aserto-dev/azm v0.1.10/go.mod h1:q9hcNvUbhvy3JvGYOwRq/UT8JKRFBV2aA/3UtcQunzg=
 github.com/aserto-dev/certs v0.0.6 h1:V79JptXMvgePJ2rgktu8QdgbEQsIXxF1kXqQhPM76NI=
 github.com/aserto-dev/certs v0.0.6/go.mod h1:ppJ/GVSerB8EsikJeQP71LJBuHiUW2avS2f84oC/75c=
 github.com/aserto-dev/clui v0.8.3 h1:foEJuVpMFVP4La3SxUcinxRLOZx/TyS2BRuahbywYFg=
@@ -461,8 +459,8 @@ github.com/aserto-dev/runtime v0.64.0 h1:yKuSZSKG74XtuBs5GPQ/YppbiD1A8MhdTyNxFs1
 github.com/aserto-dev/runtime v0.64.0/go.mod h1:v1f1ZZagY2lciNQIbIgIboJCQNyv0tbXYeRxGsQTkwQ=
 github.com/aserto-dev/self-decision-logger v0.0.5 h1:SXEo984ZasskvrRZ4LrLwqDOvQMNHD3iM4vRMaJRRnQ=
 github.com/aserto-dev/self-decision-logger v0.0.5/go.mod h1:CJUe5pfaaHzemWr7LqMOA8b9fuf/n0V2ekKsH7X28R4=
-github.com/aserto-dev/service-host v0.0.11 h1:vJ74CVz3PLH87rmgoTAr7T6si31nuCdMGa12a5UslAs=
-github.com/aserto-dev/service-host v0.0.11/go.mod h1:NfLZZW2Y3+1Adgfaw/BAoW8ttPTvFuyapJAow9YdvHU=
+github.com/aserto-dev/service-host v0.0.12 h1:J4yxaO3KOJgNWcHpebUIuzXZ9HAoQfLpJXgP7VQj8GA=
+github.com/aserto-dev/service-host v0.0.12/go.mod h1:cTZWhaJXtmhhOSrjYrZCLvDzH+f33S1jz1EFOG6M1jM=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=

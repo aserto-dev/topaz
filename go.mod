@@ -20,7 +20,6 @@ require (
 	github.com/aserto-dev/aserto-grpc v0.2.3
 	github.com/aserto-dev/aserto-management v0.9.4
 	github.com/aserto-dev/azm v0.1.10
-	github.com/aserto-dev/azm v0.1.10
 	github.com/aserto-dev/certs v0.0.6
 	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.8
@@ -37,7 +36,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.31.2
 	github.com/aserto-dev/runtime v0.64.0
 	github.com/aserto-dev/self-decision-logger v0.0.5
-	github.com/aserto-dev/service-host v0.0.11
+	github.com/aserto-dev/service-host v0.0.12
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v26.1.3+incompatible
 	github.com/docker/go-connections v0.5.0
