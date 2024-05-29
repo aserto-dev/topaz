@@ -50,7 +50,7 @@ type Plugin struct {
 	topazConfig *topaz.Config
 	syncNow     chan api.SyncMode
 	firstRunSignal chan struct{}
-	once          sync.Once // sync.Once for ensuring a single execution
+	once          sync.Once
 }
 
 func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Config, manager *plugins.Manager) *Plugin {
@@ -65,7 +65,6 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 		logger.Error().Msg("no topaz directory config was provided")
 	}
 
-	//add channel for plugin indicating whether the sync is done or not
 	return &Plugin{
 		ctx:         syncContext,
 		cancel:      cancel,

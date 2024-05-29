@@ -77,7 +77,6 @@ func (e *Topaz) Start() error {
 		return errors.Wrap(err, "failed to start engine server")
 	}
 
-	//TODO: Reader service not serving when our first edge sync is not yet completed, if aserto edge plugin has been configured
 	// Add registered services to the health service
 
 	if e.Manager.HealthServer != nil {
