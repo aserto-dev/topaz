@@ -152,18 +152,28 @@ tree $HOME/.config/topaz
 tree ~/.local/share/topaz
 /Users/ogazitt/.local/share/topaz
 ├── certs
-│   ├── gateway-ca.crt
-│   ├── gateway.crt
-│   ├── gateway.key
-│   ├── grpc-ca.crt
-│   ├── grpc.crt
-│   └── grpc.key
-└── db
-    └── todo.db
+│   ├── gateway-ca.crt
+│   ├── gateway.crt
+│   ├── gateway.key
+│   ├── grpc-ca.crt
+│   ├── grpc.crt
+│   └── grpc.key
+├── db
+│   └── todo.db
+└── tmpl
+    └── todo
+        ├── data
+        │   ├── citadel_objects.json
+        │   ├── citadel_relations.json
+        │   ├── todo_objects.json
+        │   └── todo_relations.json
+        └── model
+            └── manifest.yaml
 ```
 
 * `certs/` contains a set of generated self-signed certificates for Topaz.
 * `db/todo.db` contains the embedded database which houses the model and data.
+* `tmpl/todo` contains the template artifacts.
 
 For a deeper overview of the `cfg/config.yaml` file, see [topaz configuration](https://github.com/aserto-dev/topaz/blob/main/docs/config.md).
 
