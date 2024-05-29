@@ -8,6 +8,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 
@@ -24,7 +25,7 @@ func main() {
 
 	cli := cmd.CLI{}
 
-	cliConfigFile := filepath.Join(cc.GetTopazDir(), cmd.CLIConfigurationFile)
+	cliConfigFile := filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
 
 	oldDBPath := filepath.Join(cc.GetTopazDir(), "db")
 	warn, err := checkDBFiles(oldDBPath)

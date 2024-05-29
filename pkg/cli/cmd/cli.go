@@ -13,10 +13,6 @@ import (
 
 type SaveContext bool
 
-const (
-	CLIConfigurationFile = "topaz.json"
-)
-
 var (
 	Save SaveContext
 )

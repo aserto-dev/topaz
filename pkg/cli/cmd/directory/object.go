@@ -21,7 +21,7 @@ import (
 type GetObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a get object request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
 }
 
@@ -85,7 +85,7 @@ func (cmd *GetObjectCmd) template() proto.Message {
 type SetObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a set object request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
 }
 
@@ -154,7 +154,7 @@ func (cmd *SetObjectCmd) template() proto.Message {
 type DeleteObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a delete object request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
 }
 
@@ -218,7 +218,7 @@ func (cmd *DeleteObjectCmd) template() proto.Message {
 type ListObjectsCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a list objects request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit config file" hidden:"" type:"fflag.Editor"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	clients.DirectoryConfig
 }
 
