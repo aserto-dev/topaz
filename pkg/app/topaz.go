@@ -99,7 +99,6 @@ func (e *Topaz) Start() error {
 		}
 		plugin := rntime.GetPluginsManager().Plugin(edge.PluginName)
 		if plugin == nil {
-			fmt.Println("\n\n\nHERE\n\n\n")
 			e.Manager.HealthServer.SetServiceStatus("reader", grpc_health_v1.HealthCheckResponse_SERVING)
 			return nil
 		}

@@ -2,7 +2,6 @@ package edge
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -195,7 +194,6 @@ func (p *Plugin) scheduler() {
 }
 
 func (p *Plugin) task(mode api.SyncMode) {
-	fmt.Println("\n\n\nsyncing...\n\n\n")
 	p.logger.Info().Str(status, started).Msg(syncTask)
 
 	defer func() {
@@ -248,7 +246,6 @@ func (p *Plugin) task(mode api.SyncMode) {
 	p.once.Do(func() {
 		p.firstRunSignal <- struct{}{}
 })
-	fmt.Println("\n\n\ndone\n\n\n")
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
 
