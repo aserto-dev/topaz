@@ -2,7 +2,9 @@ package edge
 
 import (
 	"context"
+	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/aserto-dev/go-aserto/client"
@@ -48,6 +50,8 @@ type Plugin struct {
 	config      *Config
 	topazConfig *topaz.Config
 	syncNow     chan api.SyncMode
+	firstRunSignal chan struct{}
+	once          sync.Once // sync.Once for ensuring a single execution
 }
 
 func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Config, manager *plugins.Manager) *Plugin {
@@ -62,6 +66,7 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 		logger.Error().Msg("no topaz directory config was provided")
 	}
 
+	//add channel for plugin indicating whether the sync is done or not
 	return &Plugin{
 		ctx:         syncContext,
 		cancel:      cancel,
@@ -70,6 +75,8 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 		config:      cfg,
 		topazConfig: topazConfig,
 		syncNow:     make(chan api.SyncMode),
+		firstRunSignal: make(chan struct{}),
+		once: sync.Once{},
 	}
 }
 
@@ -188,6 +195,7 @@ func (p *Plugin) scheduler() {
 }
 
 func (p *Plugin) task(mode api.SyncMode) {
+	fmt.Println("\n\n\nsyncing...\n\n\n")
 	p.logger.Info().Str(status, started).Msg(syncTask)
 
 	defer func() {
@@ -237,7 +245,10 @@ func (p *Plugin) task(mode api.SyncMode) {
 	if err := ds.DataSyncClient().Sync(ctx, conn, opts...); err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
 	}
-
+	p.once.Do(func() {
+		p.firstRunSignal <- struct{}{}
+})
+	fmt.Println("\n\n\ndone\n\n\n")
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
 
@@ -262,4 +273,8 @@ func (p *Plugin) remoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, e
 	}
 
 	return conn, nil
+}
+
+func (p *Plugin) GetFirstRunChan() chan struct{}{
+	return p.firstRunSignal
 }
