@@ -22,7 +22,7 @@ func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	color.Green(">>> installing %s (%s)...",
-		c.Container(
+		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name
 			cmd.ContainerTag,      // tag
@@ -36,7 +36,7 @@ func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	return dc.PullImage(
-		c.Container(
+		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name
 			cmd.ContainerTag,      // tag

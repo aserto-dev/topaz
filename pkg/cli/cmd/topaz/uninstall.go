@@ -25,7 +25,7 @@ func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	color.Green(">>> uninstalling %s...",
-		c.Container(
+		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name
 			cmd.ContainerTag,      // tag
@@ -38,7 +38,7 @@ func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	// remove container image when exists.
-	if err := dc.RemoveImage(c.Container(
+	if err := dc.RemoveImage(cc.Container(
 		cmd.ContainerRegistry,
 		cmd.ContainerImage,
 		cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag),

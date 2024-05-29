@@ -119,11 +119,11 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 	info.Runtime.RunningContainerName = c.Config.Running.ContainerName
 	info.Runtime.TopazConfigFile = filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
 
-	info.Default.ContainerRegistry = c.ContainerRegistry()
-	info.Default.ContainerImage = c.ContainerImage()
-	info.Default.ContainerTag = c.ContainerTag()
-	info.Default.ContainerPlatform = c.ContainerPlatform()
-	info.Default.NoCheck = c.NoCheck()
+	info.Default.ContainerRegistry = cc.ContainerRegistry()
+	info.Default.ContainerImage = cc.ContainerImage()
+	info.Default.ContainerTag = cc.ContainerTag()
+	info.Default.ContainerPlatform = cc.ContainerPlatform()
+	info.Default.NoCheck = cc.NoCheck()
 
 	info.Directory.DirectorySvc = cc.DirectorySvc()
 	info.Directory.DirectoryKey = cc.DirectoryKey()

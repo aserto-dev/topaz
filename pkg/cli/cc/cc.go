@@ -7,14 +7,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
+	"sync"
 	"time"
 
-	"github.com/Masterminds/semver"
 	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/docker/docker/api/types"
 	"github.com/fullstorydev/grpcurl"
 	"github.com/samber/lo"
@@ -66,6 +64,11 @@ const (
 	StatusRunning
 )
 
+var (
+	defaults DefaultsConfig
+	once     sync.Once
+)
+
 func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 	ctx := &CommonCtx{
 		Context: context.Background(),
@@ -77,18 +80,10 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 				Config:     "config.yaml",
 			},
 			Defaults: DefaultsConfig{
-				NoCheck:           noCheck,
-				ContainerRegistry: defaultContainerRegistry,
-				ContainerImage:    defaultContainerImage,
-				ContainerTag:      defaultContainerTag,
-				ContainerPlatform: "linux/" + runtime.GOARCH,
+				NoCheck: noCheck,
 			},
 			Running: RunningConfig{},
 		},
-	}
-	v, err := semver.NewVersion(version.GetInfo().Version)
-	if err == nil {
-		ctx.Config.Defaults.ContainerTag = v.String()
 	}
 
 	if _, err := os.Stat(configFilePath); err == nil {
@@ -101,6 +96,8 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 			return nil, err
 		}
 	}
+
+	setDefaults(ctx)
 
 	return ctx, nil
 }
@@ -179,4 +176,10 @@ func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 		return err
 	}
 	return nil
+}
+
+func setDefaults(ctx *CommonCtx) {
+	once.Do(func() {
+		defaults = ctx.Config.Defaults
+	})
 }

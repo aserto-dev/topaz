@@ -82,7 +82,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return err
 	}
 
-	image := c.Container(
+	image := cc.Container(
 		cmd.ContainerRegistry, // registry
 		cmd.ContainerImage,    // image
 		cmd.ContainerTag,      // tag

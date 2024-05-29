@@ -12,6 +12,8 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 
+	ver "github.com/aserto-dev/topaz/pkg/version"
+
 	"github.com/alecthomas/kong"
 	"github.com/rs/zerolog"
 )
@@ -35,6 +37,11 @@ func main() {
 	}
 
 	ctx, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+	err = checkVersion(ctx)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
@@ -65,10 +72,10 @@ func main() {
 			"topaz_cfg_dir":      cc.GetTopazCfgDir(),
 			"topaz_db_dir":       cc.GetTopazDataDir(),
 			"topaz_tmpl_dir":     cc.GetTopazTemplateDir(),
-			"container_registry": ctx.ContainerRegistry(),
-			"container_image":    ctx.ContainerImage(),
-			"container_tag":      ctx.ContainerTag(),
-			"container_platform": ctx.ContainerPlatform(),
+			"container_registry": cc.ContainerRegistry(),
+			"container_image":    cc.ContainerImage(),
+			"container_tag":      cc.ContainerTag(),
+			"container_platform": cc.ContainerPlatform(),
 			"container_name":     cc.ContainerName(ctx.Config.Active.ConfigFile),
 			"directory_svc":      cc.DirectorySvc(),
 			"directory_key":      cc.DirectoryKey(),
@@ -78,7 +85,7 @@ func main() {
 			"authorizer_token":   cc.AuthorizerToken(),
 			"tenant_id":          cc.TenantID(),
 			"insecure":           strconv.FormatBool(cc.Insecure()),
-			"no_check":           strconv.FormatBool(ctx.NoCheck()),
+			"no_check":           strconv.FormatBool(cc.NoCheck()),
 			"active_config":      ctx.Config.Active.Config,
 		},
 	)
@@ -134,4 +141,20 @@ func exit(rc int) {
 		os.Exit(0)
 	}
 	os.Exit(rc)
+}
+
+// check set version in defaults and suggest update if needed.
+func checkVersion(ctx *cc.CommonCtx) error {
+	if cc.ContainerTag() == "latest" {
+		return nil
+	}
+	if cc.ContainerTag() != ver.GetInfo().Version {
+		ctx.UI.Exclamation().Msgf("Your default container tag is set to %s, however you are using version %v", ctx.Config.Defaults.ContainerTag, ver.GetInfo().Version)
+		if !common.PromptYesNo("Do you want to update?", false) {
+			return nil
+		}
+		ctx.Config.Defaults.ContainerTag = ver.GetInfo().Version
+		return ctx.SaveContextConfig(common.CLIConfigurationFile)
+	}
+	return nil
 }

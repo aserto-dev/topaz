@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
+	"github.com/Masterminds/semver"
+	ver "github.com/aserto-dev/topaz/pkg/version"
 	"github.com/samber/lo"
 )
 
@@ -25,40 +28,48 @@ func defaultContainerTag() string {
 }
 
 // Container returns the fully qualified container name (registry/image:tag).
-func (c *CommonCtx) Container(registry, image, tag string) string {
+func Container(registry, image, tag string) string {
 	if container := os.Getenv("CONTAINER"); container != "" {
 		return container
 	}
 
 	return fmt.Sprintf("%s/%s:%s",
-		lo.Ternary(registry != "", registry, c.ContainerRegistry()),
-		lo.Ternary(image != "", image, c.ContainerImage()),
-		lo.Ternary(tag != "", tag, c.ContainerTag()),
+		lo.Ternary(registry != "", registry, ContainerRegistry()),
+		lo.Ternary(image != "", image, ContainerImage()),
+		lo.Ternary(tag != "", tag, ContainerTag()),
 	)
 }
 
 // ContainerRegistry returns the container registry (host[:port]/repo).
-func (c *CommonCtx) ContainerRegistry() string {
+func ContainerRegistry() string {
 	if containerRegistry := os.Getenv("CONTAINER_REGISTRY"); containerRegistry != "" {
 		return containerRegistry
 	}
-	return c.Config.Defaults.ContainerRegistry
+	if defaults.ContainerRegistry != "" {
+		return defaults.ContainerRegistry
+	}
+	return defaultContainerRegistry
 }
 
 // ContainerImage returns the container image name.
-func (c *CommonCtx) ContainerImage() string {
+func ContainerImage() string {
 	if containerImage := os.Getenv("CONTAINER_IMAGE"); containerImage != "" {
 		return containerImage
 	}
-	return c.Config.Defaults.ContainerImage
+	if defaults.ContainerImage != "" {
+		return defaults.ContainerImage
+	}
+	return defaultContainerImage
 }
 
 // ContainerTag returns the container tag (label or semantic version).
-func (c *CommonCtx) ContainerTag() string {
+func ContainerTag() string {
 	if containerTag := os.Getenv("CONTAINER_TAG"); containerTag != "" {
 		return containerTag
 	}
-
+	if defaults.ContainerTag != "" {
+		return defaults.ContainerTag
+	}
 	v, err := semver.NewVersion(ver.GetInfo().Version)
 	if err != nil {
 		return defaultContainerTag()
@@ -67,11 +78,14 @@ func (c *CommonCtx) ContainerTag() string {
 }
 
 // ContainerPlatform, returns the container platform for multi-platform capable servers.
-func (c *CommonCtx) ContainerPlatform() string {
+func ContainerPlatform() string {
 	if containerPlatform := os.Getenv("CONTAINER_PLATFORM"); containerPlatform != "" {
 		return containerPlatform
 	}
-	return c.Config.Defaults.ContainerPlatform
+	if defaults.ContainerPlatform != "" {
+		return defaults.ContainerPlatform
+	}
+	return "linux/" + runtime.GOARCH
 }
 
 // ContainerName returns the container instance name (docker run --name CONTAINER_NAME).

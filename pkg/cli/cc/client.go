@@ -75,11 +75,11 @@ func Insecure() bool {
 	return defaultInsecure
 }
 
-func (c *CommonCtx) NoCheck() bool {
+func NoCheck() bool {
 	if noCheck := os.Getenv("TOPAZ_NO_CHECK"); noCheck != "" {
 		if b, err := strconv.ParseBool(noCheck); err == nil {
 			return b
 		}
 	}
-	return c.Config.Defaults.NoCheck
+	return defaults.NoCheck
 }
