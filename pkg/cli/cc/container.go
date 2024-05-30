@@ -22,6 +22,9 @@ const (
 func defaultContainerTag() string {
 	v, err := semver.NewVersion(ver.GetInfo().Version)
 	if err == nil {
+		if v.String() == "0.0.0" || strings.Contains(v.String(), "dirty") {
+			return defaultContainerTagFallback
+		}
 		return v.String()
 	}
 	return defaultContainerTagFallback
@@ -70,11 +73,8 @@ func ContainerTag() string {
 	if defaults.ContainerTag != "" {
 		return defaults.ContainerTag
 	}
-	v, err := semver.NewVersion(ver.GetInfo().Version)
-	if err != nil {
-		return defaultContainerTag()
-	}
-	return v.String()
+
+	return defaultContainerTag()
 }
 
 // ContainerPlatform, returns the container platform for multi-platform capable servers.
