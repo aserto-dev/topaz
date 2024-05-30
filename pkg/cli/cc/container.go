@@ -22,7 +22,7 @@ const (
 func defaultContainerTag() string {
 	v, err := semver.NewVersion(ver.GetInfo().Version)
 	if err == nil {
-		if v.String() == "0.0.0" || strings.Contains(v.String(), "dirty") {
+		if v.String() == "0.0.0" || v.Prerelease() != "" {
 			return defaultContainerTagFallback
 		}
 		return v.String()
