@@ -81,5 +81,5 @@ func NoCheck() bool {
 			return b
 		}
 	}
-	return defaultNoCheck
+	return defaults.NoCheck
 }

@@ -12,6 +12,8 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 
+	ver "github.com/aserto-dev/topaz/pkg/version"
+
 	"github.com/alecthomas/kong"
 	"github.com/rs/zerolog"
 )
@@ -35,6 +37,11 @@ func main() {
 	}
 
 	ctx, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+	err = checkVersion(ctx)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
@@ -134,4 +141,20 @@ func exit(rc int) {
 		os.Exit(0)
 	}
 	os.Exit(rc)
+}
+
+// check set version in defaults and suggest update if needed.
+func checkVersion(ctx *cc.CommonCtx) error {
+	if cc.ContainerTag() == "latest" {
+		return nil
+	}
+	if cc.ContainerTag() != ver.GetInfo().Version {
+		ctx.UI.Exclamation().Msgf("Your default container tag is set to %s, however you are using version %v", ctx.Config.Defaults.ContainerTag, ver.GetInfo().Version)
+		if !common.PromptYesNo("Do you want to update?", false) {
+			return nil
+		}
+		ctx.Config.Defaults.ContainerTag = ver.GetInfo().Version
+		return ctx.SaveContextConfig(common.CLIConfigurationFile)
+	}
+	return nil
 }

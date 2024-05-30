@@ -7,9 +7,8 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/Masterminds/semver"
 	ver "github.com/aserto-dev/topaz/pkg/version"
-
-	"github.com/Masterminds/semver/v3"
 	"github.com/samber/lo"
 )
 
@@ -46,6 +45,9 @@ func ContainerRegistry() string {
 	if containerRegistry := os.Getenv("CONTAINER_REGISTRY"); containerRegistry != "" {
 		return containerRegistry
 	}
+	if defaults.ContainerRegistry != "" {
+		return defaults.ContainerRegistry
+	}
 	return defaultContainerRegistry
 }
 
@@ -53,6 +55,9 @@ func ContainerRegistry() string {
 func ContainerImage() string {
 	if containerImage := os.Getenv("CONTAINER_IMAGE"); containerImage != "" {
 		return containerImage
+	}
+	if defaults.ContainerImage != "" {
+		return defaults.ContainerImage
 	}
 	return defaultContainerImage
 }
@@ -62,7 +67,9 @@ func ContainerTag() string {
 	if containerTag := os.Getenv("CONTAINER_TAG"); containerTag != "" {
 		return containerTag
 	}
-
+	if defaults.ContainerTag != "" {
+		return defaults.ContainerTag
+	}
 	v, err := semver.NewVersion(ver.GetInfo().Version)
 	if err != nil {
 		return defaultContainerTag()
@@ -74,6 +81,9 @@ func ContainerTag() string {
 func ContainerPlatform() string {
 	if containerPlatform := os.Getenv("CONTAINER_PLATFORM"); containerPlatform != "" {
 		return containerPlatform
+	}
+	if defaults.ContainerPlatform != "" {
+		return defaults.ContainerPlatform
 	}
 	return "linux/" + runtime.GOARCH
 }

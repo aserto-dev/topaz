@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/aserto-dev/clui"
@@ -63,6 +64,11 @@ const (
 	StatusRunning
 )
 
+var (
+	defaults DefaultsConfig
+	once     sync.Once
+)
+
 func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 	ctx := &CommonCtx{
 		Context: context.Background(),
@@ -74,11 +80,7 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 				Config:     "config.yaml",
 			},
 			Defaults: DefaultsConfig{
-				NoCheck:           noCheck,
-				ContainerRegistry: ContainerRegistry(),
-				ContainerImage:    ContainerImage(),
-				ContainerTag:      ContainerTag(),
-				ContainerPlatform: ContainerPlatform(),
+				NoCheck: noCheck,
 			},
 			Running: RunningConfig{},
 		},
@@ -94,6 +96,8 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 			return nil, err
 		}
 	}
+
+	setDefaults(ctx)
 
 	return ctx, nil
 }
@@ -172,4 +176,10 @@ func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 		return err
 	}
 	return nil
+}
+
+func setDefaults(ctx *CommonCtx) {
+	once.Do(func() {
+		defaults = ctx.Config.Defaults
+	})
 }
