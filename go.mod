@@ -14,7 +14,7 @@ toolchain go1.22.2
 replace github.com/adrg/xdg => ./pkg/cli/xdg
 
 require (
-	github.com/Masterminds/semver/v3 v3.2.1
+	github.com/Masterminds/semver v1.5.0
 	github.com/adrg/xdg v0.4.0
 	github.com/alecthomas/kong v0.9.0
 	github.com/aserto-dev/aserto-grpc v0.2.3
@@ -36,7 +36,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.31.2
 	github.com/aserto-dev/runtime v0.64.0
 	github.com/aserto-dev/self-decision-logger v0.0.5
-	github.com/aserto-dev/service-host v0.0.12
+	github.com/aserto-dev/service-host v0.0.13
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v26.1.3+incompatible
 	github.com/docker/go-connections v0.5.0
@@ -76,14 +76,12 @@ require (
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
-	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/Microsoft/hcsshim v0.12.3 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
-	github.com/aserto-dev/go-http-metrics v0.10.1-20221024-1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.13.0 // indirect
 	github.com/bufbuild/protovalidate-go v0.6.2 // indirect
@@ -122,6 +120,7 @@ require (
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.0.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 // indirect
+	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -171,6 +170,7 @@ require (
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
+	github.com/slok/go-http-metrics v0.12.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
