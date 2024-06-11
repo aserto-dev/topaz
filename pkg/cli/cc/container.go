@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/Masterminds/semver"
+	"github.com/Masterminds/semver/v3"
 	ver "github.com/aserto-dev/topaz/pkg/version"
 	"github.com/samber/lo"
 )
