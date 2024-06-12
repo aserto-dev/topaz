@@ -102,7 +102,9 @@ func (e *Topaz) ConfigServices() error {
 		return err
 	}
 	healthCheck = e.Manager.HealthServer.Server
-	e.Manager.HealthServer.Server.SetServingStatus("sync", grpc_health_v1.HealthCheckResponse_SERVICE_UNKNOWN)
+	if e.Manager.HealthServer != nil {
+		e.Manager.HealthServer.Server.SetServingStatus("sync", grpc_health_v1.HealthCheckResponse_SERVICE_UNKNOWN)
+	}
 	if err := e.prepareServices(); err != nil {
 		return err
 	}
