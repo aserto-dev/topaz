@@ -25,9 +25,9 @@ require (
 	github.com/aserto-dev/errors v0.0.8
 	github.com/aserto-dev/go-aserto v0.31.4
 	github.com/aserto-dev/go-authorizer v0.20.6
-	github.com/aserto-dev/go-directory v0.31.4
+	github.com/aserto-dev/go-directory v0.31.5
 	github.com/aserto-dev/go-directory-cli v0.31.2
-	github.com/aserto-dev/go-edge-ds v0.31.8
+	github.com/aserto-dev/go-edge-ds v0.32.0
 	github.com/aserto-dev/go-grpc v0.8.65
 	github.com/aserto-dev/go-topaz-ui v0.1.7
 	github.com/aserto-dev/header v0.0.7
@@ -76,7 +76,6 @@ require (
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
-	github.com/Masterminds/semver/v3 v3.2.1 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/Microsoft/hcsshim v0.12.3 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
