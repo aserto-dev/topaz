@@ -14,21 +14,20 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
+	"google.golang.org/grpc/health/grpc_health_v1"
 )
 
 type PluginFactory struct {
 	ctx    context.Context
 	cfg    *topaz.Config
 	logger *zerolog.Logger
-	app *app.Topaz
 }
 
-func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Logger, topazApp *app.Topaz) PluginFactory {
+func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Logger) PluginFactory {
 	return PluginFactory{
 		ctx:    ctx,
 		cfg:    cfg,
 		logger: logger,
-		app: topazApp,
 	}
 }
 
@@ -43,8 +42,9 @@ func (f PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugi
 			Name:    PluginName,
 		}
 	}
+	app.SetServiceStatus("sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
 
-	return newEdgePlugin(f.logger, cfg, f.cfg, m,f.app)
+	return newEdgePlugin(f.logger, cfg, f.cfg, m)
 }
 
 func (PluginFactory) Validate(m *plugins.Manager, config []byte) (interface{}, error) {

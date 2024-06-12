@@ -8,10 +8,8 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/debug"
-	"github.com/aserto-dev/topaz/plugins/edge"
 	"github.com/spf13/cobra"
 	"golang.org/x/sync/errgroup"
-	"google.golang.org/grpc/health/grpc_health_v1"
 )
 
 var (
@@ -91,7 +89,6 @@ var cmdRun = &cobra.Command{
 				controllerFactory,
 				decisionlog,
 				directory,
-				topazApp,
 			)
 			if err != nil {
 				return err
@@ -105,9 +102,6 @@ var cmdRun = &cobra.Command{
 		err = topazApp.Start()
 		if err != nil {
 			return err
-		}
-		if _, edgePluginUsed := topazApp.Configuration.OPA.Config.Plugins[edge.PluginName]; edgePluginUsed{
-			topazApp.SetServiceStatus("sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
 		}
 
 		<-topazApp.Context.Done()
