@@ -44,16 +44,16 @@ type Config struct {
 }
 
 type Plugin struct {
-	ctx         context.Context
-	cancel      context.CancelFunc
-	manager     *plugins.Manager
-	logger      *zerolog.Logger
-	config      *Config
-	topazConfig *topaz.Config
-	syncNow     chan api.SyncMode
+	ctx            context.Context
+	cancel         context.CancelFunc
+	manager        *plugins.Manager
+	logger         *zerolog.Logger
+	config         *Config
+	topazConfig    *topaz.Config
+	syncNow        chan api.SyncMode
 	firstRunSignal chan struct{}
-	once          sync.Once
-	app *app.Topaz
+	once           sync.Once
+	app            *app.Topaz
 }
 
 func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Config, manager *plugins.Manager, app *app.Topaz) *Plugin {
@@ -75,8 +75,8 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 		manager:     manager,
 		config:      cfg,
 		topazConfig: topazConfig,
-		once: sync.Once{},
-		app: app,
+		once:        sync.Once{},
+		app:         app,
 	}
 }
 
@@ -242,10 +242,10 @@ func (p *Plugin) task(mode api.SyncMode) {
 	if err := ds.DataSyncClient().Sync(ctx, conn, opts...); err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
 	}
-	if(p.config.Enabled){
-	p.once.Do(func() {
-		p.app.SetServiceStatus("sync",grpc_health_v1.HealthCheckResponse_SERVING)
-})
+	if p.config.Enabled {
+		p.once.Do(func() {
+			p.app.SetServiceStatus("sync", grpc_health_v1.HealthCheckResponse_SERVING)
+		})
 	}
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
@@ -273,6 +273,6 @@ func (p *Plugin) remoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, e
 	return conn, nil
 }
 
-func (p *Plugin) GetFirstRunChan() chan struct{}{
+func (p *Plugin) GetFirstRunChan() chan struct{} {
 	return p.firstRunSignal
 }
