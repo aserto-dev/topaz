@@ -28,7 +28,6 @@ type RuntimeResolver struct {
 	runtime *runtime.Runtime
 }
 
-//This is where plugins are created
 func NewRuntimeResolver(
 	ctx context.Context,
 	logger *zerolog.Logger,
@@ -54,7 +53,7 @@ func NewRuntimeResolver(
 
 		// plugins
 		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),
-		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger,topazApp)),
+		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger, topazApp)),
 	)
 	if err != nil {
 		return nil, cleanupRuntime, err
