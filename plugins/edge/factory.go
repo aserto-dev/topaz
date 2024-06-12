@@ -5,6 +5,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/aserto-dev/topaz/pkg/app"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/plugins/noop"
 	"github.com/mitchellh/mapstructure"
@@ -19,13 +20,15 @@ type PluginFactory struct {
 	ctx    context.Context
 	cfg    *topaz.Config
 	logger *zerolog.Logger
+	app *app.Topaz
 }
 
-func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Logger) PluginFactory {
+func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Logger, topazApp *app.Topaz) PluginFactory {
 	return PluginFactory{
 		ctx:    ctx,
 		cfg:    cfg,
 		logger: logger,
+		app: topazApp,
 	}
 }
 
@@ -41,7 +44,7 @@ func (f PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugi
 		}
 	}
 
-	return newEdgePlugin(f.logger, cfg, f.cfg, m)
+	return newEdgePlugin(f.logger, cfg, f.cfg, m,f.app)
 }
 
 func (PluginFactory) Validate(m *plugins.Manager, config []byte) (interface{}, error) {

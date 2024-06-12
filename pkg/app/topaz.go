@@ -16,7 +16,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
-	"github.com/aserto-dev/topaz/plugins/edge"
 	"github.com/samber/lo"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -26,6 +25,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/keepalive"
 
@@ -43,6 +43,16 @@ type Topaz struct {
 	ServiceBuilder *builder.ServiceFactory
 	Manager        *builder.ServiceManager
 	Services       map[string]ServiceTypes
+}
+
+var (
+	healthCheck *health.Server
+)
+
+func (e *Topaz) SetServiceStatus(service string, servingStatus grpc_health_v1.HealthCheckResponse_ServingStatus) {
+	if healthCheck != nil {
+		healthCheck.SetServingStatus(service, servingStatus)
+	}
 }
 
 type ServiceTypes interface {
@@ -79,39 +89,18 @@ func (e *Topaz) Start() error {
 
 	// Add registered services to the health service
 
-	if e.Manager.HealthServer != nil {
-		for serviceName := range e.Configuration.APIConfig.Services {
-			if(serviceName != "reader"){
+		// Add registered services to the health service
+		if e.Manager.HealthServer != nil {
+			healthCheck = e.Manager.HealthServer.Server
+			for serviceName := range e.Configuration.APIConfig.Services {
 				e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_SERVING)
 			}
-			if(serviceName == "reader"){
-				e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_NOT_SERVING)
-			}
 		}
-		r, err := e.Services["authorizer"].(*Authorizer).Resolver.GetRuntimeResolver().ListRuntimes(e.Context)
-		if err != nil{
-			return errors.Errorf("failed to get runtime for authorizer")
-		}
-		rntime,ok := r[e.Configuration.OPA.InstanceID]
-		if(!ok){
-			return errors.Errorf("could not get runtime")
-		}
-		plugin := rntime.GetPluginsManager().Plugin(edge.PluginName)
-		if plugin == nil {
-			e.Manager.HealthServer.SetServiceStatus("reader", grpc_health_v1.HealthCheckResponse_SERVING)
-			return nil
-		}
-		edgePlugin, ok := plugin.(*edge.Plugin)
-		if !ok {
-			return errors.Errorf("failed to cast discovery plugin")
-		}
-		<-edgePlugin.GetFirstRunChan()
-		e.Manager.HealthServer.SetServiceStatus("reader", grpc_health_v1.HealthCheckResponse_SERVING)
+
+		e.Manager.HealthServer.SetServiceStatus("sync", grpc_health_v1.HealthCheckResponse_UNKNOWN)
+	
+		return nil
 	}
-
-	return nil
-}
-
 func (e *Topaz) ConfigServices() error {
 	metricsMiddleware, err := e.setupHealthAndMetrics()
 	if err != nil {

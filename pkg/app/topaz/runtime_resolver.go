@@ -13,6 +13,7 @@ import (
 	runtime "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
+	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/management"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decision_log"
@@ -27,13 +28,15 @@ type RuntimeResolver struct {
 	runtime *runtime.Runtime
 }
 
+//This is where plugins are created
 func NewRuntimeResolver(
 	ctx context.Context,
 	logger *zerolog.Logger,
 	cfg *config.Config,
 	ctrlf *controller.Factory,
 	decisionLogger decisionlog.DecisionLogger,
-	directoryResolver resolvers.DirectoryResolver) (resolvers.RuntimeResolver, func(), error) {
+	directoryResolver resolvers.DirectoryResolver,
+	topazApp *app.Topaz) (resolvers.RuntimeResolver, func(), error) {
 
 	sidecarRuntime, cleanupRuntime, err := runtime.NewRuntime(ctx, logger, &cfg.OPA,
 		// directory get functions
@@ -51,7 +54,7 @@ func NewRuntimeResolver(
 
 		// plugins
 		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),
-		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
+		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger,topazApp)),
 	)
 	if err != nil {
 		return nil, cleanupRuntime, err
