@@ -25,9 +25,9 @@ require (
 	github.com/aserto-dev/errors v0.0.8
 	github.com/aserto-dev/go-aserto v0.31.4
 	github.com/aserto-dev/go-authorizer v0.20.6
-	github.com/aserto-dev/go-directory v0.31.4
+	github.com/aserto-dev/go-directory v0.31.5
 	github.com/aserto-dev/go-directory-cli v0.31.2
-	github.com/aserto-dev/go-edge-ds v0.31.7
+	github.com/aserto-dev/go-edge-ds v0.32.0
 	github.com/aserto-dev/go-grpc v0.8.65
 	github.com/aserto-dev/go-topaz-ui v0.1.7
 	github.com/aserto-dev/header v0.0.7
@@ -38,7 +38,7 @@ require (
 	github.com/aserto-dev/self-decision-logger v0.0.5
 	github.com/aserto-dev/service-host v0.0.13
 	github.com/cli/browser v1.3.0
-	github.com/docker/docker v26.1.3+incompatible
+	github.com/docker/docker v26.1.4+incompatible
 	github.com/docker/go-connections v0.5.0
 	github.com/fatih/color v1.17.0
 	github.com/fullstorydev/grpcurl v1.9.1
@@ -46,7 +46,7 @@ require (
 	github.com/google/wire v0.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0
-	github.com/itchyny/gojq v0.12.15
+	github.com/itchyny/gojq v0.12.16
 	github.com/lestrrat-go/jwx/v2 v2.0.21
 	github.com/magefile/mage v1.15.0
 	github.com/mennanov/fmutils v0.3.0
@@ -60,15 +60,15 @@ require (
 	github.com/rs/zerolog v1.33.0
 	github.com/samber/lo v1.39.0
 	github.com/spf13/cobra v1.8.0
-	github.com/spf13/viper v1.18.2
+	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.7.0
-	golang.org/x/sys v0.20.0
+	golang.org/x/sys v0.21.0
 	google.golang.org/grpc v1.64.0
-	google.golang.org/protobuf v1.34.1
+	google.golang.org/protobuf v1.34.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
-	sigs.k8s.io/controller-runtime v0.18.3
+	sigs.k8s.io/controller-runtime v0.18.4
 )
 
 require (
@@ -76,7 +76,6 @@ require (
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
-	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/Microsoft/hcsshim v0.12.3 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
@@ -126,7 +125,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/itchyny/timefmt-go v0.1.5 // indirect
+	github.com/itchyny/timefmt-go v0.1.6 // indirect
 	github.com/jhump/protoreflect v1.16.0 // indirect
 	github.com/klauspost/compress v1.17.8 // indirect
 	github.com/kyokomi/emoji v2.2.4+incompatible // indirect
