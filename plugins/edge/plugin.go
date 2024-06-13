@@ -3,7 +3,6 @@ package edge
 import (
 	"context"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/aserto-dev/go-aserto/client"
@@ -44,15 +43,13 @@ type Config struct {
 }
 
 type Plugin struct {
-	ctx            context.Context
-	cancel         context.CancelFunc
-	manager        *plugins.Manager
-	logger         *zerolog.Logger
-	config         *Config
-	topazConfig    *topaz.Config
-	syncNow        chan api.SyncMode
-	firstRunSignal chan struct{}
-	once           sync.Once
+	ctx         context.Context
+	cancel      context.CancelFunc
+	manager     *plugins.Manager
+	logger      *zerolog.Logger
+	config      *Config
+	topazConfig *topaz.Config
+	syncNow     chan api.SyncMode
 }
 
 func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Config, manager *plugins.Manager) *Plugin {
@@ -74,7 +71,6 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 		manager:     manager,
 		config:      cfg,
 		topazConfig: topazConfig,
-		once:        sync.Once{},
 	}
 }
 
@@ -240,9 +236,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 		p.logger.Error().Err(err).Msg(syncTask)
 	}
 	if p.config.Enabled {
-		p.once.Do(func() {
-			app.SetServiceStatus("sync", grpc_health_v1.HealthCheckResponse_SERVING)
-		})
+		app.SetServiceStatus("sync", grpc_health_v1.HealthCheckResponse_SERVING)
 	}
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
@@ -268,8 +262,4 @@ func (p *Plugin) remoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, e
 	}
 
 	return conn, nil
-}
-
-func (p *Plugin) GetFirstRunChan() chan struct{} {
-	return p.firstRunSignal
 }
