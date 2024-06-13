@@ -82,6 +82,7 @@ var cmdRun = &cobra.Command{
 				topazApp.Configuration.ControllerConfig,
 				app.KeepAliveDialOptionsProvider(),
 			)
+
 			runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(
 				topazApp.Context,
 				topazApp.Logger,
@@ -93,10 +94,11 @@ var cmdRun = &cobra.Command{
 			if err != nil {
 				return err
 			}
+
 			defer runtimeCleanup()
+
 			topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(runtime)
 			topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
-
 		}
 
 		err = topazApp.Start()
