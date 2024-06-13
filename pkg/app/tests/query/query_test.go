@@ -88,32 +88,6 @@ var queryTests = []struct {
 		},
 	},
 	{
-		name: "ds.userV2",
-		query: &authz2.QueryRequest{
-			Query: `x = ds.user({"key": "CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs"})`,
-		},
-		validate: func(t *testing.T, resp *authz2.QueryResponse, err error) {
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
-
-			var result runtime.Result
-			buf, err := resp.Response.MarshalJSON()
-			require.NoError(t, err)
-
-			if err := json.Unmarshal(buf, &result); err != nil {
-				require.NoError(t, err)
-			}
-
-			require.NotNil(t, result)
-			require.Greater(t, len(result.Result), 0)
-			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "key")
-			binding := result.Result[0].Bindings["x"].(map[string]interface{})
-			require.Equal(t, binding["key"], "CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs")
-		},
-	},
-	{
 		name: "ds.userV3",
 		query: &authz2.QueryRequest{
 			Query: `x = ds.user({"id": "CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs"})`,
@@ -137,30 +111,6 @@ var queryTests = []struct {
 			require.Contains(t, result.Result[0].Bindings["x"], "id")
 			binding := result.Result[0].Bindings["x"].(map[string]interface{})
 			require.Equal(t, binding["id"], "CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs")
-		},
-	},
-	{
-		name: "ds.identityV2",
-		query: &authz2.QueryRequest{
-			Query: `x = ds.identity({"key": "euang@acmecorp.com"})`,
-		},
-		validate: func(t *testing.T, resp *authz2.QueryResponse, err error) {
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
-
-			var result *runtime.Result
-			buf, err := resp.Response.MarshalJSON()
-			require.NoError(t, err)
-
-			if err := json.Unmarshal(buf, &result); err != nil {
-				require.NoError(t, err)
-			}
-
-			require.NotNil(t, result)
-			require.Greater(t, len(result.Result), 0)
-			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs")
 		},
 	},
 	{
