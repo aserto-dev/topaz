@@ -40,6 +40,7 @@ func (f PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugi
 			Name:    PluginName,
 		}
 	}
+
 	return newEdgePlugin(f.logger, cfg, f.cfg, m)
 }
 
