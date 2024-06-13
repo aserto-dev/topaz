@@ -92,8 +92,8 @@ func (e *Topaz) Start() error {
 		healthCheck = e.Manager.HealthServer.Server
 		for serviceName := range e.Configuration.APIConfig.Services {
 			e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_SERVING)
-			e.Manager.HealthServer.Server.SetServingStatus("sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
 		}
+		e.Manager.HealthServer.Server.SetServingStatus("sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
 	}
 	return nil
 }
