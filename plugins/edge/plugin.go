@@ -9,8 +9,10 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/datasync"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
+	"github.com/aserto-dev/topaz/pkg/app"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/google/uuid"
 	"github.com/open-policy-agent/opa/plugins"
@@ -79,9 +81,7 @@ func (p *Plugin) resetContext() {
 
 func (p *Plugin) Start(ctx context.Context) error {
 	p.logger.Info().Str("id", p.manager.ID).Bool("enabled", p.config.Enabled).Int("interval", p.config.SyncInterval).Msg("EdgePlugin.Start")
-
 	p.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateOK})
-
 	if p.hasLoopBack() {
 		p.logger.Warn().
 			Str("edge-directory", p.config.Addr).
@@ -233,11 +233,12 @@ func (p *Plugin) task(mode api.SyncMode) {
 		p.logger.Error().Err(err).Msg(syncTask)
 		return
 	}
-
 	if err := ds.DataSyncClient().Sync(ctx, conn, opts...); err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
 	}
-
+	if p.config.Enabled {
+		app.SetServiceStatus("sync", grpc_health_v1.HealthCheckResponse_SERVING)
+	}
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
 

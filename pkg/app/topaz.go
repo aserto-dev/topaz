@@ -25,6 +25,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/keepalive"
 
@@ -42,6 +43,16 @@ type Topaz struct {
 	ServiceBuilder *builder.ServiceFactory
 	Manager        *builder.ServiceManager
 	Services       map[string]ServiceTypes
+}
+
+var (
+	healthCheck *health.Server
+)
+
+func SetServiceStatus(service string, servingStatus grpc_health_v1.HealthCheckResponse_ServingStatus) {
+	if healthCheck != nil {
+		healthCheck.SetServingStatus(service, servingStatus)
+	}
 }
 
 type ServiceTypes interface {
@@ -78,20 +89,19 @@ func (e *Topaz) Start() error {
 
 	// Add registered services to the health service
 	if e.Manager.HealthServer != nil {
+		healthCheck = e.Manager.HealthServer.Server
 		for serviceName := range e.Configuration.APIConfig.Services {
 			e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_SERVING)
 		}
+		e.Manager.HealthServer.Server.SetServingStatus("sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
 	}
-
 	return nil
 }
-
 func (e *Topaz) ConfigServices() error {
 	metricsMiddleware, err := e.setupHealthAndMetrics()
 	if err != nil {
 		return err
 	}
-
 	if err := e.prepareServices(); err != nil {
 		return err
 	}
