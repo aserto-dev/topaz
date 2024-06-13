@@ -71,6 +71,7 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 		manager:     manager,
 		config:      cfg,
 		topazConfig: topazConfig,
+		syncNow:     make(chan api.SyncMode),
 	}
 }
 
