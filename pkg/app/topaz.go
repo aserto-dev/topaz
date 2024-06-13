@@ -95,6 +95,7 @@ func (e *Topaz) Start() error {
 		}
 		e.Manager.HealthServer.Server.SetServingStatus("sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
 	}
+
 	return nil
 }
 func (e *Topaz) ConfigServices() error {

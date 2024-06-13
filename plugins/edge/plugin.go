@@ -142,8 +142,8 @@ func (p *Plugin) SyncNow(mode api.SyncMode) {
 const cycles int = 4
 
 func (p *Plugin) scheduler() {
-	// scheduler startup delay 15s
-	interval := time.NewTicker(15 * time.Second)
+	// scheduler startup delay 1s
+	interval := time.NewTicker(1 * time.Second)
 	defer interval.Stop()
 
 	cycle := cycles
@@ -233,12 +233,15 @@ func (p *Plugin) task(mode api.SyncMode) {
 		p.logger.Error().Err(err).Msg(syncTask)
 		return
 	}
+
 	if err := ds.DataSyncClient().Sync(ctx, conn, opts...); err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
 	}
+
 	if p.config.Enabled {
 		app.SetServiceStatus("sync", grpc_health_v1.HealthCheckResponse_SERVING)
 	}
+
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
 
