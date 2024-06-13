@@ -115,6 +115,8 @@ func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 			p.resetContext()
 			go p.scheduler()
 		} else {
+			// set health status to NOT_SERVING when plugin switches to disabled.
+			app.SetServiceStatus("sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
 			p.cancel()
 		}
 	}
