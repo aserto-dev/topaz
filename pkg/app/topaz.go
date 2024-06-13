@@ -89,6 +89,7 @@ func (e *Topaz) Start() error {
 
 	// Add registered services to the health service
 	if e.Manager.HealthServer != nil {
+		healthCheck = e.Manager.HealthServer.Server
 		for serviceName := range e.Configuration.APIConfig.Services {
 			e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_SERVING)
 			e.Manager.HealthServer.Server.SetServingStatus("sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
@@ -101,7 +102,6 @@ func (e *Topaz) ConfigServices() error {
 	if err != nil {
 		return err
 	}
-	healthCheck = e.Manager.HealthServer.Server
 	if err := e.prepareServices(); err != nil {
 		return err
 	}
