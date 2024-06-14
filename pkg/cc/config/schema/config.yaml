@@ -329,7 +329,7 @@ controller:
   enabled: true
   server:
     address: relay.prod.aserto.com:8443
-    api_key: 0xdeadbeef
+    api_key: "0xdeadbeef"
     client_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
     client_key_path: "${TOPAZ_DIR}/certs/grpc.key"
 

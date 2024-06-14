@@ -24,10 +24,10 @@
                     "$ref": "#definitions/RemoteDirectory"
                 },
                 "jwt": {
-                    "#ref": "#definitions/JSONWebToken"
+                    "$ref": "#definitions/JSONWebToken"
                 },
                 "auth": {
-                    "#ref": "#definitions/Authentication"
+                    "$ref": "#definitions/Authentication"
                 },
                 "api": {
                     "$ref": "#definitions/API"
@@ -176,6 +176,7 @@
                     "type": "object",
                     "description": "map of additional gRPC headers",
                     "additionalProperties": {
+                        "description": "header key : value",
                         "type":"string"
                     },
                     "examples": [
@@ -187,8 +188,8 @@
             }
         },
         "JSONWebToken": {
-            "description": "JWT config",
-            "type": "object",
+            "description": "JWT validation configuration",
+            "type":"object",
             "additionalProperties": false,
             "properties": {
                 "acceptable_time_skew_seconds": {
@@ -209,33 +210,54 @@
                     "description": "map of api key to identity",
                     "type": "object",
                     "additionalProperties": {
+                        "description": "key -> identity",
                         "type": "string"
                     }
                 },
                 "options": {
+                    "description": "options",
                     "type": "object",
                     "properties": {
                         "default": {
-                            "enable_api_key":{
-                                "description": "",
-                                "type": "boolean"
-                            },
-                            "enable_anonymous": {
-                                "description": "",
-                                "type": "boolean"
+                            "description": "default settings",
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "enable_api_key":{
+                                    "description": "enable API key access",
+                                    "type": "boolean"
+                                },
+                                "enable_anonymous": {
+                                    "description": "enable anonymous access",
+                                    "type": "boolean"
+                                }
                             }
                         },
                         "overrides": {
+                            "description": "overrides",
+                            "type": "object",
                             "properties": {
                                 "paths": {
-                                    "type":"array"
+                                    "description": "paths",
+                                    "type":"array",
+                                    "items": {
+                                        "description": "path to override",
+                                        "type": "string"
+                                    }
                                 },
                                 "override": {
-                                    "enable_api_key":{
-                                        "type": "boolean"
-                                    },
-                                    "enable_anonymous": {
-                                        "type": "boolean"
+                                    "description": "override",
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "enable_api_key":{
+                                            "description": "enable API key access",
+                                            "type": "boolean"
+                                        },
+                                        "enable_anonymous": {
+                                            "description": "enable anonymous access",
+                                            "type": "boolean"
+                                        }
                                     }
                                 }
                             }
@@ -381,14 +403,34 @@
                     "description": "REST gateway host address and port",
                     "type": "string"
                 },
-                "allowed_origins":{
-                    "description": "allowed CORS origins",
-                    "type": "array",
-                    "uniqueItems": true
-                },
                 "certs": {
                     "description": "REST gateway TLS certificate configuration",
                     "$ref": "#/definitions/ServiceTLSCertificates"
+                },
+                "allowed_origins":{
+                    "description": "allowed CORS origins",
+                    "type": "array",
+                    "items": {
+                        "description": "URL path of allowed origin",
+                        "type": "string"
+                    },
+                    "uniqueItems": true
+                },
+                "allowed_headers": {
+                    "description": "allowed headers",
+                    "type": "array",
+                    "items": {
+                        "description": "header name",
+                        "type": "string"
+                    }
+                },
+                "allowed_methods": {
+                    "description": "allowed HTTP methods",
+                    "type": "array",
+                    "items": {
+                        "description": "HTTP method name",
+                        "type": "string"
+                    }
                 },
                 "http": {
                     "description": "allow HTTP traffic",
@@ -484,12 +526,16 @@
                                 "relay.prod.aserto.com:8443"
                             ]
                         },
+                        "api_key": {
+                            "description": "API key",
+                            "type": "string"
+                        },
                         "client_cert_path": {
-                            "description": "control plane mTLS certificate",
+                            "description": "mTLS control plane cert path",
                             "type": "string"
                         },
                         "client_key_path": {
-                            "description": "control plane mTLS key",
+                            "description": "mTLS control plane key path",
                             "type": "string"
                         }
                     }
@@ -513,25 +559,29 @@
                             "examples": ["/decisions"]
                         },
                         "scribe": {
-                            "description": "",
+                            "description": "Scribe configuration",
                             "type": "object",
                             "properties": {
                                 "address": {
-                                    "description": "",
+                                    "description": "address of scribe service",
                                     "type": "string",
                                     "default": ""
                                 },
                                 "client_cert_path": {
-                                    "description": "",
+                                    "description": "mTLS scribe cert path",
                                     "type": "string"
                                 },
                                 "client_key_path": {
-                                    "description": "",
+                                    "description": "mTLS scribe key path",
                                     "type": "string"
                                 },
                                 "headers": {
                                     "description": "map of additional gRPC headers",
                                     "type": "object",
+                                    "additionalProperties": {
+                                        "description": "header key : value",
+                                        "type":"string"
+                                    },
                                     "examples": [
                                         {
                                             "aserto-tenant-id": "00000000-1111-2222-3333-444455556666"
@@ -554,7 +604,7 @@
                             }
                         },
                         "shipper": {
-                            "description": "",
+                            "description": "Shipper configuration",
                             "type": "object",
                             "$comment": "https://github.com/aserto-dev/self-decision-logger/blob/main/shipper/config.go",
                             "properties": {
