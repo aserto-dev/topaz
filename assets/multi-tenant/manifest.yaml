@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  # user represents a user that can be granted role(s)
+  user:
+    relations:
+      manager: user
+
+  # group represents a collection of users and/or (nested) groups
+  group:
+    relations:
+      member: user | group#member
+
+  # identity represents a collection of identities for users
+  identity:
+    relations:
+      identifier: user
+
+  # tenant represents a tenant in a multi-tenant system
+  tenant:
+    relations:
+      owner: user
+      admin: user | group#member
+      member: user | group#member
+      viewer: user | group#member
+      invitee: user
+
+    permissions:
+      can_delete_tenant: owner
+      can_invite_member: can_delete
+      can_list_members: can_view
+      can_leave_tenant: can_view
+      can_manage_invitation: invitee
+
+      can_delete: owner | admin
+      can_create: can_delete | member
+      can_edit: can_create
+      can_view: can_create | viewer
+
+  # resource represents a resource within a tenant
+  resource:
+    relations:
+      parent: tenant
+      owner: user
+      writer: user | group#member
+      reader: user | group#member
+
+    permissions:
+      can_read: reader | writer | owner | parent->can_view
+      can_write: writer | owner | parent->can_edit
+      can_delete: owner | parent->can_delete
