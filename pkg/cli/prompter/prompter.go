@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gdamore/tcell/v2"
 	"github.com/pkg/errors"
 
 	"github.com/rivo/tview"
@@ -57,6 +58,15 @@ func (f *prompt) Show() error {
 func (f *prompt) init() error {
 	md := f.msg.ProtoReflect().Descriptor()
 	name := md.FullName().Name()
+
+	f.app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyESC || event.Key() == tcell.KeyCtrlC {
+			f.rc <- false
+			f.app.Stop()
+			return nil
+		}
+		return event
+	})
 
 	f.form.SetBorder(true)
 	f.form.SetTitle(string(name)).SetTitleAlign(tview.AlignLeft)
