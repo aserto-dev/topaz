@@ -28,13 +28,11 @@ func NewAPIKeyAuthMiddleware(
 	cfg *config.AuthnConfig,
 	logger *zerolog.Logger,
 ) (*APIKeyAuthMiddleware, error) {
-
 	return &APIKeyAuthMiddleware{
 		apiAuth: cfg.APIKeys,
 		cfg:     cfg,
 		logger:  logger,
 	}, nil
-
 }
 
 func (a *APIKeyAuthMiddleware) Unary() grpc.UnaryServerInterceptor {
@@ -84,7 +82,6 @@ func (a *APIKeyAuthMiddleware) authenticate(
 	ctx context.Context,
 	path, authHeader string,
 ) (context.Context, error) {
-
 	options := a.cfg.Options.ForPath(path)
 
 	if options.EnableAnonymous {

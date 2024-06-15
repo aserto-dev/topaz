@@ -20,7 +20,7 @@ type GenerateCertsCmd struct {
 func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(certsDir, 0755); err != nil {
+		if err := os.MkdirAll(certsDir, 0o755); err != nil {
 			return err
 		}
 	}

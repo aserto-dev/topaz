@@ -42,7 +42,6 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
 			var (
 				args struct {
 					ObjectType    string `json:"object_type,omitempty"` // v3 object_type

@@ -74,7 +74,8 @@ var BuiltinHelpTests = []struct {
 		expected: map[string]interface{}{
 			"ds.identity": map[string]interface{}{
 				"id": "",
-			}},
+			},
+		},
 	},
 	{
 		name:  "ds.user",
@@ -82,7 +83,8 @@ var BuiltinHelpTests = []struct {
 		expected: map[string]interface{}{
 			"ds.user": map[string]interface{}{
 				"id": "",
-			}},
+			},
+		},
 	},
 	{
 		name:  "ds.check",
@@ -139,7 +141,8 @@ var BuiltinHelpTests = []struct {
 				"subject_relation": "",
 				"explain":          false,
 				"trace":            false,
-			}},
+			},
+		},
 	},
 	{
 		name:  "ds.object",
@@ -150,7 +153,8 @@ var BuiltinHelpTests = []struct {
 				"object_id":      "",
 				"page":           nil,
 				"with_relations": false,
-			}},
+			},
+		},
 	},
 	{
 		name:  "ds.relation",
@@ -164,7 +168,8 @@ var BuiltinHelpTests = []struct {
 				"subject_relation": "",
 				"subject_type":     "",
 				"with_objects":     false,
-			}},
+			},
+		},
 	},
 	{
 		name:  "ds.relations",
@@ -180,7 +185,8 @@ var BuiltinHelpTests = []struct {
 				"subject_type":                "",
 				"with_objects":                false,
 				"with_empty_subject_relation": false,
-			}},
+			},
+		},
 	},
 }
 

@@ -45,9 +45,7 @@ type Topaz struct {
 	Services       map[string]ServiceTypes
 }
 
-var (
-	healthCheck *health.Server
-)
+var healthCheck *health.Server
 
 func SetServiceStatus(service string, servingStatus grpc_health_v1.HealthCheckResponse_ServingStatus) {
 	if healthCheck != nil {
@@ -100,6 +98,7 @@ func (e *Topaz) Start() error {
 
 	return nil
 }
+
 func (e *Topaz) ConfigServices() error {
 	metricsMiddleware, err := e.setupHealthAndMetrics()
 	if err != nil {

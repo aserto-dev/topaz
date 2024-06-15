@@ -47,7 +47,6 @@ func GetTopazTemplateDir() string {
 		return tmplDir
 	}
 	return filepath.Clean(filepath.Join(xdg.DataHome, "topaz", "tmpl"))
-
 }
 
 func EnsureDirs() error {
@@ -64,7 +63,7 @@ func EnsureTopazDir() error {
 	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
 		return nil
 	}
-	return os.MkdirAll(dir, 0700)
+	return os.MkdirAll(dir, 0o700)
 }
 
 func EnsureTopazCfgDir() error {
@@ -72,7 +71,7 @@ func EnsureTopazCfgDir() error {
 	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
 		return nil
 	}
-	return os.MkdirAll(dir, 0700)
+	return os.MkdirAll(dir, 0o700)
 }
 
 func EnsureTopazCertsDir() error {
@@ -80,7 +79,7 @@ func EnsureTopazCertsDir() error {
 	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
 		return nil
 	}
-	return os.MkdirAll(dir, 0755)
+	return os.MkdirAll(dir, 0o755)
 }
 
 func EnsureTopazDataDir() error {
@@ -88,7 +87,7 @@ func EnsureTopazDataDir() error {
 	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
 		return nil
 	}
-	return os.MkdirAll(dir, 0700)
+	return os.MkdirAll(dir, 0o700)
 }
 
 func EnsureTopazTemplateDir() error {
@@ -96,5 +95,5 @@ func EnsureTopazTemplateDir() error {
 	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
 		return nil
 	}
-	return os.MkdirAll(dir, 0700)
+	return os.MkdirAll(dir, 0o700)
 }

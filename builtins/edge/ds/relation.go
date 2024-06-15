@@ -36,10 +36,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
-			var (
-				args dsr3.GetRelationRequest
-			)
+			var args dsr3.GetRelationRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				traceError(&bctx, fnName, err)
@@ -117,10 +114,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
-			var (
-				args dsr3.GetRelationsRequest
-			)
+			var args dsr3.GetRelationsRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				traceError(&bctx, fnName, err)

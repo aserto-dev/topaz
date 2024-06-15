@@ -29,12 +29,9 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
-			var (
-				args struct {
-					ID string `json:"id"`
-				}
-			)
+			var args struct {
+				ID string `json:"id"`
+			}
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err

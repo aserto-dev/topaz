@@ -21,5 +21,4 @@ func (dl *Noop) Stop(ctx context.Context) {
 }
 
 func (dl *Noop) Reconfigure(ctx context.Context, config interface{}) {
-
 }

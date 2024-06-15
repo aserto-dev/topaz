@@ -26,7 +26,6 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
 			var args struct {
 				ID string `json:"id"`
 			}

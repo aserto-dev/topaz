@@ -38,6 +38,7 @@ opa:
     watch: true
     skip_verification: true
 `
+
 const Template = templatePreamble + `
 opa:
   instance_id: "-"

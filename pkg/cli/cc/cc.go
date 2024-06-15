@@ -171,7 +171,7 @@ func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(cliConfig, kongConfigBytes, 0666) // nolint
+	err = os.WriteFile(cliConfig, kongConfigBytes, 0o666) // nolint
 	if err != nil {
 		return err
 	}

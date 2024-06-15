@@ -11,7 +11,6 @@ type StartCmd struct {
 }
 
 func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
-
 	if err := cmd.run(c, modeDaemon); err != nil {
 		return err
 	}

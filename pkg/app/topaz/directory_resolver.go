@@ -12,7 +12,7 @@ import (
 func DirectoryResolver(
 	ctx context.Context,
 	logger *zerolog.Logger,
-	cfg *config.Config) resolvers.DirectoryResolver {
-
+	cfg *config.Config,
+) resolvers.DirectoryResolver {
 	return directory.NewResolver(logger, &cfg.DirectoryResolver)
 }

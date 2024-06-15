@@ -251,7 +251,6 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	resp, err := client.V3.Reader.GetRelations(c.Context, &req)
-
 	if err != nil {
 		return errors.Wrap(err, "get relations call failed")
 	}

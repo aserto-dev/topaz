@@ -48,7 +48,6 @@ var cmdRun = &cobra.Command{
 				cfg.Debug.ListenAddress = "localhost:6060"
 				cfg.Debug.ShutdownTimeout = 5
 			}
-
 		})
 		defer func() {
 			if cleanup != nil {

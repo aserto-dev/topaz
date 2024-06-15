@@ -65,7 +65,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerName = c.Config.Running.ContainerName
 
 	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
-		err = os.MkdirAll(cc.GetTopazDir(), 0700)
+		err = os.MkdirAll(cc.GetTopazDir(), 0o700)
 		if err != nil {
 			return err
 		}
@@ -77,7 +77,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(cliConfig, kongConfigBytes, 0666) // nolint
+	err = os.WriteFile(cliConfig, kongConfigBytes, 0o666) // nolint
 	if err != nil {
 		return err
 	}
@@ -145,7 +145,6 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 }
 
 func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, customName string) error {
-
 	// 1 - topaz stop - ensure topaz is not running, so we can reconfigure
 	{
 		command := &topaz.StopCmd{
@@ -291,7 +290,6 @@ func (i *tmplInstaller) setManifest() error {
 }
 
 func (i *tmplInstaller) importData() error {
-
 	name := i.tmpl.Name
 	if i.customName != "" {
 		name = i.customName

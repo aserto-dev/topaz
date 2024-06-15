@@ -248,7 +248,6 @@ func (p *Plugin) task(mode api.SyncMode) {
 }
 
 func (p *Plugin) remoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, error) {
-
 	opts := []client.ConnectionOption{
 		client.WithAddr(p.config.Addr),
 		client.WithInsecure(p.config.Insecure),

@@ -119,7 +119,8 @@ func (dc *DockerClient) Stop(name string) error {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: running},
+				Key: "status", Value: running,
+			},
 			filters.KeyValuePair{
 				Key: "name", Value: name,
 			}),
@@ -143,7 +144,8 @@ func (dc *DockerClient) IsRunning(name string) (bool, error) {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: running},
+				Key: "status", Value: running,
+			},
 			filters.KeyValuePair{
 				Key: "name", Value: name,
 			}),
@@ -164,7 +166,8 @@ func (dc *DockerClient) GetRunningTopazContainers() ([]*types.Container, error) 
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: running},
+				Key: "status", Value: running,
+			},
 		),
 	})
 	if err != nil {

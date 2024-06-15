@@ -13,9 +13,7 @@ import (
 
 type SaveContext bool
 
-var (
-	Save SaveContext
-)
+var Save SaveContext
 
 type CLI struct {
 	Start      topaz.StartCmd           `cmd:"" help:"start topaz instance (daemon mode)"`

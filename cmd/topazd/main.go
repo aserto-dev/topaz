@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"log"
 
 	"github.com/aserto-dev/topaz/pkg/version"

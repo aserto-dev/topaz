@@ -133,7 +133,7 @@ func testBaseDirsSymlinks(t *testing.T, inputs []*testInputData) {
 			inputDir := filepath.Join(filepath.Dir(symlinkDir), "inputdir")
 
 			require.NoError(t, os.Remove(symlinkDir))
-			require.NoError(t, os.Mkdir(inputDir, os.ModeDir|0700))
+			require.NoError(t, os.Mkdir(inputDir, os.ModeDir|0o700))
 			require.NoError(t, os.Symlink(inputDir, symlinkDir))
 
 			// Create input file.

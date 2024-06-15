@@ -34,7 +34,6 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
 			var args dsr3.GetGraphRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {

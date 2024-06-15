@@ -147,7 +147,6 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 
 		return configLoader.Configuration.validation()
 	}()
-
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to validate config file")
 	}
