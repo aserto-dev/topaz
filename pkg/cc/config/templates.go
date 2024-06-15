@@ -145,6 +145,23 @@ api:
     console:
       gateway:
         listen_address: "0.0.0.0:8080"
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -173,7 +190,24 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
-        # if not specified, the allowed_origins includes localhost by default
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
+        # if not specified, the allowed_origins includes localhost by default        
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -201,6 +235,23 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -226,6 +277,23 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -251,6 +319,23 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -276,6 +361,23 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -305,6 +407,23 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:8383"
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
         allowed_origins:
         - http://localhost
         - http://localhost:*
