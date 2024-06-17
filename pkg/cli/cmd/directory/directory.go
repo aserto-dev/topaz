@@ -1,12 +1,5 @@
 package directory
 
-type FormatVersion int
-
-const (
-	V2 FormatVersion = 2
-	V3 FormatVersion = 3
-)
-
 type DirectoryCmd struct {
 	Check   CheckCmd   `cmd:"" help:"check permission"`
 	Search  SearchCmd  `cmd:"" help:"search relation graph"`
