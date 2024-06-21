@@ -51,10 +51,6 @@ func (cmd *QueryCmd) Run(c *cc.CommonCtx) error {
 		return errors.New("request argument is required")
 	}
 
-	if cmd.Request == "" {
-		return errors.New("request argument is required")
-	}
-
 	var req authorizer.QueryRequest
 	err = clients.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
@@ -76,7 +72,7 @@ func (cmd *QueryCmd) template() proto.Message {
 		Options: &authorizer.QueryOptions{
 			Metrics:      false,
 			Instrument:   false,
-			Trace:        authorizer.TraceLevel_TRACE_LEVEL_FAILS,
+			Trace:        authorizer.TraceLevel_TRACE_LEVEL_OFF,
 			TraceSummary: false,
 		},
 		PolicyContext: &api.PolicyContext{

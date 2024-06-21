@@ -25,6 +25,7 @@ func (cmd *EvalCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
 		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
 	}
+
 	client, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
 	if err != nil {
 		return errors.Wrap(err, "failed to get authorizer client")
