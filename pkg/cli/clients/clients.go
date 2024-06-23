@@ -25,14 +25,14 @@ func UnmarshalRequest[T any, M Message[T]](src string, msg M) error {
 		} else {
 			return errors.Wrap(err, "failed to read from stdin")
 		}
-	} else if _, err := os.Stat(src); errors.Is(err, os.ErrNotExist) {
-		bytes = []byte(src)
-	} else {
+	} else if fi, err := os.Stat(src); err == nil && !fi.IsDir() {
 		if b, err := os.ReadFile(src); err == nil {
 			bytes = b
 		} else {
 			return errors.Wrapf(err, "opening file [%s]", src)
 		}
+	} else {
+		bytes = []byte(src)
 	}
 
 	return protojson.Unmarshal(bytes, msg)

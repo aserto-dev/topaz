@@ -110,6 +110,13 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 
 		switch fields.Get(i).Kind() { //nolint: exhaustive
 		case protoreflect.StringKind:
+			if fields.Get(i).IsList() {
+				f.form.AddInputField(fieldName, "[ ]", 64, nil, func(s string) {
+					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
+				})
+				continue
+			}
+
 			v := msg.ProtoReflect().Get(fd)
 			f.form.AddInputField(fieldName, v.String(), 64, nil, func(s string) {
 				_ = f.setField(msg.ProtoReflect(), fields.Get(c), s)
@@ -133,9 +140,33 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 				_ = f.setField(msg.ProtoReflect(), fields.Get(c), lo.Ternary(b, "true", "false"))
 			})
 
+		case protoreflect.EnumKind:
+			options := []string{}
+			lookup := map[string]int{}
+			for v := 0; v < fields.Get(i).Enum().Values().Len(); v++ {
+				name := string(fields.Get(i).Enum().Values().Get(v).Name())
+				number := int(fields.Get(i).Enum().Values().Get(v).Number())
+				options = append(options, name)
+				lookup[name] = number
+			}
+
+			f.form.AddDropDown(fieldName, options, 0, func(opt string, index int) {
+				number, ok := lookup[opt]
+				if ok {
+					_ = f.setEnum(msg.ProtoReflect(), fields.Get(c), number)
+				}
+			})
+
 		case protoreflect.MessageKind:
 			if strings.HasSuffix(string(fd.FullName()), ".properties") {
-				f.form.AddInputField(fieldName, "{}", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
+					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
+				})
+				continue
+			}
+
+			if strings.HasSuffix(string(fd.FullName()), ".resource_context") {
+				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
 				continue
@@ -177,7 +208,6 @@ func (f *prompt) setField(msg protoreflect.Message, fd protoreflect.FieldDescrip
 		msg.Set(fd, protoreflect.ValueOfBool(b))
 
 	case protoreflect.Int32Kind:
-
 		i, err := strconv.ParseInt(lo.Ternary(value == "", "false", value), 10, 32)
 		if err != nil {
 			return err
@@ -186,7 +216,6 @@ func (f *prompt) setField(msg protoreflect.Message, fd protoreflect.FieldDescrip
 		msg.Set(fd, protoreflect.ValueOfInt32(int32(i)))
 
 	case protoreflect.Int64Kind:
-
 		i, err := strconv.ParseInt(lo.Ternary(value == "", "false", value), 10, 64)
 		if err != nil {
 			return err
@@ -195,7 +224,6 @@ func (f *prompt) setField(msg protoreflect.Message, fd protoreflect.FieldDescrip
 		msg.Set(fd, protoreflect.ValueOfInt64(i))
 
 	case protoreflect.StringKind:
-
 		msg.Set(fd, protoreflect.ValueOfString(value))
 
 	default:
@@ -228,5 +256,10 @@ func (f *prompt) setTimestamp(msg protoreflect.Message, fd protoreflect.FieldDes
 	}
 	ts := timestamppb.New(t)
 	msg.Set(fd, protoreflect.ValueOfMessage(ts.ProtoReflect()))
+	return nil
+}
+
+func (f *prompt) setEnum(msg protoreflect.Message, fd protoreflect.FieldDescriptor, index int) error {
+	msg.Set(fd, protoreflect.ValueOfEnum(protoreflect.EnumNumber(index)))
 	return nil
 }
