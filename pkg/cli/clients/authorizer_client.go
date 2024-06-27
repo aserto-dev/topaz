@@ -23,7 +23,7 @@ type AuthorizerConfig struct {
 	TenantID string `flag:"tenant-id" help:"" default:"${tenant_id}" env:"ASERTO_TENANT_ID" `
 }
 
-func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.AuthorizerClient, error) {
+func NewAuthorizerConn(ctx context.Context, cfg *AuthorizerConfig) (*grpc.ClientConn, error) {
 	if cfg.Host == "" {
 		return nil, fmt.Errorf("no host specified")
 	}
@@ -49,7 +49,11 @@ func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.Aut
 		opts = append(opts, azc.WithTenantID(cfg.TenantID))
 	}
 
-	conn, err := azc.NewConnection(c.Context, opts...)
+	return azc.NewConnection(ctx, opts...)
+}
+
+func NewAuthorizerClient(c *cc.CommonCtx, cfg *AuthorizerConfig) (authorizer.AuthorizerClient, error) {
+	conn, err := NewAuthorizerConn(c.Context, cfg)
 	if err != nil {
 		return nil, err
 	}
