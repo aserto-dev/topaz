@@ -22,40 +22,6 @@ type DirectoryConfig struct {
 	TenantID string `flag:"tenant-id" help:"" default:"${tenant_id}" env:"ASERTO_TENANT_ID" `
 }
 
-func NewDirectoryClient(c *cc.CommonCtx, cfg *DirectoryConfig) (*dsc.Client, error) {
-	if cfg.Host == "" {
-		return nil, fmt.Errorf("no host specified")
-	}
-
-	if err := cfg.validate(); err != nil {
-		return nil, err
-	}
-
-	opts := []client.ConnectionOption{
-		client.WithAddr(cfg.Host),
-		client.WithInsecure(cfg.Insecure),
-	}
-
-	if cfg.APIKey != "" {
-		opts = append(opts, client.WithAPIKeyAuth(cfg.APIKey))
-	}
-
-	if cfg.Token != "" {
-		opts = append(opts, client.WithTokenAuth(cfg.Token))
-	}
-
-	if cfg.TenantID != "" {
-		opts = append(opts, client.WithTenantID(cfg.TenantID))
-	}
-
-	conn, err := client.NewConnection(c.Context, opts...)
-	if err != nil {
-		return nil, err
-	}
-
-	return dsc.New(conn, c.UI)
-}
-
 func NewDirectoryConn(ctx context.Context, cfg *DirectoryConfig) (*grpc.ClientConn, error) {
 	if cfg.Host == "" {
 		return nil, fmt.Errorf("no host specified")
@@ -82,12 +48,16 @@ func NewDirectoryConn(ctx context.Context, cfg *DirectoryConfig) (*grpc.ClientCo
 		opts = append(opts, client.WithTenantID(cfg.TenantID))
 	}
 
-	conn, err := client.NewConnection(ctx, opts...)
+	return client.NewConnection(ctx, opts...)
+}
+
+func NewDirectoryClient(c *cc.CommonCtx, cfg *DirectoryConfig) (*dsc.Client, error) {
+	conn, err := NewDirectoryConn(c.Context, cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	return conn, nil
+	return dsc.New(conn, c.UI)
 }
 
 func (cfg *DirectoryConfig) validate() error {

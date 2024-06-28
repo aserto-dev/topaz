@@ -1,6 +1,10 @@
 package authorizer
 
 import (
+	"cmp"
+	"slices"
+	"strings"
+
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -18,6 +22,7 @@ type ListPoliciesCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to list request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
+	Raw      bool   `name:"raw" help:"return raw request output"`
 	clients.AuthorizerConfig
 }
 
@@ -62,7 +67,22 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	slices.SortFunc(resp.Result, func(a, b *api.Module) int {
+		return cmp.Compare(a.GetPackagePath()+a.GetId(), b.GetPackagePath()+b.GetId())
+	})
+
+	if cmd.Raw {
+		return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	}
+
+	table := c.UI.Normal().WithTable("package path", "id")
+	for _, module := range resp.Result {
+		table.WithTableRow(
+			strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId())
+	}
+	table.Do()
+
+	return nil
 }
 
 func (cmd *ListPoliciesCmd) template() proto.Message {

@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strconv"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
@@ -148,13 +149,33 @@ func checkVersion(ctx *cc.CommonCtx) error {
 	if cc.ContainerTag() == "latest" {
 		return nil
 	}
-	if cc.ContainerTag() != ver.GetInfo().Version {
-		ctx.UI.Exclamation().Msgf("Your default container tag is set to %s, however you are using version %v", ctx.Config.Defaults.ContainerTag, ver.GetInfo().Version)
-		if !common.PromptYesNo("Do you want to update?", false) {
-			return nil
-		}
-		ctx.Config.Defaults.ContainerTag = ver.GetInfo().Version
-		return ctx.SaveContextConfig(common.CLIConfigurationFile)
+
+	buildVer, err := semver.NewVersion(ver.GetInfo().Version)
+	if err != nil {
+		return err
 	}
-	return nil
+	if buildVer.Prerelease() != "" {
+		return nil
+	}
+
+	tagVer, err := semver.NewVersion(cc.ContainerTag())
+	if err != nil {
+		return err
+	}
+
+	if buildVer.Major() == tagVer.Major() && buildVer.Minor() == tagVer.Minor() && buildVer.Patch() == tagVer.Patch() {
+		return nil
+	}
+
+	fmt.Fprintf(ctx.UI.Err(),
+		"The default container tag configuration setting (%s), is different from the current topaz version (%v).\n",
+		ctx.Config.Defaults.ContainerTag,
+		ver.GetInfo().Version,
+	)
+	if !common.PromptYesNo("Do you want to update the configuration setting?", false) {
+		return nil
+	}
+
+	ctx.Config.Defaults.ContainerTag = ver.GetInfo().Version
+	return ctx.SaveContextConfig(common.CLIConfigurationFile)
 }

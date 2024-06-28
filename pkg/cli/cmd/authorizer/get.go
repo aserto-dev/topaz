@@ -1,6 +1,8 @@
 package authorizer
 
 import (
+	"fmt"
+
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -18,6 +20,7 @@ type GetPolicyCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get policy request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
+	Raw      bool   `name:"raw" help:"return raw request output"`
 	clients.AuthorizerConfig
 }
 
@@ -61,7 +64,14 @@ func (cmd *GetPolicyCmd) Run(c *cc.CommonCtx) error {
 	if err != nil {
 		return err
 	}
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+
+	if cmd.Raw {
+		return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	}
+
+	fmt.Fprintf(c.UI.Output(), "%s\n", resp.Result.GetRaw())
+
+	return nil
 }
 
 func (cmd *GetPolicyCmd) template() proto.Message {
