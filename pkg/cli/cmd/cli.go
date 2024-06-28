@@ -32,7 +32,7 @@ type CLI struct {
 	Update     topaz.UpdateCmd          `cmd:"" help:"update topaz container version"`
 	Version    VersionCmd               `cmd:"" help:"version information"`
 	NoCheck    bool                     `name:"no-check" json:"noCheck,omitempty" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
-	LogLevel   int                      `name:"log" short:"L" type:"counter" default:"0" help:"log level"`
+	LogLevel   int                      `name:"verbosity" short:"v" type:"counter" default:"0" help:"log level"`
 	Import     ImportCmd                `cmd:"" help:"'topaz import' was moved to 'topaz directory import'" hidden:""`
 	Export     ExportCmd                `cmd:"" help:"'topaz export' was moved to 'topaz directory export'" hidden:""`
 	Backup     BackupCmd                `cmd:"" help:"'topaz backup' was moved to 'topaz directory backup'" hidden:""`
