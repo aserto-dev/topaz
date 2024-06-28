@@ -59,7 +59,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rivo/tview v0.0.0-20240625185742-b0a7293b8130
 	github.com/rs/zerolog v1.33.0
-	github.com/samber/lo v1.41.0
+	github.com/samber/lo v1.42.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
