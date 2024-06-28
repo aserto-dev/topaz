@@ -29,7 +29,7 @@ require (
 	github.com/aserto-dev/go-directory-cli v0.31.2
 	github.com/aserto-dev/go-edge-ds v0.32.0
 	github.com/aserto-dev/go-grpc v0.8.65
-	github.com/aserto-dev/go-topaz-ui v0.1.7
+	github.com/aserto-dev/go-topaz-ui v0.1.8
 	github.com/aserto-dev/header v0.0.7
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
@@ -42,6 +42,7 @@ require (
 	github.com/docker/go-connections v0.5.0
 	github.com/fatih/color v1.17.0
 	github.com/fullstorydev/grpcurl v1.9.1
+	github.com/gdamore/tcell/v2 v2.7.4
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
@@ -102,7 +103,6 @@ require (
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gdamore/encoding v1.0.1 // indirect
-	github.com/gdamore/tcell/v2 v2.7.4 // indirect
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
