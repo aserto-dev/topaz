@@ -9,28 +9,25 @@ import (
 	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/go-aserto/client"
 	eds "github.com/aserto-dev/go-edge-ds"
+	console "github.com/aserto-dev/go-topaz-ui"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
+	builder "github.com/aserto-dev/service-host"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
-	"github.com/samber/lo"
-
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"github.com/samber/lo"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/keepalive"
-
-	console "github.com/aserto-dev/go-topaz-ui"
-	builder "github.com/aserto-dev/service-host"
 )
 
 // Topaz is an authorizer service instance, responsible for managing
@@ -47,8 +44,20 @@ type Topaz struct {
 
 var healthCheck *health.Server
 
-func SetServiceStatus(service string, servingStatus grpc_health_v1.HealthCheckResponse_ServingStatus) {
-	if healthCheck != nil {
+func SetServiceStatus(log *zerolog.Logger, service string, servingStatus grpc_health_v1.HealthCheckResponse_ServingStatus) {
+	if healthCheck == nil {
+		return
+	}
+
+	resp, err := healthCheck.Check(context.Background(), &grpc_health_v1.HealthCheckRequest{Service: service})
+	if err != nil {
+		log.Error().Err(err).Str("service", service).Str("status", servingStatus.String()).Msg("health")
+		return
+	}
+
+	// only write log message when the health state changed.
+	if resp.Status != servingStatus {
+		log.Info().Str("service", service).Str("status", servingStatus.String()).Msg("health")
 		healthCheck.SetServingStatus(service, servingStatus)
 	}
 }
@@ -93,7 +102,9 @@ func (e *Topaz) Start() error {
 		}
 
 		// register phony sync service with status NOT_SERVING
-		e.Manager.HealthServer.Server.SetServingStatus("sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
+		service, servingStatus := "sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING
+		e.Manager.HealthServer.Server.SetServingStatus(service, servingStatus)
+		e.Logger.Info().Str("component", "edge.plugin").Str("service", service).Str("status", servingStatus.String()).Msg("health")
 	}
 
 	return nil
