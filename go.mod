@@ -2,7 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.22.0
 
-toolchain go1.22.2
+toolchain go1.22.5
 
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
@@ -59,14 +59,14 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rivo/tview v0.0.0-20240625185742-b0a7293b8130
 	github.com/rs/zerolog v1.33.0
-	github.com/samber/lo v1.42.0
+	github.com/samber/lo v1.44.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.7.0
 	golang.org/x/sys v0.21.0
-	google.golang.org/grpc v1.64.0
+	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	sigs.k8s.io/controller-runtime v0.18.4
