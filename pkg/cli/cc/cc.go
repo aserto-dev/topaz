@@ -175,6 +175,8 @@ func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 	if err != nil {
 		return err
 	}
+
+	defaults = c.Config.Defaults
 	return nil
 }
 
