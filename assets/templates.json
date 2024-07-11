@@ -48,8 +48,8 @@
         "hosted_url": "hosted/github.json"
     },
     "multi-tenant": {
-        "title": "Multi-tenant",
-        "short_description": "Authorization template for multi-tenant.",
+        "title": "Multi-Tenant RBAC",
+        "short_description": "Multi-tenant RBAC authorization template.",
         "description": "",
         "docs_url": "",
         "topaz_url": "multi-tenant.json",
