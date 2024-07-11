@@ -22,7 +22,7 @@ type SearchCmd struct {
 
 func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -61,7 +61,7 @@ func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "get graph call failed")
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *SearchCmd) template() proto.Message {

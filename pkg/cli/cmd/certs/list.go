@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/table"
 )
 
 type ListCertsCmd struct {
@@ -23,7 +24,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("directory %s not found", certsDir)
 	}
 
-	c.UI.Normal().Msgf("certs directory: %s", certsDir)
+	fmt.Fprintf(c.StdOut(), "certs directory: %s\n", certsDir)
 
 	certDetails := make(map[string]*x509.Certificate)
 
@@ -48,7 +49,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 		certDetails[fn] = cert
 	}
 
-	table := c.UI.Normal().WithTable("File", "Not Before", "Not After", "Valid", "CN", "DNS names")
+	t := table.New(c.StdOut()).WithColumns("File", "Not Before", "Not After", "Valid", "CN", "DNS names")
 
 	fileNames := make([]string, 0, len(certDetails))
 	for k := range certDetails {
@@ -57,14 +58,14 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 
 	sort.Strings(fileNames)
 
-	table.WithTableNoAutoWrapText()
+	t.WithTableNoAutoWrapText()
 	for _, k := range fileNames {
 		isValid := true
 		if time.Until(certDetails[k].NotAfter) < 0 {
 			isValid = false
 		}
 
-		table.WithTableRow(k,
+		t.WithRow(k,
 			certDetails[k].NotBefore.Format(time.RFC3339),
 			certDetails[k].NotAfter.Format(time.RFC3339),
 			fmt.Sprintf("%t", isValid),
@@ -72,7 +73,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 			strings.Join(certDetails[k].DNSNames, ","),
 		)
 	}
-	table.Do()
+	t.Do()
 
 	return nil
 }

@@ -57,7 +57,7 @@ func NewDirectoryClient(c *cc.CommonCtx, cfg *DirectoryConfig) (*dsc.Client, err
 		return nil, err
 	}
 
-	return dsc.New(conn, c.UI)
+	return dsc.New(conn, c.StdOut(), c.StdErr())
 }
 
 func (cfg *DirectoryConfig) validate() error {

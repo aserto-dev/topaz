@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"sync"
 	"time"
 
-	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/docker/docker/api/types"
@@ -29,7 +29,7 @@ var (
 
 type CommonCtx struct {
 	Context context.Context
-	UI      *clui.UI
+	std     *iostream.StdIO
 	Config  *CLIConfig
 }
 
@@ -72,7 +72,7 @@ var (
 func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 	ctx := &CommonCtx{
 		Context: context.Background(),
-		UI:      iostream.NewUI(iostream.DefaultIO()),
+		std:     iostream.DefaultIO(),
 		Config: &CLIConfig{
 			Version: 1,
 			Active: ActiveConfig{
@@ -184,4 +184,12 @@ func setDefaults(ctx *CommonCtx) {
 	once.Do(func() {
 		defaults = ctx.Config.Defaults
 	})
+}
+
+func (c *CommonCtx) StdOut() io.Writer {
+	return c.std.StdOut()
+}
+
+func (c *CommonCtx) StdErr() io.Writer {
+	return c.std.StdErr()
 }

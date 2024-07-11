@@ -23,7 +23,7 @@ type EvalCmd struct {
 
 func (cmd *EvalCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
@@ -62,7 +62,7 @@ func (cmd *EvalCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *EvalCmd) template() proto.Message {

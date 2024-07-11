@@ -20,7 +20,7 @@ func (cmd *DeleteConfigCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("configuration %q is running, use 'topaz stop' to stop, before deleting", cmd.Name)
 	}
 
-	c.UI.Normal().Msgf("Removing configuration %q", cmd.Name)
+	fmt.Fprintf(c.StdOut(), "Removing configuration %q\n", cmd.Name)
 	filename := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 
 	if c.Config.Active.Config == cmd.Name.String() {

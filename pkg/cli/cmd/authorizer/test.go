@@ -296,7 +296,7 @@ const assertionsTemplateV3 string = `{
 
 func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	if !cmd.Pretty {
-		fmt.Fprintf(c.UI.Output(), "%s\n", lo.Ternary(cmd.V2, assertionsTemplateV2, assertionsTemplateV3))
+		fmt.Fprintf(c.StdOut(), "%s\n", lo.Ternary(cmd.V2, assertionsTemplateV2, assertionsTemplateV3))
 		return nil
 	}
 
@@ -312,7 +312,7 @@ func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	enc := json.NewEncoder(c.UI.Output())
+	enc := json.NewEncoder(c.StdOut())
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
 	if err := enc.Encode(template); err != nil {

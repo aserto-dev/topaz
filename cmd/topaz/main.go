@@ -49,8 +49,12 @@ func main() {
 	}
 
 	if warn && len(os.Args) == 1 {
-		ctx.UI.Exclamation().Msgf("Detected directory db files in the old data location %q\nCheck the documentation on how to update your configuration:\n%s\n",
-			oldDBPath, docLink)
+		fmt.Fprintf(
+			ctx.StdErr(),
+			"Detected directory db files in the old data location %q\nCheck the documentation on how to update your configuration:\n%s\n",
+			oldDBPath,
+			docLink,
+		)
 	}
 
 	kongCtx := kong.Parse(&cli,
@@ -167,7 +171,7 @@ func checkVersion(ctx *cc.CommonCtx) error {
 		return nil
 	}
 
-	fmt.Fprintf(ctx.UI.Err(),
+	fmt.Fprintf(ctx.StdErr(),
 		"The default container tag configuration setting (%s), is different from the current topaz version (%v).\n",
 		ctx.Config.Defaults.ContainerTag,
 		ver.GetInfo().Version,

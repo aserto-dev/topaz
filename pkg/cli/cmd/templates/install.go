@@ -43,7 +43,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if !cmd.Force {
-		c.UI.Exclamation().Msg("Installing this template will completely reset your topaz configuration.")
+		fmt.Fprintln(c.StdErr(), "Installing this template will completely reset your topaz configuration.")
 		if !common.PromptYesNo("Do you want to continue?", false) {
 			return nil
 		}
@@ -107,7 +107,8 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	// 4 - wait for health endpoint to be in serving state
 	cfg := config.GetConfig(c.Config.Active.ConfigFile)
 	if cfg.HasTopazDir {
-		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable.\nPlease change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+		fmt.Fprintln(c.StdErr(), "This configuration file still uses TOPAZ_DIR environment variable.")
+		fmt.Fprintln(c.StdErr(), "Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}
 	addr, _ := cfg.HealthService()
 	if !cc.ServiceHealthStatus(addr, "model") {

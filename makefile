@@ -157,7 +157,7 @@ install-vault: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
 .PHONY: install-buf
 install-buf: ${EXT_BIN_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@gh release download --repo https://github.com/bufbuild/buf --pattern "buf-$$(uname -s)-$$(uname -m)" --output "${EXT_BIN_DIR}/buf" --clobber
+	@gh release download v${BUF_VERSION} --repo https://github.com/bufbuild/buf --pattern "buf-$$(uname -s)-$$(uname -m)" --output "${EXT_BIN_DIR}/buf" --clobber
 	@chmod +x ${EXT_BIN_DIR}/buf
 	@${EXT_BIN_DIR}/buf --version
 
@@ -214,6 +214,7 @@ clean:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@rm -rf ${EXT_DIR}
 	@rm -rf ${BIN_DIR}
+	@rm -rf ./dist
 
 ${BIN_DIR}:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"

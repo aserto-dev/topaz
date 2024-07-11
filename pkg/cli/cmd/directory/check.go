@@ -21,7 +21,7 @@ type CheckCmd struct {
 
 func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -60,7 +60,7 @@ func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "check permission call failed")
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *CheckCmd) template() proto.Message {
