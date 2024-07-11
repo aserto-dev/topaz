@@ -1,0 +1,492 @@
+{
+  "objects": [
+    {
+      "type": "service",
+      "id": "petstore",
+      "displayName": "Petstore API",
+      "properties": {
+        "canonicalName": "petstore"
+      }
+    },
+    {
+      "type": "group",
+      "id": "global-readers",
+      "displayName": "Global Readers"
+    },
+    {
+      "type": "group",
+      "id": "global-writers",
+      "displayName": "Global Writers"
+    },
+    {
+      "type": "group",
+      "id": "global-creators",
+      "displayName": "Global Creators"
+    },
+    {
+      "type": "group",
+      "id": "global-deleters",
+      "displayName": "Global Deleters"
+    },
+    {
+      "type": "group",
+      "id": "petstore-readers",
+      "displayName": "Petstore API Readers"
+    },
+    {
+      "type": "group",
+      "id": "petstore-writers",
+      "displayName": "Petstore API Writers"
+    },
+    {
+      "type": "group",
+      "id": "petstore-creators",
+      "displayName": "Petstore API Creators"
+    },
+    {
+      "type": "group",
+      "id": "petstore-deleters",
+      "displayName": "Petstore API Deleters"
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:GET:/store/order/{orderId}",
+      "displayName": "GET /store/order/{orderId}",
+      "properties": {
+        "canonicalName": "petstore:GET:/store/order/{orderId}",
+        "method": "GET",
+        "path": "/store/order/{orderId}",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:DELETE:/store/order/{orderId}",
+      "displayName": "DELETE /store/order/{orderId}",
+      "properties": {
+        "canonicalName": "petstore:DELETE:/store/order/{orderId}",
+        "method": "DELETE",
+        "path": "/store/order/{orderId}",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:POST:/user/createWithList",
+      "displayName": "POST /user/createWithList",
+      "properties": {
+        "canonicalName": "petstore:POST:/user/createWithList",
+        "method": "POST",
+        "path": "/user/createWithList",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:GET:/pet/{petId}",
+      "displayName": "GET /pet/{petId}",
+      "properties": {
+        "canonicalName": "petstore:GET:/pet/{petId}",
+        "method": "GET",
+        "path": "/pet/{petId}",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:POST:/pet/{petId}",
+      "displayName": "POST /pet/{petId}",
+      "properties": {
+        "canonicalName": "petstore:POST:/pet/{petId}",
+        "method": "POST",
+        "path": "/pet/{petId}",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:DELETE:/pet/{petId}",
+      "displayName": "DELETE /pet/{petId}",
+      "properties": {
+        "canonicalName": "petstore:DELETE:/pet/{petId}",
+        "method": "DELETE",
+        "path": "/pet/{petId}",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:GET:/user/login",
+      "displayName": "GET /user/login",
+      "properties": {
+        "canonicalName": "petstore:GET:/user/login",
+        "method": "GET",
+        "path": "/user/login",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:POST:/pet/{petId}/uploadImage",
+      "displayName": "POST /pet/{petId}/uploadImage",
+      "properties": {
+        "canonicalName": "petstore:POST:/pet/{petId}/uploadImage",
+        "method": "POST",
+        "path": "/pet/{petId}/uploadImage",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:POST:/store/order",
+      "displayName": "POST /store/order",
+      "properties": {
+        "canonicalName": "petstore:POST:/store/order",
+        "method": "POST",
+        "path": "/store/order",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:GET:/user/logout",
+      "displayName": "GET /user/logout",
+      "properties": {
+        "canonicalName": "petstore:GET:/user/logout",
+        "method": "GET",
+        "path": "/user/logout",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:GET:/store/inventory",
+      "displayName": "GET /store/inventory",
+      "properties": {
+        "canonicalName": "petstore:GET:/store/inventory",
+        "method": "GET",
+        "path": "/store/inventory",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:GET:/pet/findByStatus",
+      "displayName": "GET /pet/findByStatus",
+      "properties": {
+        "canonicalName": "petstore:GET:/pet/findByStatus",
+        "method": "GET",
+        "path": "/pet/findByStatus",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:GET:/user/{username}",
+      "displayName": "GET /user/{username}",
+      "properties": {
+        "canonicalName": "petstore:GET:/user/{username}",
+        "method": "GET",
+        "path": "/user/{username}",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:PUT:/user/{username}",
+      "displayName": "PUT /user/{username}",
+      "properties": {
+        "canonicalName": "petstore:PUT:/user/{username}",
+        "method": "PUT",
+        "path": "/user/{username}",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:DELETE:/user/{username}",
+      "displayName": "DELETE /user/{username}",
+      "properties": {
+        "canonicalName": "petstore:DELETE:/user/{username}",
+        "method": "DELETE",
+        "path": "/user/{username}",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:GET:/pet/findByTags",
+      "displayName": "GET /pet/findByTags",
+      "properties": {
+        "canonicalName": "petstore:GET:/pet/findByTags",
+        "method": "GET",
+        "path": "/pet/findByTags",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:POST:/pet",
+      "displayName": "POST /pet",
+      "properties": {
+        "canonicalName": "petstore:POST:/pet",
+        "method": "POST",
+        "path": "/pet",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:PUT:/pet",
+      "displayName": "PUT /pet",
+      "properties": {
+        "canonicalName": "petstore:PUT:/pet",
+        "method": "PUT",
+        "path": "/pet",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "petstore:POST:/user",
+      "displayName": "POST /user",
+      "properties": {
+        "canonicalName": "petstore:POST:/user",
+        "method": "POST",
+        "path": "/user",
+        "service": "Petstore API",
+        "serviceID": "petstore"
+      }
+    },
+    {
+      "type": "service",
+      "id": "rick-and-morty",
+      "displayName": "Rick and Morty API",
+      "properties": {
+        "canonicalName": "rick-and-morty"
+      }
+    },
+    {
+      "type": "group",
+      "id": "rick-and-morty-readers",
+      "displayName": "Rick and Morty API Readers"
+    },
+    {
+      "type": "group",
+      "id": "rick-and-morty-writers",
+      "displayName": "Rick and Morty API Writers"
+    },
+    {
+      "type": "group",
+      "id": "rick-and-morty-creators",
+      "displayName": "Rick and Morty API Creators"
+    },
+    {
+      "type": "group",
+      "id": "rick-and-morty-deleters",
+      "displayName": "Rick and Morty API Deleters"
+    },
+    {
+      "type": "endpoint",
+      "id": "rick-and-morty:GET:/v1/locations/:locationId",
+      "displayName": "GET /v1/locations/:locationId",
+      "properties": {
+        "canonicalName": "rick-and-morty:GET:/v1/locations/:locationId",
+        "method": "GET",
+        "path": "/v1/locations/:locationId",
+        "service": "Rick and Morty API",
+        "serviceID": "rick-and-morty"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "rick-and-morty:GET:/openapi.json",
+      "displayName": "GET /openapi.json",
+      "properties": {
+        "canonicalName": "rick-and-morty:GET:/openapi.json",
+        "method": "GET",
+        "path": "/openapi.json",
+        "service": "Rick and Morty API",
+        "serviceID": "rick-and-morty"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "rick-and-morty:GET:/v1/characters",
+      "displayName": "GET /v1/characters",
+      "properties": {
+        "canonicalName": "rick-and-morty:GET:/v1/characters",
+        "method": "GET",
+        "path": "/v1/characters",
+        "service": "Rick and Morty API",
+        "serviceID": "rick-and-morty"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "rick-and-morty:GET:/v1/characters/:characterId",
+      "displayName": "GET /v1/characters/:characterId",
+      "properties": {
+        "canonicalName": "rick-and-morty:GET:/v1/characters/:characterId",
+        "method": "GET",
+        "path": "/v1/characters/:characterId",
+        "service": "Rick and Morty API",
+        "serviceID": "rick-and-morty"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "rick-and-morty:GET:/v1/episodes/",
+      "displayName": "GET /v1/episodes/",
+      "properties": {
+        "canonicalName": "rick-and-morty:GET:/v1/episodes/",
+        "method": "GET",
+        "path": "/v1/episodes/",
+        "service": "Rick and Morty API",
+        "serviceID": "rick-and-morty"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "rick-and-morty:GET:/v1/episodes/:episodeId",
+      "displayName": "GET /v1/episodes/:episodeId",
+      "properties": {
+        "canonicalName": "rick-and-morty:GET:/v1/episodes/:episodeId",
+        "method": "GET",
+        "path": "/v1/episodes/:episodeId",
+        "service": "Rick and Morty API",
+        "serviceID": "rick-and-morty"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "rick-and-morty:GET:/v1/locations",
+      "displayName": "GET /v1/locations",
+      "properties": {
+        "canonicalName": "rick-and-morty:GET:/v1/locations",
+        "method": "GET",
+        "path": "/v1/locations",
+        "service": "Rick and Morty API",
+        "serviceID": "rick-and-morty"
+      }
+    },
+    {
+      "type": "service",
+      "id": "todo",
+      "displayName": "Todo List API",
+      "properties": {
+        "canonicalName": "todo"
+      }
+    },
+    {
+      "type": "group",
+      "id": "todo-readers",
+      "displayName": "Todo List API Readers"
+    },
+    {
+      "type": "group",
+      "id": "todo-writers",
+      "displayName": "Todo List API Writers"
+    },
+    {
+      "type": "group",
+      "id": "todo-creators",
+      "displayName": "Todo List API Creators"
+    },
+    {
+      "type": "group",
+      "id": "todo-deleters",
+      "displayName": "Todo List API Deleters"
+    },
+    {
+      "type": "endpoint",
+      "id": "todo:PATCH:/v1/todos/{todoId}",
+      "displayName": "PATCH /v1/todos/{todoId}",
+      "properties": {
+        "canonicalName": "todo:PATCH:/v1/todos/{todoId}",
+        "method": "PATCH",
+        "path": "/v1/todos/{todoId}",
+        "service": "Todo List API",
+        "serviceID": "todo"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "todo:DELETE:/v1/todos/{todoId}",
+      "displayName": "DELETE /v1/todos/{todoId}",
+      "properties": {
+        "canonicalName": "todo:DELETE:/v1/todos/{todoId}",
+        "method": "DELETE",
+        "path": "/v1/todos/{todoId}",
+        "service": "Todo List API",
+        "serviceID": "todo"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "todo:GET:/v1/$todosAndUsers",
+      "displayName": "GET /v1/$todosAndUsers",
+      "properties": {
+        "canonicalName": "todo:GET:/v1/$todosAndUsers",
+        "method": "GET",
+        "path": "/v1/$todosAndUsers",
+        "service": "Todo List API",
+        "serviceID": "todo"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "todo:GET:/v1/$todosWithNoUserId",
+      "displayName": "GET /v1/$todosWithNoUserId",
+      "properties": {
+        "canonicalName": "todo:GET:/v1/$todosWithNoUserId",
+        "method": "GET",
+        "path": "/v1/$todosWithNoUserId",
+        "service": "Todo List API",
+        "serviceID": "todo"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "todo:GET:/v1/todos",
+      "displayName": "GET /v1/todos",
+      "properties": {
+        "canonicalName": "todo:GET:/v1/todos",
+        "method": "GET",
+        "path": "/v1/todos",
+        "service": "Todo List API",
+        "serviceID": "todo"
+      }
+    },
+    {
+      "type": "endpoint",
+      "id": "todo:POST:/v1/todos",
+      "displayName": "POST /v1/todos",
+      "properties": {
+        "canonicalName": "todo:POST:/v1/todos",
+        "method": "POST",
+        "path": "/v1/todos",
+        "service": "Todo List API",
+        "serviceID": "todo"
+      }
+    }
+  ]  
+}
