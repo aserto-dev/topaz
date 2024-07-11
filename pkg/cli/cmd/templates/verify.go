@@ -24,8 +24,8 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	// limit the amount of noise from the azm parser.
 	zerolog.SetGlobalLevel(zerolog.Disabled)
 
-	t := table.New(c.StdOut()).WithColumns("template", "asset", "exists", "parsed", "error")
-	t.WithTableNoAutoWrapText()
+	tab := table.New(c.StdOut()).WithColumns("template", "asset", "exists", "parsed", "error")
+	tab.WithTableNoAutoWrapText()
 
 	for tmplName := range ctlg {
 
@@ -40,7 +40,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 			if err != nil {
 				errStr = err.Error()
 			}
-			t.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+			tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
 		}
 		{
 			assets := []string{}
@@ -55,12 +55,12 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 				if err != nil {
 					errStr = err.Error()
 				}
-				t.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+				tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
 			}
 		}
 	}
 
-	t.Do()
+	tab.Do()
 
 	return nil
 }

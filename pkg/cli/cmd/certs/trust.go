@@ -36,12 +36,12 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	t := table.New(c.StdOut()).WithColumns("File", "Action")
-	defer t.Do()
+	tab := table.New(c.StdOut()).WithColumns("File", "Action")
+	defer tab.Do()
 
 	list := getFileList(certsDir, withCACerts())
 	if len(list) == 0 {
-		t.WithRow("no files found", "no actions performed")
+		tab.WithRow("no files found", "no actions performed")
 		return nil
 	}
 
@@ -57,7 +57,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 			if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
 				return err
 			}
-			t.WithRow(fn, "removed from trust store")
+			tab.WithRow(fn, "removed from trust store")
 			continue
 		}
 
@@ -65,7 +65,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 			if err := certs.AddTrustedCert(fqn); err != nil {
 				return err
 			}
-			t.WithRow(filepath.Base(fqn), "added to trust store")
+			tab.WithRow(filepath.Base(fqn), "added to trust store")
 			continue
 		}
 	}

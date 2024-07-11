@@ -49,7 +49,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 		certDetails[fn] = cert
 	}
 
-	t := table.New(c.StdOut()).WithColumns("File", "Not Before", "Not After", "Valid", "CN", "DNS names")
+	tab := table.New(c.StdOut()).WithColumns("File", "Not Before", "Not After", "Valid", "CN", "DNS names")
 
 	fileNames := make([]string, 0, len(certDetails))
 	for k := range certDetails {
@@ -58,14 +58,14 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 
 	sort.Strings(fileNames)
 
-	t.WithTableNoAutoWrapText()
+	tab.WithTableNoAutoWrapText()
 	for _, k := range fileNames {
 		isValid := true
 		if time.Until(certDetails[k].NotAfter) < 0 {
 			isValid = false
 		}
 
-		t.WithRow(k,
+		tab.WithRow(k,
 			certDetails[k].NotBefore.Format(time.RFC3339),
 			certDetails[k].NotAfter.Format(time.RFC3339),
 			fmt.Sprintf("%t", isValid),
@@ -73,7 +73,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 			strings.Join(certDetails[k].DNSNames, ","),
 		)
 	}
-	t.Do()
+	tab.Do()
 
 	return nil
 }

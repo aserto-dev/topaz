@@ -23,7 +23,7 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 
 	fmt.Fprintf(c.StdOut(), "certs directory: %s\n", certsDir)
 
-	t := table.New(c.StdOut()).WithColumns("File", "Action")
+	tab := table.New(c.StdOut()).WithColumns("File", "Action")
 
 	// remove cert from trust store, before delete cert file
 	for _, fqn := range getFileList(certsDir, withCACerts()) {
@@ -34,7 +34,7 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		fn := filepath.Base(fqn)
 		cn := fmt.Sprintf("%s-%s", certCommonName, strings.TrimSuffix(fn, filepath.Ext(fn)))
 
-		t.WithRow(fn, "removed from trust store")
+		tab.WithRow(fn, "removed from trust store")
 		if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
 			return err
 		}
@@ -47,10 +47,10 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		if err := os.Remove(fqn); err != nil {
 			return err
 		}
-		t.WithRow(filepath.Base(fqn), "deleted")
+		tab.WithRow(filepath.Base(fqn), "deleted")
 	}
 
-	t.Do()
+	tab.Do()
 
 	return nil
 }

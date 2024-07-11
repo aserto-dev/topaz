@@ -76,11 +76,11 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), resp)
 	}
 
-	t := table.New(c.StdOut()).WithColumns("package path", "id")
+	tab := table.New(c.StdOut()).WithColumns("package path", "id")
 	for _, module := range resp.Result {
-		t.WithRow(strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId())
+		tab.WithRow(strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId())
 	}
-	t.Do()
+	tab.Do()
 
 	return nil
 }
