@@ -39,7 +39,7 @@ type EngineHarness struct {
 func (h *EngineHarness) Cleanup() {
 	assert := require.New(h.t)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	h.Engine.Manager.StopServers(ctx)
 	cancel()
 	h.cleanup()

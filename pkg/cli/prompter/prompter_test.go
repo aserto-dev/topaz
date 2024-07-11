@@ -3,6 +3,7 @@ package prompter_test
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
@@ -17,6 +18,10 @@ import (
 )
 
 func TestPrompter(t *testing.T) {
+	if enabled, err := strconv.ParseBool(os.Getenv("TEST_INTERACTIVE")); err != nil || !enabled {
+		t.Skip("skip interactive tests")
+	}
+
 	reqs := []proto.Message{
 		&reader.GetObjectRequest{
 			Page: &common.PaginationRequest{
