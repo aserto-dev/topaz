@@ -21,7 +21,7 @@ func (cmd *RenameConfigCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("configuration %q is running, use 'topaz stop' to stop, before renaming", cmd.Name)
 	}
 
-	c.UI.Normal().Msgf("Renaming configuration %q to %q", cmd.Name, cmd.NewName)
+	fmt.Fprintf(c.StdOut(), "Renaming configuration %q to %q\n", cmd.Name, cmd.NewName)
 	oldFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	newFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.NewName))
 

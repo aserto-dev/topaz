@@ -9,6 +9,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/certs"
+	"github.com/aserto-dev/topaz/pkg/cli/table"
 )
 
 type TrustCertsCmd struct {
@@ -22,7 +23,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("directory %s not found", certsDir)
 	}
 
-	c.UI.Normal().Msgf("certs directory: %s", certsDir)
+	fmt.Fprintf(c.StdOut(), "certs directory: %s\n", certsDir)
 
 	if runtime.GOOS == `linux` {
 		var err error
@@ -31,16 +32,16 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		} else {
 			err = certs.AddTrustedCert("")
 		}
-		c.UI.Exclamation().Msg(err.Error())
+		fmt.Fprintf(c.StdErr(), "%s\n", err.Error())
 		return nil
 	}
 
-	table := c.UI.Normal().WithTable("File", "Action")
-	defer table.Do()
+	tab := table.New(c.StdOut()).WithColumns("File", "Action")
+	defer tab.Do()
 
 	list := getFileList(certsDir, withCACerts())
 	if len(list) == 0 {
-		table.WithTableRow("no files found", "no actions performed")
+		tab.WithRow("no files found", "no actions performed")
 		return nil
 	}
 
@@ -56,7 +57,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 			if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
 				return err
 			}
-			table.WithTableRow(fn, "removed from trust store")
+			tab.WithRow(fn, "removed from trust store")
 			continue
 		}
 
@@ -64,7 +65,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 			if err := certs.AddTrustedCert(fqn); err != nil {
 				return err
 			}
-			table.WithTableRow(filepath.Base(fqn), "added to trust store")
+			tab.WithRow(filepath.Base(fqn), "added to trust store")
 			continue
 		}
 	}

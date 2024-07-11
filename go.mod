@@ -21,12 +21,11 @@ require (
 	github.com/aserto-dev/aserto-management v0.9.4
 	github.com/aserto-dev/azm v0.1.10
 	github.com/aserto-dev/certs v0.0.6
-	github.com/aserto-dev/clui v0.8.3
 	github.com/aserto-dev/errors v0.0.8
 	github.com/aserto-dev/go-aserto v0.31.4
 	github.com/aserto-dev/go-authorizer v0.20.6
 	github.com/aserto-dev/go-directory v0.31.5
-	github.com/aserto-dev/go-directory-cli v0.31.2
+	github.com/aserto-dev/go-directory-cli v0.31.3-0.20240711215128-477b23ffcb75
 	github.com/aserto-dev/go-edge-ds v0.32.0
 	github.com/aserto-dev/go-grpc v0.8.65
 	github.com/aserto-dev/go-topaz-ui v0.1.10
@@ -38,7 +37,7 @@ require (
 	github.com/aserto-dev/self-decision-logger v0.0.5
 	github.com/aserto-dev/service-host v0.0.14
 	github.com/cli/browser v1.3.0
-	github.com/docker/docker v26.1.4+incompatible
+	github.com/docker/docker v27.0.3+incompatible
 	github.com/docker/go-connections v0.5.0
 	github.com/fatih/color v1.17.0
 	github.com/fullstorydev/grpcurl v1.9.1
@@ -54,6 +53,7 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/moby/term v0.5.0
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/open-policy-agent/opa v0.66.0
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/pkg/errors v0.9.1
@@ -65,7 +65,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.7.0
-	golang.org/x/sys v0.21.0
+	golang.org/x/sys v0.22.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
@@ -129,7 +129,6 @@ require (
 	github.com/itchyny/timefmt-go v0.1.6 // indirect
 	github.com/jhump/protoreflect v1.16.0 // indirect
 	github.com/klauspost/compress v1.17.8 // indirect
-	github.com/kyokomi/emoji v2.2.4+incompatible // indirect
 	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
 	github.com/lestrrat-go/httprc v1.0.5 // indirect
@@ -152,7 +151,6 @@ require (
 	github.com/nats-io/nats.go v1.35.0 // indirect
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
-	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/onsi/ginkgo/v2 v2.19.0 // indirect
 	github.com/onsi/gomega v1.33.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect

@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"io"
+	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/aserto-dev/clui"
 	dsc "github.com/aserto-dev/go-directory-cli/client"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/topaz/cmd/topaz-db/pkg/inproc"
@@ -28,7 +28,7 @@ func (cmd *LoadCmd) Run(ctx context.Context) error {
 	conn, cleanup := inproc.NewServer(ctx, &logger, cfg)
 	defer cleanup()
 
-	dsClient, err := dsc.New(conn, clui.NewUI())
+	dsClient, err := dsc.New(conn, os.Stdout, os.Stderr)
 	if err != nil {
 		return err
 	}

@@ -8,6 +8,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/certs"
+	"github.com/aserto-dev/topaz/pkg/cli/table"
 )
 
 type RemoveCertFileCmd struct {
@@ -20,9 +21,9 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("directory %s not found", certsDir)
 	}
 
-	c.UI.Normal().Msgf("certs directory: %s", certsDir)
+	fmt.Fprintf(c.StdOut(), "certs directory: %s\n", certsDir)
 
-	table := c.UI.Normal().WithTable("File", "Action")
+	tab := table.New(c.StdOut()).WithColumns("File", "Action")
 
 	// remove cert from trust store, before delete cert file
 	for _, fqn := range getFileList(certsDir, withCACerts()) {
@@ -33,7 +34,7 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		fn := filepath.Base(fqn)
 		cn := fmt.Sprintf("%s-%s", certCommonName, strings.TrimSuffix(fn, filepath.Ext(fn)))
 
-		table.WithTableRow(fn, "removed from trust store")
+		tab.WithRow(fn, "removed from trust store")
 		if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
 			return err
 		}
@@ -46,10 +47,10 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		if err := os.Remove(fqn); err != nil {
 			return err
 		}
-		table.WithTableRow(filepath.Base(fqn), "deleted")
+		tab.WithRow(filepath.Base(fqn), "deleted")
 	}
 
-	table.Do()
+	tab.Do()
 
 	return nil
 }

@@ -24,7 +24,7 @@ type GetRelationCmd struct {
 
 func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -63,7 +63,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "get relation call failed")
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *GetRelationCmd) template() proto.Message {
@@ -87,7 +87,7 @@ type SetRelationCmd struct {
 
 func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -126,7 +126,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "set relation call failed")
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *SetRelationCmd) template() proto.Message {
@@ -154,7 +154,7 @@ type DeleteRelationCmd struct {
 
 func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -193,7 +193,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "delete relation call failed")
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *DeleteRelationCmd) template() proto.Message {
@@ -216,7 +216,7 @@ type ListRelationsCmd struct {
 
 func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -255,7 +255,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "get relations call failed")
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *ListRelationsCmd) template() proto.Message {

@@ -32,7 +32,7 @@ func (cmd *GetObjectCmd) BeforeReset(ctx *kong.Context) error {
 
 func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
@@ -70,7 +70,7 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "get object call failed")
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *GetObjectCmd) template() proto.Message {
@@ -96,7 +96,7 @@ func (cmd *SetObjectCmd) BeforeReset(ctx *kong.Context) error {
 
 func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -134,7 +134,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to set object")
 	}
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *SetObjectCmd) template() proto.Message {
@@ -165,7 +165,7 @@ func (cmd *DeleteObjectCmd) BeforeReset(ctx *kong.Context) error {
 
 func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -204,7 +204,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "delete object call failed")
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *DeleteObjectCmd) template() proto.Message {
@@ -229,7 +229,7 @@ func (cmd *ListObjectsCmd) BeforeReset(ctx *kong.Context) error {
 
 func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
@@ -268,7 +268,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "get objects call failed")
 	}
 
-	return jsonx.OutputJSONPB(c.UI.Output(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
 func (cmd *ListObjectsCmd) template() proto.Message {

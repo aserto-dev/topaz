@@ -13,6 +13,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
+	"github.com/aserto-dev/topaz/pkg/cli/table"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
@@ -28,7 +29,7 @@ type ListPoliciesCmd struct {
 
 func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.UI.Output(), cmd.template())
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
 	client, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
@@ -72,15 +73,14 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 	})
 
 	if cmd.Raw {
-		return jsonx.OutputJSONPB(c.UI.Output(), resp)
+		return jsonx.OutputJSONPB(c.StdOut(), resp)
 	}
 
-	table := c.UI.Normal().WithTable("package path", "id")
+	tab := table.New(c.StdOut()).WithColumns("package path", "id")
 	for _, module := range resp.Result {
-		table.WithTableRow(
-			strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId())
+		tab.WithRow(strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId())
 	}
-	table.Do()
+	tab.Do()
 
 	return nil
 }

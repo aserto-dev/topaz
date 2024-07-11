@@ -39,7 +39,7 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	_, _ = fmt.Fprint(color.Error, color.GreenString(">>> get manifest to %s", cmd.Path))
+	_, _ = fmt.Fprint(c.StdErr(), color.GreenString(">>> get manifest to %s\n", cmd.Path))
 
 	r, err := dirClient.V3.GetManifest(c.Context)
 	if err != nil {
@@ -80,7 +80,7 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
-	_, _ = fmt.Fprint(color.Error, color.GreenString(">>> set manifest to %s", cmd.Path))
+	_, _ = fmt.Fprint(c.StdErr(), color.GreenString(">>> set manifest to %s\n", cmd.Path))
 
 	return dirClient.V3.SetManifest(c.Context, r)
 }
@@ -94,9 +94,9 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	c.UI.Exclamation().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
+	fmt.Fprintf(c.StdErr(), "WARNING: delete manifest resets all directory state, including relation and object data\n")
 	if cmd.Force || common.PromptYesNo("Do you want to continue?", false) {
-		_, _ = fmt.Fprint(color.Error, color.GreenString(">>> delete manifest"))
+		_, _ = fmt.Fprint(c.StdErr(), color.GreenString(">>> delete manifest\n"))
 		return dirClient.V3.DeleteManifest(c.Context)
 	}
 	return nil

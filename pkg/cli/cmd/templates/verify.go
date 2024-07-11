@@ -7,6 +7,7 @@ import (
 
 	v3 "github.com/aserto-dev/azm/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/table"
 	"github.com/rs/zerolog"
 )
 
@@ -23,8 +24,8 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	// limit the amount of noise from the azm parser.
 	zerolog.SetGlobalLevel(zerolog.Disabled)
 
-	table := c.UI.Normal().WithTable("template", "asset", "exists", "parsed", "error")
-	table.WithTableNoAutoWrapText()
+	tab := table.New(c.StdOut()).WithColumns("template", "asset", "exists", "parsed", "error")
+	tab.WithTableNoAutoWrapText()
 
 	for tmplName := range ctlg {
 
@@ -39,7 +40,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 			if err != nil {
 				errStr = err.Error()
 			}
-			table.WithTableRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+			tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
 		}
 		{
 			assets := []string{}
@@ -54,12 +55,12 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 				if err != nil {
 					errStr = err.Error()
 				}
-				table.WithTableRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+				tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
 			}
 		}
 	}
 
-	table.Do()
+	tab.Do()
 
 	return nil
 }

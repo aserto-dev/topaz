@@ -53,7 +53,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
 
 	if cfg.HasTopazDir {
-		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+		fmt.Fprintf(c.StdErr(), "This configuration file still uses TOPAZ_DIR environment variable.\nPlease change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.\n")
 	}
 
 	generator := config.NewGenerator(filepath.Base(c.Config.Active.ConfigFile))
@@ -107,8 +107,8 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithEnvs(cmd.Env),
 		dockerx.WithPorts(ports),
 		dockerx.WithVolumes(volumes),
-		dockerx.WithOutput(c.UI.Output()),
-		dockerx.WithError(c.UI.Err()),
+		dockerx.WithOutput(c.StdOut()),
+		dockerx.WithError(c.StdErr()),
 	}
 
 	if mode == modeInteractive {
@@ -123,7 +123,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		}
 	}
 
-	fmt.Fprintf(c.UI.Output(), "\n")
+	fmt.Fprintf(c.StdOut(), "\n")
 
 	if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
