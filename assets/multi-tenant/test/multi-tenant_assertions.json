@@ -804,7 +804,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "citadel",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
       },
@@ -814,7 +814,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "citadel",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
       },
@@ -824,7 +824,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "citadel",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
       },
@@ -834,7 +834,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "citadel",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
       },
@@ -844,7 +844,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "citadel",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
       },
@@ -1354,7 +1354,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "smiths",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
       },
@@ -1364,7 +1364,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "smiths",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
       },
@@ -1374,7 +1374,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "smiths",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
       },
@@ -1384,7 +1384,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "smiths",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
       },
@@ -1394,7 +1394,7 @@
       "check": {
         "object_type": "tenant",
         "object_id": "smiths",
-        "relation": "can_manage_roles",
+        "relation": "can_manage_members",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
       },
