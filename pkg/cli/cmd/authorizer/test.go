@@ -278,17 +278,10 @@ func (t *testResults) Passed(passed bool) {
 }
 
 type TestTemplateCmd struct {
-	V2     bool `flag:"" default:"false" help:"use v2 template"`
 	Pretty bool `flag:"" default:"false" help:"pretty print JSON"`
 }
 
-const assertionsTemplateV2 string = `{
-  "assertions": [
-	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true},
-  ]
-}`
-
-const assertionsTemplateV3 string = `{
+const assertionsTemplate string = `{
   "assertions": [
 	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true},
   ]
@@ -296,14 +289,11 @@ const assertionsTemplateV3 string = `{
 
 func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	if !cmd.Pretty {
-		fmt.Fprintf(c.StdOut(), "%s\n", lo.Ternary(cmd.V2, assertionsTemplateV2, assertionsTemplateV3))
+		fmt.Fprintln(c.StdOut(), assertionsTemplate)
 		return nil
 	}
 
-	r := strings.NewReader(assertionsTemplateV3)
-	if cmd.V2 {
-		r = strings.NewReader(assertionsTemplateV2)
-	}
+	r := strings.NewReader(assertionsTemplate)
 
 	dec := json.NewDecoder(r)
 

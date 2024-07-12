@@ -3,7 +3,6 @@ package topaz
 import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/fatih/color"
 )
 
 type InstallCmd struct {
@@ -21,7 +20,7 @@ func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 		return cc.ErrIsRunning
 	}
 
-	color.Green(">>> installing %s (%s)...",
+	c.Con().Info().Msg(">>> installing %s (%s)...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name

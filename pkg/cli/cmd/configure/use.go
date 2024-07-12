@@ -31,7 +31,7 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 	c.Config.Active.Config = cmd.Name.String()
 	c.Config.Active.ConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 
-	fmt.Fprintf(c.StdOut(), "Using configuration %q\n", cmd.Name)
+	c.Con().Info().Msg("Using configuration %q", cmd.Name)
 
 	if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())

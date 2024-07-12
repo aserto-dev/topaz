@@ -2,7 +2,6 @@ package configure
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -11,7 +10,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
-	"github.com/fatih/color"
 	"github.com/pkg/errors"
 )
 
@@ -38,7 +36,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if !cmd.Stdout {
-		_, _ = fmt.Fprint(c.StdErr(), color.GreenString(">>> configure policy\n"))
+		c.Con().Info().Msg(">>> configure policy\n")
 	}
 
 	configGenerator := config.NewGenerator(cmd.Name.String()).
@@ -74,7 +72,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	} else {
 		if !cmd.Force {
 			if _, err := os.Stat(c.Config.Active.ConfigFile); err == nil {
-				fmt.Fprintf(c.StdErr(), "Configuration file %q already exists.\n", c.Config.Active.ConfigFile)
+				c.Con().Warn().Msg("Configuration file %q already exists.", c.Config.Active.ConfigFile)
 				if !common.PromptYesNo("Do you want to continue?", false) {
 					return nil
 				}
@@ -88,11 +86,11 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 
 	if !cmd.Stdout {
 		if cmd.LocalPolicyImage != "" {
-			color.Green("using local policy image: %s", cmd.LocalPolicyImage)
+			c.Con().Info().Msg("using local policy image: %s", cmd.LocalPolicyImage)
 			return configGenerator.GenerateConfig(w, config.LocalImageTemplate)
 		}
 
-		color.Green("policy name: %s", cmd.Name)
+		c.Con().Info().Msg("policy name: %s", cmd.Name)
 	}
 
 	c.Context = context.WithValue(c.Context, common.Save, true)

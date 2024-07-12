@@ -344,7 +344,7 @@ const assertionsTemplateV3 string = `{
 
 func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	if !cmd.Pretty {
-		fmt.Fprintf(c.StdOut(), "%s\n", assertionsTemplateV3)
+		c.Out().Msg(assertionsTemplateV3)
 		return nil
 	}
 

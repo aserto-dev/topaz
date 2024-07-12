@@ -6,7 +6,6 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/fatih/color"
 	"github.com/pkg/errors"
 )
 
@@ -33,7 +32,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, "backup.tar.gz")
 	}
 
-	color.Green(">>> restore from %s", cmd.File)
+	c.Con().Info().Msg(">>> restore from %s", cmd.File)
 
 	return dirClient.V3.Restore(c.Context, cmd.File)
 }

@@ -37,24 +37,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	ctx, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
+	c, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
-	err = checkVersion(ctx)
+	err = checkVersion(c)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
 
 	if warn && len(os.Args) == 1 {
-		fmt.Fprintf(
-			ctx.StdErr(),
-			"Detected directory db files in the old data location %q\nCheck the documentation on how to update your configuration:\n%s\n",
-			oldDBPath,
-			docLink,
-		)
+		c.Con().Warn().Msg("Detected directory db files in the old data location %q", oldDBPath)
+		c.Con().Msg("Check the documentation on how to update your configuration:\n%s", docLink)
 	}
 
 	kongCtx := kong.Parse(&cli,
@@ -81,7 +77,7 @@ func main() {
 			"container_image":    cc.ContainerImage(),
 			"container_tag":      cc.ContainerTag(),
 			"container_platform": cc.ContainerPlatform(),
-			"container_name":     cc.ContainerName(ctx.Config.Active.ConfigFile),
+			"container_name":     cc.ContainerName(c.Config.Active.ConfigFile),
 			"directory_svc":      cc.DirectorySvc(),
 			"directory_key":      cc.DirectoryKey(),
 			"directory_token":    cc.DirectoryToken(),
@@ -91,7 +87,8 @@ func main() {
 			"tenant_id":          cc.TenantID(),
 			"insecure":           strconv.FormatBool(cc.Insecure()),
 			"no_check":           strconv.FormatBool(cc.NoCheck()),
-			"active_config":      ctx.Config.Active.Config,
+			"no_color":           strconv.FormatBool(cc.NoColor()),
+			"active_config":      c.Config.Active.Config,
 		},
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
@@ -100,7 +97,7 @@ func main() {
 		kongCtx.FatalIfErrorf(err)
 	}
 
-	if err := kongCtx.Run(ctx); err != nil {
+	if err := kongCtx.Run(c); err != nil {
 		kongCtx.FatalIfErrorf(err)
 	}
 }
@@ -149,7 +146,7 @@ func exit(rc int) {
 }
 
 // check set version in defaults and suggest update if needed.
-func checkVersion(ctx *cc.CommonCtx) error {
+func checkVersion(c *cc.CommonCtx) error {
 	if cc.ContainerTag() == "latest" {
 		return nil
 	}
@@ -171,15 +168,14 @@ func checkVersion(ctx *cc.CommonCtx) error {
 		return nil
 	}
 
-	fmt.Fprintf(ctx.StdErr(),
-		"The default container tag configuration setting (%s), is different from the current topaz version (%v).\n",
-		ctx.Config.Defaults.ContainerTag,
+	c.Con().Warn().Msg("The default container tag configuration setting (%s), is different from the current topaz version (%v).",
+		c.Config.Defaults.ContainerTag,
 		ver.GetInfo().Version,
 	)
 	if !common.PromptYesNo("Do you want to update the configuration setting?", false) {
 		return nil
 	}
 
-	ctx.Config.Defaults.ContainerTag = ver.GetInfo().Version
-	return ctx.SaveContextConfig(common.CLIConfigurationFile)
+	c.Config.Defaults.ContainerTag = ver.GetInfo().Version
+	return c.SaveContextConfig(common.CLIConfigurationFile)
 }

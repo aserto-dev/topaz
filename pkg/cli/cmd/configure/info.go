@@ -2,7 +2,6 @@ package configure
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -46,7 +45,7 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 		if s, ok := v.(string); ok && cmd.Raw {
-			fmt.Fprintf(os.Stdout, "%s\n", s)
+			c.Out().Msg(s)
 		} else {
 			_ = enc.Encode(v)
 		}
@@ -82,6 +81,7 @@ type Info struct {
 		ContainerTag      string `json:"container_tag"`
 		ContainerPlatform string `json:"container_platform"`
 		NoCheck           bool   `json:"topaz_no_check"`
+		NoColor           bool   `json:"topaz_no_color"`
 	} `json:"default"`
 	Directory struct {
 		DirectorySvc   string `json:"topaz_directory_svc"`
@@ -124,6 +124,7 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 	info.Default.ContainerTag = cc.ContainerTag()
 	info.Default.ContainerPlatform = cc.ContainerPlatform()
 	info.Default.NoCheck = cc.NoCheck()
+	info.Default.NoColor = cc.NoColor()
 
 	info.Directory.DirectorySvc = cc.DirectorySvc()
 	info.Directory.DirectoryKey = cc.DirectoryKey()

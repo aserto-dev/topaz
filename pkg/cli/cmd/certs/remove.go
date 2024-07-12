@@ -21,7 +21,7 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("directory %s not found", certsDir)
 	}
 
-	fmt.Fprintf(c.StdOut(), "certs directory: %s\n", certsDir)
+	c.Con().Info().Msg("certs directory: %s", certsDir)
 
 	tab := table.New(c.StdOut()).WithColumns("File", "Action")
 

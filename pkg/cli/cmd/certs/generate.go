@@ -41,7 +41,7 @@ func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 		Dir:  certsDir,
 	}
 
-	fmt.Fprintf(c.StdErr(), "certs directory: %s\n", certsDir)
+	c.Con().Info().Msg("certs directory: %s", certsDir)
 	err := certs.GenerateCerts(c, cmd.Force, cmd.DNSNames, pathGateway, pathGRPC)
 	if err != nil {
 		return err

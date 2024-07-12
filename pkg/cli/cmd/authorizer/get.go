@@ -1,8 +1,6 @@
 package authorizer
 
 import (
-	"fmt"
-
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -69,7 +67,7 @@ func (cmd *GetPolicyCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), resp)
 	}
 
-	fmt.Fprintf(c.StdOut(), "%s\n", resp.Result.GetRaw())
+	c.Out().Msg(resp.Result.GetRaw())
 
 	return nil
 }

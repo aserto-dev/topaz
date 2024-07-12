@@ -6,7 +6,6 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/fatih/color"
 	"github.com/pkg/errors"
 )
 
@@ -24,7 +23,7 @@ func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	color.Green(">>> uninstalling %s...",
+	c.Con().Info().Msg(">>> uninstalling %s...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name

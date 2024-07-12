@@ -7,7 +7,6 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/fatih/color"
 	"github.com/pkg/errors"
 )
 
@@ -20,7 +19,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
-	color.Green(">>> importing data from %s", cmd.Directory)
+	c.Con().Info().Msg(">>> importing data from %s", cmd.Directory)
 
 	if fi, err := os.Stat(cmd.Directory); err != nil || !fi.IsDir() {
 		if err != nil {
