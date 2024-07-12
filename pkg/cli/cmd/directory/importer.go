@@ -20,7 +20,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
-	color.Green(">>> importing data from %s", cmd.Directory)
+	fmt.Fprint(c.StdOut(), color.GreenString(">>> importing data from %s\n", cmd.Directory))
 
 	if fi, err := os.Stat(cmd.Directory); err != nil || !fi.IsDir() {
 		if err != nil {

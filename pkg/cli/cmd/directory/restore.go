@@ -1,6 +1,7 @@
 package directory
 
 import (
+	"fmt"
 	"os"
 	"path"
 
@@ -33,7 +34,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, "backup.tar.gz")
 	}
 
-	color.Green(">>> restore from %s", cmd.File)
+	fmt.Fprint(c.StdOut(), color.GreenString(">>> restore from %s\n", cmd.File))
 
 	return dirClient.V3.Restore(c.Context, cmd.File)
 }

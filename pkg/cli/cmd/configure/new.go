@@ -88,11 +88,11 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 
 	if !cmd.Stdout {
 		if cmd.LocalPolicyImage != "" {
-			color.Green("using local policy image: %s", cmd.LocalPolicyImage)
+			fmt.Fprint(c.StdOut(), color.GreenString("using local policy image: %s\n", cmd.LocalPolicyImage))
 			return configGenerator.GenerateConfig(w, config.LocalImageTemplate)
 		}
 
-		color.Green("policy name: %s", cmd.Name)
+		fmt.Fprint(c.StdOut(), color.GreenString("policy name: %s\n", cmd.Name))
 	}
 
 	c.Context = context.WithValue(c.Context, common.Save, true)

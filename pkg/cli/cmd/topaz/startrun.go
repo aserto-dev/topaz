@@ -75,7 +75,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return err
 	}
 
-	color.Green(">>> starting topaz %q...", c.Config.Running.Config)
+	fmt.Fprint(c.StdOut(), color.GreenString(">>> starting topaz %q...\n", c.Config.Running.Config))
 
 	dc, err := dockerx.New()
 	if err != nil {

@@ -1,6 +1,8 @@
 package topaz
 
 import (
+	"fmt"
+
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/fatih/color"
@@ -21,14 +23,14 @@ func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
 		return cc.ErrIsRunning
 	}
 
-	color.Green(">>> installing %s (%s)...",
+	fmt.Fprint(c.StdOut(), color.GreenString(">>> installing %s (%s)...\n",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name
 			cmd.ContainerTag,      // tag
 		),
 		cmd.ContainerPlatform, // os/arch
-	)
+	))
 
 	dc, err := dockerx.New()
 	if err != nil {
