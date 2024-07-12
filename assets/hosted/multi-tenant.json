@@ -11,7 +11,7 @@
     {
       "name": "Multi-tenant",
       "description": "Sample data for multi-tenant template",
-      "provider_id": "",
+      "provider_id": "87be795c-4076-11ef-91b2-04a8cc1036f3",
       "ds_load": "/assets/templates/multi-tenant/ds-load/multi-tenant.json"
     }
   ]

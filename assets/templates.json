@@ -59,7 +59,7 @@
         "title": "Multi-Tenant RBAC",
         "short_description": "Multi-tenant RBAC authorization template",
         "description": "A multi-tenant authorization template in which resources belong to tenants and users can have different roles in different tenants, as well as system-wide roles. Tenant roles grant access to tenant resources, while system roles grant access to resources across all tenants. You can evolve it to fit your needs.",
-        "docs_url": "",
+        "docs_url": "https://docs.aserto.com/docs/quickstarts/multi-tenant/overview",
         "topaz_url": "multi-tenant.json",
         "hosted_url": "hosted/multi-tenant.json"
     }
