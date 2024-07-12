@@ -11,7 +11,7 @@
     {
       "name": "API Authorization",
       "description": "Sample data for API Authorization template",
-      "provider_id": "",
+      "provider_id": "b357e76c-4083-11ef-b0b3-0425c56990f7",
       "ds_load": "/assets/templates/api-auth/ds-load/api-auth.json"
     }
   ]
