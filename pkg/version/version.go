@@ -22,7 +22,7 @@ type Info struct {
 // GetInfo - get version stamp information.
 func GetInfo() Info {
 	if ver == "" {
-		ver = "0.0.0"
+		ver = "0.0.0-dev"
 	}
 
 	if date == "" {
