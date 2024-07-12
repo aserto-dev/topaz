@@ -57,8 +57,6 @@ types:
       can_delete_tenant: owner | system->admin
       can_manage_members: can_administer
       can_list_members: can_view
-      # an owner cannot leave the tenant. they must be removed by another owner.
-      can_leave_tenant: can_view - owner
 
       can_create_resources: can_edit
       can_delete_resources: can_administer
