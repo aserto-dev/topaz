@@ -1,6 +1,8 @@
 package topaz
 
 import (
+	"fmt"
+
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/fatih/color"
@@ -17,14 +19,14 @@ type UpdateCmd struct {
 func (cmd *UpdateCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	color.Green(">>> updating %s (%s)...",
+	fmt.Fprint(c.StdOut(), color.GreenString(">>> updating %s (%s)...\n",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image
 			cmd.ContainerTag,      // tag
 		),
 		cmd.ContainerPlatform,
-	)
+	))
 
 	dc, err := dockerx.New()
 	if err != nil {
