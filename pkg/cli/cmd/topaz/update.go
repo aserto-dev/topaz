@@ -1,6 +1,8 @@
 package topaz
 
 import (
+	"fmt"
+
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 )
@@ -23,7 +25,7 @@ func (cmd *UpdateCmd) Run(c *cc.CommonCtx) error {
 			cmd.ContainerTag,      // tag
 		),
 		cmd.ContainerPlatform,
-	)
+	))
 
 	dc, err := dockerx.New()
 	if err != nil {
