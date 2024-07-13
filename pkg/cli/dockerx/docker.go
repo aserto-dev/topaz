@@ -89,7 +89,7 @@ func (dc *DockerClient) RemoveImage(img string) error {
 	}
 
 	for i := 0; i < len(images); i++ {
-		_, err := dc.cli.ImageRemove(dc.ctx, images[i].ID, image.RemoveOptions{})
+		_, err := dc.cli.ImageRemove(dc.ctx, images[i].ID, image.RemoveOptions{Force: true})
 		if err != nil {
 			return err
 		}
