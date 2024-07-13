@@ -93,6 +93,10 @@ func main() {
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
 
+	if cli.NoColor {
+		os.Setenv("TOPAZ_NO_COLOR", "TRUE")
+	}
+
 	if err := cc.EnsureDirs(); err != nil {
 		kongCtx.FatalIfErrorf(err)
 	}

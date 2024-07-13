@@ -239,10 +239,6 @@ func (cm *ConMsg) Error() *ConMsg {
 
 // Msg() - sends the con|out message, by default adds a CrLr when not present.
 func (cm *ConMsg) Msg(message string, args ...interface{}) {
-	// if NoColor() {
-	// 	cm.color.Set().DisableColor()
-	// }
-
 	color.NoColor = NoColor()
 
 	if !strings.HasSuffix(message, "\n") {
