@@ -1,7 +1,6 @@
 package topaz
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -30,7 +29,7 @@ func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
 			cmd.ContainerImage,    // image name
 			cmd.ContainerTag,      // tag
 		),
-	))
+	)
 
 	dc, err := dockerx.New()
 	if err != nil {
