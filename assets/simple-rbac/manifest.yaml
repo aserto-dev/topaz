@@ -13,6 +13,7 @@ types:
       manager: user
 
     permissions:
+      ### display_name: user#in_management_chain ###
       in_management_chain: manager | manager->in_management_chain
 
 
