@@ -19,13 +19,13 @@
     },
     {
       "type": "resource",
-      "id": "citadel/adventures",
+      "id": "citadel-adventures",
       "display_name": "The Citadel adventures resource",
       "properties": {}
     },
     {
       "type": "resource",
-      "id": "smiths/budget",
+      "id": "smiths-budget",
       "display_name": "The Smiths family's budget",
       "properties": {}
     }
