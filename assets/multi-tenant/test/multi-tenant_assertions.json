@@ -1703,7 +1703,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -1713,7 +1713,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -1723,7 +1723,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -1733,7 +1733,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -1743,7 +1743,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -1753,7 +1753,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -1763,7 +1763,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -1773,7 +1773,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -1783,7 +1783,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -1793,7 +1793,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -1803,7 +1803,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -1813,7 +1813,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -1823,7 +1823,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -1833,7 +1833,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -1843,7 +1843,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -1853,7 +1853,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -1863,7 +1863,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -1873,7 +1873,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -1883,7 +1883,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -1893,7 +1893,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -1903,7 +1903,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -1913,7 +1913,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -1923,7 +1923,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -1933,7 +1933,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -1943,7 +1943,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -1953,7 +1953,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -1963,7 +1963,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -1973,7 +1973,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -1983,7 +1983,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -1993,7 +1993,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "citadel/adventures",
+        "object_id": "citadel-adventures",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -2003,7 +2003,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -2013,7 +2013,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -2023,7 +2023,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -2033,7 +2033,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -2043,7 +2043,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "owner",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -2053,7 +2053,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -2063,7 +2063,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -2073,7 +2073,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -2083,7 +2083,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -2093,7 +2093,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "writer",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -2103,7 +2103,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -2113,7 +2113,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -2123,7 +2123,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -2133,7 +2133,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -2143,7 +2143,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "reader",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -2153,7 +2153,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -2163,7 +2163,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -2173,7 +2173,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -2183,7 +2183,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -2193,7 +2193,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_delete",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -2203,7 +2203,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -2213,7 +2213,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -2223,7 +2223,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -2233,7 +2233,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -2243,7 +2243,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_write",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
@@ -2253,7 +2253,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "rick@the-citadel.com"
@@ -2263,7 +2263,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "morty@the-citadel.com"
@@ -2273,7 +2273,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "summer@the-smiths.com"
@@ -2283,7 +2283,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "beth@the-smiths.com"
@@ -2293,7 +2293,7 @@
     {
       "check": {
         "object_type": "resource",
-        "object_id": "smiths/budget",
+        "object_id": "smiths-budget",
         "relation": "can_read",
         "subject_type": "user",
         "subject_id": "jerry@the-smiths.com"
