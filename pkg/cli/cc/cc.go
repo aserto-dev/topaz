@@ -51,6 +51,7 @@ type RunningConfig struct {
 
 type DefaultsConfig struct {
 	NoCheck           bool   `json:"no_check"`
+	NoColor           bool   `json:"no_color"`
 	ContainerRegistry string `json:"container_registry"`
 	ContainerImage    string `json:"container_image"`
 	ContainerTag      string `json:"container_tag"`

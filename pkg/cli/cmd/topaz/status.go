@@ -1,10 +1,7 @@
 package topaz
 
 import (
-	"fmt"
-
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/fatih/color"
 )
 
 type StatusCmd struct {
@@ -18,9 +15,9 @@ func (cmd *StatusCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if c.CheckRunStatus(containerName, cc.StatusRunning) {
-		fmt.Fprint(c.StdOut(), color.GreenString(">>> topaz %q is running\n", c.Config.Running.Config))
+		c.Con().Info().Msg(">>> topaz %q is running", c.Config.Running.Config)
 	} else {
-		fmt.Fprint(c.StdOut(), color.YellowString(">>> topaz is not running\n"))
+		c.Con().Warn().Msg(">>> topaz is not running")
 	}
 
 	return nil

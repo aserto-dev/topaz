@@ -1,7 +1,6 @@
 package directory
 
 import (
-	"fmt"
 	"io"
 	"os"
 
@@ -9,7 +8,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 
-	"github.com/fatih/color"
 	"github.com/pkg/errors"
 )
 
@@ -39,7 +37,7 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	_, _ = fmt.Fprint(c.StdErr(), color.GreenString(">>> get manifest to %s\n", cmd.Path))
+	c.Con().Info().Msg(">>> get manifest to %s", cmd.Path)
 
 	r, err := dirClient.V3.GetManifest(c.Context)
 	if err != nil {
@@ -80,7 +78,7 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
-	_, _ = fmt.Fprint(c.StdErr(), color.GreenString(">>> set manifest to %s\n", cmd.Path))
+	c.Con().Info().Msg(">>> set manifest to %s\n", cmd.Path)
 
 	return dirClient.V3.SetManifest(c.Context, r)
 }
@@ -94,9 +92,9 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	fmt.Fprintf(c.StdErr(), "WARNING: delete manifest resets all directory state, including relation and object data\n")
+	c.Con().Warn().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
 	if cmd.Force || common.PromptYesNo("Do you want to continue?", false) {
-		_, _ = fmt.Fprint(c.StdErr(), color.GreenString(">>> delete manifest\n"))
+		c.Con().Info().Msg(">>> delete manifest")
 		return dirClient.V3.DeleteManifest(c.Context)
 	}
 	return nil

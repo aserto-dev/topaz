@@ -24,7 +24,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("directory %s not found", certsDir)
 	}
 
-	fmt.Fprintf(c.StdOut(), "certs directory: %s\n", certsDir)
+	c.Con().Info().Msg("certs directory: %s", certsDir)
 
 	certDetails := make(map[string]*x509.Certificate)
 

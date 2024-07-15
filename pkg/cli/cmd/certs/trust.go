@@ -23,7 +23,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		return fmt.Errorf("directory %s not found", certsDir)
 	}
 
-	fmt.Fprintf(c.StdOut(), "certs directory: %s\n", certsDir)
+	c.Con().Info().Msg("certs directory: %s", certsDir)
 
 	if runtime.GOOS == `linux` {
 		var err error
@@ -32,7 +32,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		} else {
 			err = certs.AddTrustedCert("")
 		}
-		fmt.Fprintf(c.StdErr(), "%s\n", err.Error())
+		c.Con().Error().Msg(err.Error())
 		return nil
 	}
 

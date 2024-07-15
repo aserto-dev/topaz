@@ -1,13 +1,11 @@
 package topaz
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/fatih/color"
 	"github.com/pkg/errors"
 )
 
@@ -25,13 +23,13 @@ func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	fmt.Fprint(c.StdOut(), color.GreenString(">>> uninstalling %s...\n",
+	c.Con().Info().Msg(">>> uninstalling %s...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name
 			cmd.ContainerTag,      // tag
 		),
-	))
+	)
 
 	dc, err := dockerx.New()
 	if err != nil {

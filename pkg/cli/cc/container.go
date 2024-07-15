@@ -104,8 +104,9 @@ func ContainerName(defaultConfigFile string) string {
 // which is why they are not explicitly handled in this function.
 func ContainerVersionTag(version, tag string) string {
 	if version != "" && version != tag {
-		fmt.Fprintf(os.Stderr, "!!! --container-version incl $CONTAINER_VERSION are obsolete, use: --container-tag and $CONTAINER_TAG instead\n")
-		fmt.Fprintf(os.Stderr, "!!! --container-version value %q it propagated to --container-tag\n", version)
+		fmt.Fprintf(os.Stderr, "!!! --container-version incl $CONTAINER_VERSION are obsolete !!!\n")
+		fmt.Fprintf(os.Stderr, "instead use: --container-tag and/or $CONTAINER_TAG\n")
+		fmt.Fprintf(os.Stderr, "the current --container-version value %q is propagated to --container-tag\n", version)
 		return version
 	}
 	return tag
