@@ -153,63 +153,82 @@ func (p *Plugin) scheduler() {
 	running.Store(false)
 
 	cycle := cycles
-	syncMode := api.SyncMode_SYNC_MODE_UNKNOWN
+
+	intervalMode := api.SyncMode_SYNC_MODE_UNKNOWN
+	onDemandMode := api.SyncMode_SYNC_MODE_UNKNOWN
 
 	for {
 		select {
 		case <-p.ctx.Done():
-			p.logger.Warn().Time("done", time.Now()).Msg(syncScheduler)
+			p.logger.Debug().Time("done", time.Now()).Msg(syncScheduler)
 			return
 
 		case t := <-interval.C:
 			p.logger.Info().Time("dispatch", t).Msg(syncScheduler)
 			interval.Stop()
 
-			syncMode = api.SyncMode_SYNC_MODE_WATERMARK
+			intervalMode = api.SyncMode_SYNC_MODE_WATERMARK
 
 			if cycle%cycles == 0 {
-				syncMode = api.SyncMode_SYNC_MODE_DIFF
+				intervalMode = api.SyncMode_SYNC_MODE_DIFF
 				cycle = 0
 			}
 			cycle++
-			p.logger.Warn().Str("modes", PrintMode(syncMode)).Msg("INTERVAL")
+			p.logger.Debug().Str("mode", PrintMode(intervalMode)).Msg("interval handler")
 
 		case mode := <-p.syncNow:
-			p.logger.Warn().Time("dispatch", time.Now()).Msg(syncOnDemand)
+			p.logger.Info().Time("dispatch", time.Now()).Msg(syncOnDemand)
 			interval.Stop()
 
-			syncMode = Fold(syncMode, mode)
-			p.logger.Warn().Str("modes", PrintMode(syncMode)).Msg("ON-DEMAND")
+			onDemandMode = Fold(onDemandMode, mode)
+			p.logger.Debug().Str("mode", PrintMode(onDemandMode)).Msg("on-demand handler")
 		}
 
 		if !running.Load() {
-			runMode := syncMode
-			syncMode = api.SyncMode_SYNC_MODE_UNKNOWN
+			// determine the run mode
+			runMode := api.SyncMode_SYNC_MODE_UNKNOWN
+			if onDemandMode != api.SyncMode_SYNC_MODE_UNKNOWN {
+				runMode = onDemandMode
+				onDemandMode = api.SyncMode_SYNC_MODE_UNKNOWN
+			} else {
+				runMode = intervalMode
+			}
+
 			go func() {
-				p.logger.Warn().Str("modes", PrintMode(runMode)).Msg("TASK STARTED RUNNING")
+				p.logger.Debug().Str("mode", PrintMode(runMode)).Msg("start task")
 
 				running.Store(true)
 				defer func() {
-					p.logger.Warn().Str("modes", PrintMode(runMode)).Msg("TASK STOPPED RUNNING")
+					p.logger.Debug().Str("mode", PrintMode(runMode)).Msg("finished task")
 					running.Store(false)
 				}()
 
 				p.task(runMode)
 
-				// calculate the interval in secs
-				//
-				// p.config.SyncInterval 1m-60m
-				// 1m -> 60s -> 15s interval
-				// 5m -> 300s -> 75s interval
-				// 60m -> 3600s -> 900s interval
-				waitInSec := (p.config.SyncInterval * 60) / cycles
-
-				wait := time.Duration(waitInSec) * time.Second
-				interval.Reset(wait)
-				p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
+				// if on-demand mode is UNKNOWN, meaning no new on-demand requests were received while processing the last run, fall back to interval mode.
+				if onDemandMode == api.SyncMode_SYNC_MODE_UNKNOWN {
+					wait := p.calcInterval()
+					interval.Reset(wait)
+					p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
+				} else {
+					p.logger.Warn().Str("mode", PrintMode(onDemandMode)).Msg("trigger queued on-demand mode")
+					p.SyncNow(onDemandMode)
+				}
 			}()
 		}
 	}
+}
+
+// calcInterval - calculates the next time interval in secs,
+// based on the configuration SyncInterval (defined on the EdgeDirectory connection)
+// returning a time.Duration.
+//
+// p.config.SyncInterval 1m-60m
+// 1m -> 60s -> 15s interval
+// 60m -> 3600s -> 900s interval.
+func (p *Plugin) calcInterval() time.Duration {
+	waitInSec := (p.config.SyncInterval * 60) / cycles
+	return time.Duration(waitInSec) * time.Second
 }
 
 func (p *Plugin) task(mode api.SyncMode) {
@@ -238,27 +257,52 @@ func (p *Plugin) task(mode api.SyncMode) {
 	}
 	defer conn.Close()
 
-	opts := []datasync.Option{}
-	switch mode {
-	case api.SyncMode_SYNC_MODE_UNKNOWN:
-		opts = append(opts, datasync.WithMode(datasync.Manifest), datasync.WithMode(datasync.Full))
-	case api.SyncMode_SYNC_MODE_FULL:
-		opts = append(opts, datasync.WithMode(datasync.Manifest), datasync.WithMode(datasync.Full))
-	case api.SyncMode_SYNC_MODE_DIFF:
-		opts = append(opts, datasync.WithMode(datasync.Manifest), datasync.WithMode(datasync.Diff))
-	case api.SyncMode_SYNC_MODE_WATERMARK:
-		opts = append(opts, datasync.WithMode(datasync.Manifest), datasync.WithMode(datasync.Watermark))
-	case api.SyncMode_SYNC_MODE_MANIFEST:
-		opts = append(opts, datasync.WithMode(datasync.Manifest))
-	default:
-	}
-
 	ds, err := directory.Get()
 	if err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
 		return
 	}
 
+	if mode == api.SyncMode_SYNC_MODE_UNKNOWN {
+		p.exec(ctx, ds, conn, []datasync.Option{
+			datasync.WithMode(datasync.Manifest),
+			datasync.WithMode(datasync.Full),
+		})
+		return
+	}
+
+	if Has(mode, api.SyncMode_SYNC_MODE_WATERMARK) {
+		p.exec(ctx, ds, conn, []datasync.Option{
+			datasync.WithMode(datasync.Manifest),
+			datasync.WithMode(datasync.Watermark),
+		})
+	}
+
+	if Has(mode, api.SyncMode_SYNC_MODE_DIFF) {
+		p.exec(ctx, ds, conn, []datasync.Option{
+			datasync.WithMode(datasync.Manifest),
+			datasync.WithMode(datasync.Diff),
+		})
+		return
+	}
+
+	if Has(mode, api.SyncMode_SYNC_MODE_FULL) {
+		p.exec(ctx, ds, conn, []datasync.Option{
+			datasync.WithMode(datasync.Manifest),
+			datasync.WithMode(datasync.Full),
+		})
+		return
+	}
+
+	if Has(mode, api.SyncMode_SYNC_MODE_MANIFEST) && !Has(mode, api.SyncMode_SYNC_MODE_WATERMARK) {
+		p.exec(ctx, ds, conn, []datasync.Option{
+			datasync.WithMode(datasync.Manifest),
+		})
+		return
+	}
+}
+
+func (p *Plugin) exec(ctx context.Context, ds *directory.Directory, conn *grpc.ClientConn, opts []datasync.Option) {
 	if err := ds.DataSyncClient().Sync(ctx, conn, opts...); err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
 	}
@@ -317,5 +361,9 @@ func PrintMode(mode api.SyncMode) string {
 	if mode == api.SyncMode_SYNC_MODE_UNKNOWN {
 		modes = append(modes, "UNKNOWN")
 	}
-	return strings.Join(modes, " | ")
+	return strings.Join(modes, "|")
+}
+
+func Has(mode, instance api.SyncMode) bool {
+	return mode&instance != 0
 }

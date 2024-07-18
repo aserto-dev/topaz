@@ -38,7 +38,6 @@ func HandleCommand(ctx context.Context, cmd *api.Command, r *runtime.Runtime) er
 		if !ok {
 			return errors.Errorf("failed to cast discovery plugin")
 		}
-		r.Logger.Warn().Str("modes", edge.PrintMode(msg.SyncEdgeDirectory.Mode)).Msg("COMMAND HANDLER")
 		edgePlugin.SyncNow(msg.SyncEdgeDirectory.Mode)
 
 	default:
