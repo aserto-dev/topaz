@@ -3,6 +3,7 @@ package edge
 import (
 	"context"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/aserto-dev/go-aserto/client"
@@ -148,7 +149,11 @@ func (p *Plugin) scheduler() {
 	interval := time.NewTicker(1 * time.Second)
 	defer interval.Stop()
 
+	var running atomic.Bool
+	running.Store(false)
+
 	cycle := cycles
+	syncMode := api.SyncMode_SYNC_MODE_UNKNOWN
 
 	for {
 		select {
@@ -160,32 +165,50 @@ func (p *Plugin) scheduler() {
 			p.logger.Info().Time("dispatch", t).Msg(syncScheduler)
 			interval.Stop()
 
-			p.task(api.SyncMode_SYNC_MODE_WATERMARK) // watermark sync
+			syncMode = api.SyncMode_SYNC_MODE_WATERMARK
 
 			if cycle%cycles == 0 {
-				p.task(api.SyncMode_SYNC_MODE_DIFF)
+				syncMode = api.SyncMode_SYNC_MODE_DIFF
 				cycle = 0
 			}
 			cycle++
+			p.logger.Warn().Str("modes", PrintMode(syncMode)).Msg("INTERVAL")
 
 		case mode := <-p.syncNow:
 			p.logger.Warn().Time("dispatch", time.Now()).Msg(syncOnDemand)
 			interval.Stop()
 
-			p.task(mode)
+			syncMode = Fold(syncMode, mode)
+			p.logger.Warn().Str("modes", PrintMode(syncMode)).Msg("ON-DEMAND")
 		}
 
-		// calculate the interval in secs
-		//
-		// p.config.SyncInterval 1m-60m
-		// 1m -> 60s -> 15s interval
-		// 5m -> 300s -> 75s interval
-		// 60m -> 3600s -> 900s interval
-		waitInSec := (p.config.SyncInterval * 60) / cycles
+		if !running.Load() {
+			runMode := syncMode
+			syncMode = api.SyncMode_SYNC_MODE_UNKNOWN
+			go func() {
+				p.logger.Warn().Str("modes", PrintMode(runMode)).Msg("TASK STARTED RUNNING")
 
-		wait := time.Duration(waitInSec) * time.Second
-		interval.Reset(wait)
-		p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
+				running.Store(true)
+				defer func() {
+					p.logger.Warn().Str("modes", PrintMode(runMode)).Msg("TASK STOPPED RUNNING")
+					running.Store(false)
+				}()
+
+				p.task(runMode)
+
+				// calculate the interval in secs
+				//
+				// p.config.SyncInterval 1m-60m
+				// 1m -> 60s -> 15s interval
+				// 5m -> 300s -> 75s interval
+				// 60m -> 3600s -> 900s interval
+				waitInSec := (p.config.SyncInterval * 60) / cycles
+
+				wait := time.Duration(waitInSec) * time.Second
+				interval.Reset(wait)
+				p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
+			}()
+		}
 	}
 }
 
@@ -267,4 +290,32 @@ func (p *Plugin) remoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, e
 	}
 
 	return conn, nil
+}
+
+func Fold(m ...api.SyncMode) api.SyncMode {
+	r := api.SyncMode_SYNC_MODE_UNKNOWN
+	for _, v := range m {
+		r |= v
+	}
+	return r
+}
+
+func PrintMode(mode api.SyncMode) string {
+	modes := []string{}
+	if mode&api.SyncMode_SYNC_MODE_MANIFEST != 0 {
+		modes = append(modes, "MANIFEST")
+	}
+	if mode&api.SyncMode_SYNC_MODE_FULL != 0 {
+		modes = append(modes, "FULL")
+	}
+	if mode&api.SyncMode_SYNC_MODE_DIFF != 0 {
+		modes = append(modes, "DIFF")
+	}
+	if mode&api.SyncMode_SYNC_MODE_WATERMARK != 0 {
+		modes = append(modes, "WATERMARK")
+	}
+	if mode == api.SyncMode_SYNC_MODE_UNKNOWN {
+		modes = append(modes, "UNKNOWN")
+	}
+	return strings.Join(modes, " | ")
 }
