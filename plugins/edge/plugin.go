@@ -174,14 +174,14 @@ func (p *Plugin) scheduler() {
 				cycle = 0
 			}
 			cycle++
-			p.logger.Debug().Str("mode", PrintMode(intervalMode)).Msg("interval handler")
+			p.logger.Debug().Str("mode", printMode(intervalMode)).Msg("interval handler")
 
 		case mode := <-p.syncNow:
 			p.logger.Info().Time("dispatch", time.Now()).Msg(syncOnDemand)
 			interval.Stop()
 
-			onDemandMode = Fold(onDemandMode, mode)
-			p.logger.Debug().Str("mode", PrintMode(onDemandMode)).Msg("on-demand handler")
+			onDemandMode = fold(onDemandMode, mode)
+			p.logger.Debug().Str("mode", printMode(onDemandMode)).Msg("on-demand handler")
 		}
 
 		if !running.Load() {
@@ -195,11 +195,11 @@ func (p *Plugin) scheduler() {
 			}
 
 			go func() {
-				p.logger.Debug().Str("mode", PrintMode(runMode)).Msg("start task")
+				p.logger.Debug().Str("mode", printMode(runMode)).Msg("start task")
 
 				running.Store(true)
 				defer func() {
-					p.logger.Debug().Str("mode", PrintMode(runMode)).Msg("finished task")
+					p.logger.Debug().Str("mode", printMode(runMode)).Msg("finished task")
 					running.Store(false)
 				}()
 
@@ -211,7 +211,7 @@ func (p *Plugin) scheduler() {
 					interval.Reset(wait)
 					p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
 				} else {
-					p.logger.Warn().Str("mode", PrintMode(onDemandMode)).Msg("trigger queued on-demand mode")
+					p.logger.Warn().Str("mode", printMode(onDemandMode)).Msg("trigger queued on-demand mode")
 					p.SyncNow(onDemandMode)
 				}
 			}()
@@ -271,14 +271,14 @@ func (p *Plugin) task(mode api.SyncMode) {
 		return
 	}
 
-	if Has(mode, api.SyncMode_SYNC_MODE_WATERMARK) {
+	if has(mode, api.SyncMode_SYNC_MODE_WATERMARK) {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Watermark),
 		})
 	}
 
-	if Has(mode, api.SyncMode_SYNC_MODE_DIFF) {
+	if has(mode, api.SyncMode_SYNC_MODE_DIFF) {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Diff),
@@ -286,7 +286,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 		return
 	}
 
-	if Has(mode, api.SyncMode_SYNC_MODE_FULL) {
+	if has(mode, api.SyncMode_SYNC_MODE_FULL) {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Full),
@@ -294,7 +294,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 		return
 	}
 
-	if Has(mode, api.SyncMode_SYNC_MODE_MANIFEST) && !Has(mode, api.SyncMode_SYNC_MODE_WATERMARK) {
+	if has(mode, api.SyncMode_SYNC_MODE_MANIFEST) && !has(mode, api.SyncMode_SYNC_MODE_WATERMARK) {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 		})
@@ -336,7 +336,7 @@ func (p *Plugin) remoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, e
 	return conn, nil
 }
 
-func Fold(m ...api.SyncMode) api.SyncMode {
+func fold(m ...api.SyncMode) api.SyncMode {
 	r := api.SyncMode_SYNC_MODE_UNKNOWN
 	for _, v := range m {
 		r |= v
@@ -344,7 +344,7 @@ func Fold(m ...api.SyncMode) api.SyncMode {
 	return r
 }
 
-func PrintMode(mode api.SyncMode) string {
+func printMode(mode api.SyncMode) string {
 	modes := []string{}
 	if mode&api.SyncMode_SYNC_MODE_MANIFEST != 0 {
 		modes = append(modes, "MANIFEST")
@@ -364,6 +364,6 @@ func PrintMode(mode api.SyncMode) string {
 	return strings.Join(modes, "|")
 }
 
-func Has(mode, instance api.SyncMode) bool {
+func has(mode, instance api.SyncMode) bool {
 	return mode&instance != 0
 }
