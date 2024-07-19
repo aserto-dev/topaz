@@ -14,8 +14,8 @@
                 "logging": {
                     "$ref": "#/definitions/Logging"
                 },
-                "debug": {
-                    "$ref": "#/definitions/Debug"
+                "debug_service": {
+                    "$ref": "#/definitions/DebugService"
                 },
                 "directory": {
                     "$ref": "#definitions/Directory"
@@ -91,8 +91,8 @@
                 }
             }
         },
-        "Debug": {
-            "description": "debug setting",
+        "DebugService": {
+            "description": "debug service setting",
             "type": "object",
             "additionalProperties": false,
             "properties": {
@@ -104,7 +104,7 @@
                 "listen_address": {
                     "type": "string",
                     "description": "debug service listen address",
-                    "default": "http://localhost:6060"
+                    "default": "localhost:6060"
                 },
                 "shutdown_timeout": {
                     "type": "integer",
