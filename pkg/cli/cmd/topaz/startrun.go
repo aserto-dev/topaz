@@ -163,8 +163,11 @@ func getVolumes(cfg *config.Loader) ([]string, error) {
 	})
 
 	volumes := []string{
-		fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir()),        // manually attach the configuration folder
-		fmt.Sprintf("%s:/root/.policy:ro", dockerx.PolicyRoot()), // manually attache policy store
+		fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir()), // manually attach the configuration folder
+	}
+
+	if cfg.Configuration.OPA.LocalBundles.LocalPolicyImage != "" && dockerx.PolicyRoot() != "" {
+		volumes = append(volumes, fmt.Sprintf("%s:/root/.policy:ro", dockerx.PolicyRoot())) // manually attach policy store
 	}
 
 	for _, v := range volumeMap {
