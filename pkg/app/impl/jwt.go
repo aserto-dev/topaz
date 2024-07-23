@@ -12,17 +12,16 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
-	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/pb"
+	"github.com/aserto-dev/topaz/directory"
+
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
-
-	"github.com/aserto-dev/topaz/directory"
 )
 
 var (
@@ -36,7 +35,7 @@ var (
 
 // getUserFromJWT.
 func (s *AuthorizerServer) getUserFromJWT(ctx context.Context, bearerJWT string) (proto.Message, error) {
-	resp := dsc2.Object{}
+	resp := dsc3.Object{}
 
 	ident, err := s.getIdentityFromJWT(ctx, bearerJWT)
 	if err != nil {
@@ -262,7 +261,7 @@ func (s *AuthorizerServer) getObject(ctx context.Context, objType, objID string)
 	return addObjectKey(objResp.Result)
 }
 
-func addObjectKey(in *common.Object) (proto.Message, error) {
+func addObjectKey(in *dsc3.Object) (proto.Message, error) {
 	buf := new(bytes.Buffer)
 	if err := pb.ProtoToBuf(buf, in); err != nil {
 		return nil, err

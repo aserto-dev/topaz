@@ -245,6 +245,7 @@ func checkPermissionV3(ctx context.Context, c *client.Client, msg *structpb.Valu
 
 	start := time.Now()
 
+	//nolint: staticcheck // SA1019: c.Reader.CheckPermission
 	resp, err := c.Reader.CheckPermission(ctx, &req)
 
 	duration := time.Since(start)
@@ -265,6 +266,7 @@ func checkRelationV3(ctx context.Context, c *client.Client, msg *structpb.Value)
 
 	start := time.Now()
 
+	//nolint: staticcheck // SA1019: c.Reader.CheckRelation
 	resp, err := c.Reader.CheckRelation(ctx, &req)
 
 	duration := time.Since(start)

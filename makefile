@@ -27,7 +27,7 @@ BUF_VER            := 1.34.0
 BUF_USER           := $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_USER kv/buf.build)
 BUF_TOKEN          := $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_TOKEN kv/buf.build)
 BUF_REPO           := "buf.build/aserto-dev/directory"
-BUF_LATEST         := $(shell BUF_BETA_SUPPRESS_WARNINGS=1 ${EXT_BIN_DIR}/buf beta registry tag list buf.build/aserto-dev/directory --format json --reverse | jq -r '.results[0].name')
+BUF_LATEST         := $(shell BUF_BETA_SUPPRESS_WARNINGS=1 ${EXT_BIN_DIR}/buf beta registry label list buf.build/aserto-dev/directory --format json --reverse | jq -r '.results[0].name')
 BUF_DEV_IMAGE      := "../pb-directory/bin/directory.bin"
 
 RELEASE_TAG        := $$(svu)
@@ -114,7 +114,7 @@ buf-build: ${BIN_DIR}
 .PHONY: buf-push
 buf-push:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/buf push proto --tag ${RELEASE_TAG}
+	@${EXT_BIN_DIR}/buf push proto --label ${RELEASE_TAG}
 
 .PHONY: buf-mod-update
 buf-mod-update:
