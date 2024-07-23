@@ -9,8 +9,8 @@ logging:
   log_level: info
   grpc_log_level: info
 
-# debug settings
-debug:
+# debug service settings
+debug_service:
   enabled: false
   listen_address: ""
   shutdown_timeout: 0

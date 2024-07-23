@@ -101,6 +101,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
+			//nolint: staticcheck // SA1019: client.CheckRelation is deprecated
 			resp, err := client.CheckRelation(bctx.Context, &args)
 			if err != nil {
 				traceError(&bctx, fnName, err)
@@ -151,6 +152,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 				return nil, errors.Wrapf(err, "get directory client")
 			}
 
+			//nolint: staticcheck // SA1019: client.CheckPermission is deprecated
 			resp, err := client.CheckPermission(bctx.Context, &args)
 			if err != nil {
 				traceError(&bctx, fnName, err)

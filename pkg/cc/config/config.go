@@ -47,9 +47,9 @@ type ServicesConfig struct {
 
 // Config holds the configuration for the app.
 type Common struct {
-	Version int           `json:"version"`
-	Logging logger.Config `json:"logging"`
-	Debug   debug.Config  `json:"debug"`
+	Version      int           `json:"version"`
+	Logging      logger.Config `json:"logging"`
+	DebugService debug.Config  `json:"debug_service"`
 
 	Command struct {
 		Mode CommandMode
