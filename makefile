@@ -22,7 +22,7 @@ GOTESTSUM_VER      := 1.11.0
 GOLANGCI-LINT_VER  := 1.56.2
 GORELEASER_VER     := 1.24.0
 WIRE_VER	         := 0.6.0
-BUF_VER            := 1.30.0
+BUF_VER            := 1.34.0
 
 BUF_USER           := $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_USER kv/buf.build)
 BUF_TOKEN          := $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_TOKEN kv/buf.build)
