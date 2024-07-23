@@ -36,9 +36,12 @@ func PolicyRoot() string {
 			return ""
 		}
 
-		return path.Join(home, defaultPolicyRoot)
+		policyRoot = path.Join(home, defaultPolicyRoot)
 	}
-	return policyRoot
+	if fi, err := os.Stat(policyRoot); err == nil && fi.IsDir() {
+		return policyRoot
+	}
+	return ""
 }
 
 type DockerClient struct {
