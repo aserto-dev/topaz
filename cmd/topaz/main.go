@@ -159,14 +159,12 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 	return len(files) > 0, nil
 }
 
-// hack to suppress Kong raising an error when invoking the CLI without params, resulting in an fnExit code 1 instead of 0
-// aserto: error: expected one of "login",  "logout",  "start",  "stop",  "restart",  ...
+// hack to suppress Kong raising an error when invoking the CLI without params, resulting in exit code 0 instead of 1
 // exit is usd by kong.Exit().
 func exit(rc int) {
 	if len(os.Args) == 1 {
 		os.Exit(0)
 	}
-	// os.Exit(rc)
 }
 
 // check set version in defaults and suggest update if needed.
