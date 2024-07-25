@@ -30,6 +30,10 @@ const (
 )
 
 func main() {
+	if len(os.Args) == 1 {
+		os.Args = append(os.Args, "--help")
+	}
+
 	os.Exit(run())
 }
 
@@ -68,7 +72,6 @@ func run() (exitCode int) {
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
-		kong.Exit(exit),
 		kong.ConfigureHelp(kong.HelpOptions{
 			NoAppSummary:        false,
 			Summary:             false,
@@ -157,14 +160,6 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 	}
 
 	return len(files) > 0, nil
-}
-
-// hack to suppress Kong raising an error when invoking the CLI without params, resulting in exit code 0 instead of 1
-// exit is usd by kong.Exit().
-func exit(rc int) {
-	if len(os.Args) == 1 {
-		os.Exit(0)
-	}
 }
 
 // check set version in defaults and suggest update if needed.
