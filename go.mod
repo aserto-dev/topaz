@@ -23,7 +23,7 @@ require (
 	github.com/aserto-dev/azm v0.1.11
 	github.com/aserto-dev/certs v0.0.6
 	github.com/aserto-dev/errors v0.0.9
-	github.com/aserto-dev/go-aserto v0.31.4
+	github.com/aserto-dev/go-aserto v0.31.5-0.20240725175353-73fd8d16fe72
 	github.com/aserto-dev/go-authorizer v0.20.7
 	github.com/aserto-dev/go-directory v0.31.6
 	github.com/aserto-dev/go-directory-cli v0.31.3-0.20240711215128-477b23ffcb75
