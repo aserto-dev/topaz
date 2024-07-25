@@ -19,11 +19,18 @@ import (
 	"github.com/rs/zerolog"
 )
 
+const docLink = "https://www.topaz.sh/docs/command-line-interface/topaz-cli/configuration"
+
 const (
-	docLink = "https://www.topaz.sh/docs/command-line-interface/topaz-cli/configuration"
+	rcOK  int = 0
+	rcErr int = 1
 )
 
 func main() {
+	os.Exit(run())
+}
+
+func run() (exitCode int) {
 	fflag.Init()
 
 	cli := cmd.CLI{}
@@ -33,19 +40,17 @@ func main() {
 	oldDBPath := filepath.Join(cc.GetTopazDir(), "db")
 	warn, err := checkDBFiles(oldDBPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		exitErr(err)
 	}
 
 	c, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		exitErr(err)
 	}
+
 	err = checkVersion(c)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		exitErr(err)
 	}
 
 	if warn && len(os.Args) == 1 {
@@ -98,12 +103,19 @@ func main() {
 	}
 
 	if err := cc.EnsureDirs(); err != nil {
-		kongCtx.FatalIfErrorf(err)
+		exitErr(err)
 	}
 
 	if err := kongCtx.Run(c); err != nil {
-		kongCtx.FatalIfErrorf(err)
+		exitErr(err)
 	}
+
+	return rcOK
+}
+
+func exitErr(err error) int {
+	fmt.Fprintln(os.Stderr, err.Error())
+	return rcErr
 }
 
 func logLevel(level int) zerolog.Level {
