@@ -23,10 +23,10 @@ require (
 	github.com/aserto-dev/azm v0.1.11
 	github.com/aserto-dev/certs v0.0.6
 	github.com/aserto-dev/errors v0.0.9
-	github.com/aserto-dev/go-aserto v0.31.4
+	github.com/aserto-dev/go-aserto v0.31.5
 	github.com/aserto-dev/go-authorizer v0.20.7
 	github.com/aserto-dev/go-directory v0.31.6
-	github.com/aserto-dev/go-directory-cli v0.31.3-0.20240711215128-477b23ffcb75
+	github.com/aserto-dev/go-directory-cli v0.31.3
 	github.com/aserto-dev/go-edge-ds v0.32.3
 	github.com/aserto-dev/go-grpc v0.8.67
 	github.com/aserto-dev/go-topaz-ui v0.1.11
@@ -38,7 +38,7 @@ require (
 	github.com/aserto-dev/self-decision-logger v0.0.5
 	github.com/aserto-dev/service-host v0.0.14
 	github.com/cli/browser v1.3.0
-	github.com/docker/docker v27.1.0+incompatible
+	github.com/docker/docker v27.1.1+incompatible
 	github.com/docker/go-connections v0.5.0
 	github.com/fatih/color v1.17.0
 	github.com/fullstorydev/grpcurl v1.9.1

@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strconv"
+	"syscall"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -19,11 +22,25 @@ import (
 	"github.com/rs/zerolog"
 )
 
+const docLink = "https://www.topaz.sh/docs/command-line-interface/topaz-cli/configuration"
+
 const (
-	docLink = "https://www.topaz.sh/docs/command-line-interface/topaz-cli/configuration"
+	rcOK  int = 0
+	rcErr int = 1
 )
 
 func main() {
+	if len(os.Args) == 1 {
+		os.Args = append(os.Args, "--help")
+	}
+
+	os.Exit(run())
+}
+
+func run() (exitCode int) {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	fflag.Init()
 
 	cli := cmd.CLI{}
@@ -33,19 +50,17 @@ func main() {
 	oldDBPath := filepath.Join(cc.GetTopazDir(), "db")
 	warn, err := checkDBFiles(oldDBPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		exitErr(err)
 	}
 
-	c, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
+	c, err := cc.NewCommonContext(ctx, cli.NoCheck, cliConfigFile)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		exitErr(err)
 	}
+
 	err = checkVersion(c)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		exitErr(err)
 	}
 
 	if warn && len(os.Args) == 1 {
@@ -57,7 +72,6 @@ func main() {
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
-		kong.Exit(exit),
 		kong.ConfigureHelp(kong.HelpOptions{
 			NoAppSummary:        false,
 			Summary:             false,
@@ -98,12 +112,19 @@ func main() {
 	}
 
 	if err := cc.EnsureDirs(); err != nil {
-		kongCtx.FatalIfErrorf(err)
+		exitErr(err)
 	}
 
 	if err := kongCtx.Run(c); err != nil {
-		kongCtx.FatalIfErrorf(err)
+		exitErr(err)
 	}
+
+	return rcOK
+}
+
+func exitErr(err error) int {
+	fmt.Fprintln(os.Stderr, err.Error())
+	return rcErr
 }
 
 func logLevel(level int) zerolog.Level {
@@ -139,14 +160,6 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 	}
 
 	return len(files) > 0, nil
-}
-
-// set status code to 0 when executing with no arguments, help only output.
-func exit(rc int) {
-	if len(os.Args) == 1 {
-		os.Exit(0)
-	}
-	os.Exit(rc)
 }
 
 // check set version in defaults and suggest update if needed.

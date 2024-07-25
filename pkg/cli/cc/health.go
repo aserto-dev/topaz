@@ -16,8 +16,7 @@ func ServiceHealthStatus(addr, service string) bool {
 	connTimeout := time.Second * 30
 	rpcTimeout := time.Second * 30
 
-	bCtx := context.Background()
-	dialCtx, dialCancel := context.WithTimeout(bCtx, connTimeout)
+	dialCtx, dialCancel := context.WithTimeout(context.Background(), connTimeout)
 	defer dialCancel()
 
 	dialOpts := []grpc.DialOption{
@@ -30,7 +29,7 @@ func ServiceHealthStatus(addr, service string) bool {
 	}
 	defer conn.Close()
 
-	rpcCtx, rpcCancel := context.WithTimeout(bCtx, rpcTimeout)
+	rpcCtx, rpcCancel := context.WithTimeout(context.Background(), rpcTimeout)
 	defer rpcCancel()
 
 	if err := Retry(rpcTimeout, time.Millisecond*100, func() error {

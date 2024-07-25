@@ -70,9 +70,9 @@ var (
 	once     sync.Once
 )
 
-func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
-	ctx := &CommonCtx{
-		Context: context.Background(),
+func NewCommonContext(ctx context.Context, noCheck bool, configFilePath string) (*CommonCtx, error) {
+	commonCtx := &CommonCtx{
+		Context: ctx,
 		std:     iostream.DefaultIO(),
 		Config: &CLIConfig{
 			Version: 1,
@@ -92,15 +92,15 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 		if err != nil {
 			return nil, err
 		}
-		err = json.Unmarshal(data, ctx.Config)
+		err = json.Unmarshal(data, commonCtx.Config)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	setDefaults(ctx)
+	setDefaults(commonCtx)
 
-	return ctx, nil
+	return commonCtx, nil
 }
 
 func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatus) bool {
