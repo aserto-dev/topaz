@@ -5,13 +5,14 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"syscall"
 
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/cmd/topaz-db/cmd"
 )
 
 func main() {
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
 	cli := cmd.CLI{}
