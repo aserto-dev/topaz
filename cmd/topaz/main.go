@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strconv"
+	"syscall"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -31,6 +34,9 @@ func main() {
 }
 
 func run() (exitCode int) {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	fflag.Init()
 
 	cli := cmd.CLI{}
@@ -43,7 +49,7 @@ func run() (exitCode int) {
 		exitErr(err)
 	}
 
-	c, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
+	c, err := cc.NewCommonContext(ctx, cli.NoCheck, cliConfigFile)
 	if err != nil {
 		exitErr(err)
 	}
@@ -153,12 +159,14 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 	return len(files) > 0, nil
 }
 
-// set status code to 0 when executing with no arguments, help only output.
+// hack to suppress Kong raising an error when invoking the CLI without params, resulting in an fnExit code 1 instead of 0
+// aserto: error: expected one of "login",  "logout",  "start",  "stop",  "restart",  ...
+// exit is usd by kong.Exit().
 func exit(rc int) {
 	if len(os.Args) == 1 {
 		os.Exit(0)
 	}
-	os.Exit(rc)
+	// os.Exit(rc)
 }
 
 // check set version in defaults and suggest update if needed.
