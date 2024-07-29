@@ -23,7 +23,7 @@ type GetObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a get object request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *GetObjectCmd) BeforeReset(ctx *kong.Context) error {
@@ -61,7 +61,7 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	client, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -87,7 +87,7 @@ type SetObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a set object request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *SetObjectCmd) BeforeReset(ctx *kong.Context) error {
@@ -100,7 +100,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -156,7 +156,7 @@ type DeleteObjectCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete object request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a delete object request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *DeleteObjectCmd) BeforeReset(ctx *kong.Context) error {
@@ -169,7 +169,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -220,7 +220,7 @@ type ListObjectsCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a list objects request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *ListObjectsCmd) BeforeReset(ctx *kong.Context) error {
@@ -233,7 +233,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}

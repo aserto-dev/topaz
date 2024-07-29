@@ -14,25 +14,25 @@ import (
 type GetManifestCmd struct {
 	Path   string `arg:"path" help:"filepath to manifest file" type:"path" optional:""`
 	Stdout bool   `flag:"" help:"output manifest to --stdout"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 type SetManifestCmd struct {
 	Path  string `arg:"" help:"filepath to manifest file" type:"path" optional:""`
 	Stdin bool   `flag:"" help:"set manifest from --stdin"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 type DeleteManifestCmd struct {
 	Force bool `flag:"" help:"do not ask for conformation to delete manifest"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
-	dsClient, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
-	dsClient, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
-	dsClient, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}

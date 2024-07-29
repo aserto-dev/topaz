@@ -31,7 +31,7 @@ func (cmd *SyncCmd) Run(ctx context.Context) error {
 	}
 
 	// create client conn
-	conn, err := dsc.NewConn(ctx, &cmd.DirectoryConfig)
+	conn, err := dsc.NewConn(ctx, &cmd.Config)
 	if err != nil {
 		return err
 	}

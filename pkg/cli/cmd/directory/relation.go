@@ -20,7 +20,7 @@ type GetRelationCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get relation request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a get relation request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
@@ -28,7 +28,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -83,7 +83,7 @@ type SetRelationCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set relation request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a set relation request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
@@ -91,7 +91,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -150,7 +150,7 @@ type DeleteRelationCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete relation request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a delete relation request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
@@ -158,7 +158,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -212,7 +212,7 @@ type ListRelationsCmd struct {
 	Request  string `arg:"" type:"s" name:"request" optional:"" help:"file path to list relations request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a list relations request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
@@ -220,7 +220,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}

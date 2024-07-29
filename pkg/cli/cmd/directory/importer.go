@@ -12,7 +12,7 @@ import (
 
 type ImportCmd struct {
 	Directory string `short:"d" required:"" help:"directory containing .json data"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
@@ -35,7 +35,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}

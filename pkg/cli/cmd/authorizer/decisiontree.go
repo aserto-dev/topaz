@@ -20,7 +20,7 @@ type DecisionTreeCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to decision tree request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	azc.AuthorizerConfig
+	azc.Config
 }
 
 func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
@@ -28,7 +28,7 @@ func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	azClient, err := azc.NewClient(c, &cmd.AuthorizerConfig)
+	azClient, err := azc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get authorizer client")
 	}

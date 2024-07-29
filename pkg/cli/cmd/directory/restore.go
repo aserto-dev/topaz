@@ -11,7 +11,7 @@ import (
 
 type RestoreCmd struct {
 	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
@@ -19,7 +19,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}

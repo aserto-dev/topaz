@@ -40,7 +40,7 @@ type TestExecCmd struct {
 	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
 	Summary bool   `flag:"" default:"false" help:"display test summary"`
 	results *testResults
-	azc.AuthorizerConfig
+	azc.Config
 }
 
 // nolint: funlen,gocyclo
@@ -51,7 +51,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 	defer r.Close()
 
-	azClient, err := azc.NewClient(c, &cmd.AuthorizerConfig)
+	azClient, err := azc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}

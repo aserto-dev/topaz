@@ -17,7 +17,7 @@ type CheckCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to check permission request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	dsc.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
@@ -25,7 +25,7 @@ func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
