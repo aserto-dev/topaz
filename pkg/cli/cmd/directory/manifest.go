@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 
 	"github.com/pkg/errors"
@@ -14,32 +14,32 @@ import (
 type GetManifestCmd struct {
 	Path   string `arg:"path" help:"filepath to manifest file" type:"path" optional:""`
 	Stdout bool   `flag:"" help:"output manifest to --stdout"`
-	clients.DirectoryConfig
+	dsc.Config
 }
 
 type SetManifestCmd struct {
 	Path  string `arg:"" help:"filepath to manifest file" type:"path" optional:""`
 	Stdin bool   `flag:"" help:"set manifest from --stdin"`
-	clients.DirectoryConfig
+	dsc.Config
 }
 
 type DeleteManifestCmd struct {
 	Force bool `flag:"" help:"do not ask for conformation to delete manifest"`
-	clients.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
 
 	c.Con().Info().Msg(">>> get manifest to %s", cmd.Path)
 
-	r, err := dirClient.V3.GetManifest(c.Context)
+	r, err := dsClient.GetManifest(c.Context)
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -80,14 +80,14 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 
 	c.Con().Info().Msg(">>> set manifest to %s\n", cmd.Path)
 
-	return dirClient.V3.SetManifest(c.Context, r)
+	return dsClient.SetManifest(c.Context, r)
 }
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 	if !c.IsServing(cmd.Host) {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -95,7 +95,7 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 	c.Con().Warn().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
 	if cmd.Force || common.PromptYesNo("Do you want to continue?", false) {
 		c.Con().Info().Msg(">>> delete manifest")
-		return dirClient.V3.DeleteManifest(c.Context)
+		return dsClient.DeleteManifest(c.Context)
 	}
 	return nil
 }

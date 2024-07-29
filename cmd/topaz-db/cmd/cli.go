@@ -1,8 +1,6 @@
 package cmd
 
-import (
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
-)
+import dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 
 type CLI struct {
 	Init InitCmd `cmd:"" help:"create new database file"`
@@ -28,5 +26,5 @@ type LoadCmd struct {
 type SyncCmd struct {
 	DBFile string   `arg:"" help:"db file name" type:"existingfile"`
 	Mode   []string `flag:"" short:"m" enum:"manifest,full,diff,watermark" required:"" help:"sync mode"`
-	clients.DirectoryConfig
+	dsc.Config
 }

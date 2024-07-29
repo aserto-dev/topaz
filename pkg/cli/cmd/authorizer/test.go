@@ -14,7 +14,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 
 	"github.com/fatih/color"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -40,7 +40,7 @@ type TestExecCmd struct {
 	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
 	Summary bool   `flag:"" default:"false" help:"display test summary"`
 	results *testResults
-	clients.AuthorizerConfig
+	azc.Config
 }
 
 // nolint: funlen,gocyclo
@@ -51,7 +51,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 	defer r.Close()
 
-	azc, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
+	azClient, err := azc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -102,7 +102,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 
 		switch {
 		case checkType == CheckDecision:
-			result = checkDecisionV2(c.Context, azc, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkDecisionV2(c.Context, azClient.Authorizer, msg.Fields[checkTypeMapStr[checkType]])
 		default:
 			continue
 		}

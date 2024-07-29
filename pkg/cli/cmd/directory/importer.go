@@ -6,13 +6,13 @@ import (
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/pkg/errors"
 )
 
 type ImportCmd struct {
 	Directory string `short:"d" required:"" help:"directory containing .json data"`
-	clients.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
@@ -35,10 +35,10 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
 
-	return dirClient.V3.Import(c.Context, files)
+	return dsClient.Import(c.Context, files)
 }

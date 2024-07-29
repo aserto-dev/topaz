@@ -431,10 +431,8 @@ github.com/aserto-dev/go-authorizer v0.20.7 h1:g8N24ttTmOR0MeRi6G6AC5pmTYRwSsB8X
 github.com/aserto-dev/go-authorizer v0.20.7/go.mod h1:lncQZDlVYhXMsVBYnPvrFhGjtuvmNBJfUkIamy1dtrM=
 github.com/aserto-dev/go-decision-logs v0.0.4 h1:beu/mhqZ92ovhSIPOv2f4q0Ci7HWNLla/j/x+ZD5eHw=
 github.com/aserto-dev/go-decision-logs v0.0.4/go.mod h1:W50DNu4HPCk+iyI39cP3+KBytdrQYVieSPXh9StuRzA=
-github.com/aserto-dev/go-directory v0.31.6 h1:gHL/z2Gegc+CmaarUnNGk+Zya/eJ4eS1vGfEiRYQeX0=
-github.com/aserto-dev/go-directory v0.31.6/go.mod h1:T125gQBcPXrLUh7bMPFHzsXRHUnZb++DzhPk8o8tc4k=
-github.com/aserto-dev/go-directory-cli v0.31.3 h1:Q4hZYHuvyGdPR7WtsX+CwX7ps42dM5v0+IoHjCjKBPc=
-github.com/aserto-dev/go-directory-cli v0.31.3/go.mod h1:MnNxdykB4ICw5dxY28BIGq53RbPIIT9wIvbGk1aL69I=
+github.com/aserto-dev/go-directory v0.31.7 h1:cK2XKOhXe7rMqAvRmYzXh9eZbcjqD1qNAvhbsJtKP9s=
+github.com/aserto-dev/go-directory v0.31.7/go.mod h1:T125gQBcPXrLUh7bMPFHzsXRHUnZb++DzhPk8o8tc4k=
 github.com/aserto-dev/go-edge-ds v0.32.3 h1:/A2HvlZvtKkYIjaAbQ+C4L3uWj5RZAr7+VjzrHUVhQU=
 github.com/aserto-dev/go-edge-ds v0.32.3/go.mod h1:H98tGHc/KWTrMczXuao4L4r10B5GPXPhq5K7R2uy9xE=
 github.com/aserto-dev/go-grpc v0.8.67 h1:6DGZiIjIWWFMQ81bLswTqbuQLWS5zycbAQIJsyPmftA=
@@ -901,8 +899,8 @@ github.com/prometheus/statsd_exporter v0.26.1 h1:ucbIAdPmwAUcA+dU+Opok8Qt81Aw8Ha
 github.com/prometheus/statsd_exporter v0.26.1/go.mod h1:XlDdjAmRmx3JVvPPYuFNUg+Ynyb5kR69iPPkQjxXFMk=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 h1:N/ElC8H3+5XpJzTSTfLsJV/mx9Q9g7kxmchpfZyxgzM=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
-github.com/rivo/tview v0.0.0-20240625185742-b0a7293b8130 h1:o1CYtoFOm6xJK3DvDAEG5wDJPLj+SoxUtUDFaQgt1iY=
-github.com/rivo/tview v0.0.0-20240625185742-b0a7293b8130/go.mod h1:02iFIz7K/A9jGCvrizLPvoqr4cEIx7q54RH5Qudkrss=
+github.com/rivo/tview v0.0.0-20240728114935-65571ae51e71 h1:lU8yiVCOA/uS4fRto0Xxw2oUWVvJyAJBBJz8LhuhVys=
+github.com/rivo/tview v0.0.0-20240728114935-65571ae51e71/go.mod h1:02iFIz7K/A9jGCvrizLPvoqr4cEIx7q54RH5Qudkrss=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.4.3/go.mod h1:FN3SvrM+Zdj16jyLfmOkMNblXMcoc8DfTHruCPUcx88=
 github.com/rivo/uniseg v0.4.7 h1:WUdvkW8uEhrYfLC4ZzdpI2ztxP1I582+49Oc5Mq64VQ=

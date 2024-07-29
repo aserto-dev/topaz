@@ -5,10 +5,11 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/edit"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
+	"github.com/aserto-dev/topaz/pkg/cli/pb"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
@@ -19,7 +20,7 @@ type GetRelationCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get relation request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a get relation request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	clients.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
@@ -27,7 +28,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -53,12 +54,12 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetRelationRequest
-	err = clients.UnmarshalRequest(cmd.Request, &req)
+	err = pb.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
 
-	resp, err := client.V3.Reader.GetRelation(c.Context, &req)
+	resp, err := client.Reader.GetRelation(c.Context, &req)
 	if err != nil {
 		return errors.Wrap(err, "get relation call failed")
 	}
@@ -82,7 +83,7 @@ type SetRelationCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set relation request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a set relation request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	clients.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
@@ -90,7 +91,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -116,12 +117,12 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.SetRelationRequest
-	err = clients.UnmarshalRequest(cmd.Request, &req)
+	err = pb.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
 
-	resp, err := client.V3.Writer.SetRelation(c.Context, &req)
+	resp, err := client.Writer.SetRelation(c.Context, &req)
 	if err != nil {
 		return errors.Wrap(err, "set relation call failed")
 	}
@@ -149,7 +150,7 @@ type DeleteRelationCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete relation request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a delete relation request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	clients.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
@@ -157,7 +158,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -183,12 +184,12 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.DeleteRelationRequest
-	err = clients.UnmarshalRequest(cmd.Request, &req)
+	err = pb.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
 
-	resp, err := client.V3.Writer.DeleteRelation(c.Context, &req)
+	resp, err := client.Writer.DeleteRelation(c.Context, &req)
 	if err != nil {
 		return errors.Wrap(err, "delete relation call failed")
 	}
@@ -211,7 +212,7 @@ type ListRelationsCmd struct {
 	Request  string `arg:"" type:"s" name:"request" optional:"" help:"file path to list relations request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a list relations request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	clients.DirectoryConfig
+	dsc.Config
 }
 
 func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
@@ -219,7 +220,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	client, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -245,12 +246,12 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetRelationsRequest
-	err = clients.UnmarshalRequest(cmd.Request, &req)
+	err = pb.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
 
-	resp, err := client.V3.Reader.GetRelations(c.Context, &req)
+	resp, err := client.Reader.GetRelations(c.Context, &req)
 	if err != nil {
 		return errors.Wrap(err, "get relations call failed")
 	}
