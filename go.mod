@@ -4,14 +4,13 @@ go 1.22.0
 
 toolchain go1.22.5
 
-// replace github.com/aserto-dev/go-directory => ../go-directory
-// replace github.com/aserto-dev/go-directory-cli => ../go-directory-cli
-// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
 // replace github.com/aserto-dev/azm => ../azm
+// replace github.com/aserto-dev/go-directory => ../go-directory
+// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
-// replace github.com/aserto-dev/service-host => ../service-host
 // replace github.com/aserto-dev/runtime => ../runtime
+// replace github.com/aserto-dev/service-host => ../service-host
+
 replace github.com/adrg/xdg => ./pkg/cli/xdg
 
 require (
@@ -25,7 +24,7 @@ require (
 	github.com/aserto-dev/errors v0.0.9
 	github.com/aserto-dev/go-aserto v0.31.5
 	github.com/aserto-dev/go-authorizer v0.20.7
-	github.com/aserto-dev/go-directory v0.31.6
+	github.com/aserto-dev/go-directory v0.31.7
 	github.com/aserto-dev/go-edge-ds v0.32.3
 	github.com/aserto-dev/go-grpc v0.8.67
 	github.com/aserto-dev/go-topaz-ui v0.1.11
@@ -58,7 +57,7 @@ require (
 	github.com/open-policy-agent/opa v0.66.0
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/pkg/errors v0.9.1
-	github.com/rivo/tview v0.0.0-20240625185742-b0a7293b8130
+	github.com/rivo/tview v0.0.0-20240728114935-65571ae51e71
 	github.com/rs/zerolog v1.33.0
 	github.com/samber/lo v1.46.0
 	github.com/spf13/cobra v1.8.1
