@@ -8,10 +8,11 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	"github.com/aserto-dev/topaz/pkg/cli/edit"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
+	"github.com/aserto-dev/topaz/pkg/cli/pb"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 	"github.com/aserto-dev/topaz/pkg/cli/table"
 	"github.com/pkg/errors"
@@ -24,7 +25,7 @@ type ListPoliciesCmd struct {
 	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	Raw      bool   `name:"raw" help:"return raw request output"`
-	clients.AuthorizerConfig
+	azc.AuthorizerConfig
 }
 
 func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
@@ -32,7 +33,7 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
+	azClient, err := azc.NewClient(c, &cmd.AuthorizerConfig)
 	if err != nil {
 		return errors.Wrap(err, "failed to get authorizer client")
 	}
@@ -58,12 +59,12 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req authorizer.ListPoliciesRequest
-	err = clients.UnmarshalRequest(cmd.Request, &req)
+	err = pb.UnmarshalRequest(cmd.Request, &req)
 	if err != nil {
 		return err
 	}
 
-	resp, err := client.ListPolicies(c.Context, &req)
+	resp, err := azClient.Authorizer.ListPolicies(c.Context, &req)
 	if err != nil {
 		return err
 	}

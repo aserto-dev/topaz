@@ -4,13 +4,13 @@ import (
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/pkg/errors"
 )
 
 type ExportCmd struct {
 	Directory string `short:"d" required:"" help:"directory to write .json data"`
-	directory.DirectoryConfig
+	dsc.DirectoryConfig
 }
 
 func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
@@ -22,10 +22,10 @@ func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
 	objectsFile := filepath.Join(cmd.Directory, "objects.json")
 	relationsFile := filepath.Join(cmd.Directory, "relations.json")
 
-	dirClient, err := directory.NewClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return err
 	}
 
-	return dirClient.Export(c.Context, objectsFile, relationsFile)
+	return dsClient.Export(c.Context, objectsFile, relationsFile)
 }
