@@ -4,6 +4,7 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/edit"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
@@ -16,7 +17,7 @@ type CheckCmd struct {
 	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to check permission request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	clients.DirectoryConfig
+	directory.DirectoryConfig
 }
 
 func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
@@ -24,7 +25,7 @@ func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	client, err := directory.NewClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -55,7 +56,7 @@ func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	resp, err := client.V3.Reader.Check(c.Context, &req)
+	resp, err := client.Reader.Check(c.Context, &req)
 	if err != nil {
 		return errors.Wrap(err, "check permission call failed")
 	}

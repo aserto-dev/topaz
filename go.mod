@@ -26,7 +26,6 @@ require (
 	github.com/aserto-dev/go-aserto v0.31.5
 	github.com/aserto-dev/go-authorizer v0.20.7
 	github.com/aserto-dev/go-directory v0.31.6
-	github.com/aserto-dev/go-directory-cli v0.31.3
 	github.com/aserto-dev/go-edge-ds v0.32.3
 	github.com/aserto-dev/go-grpc v0.8.67
 	github.com/aserto-dev/go-topaz-ui v0.1.11
@@ -50,6 +49,7 @@ require (
 	github.com/itchyny/gojq v0.12.16
 	github.com/lestrrat-go/jwx/v2 v2.1.0
 	github.com/magefile/mage v1.15.0
+	github.com/mattn/go-isatty v0.0.20
 	github.com/mennanov/fmutils v0.3.0
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/mitchellh/mapstructure v1.5.0
@@ -138,7 +138,6 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/minio/highwayhash v1.0.2 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect

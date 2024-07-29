@@ -179,6 +179,7 @@
     "topazd",
     "tview",
     "typecheck",
+    "Typeflag",
     "unconvert",
     "unparam",
     "upgrader",

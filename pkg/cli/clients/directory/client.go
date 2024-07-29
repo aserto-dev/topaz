@@ -1,12 +1,18 @@
-package clients
+package directory
 
 import (
 	"context"
 	"fmt"
 
 	"github.com/aserto-dev/go-aserto/client"
-	dsc "github.com/aserto-dev/go-directory-cli/client"
+	dsa3 "github.com/aserto-dev/go-directory/aserto/directory/assertion/v3"
+	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+
 	"github.com/fullstorydev/grpcurl"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -22,7 +28,17 @@ type DirectoryConfig struct {
 	TenantID string `flag:"tenant-id" help:"" default:"${tenant_id}" env:"ASERTO_TENANT_ID" `
 }
 
-func NewDirectoryConn(ctx context.Context, cfg *DirectoryConfig) (*grpc.ClientConn, error) {
+type Client struct {
+	conn      *grpc.ClientConn
+	Model     dsm3.ModelClient
+	Reader    dsr3.ReaderClient
+	Writer    dsw3.WriterClient
+	Importer  dsi3.ImporterClient
+	Exporter  dse3.ExporterClient
+	Assertion dsa3.AssertionClient
+}
+
+func NewConn(ctx context.Context, cfg *DirectoryConfig) (*grpc.ClientConn, error) {
 	if cfg.Host == "" {
 		return nil, fmt.Errorf("no host specified")
 	}
@@ -51,13 +67,25 @@ func NewDirectoryConn(ctx context.Context, cfg *DirectoryConfig) (*grpc.ClientCo
 	return client.NewConnection(ctx, opts...)
 }
 
-func NewDirectoryClient(c *cc.CommonCtx, cfg *DirectoryConfig) (*dsc.Client, error) {
-	conn, err := NewDirectoryConn(c.Context, cfg)
+func New(conn *grpc.ClientConn) *Client {
+	return &Client{
+		conn:      conn,
+		Model:     dsm3.NewModelClient(conn),
+		Reader:    dsr3.NewReaderClient(conn),
+		Writer:    dsw3.NewWriterClient(conn),
+		Importer:  dsi3.NewImporterClient(conn),
+		Exporter:  dse3.NewExporterClient(conn),
+		Assertion: dsa3.NewAssertionClient(conn),
+	}
+}
+
+func NewClient(c *cc.CommonCtx, cfg *DirectoryConfig) (*Client, error) {
+	conn, err := NewConn(c.Context, cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	return dsc.New(conn, c.StdOut(), c.StdErr())
+	return New(conn), nil
 }
 
 func (cfg *DirectoryConfig) validate() error {

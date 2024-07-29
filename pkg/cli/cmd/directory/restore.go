@@ -5,13 +5,13 @@ import (
 	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/pkg/errors"
 )
 
 type RestoreCmd struct {
 	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
-	clients.DirectoryConfig
+	directory.DirectoryConfig
 }
 
 func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
@@ -19,7 +19,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	dirClient, err := directory.NewClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return err
 	}
@@ -34,5 +34,5 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 
 	c.Con().Info().Msg(">>> restore from %s", cmd.File)
 
-	return dirClient.V3.Restore(c.Context, cmd.File)
+	return dirClient.Restore(c.Context, cmd.File)
 }

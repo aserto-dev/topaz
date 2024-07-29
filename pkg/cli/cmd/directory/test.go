@@ -11,13 +11,11 @@ import (
 	"time"
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/samber/lo"
-
-	client "github.com/aserto-dev/go-directory-cli/client/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 
 	"github.com/fatih/color"
+	"github.com/samber/lo"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -43,7 +41,7 @@ type TestExecCmd struct {
 	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
 	Summary bool   `flag:"" default:"false" help:"display test summary"`
 	results *testResults
-	clients.DirectoryConfig
+	directory.DirectoryConfig
 }
 
 // nolint: funlen,gocyclo
@@ -54,7 +52,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 	defer r.Close()
 
-	dsc, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	dsc, err := directory.NewClient(c, &cmd.DirectoryConfig)
 	if err != nil {
 		return err
 	}
@@ -105,11 +103,11 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 
 		switch {
 		case checkType == Check && reqVersion == 3:
-			result = checkV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkV3(c.Context, dsc, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckPermission && reqVersion == 3:
-			result = checkPermissionV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkPermissionV3(c.Context, dsc, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckRelation && reqVersion == 3:
-			result = checkRelationV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkRelationV3(c.Context, dsc, msg.Fields[checkTypeMapStr[checkType]])
 		default:
 			continue
 		}
@@ -217,7 +215,7 @@ func unmarshalReq(value *structpb.Value, msg proto.Message) error {
 	return nil
 }
 
-func checkV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
+func checkV3(ctx context.Context, c *directory.Client, msg *structpb.Value) *checkResult {
 	var req dsr3.CheckRequest
 	if err := unmarshalReq(msg, &req); err != nil {
 		return &checkResult{Err: err}
@@ -237,7 +235,7 @@ func checkV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkR
 	}
 }
 
-func checkPermissionV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
+func checkPermissionV3(ctx context.Context, c *directory.Client, msg *structpb.Value) *checkResult {
 	var req dsr3.CheckPermissionRequest
 	if err := unmarshalReq(msg, &req); err != nil {
 		return &checkResult{Err: err}
@@ -258,7 +256,7 @@ func checkPermissionV3(ctx context.Context, c *client.Client, msg *structpb.Valu
 	}
 }
 
-func checkRelationV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
+func checkRelationV3(ctx context.Context, c *directory.Client, msg *structpb.Value) *checkResult {
 	var req dsr3.CheckRelationRequest
 	if err := unmarshalReq(msg, &req); err != nil {
 		return &checkResult{Err: err}

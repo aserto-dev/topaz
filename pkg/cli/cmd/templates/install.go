@@ -9,10 +9,10 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	"github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
-	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
+	dsCmd "github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/topaz"
 )
 
@@ -31,7 +31,7 @@ type InstallTemplateCmd struct {
 	TemplatesURL      string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 	ConfigName        string `optional:"" help:"set config name"`
-	clients.DirectoryConfig
+	directory.DirectoryConfig
 }
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
@@ -214,7 +214,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 	return nil
 }
 
-func installTemplate(c *cc.CommonCtx, tmpl *template, topazTemplateDir string, cfg *clients.DirectoryConfig, customName string) *tmplInstaller {
+func installTemplate(c *cc.CommonCtx, tmpl *template, topazTemplateDir string, cfg *directory.DirectoryConfig, customName string) *tmplInstaller {
 	return &tmplInstaller{
 		c:                c,
 		tmpl:             tmpl,
@@ -228,7 +228,7 @@ type tmplInstaller struct {
 	c                *cc.CommonCtx
 	tmpl             *template
 	topazTemplateDir string
-	cfg              *clients.DirectoryConfig
+	cfg              *directory.DirectoryConfig
 	customName       string
 }
 
@@ -257,7 +257,7 @@ func (i *tmplInstaller) Test() error {
 }
 
 func (i *tmplInstaller) deleteManifest() error {
-	command := directory.DeleteManifestCmd{
+	command := dsCmd.DeleteManifestCmd{
 		Force:           true,
 		DirectoryConfig: *i.cfg,
 	}
@@ -282,7 +282,7 @@ func (i *tmplInstaller) setManifest() error {
 		}
 	}
 
-	command := directory.SetManifestCmd{
+	command := dsCmd.SetManifestCmd{
 		Path:            manifest,
 		DirectoryConfig: *i.cfg,
 	}
@@ -313,7 +313,7 @@ func (i *tmplInstaller) importData() error {
 	}
 
 	for dir := range dataDirs {
-		command := directory.ImportCmd{
+		command := dsCmd.ImportCmd{
 			Directory:       dir,
 			DirectoryConfig: *i.cfg,
 		}
@@ -349,7 +349,7 @@ func (i *tmplInstaller) runTemplateTests() error {
 	}
 
 	for _, v := range tests {
-		command := directory.TestExecCmd{
+		command := dsCmd.TestExecCmd{
 			File:            v,
 			NoColor:         false,
 			Summary:         true,
