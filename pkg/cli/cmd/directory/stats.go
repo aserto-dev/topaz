@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/aserto-dev/azm/model"
 	"github.com/aserto-dev/azm/stats"
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -81,30 +82,29 @@ func statsTable(w io.Writer, stats *stats.Stats) {
 	for ot, objType := range stats.ObjectTypes {
 		for or, objRel := range objType.Relations {
 			for st, subType := range objRel.SubjectTypes {
-				tab.WithRow(
-					ot.String(),
-					fmt.Sprintf("%8d", objType.ObjCount),
-					or.String(),
-					fmt.Sprintf("%8d", objRel.Count),
-					st.String(),
-					fmt.Sprintf("%8d", subType.Count),
-					"",
-					fmt.Sprintf("%8d", 0))
+				tabRow(tab, ot, objType.ObjCount, or, objRel.Count, st, subType.Count, "", 0)
 
 				for sr, subRel := range subType.SubjectRelations {
-					tab.WithRow(
-						ot.String(),
-						fmt.Sprintf("%8d", objType.ObjCount),
-						or.String(),
-						fmt.Sprintf("%8d", objRel.Count),
-						st.String(),
-						fmt.Sprintf("%8d", subType.Count),
-						sr.String(),
-						fmt.Sprintf("%8d", subRel.Count))
+					tabRow(tab, ot, objType.ObjCount, or, objRel.Count, st, subType.Count, sr, subRel.Count)
 				}
 			}
 		}
 	}
 
 	tab.Do()
+}
+
+func countStr(c int32) string { return fmt.Sprintf("%8d", c) }
+
+func tabRow(tab *table.TableWriter, objType model.ObjectName, objTypeCount int32, objRel model.RelationName, objRelCount int32, subType model.ObjectName, subTypeCount int32, subRel model.RelationName, subRelCount int32) {
+	tab.WithRow(
+		objType.String(),
+		countStr(objTypeCount),
+		objRel.String(),
+		countStr(objRelCount),
+		subType.String(),
+		countStr(subTypeCount),
+		subRel.String(),
+		countStr(subRelCount),
+	)
 }
