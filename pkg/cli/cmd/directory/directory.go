@@ -11,6 +11,7 @@ type DirectoryCmd struct {
 	Export  ExportCmd  `cmd:"" help:"export directory data"`
 	Backup  BackupCmd  `cmd:"" help:"backup directory data"`
 	Restore RestoreCmd `cmd:"" help:"restore directory data"`
+	Stats   StatsCmd   `cmd:"" help:"show directory statistics"`
 	Test    TestCmd    `cmd:"" help:"execute directory assertions"`
 }
 
