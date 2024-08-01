@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path"
@@ -13,6 +14,7 @@ import (
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/js"
+	"google.golang.org/grpc/codes"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -50,8 +52,16 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 
 func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 	return func() error {
+		objCounter := &dsi3.ImportCounter{Type: "object"}
+		relCounter := &dsi3.ImportCounter{Type: "relation"}
+
+		defer func() {
+			printCounter(os.Stderr, objCounter)
+			printCounter(os.Stderr, relCounter)
+		}()
+
 		for {
-			_, err := stream.Recv()
+			msg, err := stream.Recv()
 			if err == io.EOF {
 				return nil
 			}
@@ -59,14 +69,48 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 			if err != nil {
 				return err
 			}
+
+			switch m := msg.Msg.(type) {
+			case *dsi3.ImportResponse_Status:
+				printStatus(os.Stderr, m.Status)
+
+			case *dsi3.ImportResponse_Counter:
+				switch m.Counter.Type {
+				case "object":
+					objCounter = m.Counter
+				case "relation":
+					relCounter = m.Counter
+				}
+
+			default:
+				msg.Object.Type = "object"
+				objCounter = msg.Object
+				msg.Relation.Type = "relation"
+				relCounter = msg.Relation
+			}
 		}
 	}
 }
 
-func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reader, ctr *Counter) func() error {
-	objectsCounter := ctr.Objects()
-	relationsCounter := ctr.Relations()
+func printStatus(w io.Writer, status *dsi3.ImportStatus) {
+	fmt.Fprintf(w, "%-8s: %s (%d) - %s\n",
+		"error",
+		codes.Code(status.Code).String(),
+		status.Code,
+		status.Msg)
+}
 
+func printCounter(w io.Writer, ctr *dsi3.ImportCounter) {
+	fmt.Fprintf(w, "%-8s: recv:%d set:%d delete:%d error:%d\n",
+		ctr.Type,
+		ctr.Recv,
+		ctr.Set,
+		ctr.Delete,
+		ctr.Error,
+	)
+}
+
+func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reader, ctr *Counter) func() error {
 	return func() error {
 		for {
 			header, err := tr.Next()
@@ -90,12 +134,12 @@ func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reade
 			name := path.Clean(header.Name)
 			switch name {
 			case ObjectsFileName:
-				if err := c.loadObjects(stream, r, objectsCounter); err != nil {
+				if err := c.loadObjects(stream, r); err != nil {
 					return err
 				}
 
 			case RelationsFileName:
-				if err := c.loadRelations(stream, r, relationsCounter); err != nil {
+				if err := c.loadRelations(stream, r); err != nil {
 					return err
 				}
 			}
@@ -109,7 +153,7 @@ func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reade
 	}
 }
 
-func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Reader, ctr *Item) error {
+func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Reader) error {
 	defer objects.Close()
 
 	var m dsc3.Object
@@ -122,7 +166,6 @@ func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Read
 
 		if err != nil {
 			if strings.Contains(err.Error(), "unknown field") {
-				ctr.Skip()
 				continue
 			}
 			return err
@@ -136,13 +179,12 @@ func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Read
 		}); err != nil {
 			return err
 		}
-		ctr.Incr().Print(os.Stdout)
 	}
 
 	return nil
 }
 
-func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.Reader, ctr *Item) error {
+func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.Reader) error {
 	defer relations.Close()
 
 	var m dsc3.Relation
@@ -154,7 +196,6 @@ func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.
 		}
 		if err != nil {
 			if strings.Contains(err.Error(), "unknown field") {
-				ctr.Skip()
 				continue
 			}
 			return err
@@ -168,8 +209,6 @@ func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.
 		}); err != nil {
 			return err
 		}
-
-		ctr.Incr().Print(os.Stdout)
 	}
 
 	return nil
