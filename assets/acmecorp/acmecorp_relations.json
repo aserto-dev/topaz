@@ -17,7 +17,7 @@
     {
       "object_type": "user",
       "object_id": "johne@acmecorp.com",
-      "relation": "managers",
+      "relation": "manager",
       "subject_type": "user",
       "subject_id": "aaronp@acmecorp.com"
     },
@@ -39,7 +39,7 @@
       "object_type": "user",
       "object_id": "reneel@acmecorp.com",
       "relation": "manager",
-      "subject_type": "users",
+      "subject_type": "user",
       "subject_id": "aaronp@acmecorp.com"
     },
     {
@@ -11938,7 +11938,7 @@
     {
       "object_type": "group",
       "object_id": "viewer",
-      "relation": "MEMBER",
+      "relation": "member",
       "subject_type": "user",
       "subject_id": "danh@acmecorp.com"
     },

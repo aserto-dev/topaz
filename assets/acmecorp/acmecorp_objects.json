@@ -1,14 +1,6 @@
 {
   "objects": [
     {
-      "type": "user",
-      "id": " help me",
-      "display_name": "Support Gonzo",
-      "properties": {
-        "connection_id": "d0bc8d47-2c0b-11ee-b3f8-0328466d27be"
-      }
-    },
-    {
       "type": "group",
       "id": "cvp-of-it",
       "display_name": "cvp-of-it-group",
@@ -3113,7 +3105,7 @@
       }
     },
     {
-      "type": "uses",
+      "type": "user",
       "id": "jank@acmecorp.com",
       "display_name": "Jan Kotas",
       "properties": {
