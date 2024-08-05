@@ -32,9 +32,6 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 
 	tr := tar.NewReader(gz)
 
-	ctr := &Counter{}
-	defer ctr.Print(os.Stdout)
-
 	g, iCtx := errgroup.WithContext(context.Background())
 	stream, err := c.Importer.Import(iCtx)
 	if err != nil {
@@ -43,15 +40,23 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 
 	g.Go(c.receiver(stream))
 
-	g.Go(c.restoreHandler(stream, tr, ctr))
+	g.Go(c.restoreHandler(stream, tr))
 
 	return g.Wait()
 }
 
 func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 	return func() error {
+		objCounter := &dsi3.ImportCounter{Type: objectsCounter}
+		relCounter := &dsi3.ImportCounter{Type: relationsCounter}
+
+		defer func() {
+			printCounter(os.Stderr, objCounter)
+			printCounter(os.Stderr, relCounter)
+		}()
+
 		for {
-			_, err := stream.Recv()
+			msg, err := stream.Recv()
 			if err == io.EOF {
 				return nil
 			}
@@ -59,14 +64,32 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 			if err != nil {
 				return err
 			}
+
+			switch m := msg.Msg.(type) {
+			case *dsi3.ImportResponse_Status:
+				printStatus(os.Stderr, m.Status)
+
+			case *dsi3.ImportResponse_Counter:
+				switch m.Counter.Type {
+				case objectsCounter:
+					objCounter = m.Counter
+				case relationsCounter:
+					relCounter = m.Counter
+				}
+
+			// handle obsolete message usage as the default.
+			//nolint: staticcheck // SA1019
+			default:
+				msg.Object.Type = objectsCounter
+				objCounter = msg.Object
+				msg.Relation.Type = relationsCounter
+				relCounter = msg.Relation
+			}
 		}
 	}
 }
 
-func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reader, ctr *Counter) func() error {
-	objectsCounter := ctr.Objects()
-	relationsCounter := ctr.Relations()
-
+func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reader) func() error {
 	return func() error {
 		for {
 			header, err := tr.Next()
@@ -90,12 +113,12 @@ func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reade
 			name := path.Clean(header.Name)
 			switch name {
 			case ObjectsFileName:
-				if err := c.loadObjects(stream, r, objectsCounter); err != nil {
+				if err := c.loadObjects(stream, r); err != nil {
 					return err
 				}
 
 			case RelationsFileName:
-				if err := c.loadRelations(stream, r, relationsCounter); err != nil {
+				if err := c.loadRelations(stream, r); err != nil {
 					return err
 				}
 			}
@@ -109,7 +132,7 @@ func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reade
 	}
 }
 
-func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Reader, ctr *Item) error {
+func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Reader) error {
 	defer objects.Close()
 
 	var m dsc3.Object
@@ -122,7 +145,6 @@ func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Read
 
 		if err != nil {
 			if strings.Contains(err.Error(), "unknown field") {
-				ctr.Skip()
 				continue
 			}
 			return err
@@ -136,13 +158,12 @@ func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Read
 		}); err != nil {
 			return err
 		}
-		ctr.Incr().Print(os.Stdout)
 	}
 
 	return nil
 }
 
-func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.Reader, ctr *Item) error {
+func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.Reader) error {
 	defer relations.Close()
 
 	var m dsc3.Relation
@@ -154,7 +175,6 @@ func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.
 		}
 		if err != nil {
 			if strings.Contains(err.Error(), "unknown field") {
-				ctr.Skip()
 				continue
 			}
 			return err
@@ -168,8 +188,6 @@ func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.
 		}); err != nil {
 			return err
 		}
-
-		ctr.Incr().Print(os.Stdout)
 	}
 
 	return nil

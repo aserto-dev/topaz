@@ -13,9 +13,6 @@ import (
 )
 
 func (c *Client) Import(ctx context.Context, files []string) error {
-	ctr := &Counter{}
-	defer ctr.Print(os.Stdout)
-
 	g, iCtx := errgroup.WithContext(context.Background())
 	stream, err := c.Importer.Import(iCtx)
 	if err != nil {
@@ -24,15 +21,15 @@ func (c *Client) Import(ctx context.Context, files []string) error {
 
 	g.Go(c.receiver(stream))
 
-	g.Go(c.importHandler(stream, files, ctr))
+	g.Go(c.importHandler(stream, files))
 
 	return g.Wait()
 }
 
-func (c *Client) importHandler(stream dsi3.Importer_ImportClient, files []string, ctr *Counter) func() error {
+func (c *Client) importHandler(stream dsi3.Importer_ImportClient, files []string) func() error {
 	return func() error {
 		for _, file := range files {
-			if err := c.importFile(stream, file, ctr); err != nil {
+			if err := c.importFile(stream, file); err != nil {
 				return err
 			}
 		}
@@ -45,7 +42,7 @@ func (c *Client) importHandler(stream dsi3.Importer_ImportClient, files []string
 	}
 }
 
-func (c *Client) importFile(stream dsi3.Importer_ImportClient, file string, ctr *Counter) error {
+func (c *Client) importFile(stream dsi3.Importer_ImportClient, file string) error {
 	r, err := os.Open(file)
 	if err != nil {
 		return errors.Wrapf(err, "failed to open file: [%s]", file)
@@ -62,12 +59,12 @@ func (c *Client) importFile(stream dsi3.Importer_ImportClient, file string, ctr 
 	objectType := reader.GetObjectType()
 	switch objectType {
 	case ObjectsStr:
-		if err := c.loadObjects(stream, reader, ctr.Objects()); err != nil {
+		if err := c.loadObjects(stream, reader); err != nil {
 			return err
 		}
 
 	case RelationsStr:
-		if err := c.loadRelations(stream, reader, ctr.Relations()); err != nil {
+		if err := c.loadRelations(stream, reader); err != nil {
 			return err
 		}
 
