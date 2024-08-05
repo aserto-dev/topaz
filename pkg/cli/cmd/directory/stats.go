@@ -12,9 +12,9 @@ import (
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/aserto-dev/topaz/pkg/cli/table"
-	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/pkg/errors"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type StatsCmd struct {
@@ -64,22 +64,22 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 
-		var stats stats.Stats
-		if err := json.Unmarshal(buf, &stats); err != nil {
+		var s stats.Stats
+		if err := json.Unmarshal(buf, &s); err != nil {
 			return err
 		}
 
-		statsTable(c.StdErr(), &stats)
+		statsTable(c.StdErr(), &s)
 	}
 
 	return nil
 }
 
-func statsTable(w io.Writer, stats *stats.Stats) {
+func statsTable(w io.Writer, s *stats.Stats) {
 	tab := table.New(w).WithColumns("obj-type", "obj-type-count", "rel", "rel-count", "sub-type", "sub-type-count", "sub-rel", "sub-rel-count")
 	tab.WithTableNoAutoWrapText()
 
-	for ot, objType := range stats.ObjectTypes {
+	for ot, objType := range s.ObjectTypes {
 		for or, objRel := range objType.Relations {
 			for st, subType := range objRel.SubjectTypes {
 				tabRow(tab, ot, objType.ObjCount, or, objRel.Count, st, subType.Count, "", 0)

@@ -5,7 +5,6 @@ import (
 	"compress/gzip"
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"path"
@@ -14,7 +13,6 @@ import (
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/js"
-	"google.golang.org/grpc/codes"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -34,9 +32,6 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 
 	tr := tar.NewReader(gz)
 
-	ctr := &Counter{}
-	defer ctr.Print(os.Stdout)
-
 	g, iCtx := errgroup.WithContext(context.Background())
 	stream, err := c.Importer.Import(iCtx)
 	if err != nil {
@@ -45,15 +40,15 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 
 	g.Go(c.receiver(stream))
 
-	g.Go(c.restoreHandler(stream, tr, ctr))
+	g.Go(c.restoreHandler(stream, tr))
 
 	return g.Wait()
 }
 
 func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 	return func() error {
-		objCounter := &dsi3.ImportCounter{Type: "object"}
-		relCounter := &dsi3.ImportCounter{Type: "relation"}
+		objCounter := &dsi3.ImportCounter{Type: objectsCounter}
+		relCounter := &dsi3.ImportCounter{Type: relationsCounter}
 
 		defer func() {
 			printCounter(os.Stderr, objCounter)
@@ -76,41 +71,25 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 
 			case *dsi3.ImportResponse_Counter:
 				switch m.Counter.Type {
-				case "object":
+				case objectsCounter:
 					objCounter = m.Counter
-				case "relation":
+				case relationsCounter:
 					relCounter = m.Counter
 				}
 
+			// handle obsolete message usage as the default
+			//nolint: staticcheck // SA1019
 			default:
-				msg.Object.Type = "object"
+				msg.Object.Type = objectsCounter
 				objCounter = msg.Object
-				msg.Relation.Type = "relation"
+				msg.Relation.Type = relationsCounter
 				relCounter = msg.Relation
 			}
 		}
 	}
 }
 
-func printStatus(w io.Writer, status *dsi3.ImportStatus) {
-	fmt.Fprintf(w, "%-8s: %s (%d) - %s\n",
-		"error",
-		codes.Code(status.Code).String(),
-		status.Code,
-		status.Msg)
-}
-
-func printCounter(w io.Writer, ctr *dsi3.ImportCounter) {
-	fmt.Fprintf(w, "%-8s: recv:%d set:%d delete:%d error:%d\n",
-		ctr.Type,
-		ctr.Recv,
-		ctr.Set,
-		ctr.Delete,
-		ctr.Error,
-	)
-}
-
-func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reader, ctr *Counter) func() error {
+func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reader) func() error {
 	return func() error {
 		for {
 			header, err := tr.Next()

@@ -19,13 +19,13 @@ require (
 	github.com/alecthomas/kong v0.9.0
 	github.com/aserto-dev/aserto-grpc v0.2.3
 	github.com/aserto-dev/aserto-management v0.9.4
-	github.com/aserto-dev/azm v0.1.12-0.20240730215459-7e8c5ea3c653
+	github.com/aserto-dev/azm v0.1.12
 	github.com/aserto-dev/certs v0.0.6
-	github.com/aserto-dev/errors v0.0.10-0.20240730214636-e65200cadb25
+	github.com/aserto-dev/errors v0.0.10
 	github.com/aserto-dev/go-aserto v0.31.5
-	github.com/aserto-dev/go-authorizer v0.20.7
-	github.com/aserto-dev/go-directory v0.31.8
-	github.com/aserto-dev/go-edge-ds v0.32.4-0.20240801040212-03708a689838
+	github.com/aserto-dev/go-authorizer v0.20.8
+	github.com/aserto-dev/go-directory v0.31.9
+	github.com/aserto-dev/go-edge-ds v0.32.4-0.20240805213828-78b0376814d5
 	github.com/aserto-dev/go-grpc v0.8.67
 	github.com/aserto-dev/go-topaz-ui v0.1.11
 	github.com/aserto-dev/header v0.0.7
@@ -44,9 +44,9 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.21.0
 	github.com/itchyny/gojq v0.12.16
-	github.com/lestrrat-go/jwx/v2 v2.1.0
+	github.com/lestrrat-go/jwx/v2 v2.1.1
 	github.com/magefile/mage v1.15.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mennanov/fmutils v0.3.0
@@ -57,15 +57,15 @@ require (
 	github.com/open-policy-agent/opa v0.67.0
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/pkg/errors v0.9.1
-	github.com/rivo/tview v0.0.0-20240728114935-65571ae51e71
+	github.com/rivo/tview v0.0.0-20240805111717-08da3ea4576f
 	github.com/rs/zerolog v1.33.0
 	github.com/samber/lo v1.46.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
 	go.opencensus.io v0.24.0
-	golang.org/x/sync v0.7.0
-	golang.org/x/sys v0.22.0
+	golang.org/x/sync v0.8.0
+	golang.org/x/sys v0.23.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
@@ -131,7 +131,7 @@ require (
 	github.com/klauspost/compress v1.17.8 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
-	github.com/lestrrat-go/httprc v1.0.5 // indirect
+	github.com/lestrrat-go/httprc v1.0.6 // indirect
 	github.com/lestrrat-go/iter v1.0.2 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
@@ -194,8 +194,8 @@ require (
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20240722135656-d784300faade // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240722135656-d784300faade // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240730163845-b1a4ccb954bf // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240730163845-b1a4ccb954bf // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
