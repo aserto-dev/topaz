@@ -77,7 +77,7 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 					relCounter = m.Counter
 				}
 
-			//handle obsolete message usage as the default.
+			// handle obsolete message usage as the default.
 			//nolint: staticcheck // SA1019
 			default:
 				msg.Object.Type = objectsCounter
