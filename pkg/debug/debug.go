@@ -77,7 +77,7 @@ func (srv *Server) Start() {
 }
 
 func (srv *Server) Stop() {
-	if !srv.cfg.Enabled {
+	if srv == nil || !srv.cfg.Enabled {
 		return
 	}
 
