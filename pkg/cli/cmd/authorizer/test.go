@@ -14,7 +14,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 
 	"github.com/fatih/color"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -40,7 +40,7 @@ type TestExecCmd struct {
 	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
 	Summary bool   `flag:"" default:"false" help:"display test summary"`
 	results *testResults
-	clients.AuthorizerConfig
+	azc.Config
 }
 
 // nolint: funlen,gocyclo
@@ -51,7 +51,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 	defer r.Close()
 
-	azc, err := clients.NewAuthorizerClient(c, &cmd.AuthorizerConfig)
+	azClient, err := azc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -102,7 +102,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 
 		switch {
 		case checkType == CheckDecision:
-			result = checkDecisionV2(c.Context, azc, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkDecisionV2(c.Context, azClient.Authorizer, msg.Fields[checkTypeMapStr[checkType]])
 		default:
 			continue
 		}
@@ -278,17 +278,10 @@ func (t *testResults) Passed(passed bool) {
 }
 
 type TestTemplateCmd struct {
-	V2     bool `flag:"" default:"false" help:"use v2 template"`
 	Pretty bool `flag:"" default:"false" help:"pretty print JSON"`
 }
 
-const assertionsTemplateV2 string = `{
-  "assertions": [
-	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true},
-  ]
-}`
-
-const assertionsTemplateV3 string = `{
+const assertionsTemplate string = `{
   "assertions": [
 	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true},
   ]
@@ -296,14 +289,11 @@ const assertionsTemplateV3 string = `{
 
 func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	if !cmd.Pretty {
-		fmt.Fprintf(c.UI.Output(), "%s\n", lo.Ternary(cmd.V2, assertionsTemplateV2, assertionsTemplateV3))
+		fmt.Fprintln(c.StdOut(), assertionsTemplate)
 		return nil
 	}
 
-	r := strings.NewReader(assertionsTemplateV3)
-	if cmd.V2 {
-		r = strings.NewReader(assertionsTemplateV2)
-	}
+	r := strings.NewReader(assertionsTemplate)
 
 	dec := json.NewDecoder(r)
 
@@ -312,7 +302,7 @@ func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	enc := json.NewEncoder(c.UI.Output())
+	enc := json.NewEncoder(c.StdOut())
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
 	if err := enc.Encode(template); err != nil {

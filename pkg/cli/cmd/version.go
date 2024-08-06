@@ -21,10 +21,7 @@ type VersionCmd struct {
 func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	fmt.Fprintf(c.UI.Output(), "%s %s\n",
-		x.AppName,
-		version.GetInfo().String(),
-	)
+	c.Con().Info().Msg("%s %s", x.AppName, version.GetInfo().String())
 
 	if !cmd.Container {
 		return nil
@@ -42,8 +39,8 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 	)
 
 	if !dc.ImageExists(image) {
-		fmt.Fprintf(c.UI.Output(), "!!! container image %q does not exist locally\n", image)
-		fmt.Fprint(c.UI.Output(), "!!! run 'topaz install' to download\n")
+		c.Con().Warn().Msg("!!! container image %q does not exist locally", image)
+		c.Con().Msg("!!! run 'topaz install' to download")
 		return nil
 	}
 
@@ -52,13 +49,13 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		dockerx.WithEntrypoint([]string{"/app/topazd", "version"}),
 		dockerx.WithContainerPlatform(cmd.ContainerPlatform),
 		dockerx.WithContainerName("topazd-version"),
-		dockerx.WithOutput(c.UI.Output()),
-		dockerx.WithError(c.UI.Err()),
+		dockerx.WithOutput(c.StdOut()),
+		dockerx.WithError(c.StdErr()),
 	); err != nil {
 		return err
 	}
 
-	fmt.Fprintf(c.UI.Output(), "\n")
+	fmt.Fprintln(c.StdOut())
 
 	return nil
 }

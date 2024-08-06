@@ -37,13 +37,16 @@ func newDecisionLogger(cfg *Config, manager *plugins.Manager, logger decisionlog
 		logger:  logger,
 	}
 }
+
 func (plugin *DecisionLogsPlugin) Start(ctx context.Context) error {
 	plugin.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateOK})
 	return nil
 }
+
 func (plugin *DecisionLogsPlugin) Stop(ctx context.Context) {
 	plugin.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateNotReady})
 }
+
 func (plugin *DecisionLogsPlugin) Reconfigure(ctx context.Context, config interface{}) {
 	plugin.cfg = config.(*Config)
 }

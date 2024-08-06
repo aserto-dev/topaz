@@ -123,3 +123,14 @@ func MaskedMarshalOpts() protojson.MarshalOptions {
 		EmitUnpopulated: false,
 	}
 }
+
+func MarshalOpts(multiline bool) protojson.MarshalOptions {
+	return protojson.MarshalOptions{
+		Multiline:       multiline,
+		Indent:          "  ",
+		AllowPartial:    true,
+		UseProtoNames:   true,
+		UseEnumNumbers:  false,
+		EmitUnpopulated: true,
+	}
+}

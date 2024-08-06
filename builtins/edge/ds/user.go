@@ -4,7 +4,6 @@ import (
 	"bytes"
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/convert"
 	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/ast"
@@ -20,16 +19,8 @@ import (
 
 // RegisterUser - ds.user
 //
-// v3 (latest) request format:
-//
 //	ds.user({
 //		"id": ""
-//	})
-//
-// v2 request format:
-//
-//	ds.user({
-//		"key": ""
 //	})
 func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
@@ -38,25 +29,15 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
-			var (
-				args struct {
-					ID  string `json:"id"`
-					Key string `json:"key"`
-				}
-				outputV2 bool
-			)
+			var args struct {
+				ID string `json:"id"`
+			}
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
-			if args.ID == "" && args.Key != "" {
-				args.ID = args.Key
-				outputV2 = true
-			}
-
-			if args.ID == "" && args.Key == "" {
+			if args.ID == "" {
 				type argsV3 struct {
 					ID string `json:"id"`
 				}
@@ -90,9 +71,6 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 
 			if resp.Result != nil {
 				result = resp.Result
-				if outputV2 {
-					result = convert.ObjectToV2(resp.Result)
-				}
 			}
 
 			if err := ProtoToBuf(buf, result); err != nil {

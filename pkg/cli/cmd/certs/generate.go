@@ -20,7 +20,7 @@ type GenerateCertsCmd struct {
 func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(certsDir, 0755); err != nil {
+		if err := os.MkdirAll(certsDir, 0o755); err != nil {
 			return err
 		}
 	}
@@ -41,7 +41,7 @@ func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 		Dir:  certsDir,
 	}
 
-	c.UI.Normal().Msgf("certs directory: %s", certsDir)
+	c.Con().Info().Msg("certs directory: %s", certsDir)
 	err := certs.GenerateCerts(c, cmd.Force, cmd.DNSNames, pathGateway, pathGRPC)
 	if err != nil {
 		return err

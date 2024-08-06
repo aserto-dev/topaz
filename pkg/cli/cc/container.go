@@ -7,19 +7,28 @@ import (
 	"runtime"
 	"strings"
 
-	ver "github.com/aserto-dev/topaz/pkg/version"
-
 	"github.com/Masterminds/semver/v3"
+	ver "github.com/aserto-dev/topaz/pkg/version"
 	"github.com/samber/lo"
 )
 
 const (
-	DefaultValue             string = ""
-	defaultContainerRegistry string = "ghcr.io/aserto-dev"
-	defaultContainerImage    string = "topaz"
-	defaultContainerTag      string = "latest"
-	defaultContainerName     string = "topaz"
+	defaultContainerRegistry    string = "ghcr.io/aserto-dev"
+	defaultContainerImage       string = "topaz"
+	defaultContainerTagFallback string = "latest"
+	defaultContainerName        string = "topaz"
 )
+
+func defaultContainerTag() string {
+	v, err := semver.NewVersion(ver.GetInfo().Version)
+	if err == nil {
+		if v.String() == "0.0.0" || v.Prerelease() != "" {
+			return defaultContainerTagFallback
+		}
+		return v.String()
+	}
+	return defaultContainerTagFallback
+}
 
 // Container returns the fully qualified container name (registry/image:tag).
 func Container(registry, image, tag string) string {
@@ -39,6 +48,9 @@ func ContainerRegistry() string {
 	if containerRegistry := os.Getenv("CONTAINER_REGISTRY"); containerRegistry != "" {
 		return containerRegistry
 	}
+	if defaults.ContainerRegistry != "" {
+		return defaults.ContainerRegistry
+	}
 	return defaultContainerRegistry
 }
 
@@ -46,6 +58,9 @@ func ContainerRegistry() string {
 func ContainerImage() string {
 	if containerImage := os.Getenv("CONTAINER_IMAGE"); containerImage != "" {
 		return containerImage
+	}
+	if defaults.ContainerImage != "" {
+		return defaults.ContainerImage
 	}
 	return defaultContainerImage
 }
@@ -55,18 +70,20 @@ func ContainerTag() string {
 	if containerTag := os.Getenv("CONTAINER_TAG"); containerTag != "" {
 		return containerTag
 	}
-
-	v, err := semver.NewVersion(ver.GetInfo().Version)
-	if err != nil {
-		return defaultContainerTag
+	if defaults.ContainerTag != "" {
+		return defaults.ContainerTag
 	}
-	return v.String()
+
+	return defaultContainerTag()
 }
 
 // ContainerPlatform, returns the container platform for multi-platform capable servers.
 func ContainerPlatform() string {
 	if containerPlatform := os.Getenv("CONTAINER_PLATFORM"); containerPlatform != "" {
 		return containerPlatform
+	}
+	if defaults.ContainerPlatform != "" {
+		return defaults.ContainerPlatform
 	}
 	return "linux/" + runtime.GOARCH
 }
@@ -87,8 +104,9 @@ func ContainerName(defaultConfigFile string) string {
 // which is why they are not explicitly handled in this function.
 func ContainerVersionTag(version, tag string) string {
 	if version != "" && version != tag {
-		fmt.Fprintf(os.Stderr, "!!! --container-version incl $CONTAINER_VERSION are obsolete, use: --container-tag and $CONTAINER_TAG instead\n")
-		fmt.Fprintf(os.Stderr, "!!! --container-version value %q it propagated to --container-tag\n", version)
+		fmt.Fprintf(os.Stderr, "!!! --container-version incl $CONTAINER_VERSION are obsolete !!!\n")
+		fmt.Fprintf(os.Stderr, "instead use: --container-tag and/or $CONTAINER_TAG\n")
+		fmt.Fprintf(os.Stderr, "the current --container-version value %q is propagated to --container-tag\n", version)
 		return version
 	}
 	return tag

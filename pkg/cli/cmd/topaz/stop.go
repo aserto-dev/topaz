@@ -9,7 +9,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/fatih/color"
 )
 
 type StopCmd struct {
@@ -28,9 +27,9 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 
-		color.Green(">>> stopping topaz...")
+		c.Con().Info().Msg(">>> stopping topaz...")
 		for _, container := range topazContainers {
-			color.Green(">>> stopping topaz %q...", c.Config.Running.Config)
+			c.Con().Info().Msg(">>> stopping topaz %q...", c.Config.Running.Config)
 
 			if err := dc.Stop(container.Names[0]); err != nil {
 				return err
@@ -52,7 +51,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 			return nil
 		}
 
-		color.Green(">>> stopping topaz %q...", c.Config.Running.Config)
+		c.Con().Info().Msg(">>> stopping topaz %q...", c.Config.Running.Config)
 
 		if err := dc.Stop(cmd.ContainerName); err != nil {
 			return err

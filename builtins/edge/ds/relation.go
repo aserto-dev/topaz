@@ -3,11 +3,8 @@ package ds
 import (
 	"bytes"
 
-	dsc2 "github.com/aserto-dev/go-directory/aserto/directory/common/v2"
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/convert"
 	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/ast"
@@ -23,8 +20,6 @@ import (
 
 // RegisterRelation - ds.relation
 //
-// v3 (latest) request format:
-//
 //	ds.relation: {
 //		"object_id": "",
 //		"object_type": "",
@@ -34,28 +29,6 @@ import (
 //		"subject_type": "",
 //		"with_objects": false
 //	  }
-//
-// v2 request format:
-//
-//	ds.relation({
-//		"object": {
-//		  "type": ""
-//		  "key": "",
-//		},
-//		"relation": {
-//		  "name": "",
-//		},
-//		"subject": {
-//		  "type": ""
-//		  "key": "",
-//		},
-//		"with_objects": false
-//	  })
-type extendedRelation struct {
-	*dsc2.RelationIdentifier
-	WithObjects bool `json:"with_objects"`
-}
-
 func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -63,31 +36,11 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
-			var (
-				args     dsr3.GetRelationRequest
-				outputV2 bool
-			)
+			var args dsr3.GetRelationRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
-
-				// if v3 input parsing fails, fallback to v2 before exiting with an error.
-				var a2 extendedRelation
-				if err := ast.As(op1.Value, &a2); err != nil {
-					return nil, err
-				}
-
-				outputV2 = true
-
-				args = dsr3.GetRelationRequest{
-					ObjectType:      a2.GetObject().GetType(),
-					ObjectId:        a2.GetObject().GetKey(),
-					Relation:        a2.GetRelation().GetName(),
-					SubjectType:     a2.GetSubject().GetType(),
-					SubjectId:       a2.GetSubject().GetKey(),
-					SubjectRelation: "",
-					WithObjects:     a2.WithObjects,
-				}
+				traceError(&bctx, fnName, err)
+				return nil, err
 			}
 
 			if proto.Equal(&args, &dsr3.GetRelationRequest{}) {
@@ -125,13 +78,8 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 
 			if resp != nil {
 				result = resp
-				if outputV2 {
-					result = &dsr2.GetRelationResponse{
-						Results: []*dsc2.Relation{convert.RelationToV2(resp.Result)},
-						Objects: convert.ObjectMapToV2(resp.Objects),
-					}
-				}
 			}
+
 			if err := ProtoToBuf(buf, result); err != nil {
 				return nil, err
 			}
@@ -145,25 +93,20 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		}
 }
 
-// RegisterRelations - ds.relations
+// TODO : update v3 format
 //
-// v3 (latest) request format:
-//
-// v2 request format:
-//
-//	ds.relations({
-//		"object": {
-//		  "type": ""
-//		  "key": "",
-//		},
-//		"relation": {
-//		  "name": "",
-//		},
-//		"subject": {
-//		  "type": ""
-//		  "key": "",
+//	RegisterRelations - ds.relations({
+//		"ds.relations": {
+//			"object_type": "",
+//			"object_id": "",
+//			"relation": "",
+//			"subject_type": "",
+//			"subject_id": "",
+//			"subject_relation": "",
+//			"with_objects": false,
+//			"with_empty_subject_relation": false
 //		}
-//	  })
+//	})
 func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -171,31 +114,11 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
-			var (
-				args     dsr3.GetRelationsRequest
-				outputV2 bool
-			)
+			var args dsr3.GetRelationsRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
-				// if v3 input parsing fails, fallback to v2 before exiting with an error.
-				var a2 dsc2.RelationIdentifier
-				if err := ast.As(op1.Value, &a2); err != nil {
-					return nil, err
-				}
-
-				outputV2 = true
-
-				args = dsr3.GetRelationsRequest{
-					ObjectType:      a2.GetObject().GetType(),
-					ObjectId:        a2.GetObject().GetKey(),
-					Relation:        a2.GetRelation().GetName(),
-					SubjectType:     a2.GetSubject().GetType(),
-					SubjectId:       a2.GetSubject().GetKey(),
-					SubjectRelation: "",
-					WithObjects:     false,
-				}
-
+				traceError(&bctx, fnName, err)
+				return nil, err
 			}
 
 			if proto.Equal(&args, &dsr3.GetRelationsRequest{}) {
@@ -231,12 +154,8 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 
 			if resp.Results != nil {
 				result = resp
-				if outputV2 {
-					result = &dsr2.GetRelationsResponse{
-						Results: convert.RelationArrayToV2(resp.Results),
-					}
-				}
 			}
+
 			if err := ProtoToBuf(buf, result); err != nil {
 				return nil, err
 			}

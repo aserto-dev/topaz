@@ -36,9 +36,12 @@ func PolicyRoot() string {
 			return ""
 		}
 
-		return path.Join(home, defaultPolicyRoot)
+		policyRoot = path.Join(home, defaultPolicyRoot)
 	}
-	return policyRoot
+	if fi, err := os.Stat(policyRoot); err == nil && fi.IsDir() {
+		return policyRoot
+	}
+	return ""
 }
 
 type DockerClient struct {
@@ -89,7 +92,7 @@ func (dc *DockerClient) RemoveImage(img string) error {
 	}
 
 	for i := 0; i < len(images); i++ {
-		_, err := dc.cli.ImageRemove(dc.ctx, images[i].ID, image.RemoveOptions{})
+		_, err := dc.cli.ImageRemove(dc.ctx, images[i].ID, image.RemoveOptions{Force: true})
 		if err != nil {
 			return err
 		}
@@ -119,7 +122,8 @@ func (dc *DockerClient) Stop(name string) error {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: running},
+				Key: "status", Value: running,
+			},
 			filters.KeyValuePair{
 				Key: "name", Value: name,
 			}),
@@ -143,7 +147,8 @@ func (dc *DockerClient) IsRunning(name string) (bool, error) {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: running},
+				Key: "status", Value: running,
+			},
 			filters.KeyValuePair{
 				Key: "name", Value: name,
 			}),
@@ -164,7 +169,8 @@ func (dc *DockerClient) GetRunningTopazContainers() ([]*types.Container, error) 
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: running},
+				Key: "status", Value: running,
+			},
 		),
 	})
 	if err != nil {

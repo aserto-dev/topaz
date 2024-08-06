@@ -21,6 +21,7 @@ func (g *Generator) WithVersion(version int) *Generator {
 	g.Version = version
 	return g
 }
+
 func (g *Generator) WithLocalPolicyImage(image string) *Generator {
 	g.LocalPolicyImage = image
 	return g
@@ -30,6 +31,7 @@ func (g *Generator) WithPolicyName(policyName string) *Generator {
 	g.PolicyName = policyName
 	return g
 }
+
 func (g *Generator) WithResource(resource string) *Generator {
 	g.Resource = resource
 	return g
@@ -83,7 +85,7 @@ func (g *Generator) CreateConfigDir() (string, error) {
 		return configDir, nil
 	}
 
-	return configDir, os.MkdirAll(configDir, 0700)
+	return configDir, os.MkdirAll(configDir, 0o700)
 }
 
 func (g *Generator) CreateCertsDir() (string, error) {
@@ -92,7 +94,7 @@ func (g *Generator) CreateCertsDir() (string, error) {
 		return certsDir, nil
 	}
 
-	return certsDir, os.MkdirAll(certsDir, 0700)
+	return certsDir, os.MkdirAll(certsDir, 0o700)
 }
 
 func (g *Generator) CreateDataDir() (string, error) {
@@ -101,7 +103,7 @@ func (g *Generator) CreateDataDir() (string, error) {
 		return dataDir, nil
 	}
 
-	return dataDir, os.MkdirAll(dataDir, 0700)
+	return dataDir, os.MkdirAll(dataDir, 0o700)
 }
 
 func (g *Generator) writeConfig(w io.Writer, templ string) error {

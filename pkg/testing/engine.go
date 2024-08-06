@@ -39,7 +39,7 @@ type EngineHarness struct {
 func (h *EngineHarness) Cleanup() {
 	assert := require.New(h.t)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	h.Engine.Manager.StopServers(ctx)
 	cancel()
 	h.cleanup()
@@ -127,7 +127,7 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	assert := require.New(t)
 
 	topazDir := path.Join(t.TempDir(), "topaz")
-	err := os.MkdirAll(topazDir, 0777)
+	err := os.MkdirAll(topazDir, 0o777)
 	assert.NoError(err)
 	assert.DirExists(topazDir)
 
@@ -150,7 +150,7 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 	}
 
 	topazCertsDir := path.Join(topazDir, "certs")
-	err = os.MkdirAll(topazCertsDir, 0777)
+	err = os.MkdirAll(topazCertsDir, 0o777)
 	assert.NoError(err)
 	assert.DirExists(topazCertsDir)
 

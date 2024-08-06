@@ -10,16 +10,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/samber/lo"
-
-	v2 "github.com/aserto-dev/go-directory-cli/client/v2"
-	client "github.com/aserto-dev/go-directory-cli/client/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 
 	"github.com/fatih/color"
+	"github.com/samber/lo"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -45,7 +41,7 @@ type TestExecCmd struct {
 	NoColor bool   `flag:"" default:"false" help:"disable colorized output"`
 	Summary bool   `flag:"" default:"false" help:"display test summary"`
 	results *testResults
-	clients.DirectoryConfig
+	dsc.Config
 }
 
 // nolint: funlen,gocyclo
@@ -56,7 +52,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 	defer r.Close()
 
-	dsc, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -107,15 +103,11 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 
 		switch {
 		case checkType == Check && reqVersion == 3:
-			result = checkV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkV3(c.Context, dsClient, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckPermission && reqVersion == 3:
-			result = checkPermissionV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkPermissionV3(c.Context, dsClient, msg.Fields[checkTypeMapStr[checkType]])
 		case checkType == CheckRelation && reqVersion == 3:
-			result = checkRelationV3(c.Context, dsc.V3, msg.Fields[checkTypeMapStr[checkType]])
-		case checkType == CheckPermission && reqVersion == 2:
-			result = checkPermissionV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
-		case checkType == CheckRelation && reqVersion == 2:
-			result = checkRelationV2(c.Context, dsc.V2, msg.Fields[checkTypeMapStr[checkType]])
+			result = checkRelationV3(c.Context, dsClient, msg.Fields[checkTypeMapStr[checkType]])
 		default:
 			continue
 		}
@@ -205,12 +197,6 @@ func getReqVersion(val *structpb.Value) int {
 		if _, ok := v.StructValue.Fields["object_type"]; ok {
 			return 3
 		}
-		if _, ok := v.StructValue.Fields["object"]; ok {
-			return 2
-		}
-		if _, ok := v.StructValue.Fields["identity_context"]; ok {
-			return 2
-		}
 	}
 	return 0
 }
@@ -229,7 +215,7 @@ func unmarshalReq(value *structpb.Value, msg proto.Message) error {
 	return nil
 }
 
-func checkV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
+func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *checkResult {
 	var req dsr3.CheckRequest
 	if err := unmarshalReq(msg, &req); err != nil {
 		return &checkResult{Err: err}
@@ -249,7 +235,7 @@ func checkV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkR
 	}
 }
 
-func checkPermissionV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
+func checkPermissionV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *checkResult {
 	var req dsr3.CheckPermissionRequest
 	if err := unmarshalReq(msg, &req); err != nil {
 		return &checkResult{Err: err}
@@ -257,6 +243,7 @@ func checkPermissionV3(ctx context.Context, c *client.Client, msg *structpb.Valu
 
 	start := time.Now()
 
+	//nolint: staticcheck // SA1019: c.Reader.CheckPermission
 	resp, err := c.Reader.CheckPermission(ctx, &req)
 
 	duration := time.Since(start)
@@ -269,7 +256,7 @@ func checkPermissionV3(ctx context.Context, c *client.Client, msg *structpb.Valu
 	}
 }
 
-func checkRelationV3(ctx context.Context, c *client.Client, msg *structpb.Value) *checkResult {
+func checkRelationV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *checkResult {
 	var req dsr3.CheckRelationRequest
 	if err := unmarshalReq(msg, &req); err != nil {
 		return &checkResult{Err: err}
@@ -277,6 +264,7 @@ func checkRelationV3(ctx context.Context, c *client.Client, msg *structpb.Value)
 
 	start := time.Now()
 
+	//nolint: staticcheck // SA1019: c.Reader.CheckRelation
 	resp, err := c.Reader.CheckRelation(ctx, &req)
 
 	duration := time.Since(start)
@@ -289,46 +277,6 @@ func checkRelationV3(ctx context.Context, c *client.Client, msg *structpb.Value)
 	}
 }
 
-func checkPermissionV2(ctx context.Context, c *v2.Client, msg *structpb.Value) *checkResult {
-	var req dsr2.CheckPermissionRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Reader.CheckPermission(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &checkResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkPermissionStringV2(&req),
-	}
-}
-
-func checkRelationV2(ctx context.Context, c *v2.Client, msg *structpb.Value) *checkResult {
-	var req dsr2.CheckRelationRequest
-	if err := unmarshalReq(msg, &req); err != nil {
-		return &checkResult{Err: err}
-	}
-
-	start := time.Now()
-
-	resp, err := c.Reader.CheckRelation(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &checkResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkRelationStringV2(&req),
-	}
-}
-
 func checkStringV3(req *dsr3.CheckRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
@@ -337,27 +285,11 @@ func checkStringV3(req *dsr3.CheckRequest) string {
 	)
 }
 
-func checkRelationStringV2(req *dsr2.CheckRelationRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.Object.GetType(), req.Object.GetKey(),
-		req.Relation.GetName(),
-		req.Subject.GetType(), req.Subject.GetKey(),
-	)
-}
-
 func checkRelationStringV3(req *dsr3.CheckRelationRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
 		req.GetRelation(),
 		req.GetSubjectType(), req.GetSubjectId(),
-	)
-}
-
-func checkPermissionStringV2(req *dsr2.CheckPermissionRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.Object.GetType(), req.Object.GetKey(),
-		req.Permission.GetName(),
-		req.Subject.GetType(), req.Subject.GetKey(),
 	)
 }
 
@@ -401,36 +333,22 @@ func (t *testResults) Passed(passed bool) {
 }
 
 type TestTemplateCmd struct {
-	V2     bool `flag:"" default:"false" help:"use v2 template"`
 	Pretty bool `flag:"" default:"false" help:"pretty print JSON"`
 }
 
-const assertionsTemplateV2 string = `{
-  "assertions": [
-    {"check_relation": {"object": {"type": "", "key": ""}, "relation": {"name": ""}, "subject": {"type": "", "key": ""}}, "expected": true},
-    {"check_permission": {"object": {"type": "", "key": ""}, "permission": {"name": ""}, "subject": {"type": "", "key": ""}}, "expected": true},
-  ]
-}`
-
 const assertionsTemplateV3 string = `{
   "assertions": [
-	{"check": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true},
-	{"check_relation": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true},
-	{"check_permission": {"object_type": "", "object_id": "", "permission": "", "subject_type": "", "subject_id": ""}, "expected": true},
+  	{"check": {"object_type": "", "object_id": "", "relation": "", "subject_type": "", "subject_id": ""}, "expected": true}
   ]
 }`
 
 func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	if !cmd.Pretty {
-		fmt.Fprintf(c.UI.Output(), "%s\n", lo.Ternary(cmd.V2, assertionsTemplateV2, assertionsTemplateV3))
+		c.Out().Msg(assertionsTemplateV3)
 		return nil
 	}
 
 	r := strings.NewReader(assertionsTemplateV3)
-	if cmd.V2 {
-		r = strings.NewReader(assertionsTemplateV2)
-	}
-
 	dec := json.NewDecoder(r)
 
 	var template interface{}
@@ -438,7 +356,7 @@ func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	enc := json.NewEncoder(c.UI.Output())
+	enc := json.NewEncoder(c.StdOut())
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
 	if err := enc.Encode(template); err != nil {

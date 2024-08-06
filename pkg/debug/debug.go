@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"golang.org/x/sync/errgroup"
 )
 
 type Config struct {
@@ -17,41 +16,45 @@ type Config struct {
 }
 
 type Server struct {
-	server   *http.Server
-	logger   *zerolog.Logger
-	cfg      *Config
-	errGroup *errgroup.Group
+	server *http.Server
+	logger *zerolog.Logger
+	cfg    *Config
 }
 
-func NewServer(cfg *Config, log *zerolog.Logger, errGroup *errgroup.Group) *Server {
+func NewServer(cfg *Config, log *zerolog.Logger) *Server {
 	if cfg.Enabled {
-		pprofMux := http.NewServeMux()
-		pprofMux.Handle("/debug/allocs", pprof.Handler("allocs"))
-		pprofMux.Handle("/debug/block", pprof.Handler("block"))
-		pprofMux.Handle("/debug/goroutine", pprof.Handler("goroutine"))
-		pprofMux.Handle("/debug/heap", pprof.Handler("heap"))
-		pprofMux.Handle("/debug/mutex", pprof.Handler("mutex"))
-		pprofMux.Handle("/debug/threadcreate", pprof.Handler("threadcreate"))
-		pprofMux.Handle("/debug/profile", http.HandlerFunc(pprof.Profile))
-		pprofMux.Handle("/debug/symbol", http.HandlerFunc(pprof.Symbol))
-		pprofMux.Handle("/debug/trace", http.HandlerFunc(pprof.Trace))
+		http.DefaultServeMux = http.NewServeMux()
+
+		pprofServeMux := http.NewServeMux()
+
+		pprofServeMux.HandleFunc("/debug/pprof/", pprof.Index)
+		pprofServeMux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+		pprofServeMux.HandleFunc("/debug/pprof/profile", pprof.Profile)
+		pprofServeMux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+		pprofServeMux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+
+		pprofServeMux.Handle("/debug/pprof/allocs", pprof.Handler("allocs"))
+		pprofServeMux.Handle("/debug/pprof/block", pprof.Handler("block"))
+		pprofServeMux.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
+		pprofServeMux.Handle("/debug/pprof/heap", pprof.Handler("heap"))
+		pprofServeMux.Handle("/debug/pprof/mutex", pprof.Handler("mutex"))
+		pprofServeMux.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
+
+		debugLogger := log.With().Str("component", "debug").Logger()
 
 		srv := &http.Server{
 			Addr:              cfg.ListenAddress,
-			Handler:           pprofMux,
+			Handler:           pprofServeMux,
 			ReadTimeout:       5 * time.Second,
 			ReadHeaderTimeout: 5 * time.Second,
 			WriteTimeout:      30 * time.Second,
 			IdleTimeout:       30 * time.Second,
 		}
 
-		debugLogger := log.With().Str("component", "debug").Logger()
-
 		return &Server{
-			server:   srv,
-			logger:   &debugLogger,
-			cfg:      cfg,
-			errGroup: errGroup,
+			server: srv,
+			logger: &debugLogger,
+			cfg:    cfg,
 		}
 	}
 
@@ -59,18 +62,25 @@ func NewServer(cfg *Config, log *zerolog.Logger, errGroup *errgroup.Group) *Serv
 }
 
 func (srv *Server) Start() {
+	if !srv.cfg.Enabled {
+		return
+	}
+
 	if srv != nil {
-		srv.errGroup.Go(func() error {
-			err := srv.server.ListenAndServe()
-			if err != nil && err != http.ErrServerClosed {
-				srv.logger.Error().Err(err).Str("address", srv.cfg.ListenAddress).Msg("Profiling endpoint failed to listen")
+		go func() {
+			srv.logger.Warn().Str("listen_address", srv.cfg.ListenAddress).Msg("debug-service")
+			if err := srv.server.ListenAndServe(); err != nil {
+				srv.logger.Error().Err(err).Msg("debug-service")
 			}
-			return nil
-		})
+		}()
 	}
 }
 
 func (srv *Server) Stop() {
+	if srv == nil || !srv.cfg.Enabled {
+		return
+	}
+
 	if srv != nil {
 		var shutdown context.CancelFunc
 		ctx := context.Background()
@@ -79,9 +89,10 @@ func (srv *Server) Stop() {
 			ctx, shutdown = context.WithTimeout(ctx, shutdownTimeout)
 			defer shutdown()
 		}
+
 		err := srv.server.Shutdown(ctx)
 		if err != nil {
-			srv.logger.Info().Err(err).Msg("error shutting down debug server")
+			srv.logger.Info().Err(err).Str("state", "shutdown").Msg("debug-service")
 		}
 	}
 }

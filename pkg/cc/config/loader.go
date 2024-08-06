@@ -47,6 +47,10 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 	v.SetEnvPrefix("TOPAZ")
 
 	// Set defaults
+	v.SetDefault("debug_service.enabled", false)
+	v.SetDefault("debug_service.listen_address", "localhost:6060")
+	v.SetDefault("debug_service.shutdown_timeout", 0)
+
 	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
 
 	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")

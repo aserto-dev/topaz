@@ -5,15 +5,13 @@ import (
 	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/fatih/color"
+	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/pkg/errors"
 )
 
 type RestoreCmd struct {
-	File   string        `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
-	Format FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
-	clients.DirectoryConfig
+	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
+	dsc.Config
 }
 
 func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
@@ -21,7 +19,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -34,9 +32,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, "backup.tar.gz")
 	}
 
-	color.Green(">>> restore from %s", cmd.File)
-	if cmd.Format == V2 {
-		return dirClient.V2.Restore(c.Context, cmd.File)
-	}
-	return dirClient.V3.Restore(c.Context, cmd.File)
+	c.Con().Info().Msg(">>> restore from %s", cmd.File)
+
+	return dsClient.Restore(c.Context, cmd.File)
 }

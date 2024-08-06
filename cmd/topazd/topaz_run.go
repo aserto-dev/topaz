@@ -9,7 +9,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/spf13/cobra"
-	"golang.org/x/sync/errgroup"
 )
 
 var (
@@ -19,7 +18,6 @@ var (
 	flagRunIgnorePaths       []string
 	flagRunDebug             bool
 	debugService             *debug.Server
-	errGroup                 *errgroup.Group
 )
 
 var cmdRun = &cobra.Command{
@@ -43,12 +41,7 @@ var cmdRun = &cobra.Command{
 				cfg.OPA.LocalBundles.Watch = true
 			}
 
-			if flagRunDebug {
-				cfg.Debug.Enabled = true
-				cfg.Debug.ListenAddress = "localhost:6060"
-				cfg.Debug.ShutdownTimeout = 5
-			}
-
+			cfg.Common.DebugService.Enabled = flagRunDebug
 		})
 		defer func() {
 			if cleanup != nil {
@@ -64,9 +57,8 @@ var cmdRun = &cobra.Command{
 			return err
 		}
 
-		if topazApp.Configuration.Debug.Enabled {
-			errGroup = new(errgroup.Group)
-			debugService = debug.NewServer(&topazApp.Configuration.Debug, topazApp.Logger, errGroup)
+		if topazApp.Configuration.DebugService.Enabled {
+			debugService = debug.NewServer(&topazApp.Configuration.DebugService, topazApp.Logger)
 			debugService.Start()
 		}
 
@@ -108,7 +100,9 @@ var cmdRun = &cobra.Command{
 
 		<-topazApp.Context.Done()
 
-		debugService.Stop()
+		if topazApp.Configuration.DebugService.Enabled {
+			debugService.Stop()
+		}
 
 		return nil
 	},

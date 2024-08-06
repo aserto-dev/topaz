@@ -52,9 +52,9 @@
 # config file you can use for local development
 config-dev*.yaml
 
-# release version file, generated at release
-VERSION.txt
-
 # https://github.com/golang/go/issues/53502
 # go.work.sum is machine specific and should not be checked in
 go.work.sum
+
+# exclude DLV debugger generated binaries
+__debug_bin*

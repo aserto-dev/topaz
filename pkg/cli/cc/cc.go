@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
-	"github.com/aserto-dev/clui"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/docker/docker/api/types"
@@ -28,7 +29,7 @@ var (
 
 type CommonCtx struct {
 	Context context.Context
-	UI      *clui.UI
+	std     *iostream.StdIO
 	Config  *CLIConfig
 }
 
@@ -50,6 +51,7 @@ type RunningConfig struct {
 
 type DefaultsConfig struct {
 	NoCheck           bool   `json:"no_check"`
+	NoColor           bool   `json:"no_color"`
 	ContainerRegistry string `json:"container_registry"`
 	ContainerImage    string `json:"container_image"`
 	ContainerTag      string `json:"container_tag"`
@@ -63,10 +65,15 @@ const (
 	StatusRunning
 )
 
-func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
-	ctx := &CommonCtx{
-		Context: context.Background(),
-		UI:      iostream.NewUI(iostream.DefaultIO()),
+var (
+	defaults DefaultsConfig
+	once     sync.Once
+)
+
+func NewCommonContext(ctx context.Context, noCheck bool, configFilePath string) (*CommonCtx, error) {
+	commonCtx := &CommonCtx{
+		Context: ctx,
+		std:     iostream.DefaultIO(),
 		Config: &CLIConfig{
 			Version: 1,
 			Active: ActiveConfig{
@@ -74,11 +81,7 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 				Config:     "config.yaml",
 			},
 			Defaults: DefaultsConfig{
-				NoCheck:           noCheck,
-				ContainerRegistry: ContainerRegistry(),
-				ContainerImage:    ContainerImage(),
-				ContainerTag:      ContainerTag(),
-				ContainerPlatform: ContainerPlatform(),
+				NoCheck: noCheck,
 			},
 			Running: RunningConfig{},
 		},
@@ -89,13 +92,15 @@ func NewCommonContext(noCheck bool, configFilePath string) (*CommonCtx, error) {
 		if err != nil {
 			return nil, err
 		}
-		err = json.Unmarshal(data, ctx.Config)
+		err = json.Unmarshal(data, commonCtx.Config)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return ctx, nil
+	setDefaults(commonCtx)
+
+	return commonCtx, nil
 }
 
 func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatus) bool {
@@ -167,9 +172,25 @@ func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(cliConfig, kongConfigBytes, 0666) // nolint
+	err = os.WriteFile(cliConfig, kongConfigBytes, 0o666) // nolint
 	if err != nil {
 		return err
 	}
+
+	defaults = c.Config.Defaults
 	return nil
+}
+
+func setDefaults(ctx *CommonCtx) {
+	once.Do(func() {
+		defaults = ctx.Config.Defaults
+	})
+}
+
+func (c *CommonCtx) StdOut() io.Writer {
+	return c.std.StdOut()
+}
+
+func (c *CommonCtx) StdErr() io.Writer {
+	return c.std.StdErr()
 }

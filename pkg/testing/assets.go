@@ -21,7 +21,6 @@ func AssetsDir() string {
 
 // AssetAcmeDBFilePath returns the path of the test contoso EDS database file.
 func AssetAcmeDBFilePath() string {
-
 	const filename = "eds-acmecorp.db"
 	t := testing.T{}
 	srcFile := filepath.Join(AssetsDir(), filename)

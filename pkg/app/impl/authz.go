@@ -152,7 +152,6 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		rego.Input(input),
 		rego.Query(queryStmt.String()),
 	).PrepareForEval(ctx)
-
 	if err != nil {
 		return resp, aerr.ErrBadQuery.Err(err).Msg(queryStmt.String())
 	}
@@ -263,7 +262,6 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		rego.Store(policyRuntime.GetPluginsManager().Store),
 		rego.Query(queryStmt),
 	).PrepareForEval(ctx)
-
 	if err != nil {
 		return resp, aerr.ErrBadQuery.Err(err).Msg(queryStmt)
 	}
@@ -648,7 +646,6 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 }
 
 func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.ListPoliciesRequest) (*authorizer.ListPoliciesResponse, error) {
-
 	response := &authorizer.ListPoliciesResponse{}
 
 	rt, err := s.getRuntime(ctx, req.PolicyInstance)

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/table"
 )
 
 type ListConfigCmd struct {
@@ -13,7 +14,7 @@ type ListConfigCmd struct {
 }
 
 func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
-	table := c.UI.Normal().WithTable("", "Name", "Config File")
+	tab := table.New(c.StdOut()).WithColumns("", "Name", "Config File")
 
 	files, err := os.ReadDir(cmd.ConfigDir)
 	if err != nil {
@@ -30,9 +31,9 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 			active = "*"
 		}
 
-		table.WithTableRow(active, name, files[i].Name())
+		tab.WithRow(active, name, files[i].Name())
 	}
-	table.Do()
+	tab.Do()
 
 	return nil
 }

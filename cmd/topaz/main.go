@@ -1,52 +1,77 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strconv"
+	"syscall"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+
+	ver "github.com/aserto-dev/topaz/pkg/version"
 
 	"github.com/alecthomas/kong"
 	"github.com/rs/zerolog"
 )
 
+const docLink = "https://www.topaz.sh/docs/command-line-interface/topaz-cli/configuration"
+
 const (
-	docLink = "https://www.topaz.sh/docs/command-line-interface/topaz-cli/configuration"
+	rcOK  int = 0
+	rcErr int = 1
 )
 
 func main() {
+	if len(os.Args) == 1 {
+		os.Args = append(os.Args, "--help")
+	}
+
+	os.Exit(run())
+}
+
+func run() (exitCode int) {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	fflag.Init()
 
 	cli := cmd.CLI{}
 
-	cliConfigFile := filepath.Join(cc.GetTopazDir(), cmd.CLIConfigurationFile)
+	cliConfigFile := filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
 
 	oldDBPath := filepath.Join(cc.GetTopazDir(), "db")
 	warn, err := checkDBFiles(oldDBPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		exitErr(err)
 	}
 
-	ctx, err := cc.NewCommonContext(cli.NoCheck, cliConfigFile)
+	c, err := cc.NewCommonContext(ctx, cli.NoCheck, cliConfigFile)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
+		exitErr(err)
+	}
+
+	err = checkVersion(c)
+	if err != nil {
+		exitErr(err)
 	}
 
 	if warn && len(os.Args) == 1 {
-		ctx.UI.Exclamation().Msgf("Detected directory db files in the old data location %q\nCheck the documentation on how to update your configuration:\n%s\n",
-			oldDBPath, docLink)
+		c.Con().Warn().Msg("Detected directory db files in the old data location %q", oldDBPath)
+		c.Con().Msg("Check the documentation on how to update your configuration:\n%s", docLink)
 	}
 
 	kongCtx := kong.Parse(&cli,
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
-		kong.Exit(exit),
 		kong.ConfigureHelp(kong.HelpOptions{
 			NoAppSummary:        false,
 			Summary:             false,
@@ -61,11 +86,12 @@ func main() {
 			"topaz_certs_dir":    cc.GetTopazCertsDir(),
 			"topaz_cfg_dir":      cc.GetTopazCfgDir(),
 			"topaz_db_dir":       cc.GetTopazDataDir(),
+			"topaz_tmpl_dir":     cc.GetTopazTemplateDir(),
 			"container_registry": cc.ContainerRegistry(),
 			"container_image":    cc.ContainerImage(),
 			"container_tag":      cc.ContainerTag(),
 			"container_platform": cc.ContainerPlatform(),
-			"container_name":     cc.ContainerName(ctx.Config.Active.ConfigFile),
+			"container_name":     cc.ContainerName(c.Config.Active.ConfigFile),
 			"directory_svc":      cc.DirectorySvc(),
 			"directory_key":      cc.DirectoryKey(),
 			"directory_token":    cc.DirectoryToken(),
@@ -75,17 +101,30 @@ func main() {
 			"tenant_id":          cc.TenantID(),
 			"insecure":           strconv.FormatBool(cc.Insecure()),
 			"no_check":           strconv.FormatBool(cc.NoCheck()),
+			"no_color":           strconv.FormatBool(cc.NoColor()),
+			"active_config":      c.Config.Active.Config,
 		},
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
 
-	if err := cc.EnsureDirs(); err != nil {
-		kongCtx.FatalIfErrorf(err)
+	if cli.NoColor {
+		os.Setenv("TOPAZ_NO_COLOR", "TRUE")
 	}
 
-	if err := kongCtx.Run(ctx); err != nil {
-		kongCtx.FatalIfErrorf(err)
+	if err := cc.EnsureDirs(); err != nil {
+		exitErr(err)
 	}
+
+	if err := kongCtx.Run(c); err != nil {
+		exitErr(err)
+	}
+
+	return rcOK
+}
+
+func exitErr(err error) int {
+	fmt.Fprintln(os.Stderr, err.Error())
+	return rcErr
 }
 
 func logLevel(level int) zerolog.Level {
@@ -123,10 +162,37 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 	return len(files) > 0, nil
 }
 
-// set status code to 0 when executing with no arguments, help only output.
-func exit(rc int) {
-	if len(os.Args) == 1 {
-		os.Exit(0)
+// check set version in defaults and suggest update if needed.
+func checkVersion(c *cc.CommonCtx) error {
+	if cc.ContainerTag() == "latest" {
+		return nil
 	}
-	os.Exit(rc)
+
+	buildVer, err := semver.NewVersion(ver.GetInfo().Version)
+	if err != nil {
+		return err
+	}
+	if buildVer.Prerelease() != "" {
+		return nil
+	}
+
+	tagVer, err := semver.NewVersion(cc.ContainerTag())
+	if err != nil {
+		return err
+	}
+
+	if buildVer.Major() == tagVer.Major() && buildVer.Minor() == tagVer.Minor() && buildVer.Patch() == tagVer.Patch() {
+		return nil
+	}
+
+	c.Con().Warn().Msg("The default container tag configuration setting (%s), is different from the current topaz version (%v).",
+		c.Config.Defaults.ContainerTag,
+		ver.GetInfo().Version,
+	)
+	if !common.PromptYesNo("Do you want to update the configuration setting?", false) {
+		return nil
+	}
+
+	c.Config.Defaults.ContainerTag = ver.GetInfo().Version
+	return c.SaveContextConfig(common.CLIConfigurationFile)
 }

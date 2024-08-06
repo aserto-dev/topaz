@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://topaz.sh/schema/config.json
 ---
 # config schema version
 version: 2
@@ -19,9 +20,33 @@ jwt:
   acceptable_time_skew_seconds: 5 # set as default, 5 secs
 
 api:
-  health:
-    listen_address: "0.0.0.0:9494"
+  # health:
+  #   listen_address: "0.0.0.0:9494"
+  # metrics:
+  #   listen_address: "0.0.0.0:9696"
+  #   zpages: true
   services:
+    console:
+        gateway:
+          listen_address: "0.0.0.0:8080"
+          allowed_origins:
+          - http://localhost
+          - http://localhost:*
+          - https://localhost
+          - https://localhost:*
+          - https://0.0.0.0:*
+          - https://*.aserto.com
+          - https://*aserto-console.netlify.app
+          certs:
+            tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+            tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+            tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
+        grpc:
+          listen_address: "0.0.0.0:8081"
+          certs:
+            tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+            tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+            tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'    # health:
     model:
       grpc:
         listen_address: "0.0.0.0:9292"

@@ -58,6 +58,28 @@ builds:
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
+  - id: topaz-db
+    main: ./cmd/topaz-db
+    binary: topaz-db
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
   # https://goreleaser.com/customization/archive/
@@ -77,7 +99,7 @@ checksum:
 
 snapshot:
   # https://goreleaser.com/customization/snapshots/
-  name_template: "{{ .Tag }}"
+  name_template: "{{ incpatch .Version }}-{{ .ShortCommit }}{{ if .IsGitDirty }}-dirty{{ end }}"
 
 source:
   # https://goreleaser.com/customization/source/
@@ -103,18 +125,6 @@ release:
 
 blobs:
   # https://goreleaser.com/customization/blob/
-  -
-    provider: gs
-    bucket: topaz-cli
-    folder: "topaz/{{ .Version }}"
-    extra_files:
-      - glob: VERSION.txt
-  -
-    provider: gs
-    bucket: topaz-cli
-    folder: "topaz/latest"
-    extra_files:
-      - glob: VERSION.txt
 
 brews:
   # https://goreleaser.com/customization/homebrew/
@@ -126,7 +136,7 @@ brews:
       name: homebrew-tap
       token: "{{ .Env.ASERTO_TAP }}"
 
-    url_template: "https://storage.googleapis.com/topaz-cli/topaz/{{ .Version }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/aserto-dev/topaz/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
     download_strategy: CurlDownloadStrategy
 

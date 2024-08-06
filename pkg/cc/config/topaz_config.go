@@ -32,7 +32,6 @@ type CallOptions struct {
 }
 
 type Options struct {
-
 	// API Key for machine-to-machine communication, internal to Aserto
 	EnableAPIKey bool `json:"enable_api_key"`
 	// Allows calls without any form of authentication

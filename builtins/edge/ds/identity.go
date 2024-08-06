@@ -16,16 +16,8 @@ import (
 
 // RegisterIdentity - ds.identity - get user id (key) for identity
 //
-// v3 (latest) request format:
-//
 //	ds.identity({
 //		"id": ""
-//	})
-//
-// v2 request format:
-//
-//	ds.identity({
-//		"key": ""
 //	})
 func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
@@ -34,21 +26,16 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-
 			var args struct {
-				ID  string `json:"id"`
-				Key string `json:"key"`
+				ID string `json:"id"`
 			}
 
 			if err := ast.As(op1.Value, &args); err != nil {
+				traceError(&bctx, fnName, err)
 				return nil, err
 			}
 
-			if args.ID == "" && args.Key != "" {
-				args.ID = args.Key
-			}
-
-			if args.ID == "" && args.Key == "" {
+			if args.ID == "" {
 				type argsV3 struct {
 					ID string `json:"id"`
 				}

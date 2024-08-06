@@ -6,6 +6,7 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 )
 
 type ConfigCmd struct {
@@ -15,6 +16,7 @@ type ConfigCmd struct {
 	Rename RenameConfigCmd `cmd:"" help:"rename configuration"`
 	Delete DeleteConfigCmd `cmd:"" help:"delete configuration"`
 	Info   InfoConfigCmd   `cmd:"" help:"display configuration information"`
+	Edit   EditConfigCmd   `cmd:"" help:"edit config file (defaults to active)" hidden:"" type:"fflag.Editor"`
 }
 
 var restrictedNamePattern = regexp.MustCompile(`^[a-z0-9][a-z0-9_.-]*$`)
@@ -38,5 +40,13 @@ func (c ConfigName) String() string {
 }
 
 func (cmd *ConfigCmd) Run(c *cc.CommonCtx) error {
+	return nil
+}
+
+func (cmd *ConfigCmd) BeforeReset(ctx *kong.Context) error {
+	n := ctx.Selected()
+	if n != nil {
+		fflag.UnHideCmds(ctx)
+	}
 	return nil
 }

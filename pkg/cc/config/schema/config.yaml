@@ -1,17 +1,24 @@
-# yaml-language-server: $schema=config.json
+# yaml-language-server: $schema=./config.json
 ---
 # config schema version
 version: 2
 
+# logger settings.
 logging:
   prod: true
   log_level: info
   grpc_log_level: info
 
+# debug service settings
+debug_service:
+  enabled: false
+  listen_address: ""
+  shutdown_timeout: 0
+
+# edge directory configuration.
 directory:
   db_path: '${TOPAZ_DB_DIR}/test.db'
   request_timeout: 5s # set as default, 5 secs.
-  enable_v2: false # enable directory version 2 services for backward compatibility, this defaults to false per topaz 0.31.0
 
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:
@@ -25,11 +32,29 @@ remote_directory:
   ca_cert_path: ""
   timeout_in_seconds: 5
   headers:
-    aserto-account-id: "8b203797-4233-41af-af62-d399b097bfd6"
+    aserto-account-id: "00000000-1111-2222-3333-444455556666"
 
 # default jwt validation configuration
 jwt:
   acceptable_time_skew_seconds: 5 # set as default, 5 secs
+
+# authentication configuration
+auth:
+  api_keys:
+    "69ba614c64ed4be69485de73d062a00b": admin@email.com
+    "##Ve@rySecret123!!": user@email.com
+  options:
+    default:
+      enable_api_key: true
+      enable_anonymous: false
+    overrides:
+      paths:
+        - /aserto.authorizer.v2.Authorizer/Info
+        - /grpc.reflection.v1.ServerReflection/ServerReflectionInfo
+        - /grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo
+      override:
+        enable_anonymous: true
+        enable_api_key: false
 
 api:
   health:
@@ -49,8 +74,20 @@ api:
     
   services:
     console:
+      grpc:
+        listen_address: "0.0.0.0:8081"
+        fqdn: ""
+        certs:
+          tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+          tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:8080"
+        fqdn: ""
+        certs:
+          tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+          tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -59,16 +96,29 @@ api:
         - https://0.0.0.0:*
         - https://*.aserto.com
         - https://*aserto-console.netlify.app
-        certs:
-          tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
-          tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
-          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
-      grpc:
-        listen_address: "0.0.0.0:8081"
-        certs:
-          tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
-          tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
-          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
+        http: false
+        read_timeout: 2s
+        read_header_timeout: 2s
+        write_timeout: 2s
+        idle_timeout: 30s
+        
     reader:
       grpc:
         listen_address: "0.0.0.0:9292"
@@ -79,6 +129,7 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
+        fqdn: ""
         # if not specified, the allowed_origins includes localhost by default
         allowed_origins:
         - http://localhost
@@ -107,6 +158,7 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
+        fqdn: ""
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -132,6 +184,7 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
+        fqdn: ""
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -157,6 +210,7 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
+        fqdn: ""
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -182,6 +236,7 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:9393"
+        fqdn: ""
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -211,6 +266,11 @@ api:
           tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       gateway:
         listen_address: "0.0.0.0:8383"
+        fqdn: ""
+        certs:
+          tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+          tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
         allowed_origins:
         - http://localhost
         - http://localhost:*
@@ -219,10 +279,23 @@ api:
         - https://0.0.0.0:*
         - https://*.aserto.com
         - https://*aserto-console.netlify.app
-        certs:
-          tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
-          tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
-          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
+        allowed_headers:
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
+        allowed_methods:
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"          
         http: false
         read_timeout: 2s
         read_header_timeout: 2s
@@ -256,7 +329,7 @@ controller:
   enabled: true
   server:
     address: relay.prod.aserto.com:8443
-    api_key: 0xdeadbeef
+    api_key: "0xdeadbeef"
     client_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
     client_key_path: "${TOPAZ_DIR}/certs/grpc.key"
 

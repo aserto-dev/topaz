@@ -15,6 +15,7 @@ const (
 	defaultTenantID        = ""
 	defaultInsecure        = false
 	defaultNoCheck         = false
+	defaultNoColor         = false
 )
 
 func DirectorySvc() string {
@@ -81,5 +82,14 @@ func NoCheck() bool {
 			return b
 		}
 	}
-	return defaultNoCheck
+	return defaults.NoCheck
+}
+
+func NoColor() bool {
+	if noColor := os.Getenv("TOPAZ_NO_COLOR"); noColor != "" {
+		if b, err := strconv.ParseBool(noColor); err == nil {
+			return b
+		}
+	}
+	return defaults.NoColor
 }

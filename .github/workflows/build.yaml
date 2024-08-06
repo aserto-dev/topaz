@@ -1,0 +1,34 @@
+name: build
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #     - dev
+  #     - dev-*
+  #     - release-*
+  #   tags:
+  #     - v*
+  # pull_request:
+
+jobs:
+  build-step:
+    uses: aserto-dev/workflows/.github/workflows/go-build.yaml@main
+    secrets: 
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+  
+  docker-build-step:
+    uses: aserto-dev/workflows/.github/workflows/go-docker-build.yaml@main
+    needs: build-step
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+
+  release-step:
+    needs: [build-step, docker-build-step]
+    uses: aserto-dev/workflows/.github/workflows/go-release.yaml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}

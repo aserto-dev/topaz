@@ -11,7 +11,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/fatih/color"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -53,7 +52,8 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
 
 	if cfg.HasTopazDir {
-		c.UI.Exclamation().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+		c.Con().Warn().Msg("This configuration file still uses TOPAZ_DIR environment variable.")
+		c.Con().Msg("Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}
 
 	generator := config.NewGenerator(filepath.Base(c.Config.Active.ConfigFile))
@@ -75,7 +75,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return err
 	}
 
-	color.Green(">>> starting topaz %q...", c.Config.Running.Config)
+	c.Con().Info().Msg(">>> starting topaz %q...", c.Config.Running.Config)
 
 	dc, err := dockerx.New()
 	if err != nil {
@@ -107,8 +107,8 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithEnvs(cmd.Env),
 		dockerx.WithPorts(ports),
 		dockerx.WithVolumes(volumes),
-		dockerx.WithOutput(c.UI.Output()),
-		dockerx.WithError(c.UI.Err()),
+		dockerx.WithOutput(c.StdOut()),
+		dockerx.WithError(c.StdErr()),
 	}
 
 	if mode == modeInteractive {
@@ -123,7 +123,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		}
 	}
 
-	fmt.Fprintf(c.UI.Output(), "\n")
+	c.Con().Msg("")
 
 	if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -163,8 +163,11 @@ func getVolumes(cfg *config.Loader) ([]string, error) {
 	})
 
 	volumes := []string{
-		fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir()),        // manually attach the configuration folder
-		fmt.Sprintf("%s:/root/.policy:ro", dockerx.PolicyRoot()), // manually attache policy store
+		fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir()), // manually attach the configuration folder
+	}
+
+	if cfg.Configuration.OPA.LocalBundles.LocalPolicyImage != "" && dockerx.PolicyRoot() != "" {
+		volumes = append(volumes, fmt.Sprintf("%s:/root/.policy:ro", dockerx.PolicyRoot())) // manually attach policy store
 	}
 
 	for _, v := range volumeMap {

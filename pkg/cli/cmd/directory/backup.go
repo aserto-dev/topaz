@@ -5,15 +5,14 @@ import (
 	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/clients"
-	"github.com/fatih/color"
+	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+
 	"github.com/pkg/errors"
 )
 
 type BackupCmd struct {
-	File   string        `arg:""  default:"backup.tar.gz" help:"absolute file path to make backup to"`
-	Format FormatVersion `flag:"" short:"f" enum:"3,2" name:"format" default:"3" help:"format of json data"`
-	clients.DirectoryConfig
+	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to make backup to"`
+	dsc.Config
 }
 
 const defaultFileName = "backup.tar.gz"
@@ -23,7 +22,7 @@ func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 
-	dirClient, err := clients.NewDirectoryClient(c, &cmd.DirectoryConfig)
+	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -36,10 +35,7 @@ func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, defaultFileName)
 	}
 
-	color.Green(">>> backup to %s", cmd.File)
+	c.Con().Info().Msg(">>> backup to %s", cmd.File)
 
-	if cmd.Format == V2 {
-		return dirClient.V2.Backup(c.Context, cmd.File)
-	}
-	return dirClient.V3.Backup(c.Context, cmd.File)
+	return dsClient.Backup(c.Context, cmd.File)
 }

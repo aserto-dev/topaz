@@ -5,14 +5,10 @@ import (
 	"net/http"
 	"strconv"
 
-	dse2 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v2"
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	dsi2 "github.com/aserto-dev/go-directory/aserto/directory/importer/v2"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsr2 "github.com/aserto-dev/go-directory/aserto/directory/reader/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw2 "github.com/aserto-dev/go-directory/aserto/directory/writer/v2"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
@@ -60,27 +56,15 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 			dsm3.RegisterModelServer(server, e.dir.Model3())
 		}
 		if lo.Contains(services, readerService) {
-			if e.dir.Config().EnableV2 {
-				dsr2.RegisterReaderServer(server, e.dir.Reader2())
-			}
 			dsr3.RegisterReaderServer(server, e.dir.Reader3())
 		}
 		if lo.Contains(services, writerService) {
-			if e.dir.Config().EnableV2 {
-				dsw2.RegisterWriterServer(server, e.dir.Writer2())
-			}
 			dsw3.RegisterWriterServer(server, e.dir.Writer3())
 		}
 		if lo.Contains(services, importerService) {
-			if e.dir.Config().EnableV2 {
-				dsi2.RegisterImporterServer(server, e.dir.Importer2())
-			}
 			dsi3.RegisterImporterServer(server, e.dir.Importer3())
 		}
 		if lo.Contains(services, exporterService) {
-			if e.dir.Config().EnableV2 {
-				dse2.RegisterExporterServer(server, e.dir.Exporter2())
-			}
 			dse3.RegisterExporterServer(server, e.dir.Exporter3())
 		}
 	}

@@ -6,6 +6,7 @@ import (
 
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/table"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
@@ -37,11 +38,11 @@ func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...
 		}
 
 		if len(existingFiles) != 0 {
-			table := c.UI.Normal().WithTable("File", "Action")
+			tab := table.New(c.StdErr()).WithColumns("File", "Action")
 			for _, fqn := range existingFiles {
-				table.WithTableRow(filepath.Base(fqn), "skipped, file already exists")
+				tab.WithRow(filepath.Base(fqn), "skipped, file already exists")
 			}
-			table.Do()
+			tab.Do()
 			return nil
 		}
 	}
@@ -53,7 +54,7 @@ func generate(c *cc.CommonCtx, dnsNames []string, certPaths ...*CertPaths) error
 	logger := zerolog.Nop()
 	generator := certs.NewGenerator(&logger)
 
-	table := c.UI.Normal().WithTable("File", "Action")
+	tab := table.New(c.StdErr()).WithColumns("File", "Action")
 
 	for _, certPaths := range certPaths {
 		if err := generator.MakeDevCert(&certs.CertGenConfig{
@@ -67,12 +68,12 @@ func generate(c *cc.CommonCtx, dnsNames []string, certPaths ...*CertPaths) error
 			return errors.Wrap(err, "failed to create dev certs")
 		}
 
-		table.WithTableRow(filepath.Base(certPaths.CA), "generated")
-		table.WithTableRow(filepath.Base(certPaths.Cert), "generated")
-		table.WithTableRow(filepath.Base(certPaths.Key), "generated")
+		tab.WithRow(filepath.Base(certPaths.CA), "generated")
+		tab.WithRow(filepath.Base(certPaths.Cert), "generated")
+		tab.WithRow(filepath.Base(certPaths.Key), "generated")
 	}
 
-	table.Do()
+	tab.Do()
 
 	return nil
 }

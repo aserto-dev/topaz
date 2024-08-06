@@ -1,6 +1,9 @@
 package templates
 
-import "github.com/aserto-dev/topaz/pkg/cli/cc"
+import (
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/table"
+)
 
 type ListTemplatesCmd struct {
 	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
@@ -17,12 +20,12 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 		maxWidth = max(maxWidth, len(n)+1)
 	}
 
-	table := c.UI.Normal().WithTable(colName, colDescription, colDocumentation)
-	table.WithTableNoAutoWrapText()
+	tab := table.New(c.StdOut()).WithColumns(colName, colDescription, colDocumentation)
+	tab.WithTableNoAutoWrapText()
 	for n, t := range ctlg {
-		table.WithTableRow(n, t.ShortDescription, t.DocumentationURL)
+		tab.WithRow(n, t.ShortDescription, t.DocumentationURL)
 	}
-	table.Do()
+	tab.Do()
 
 	return nil
 }
