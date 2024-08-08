@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/aserto-dev/go-aserto/client"
+	client "github.com/aserto-dev/go-aserto"
 	dsa3 "github.com/aserto-dev/go-directory/aserto/directory/assertion/v3"
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
@@ -38,7 +38,7 @@ type Client struct {
 	Assertion dsa3.AssertionClient
 }
 
-func NewConn(ctx context.Context, cfg *Config) (*grpc.ClientConn, error) {
+func NewConn(cfg *Config) (*grpc.ClientConn, error) {
 	if cfg.Host == "" {
 		return nil, fmt.Errorf("no host specified")
 	}
@@ -64,7 +64,7 @@ func NewConn(ctx context.Context, cfg *Config) (*grpc.ClientConn, error) {
 		opts = append(opts, client.WithTenantID(cfg.TenantID))
 	}
 
-	return client.NewConnection(ctx, opts...)
+	return client.NewConnection(opts...)
 }
 
 func New(conn *grpc.ClientConn) *Client {
@@ -80,7 +80,7 @@ func New(conn *grpc.ClientConn) *Client {
 }
 
 func NewClient(c *cc.CommonCtx, cfg *Config) (*Client, error) {
-	conn, err := NewConn(c.Context, cfg)
+	conn, err := NewConn(cfg)
 	if err != nil {
 		return nil, err
 	}

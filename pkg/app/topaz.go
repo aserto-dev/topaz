@@ -7,7 +7,7 @@ import (
 	"time"
 
 	cerr "github.com/aserto-dev/errors"
-	"github.com/aserto-dev/go-aserto/client"
+	client "github.com/aserto-dev/go-aserto"
 	eds "github.com/aserto-dev/go-edge-ds"
 	console "github.com/aserto-dev/go-topaz-ui"
 	"github.com/aserto-dev/self-decision-logger/logger/self"

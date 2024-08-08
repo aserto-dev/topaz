@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/aserto-dev/go-aserto/client"
+	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/go-edge-ds/pkg/datasync"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
@@ -250,7 +250,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 		cancel()
 	}()
 
-	conn, err := p.remoteDirectoryClient(ctx)
+	conn, err := p.remoteDirectoryClient()
 	if err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
 		return
@@ -314,7 +314,7 @@ func (p *Plugin) exec(ctx context.Context, ds *directory.Directory, conn *grpc.C
 	p.logger.Info().Str(status, finished).Msg(syncTask)
 }
 
-func (p *Plugin) remoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, error) {
+func (p *Plugin) remoteDirectoryClient() (*grpc.ClientConn, error) {
 	opts := []client.ConnectionOption{
 		client.WithAddr(p.config.Addr),
 		client.WithInsecure(p.config.Insecure),
@@ -328,7 +328,7 @@ func (p *Plugin) remoteDirectoryClient(ctx context.Context) (*grpc.ClientConn, e
 		opts = append(opts, client.WithTenantID(p.config.TenantID))
 	}
 
-	conn, err := client.NewConnection(ctx, opts...)
+	conn, err := client.NewConnection(opts...)
 	if err != nil {
 		return nil, err
 	}

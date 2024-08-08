@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/aserto-dev/go-aserto/client"
+	client "github.com/aserto-dev/go-aserto"
 	"github.com/fullstorydev/grpcurl"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -28,7 +28,7 @@ type Client struct {
 	Authorizer az2.AuthorizerClient
 }
 
-func NewConn(ctx context.Context, cfg *Config) (*grpc.ClientConn, error) {
+func NewConn(cfg *Config) (*grpc.ClientConn, error) {
 	if cfg.Host == "" {
 		return nil, fmt.Errorf("no host specified")
 	}
@@ -54,7 +54,7 @@ func NewConn(ctx context.Context, cfg *Config) (*grpc.ClientConn, error) {
 		opts = append(opts, client.WithTenantID(cfg.TenantID))
 	}
 
-	return client.NewConnection(ctx, opts...)
+	return client.NewConnection(opts...)
 }
 
 func New(conn *grpc.ClientConn) *Client {
@@ -65,7 +65,7 @@ func New(conn *grpc.ClientConn) *Client {
 }
 
 func NewClient(c *cc.CommonCtx, cfg *Config) (*Client, error) {
-	conn, err := NewConn(c.Context, cfg)
+	conn, err := NewConn(cfg)
 	if err != nil {
 		return nil, err
 	}
