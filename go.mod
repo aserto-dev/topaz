@@ -17,23 +17,23 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/adrg/xdg v0.4.0
 	github.com/alecthomas/kong v0.9.0
-	github.com/aserto-dev/aserto-grpc v0.2.3
-	github.com/aserto-dev/aserto-management v0.9.5-0.20240808200122-49b6f758bd48
+	github.com/aserto-dev/aserto-grpc v0.2.4
+	github.com/aserto-dev/aserto-management v0.9.5
 	github.com/aserto-dev/azm v0.1.12
 	github.com/aserto-dev/certs v0.0.6
 	github.com/aserto-dev/errors v0.0.10
 	github.com/aserto-dev/go-aserto v0.31.6-0.20240808230126-d4cf89f6c1b5
 	github.com/aserto-dev/go-authorizer v0.20.8
 	github.com/aserto-dev/go-directory v0.31.9
-	github.com/aserto-dev/go-edge-ds v0.32.4
-	github.com/aserto-dev/go-grpc v0.8.67
+	github.com/aserto-dev/go-edge-ds v0.32.5-0.20240808234603-05327576aa72
+	github.com/aserto-dev/go-grpc v0.8.68
 	github.com/aserto-dev/go-topaz-ui v0.1.11
 	github.com/aserto-dev/header v0.0.7
 	github.com/aserto-dev/logger v0.0.4
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.31.2
 	github.com/aserto-dev/runtime v0.67.1
-	github.com/aserto-dev/self-decision-logger v0.0.6-0.20240808203951-66f98de9cb23
+	github.com/aserto-dev/self-decision-logger v0.0.6
 	github.com/aserto-dev/service-host v0.0.15
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.1.1+incompatible
@@ -54,10 +54,10 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/moby/term v0.5.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/open-policy-agent/opa v0.67.0
+	github.com/open-policy-agent/opa v0.67.1
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/pkg/errors v0.9.1
-	github.com/rivo/tview v0.0.0-20240805111717-08da3ea4576f
+	github.com/rivo/tview v0.0.0-20240807205129-e4c497cc59ed
 	github.com/rs/zerolog v1.33.0
 	github.com/samber/lo v1.46.0
 	github.com/spf13/cobra v1.8.1
@@ -65,7 +65,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.8.0
-	golang.org/x/sys v0.23.0
+	golang.org/x/sys v0.24.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
@@ -192,10 +192,10 @@ require (
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/term v0.23.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
-	golang.org/x/time v0.5.0 // indirect
+	golang.org/x/time v0.6.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20240805194559-2c9e96a0b5d4 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240805194559-2c9e96a0b5d4 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240808171019-573a1156607a // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240808171019-573a1156607a // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
