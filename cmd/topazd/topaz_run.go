@@ -41,9 +41,7 @@ var cmdRun = &cobra.Command{
 				cfg.OPA.LocalBundles.Watch = true
 			}
 
-			if flagRunDebug {
-				cfg.Common.DebugService.Enabled = flagRunDebug
-			}
+			cfg.Common.DebugService.Enabled = flagRunDebug
 		})
 		defer func() {
 			if cleanup != nil {
@@ -102,7 +100,9 @@ var cmdRun = &cobra.Command{
 
 		<-topazApp.Context.Done()
 
-		debugService.Stop()
+		if topazApp.Configuration.DebugService.Enabled {
+			debugService.Stop()
+		}
 
 		return nil
 	},
