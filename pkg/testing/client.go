@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/aserto-dev/go-aserto/client"
+	client "github.com/aserto-dev/go-aserto"
 	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
@@ -112,7 +112,6 @@ func (h *EngineHarness) CreateDirectoryClient(ctx context.Context) *DirectoryCli
 	}
 
 	c, err := client.NewConnection(
-		ctx,
 		client.WithAddr(readerAPIConfig.GRPC.ListenAddress),
 		client.WithCACertPath(readerAPIConfig.GRPC.Certs.TLSCACertPath),
 		client.WithInsecure(true),

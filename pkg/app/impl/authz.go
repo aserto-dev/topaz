@@ -491,6 +491,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	return resp, nil
 }
 
+// nolint: staticcheck
 func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.PolicyInstance) (*runtime.Runtime, error) {
 	var rt *runtime.Runtime
 	var err error

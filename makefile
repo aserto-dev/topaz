@@ -104,7 +104,7 @@ buf-lint:
 .PHONY: buf-breaking
 buf-breaking:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/buf breaking proto --against "https://github.com/d5s-io/directory.git#branch=main"
+	@${EXT_BIN_DIR}/buf breaking proto --against "https://github.com/aserto-dev/pb-directory.git#branch=main"
 
 .PHONY: buf-build
 buf-build: ${BIN_DIR}

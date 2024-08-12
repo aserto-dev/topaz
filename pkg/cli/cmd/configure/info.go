@@ -2,6 +2,7 @@ package configure
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -45,7 +46,7 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 		if s, ok := v.(string); ok && cmd.Raw {
-			c.Out().Msg(s)
+			fmt.Fprintln(c.StdOut(), s)
 		} else {
 			_ = enc.Encode(v)
 		}

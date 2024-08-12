@@ -40,7 +40,9 @@ func main() {
 		},
 	)
 
-	if err := kongCtx.Run(ctx); err != nil {
+	kongCtx.BindTo(ctx, (*context.Context)(nil))
+
+	if err := kongCtx.Run(); err != nil {
 		kongCtx.FatalIfErrorf(err)
 	}
 }

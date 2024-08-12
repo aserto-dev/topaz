@@ -3,7 +3,7 @@ package directory
 import (
 	"context"
 
-	"github.com/aserto-dev/go-aserto/client"
+	client "github.com/aserto-dev/go-aserto"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"google.golang.org/grpc"
 
@@ -30,9 +30,7 @@ func NewResolver(logger *zerolog.Logger, cfg *client.Config) resolvers.Directory
 func connect(logger *zerolog.Logger, cfg *client.Config) (*grpc.ClientConn, error) {
 	logger.Debug().Str("tenant-id", cfg.TenantID).Str("addr", cfg.Address).Str("apiKey", cfg.APIKey).Bool("insecure", cfg.Insecure).Msg("GetDS")
 
-	ctx := context.Background()
-
-	conn, err := client.NewConnection(ctx,
+	conn, err := client.NewConnection(
 		client.WithAddr(cfg.Address),
 		client.WithAPIKeyAuth(cfg.APIKey),
 		client.WithTenantID(cfg.TenantID),
