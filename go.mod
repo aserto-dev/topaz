@@ -2,8 +2,6 @@ module github.com/aserto-dev/topaz
 
 go 1.22.0
 
-toolchain go1.22.5
-
 // replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
@@ -17,24 +15,24 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/adrg/xdg v0.4.0
 	github.com/alecthomas/kong v0.9.0
-	github.com/aserto-dev/aserto-grpc v0.2.4
-	github.com/aserto-dev/aserto-management v0.9.5
-	github.com/aserto-dev/azm v0.1.12
-	github.com/aserto-dev/certs v0.0.6
-	github.com/aserto-dev/errors v0.0.10
-	github.com/aserto-dev/go-aserto v0.31.6-0.20240808230126-d4cf89f6c1b5
-	github.com/aserto-dev/go-authorizer v0.20.8
-	github.com/aserto-dev/go-directory v0.31.9
-	github.com/aserto-dev/go-edge-ds v0.32.5-0.20240808234603-05327576aa72
+	github.com/aserto-dev/aserto-grpc v0.2.5
+	github.com/aserto-dev/aserto-management v0.9.6
+	github.com/aserto-dev/azm v0.1.13
+	github.com/aserto-dev/certs v0.0.7
+	github.com/aserto-dev/errors v0.0.11
+	github.com/aserto-dev/go-aserto v0.32.0
+	github.com/aserto-dev/go-authorizer v0.20.10
+	github.com/aserto-dev/go-directory v0.31.11
+	github.com/aserto-dev/go-edge-ds v0.32.5
 	github.com/aserto-dev/go-grpc v0.8.68
 	github.com/aserto-dev/go-topaz-ui v0.1.11
-	github.com/aserto-dev/header v0.0.7
-	github.com/aserto-dev/logger v0.0.4
+	github.com/aserto-dev/header v0.0.8
+	github.com/aserto-dev/logger v0.0.5
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.31.2
 	github.com/aserto-dev/runtime v0.67.1
-	github.com/aserto-dev/self-decision-logger v0.0.6
-	github.com/aserto-dev/service-host v0.0.15
+	github.com/aserto-dev/self-decision-logger v0.0.7
+	github.com/aserto-dev/service-host v0.0.16
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.1.1+incompatible
 	github.com/docker/go-connections v0.5.0
@@ -187,15 +185,15 @@ require (
 	go.opentelemetry.io/otel/trace v1.28.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.26.0 // indirect
-	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
-	golang.org/x/mod v0.19.0 // indirect
+	golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa // indirect
+	golang.org/x/mod v0.20.0 // indirect
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/term v0.23.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
-	golang.org/x/tools v0.23.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20240808171019-573a1156607a // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240808171019-573a1156607a // indirect
+	golang.org/x/tools v0.24.0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240812133136-8ffd90a71988 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240812133136-8ffd90a71988 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
