@@ -3,8 +3,9 @@ package context
 import (
 	"context"
 
+	"github.com/aserto-dev/topaz/pkg/cc/signals"
+
 	"golang.org/x/sync/errgroup"
-	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 )
 
 // ErrGroupAndContext wraps a context and an error group.
