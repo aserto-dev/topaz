@@ -15,6 +15,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/pkg/errors"
 
 	ver "github.com/aserto-dev/topaz/pkg/version"
 
@@ -68,6 +69,11 @@ func run() (exitCode int) {
 		c.Con().Msg("Check the documentation on how to update your configuration:\n%s", docLink)
 	}
 
+	cwd, err := os.Getwd()
+	if err != nil {
+		return exitErr(errors.Wrap(err, "failed to determine current working directory"))
+	}
+
 	kongCtx := kong.Parse(&cli,
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
@@ -103,6 +109,7 @@ func run() (exitCode int) {
 			"no_check":           strconv.FormatBool(cc.NoCheck()),
 			"no_color":           strconv.FormatBool(cc.NoColor()),
 			"active_config":      c.Config.Active.Config,
+			"cwd":                cwd,
 		},
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))

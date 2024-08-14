@@ -11,7 +11,7 @@ import (
 )
 
 type ImportCmd struct {
-	Directory string `short:"d" required:"" help:"directory containing .json data"`
+	Directory string `short:"d" required:"" help:"directory containing .json data"  default:"${cwd}"`
 	dsc.Config
 }
 
