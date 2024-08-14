@@ -9,7 +9,7 @@ import (
 )
 
 type ExportCmd struct {
-	Directory string `short:"d" required:"" help:"directory to write .json data"`
+	Directory string `short:"d" required:"" help:"directory to write .json data" default:"${cwd}"`
 	dsc.Config
 }
 
