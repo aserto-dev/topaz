@@ -10,7 +10,6 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/types"
 
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/proto"
 )
@@ -54,12 +53,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				})
 			}
 
-			client, err := dr.GetDS(bctx.Context)
-			if err != nil {
-				return nil, errors.Wrapf(err, "get directory client")
-			}
-
-			resp, err := client.GetGraph(bctx.Context, &args)
+			resp, err := dr.GetDS().GetGraph(bctx.Context, &args)
 			if err != nil {
 				traceError(&bctx, fnName, err)
 				return nil, err

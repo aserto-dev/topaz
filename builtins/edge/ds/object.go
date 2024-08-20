@@ -69,12 +69,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				})
 			}
 
-			client, err := dr.GetDS(bctx.Context)
-			if err != nil {
-				return nil, errors.Wrapf(err, "get directory client")
-			}
-
-			resp, err := client.GetObject(bctx.Context, req)
+			resp, err := dr.GetDS().GetObject(bctx.Context, req)
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)

@@ -228,10 +228,8 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 }
 
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
-	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
-	if err != nil {
-		return nil, err
-	}
+	client := s.resolver.GetDirectoryResolver().GetDS()
+
 	user, err := directory.GetIdentityV2(ctx, client, identity)
 	switch {
 	case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
@@ -245,10 +243,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 }
 
 func (s *AuthorizerServer) getObject(ctx context.Context, objType, objID string) (proto.Message, error) {
-	client, err := s.resolver.GetDirectoryResolver().GetDS(ctx)
-	if err != nil {
-		return nil, err
-	}
+	client := s.resolver.GetDirectoryResolver().GetDS()
 
 	objResp, err := client.GetObject(ctx, &dsr3.GetObjectRequest{
 		ObjectType: objType,

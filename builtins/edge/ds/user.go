@@ -10,7 +10,6 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/types"
 
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -44,12 +43,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				return help(fnName, argsV3{})
 			}
 
-			client, err := dr.GetDS(bctx.Context)
-			if err != nil {
-				return nil, errors.Wrapf(err, "get directory client")
-			}
-
-			resp, err := client.GetObject(bctx.Context, &dsr3.GetObjectRequest{
+			resp, err := dr.GetDS().GetObject(bctx.Context, &dsr3.GetObjectRequest{
 				ObjectType:    "user",
 				ObjectId:      args.ID,
 				WithRelations: false,

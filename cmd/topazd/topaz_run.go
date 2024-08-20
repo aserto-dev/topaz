@@ -5,6 +5,7 @@ import (
 
 	"github.com/aserto-dev/aserto-management/controller"
 	"github.com/aserto-dev/topaz/pkg/app"
+	"github.com/aserto-dev/topaz/pkg/app/directory"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/debug"
@@ -24,88 +25,91 @@ var cmdRun = &cobra.Command{
 	Use:   "run [args]",
 	Short: "Start Topaz authorization service",
 	Long:  `Start instance of the Topaz authorization service.`,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		configPath := config.Path(flagRunConfigFile)
-		topazApp, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, func(cfg *config.Config) {
-			cfg.Command.Mode = config.CommandModeRun
+	RunE:  run,
+}
 
-			if len(flagRunBundleFiles) > 0 {
-				cfg.OPA.LocalBundles.Paths = append(cfg.OPA.LocalBundles.Paths, flagRunBundleFiles...)
-			}
+func run(cmd *cobra.Command, args []string) error {
+	configPath := config.Path(flagRunConfigFile)
+	topazApp, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, configOverrides)
+	if err != nil {
+		return err
+	}
+	defer topazApp.Manager.StopServers(topazApp.Context)
+	defer cleanup()
 
-			if len(flagRunIgnorePaths) > 0 {
-				cfg.OPA.LocalBundles.Ignore = append(cfg.OPA.LocalBundles.Paths, flagRunIgnorePaths...)
-			}
+	if err := topazApp.ConfigServices(); err != nil {
+		return err
+	}
 
-			if flagRunWatchLocalBundles {
-				cfg.OPA.LocalBundles.Watch = true
-			}
+	if topazApp.Configuration.DebugService.Enabled {
+		debugService = debug.NewServer(&topazApp.Configuration.DebugService, topazApp.Logger)
+		debugService.Start()
+		defer debugService.Stop()
+	}
 
-			cfg.Common.DebugService.Enabled = flagRunDebug
-		})
-		defer func() {
-			if cleanup != nil {
-				topazApp.Manager.StopServers(topazApp.Context)
-				cleanup()
-			}
-		}()
+	if _, ok := topazApp.Services["authorizer"]; ok {
+		dirResolver, err := directory.NewResolver(topazApp.Logger, &topazApp.Configuration.DirectoryResolver)
 		if err != nil {
 			return err
 		}
-		err = topazApp.ConfigServices()
+		defer dirResolver.Close()
+
+		decisionlog, err := topazApp.GetDecisionLogger(topazApp.Configuration.DecisionLogger)
 		if err != nil {
 			return err
 		}
+		defer decisionlog.Shutdown()
 
-		if topazApp.Configuration.DebugService.Enabled {
-			debugService = debug.NewServer(&topazApp.Configuration.DebugService, topazApp.Logger)
-			debugService.Start()
-		}
+		controllerFactory := controller.NewFactory(
+			topazApp.Logger,
+			topazApp.Configuration.ControllerConfig,
+			app.KeepAliveDialOptionsProvider(),
+		)
 
-		if _, ok := topazApp.Services["authorizer"]; ok {
-			directory := topaz.DirectoryResolver(topazApp.Context, topazApp.Logger, topazApp.Configuration)
-			decisionlog, err := topazApp.GetDecisionLogger(topazApp.Configuration.DecisionLogger)
-			if err != nil {
-				return err
-			}
-
-			controllerFactory := controller.NewFactory(
-				topazApp.Logger,
-				topazApp.Configuration.ControllerConfig,
-				app.KeepAliveDialOptionsProvider(),
-			)
-
-			runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(
-				topazApp.Context,
-				topazApp.Logger,
-				topazApp.Configuration,
-				controllerFactory,
-				decisionlog,
-				directory,
-			)
-			if err != nil {
-				return err
-			}
-
-			defer runtimeCleanup()
-
-			topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(runtime)
-			topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
-		}
-
-		err = topazApp.Start()
+		runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(
+			topazApp.Context,
+			topazApp.Logger,
+			topazApp.Configuration,
+			controllerFactory,
+			decisionlog,
+			dirResolver,
+		)
 		if err != nil {
 			return err
 		}
 
-		<-topazApp.Context.Done()
+		defer runtimeCleanup()
 
-		if topazApp.Configuration.DebugService.Enabled {
-			debugService.Stop()
-		}
+		topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(runtime)
+		topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(dirResolver)
+	}
 
-		return nil
-	},
+	err = topazApp.Start()
+	if err != nil {
+		return err
+	}
+
+	<-topazApp.Context.Done()
+
+	return nil
+}
+
+func configOverrides(cfg *config.Config) {
+	cfg.Command.Mode = config.CommandModeRun
+
+	if len(flagRunBundleFiles) > 0 {
+		cfg.OPA.LocalBundles.Paths = append(cfg.OPA.LocalBundles.Paths, flagRunBundleFiles...)
+	}
+
+	if len(flagRunIgnorePaths) > 0 {
+		cfg.OPA.LocalBundles.Ignore = append(cfg.OPA.LocalBundles.Ignore, flagRunIgnorePaths...)
+	}
+
+	if flagRunWatchLocalBundles {
+		cfg.OPA.LocalBundles.Watch = true
+	}
+
+	cfg.Common.DebugService.Enabled = flagRunDebug
 }
 
 // nolint: gochecknoinits, errcheck
