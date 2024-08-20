@@ -10,7 +10,6 @@ import (
 	eds "github.com/aserto-dev/go-edge-ds"
 	"github.com/aserto-dev/go-edge-ds/pkg/datasync"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
-	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 
 	"github.com/rs/zerolog"
 )
@@ -31,7 +30,7 @@ func (cmd *SyncCmd) Run(ctx context.Context) error {
 	}
 
 	// create client conn
-	conn, err := dsc.NewConn(&cmd.Config)
+	conn, err := cmd.Config.Connect(ctx)
 	if err != nil {
 		return err
 	}

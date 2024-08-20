@@ -5,6 +5,7 @@ import (
 
 	client "github.com/aserto-dev/go-aserto"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 
 	"github.com/aserto-dev/topaz/resolvers"
@@ -30,12 +31,12 @@ func NewResolver(logger *zerolog.Logger, cfg *client.Config) resolvers.Directory
 func connect(logger *zerolog.Logger, cfg *client.Config) (*grpc.ClientConn, error) {
 	logger.Debug().Str("tenant-id", cfg.TenantID).Str("addr", cfg.Address).Str("apiKey", cfg.APIKey).Bool("insecure", cfg.Insecure).Msg("GetDS")
 
-	conn, err := client.NewConnection(
-		client.WithAddr(cfg.Address),
-		client.WithAPIKeyAuth(cfg.APIKey),
-		client.WithTenantID(cfg.TenantID),
-		client.WithInsecure(cfg.Insecure),
-	)
+	opts, err := cfg.ToConnectionOptions(client.NewDialOptionsProvider())
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create connection options")
+	}
+
+	conn, err := client.NewConnection(opts...)
 	if err != nil {
 		return nil, err
 	}
