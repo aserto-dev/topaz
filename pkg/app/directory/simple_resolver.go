@@ -1,8 +1,6 @@
 package directory
 
 import (
-	"context"
-
 	client "github.com/aserto-dev/go-aserto"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/pkg/errors"
@@ -13,23 +11,16 @@ import (
 )
 
 type Resolver struct {
-	logger  *zerolog.Logger
-	cfg     *client.Config
 	dirConn *grpc.ClientConn
+	logger  *zerolog.Logger
 }
 
 var _ resolvers.DirectoryResolver = &Resolver{}
 
 // The simple directory resolver returns a simple directory reader client.
-func NewResolver(logger *zerolog.Logger, cfg *client.Config) resolvers.DirectoryResolver {
-	return &Resolver{
-		logger: logger,
-		cfg:    cfg,
-	}
-}
-
-func connect(logger *zerolog.Logger, cfg *client.Config) (*grpc.ClientConn, error) {
-	logger.Debug().Str("tenant-id", cfg.TenantID).Str("addr", cfg.Address).Str("apiKey", cfg.APIKey).Bool("insecure", cfg.Insecure).Msg("GetDS")
+func NewResolver(logger *zerolog.Logger, cfg *client.Config) (*Resolver, error) {
+	l := logger.With().Interface("client", cfg).Logger()
+	l.Debug().Msg("new directory resolver")
 
 	opts, err := cfg.ToConnectionOptions(client.NewDialOptionsProvider())
 	if err != nil {
@@ -40,17 +31,17 @@ func connect(logger *zerolog.Logger, cfg *client.Config) (*grpc.ClientConn, erro
 	if err != nil {
 		return nil, err
 	}
-	return conn, nil
+
+	return &Resolver{dirConn: conn, logger: &l}, nil
+}
+
+func (r *Resolver) Close() {
+	if err := r.dirConn.Close(); err != nil {
+		r.logger.Err(err).Msg("failed to close directory connection")
+	}
 }
 
 // GetDS - returns a directory reader service client.
-func (r *Resolver) GetDS(ctx context.Context) (dsr3.ReaderClient, error) {
-	if r.dirConn == nil {
-		dirConn, err := connect(r.logger, r.cfg)
-		if err != nil {
-			return nil, err
-		}
-		r.dirConn = dirConn
-	}
-	return dsr3.NewReaderClient(r.dirConn), nil
+func (r *Resolver) GetDS() dsr3.ReaderClient {
+	return dsr3.NewReaderClient(r.dirConn)
 }

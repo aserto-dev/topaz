@@ -11,7 +11,6 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/types"
 
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -55,12 +54,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				})
 			}
 
-			client, err := dr.GetDS(bctx.Context)
-			if err != nil {
-				return nil, errors.Wrapf(err, "get directory client")
-			}
-
-			resp, err := client.GetRelation(bctx.Context, &args)
+			resp, err := dr.GetDS().GetRelation(bctx.Context, &args)
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
@@ -125,17 +119,12 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 				return helpMsg(fnName, &dsr3.GetRelationsRequest{})
 			}
 
-			client, err := dr.GetDS(bctx.Context)
-			if err != nil {
-				return nil, errors.Wrapf(err, "get directory client")
-			}
-
 			args.Page = &dsc3.PaginationRequest{Size: 100, Token: ""}
 
 			resp := &dsr3.GetRelationsResponse{}
 
 			for {
-				r, err := client.GetRelations(bctx.Context, &args)
+				r, err := dr.GetDS().GetRelations(bctx.Context, &args)
 				if err != nil {
 					traceError(&bctx, fnName, err)
 					return nil, err

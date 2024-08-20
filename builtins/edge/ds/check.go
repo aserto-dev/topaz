@@ -8,7 +8,6 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/types"
 
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/proto"
 )
@@ -46,12 +45,7 @@ func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				})
 			}
 
-			client, err := dr.GetDS(bctx.Context)
-			if err != nil {
-				return nil, errors.Wrapf(err, "get directory client")
-			}
-
-			resp, err := client.Check(bctx.Context, &args)
+			resp, err := dr.GetDS().Check(bctx.Context, &args)
 			if err != nil {
 				traceError(&bctx, fnName, err)
 				return nil, err
@@ -96,13 +90,8 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 				})
 			}
 
-			client, err := dr.GetDS(bctx.Context)
-			if err != nil {
-				return nil, errors.Wrapf(err, "get directory client")
-			}
-
 			//nolint: staticcheck // SA1019: client.CheckRelation is deprecated
-			resp, err := client.CheckRelation(bctx.Context, &args)
+			resp, err := dr.GetDS().CheckRelation(bctx.Context, &args)
 			if err != nil {
 				traceError(&bctx, fnName, err)
 				return nil, err
@@ -147,13 +136,8 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 				})
 			}
 
-			client, err := dr.GetDS(bctx.Context)
-			if err != nil {
-				return nil, errors.Wrapf(err, "get directory client")
-			}
-
 			//nolint: staticcheck // SA1019: client.CheckPermission is deprecated
-			resp, err := client.CheckPermission(bctx.Context, &args)
+			resp, err := dr.GetDS().CheckPermission(bctx.Context, &args)
 			if err != nil {
 				traceError(&bctx, fnName, err)
 				return nil, err

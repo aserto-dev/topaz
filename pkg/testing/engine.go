@@ -15,6 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/aserto-dev/topaz/pkg/app"
+	"github.com/aserto-dev/topaz/pkg/app/directory"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -161,16 +162,17 @@ func setup(t *testing.T, configOverrides func(*config.Config), online bool) *Eng
 		configOverrides,
 	)
 	assert.NoError(err)
-	directory := topaz.DirectoryResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration)
+	dirResolver, err := directory.NewResolver(h.Engine.Logger, &h.Engine.Configuration.DirectoryResolver)
+	assert.NoError(err)
 	decisionlog, err := h.Engine.GetDecisionLogger(h.Engine.Configuration.DecisionLogger)
 	assert.NoError(err)
-	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, nil, decisionlog, directory)
+	rt, _, err := topaz.NewRuntimeResolver(h.Engine.Context, h.Engine.Logger, h.Engine.Configuration, nil, decisionlog, dirResolver)
 	assert.NoError(err)
 	err = h.Engine.ConfigServices()
 	assert.NoError(err)
 	if _, ok := h.Engine.Services["authorizer"]; ok {
 		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(rt)
-		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(directory)
+		h.Engine.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(dirResolver)
 	}
 
 	h.Engine.Manager = h.Engine.Manager.WithShutdownTimeout(ten) // set shutdown timeout in engine manager

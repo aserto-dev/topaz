@@ -10,7 +10,6 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/types"
 
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
@@ -42,12 +41,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return help(fnName, argsV3{})
 			}
 
-			client, err := dr.GetDS(bctx.Context)
-			if err != nil {
-				return nil, errors.Wrapf(err, "get directory client")
-			}
-
-			user, err := directory.GetIdentityV2(bctx.Context, client, args.ID)
+			user, err := directory.GetIdentityV2(bctx.Context, dr.GetDS(), args.ID)
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
