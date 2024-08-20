@@ -315,17 +315,17 @@ func (p *Plugin) exec(ctx context.Context, ds *directory.Directory, conn *grpc.C
 }
 
 func (p *Plugin) remoteDirectoryClient() (*grpc.ClientConn, error) {
-	opts := []client.ConnectionOption{
-		client.WithAddr(p.config.Addr),
-		client.WithInsecure(p.config.Insecure),
+	cfg := &client.Config{
+		Address:  p.config.Addr,
+		Insecure: p.config.Insecure,
+		APIKey:   p.config.APIKey,
+		TenantID: p.config.TenantID,
+		Headers:  p.topazConfig.DirectoryResolver.Headers,
 	}
 
-	if p.config.APIKey != "" {
-		opts = append(opts, client.WithAPIKeyAuth(p.config.APIKey))
-	}
-
-	if p.config.TenantID != "" {
-		opts = append(opts, client.WithTenantID(p.config.TenantID))
+	opts, err := cfg.ToConnectionOptions(client.NewDialOptionsProvider())
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create connection options")
 	}
 
 	conn, err := client.NewConnection(opts...)
