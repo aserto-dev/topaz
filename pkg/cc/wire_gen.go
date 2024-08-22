@@ -13,7 +13,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cc/context"
 	"github.com/google/wire"
-	"github.com/rs/zerolog"
 )
 
 // Injectors from wire.go:
@@ -27,7 +26,7 @@ func buildCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath con
 	if err != nil {
 		return nil, nil, err
 	}
-	zerologLogger, err := NewLogger(logOutput, errOutput, loggerConfig)
+	zerologLogger, err := logger2.NewLogger(logOutput, errOutput, loggerConfig)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -54,7 +53,7 @@ func buildTestCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath
 	if err != nil {
 		return nil, nil, err
 	}
-	zerologLogger, err := NewLogger(logOutput, errOutput, loggerConfig)
+	zerologLogger, err := logger2.NewLogger(logOutput, errOutput, loggerConfig)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -77,7 +76,7 @@ func buildTestCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(config.NewConfig, config.NewLoggerConfig, NewLogger, certs.NewGenerator, wire.Struct(new(CC), "*"), wire.FieldsOf(new(*context.ErrGroupAndContext), "Ctx", "ErrGroup"))
+	commonSet = wire.NewSet(config.NewConfig, config.NewLoggerConfig, logger2.NewLogger, certs.NewGenerator, wire.Struct(new(CC), "*"), wire.FieldsOf(new(*context.ErrGroupAndContext), "Ctx", "ErrGroup"))
 
 	ccSet = wire.NewSet(
 		commonSet, context.NewContext,
@@ -87,13 +86,3 @@ var (
 		commonSet, context.NewTestContext,
 	)
 )
-
-func NewLogger(logOutput logger.Writer, errorOutput logger.ErrWriter, cfg *logger.Config) (*zerolog.Logger, error) {
-	log, err := logger.NewLogger(logOutput, errorOutput, cfg)
-	if err != nil {
-		return nil, err
-	}
-	logger2.AddLogrusHook(log)
-
-	return log, nil
-}
