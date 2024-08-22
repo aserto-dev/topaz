@@ -8,7 +8,7 @@ import (
 	"github.com/aserto-dev/logger"
 	"github.com/google/wire"
 
-	logrus "github.com/aserto-dev/runtime/logger"
+	runtimeLogger "github.com/aserto-dev/runtime/logger"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	cc_context "github.com/aserto-dev/topaz/pkg/cc/context"
 )
@@ -17,7 +17,7 @@ var (
 	commonSet = wire.NewSet(
 		config.NewConfig,
 		config.NewLoggerConfig,
-		logrus.NewLogger,
+		runtimeLogger.NewLogger,
 		certs.NewGenerator,
 
 		wire.Struct(new(CC), "*"),
