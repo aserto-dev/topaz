@@ -9,6 +9,7 @@ package cc
 import (
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/logger"
+	logger2 "github.com/aserto-dev/runtime/logger"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cc/context"
 	"github.com/google/wire"
@@ -25,7 +26,7 @@ func buildCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath con
 	if err != nil {
 		return nil, nil, err
 	}
-	zerologLogger, err := logger.NewLogger(logOutput, errOutput, loggerConfig)
+	zerologLogger, err := logger2.NewLogger(logOutput, errOutput, loggerConfig)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -52,7 +53,7 @@ func buildTestCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath
 	if err != nil {
 		return nil, nil, err
 	}
-	zerologLogger, err := logger.NewLogger(logOutput, errOutput, loggerConfig)
+	zerologLogger, err := logger2.NewLogger(logOutput, errOutput, loggerConfig)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -75,7 +76,13 @@ func buildTestCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath
 // wire.go:
 
 var (
-	ccSet = wire.NewSet(context.NewContext, config.NewConfig, config.NewLoggerConfig, logger.NewLogger, certs.NewGenerator, wire.Struct(new(CC), "*"), wire.FieldsOf(new(*context.ErrGroupAndContext), "Ctx", "ErrGroup"))
+	commonSet = wire.NewSet(config.NewConfig, config.NewLoggerConfig, logger2.NewLogger, certs.NewGenerator, wire.Struct(new(CC), "*"), wire.FieldsOf(new(*context.ErrGroupAndContext), "Ctx", "ErrGroup"))
 
-	ccTestSet = wire.NewSet(context.NewTestContext, config.NewConfig, config.NewLoggerConfig, logger.NewLogger, certs.NewGenerator, wire.Struct(new(CC), "*"), wire.FieldsOf(new(*context.ErrGroupAndContext), "Ctx", "ErrGroup"))
+	ccSet = wire.NewSet(
+		commonSet, context.NewContext,
+	)
+
+	ccTestSet = wire.NewSet(
+		commonSet, context.NewTestContext,
+	)
 )
