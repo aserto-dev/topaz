@@ -27,10 +27,10 @@ require (
 	github.com/aserto-dev/go-grpc v0.8.68
 	github.com/aserto-dev/go-topaz-ui v0.1.11
 	github.com/aserto-dev/header v0.0.8
-	github.com/aserto-dev/logger v0.0.5
+	github.com/aserto-dev/logger v0.0.6-0.20240822213125-f7a557a7ac14
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.31.2
-	github.com/aserto-dev/runtime v0.67.1
+	github.com/aserto-dev/runtime v0.67.2-0.20240822214304-1624448cf84f
 	github.com/aserto-dev/self-decision-logger v0.0.7
 	github.com/aserto-dev/service-host v0.0.16
 	github.com/cli/browser v1.3.0
