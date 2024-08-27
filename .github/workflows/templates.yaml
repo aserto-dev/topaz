@@ -3,14 +3,28 @@ name: templates
 on:
   workflow_dispatch:
   push:
-    tags:
-      - v*
+    branches:
+      - main
+    paths:
+      - 'assets/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'assets/**'
+
+env:
+  # when the workflow is triggered by a pull_request event, the REF_NAME is of the form
+  # '<pr-#>/merge'. The actual branch name is in HEAD_REF but that variables isn't
+  # defined for 'push' events, hence the ternary assignment.
+  SOURCE_BRANCH: ${{ github.event_name == 'push' && github.ref_name || github.head_ref }}
 
 jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
-      - name: Read Configuration
+      -
+        name: Read Configuration
         uses: hashicorp/vault-action@v3
         id: vault
         with:
@@ -18,13 +32,17 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
               kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
-
-      - name: Update topaz-website
-        run: |
-          curl -XPOST -H "Authorization: token ${READ_WRITE_TOKEN}" \
-          --fail-with-body \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Content-Type: application/json" \
-          https://api.github.com/repos/aserto-dev/topaz-website/actions/workflows/update_templates.yaml/dispatches \
-          --data '{"ref": "main", "inputs": {"version": "${{ github.ref_name }}" }}'
-
+      -
+        name: Dispatch to Topaz Website
+        uses: lasith-kg/dispatch-workflow@v2
+        with:
+          dispatch-method: workflow_dispatch
+          owner: aserto-dev
+          repo: topaz-website
+          ref: main
+          workflow: update_templates.yaml
+          token: ${{ env.READ_WRITE_TOKEN }}
+          workflow-inputs: |
+            {
+              "branch": "${{ env.SOURCE_BRANCH }}"
+            }
