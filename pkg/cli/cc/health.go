@@ -5,31 +5,25 @@ import (
 	"fmt"
 	"time"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	client "github.com/aserto-dev/go-aserto"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
+const rpcTimeout = time.Second * 30
+
 // ServiceHealthStatus adopted from grpc-health-probe cli implementation
 // https://github.com/grpc-ecosystem/grpc-health-probe/blob/master/main.go.
-func ServiceHealthStatus(addr, service string) bool {
-	connTimeout := time.Second * 30
-	rpcTimeout := time.Second * 30
-
-	dialCtx, dialCancel := context.WithTimeout(context.Background(), connTimeout)
-	defer dialCancel()
-
-	dialOpts := []grpc.DialOption{
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	}
-
-	conn, err := grpc.DialContext(dialCtx, addr, dialOpts...) //nolint: staticcheck
+func ServiceHealthStatus(ctx context.Context, addr, service string) (bool, error) {
+	conn, err := client.NewConnection(
+		client.WithAddr(addr),
+		client.WithInsecure(true),
+	)
 	if err != nil {
-		return false
+		return false, err
 	}
 	defer conn.Close()
 
-	rpcCtx, rpcCancel := context.WithTimeout(context.Background(), rpcTimeout)
+	rpcCtx, rpcCancel := context.WithTimeout(ctx, rpcTimeout)
 	defer rpcCancel()
 
 	if err := Retry(rpcTimeout, time.Millisecond*100, func() error {
@@ -44,8 +38,8 @@ func ServiceHealthStatus(addr, service string) bool {
 
 		return nil
 	}); err != nil {
-		return false
+		return false, nil
 	}
 
-	return true
+	return true, nil
 }
