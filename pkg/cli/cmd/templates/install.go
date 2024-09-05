@@ -111,7 +111,9 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 		fmt.Fprintln(c.StdErr(), "Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}
 	addr, _ := cfg.HealthService()
-	if !cc.ServiceHealthStatus(addr, "model") {
+	if health, err := cc.ServiceHealthStatus(c.Context, addr, "model"); err != nil {
+		return fmt.Errorf("unable to check health status: %w", err)
+	} else if !health {
 		return fmt.Errorf("gRPC endpoint not SERVING")
 	}
 	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
