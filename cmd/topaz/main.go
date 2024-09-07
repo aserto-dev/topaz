@@ -51,17 +51,17 @@ func run() (exitCode int) {
 	oldDBPath := filepath.Join(cc.GetTopazDir(), "db")
 	warn, err := checkDBFiles(oldDBPath)
 	if err != nil {
-		exitErr(err)
+		return exitErr(err)
 	}
 
 	c, err := cc.NewCommonContext(ctx, cli.NoCheck, cliConfigFile)
 	if err != nil {
-		exitErr(err)
+		return exitErr(err)
 	}
 
 	err = checkVersion(c)
 	if err != nil {
-		exitErr(err)
+		return exitErr(err)
 	}
 
 	if warn && len(os.Args) == 1 {
@@ -119,11 +119,11 @@ func run() (exitCode int) {
 	}
 
 	if err := cc.EnsureDirs(); err != nil {
-		exitErr(err)
+		return exitErr(err)
 	}
 
 	if err := kongCtx.Run(c); err != nil {
-		exitErr(err)
+		return exitErr(err)
 	}
 
 	return rcOK
