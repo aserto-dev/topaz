@@ -14,18 +14,16 @@ import (
 )
 
 type PolicyInstanceMiddleware struct {
-	policyName    string
-	instanceLabel string
-	logger        *zerolog.Logger
+	policyName string
+	logger     *zerolog.Logger
 }
 
 func NewInstanceMiddleware(cfg *config.Config, logger *zerolog.Logger) *PolicyInstanceMiddleware {
 	details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
 
 	return &PolicyInstanceMiddleware{
-		policyName:    details[0],
-		instanceLabel: details[1],
-		logger:        logger,
+		policyName: details[0],
+		logger:     logger,
 	}
 }
 
@@ -37,8 +35,7 @@ func (m *PolicyInstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
 		request, ok := req.(*authorizer.IsRequest)
 		if ok {
 			request.PolicyInstance = &api.PolicyInstance{
-				InstanceLabel: m.instanceLabel,
-				Name:          m.policyName,
+				Name: m.policyName,
 			}
 		}
 		return handler(ctx, req)

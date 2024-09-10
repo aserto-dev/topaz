@@ -92,8 +92,7 @@ func (cmd *ListPoliciesCmd) template() proto.Message {
 			Paths: []string{},
 		},
 		PolicyInstance: &api.PolicyInstance{
-			Name:          "",
-			InstanceLabel: "",
+			Name: "",
 		},
 	}
 }
