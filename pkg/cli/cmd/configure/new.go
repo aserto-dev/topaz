@@ -13,13 +13,18 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	FromRemote = "remote"
+	FromLocal  = "local"
+)
+
 type NewConfigCmd struct {
 	Name             ConfigName `short:"n" help:"config name"`
 	Resource         string     `short:"r" help:"policy uri (e.g. ghcr.io/org/policy:tag)"`
-	Local            bool       `help:"load the policy image from the local registry"`
+	From             string     `enum:"remote,local" default:"remote" help:"load policy from remote or local image"`
 	Stdout           bool       `short:"p" help:"print to stdout" default:"false"`
 	EdgeDirectory    bool       `short:"d" help:"enable edge directory" default:"false"`
-	Force            bool       `flag:"" default:"false" short:"f" required:"false" help:"skip confirmation prompt"`
+	Force            bool       `short:"f" flag:"" default:"false" required:"false" help:"skip confirmation prompt"`
 	LocalPolicyImage string     `short:"l" help:"[deprecated: use --local instead] local policy image name"`
 }
 
@@ -44,7 +49,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	// Backward-compatibility with deprecated LocalPolicyImage option.
-	resource, local := cmd.Resource, cmd.Local
+	resource, local := cmd.Resource, cmd.From == FromLocal
 	if cmd.LocalPolicyImage != "" {
 		resource, local = cmd.LocalPolicyImage, true
 	}
