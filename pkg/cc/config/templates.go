@@ -2,10 +2,10 @@ package config
 
 type templateParams struct {
 	Version           int
-	LocalPolicyImage  string
 	PolicyName        string
 	Resource          string
 	Authorization     string
+	LocalPolicy       bool
 	EdgeDirectory     bool
 	SeedMetadata      bool
 	EnableDirectoryV2 bool
@@ -34,7 +34,7 @@ opa:
   graceful_shutdown_period_seconds: 2
   # max_plugin_wait_time_seconds: 30 set as default
   local_bundles:
-    local_policy_image: {{ .LocalPolicyImage }}
+    local_policy_image: {{ .Resource }}
     watch: true
     skip_verification: true
 `
@@ -148,8 +148,8 @@ jwt:
 # authentication configuration
 auth:
   api_keys:
-    # "<API key>": <Identity>  
-    # "<Password>": <Identity>  
+    # "<API key>": <Identity>
+    # "<Password>": <Identity>
   options:
     default:
       enable_api_key: false
@@ -457,7 +457,7 @@ api:
         read_header_timeout: 2s
         write_timeout: 2s
         idle_timeout: 30s
-  
+
     authorizer:
       needs:
         - reader
