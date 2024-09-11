@@ -17,7 +17,7 @@ require (
 	github.com/alecthomas/kong v0.9.0
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.6
-	github.com/aserto-dev/azm v0.1.15
+	github.com/aserto-dev/azm v0.1.16
 	github.com/aserto-dev/certs v0.0.7
 	github.com/aserto-dev/errors v0.0.11
 	github.com/aserto-dev/go-aserto v0.32.0
