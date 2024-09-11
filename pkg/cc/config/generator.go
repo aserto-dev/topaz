@@ -22,8 +22,8 @@ func (g *Generator) WithVersion(version int) *Generator {
 	return g
 }
 
-func (g *Generator) WithLocalPolicyImage(image string) *Generator {
-	g.LocalPolicyImage = image
+func (g *Generator) WithLocalPolicy(local bool) *Generator {
+	g.LocalPolicy = local
 	return g
 }
 

@@ -175,13 +175,10 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 	// 2 - topaz config new - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
 		command := configure.NewConfigCmd{
-			Name:  configure.ConfigName(name),
-			Force: true,
-		}
-		if tmpl.Assets.Policy.Local {
-			command.LocalPolicyImage = tmpl.Assets.Policy.Resource
-		} else {
-			command.Resource = tmpl.Assets.Policy.Resource
+			Name:     configure.ConfigName(name),
+			Resource: tmpl.Assets.Policy.Resource,
+			Local:    tmpl.Assets.Policy.Local,
+			Force:    true,
 		}
 		if err := command.Run(c); err != nil {
 			return err
