@@ -2,12 +2,9 @@ module github.com/aserto-dev/topaz
 
 go 1.22.0
 
-replace github.com/aserto-dev/azm => ../azm
-
-replace github.com/aserto-dev/go-directory => ../go-directory
-
-replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
+// replace github.com/aserto-dev/azm => ../azm
+// replace github.com/aserto-dev/go-directory => ../go-directory
+// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 // replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 // replace github.com/aserto-dev/runtime => ../runtime
 // replace github.com/aserto-dev/service-host => ../service-host
@@ -20,13 +17,13 @@ require (
 	github.com/alecthomas/kong v0.9.0
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.6
-	github.com/aserto-dev/azm v0.1.15
+	github.com/aserto-dev/azm v0.1.16-0.20240911105403-fadfae668c86
 	github.com/aserto-dev/certs v0.0.7
 	github.com/aserto-dev/errors v0.0.11
 	github.com/aserto-dev/go-aserto v0.32.0
 	github.com/aserto-dev/go-authorizer v0.20.10
-	github.com/aserto-dev/go-directory v0.31.12-0.20240908085919-a60c0ba4a828
-	github.com/aserto-dev/go-edge-ds v0.32.6
+	github.com/aserto-dev/go-directory v0.31.12-0.20240911105251-5f39873b6d53
+	github.com/aserto-dev/go-edge-ds v0.32.7-0.20240911105518-e71ac8e39e4e
 	github.com/aserto-dev/go-grpc v0.8.69
 	github.com/aserto-dev/go-topaz-ui v0.1.11
 	github.com/aserto-dev/header v0.0.8
@@ -67,7 +64,7 @@ require (
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.8.0
 	golang.org/x/sys v0.25.0
-	google.golang.org/grpc v1.66.0
+	google.golang.org/grpc v1.66.1
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
