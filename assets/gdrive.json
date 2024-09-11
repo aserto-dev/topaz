@@ -16,7 +16,8 @@
             "gdrive/gdrive_relations.json"
         ],
         "assertions": [
-            "gdrive/test/gdrive_assertions.json"
+            "gdrive/test/gdrive_assertions.json",
+            "gdrive/test/gdrive_decisions.json"
         ]
     }
 }
