@@ -30,6 +30,7 @@ type TestExecCmd struct {
 	File    string `arg:""  default:"assertions.json" help:"filepath to assertions file"`
 	Summary bool   `flag:"" default:"false" help:"display test summary"`
 	Format  string `flag:"" default:"table" help:"output format (table|csv)" enum:"table,csv"`
+	Desc    string `flag:"" default:"off" enum:"off,on,on-error" help:"output descriptions (off|on|on-error)"`
 
 	results *common.TestResults
 	azc.Config
@@ -73,6 +74,8 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 			return fmt.Errorf("no expected outcome of assertion defined")
 		}
 
+		description, _ := common.GetString(&msg, common.Description)
+
 		checkType := common.GetCheckType(&msg)
 		if checkType == common.CheckUnknown {
 			return fmt.Errorf("unknown check type")
@@ -103,11 +106,12 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 				result.PrintCSVHeader(csvWriter)
 			}
 
-			result.PrintCSV(csvWriter, i, expected, checkType)
+			result.PrintCSV(csvWriter, i, expected, checkType, description)
 		}
 
 		if cmd.Format == common.TestOutputTable {
 			result.PrintTable(os.Stdout, i, expected, checkType, cc.NoColor())
+			common.PrintDesc(cmd.Desc, description, result, expected)
 		}
 	}
 
@@ -188,7 +192,7 @@ type TestTemplateCmd struct {
 
 const assertionsTemplate string = `{
   "assertions": [
-	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true},
+	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true, "description": ""},
   ]
 }`
 

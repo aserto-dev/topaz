@@ -21,6 +21,10 @@ const (
 	TestOutputTable string = "table"
 	TestOutputCSV   string = "csv"
 	Expected        string = "expected"
+	Description     string = "description"
+	DescOff         string = "off"
+	DescOn          string = "on"
+	DescOnError     string = "on-error"
 	Passed          string = "PASS"
 	Failed          string = "FAIL"
 	Errored         string = "ERR "
@@ -97,7 +101,7 @@ func (cr *CheckResult) PrintTable(w io.Writer, index int, expected bool, checkTy
 	}
 }
 
-func (cr *CheckResult) PrintCSV(w *csv.Writer, index int, expected bool, checkType CheckType) {
+func (cr *CheckResult) PrintCSV(w *csv.Writer, index int, expected bool, checkType CheckType, description string) {
 	_ = w.Write([]string{
 		strconv.Itoa(index + 1),
 		CheckTypeMapStr[checkType],
@@ -105,6 +109,7 @@ func (cr *CheckResult) PrintCSV(w *csv.Writer, index int, expected bool, checkTy
 		cr.Str,
 		lo.Ternary(cr.Outcome, strconv.FormatBool(cr.Outcome), strconv.FormatBool(cr.Outcome)),
 		strconv.FormatInt(int64(cr.Duration/time.Microsecond), 10),
+		description,
 	})
 }
 
@@ -116,7 +121,19 @@ func (cr *CheckResult) PrintCSVHeader(w *csv.Writer) {
 		"result",
 		"outcome",
 		"duration",
+		"description",
 	})
+}
+
+func PrintDesc(descFlag, description string, result *CheckResult, expected bool) {
+	if descFlag != DescOff && description != "" {
+		if descFlag == DescOn {
+			fmt.Printf(">>>> %s\n", description)
+		}
+		if descFlag == DescOnError && result.Outcome != expected {
+			fmt.Printf("!!!! %s\n", description)
+		}
+	}
 }
 
 func NewTestResults(assertions []json.RawMessage) *TestResults {
@@ -180,6 +197,11 @@ func (t *TestResults) Failed() int32 {
 func GetBool(msg *structpb.Struct, fieldName string) (bool, bool) {
 	v, ok := msg.Fields[fieldName]
 	return v.GetBoolValue(), ok
+}
+
+func GetString(msg *structpb.Struct, fieldName string) (string, bool) {
+	v, ok := msg.Fields[fieldName]
+	return v.GetStringValue(), ok
 }
 
 func UnmarshalReq(value *structpb.Value, msg proto.Message) error {
