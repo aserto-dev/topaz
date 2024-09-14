@@ -17,20 +17,20 @@ require (
 	github.com/alecthomas/kong v0.9.0
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.6
-	github.com/aserto-dev/azm v0.1.17-0.20240912101548-36472d1964dc
+	github.com/aserto-dev/azm v0.1.17
 	github.com/aserto-dev/certs v0.0.7
 	github.com/aserto-dev/errors v0.0.11
-	github.com/aserto-dev/go-aserto v0.32.0
+	github.com/aserto-dev/go-aserto v0.32.1
 	github.com/aserto-dev/go-authorizer v0.20.10
-	github.com/aserto-dev/go-directory v0.31.12-0.20240912101324-b22fec59953f
-	github.com/aserto-dev/go-edge-ds v0.32.7-0.20240912101648-4997276427fa
+	github.com/aserto-dev/go-directory v0.31.13
+	github.com/aserto-dev/go-edge-ds v0.32.7
 	github.com/aserto-dev/go-grpc v0.8.69
 	github.com/aserto-dev/go-topaz-ui v0.1.11
 	github.com/aserto-dev/header v0.0.8
 	github.com/aserto-dev/logger v0.0.6
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.31.2
-	github.com/aserto-dev/runtime v0.67.2
+	github.com/aserto-dev/runtime v0.68.0
 	github.com/aserto-dev/self-decision-logger v0.0.7
 	github.com/aserto-dev/service-host v0.0.16
 	github.com/cli/browser v1.3.0
@@ -52,7 +52,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/moby/term v0.5.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/open-policy-agent/opa v0.67.1
+	github.com/open-policy-agent/opa v0.68.0
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/rivo/tview v0.0.0-20240818110301-fd649dbf1223
@@ -64,7 +64,7 @@ require (
 	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.8.0
 	golang.org/x/sys v0.25.0
-	google.golang.org/grpc v1.66.1
+	google.golang.org/grpc v1.66.2
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
@@ -85,7 +85,7 @@ require (
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cncf/xds/go v0.0.0-20240423153145-555b57ec207b // indirect
-	github.com/containerd/containerd v1.7.20 // indirect
+	github.com/containerd/containerd v1.7.21 // indirect
 	github.com/containerd/errdefs v0.1.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/containerd/platforms v0.2.1 // indirect
@@ -124,7 +124,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/itchyny/timefmt-go v0.1.6 // indirect
 	github.com/jhump/protoreflect v1.16.0 // indirect
-	github.com/klauspost/compress v1.17.8 // indirect
+	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
 	github.com/lestrrat-go/httprc v1.0.6 // indirect
@@ -141,6 +141,7 @@ require (
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/locker v1.0.1 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
+	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nats-io/jwt/v2 v2.5.7 // indirect
 	github.com/nats-io/nats-server/v2 v2.10.16 // indirect
 	github.com/nats-io/nats.go v1.35.0 // indirect
@@ -151,9 +152,9 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/prometheus/client_golang v1.19.1 // indirect
+	github.com/prometheus/client_golang v1.20.2 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
-	github.com/prometheus/common v0.54.0 // indirect
+	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/prometheus/statsd_exporter v0.26.1 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
@@ -182,13 +183,13 @@ require (
 	go.opentelemetry.io/otel/trace v1.28.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.27.0 // indirect
-	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e // indirect
-	golang.org/x/mod v0.20.0 // indirect
+	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
+	golang.org/x/mod v0.21.0 // indirect
 	golang.org/x/net v0.29.0 // indirect
 	golang.org/x/term v0.24.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
-	golang.org/x/tools v0.24.0 // indirect
+	golang.org/x/tools v0.25.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240903143218-8af14fe29dc1 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240903143218-8af14fe29dc1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

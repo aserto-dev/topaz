@@ -86,8 +86,7 @@ func (cmd *QueryCmd) template() proto.Message {
 		},
 		ResourceContext: &structpb.Struct{},
 		PolicyInstance: &api.PolicyInstance{
-			Name:          "",
-			InstanceLabel: "",
+			Name: "",
 		},
 	}
 }

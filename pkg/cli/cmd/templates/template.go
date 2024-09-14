@@ -46,6 +46,7 @@ type template struct {
 		Policy   struct {
 			Name     string `json:"name"`
 			Resource string `json:"resource"`
+			Local    bool   `json:"local"`
 		} `json:"policy,omitempty"`
 		IdentityData []string `json:"idp_data,omitempty"`
 		DomainData   []string `json:"domain_data,omitempty"`

@@ -14,6 +14,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/topaz"
+	"github.com/samber/lo"
 )
 
 type InstallTemplateCmd struct {
@@ -177,6 +178,7 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 		command := configure.NewConfigCmd{
 			Name:     configure.ConfigName(name),
 			Resource: tmpl.Assets.Policy.Resource,
+			From:     lo.Ternary(tmpl.Assets.Policy.Local, configure.FromLocal, configure.FromRemote),
 			Force:    true,
 		}
 		if err := command.Run(c); err != nil {
