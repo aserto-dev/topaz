@@ -77,8 +77,7 @@ func (cmd *EvalCmd) template() proto.Message {
 			Type:     api.IdentityType_IDENTITY_TYPE_NONE,
 		},
 		PolicyInstance: &api.PolicyInstance{
-			Name:          "",
-			InstanceLabel: "",
+			Name: "",
 		},
 		ResourceContext: &structpb.Struct{},
 	}

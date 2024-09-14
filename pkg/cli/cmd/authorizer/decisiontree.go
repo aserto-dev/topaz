@@ -82,8 +82,7 @@ func (cmd *DecisionTreeCmd) template() proto.Message {
 			PathSeparator: authorizer.PathSeparator_PATH_SEPARATOR_DOT,
 		},
 		PolicyInstance: &api.PolicyInstance{
-			Name:          "",
-			InstanceLabel: "",
+			Name: "",
 		},
 	}
 }

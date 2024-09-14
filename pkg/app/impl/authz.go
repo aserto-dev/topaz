@@ -496,12 +496,12 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.P
 	var rt *runtime.Runtime
 	var err error
 	if policyInstance != nil {
-		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyInstance.Name, policyInstance.InstanceLabel)
+		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyInstance.Name)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to procure tenant runtime")
 		}
 	} else {
-		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, "", "")
+		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, "")
 		if err != nil {
 			return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
 		}
