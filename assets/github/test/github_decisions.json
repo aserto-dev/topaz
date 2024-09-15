@@ -1,0 +1,253 @@
+{
+  "assertions": [
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "summer@the-smiths.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "smiths.budget",
+          "object_type": "repo",
+          "relation": "can_read"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      },
+      "expected": true
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "summer@the-smiths.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "smiths.budget",
+          "object_type": "repo",
+          "relation": "can_triage"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      },
+      "expected": true
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "morty@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "smiths.budget",
+          "object_type": "repo",
+          "relation": "can_triage"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      }
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "beth@the-smiths.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "smiths.budget",
+          "object_type": "repo",
+          "relation": "can_administer"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      },
+      "expected": true
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "morty@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "smiths.budget",
+          "object_type": "repo",
+          "relation": "can_read"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      },
+      "expected": true
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "morty@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "smiths.budget",
+          "object_type": "repo",
+          "relation": "can_administer"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      }
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "jerry@the-smiths.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "smiths.budget",
+          "object_type": "repo",
+          "relation": "can_write"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      },
+      "expected": true
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "rick@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "smiths.budget",
+          "object_type": "repo",
+          "relation": "can_administer"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      }
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "rick@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "citadel.missions",
+          "object_type": "repo",
+          "relation": "can_administer"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      },
+      "expected": true
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "morty@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "citadel.missions",
+          "object_type": "repo",
+          "relation": "can_write"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      },
+      "expected": true
+    },
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "beth@the-smiths.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "citadel.missions",
+          "object_type": "repo",
+          "relation": "can_read"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      }
+    }
+  ]
+}

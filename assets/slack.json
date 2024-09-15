@@ -16,7 +16,8 @@
           "slack/slack_relations.json"
       ],
       "assertions": [
-          "slack/test/slack_assertions.json"
+          "slack/test/slack_assertions.json",
+          "slack/test/slack_decisions.json"
       ]
   }
 }
