@@ -1,172 +1,165 @@
 {
-  "assertions":  [
+  "assertions": [
     {
-      "check_decision":  {
-        "policy_context":  {
-          "path":  "rebac.check",
-          "decisions":  [
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
             "allowed"
           ]
         },
-        "identity_context":  {
-          "identity":  "rick@the-citadel.com",
-          "type":  "IDENTITY_TYPE_SUB"
+        "identity_context": {
+          "identity": "rick@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
         },
-        "resource_context":  {
-          "object_id":  "smiths",
-          "object_type":  "workspace",
-          "relation":  "channels_admin"
+        "resource_context": {
+          "object_id": "smiths",
+          "object_type": "workspace",
+          "relation": "channels_admin"
         },
-        "policy_instance":  {
-          "name":  "policy-rebac",
-          "instance_label":  ""
+        "policy_instance": {
+          "name": "policy-rebac"
         }
       },
-      "expected":  true
+      "expected": true
     },
     {
-      "check_decision":  {
-        "policy_context":  {
-          "path":  "rebac.check",
-          "decisions":  [
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
             "allowed"
           ]
         },
-        "identity_context":  {
-          "identity":  "jerry@the-smiths.com",
-          "type":  "IDENTITY_TYPE_SUB"
+        "identity_context": {
+          "identity": "jerry@the-smiths.com",
+          "type": "IDENTITY_TYPE_SUB"
         },
-        "resource_context":  {
-          "object_id":  "smiths",
-          "object_type":  "workspace",
-          "relation":  "channels_admin"
+        "resource_context": {
+          "object_id": "smiths",
+          "object_type": "workspace",
+          "relation": "channels_admin"
         },
-        "policy_instance":  {
-          "name":  "policy-rebac",
-          "instance_label":  ""
+        "policy_instance": {
+          "name": "policy-rebac"
         }
       },
-      "expected":  false
+      "expected": false
     },
     {
-      "check_decision":  {
-        "policy_context":  {
-          "path":  "rebac.check",
-          "decisions":  [
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
             "allowed"
           ]
         },
-        "identity_context":  {
-          "identity":  "morty@the-citadel.com",
-          "type":  "IDENTITY_TYPE_SUB"
+        "identity_context": {
+          "identity": "morty@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
         },
-        "resource_context":  {
-          "object_id":  "smiths.citadel",
-          "object_type":  "channel",
-          "relation":  "writer"
+        "resource_context": {
+          "object_id": "smiths.citadel",
+          "object_type": "channel",
+          "relation": "writer"
         },
-        "policy_instance":  {
-          "name":  "policy-rebac",
-          "instance_label":  ""
+        "policy_instance": {
+          "name": "policy-rebac"
         }
       },
-      "expected":  true
+      "expected": true
     },
     {
-      "check_decision":  {
-        "policy_context":  {
-          "path":  "rebac.check",
-          "decisions":  [
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
             "allowed"
           ]
         },
-        "identity_context":  {
-          "identity":  "summer@the-smiths.com",
-          "type":  "IDENTITY_TYPE_SUB"
+        "identity_context": {
+          "identity": "summer@the-smiths.com",
+          "type": "IDENTITY_TYPE_SUB"
         },
-        "resource_context":  {
-          "object_id":  "smiths.citadel",
-          "object_type":  "channel",
-          "relation":  "writer"
+        "resource_context": {
+          "object_id": "smiths.citadel",
+          "object_type": "channel",
+          "relation": "writer"
         },
-        "policy_instance":  {
-          "name":  "policy-rebac",
-          "instance_label":  ""
+        "policy_instance": {
+          "name": "policy-rebac"
         }
       },
-      "expected":  false
+      "expected": false
     },
     {
-      "check_decision":  {
-        "policy_context":  {
-          "path":  "rebac.check",
-          "decisions":  [
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
             "allowed"
           ]
         },
-        "identity_context":  {
-          "identity":  "morty@the-citadel.com",
-          "type":  "IDENTITY_TYPE_SUB"
+        "identity_context": {
+          "identity": "morty@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
         },
-        "resource_context":  {
-          "object_id":  "smiths.gossip",
-          "object_type":  "channel",
-          "relation":  "writer"
+        "resource_context": {
+          "object_id": "smiths.gossip",
+          "object_type": "channel",
+          "relation": "writer"
         },
-        "policy_instance":  {
-          "name":  "policy-rebac",
-          "instance_label":  ""
+        "policy_instance": {
+          "name": "policy-rebac"
         }
       },
-      "expected":  true
+      "expected": true
     },
     {
-      "check_decision":  {
-        "policy_context":  {
-          "path":  "rebac.check",
-          "decisions":  [
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
             "allowed"
           ]
         },
-        "identity_context":  {
-          "identity":  "beth@the-smiths.com",
-          "type":  "IDENTITY_TYPE_SUB"
+        "identity_context": {
+          "identity": "beth@the-smiths.com",
+          "type": "IDENTITY_TYPE_SUB"
         },
-        "resource_context":  {
-          "object_id":  "smiths.general",
-          "object_type":  "channel",
-          "relation":  "writer"
+        "resource_context": {
+          "object_id": "smiths.general",
+          "object_type": "channel",
+          "relation": "writer"
         },
-        "policy_instance":  {
-          "name":  "policy-rebac",
-          "instance_label":  ""
+        "policy_instance": {
+          "name": "policy-rebac"
         }
       },
-      "expected":  true
+      "expected": true
     },
     {
-      "check_decision":  {
-        "policy_context":  {
-          "path":  "rebac.check",
-          "decisions":  [
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
             "allowed"
           ]
         },
-        "identity_context":  {
-          "identity":  "summer@the-smiths.com",
-          "type":  "IDENTITY_TYPE_SUB"
+        "identity_context": {
+          "identity": "summer@the-smiths.com",
+          "type": "IDENTITY_TYPE_SUB"
         },
-        "resource_context":  {
-          "object_id":  "smiths.general",
-          "object_type":  "channel",
-          "relation":  "writer"
+        "resource_context": {
+          "object_id": "smiths.general",
+          "object_type": "channel",
+          "relation": "writer"
         },
-        "policy_instance":  {
-          "name":  "policy-rebac",
-          "instance_label":  ""
+        "policy_instance": {
+          "name": "policy-rebac"
         }
       },
-      "expected":  false
+      "expected": false
     }
   ]
 }
