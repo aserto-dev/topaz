@@ -14,7 +14,7 @@ replace github.com/adrg/xdg => ./pkg/cli/xdg
 require (
 	github.com/Masterminds/semver/v3 v3.3.0
 	github.com/adrg/xdg v0.4.0
-	github.com/alecthomas/kong v0.9.0
+	github.com/alecthomas/kong v1.2.1
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.6
 	github.com/aserto-dev/azm v0.1.17
