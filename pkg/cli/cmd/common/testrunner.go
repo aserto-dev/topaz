@@ -1,0 +1,319 @@
+package common
+
+import (
+	"context"
+	"encoding/csv"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
+	"time"
+
+	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
+	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+
+	"github.com/samber/lo"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/types/known/structpb"
+)
+
+type TestExecCmd struct {
+	File    string `arg:""  default:"assertions.json" help:"filepath to assertions file"`
+	Summary bool   `flag:"" default:"false" help:"display test summary"`
+	Format  string `flag:"" default:"table" help:"output format (table|csv)" enum:"table,csv"`
+	Desc    string `flag:"" default:"off" enum:"off,on,on-error" help:"output descriptions (off|on|on-error)"`
+}
+
+type TestRunner struct {
+	cmd      *TestExecCmd
+	azConfig *azc.Config
+	azClient *azc.Client
+	dsConfig *dsc.Config
+	dsClient *dsc.Client
+	results  *TestResults
+}
+
+func NewDirectoryTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, dsConfig *dsc.Config) (*TestRunner, error) {
+	dsClient, err := dsc.NewClient(c, dsConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return &TestRunner{
+		cmd:      cmd,
+		dsConfig: dsConfig,
+		dsClient: dsClient,
+	}, nil
+}
+
+func NewAuthorizerTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Config) (*TestRunner, error) {
+	azClient, err := azc.NewClient(c, azConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return &TestRunner{
+		cmd:      cmd,
+		azConfig: azConfig,
+		azClient: azClient,
+	}, nil
+}
+
+func NewTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Config, dsConfig *dsc.Config) (*TestRunner, error) {
+	dsClient, err := dsc.NewClient(c, dsConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	azClient, err := azc.NewClient(c, azConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return &TestRunner{
+		cmd:      cmd,
+		azConfig: azConfig,
+		azClient: azClient,
+		dsConfig: dsConfig,
+		dsClient: dsClient,
+	}, nil
+}
+
+// nolint: gocyclo
+func (runner *TestRunner) Run(c *cc.CommonCtx) error {
+	r, err := os.Open(runner.cmd.File)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+
+	csvWriter := csv.NewWriter(c.StdOut())
+
+	var assertions struct {
+		Assertions []json.RawMessage `json:"assertions"`
+	}
+
+	dec := json.NewDecoder(r)
+	if err := dec.Decode(&assertions); err != nil {
+		return err
+	}
+
+	runner.results = NewTestResults(assertions.Assertions)
+
+	for i := 0; i < len(assertions.Assertions); i++ {
+		var msg structpb.Struct
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(assertions.Assertions[i], &msg)
+		if err != nil {
+			return err
+		}
+
+		expected, ok := GetBool(&msg, Expected)
+		if !ok {
+			return fmt.Errorf("no expected outcome of assertion defined")
+		}
+
+		description, _ := GetString(&msg, Description)
+
+		checkType := GetCheckType(&msg)
+		if checkType == CheckUnknown {
+			return fmt.Errorf("unknown check type")
+		}
+
+		reqVersion := getReqVersion(msg.Fields[CheckTypeMapStr[checkType]])
+		if reqVersion == 0 {
+			return fmt.Errorf("unknown request version")
+		}
+
+		var result *CheckResult
+
+		switch {
+		case checkType == Check && reqVersion == 3:
+			result = checkV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
+		case checkType == CheckPermission && reqVersion == 3:
+			result = checkPermissionV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
+		case checkType == CheckRelation && reqVersion == 3:
+			result = checkRelationV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
+		case checkType == CheckDecision:
+			result = checkDecisionV2(c.Context, runner.azClient.Authorizer, msg.Fields[CheckTypeMapStr[checkType]])
+		default:
+			continue
+		}
+
+		runner.results.Passed(result.Outcome == expected)
+
+		if result.Err != nil {
+			runner.results.IncrErrored()
+		}
+
+		if runner.cmd.Format == TestOutputCSV {
+			if i == 0 {
+				result.PrintCSVHeader(csvWriter)
+			}
+			result.PrintCSV(csvWriter, i, expected, checkType, description)
+		}
+
+		if runner.cmd.Format == TestOutputTable {
+			result.PrintTable(os.Stdout, i, expected, checkType, cc.NoColor())
+			PrintDesc(runner.cmd.Desc, description, result, expected)
+		}
+	}
+
+	if runner.cmd.Format == TestOutputCSV {
+		csvWriter.Flush()
+	}
+
+	if runner.cmd.Summary {
+		runner.results.PrintSummary(os.Stdout)
+	}
+
+	if runner.results.Errored() > 0 || runner.results.Failed() > 0 {
+		return errors.New("one or more test errored or failed")
+	}
+
+	return nil
+}
+
+func getReqVersion(val *structpb.Value) int {
+	if val == nil {
+		return 0
+	}
+
+	if v, ok := val.Kind.(*structpb.Value_StructValue); ok {
+		if _, ok := v.StructValue.Fields["object_type"]; ok {
+			return 3
+		}
+		if _, ok := v.StructValue.Fields["object"]; ok {
+			return 2
+		}
+		if _, ok := v.StructValue.Fields["identity_context"]; ok {
+			return 2
+		}
+	}
+	return 0
+}
+
+func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
+	var req dsr3.CheckRequest
+	if err := UnmarshalReq(msg, &req); err != nil {
+		return &CheckResult{Err: err}
+	}
+
+	start := time.Now()
+
+	resp, err := c.Reader.Check(ctx, &req)
+
+	duration := time.Since(start)
+
+	return &CheckResult{
+		Outcome:  resp.GetCheck(),
+		Duration: duration,
+		Err:      err,
+		Str:      checkStringV3(&req),
+	}
+}
+
+func checkPermissionV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
+	var req dsr3.CheckPermissionRequest
+	if err := UnmarshalReq(msg, &req); err != nil {
+		return &CheckResult{Err: err}
+	}
+
+	start := time.Now()
+
+	//nolint: staticcheck // SA1019: c.Reader.CheckPermission
+	resp, err := c.Reader.CheckPermission(ctx, &req)
+
+	duration := time.Since(start)
+
+	return &CheckResult{
+		Outcome:  resp.GetCheck(),
+		Duration: duration,
+		Err:      err,
+		Str:      checkPermissionStringV3(&req),
+	}
+}
+
+func checkRelationV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
+	var req dsr3.CheckRelationRequest
+	if err := UnmarshalReq(msg, &req); err != nil {
+		return &CheckResult{Err: err}
+	}
+
+	start := time.Now()
+
+	//nolint: staticcheck // SA1019: c.Reader.CheckRelation
+	resp, err := c.Reader.CheckRelation(ctx, &req)
+
+	duration := time.Since(start)
+
+	return &CheckResult{
+		Outcome:  resp.GetCheck(),
+		Duration: duration,
+		Err:      err,
+		Str:      checkRelationStringV3(&req),
+	}
+}
+
+func checkDecisionV2(ctx context.Context, c az2.AuthorizerClient, msg *structpb.Value) *CheckResult {
+	var req az2.IsRequest
+	if err := UnmarshalReq(msg, &req); err != nil {
+		return &CheckResult{Err: err}
+	}
+
+	start := time.Now()
+
+	resp, err := c.Is(ctx, &req)
+
+	duration := time.Since(start)
+
+	if err != nil {
+		return &CheckResult{
+			Outcome:  false,
+			Duration: duration,
+			Err:      err,
+			Str:      checkDecisionStringV2(&req),
+		}
+	}
+
+	return &CheckResult{
+		Outcome:  lo.Ternary(err != nil, false, resp.Decisions[0].GetIs()),
+		Duration: duration,
+		Err:      err,
+		Str:      checkDecisionStringV2(&req),
+	}
+}
+
+func checkStringV3(req *dsr3.CheckRequest) string {
+	return fmt.Sprintf("%s:%s#%s@%s:%s",
+		req.GetObjectType(), req.GetObjectId(),
+		req.GetRelation(),
+		req.GetSubjectType(), req.GetSubjectId(),
+	)
+}
+
+func checkRelationStringV3(req *dsr3.CheckRelationRequest) string {
+	return fmt.Sprintf("%s:%s#%s@%s:%s",
+		req.GetObjectType(), req.GetObjectId(),
+		req.GetRelation(),
+		req.GetSubjectType(), req.GetSubjectId(),
+	)
+}
+
+func checkPermissionStringV3(req *dsr3.CheckPermissionRequest) string {
+	return fmt.Sprintf("%s:%s#%s@%s:%s",
+		req.GetObjectType(), req.GetObjectId(),
+		req.GetPermission(),
+		req.GetSubjectType(), req.GetSubjectId(),
+	)
+}
+
+func checkDecisionStringV2(req *az2.IsRequest) string {
+	return fmt.Sprintf("%s/%s:%s",
+		req.PolicyContext.GetPath(),
+		req.PolicyContext.GetDecisions()[0],
+		req.IdentityContext.Identity,
+	)
+}

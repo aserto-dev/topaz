@@ -9,6 +9,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
@@ -353,13 +354,36 @@ func (i *tmplInstaller) runTemplateTests() error {
 	}
 
 	for _, v := range tests {
-		command := directory.TestExecCmd{
-			File:    v,
-			Summary: true,
-			Config:  *i.cfg,
+		runner, err := common.NewTestRunner(
+			i.c,
+			&common.TestExecCmd{
+				File:    v,
+				Summary: true,
+				Format:  "table",
+				Desc:    "on-error",
+			},
+			&azc.Config{
+				Host:     cc.AuthorizerSvc(),
+				APIKey:   i.cfg.APIKey,
+				Token:    i.cfg.Token,
+				Insecure: i.cfg.Insecure,
+				TenantID: i.cfg.TenantID,
+				Headers:  i.cfg.Headers,
+			},
+			&dsc.Config{
+				Host:     i.cfg.Host,
+				APIKey:   i.cfg.APIKey,
+				Token:    i.cfg.Token,
+				Insecure: i.cfg.Insecure,
+				TenantID: i.cfg.TenantID,
+				Headers:  i.cfg.Headers,
+			},
+		)
+		if err != nil {
+			return err
 		}
 
-		if err := command.Run(i.c); err != nil {
+		if err := runner.Run(i.c); err != nil {
 			return err
 		}
 	}
