@@ -29,9 +29,7 @@ type TestExecCmd struct {
 
 type TestRunner struct {
 	cmd      *TestExecCmd
-	azConfig *azc.Config
 	azClient *azc.Client
-	dsConfig *dsc.Config
 	dsClient *dsc.Client
 	results  *TestResults
 }
@@ -44,7 +42,6 @@ func NewDirectoryTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, dsConfig *dsc.Con
 
 	return &TestRunner{
 		cmd:      cmd,
-		dsConfig: dsConfig,
 		dsClient: dsClient,
 	}, nil
 }
@@ -57,7 +54,6 @@ func NewAuthorizerTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Co
 
 	return &TestRunner{
 		cmd:      cmd,
-		azConfig: azConfig,
 		azClient: azClient,
 	}, nil
 }
@@ -75,9 +71,7 @@ func NewTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Config, dsCo
 
 	return &TestRunner{
 		cmd:      cmd,
-		azConfig: azConfig,
 		azClient: azClient,
-		dsConfig: dsConfig,
 		dsClient: dsClient,
 	}, nil
 }
