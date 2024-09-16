@@ -23,6 +23,7 @@ GOLANGCI-LINT_VER  := 1.56.2
 GORELEASER_VER     := 1.24.0
 WIRE_VER	         := 0.6.0
 BUF_VER            := 1.34.0
+CHECK2DECISION_VER := 0.1.0
 
 BUF_USER           := $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_USER kv/buf.build)
 BUF_TOKEN          := $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_TOKEN kv/buf.build)
@@ -35,7 +36,7 @@ RELEASE_TAG        := $$(svu)
 .DEFAULT_GOAL      := build
 
 .PHONY: deps
-deps: info install-vault install-buf install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire 
+deps: info install-vault install-buf install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire install-check2decision
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: build
@@ -85,6 +86,13 @@ test-xdg:
 write-version:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@git describe --tags > ./VERSION.txt
+
+ASSETS = "assets/api-auth/test/api-auth_" "assets/gdrive/test/gdrive_" "assets/github/test/github_" "assets/multi-tenant/test/multi-tenant_" "assets/slack/test/slack_"
+.PHONY: update-assets
+update-assets: $(ASSETS)
+$(ASSETS): install-check2decision
+	@echo -e "$(ATTN_COLOR)==> github.com/aserto-dev/topaz/assets/$@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/check2decision -i "$@assertions.json" -o "$@decisions.json"
 
 .PHONY: vault-login
 vault-login:
@@ -208,6 +216,14 @@ install-goreleaser: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 install-wire: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@GOBIN=${PWD}/${EXT_BIN_DIR} go install github.com/google/wire/cmd/wire@v${WIRE_VER}
+
+.PHONY: install-check2decision
+install-check2decision: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@gh release download v${CHECK2DECISION_VER} --repo https://github.com/aserto-dev/check2decision --pattern "check2decision-${GOOS}-${GOARCH}.zip" --output "${EXT_TMP_DIR}/check2decision.zip" --clobber
+	@unzip -o ${EXT_TMP_DIR}/check2decision.zip check2decision -d ${EXT_BIN_DIR}/  &> /dev/null
+	@chmod +x ${EXT_BIN_DIR}/check2decision
+	@${EXT_BIN_DIR}/check2decision --version 
 
 .PHONY: clean
 clean:
