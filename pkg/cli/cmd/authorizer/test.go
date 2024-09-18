@@ -3,6 +3,7 @@ package authorizer
 import (
 	"encoding/json"
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -20,12 +21,21 @@ type TestExecCmd struct {
 	azc.Config
 }
 
-// nolint: gocyclo
 func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
+	files := []string{}
+	for _, file := range cmd.Files {
+		if expanded, err := filepath.Glob(file); err == nil {
+			files = append(files, expanded...)
+		}
+	}
+	if len(files) == 0 {
+		return fmt.Errorf("no input file(s)")
+	}
+
 	runner, err := common.NewAuthorizerTestRunner(
 		c,
 		&common.TestExecCmd{
-			File:    cmd.File,
+			Files:   files,
 			Summary: cmd.Summary,
 			Format:  cmd.Format,
 			Desc:    cmd.Desc,

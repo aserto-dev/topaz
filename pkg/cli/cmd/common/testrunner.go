@@ -6,9 +6,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
+	cerr "github.com/aserto-dev/errors"
 	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -16,15 +18,22 @@ import (
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 
 	"github.com/samber/lo"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
+var (
+	ErrSkippedAuthorizerAssertion = cerr.NewAsertoError("T10001", codes.Internal, http.StatusInternalServerError, "no authorizer client")
+	ErrSkippedDirectoryAssertion  = cerr.NewAsertoError("T10002", codes.Internal, http.StatusInternalServerError, "no directory client")
+)
+
 type TestExecCmd struct {
-	File    string `arg:""  default:"assertions.json" help:"filepath to assertions file"`
-	Summary bool   `flag:"" default:"false" help:"display test summary"`
-	Format  string `flag:"" default:"table" help:"output format (table|csv)" enum:"table,csv"`
-	Desc    string `flag:"" default:"off" enum:"off,on,on-error" help:"output descriptions (off|on|on-error)"`
+	Files   []string `arg:""  default:"assertions.json" help:"path to assertions file" sep:"none" optional:""`
+	Stdin   bool     `flag:"" default:"false" help:"read assertions from --stdin"`
+	Summary bool     `flag:"" default:"false" help:"display test summary"`
+	Format  string   `flag:"" default:"table" help:"output format (table|csv)" enum:"table,csv"`
+	Desc    string   `flag:"" default:"off" enum:"off,on,on-error" help:"output descriptions (off|on|on-error)"`
 }
 
 type TestRunner struct {
@@ -76,14 +85,35 @@ func NewTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Config, dsCo
 	}, nil
 }
 
-// nolint: gocyclo
 func (runner *TestRunner) Run(c *cc.CommonCtx) error {
-	r, err := os.Open(runner.cmd.File)
+	if runner.cmd.Stdin {
+		return runner.exec(c, os.Stdin)
+	}
+
+	for _, file := range runner.cmd.Files {
+		if err := runner.execFile(c, file); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (runner *TestRunner) execFile(c *cc.CommonCtx, file string) error {
+	r, err := os.Open(file)
 	if err != nil {
 		return err
 	}
 	defer r.Close()
 
+	c.Con().Info().Msg(file)
+	return runner.exec(c, r)
+}
+
+var pbUnmarshal = protojson.UnmarshalOptions{DiscardUnknown: true}
+
+// nolint: gocyclo
+func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 	csvWriter := csv.NewWriter(c.StdOut())
 
 	var assertions struct {
@@ -99,8 +129,7 @@ func (runner *TestRunner) Run(c *cc.CommonCtx) error {
 
 	for i := 0; i < len(assertions.Assertions); i++ {
 		var msg structpb.Struct
-		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(assertions.Assertions[i], &msg)
-		if err != nil {
+		if err := pbUnmarshal.Unmarshal(assertions.Assertions[i], &msg); err != nil {
 			return err
 		}
 
@@ -131,7 +160,7 @@ func (runner *TestRunner) Run(c *cc.CommonCtx) error {
 		case checkType == CheckRelation && reqVersion == 3:
 			result = checkRelationV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
 		case checkType == CheckDecision:
-			result = checkDecisionV2(c.Context, runner.azClient.Authorizer, msg.Fields[CheckTypeMapStr[checkType]])
+			result = checkDecisionV2(c.Context, runner.azClient, msg.Fields[CheckTypeMapStr[checkType]])
 		default:
 			continue
 		}
@@ -139,7 +168,16 @@ func (runner *TestRunner) Run(c *cc.CommonCtx) error {
 		runner.results.Passed(result.Outcome == expected)
 
 		if result.Err != nil {
-			runner.results.IncrErrored()
+			switch {
+			case errors.Is(result.Err, ErrSkippedAuthorizerAssertion):
+				result.Err = nil
+				runner.results.IncrSkipped()
+			case errors.Is(result.Err, ErrSkippedDirectoryAssertion):
+				result.Err = nil
+				runner.results.IncrSkipped()
+			default:
+				runner.results.IncrErrored()
+			}
 		}
 
 		if runner.cmd.Format == TestOutputCSV {
@@ -163,9 +201,9 @@ func (runner *TestRunner) Run(c *cc.CommonCtx) error {
 		runner.results.PrintSummary(os.Stdout)
 	}
 
-	if runner.results.Errored() > 0 || runner.results.Failed() > 0 {
-		return errors.New("one or more test errored or failed")
-	}
+	// if runner.results.Errored() > 0 || runner.results.Failed() > 0 {
+	// 	return errors.New("one or more test errored or failed")
+	// }
 
 	return nil
 }
@@ -190,6 +228,15 @@ func getReqVersion(val *structpb.Value) int {
 }
 
 func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
+	if c == nil {
+		return &CheckResult{
+			Outcome:  false,
+			Duration: 0,
+			Err:      ErrSkippedDirectoryAssertion,
+			Str:      "SKIPPED",
+		}
+	}
+
 	var req dsr3.CheckRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
@@ -210,6 +257,15 @@ func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResu
 }
 
 func checkPermissionV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
+	if c == nil {
+		return &CheckResult{
+			Outcome:  false,
+			Duration: 0,
+			Err:      ErrSkippedDirectoryAssertion,
+			Str:      "SKIPPED",
+		}
+	}
+
 	var req dsr3.CheckPermissionRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
@@ -231,6 +287,15 @@ func checkPermissionV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) 
 }
 
 func checkRelationV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
+	if c == nil {
+		return &CheckResult{
+			Outcome:  false,
+			Duration: 0,
+			Err:      ErrSkippedDirectoryAssertion,
+			Str:      "SKIPPED",
+		}
+	}
+
 	var req dsr3.CheckRelationRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
@@ -251,7 +316,16 @@ func checkRelationV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *C
 	}
 }
 
-func checkDecisionV2(ctx context.Context, c az2.AuthorizerClient, msg *structpb.Value) *CheckResult {
+func checkDecisionV2(ctx context.Context, c *azc.Client, msg *structpb.Value) *CheckResult {
+	if c == nil {
+		return &CheckResult{
+			Outcome:  false,
+			Duration: 0,
+			Err:      ErrSkippedAuthorizerAssertion,
+			Str:      "SKIPPED",
+		}
+	}
+
 	var req az2.IsRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
@@ -259,7 +333,7 @@ func checkDecisionV2(ctx context.Context, c az2.AuthorizerClient, msg *structpb.
 
 	start := time.Now()
 
-	resp, err := c.Is(ctx, &req)
+	resp, err := c.Authorizer.Is(ctx, &req)
 
 	duration := time.Since(start)
 

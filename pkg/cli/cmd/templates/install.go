@@ -353,39 +353,39 @@ func (i *tmplInstaller) runTemplateTests() error {
 		}
 	}
 
-	for _, v := range tests {
-		runner, err := common.NewTestRunner(
-			i.c,
-			&common.TestExecCmd{
-				File:    v,
-				Summary: true,
-				Format:  "table",
-				Desc:    "on-error",
-			},
-			&azc.Config{
-				Host:     cc.AuthorizerSvc(),
-				APIKey:   i.cfg.APIKey,
-				Token:    i.cfg.Token,
-				Insecure: i.cfg.Insecure,
-				TenantID: i.cfg.TenantID,
-				Headers:  i.cfg.Headers,
-			},
-			&dsc.Config{
-				Host:     i.cfg.Host,
-				APIKey:   i.cfg.APIKey,
-				Token:    i.cfg.Token,
-				Insecure: i.cfg.Insecure,
-				TenantID: i.cfg.TenantID,
-				Headers:  i.cfg.Headers,
-			},
-		)
-		if err != nil {
-			return err
-		}
-
-		if err := runner.Run(i.c); err != nil {
-			return err
-		}
+	runner, err := common.NewTestRunner(
+		i.c,
+		&common.TestExecCmd{
+			Files:   tests,
+			Stdin:   false,
+			Summary: true,
+			Format:  "table",
+			Desc:    "on-error",
+		},
+		&azc.Config{
+			Host:     cc.AuthorizerSvc(),
+			APIKey:   i.cfg.APIKey,
+			Token:    i.cfg.Token,
+			Insecure: i.cfg.Insecure,
+			TenantID: i.cfg.TenantID,
+			Headers:  i.cfg.Headers,
+		},
+		&dsc.Config{
+			Host:     i.cfg.Host,
+			APIKey:   i.cfg.APIKey,
+			Token:    i.cfg.Token,
+			Insecure: i.cfg.Insecure,
+			TenantID: i.cfg.TenantID,
+			Headers:  i.cfg.Headers,
+		},
+	)
+	if err != nil {
+		return err
 	}
+
+	if err := runner.Run(i.c); err != nil {
+		return err
+	}
+
 	return nil
 }
