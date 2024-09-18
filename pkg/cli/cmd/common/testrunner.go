@@ -201,10 +201,6 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 		runner.results.PrintSummary(os.Stdout)
 	}
 
-	// if runner.results.Errored() > 0 || runner.results.Failed() > 0 {
-	// 	return errors.New("one or more test errored or failed")
-	// }
-
 	return nil
 }
 
