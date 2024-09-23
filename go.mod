@@ -17,13 +17,13 @@ require (
 	github.com/alecthomas/kong v0.9.0
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.6
-	github.com/aserto-dev/azm v0.1.17
+	github.com/aserto-dev/azm v0.1.18
 	github.com/aserto-dev/certs v0.0.7
 	github.com/aserto-dev/errors v0.0.11
 	github.com/aserto-dev/go-aserto v0.32.1
 	github.com/aserto-dev/go-authorizer v0.20.10
 	github.com/aserto-dev/go-directory v0.31.13
-	github.com/aserto-dev/go-edge-ds v0.32.7
+	github.com/aserto-dev/go-edge-ds v0.32.8-0.20240923195215-282916e084d1
 	github.com/aserto-dev/go-grpc v0.8.69
 	github.com/aserto-dev/go-topaz-ui v0.1.11
 	github.com/aserto-dev/header v0.0.8
@@ -70,7 +70,7 @@ require (
 )
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240717164558-a6c49f84cc0f.2 // indirect
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240920164238-5a7b106cbb87.2 // indirect
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
@@ -81,7 +81,7 @@ require (
 	github.com/aserto-dev/go-decision-logs v0.0.4 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protocompile v0.13.0 // indirect
-	github.com/bufbuild/protovalidate-go v0.6.5 // indirect
+	github.com/bufbuild/protovalidate-go v0.7.0 // indirect
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cncf/xds/go v0.0.0-20240423153145-555b57ec207b // indirect
