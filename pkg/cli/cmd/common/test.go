@@ -150,6 +150,7 @@ type TestResults struct {
 	passed  int32
 	failed  int32
 	errored int32
+	skipped int32
 }
 
 func (t *TestResults) IncrTotal() {
@@ -168,6 +169,10 @@ func (t *TestResults) IncrErrored() {
 	atomic.AddInt32(&t.errored, 1)
 }
 
+func (t *TestResults) IncrSkipped() {
+	atomic.AddInt32(&t.skipped, 1)
+}
+
 func (t *TestResults) Passed(passed bool) {
 	if passed {
 		t.IncrPassed()
@@ -182,6 +187,7 @@ func (t *TestResults) PrintSummary(w io.Writer) {
 	fmt.Fprintf(w, "total:   %d\n", t.total)
 	fmt.Fprintf(w, "passed:  %d\n", t.passed)
 	fmt.Fprintf(w, "failed:  %d\n", t.failed)
+	fmt.Fprintf(w, "skipped: %d\n", t.skipped)
 	fmt.Fprintf(w, "errored: %d\n", t.errored)
 	fmt.Fprintln(w)
 }
