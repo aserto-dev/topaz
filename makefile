@@ -31,7 +31,7 @@ BUF_REPO           := "buf.build/aserto-dev/directory"
 BUF_LATEST         := $(shell BUF_BETA_SUPPRESS_WARNINGS=1 ${EXT_BIN_DIR}/buf beta registry label list buf.build/aserto-dev/directory --format json --reverse | jq -r '.results[0].name')
 BUF_DEV_IMAGE      := "../pb-directory/bin/directory.bin"
 
-RELEASE_TAG        := $$(svu)
+RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu)
 
 .DEFAULT_GOAL      := build
 
@@ -93,6 +93,15 @@ update-assets: $(ASSETS)
 $(ASSETS): install-check2decision
 	@echo -e "$(ATTN_COLOR)==> github.com/aserto-dev/topaz/assets/$@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/check2decision -i "$@assertions.json" -o "$@decisions.json"
+
+TEMPLATES = "assets/api-auth.json" "assets/gdrive.json" "assets/github.json" "assets/multi-tenant.json" "assets/peoplefinder.json" "assets/simple-rbac.json" "assets/slack.json" "assets/todo.json"
+.PHONY: test-templates
+test-templates: $(TEMPLATES)
+$(TEMPLATES): snapshot
+	@echo -e "$(ATTN_COLOR)==> github.com/aserto-dev/topaz/assets/$@ $(NO_COLOR)"
+	@echo topaz templates install $@ --force --no-console --container-tag=$$(${EXT_BIN_DIR}/svu patch --strip-prefix)-$$(git rev-parse --short HEAD)-dirty-${GOARCH}
+	@./dist/topaz_${GOOS}_${GOARCH}/topaz templates install $@ --force --no-console --container-tag=$$(${EXT_BIN_DIR}/svu patch --strip-prefix)-$$(git rev-parse --short HEAD)-dirty-${GOARCH}
+	@./dist/topaz_${GOOS}_${GOARCH}/topaz stop --wait
 
 .PHONY: vault-login
 vault-login:
