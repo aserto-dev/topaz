@@ -139,6 +139,10 @@ jobs:
           args: release --clean --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Test Templates
+        run: |
+          make test-templates
 
   release:
     needs: [test, push]
