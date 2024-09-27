@@ -13,6 +13,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/google/uuid"
@@ -32,15 +33,15 @@ const (
 )
 
 type Config struct {
-	Enabled      bool   `json:"enabled"`
-	Addr         string `json:"addr"`
-	APIKey       string `json:"apikey"`
-	TenantID     string `json:"tenant_id,omitempty"`
-	Timeout      int    `json:"timeout"`
-	PageSize     int    `json:"page_size"`
-	SyncInterval int    `json:"sync_interval"`
-	Insecure     bool   `json:"insecure"`
-	SessionID    string `json:"session_id,omitempty"`
+	Enabled           bool          `json:"enabled"`
+	Addr              string        `json:"addr"`
+	APIKey            string        `json:"apikey"`
+	TenantID          string        `json:"tenant_id,omitempty"`
+	Timeout           int           `json:"timeout"`
+	SyncInterval      int           `json:"sync_interval"`
+	Insecure          bool          `json:"insecure"`
+	SessionID         string        `json:"session_id,omitempty"`
+	ConnectionTimeout time.Duration `json:"-"`
 }
 
 type Plugin struct {
@@ -57,6 +58,7 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 	newLogger := logger.With().Str("component", "edge.plugin").Logger()
 
 	cfg.SessionID = uuid.NewString()
+	cfg.ConnectionTimeout = time.Duration(cfg.Timeout * int(time.Second))
 
 	// sync context, lifetime management for scheduler.
 	syncContext, cancel := context.WithCancel(context.Background())
@@ -331,6 +333,12 @@ func (p *Plugin) remoteDirectoryClient() (*grpc.ClientConn, error) {
 	conn, err := client.NewConnection(opts...)
 	if err != nil {
 		return nil, err
+	}
+
+	ctx, cancel := context.WithTimeout(p.ctx, p.config.ConnectionTimeout)
+	defer cancel()
+	if !conn.WaitForStateChange(ctx, connectivity.Ready) {
+		return nil, errors.Errorf("failed to connect to remote directory %s", p.config.Addr)
 	}
 
 	return conn, nil
