@@ -1,4 +1,4 @@
-name: ci
+name: test-templates
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -17,6 +17,7 @@ on:
   pull_request:
 
 env:
+  GH_TOKEN: ${{ github.token }}
   VAULT_ADDR: https://vault.eng.aserto.com/
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
   GO_VERSION: "1.22"
