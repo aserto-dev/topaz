@@ -1,0 +1,78 @@
+{
+    "relations": [
+    {
+        "object_type": "device",
+        "object_id": "1",
+        "relation": "it_admin",
+        "subject_type": "user",
+        "subject_id": "beth"
+    },
+    {
+        "object_type": "device",
+        "object_id": "1",
+        "relation": "it_admin",
+        "subject_type": "user",
+        "subject_id": "dianne"
+    },
+    {
+        "object_type": "device",
+        "object_id": "1",
+        "relation": "security_guard",
+        "subject_type": "user",
+        "subject_id": "anne"
+    },
+    {
+        "object_type": "device",
+        "object_id": "1",
+        "relation": "security_guard",
+        "subject_type": "user",
+        "subject_id": "charles"
+    },
+    {
+        "object_type": "device_group",
+        "object_id": "group1",
+        "relation": "security_guard",
+        "subject_type": "user",
+        "subject_id": "charles"
+    },
+    {
+        "object_type": "device_group",
+        "object_id": "group1",
+        "relation": "it_admin",
+        "subject_type": "user",
+        "subject_id": "dianne"
+    },
+    {
+        "object_type": "device",
+        "object_id": "2",
+        "relation": "it_admin",
+        "subject_type": "device_group",
+        "subject_id": "group1",
+        "subject_relation": "it_admin"
+    },
+    {
+        "object_type": "device",
+        "object_id": "2",
+        "relation": "security_guard",
+        "subject_type": "device_group",
+        "subject_id": "group1",
+        "subject_relation": "security_guard"
+    },
+    {
+        "object_type": "device",
+        "object_id": "3",
+        "relation": "it_admin",
+        "subject_type": "device_group",
+        "subject_id": "group1",
+        "subject_relation": "it_admin"
+    },
+    {
+        "object_type": "device",
+        "object_id": "3",
+        "relation": "security_guard",
+        "subject_type": "device_group",
+        "subject_id": "group1",
+        "subject_relation": "security_guard"
+    }
+    ]
+}
