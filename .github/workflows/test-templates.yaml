@@ -82,4 +82,5 @@ jobs:
       -
         name: Test Templates
         run: |
+          make deps
           make test-templates
