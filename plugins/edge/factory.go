@@ -5,6 +5,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/aserto-dev/topaz/pkg/app"
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/plugins/noop"
 	"github.com/mitchellh/mapstructure"
@@ -13,6 +14,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
+	"google.golang.org/grpc/health/grpc_health_v1"
 )
 
 type PluginFactory struct {
@@ -36,6 +38,9 @@ func (f PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugi
 	}
 
 	if !cfg.Enabled {
+		svc, status := "sync", grpc_health_v1.HealthCheckResponse_SERVING
+		app.SetServiceStatus(f.logger, svc, status)
+		f.logger.Info().Str("component", "edge.plugin").Str("service", svc).Str("status", status.String()).Msg("health")
 		return &noop.Noop{
 			Manager: m,
 			Name:    PluginName,
