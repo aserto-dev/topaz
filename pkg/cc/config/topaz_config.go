@@ -3,6 +3,8 @@ package config
 import (
 	"strings"
 
+	"github.com/rs/zerolog/log"
+
 	"github.com/aserto-dev/aserto-management/controller"
 	"github.com/pkg/errors"
 )
@@ -24,6 +26,24 @@ type DecisionLogConfig struct {
 type AuthnConfig struct {
 	APIKeys map[string]string `json:"api_keys"`
 	Options CallOptions       `json:"options"`
+	Keys    []string          `json:"keys"`
+}
+
+func (c *AuthnConfig) transposeKeys() {
+	if len(c.APIKeys) != 0 {
+		log.Warn().Msg("config: auth.api_keys is deprecated, please use auth.keys")
+	} else if c.APIKeys == nil {
+		c.APIKeys = make(map[string]string)
+	}
+
+	for _, apikey := range c.Keys {
+		c.APIKeys[apikey] = ""
+	}
+}
+
+type APIKey struct {
+	Key     string `json:"key"`
+	Account string `json:"account"`
 }
 
 type CallOptions struct {
@@ -79,6 +99,7 @@ func (c *Config) validation() error {
 	}
 
 	setDefaultCallsAuthz(c)
+	c.Auth.transposeKeys()
 
 	if len(c.Auth.APIKeys) > 0 {
 		c.Auth.Options.Default.EnableAPIKey = true
