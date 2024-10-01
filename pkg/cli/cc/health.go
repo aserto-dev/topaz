@@ -2,10 +2,10 @@ package cc
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
+	"github.com/pkg/errors"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
@@ -33,7 +33,7 @@ func ServiceHealthStatus(ctx context.Context, addr, service string) (bool, error
 		}
 
 		if resp.GetStatus() != healthpb.HealthCheckResponse_SERVING {
-			return fmt.Errorf("gRPC endpoint not SERVING")
+			return errors.Errorf("gRPC endpoint not SERVING")
 		}
 
 		return nil

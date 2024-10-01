@@ -1,10 +1,11 @@
 package pathutil
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 // Unique eliminates the duplicate paths from the provided slice and returns
@@ -56,7 +57,7 @@ func Create(name string, paths []string) (string, error) {
 		searchedPaths = append(searchedPaths, dir)
 	}
 
-	return "", fmt.Errorf("could not create any of the following paths: %s",
+	return "", errors.Errorf("could not create any of the following paths: %s",
 		strings.Join(searchedPaths, ", "))
 }
 
@@ -75,6 +76,6 @@ func Search(name string, paths []string) (string, error) {
 		searchedPaths = append(searchedPaths, filepath.Dir(p))
 	}
 
-	return "", fmt.Errorf("could not locate `%s` in any of the following paths: %s",
+	return "", errors.Errorf("could not locate `%s` in any of the following paths: %s",
 		filepath.Base(name), strings.Join(searchedPaths, ", "))
 }

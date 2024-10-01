@@ -9,6 +9,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	"github.com/pkg/errors"
 )
 
 type TestCmd struct {
@@ -29,7 +30,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 	if len(files) == 0 {
-		return fmt.Errorf("no input file(s)")
+		return errors.Errorf("no input file(s)")
 	}
 
 	runner, err := common.NewAuthorizerTestRunner(

@@ -2,13 +2,13 @@ package directory
 
 import (
 	"encoding/json"
-	"fmt"
 	"path/filepath"
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	"github.com/pkg/errors"
 )
 
 type TestCmd struct {
@@ -29,7 +29,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 	if len(files) == 0 {
-		return fmt.Errorf("no input file(s)")
+		return errors.Errorf("no input file(s)")
 	}
 
 	runner, err := common.NewDirectoryTestRunner(

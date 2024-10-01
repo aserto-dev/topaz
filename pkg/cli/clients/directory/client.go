@@ -2,7 +2,6 @@ package directory
 
 import (
 	"context"
-	"fmt"
 
 	client "github.com/aserto-dev/go-aserto"
 	dsa3 "github.com/aserto-dev/go-directory/aserto/directory/assertion/v3"
@@ -62,7 +61,7 @@ func NewClient(c *cc.CommonCtx, cfg *Config) (*Client, error) {
 
 func (cfg *Config) Connect(ctx context.Context) (*grpc.ClientConn, error) {
 	if cfg.Host == "" {
-		return nil, fmt.Errorf("no host specified")
+		return nil, errors.Errorf("no host specified")
 	}
 
 	if err := cfg.validate(ctx); err != nil {

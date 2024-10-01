@@ -1,11 +1,11 @@
 package cc
 
 import (
-	"errors"
 	"fmt"
 	"net"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 )
 
@@ -54,7 +54,7 @@ func WaitForPorts(ports []string, expectedStatus PortStatus) error {
 			status := portStatus(listenAddress)
 			if status != expectedStatus {
 				log.Debug().Str("addr", listenAddress).Stringer("status", status).Stringer("expected", expectedStatus).Msg("WaitForPorts")
-				return fmt.Errorf("%s %s", listenAddress, status)
+				return errors.Errorf("%s %s", listenAddress, status)
 			}
 			log.Debug().Str("addr", listenAddress).Stringer("status", status).Stringer("expected", expectedStatus).Msg("WaitForPorts")
 			return nil

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"os"
 	"time"
@@ -10,6 +9,7 @@ import (
 	eds "github.com/aserto-dev/go-edge-ds"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -20,9 +20,9 @@ func (cmd *InitCmd) Run(ctx context.Context) error {
 
 	if fi, err := os.Stat(cmd.DBFile); err == nil {
 		if fi.IsDir() {
-			return fmt.Errorf("%s is a directory", cmd.DBFile)
+			return errors.Errorf("%s is a directory", cmd.DBFile)
 		}
-		return fmt.Errorf("%s already exists", cmd.DBFile)
+		return errors.Errorf("%s already exists", cmd.DBFile)
 	}
 
 	cfg := &directory.Config{
