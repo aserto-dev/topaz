@@ -70,7 +70,7 @@ lint:
 	@${EXT_BIN_DIR}/golangci-lint run --config ${PWD}/.golangci.yaml
 
 # github.com/aserto-dev/topaz/pkg/app/tests/$PKGS
-PKGS = authz builtin manifest policy query
+PKGS = authz builtin manifest policy query template
 .PHONY: test
 test: $(PKGS) test-xdg
 $(PKGS):
