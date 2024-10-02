@@ -5294,7 +5294,7 @@
    "check_decision": {
     "identity_context": {
      "identity": "system",
-     "type": "IDENTITY_TYPE_SUB"
+     "type": "IDENTITY_TYPE_MANUAL"
     },
     "policy_context": {
      "decisions": [
@@ -5308,7 +5308,8 @@
     "resource_context": {
      "object_id": "citadel",
      "object_type": "tenant",
-     "relation": "system"
+     "relation": "system",
+     "subject_type": "system"
     }
    },
    "expected": true
@@ -5317,7 +5318,7 @@
    "check_decision": {
     "identity_context": {
      "identity": "system",
-     "type": "IDENTITY_TYPE_SUB"
+     "type": "IDENTITY_TYPE_MANUAL"
     },
     "policy_context": {
      "decisions": [
@@ -5331,7 +5332,8 @@
     "resource_context": {
      "object_id": "smiths",
      "object_type": "tenant",
-     "relation": "system"
+     "relation": "system",
+     "subject_type": "system"
     }
    },
    "expected": true
