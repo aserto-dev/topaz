@@ -81,9 +81,9 @@ func TestMain(m *testing.M) {
 
 	addr = fmt.Sprintf("%s:%s", host, mappedPort.Port())
 
-	defer func() { _ = container.Terminate(ctx) }()
-
 	exitVal := m.Run()
+
+	_ = container.Terminate(ctx)
 
 	os.Exit(exitVal)
 }
