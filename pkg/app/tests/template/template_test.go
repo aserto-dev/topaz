@@ -32,15 +32,13 @@ func TestMain(m *testing.M) {
 		os.Exit(99)
 	}
 
-	goarch := runtime.GOARCH
-
 	req := testcontainers.ContainerRequest{
 		// Image: "ghcr.io/aserto-dev/topaz:latest",
 		FromDockerfile: testcontainers.FromDockerfile{
 			Context:    "../../../../",
 			Dockerfile: "Dockerfile.test",
 			BuildArgs: map[string]*string{
-				"GOARCH": &goarch,
+				"GOARCH": GoARCH(),
 			},
 			PrintBuildLog: true,
 			KeepImage:     true,
@@ -135,8 +133,8 @@ func TestTemplate(t *testing.T) {
 
 func execTemplate(addr, manifestFile, idpDataDir, domainDataDir, assertionsFile, decisionsFile string) func(*testing.T) {
 	return func(t *testing.T) {
-		cmd := topazCmd()
-		t.Logf("cmd: %s", cmd)
+		cli := topazCLI()
+		t.Logf("cmd: %s", cli)
 
 		env := map[string]string{
 			"TOPAZ_DIRECTORY_SVC":  addr,
@@ -145,12 +143,12 @@ func execTemplate(addr, manifestFile, idpDataDir, domainDataDir, assertionsFile,
 			"TOPAZ_NO_COLOR":       "true",
 		}
 
-		execStep(t, env, cmd, []string{"ds", "delete", "manifest", "--force"})
-		execStep(t, env, cmd, []string{"ds", "set", "manifest", manifestFile})
-		execStep(t, env, cmd, []string{"ds", "import", "-d", idpDataDir})
-		execStep(t, env, cmd, []string{"ds", "import", "-d", domainDataDir})
-		execStep(t, env, cmd, []string{"ds", "test", "exec", assertionsFile, "--summary"})
-		execStep(t, env, cmd, []string{"az", "test", "exec", decisionsFile, "--summary"})
+		execStep(t, env, cli, []string{"ds", "delete", "manifest", "--force"})
+		execStep(t, env, cli, []string{"ds", "set", "manifest", manifestFile})
+		execStep(t, env, cli, []string{"ds", "import", "-d", idpDataDir})
+		execStep(t, env, cli, []string{"ds", "import", "-d", domainDataDir})
+		execStep(t, env, cli, []string{"ds", "test", "exec", assertionsFile, "--summary"})
+		execStep(t, env, cli, []string{"az", "test", "exec", decisionsFile, "--summary"})
 	}
 }
 
@@ -160,11 +158,21 @@ func execStep(t *testing.T, env map[string]string, cmd string, args []string) {
 	assert.NoError(t, err)
 }
 
-func topazCmd() string {
-	relPath := fmt.Sprintf("../../../../dist/topaz_%s_%s/topaz", runtime.GOOS, runtime.GOARCH)
+func topazCLI() string {
+	relPath := fmt.Sprintf("../../../../dist/topaz_%s_%s/topaz", runtime.GOOS, *(GoARCH()))
 	absPath, err := filepath.Abs(relPath)
 	if err != nil {
 		return relPath
 	}
 	return absPath
+}
+
+func GoARCH() *string {
+	var goarch string
+	if runtime.GOARCH == "amd64" {
+		goarch = runtime.GOARCH + "_v1"
+	} else {
+		goarch = runtime.GOARCH
+	}
+	return &goarch
 }
