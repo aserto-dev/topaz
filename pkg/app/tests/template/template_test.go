@@ -32,8 +32,19 @@ func TestMain(m *testing.M) {
 		os.Exit(99)
 	}
 
+	goarch := runtime.GOARCH
+
 	req := testcontainers.ContainerRequest{
-		Image:        "ghcr.io/aserto-dev/topaz:latest",
+		// Image: "ghcr.io/aserto-dev/topaz:latest",
+		FromDockerfile: testcontainers.FromDockerfile{
+			Context:    "../../../../",
+			Dockerfile: "Dockerfile.test",
+			BuildArgs: map[string]*string{
+				"GOARCH": &goarch,
+			},
+			PrintBuildLog: true,
+			KeepImage:     true,
+		},
 		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
