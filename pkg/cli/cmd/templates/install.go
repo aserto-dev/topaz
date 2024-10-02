@@ -115,7 +115,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 	addr, _ := cfg.HealthService()
 	if health, err := cc.ServiceHealthStatus(c.Context, addr, "model"); err != nil {
-		return errors.Errorf("unable to check health status: %w", err)
+		return errors.Wrapf(err, "unable to check health status")
 	} else if !health {
 		return errors.Errorf("gRPC endpoint not SERVING")
 	}
