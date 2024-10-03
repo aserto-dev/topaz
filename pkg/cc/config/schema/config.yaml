@@ -40,9 +40,9 @@ jwt:
 
 # authentication configuration
 auth:
-  api_keys:
-    "69ba614c64ed4be69485de73d062a00b": admin@email.com
-    "##Ve@rySecret123!!": user@email.com
+  keys:
+    - "69ba614c64ed4be69485de73d062a00b"
+    - "##Ve@rySecret123!!"
   options:
     default:
       enable_api_key: true
@@ -71,7 +71,7 @@ api:
       tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
       tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
     zpages: true
-    
+
   services:
     console:
       grpc:
@@ -118,7 +118,7 @@ api:
         read_header_timeout: 2s
         write_timeout: 2s
         idle_timeout: 30s
-        
+
     reader:
       grpc:
         listen_address: "0.0.0.0:9292"
@@ -148,7 +148,7 @@ api:
         read_timeout: 2s # default 2 seconds
         read_header_timeout: 2s
         write_timeout: 2s
-        idle_timeout: 30s # default 30 seconds      
+        idle_timeout: 30s # default 30 seconds
     writer:
       grpc:
         listen_address: "0.0.0.0:9292"
@@ -253,7 +253,7 @@ api:
         read_header_timeout: 2s
         write_timeout: 2s
         idle_timeout: 30s
-  
+
     authorizer:
       needs:
         - reader
@@ -295,7 +295,7 @@ api:
         - "PROFIND"
         - "MKCOL"
         - "COPY"
-        - "MOVE"          
+        - "MOVE"
         http: false
         read_timeout: 2s
         read_header_timeout: 2s

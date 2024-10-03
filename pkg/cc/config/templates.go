@@ -147,9 +147,9 @@ jwt:
 
 # authentication configuration
 auth:
-  api_keys:
-    # "<API key>": <Identity>
-    # "<Password>": <Identity>
+  keys:
+    # - "<API key>"
+    # - "<Password>"
   options:
     default:
       enable_api_key: false

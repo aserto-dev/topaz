@@ -206,13 +206,14 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "api_keys": {
-                    "description": "map of api key to identity",
-                    "type": "object",
-                    "additionalProperties": {
-                        "description": "key -> identity",
+                "keys": {
+                    "description": "array of api keys",
+                    "type": "array",
+                    "items": {
+                        "description": "an api key",
                         "type": "string"
-                    }
+                    },
+                    "uniqueItems": true
                 },
                 "options": {
                     "description": "options",
@@ -265,7 +266,7 @@
                     }
                 }
             }
-        },        
+        },
         "API":{
             "type": "object",
             "description": "API services",
@@ -519,7 +520,7 @@
                     "description":"control plane service configuration",
                     "type": "object",
                     "properties": {
-                        "address": { 
+                        "address": {
                             "description": "address of relay service",
                             "type": "string",
                             "examples": [
@@ -551,7 +552,7 @@
                 },
                 "config": {
                     "description": "decision log plugin configuration",
-                    "type": "object", 
+                    "type": "object",
                     "properties": {
                         "store_directory": {
                             "description": "path to mount point for decision logs buffer storage",

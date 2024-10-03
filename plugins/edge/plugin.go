@@ -42,6 +42,8 @@ type Config struct {
 	Insecure          bool          `json:"insecure"`
 	SessionID         string        `json:"session_id,omitempty"`
 	ConnectionTimeout time.Duration `json:"-"`
+	// Deprecated: No longer used.
+	PageSize int `json:"page_size,omitempty"`
 }
 
 type Plugin struct {
