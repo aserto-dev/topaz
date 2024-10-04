@@ -23,6 +23,7 @@ env:
   GO_RELEASER_VERSION: "v1.24.0"
   GO_LANGCI_LINT_VERSION: "v1.56.2"
   GO_TESTSUM_VERSION: "1.11.0"
+  SYFT_VERSION: "1.13.0"
 
 jobs:
   test:
@@ -189,6 +190,10 @@ jobs:
           git config --global user.name "Aserto Bot"
           eval `ssh-agent`
           ssh-add $HOME/.ssh/id_rsa
+      -
+        name: Setup syft
+        run: |
+          brew install syft
       -
         name: Release
         uses: goreleaser/goreleaser-action@v6
