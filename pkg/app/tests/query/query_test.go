@@ -3,31 +3,114 @@ package query_test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"os"
+	"runtime"
 	"testing"
 
-	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	"github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
-	atesting "github.com/aserto-dev/topaz/pkg/testing"
+	client "github.com/aserto-dev/go-aserto"
+	azc "github.com/aserto-dev/go-aserto/az"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	rt "github.com/aserto-dev/runtime"
+	assets_test "github.com/aserto-dev/topaz/assets"
+	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
+
 	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func TestQuery(t *testing.T) {
-	harness := atesting.SetupOffline(t, func(cfg *config.Config) {
-		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
-		cfg.OPA.LocalBundles.Paths = []string{atesting.AssetLocalBundle()}
-	})
-	t.Cleanup(harness.Cleanup)
+var addr string
 
-	client := harness.CreateGRPCClient()
+func TestMain(m *testing.M) {
+	rc := 0
+	defer func() {
+		os.Exit(rc)
+	}()
+
+	ctx := context.Background()
+
+	req := testcontainers.ContainerRequest{
+		Image: "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		// FromDockerfile: testcontainers.FromDockerfile{
+		// 	Context:    "../../../../",
+		// 	Dockerfile: "Dockerfile.test",
+		// 	BuildArgs: map[string]*string{
+		// 		"GOARCH": common_test.GoARCH(),
+		// 	},
+		// 	PrintBuildLog: true,
+		// 	KeepImage:     true,
+		// },
+		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		Env: map[string]string{
+			"TOPAZ_CERTS_DIR":     "/certs",
+			"TOPAZ_DB_DIR":        "/data",
+			"TOPAZ_DECISIONS_DIR": "/decisions",
+		},
+		Files: []testcontainers.ContainerFile{
+			{
+				Reader:            assets_test.ConfigReader(),
+				ContainerFilePath: "/config/config.yaml",
+				FileMode:          0x700,
+			},
+			{
+				Reader:            assets_test.AcmecorpReader(),
+				ContainerFilePath: "/data/test.db",
+				FileMode:          0x700,
+			},
+		},
+
+		WaitingFor: wait.ForExposedPort(),
+	}
+
+	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
+	})
+	if err != nil {
+		rc = 99
+		return
+	}
+	defer func() {
+		if err := container.Terminate(ctx); err != nil {
+			rc = 100
+		}
+	}()
+
+	host, err := container.Host(ctx)
+	if err != nil {
+		rc = 99
+		return
+	}
+
+	mappedPort, err := container.MappedPort(ctx, "9292")
+	if err != nil {
+		rc = 99
+		return
+	}
+
+	addr = fmt.Sprintf("%s:%s", host, mappedPort.Port())
+
+	rc = m.Run()
+}
+
+func TestQuery(t *testing.T) {
+	opts := []client.ConnectionOption{
+		client.WithAddr(addr),
+		client.WithInsecure(true),
+	}
+
+	azClient, err := azc.New(opts...)
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = azClient.Close() })
 
 	ctx, cancel := context.WithCancel(context.Background())
 	t.Cleanup(cancel)
 
 	for _, tc := range queryTests {
 		f := func(t *testing.T) {
-			resp, err := client.Query(ctx, tc.query)
+			resp, err := azClient.Query(ctx, tc.query)
 			tc.validate(t, resp, err)
 		}
 
@@ -37,20 +120,20 @@ func TestQuery(t *testing.T) {
 
 var queryTests = []struct {
 	name     string
-	query    *authz2.QueryRequest
-	validate func(*testing.T, *authz2.QueryResponse, error)
+	query    *authorizer.QueryRequest
+	validate func(*testing.T, *authorizer.QueryResponse, error)
 }{
 	{
 		name: "opa.runtime",
-		query: &authz2.QueryRequest{
+		query: &authorizer.QueryRequest{
 			Query: "x := opa.runtime()",
 		},
-		validate: func(t *testing.T, resp *authz2.QueryResponse, err error) {
+		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 			require.NotNil(t, resp.Response)
 
-			var result *runtime.Result
+			var result *rt.Result
 			buf, err := resp.Response.MarshalJSON()
 			require.NoError(t, err)
 
@@ -66,15 +149,15 @@ var queryTests = []struct {
 	},
 	{
 		name: "data",
-		query: &authz2.QueryRequest{
+		query: &authorizer.QueryRequest{
 			Query: "x = data",
 		},
-		validate: func(t *testing.T, resp *authz2.QueryResponse, err error) {
+		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 			require.NotNil(t, resp.Response)
 
-			var result *runtime.Result
+			var result *rt.Result
 			buf, err := resp.Response.MarshalJSON()
 			require.NoError(t, err)
 
@@ -84,20 +167,20 @@ var queryTests = []struct {
 			require.NotNil(t, result)
 			require.Greater(t, len(result.Result), 0)
 			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "mycars")
+			require.Contains(t, result.Result[0].Bindings["x"], "rebac")
 		},
 	},
 	{
-		name: "ds.userV3",
-		query: &authz2.QueryRequest{
-			Query: `x = ds.user({"id": "CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs"})`,
+		name: "ds.user",
+		query: &authorizer.QueryRequest{
+			Query: `x = ds.user({"id": "euang@acmecorp.com"})`,
 		},
-		validate: func(t *testing.T, resp *authz2.QueryResponse, err error) {
+		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 			require.NotNil(t, resp.Response)
 
-			var result *runtime.Result
+			var result *rt.Result
 			buf, err := resp.Response.MarshalJSON()
 			require.NoError(t, err)
 
@@ -110,20 +193,20 @@ var queryTests = []struct {
 			require.Contains(t, result.Result[0].Bindings, "x")
 			require.Contains(t, result.Result[0].Bindings["x"], "id")
 			binding := result.Result[0].Bindings["x"].(map[string]interface{})
-			require.Equal(t, binding["id"], "CiQ3Y2VlOGU4NS1lM2NmLTRiNmYtODRlYy1mYWM4OTEwN2U5NTcSBWxvY2Fs")
+			require.Equal(t, binding["id"], "euang@acmecorp.com")
 		},
 	},
 	{
-		name: "ds.identityV3",
-		query: &authz2.QueryRequest{
+		name: "ds.identity",
+		query: &authorizer.QueryRequest{
 			Query: `x = ds.identity({"id": "euang@acmecorp.com"})`,
 		},
-		validate: func(t *testing.T, resp *authz2.QueryResponse, err error) {
+		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 			require.NotNil(t, resp.Response)
 
-			var result *runtime.Result
+			var result *rt.Result
 			buf, err := resp.Response.MarshalJSON()
 			require.NoError(t, err)
 
@@ -134,24 +217,24 @@ var queryTests = []struct {
 			require.NotNil(t, result)
 			require.Greater(t, len(result.Result), 0)
 			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "CiRkZmRhZGMzOS03MzM1LTQwNGQtYWY2Ni1jNzdjZjEzYTE1ZjgSBWxvY2Fs")
+			require.Contains(t, result.Result[0].Bindings["x"], "euang@acmecorp.com")
 		},
 	},
 	{
 		name: "identity_context_sub",
-		query: &authz2.QueryRequest{
+		query: &authorizer.QueryRequest{
 			Query: "x = input",
 			IdentityContext: &api.IdentityContext{
 				Type:     api.IdentityType_IDENTITY_TYPE_SUB,
 				Identity: "euang@acmecorp.com",
 			},
 		},
-		validate: func(t *testing.T, resp *authz2.QueryResponse, err error) {
+		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 			require.NotNil(t, resp.Response)
 
-			var result *runtime.Result
+			var result *rt.Result
 			buf, err := resp.Response.MarshalJSON()
 			require.NoError(t, err)
 
@@ -172,19 +255,19 @@ var queryTests = []struct {
 	},
 	{
 		name: "identity_context_manual",
-		query: &authz2.QueryRequest{
+		query: &authorizer.QueryRequest{
 			Query: "x = input",
 			IdentityContext: &api.IdentityContext{
 				Type:     api.IdentityType_IDENTITY_TYPE_MANUAL,
 				Identity: "euang@acmecorp.com",
 			},
 		},
-		validate: func(t *testing.T, resp *authz2.QueryResponse, err error) {
+		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 			require.NotNil(t, resp.Response)
 
-			var result *runtime.Result
+			var result *rt.Result
 			buf, err := resp.Response.MarshalJSON()
 			require.NoError(t, err)
 

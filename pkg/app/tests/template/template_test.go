@@ -8,41 +8,43 @@ import (
 	"runtime"
 	"testing"
 
+	assets_test "github.com/aserto-dev/topaz/assets"
+	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
+	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/authorizer"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/templates"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
-
-	"github.com/magefile/mage/sh"
 )
 
 var addr string
 
 func TestMain(m *testing.M) {
+	rc := 0
+	defer func() {
+		os.Exit(rc)
+	}()
+
 	ctx := context.Background()
 
-	absPath, err := filepath.Abs(filepath.Join(".", "config.yaml"))
-	if err != nil {
-		os.Exit(99)
-	}
-
-	r, err := os.Open(absPath)
-	if err != nil {
-		os.Exit(99)
-	}
-
 	req := testcontainers.ContainerRequest{
-		// Image: "ghcr.io/aserto-dev/topaz:latest",
-		FromDockerfile: testcontainers.FromDockerfile{
-			Context:    "../../../../",
-			Dockerfile: "Dockerfile.test",
-			BuildArgs: map[string]*string{
-				"GOARCH": GoARCH(),
-			},
-			PrintBuildLog: true,
-			KeepImage:     true,
-		},
+		Image: "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		// FromDockerfile: testcontainers.FromDockerfile{
+		// 	Context:    "../../../../",
+		// 	Dockerfile: "Dockerfile.test",
+		// 	BuildArgs: map[string]*string{
+		// 		"GOARCH": common_test.GoARCH(),
+		// 	},
+		// 	PrintBuildLog: true,
+		// 	KeepImage:     true,
+		// },
 		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
@@ -51,8 +53,7 @@ func TestMain(m *testing.M) {
 		},
 		Files: []testcontainers.ContainerFile{
 			{
-				Reader:            r,
-				HostFilePath:      absPath,
+				Reader:            assets_test.ConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
 				FileMode:          0x700,
 			},
@@ -66,113 +67,147 @@ func TestMain(m *testing.M) {
 		Started:          true,
 	})
 	if err != nil {
-		os.Exit(99)
+		rc = 99
+		return
 	}
+	defer func() {
+		if err := container.Terminate(ctx); err != nil {
+			rc = 100
+		}
+	}()
 
 	host, err := container.Host(ctx)
 	if err != nil {
-		os.Exit(99)
+		rc = 99
+		return
 	}
 
 	mappedPort, err := container.MappedPort(ctx, "9292")
 	if err != nil {
-		os.Exit(99)
+		rc = 99
+		return
 	}
 
 	addr = fmt.Sprintf("%s:%s", host, mappedPort.Port())
 
-	exitVal := m.Run()
-
-	_ = container.Terminate(ctx)
-
-	os.Exit(exitVal)
+	rc = m.Run()
 }
 
 var tcs = []string{
+	"../../../../assets/acmecorp.json",
 	"../../../../assets/api-auth.json",
+	"../../../../assets/citadel.json",
 	"../../../../assets/gdrive.json",
 	"../../../../assets/github.json",
 	"../../../../assets/multi-tenant.json",
+	"../../../../assets/peoplefinder.json",
 	"../../../../assets/simple-rbac.json",
 	"../../../../assets/slack.json",
+	"../../../../assets/todo.json",
 }
 
 func TestTemplate(t *testing.T) {
 	t.Logf("addr: %s", addr)
 
+	os.Setenv("TOPAZ_NO_COLOR", "true")
+	c, err := cc.NewCommonContext(context.Background(), true, filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile))
+	require.NoError(t, err)
+
+	dsConfig := &dsc.Config{
+		Host:     addr,
+		Insecure: true,
+	}
+
+	azConfig := &azc.Config{
+		Host:     addr,
+		Insecure: true,
+	}
+
 	for _, tmpl := range tcs {
 		absPath, err := filepath.Abs(tmpl)
 		require.NoError(t, err)
 
-		t.Logf("template: %s", absPath)
-
 		tmpl, err := templates.GetTemplateFromFile(absPath)
 		require.NoError(t, err)
+
+		t.Logf("name %s", tmpl.Name)
+		t.Logf("template: %s", absPath)
 
 		dirPath := filepath.Dir(absPath)
 		t.Logf("dir %s", dirPath)
 
 		manifestFile := filepath.Join(dirPath, tmpl.Assets.Manifest)
 		t.Logf("manifestFile: %s", manifestFile)
+		t.Run(tmpl.Name+"-DeleteManifest", DeleteManifest(c, dsConfig))
+		t.Run(tmpl.Name+"-SetManifest", SetManifest(c, dsConfig, manifestFile))
 
-		idpDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.IdentityData[0]))
-		t.Logf("idp_data: %s", idpDataDir)
-
-		domainDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.DomainData[0]))
-		t.Logf("domain_data: %s", domainDataDir)
-
-		assertionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[0])
-		t.Logf("assertionsFile: %s", assertionsFile)
-
-		decisionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[1])
-		t.Logf("decisionsFile: %s", decisionsFile)
-
-		t.Run(absPath, execTemplate(addr, manifestFile, idpDataDir, domainDataDir, assertionsFile, decisionsFile))
-	}
-}
-
-func execTemplate(addr, manifestFile, idpDataDir, domainDataDir, assertionsFile, decisionsFile string) func(*testing.T) {
-	return func(t *testing.T) {
-		cli := topazCLI()
-		t.Logf("cmd: %s", cli)
-
-		env := map[string]string{
-			"TOPAZ_DIRECTORY_SVC":  addr,
-			"TOPAZ_AUTHORIZER_SVC": addr,
-			"TOPAZ_INSECURE":       "true",
-			"TOPAZ_NO_COLOR":       "true",
+		if len(tmpl.Assets.IdentityData) > 0 {
+			idpDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.IdentityData[0]))
+			t.Logf("idp_data: %s", idpDataDir)
+			t.Run(tmpl.Name+"-ImportIdentityData", ImportData(c, dsConfig, idpDataDir))
 		}
 
-		execStep(t, env, cli, []string{"ds", "delete", "manifest", "--force"})
-		execStep(t, env, cli, []string{"ds", "set", "manifest", manifestFile})
-		execStep(t, env, cli, []string{"ds", "import", "-d", idpDataDir})
-		execStep(t, env, cli, []string{"ds", "import", "-d", domainDataDir})
-		execStep(t, env, cli, []string{"ds", "test", "exec", assertionsFile, "--summary"})
-		execStep(t, env, cli, []string{"az", "test", "exec", decisionsFile, "--summary"})
+		if len(tmpl.Assets.DomainData) > 0 {
+			domainDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.DomainData[0]))
+			t.Logf("domain_data: %s", domainDataDir)
+			t.Run(tmpl.Name+"-ImportDomainData", ImportData(c, dsConfig, domainDataDir))
+		}
+
+		if len(tmpl.Assets.Assertions) > 0 {
+			assertionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[0])
+			t.Logf("assertionsFile: %s", assertionsFile)
+			t.Run(tmpl.Name+"-ExecDirectoryTest", ExecDirectoryTests(c, dsConfig, []string{assertionsFile}))
+		}
+
+		if len(tmpl.Assets.Assertions) > 1 {
+			decisionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[1])
+			t.Logf("decisionsFile: %s", decisionsFile)
+			t.Run(tmpl.Name+"-ExecAuthorizerTest", ExecAuthorizerTests(c, azConfig, []string{decisionsFile}))
+		}
 	}
 }
 
-func execStep(t *testing.T, env map[string]string, cmd string, args []string) {
-	ran, err := sh.Exec(env, os.Stdout, os.Stderr, cmd, args...)
-	assert.True(t, ran)
-	assert.NoError(t, err)
+func DeleteManifest(c *cc.CommonCtx, cfg *dsc.Config) func(*testing.T) {
+	return func(t *testing.T) {
+		cmd := directory.DeleteManifestCmd{Config: *cfg, Force: true}
+		if err := cmd.Run(c); err != nil {
+			assert.NoError(t, err)
+		}
+	}
 }
 
-func topazCLI() string {
-	relPath := fmt.Sprintf("../../../../dist/topaz_%s_%s/topaz", runtime.GOOS, *(GoARCH()))
-	absPath, err := filepath.Abs(relPath)
-	if err != nil {
-		return relPath
+func SetManifest(c *cc.CommonCtx, cfg *dsc.Config, path string) func(*testing.T) {
+	return func(t *testing.T) {
+		cmd := directory.SetManifestCmd{Config: *cfg, Path: path}
+		if err := cmd.Run(c); err != nil {
+			assert.NoError(t, err)
+		}
 	}
-	return absPath
 }
 
-func GoARCH() *string {
-	var goarch string
-	if runtime.GOARCH == "amd64" {
-		goarch = runtime.GOARCH + "_v1"
-	} else {
-		goarch = runtime.GOARCH
+func ImportData(c *cc.CommonCtx, cfg *dsc.Config, dir string) func(*testing.T) {
+	return func(t *testing.T) {
+		cmd := directory.ImportCmd{Config: *cfg, Directory: dir}
+		if err := cmd.Run(c); err != nil {
+			assert.NoError(t, err)
+		}
 	}
-	return &goarch
+}
+
+func ExecDirectoryTests(c *cc.CommonCtx, cfg *dsc.Config, files []string) func(*testing.T) {
+	return func(t *testing.T) {
+		cmd := directory.TestExecCmd{Config: *cfg, TestExecCmd: common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}}
+		if err := cmd.Run(c); err != nil {
+			assert.NoError(t, err)
+		}
+	}
+}
+
+func ExecAuthorizerTests(c *cc.CommonCtx, cfg *azc.Config, files []string) func(*testing.T) {
+	return func(t *testing.T) {
+		cmd := authorizer.TestExecCmd{Config: *cfg, TestExecCmd: common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}}
+		if err := cmd.Run(c); err != nil {
+			assert.NoError(t, err)
+		}
+	}
 }

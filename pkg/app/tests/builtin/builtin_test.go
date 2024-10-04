@@ -2,22 +2,106 @@ package builtin_test
 
 import (
 	"context"
+	"fmt"
+	"os"
+	"runtime"
 	"testing"
 
-	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
-	atesting "github.com/aserto-dev/topaz/pkg/testing"
+	client "github.com/aserto-dev/go-aserto"
+	azc "github.com/aserto-dev/go-aserto/az"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	assets_test "github.com/aserto-dev/topaz/assets"
+	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func TestBuiltins(t *testing.T) {
-	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
-	})
-	t.Cleanup(harness.Cleanup)
+var addr string
 
-	client := harness.CreateGRPCClient()
+func TestMain(m *testing.M) {
+	rc := 0
+	defer func() {
+		os.Exit(rc)
+	}()
+
+	ctx := context.Background()
+
+	req := testcontainers.ContainerRequest{
+		Image: "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		// FromDockerfile: testcontainers.FromDockerfile{
+		// 	Context:    "../../../../",
+		// 	Dockerfile: "Dockerfile.test",
+		// 	BuildArgs: map[string]*string{
+		// 		"GOARCH": common_test.GoARCH(),
+		// 	},
+		// 	PrintBuildLog: true,
+		// 	KeepImage:     true,
+		// },
+		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		Env: map[string]string{
+			"TOPAZ_CERTS_DIR":     "/certs",
+			"TOPAZ_DB_DIR":        "/data",
+			"TOPAZ_DECISIONS_DIR": "/decisions",
+		},
+		Files: []testcontainers.ContainerFile{
+			{
+				Reader:            assets_test.ConfigReader(),
+				ContainerFilePath: "/config/config.yaml",
+				FileMode:          0x700,
+			},
+			{
+				Reader:            assets_test.AcmecorpReader(),
+				ContainerFilePath: "/data/test.db",
+				FileMode:          0x700,
+			},
+		},
+
+		WaitingFor: wait.ForExposedPort(),
+	}
+
+	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
+	})
+	if err != nil {
+		rc = 99
+		return
+	}
+	defer func() {
+		if err := container.Terminate(ctx); err != nil {
+			rc = 100
+		}
+	}()
+
+	host, err := container.Host(ctx)
+	if err != nil {
+		rc = 99
+		return
+	}
+
+	mappedPort, err := container.MappedPort(ctx, "9292")
+	if err != nil {
+		rc = 99
+		return
+	}
+
+	addr = fmt.Sprintf("%s:%s", host, mappedPort.Port())
+
+	rc = m.Run()
+}
+
+func TestBuiltins(t *testing.T) {
+	opts := []client.ConnectionOption{
+		client.WithAddr(addr),
+		client.WithInsecure(true),
+	}
+
+	azClient, err := azc.New(opts...)
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = azClient.Close() })
 
 	ctx, cancel := context.WithCancel(context.Background())
 	t.Cleanup(cancel)
@@ -25,7 +109,7 @@ func TestBuiltins(t *testing.T) {
 	// BuiltinHelptests(ctx, client)
 	for _, tc := range BuiltinHelpTests {
 		f := func(t *testing.T) {
-			resp, err := client.Query(ctx, &authz2.QueryRequest{
+			resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
 				Query: tc.query,
 			})
 			require.NoError(t, err)
@@ -48,7 +132,7 @@ func TestBuiltins(t *testing.T) {
 	// BuiltinNotFoundErrTests
 	for _, tc := range BuiltinNotFoundErrTests {
 		f := func(t *testing.T) {
-			resp, err := client.Query(ctx, &authz2.QueryRequest{
+			resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
 				Query: tc.query,
 			})
 			require.NoError(t, err)

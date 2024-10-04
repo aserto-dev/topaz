@@ -203,3 +203,21 @@ docker_manifests:
     image_templates: [*amd64-image, *arm64-image]
   - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
     image_templates: [*amd64-image, *arm64-image]
+
+sboms:
+  # https://goreleaser.com/customization/sbom/
+  - id: default
+    documents:
+      - "${artifact}.spdx.sbom.json"
+    cmd: syft
+    args:
+      - "$artifact"
+      - "--output" 
+      - "spdx-json=$document"
+    env:
+      - SYFT_FILE_METADATA_CATALOGER_ENABLED=true 
+    artifacts: binary
+    ids:
+      - topaz
+      - topazd
+      # - topaz-db

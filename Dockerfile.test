@@ -12,7 +12,7 @@ VOLUME ["/config", "/certs", "/db", "/decisions"]
 
 WORKDIR /app
 
-COPY dist/topazd_linux_${GOARCH}/topazd /app/
+COPY dist/topaz*_linux_${GOARCH}/topaz* /app/
 
 ENTRYPOINT ["./topazd"]
 CMD ["run", "-c", "/config/config.yaml"]

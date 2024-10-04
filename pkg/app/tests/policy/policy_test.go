@@ -2,23 +2,107 @@ package policy_test
 
 import (
 	"context"
+	"fmt"
+	"os"
+	"runtime"
 	"testing"
 
+	client "github.com/aserto-dev/go-aserto"
+	azc "github.com/aserto-dev/go-aserto/az"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
-	atesting "github.com/aserto-dev/topaz/pkg/testing"
+	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	assets_test "github.com/aserto-dev/topaz/assets"
+	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
+
 	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
-func TestPolicy(t *testing.T) {
-	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
-	})
-	t.Cleanup(harness.Cleanup)
+var addr string
 
-	client := harness.CreateGRPCClient()
+func TestMain(m *testing.M) {
+	rc := 0
+	defer func() {
+		os.Exit(rc)
+	}()
+
+	ctx := context.Background()
+
+	req := testcontainers.ContainerRequest{
+		Image: "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		// FromDockerfile: testcontainers.FromDockerfile{
+		// 	Context:    "../../../../",
+		// 	Dockerfile: "Dockerfile.test",
+		// 	BuildArgs: map[string]*string{
+		// 		"GOARCH": common_test.GoARCH(),
+		// 	},
+		// 	PrintBuildLog: true,
+		// 	KeepImage:     true,
+		// },
+		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		Env: map[string]string{
+			"TOPAZ_CERTS_DIR":     "/certs",
+			"TOPAZ_DB_DIR":        "/data",
+			"TOPAZ_DECISIONS_DIR": "/decisions",
+		},
+		Files: []testcontainers.ContainerFile{
+			{
+				Reader:            assets_test.PeoplefinderConfigReader(),
+				ContainerFilePath: "/config/config.yaml",
+				FileMode:          0x700,
+			},
+			{
+				Reader:            assets_test.AcmecorpReader(),
+				ContainerFilePath: "/data/test.db",
+				FileMode:          0x700,
+			},
+		},
+
+		WaitingFor: wait.ForExposedPort(),
+	}
+
+	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
+	})
+	if err != nil {
+		rc = 99
+		return
+	}
+	defer func() {
+		if err := container.Terminate(ctx); err != nil {
+			rc = 100
+		}
+	}()
+
+	host, err := container.Host(ctx)
+	if err != nil {
+		rc = 99
+		return
+	}
+
+	mappedPort, err := container.MappedPort(ctx, "9292")
+	if err != nil {
+		rc = 99
+		return
+	}
+
+	addr = fmt.Sprintf("%s:%s", host, mappedPort.Port())
+
+	rc = m.Run()
+}
+
+func TestPolicy(t *testing.T) {
+	opts := []client.ConnectionOption{
+		client.WithAddr(addr),
+		client.WithInsecure(true),
+	}
+
+	azClient, err := azc.New(opts...)
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = azClient.Close() })
 
 	ctx, cancel := context.WithCancel(context.Background())
 	t.Cleanup(cancel)
@@ -27,17 +111,17 @@ func TestPolicy(t *testing.T) {
 		name string
 		test func(*testing.T)
 	}{
-		{"TestListPolicies", ListPolicies(ctx, client)},
-		{"TestListPoliciesMasked", ListPoliciesMasked(ctx, client)},
-		{"TestListPoliciesMaskedComposed", ListPoliciesMaskedComposed(ctx, client)},
-		{"TestListPoliciesInvalidMask", ListPoliciesInvalidMask(ctx, client)},
-		{"TestListPoliciesEmptyMask", ListPoliciesEmptyMask(ctx, client)},
-		{"TestGetPolicies", GetPolicies(ctx, client)},
-		{"TestGetPoliciesMasked", GetPoliciesMasked(ctx, client)},
-		{"TestGetPoliciesMaskedComposed", GetPoliciesMaskedComposed(ctx, client)},
-		{"TestGetPoliciesInvalidMask", GetPoliciesInvalidMask(ctx, client)},
-		{"TestGetPoliciesEmptyMask", GetPoliciesEmptyMask(ctx, client)},
-		{"TestGetPoliciesInvalidID", GetPoliciesInvalidID(ctx, client)},
+		{"TestListPolicies", ListPolicies(ctx, azClient)},
+		{"TestListPoliciesMasked", ListPoliciesMasked(ctx, azClient)},
+		{"TestListPoliciesMaskedComposed", ListPoliciesMaskedComposed(ctx, azClient)},
+		{"TestListPoliciesInvalidMask", ListPoliciesInvalidMask(ctx, azClient)},
+		{"TestListPoliciesEmptyMask", ListPoliciesEmptyMask(ctx, azClient)},
+		{"TestGetPolicies", GetPolicies(ctx, azClient)},
+		{"TestGetPoliciesMasked", GetPoliciesMasked(ctx, azClient)},
+		{"TestGetPoliciesMaskedComposed", GetPoliciesMaskedComposed(ctx, azClient)},
+		{"TestGetPoliciesInvalidMask", GetPoliciesInvalidMask(ctx, azClient)},
+		{"TestGetPoliciesEmptyMask", GetPoliciesEmptyMask(ctx, azClient)},
+		{"TestGetPoliciesInvalidID", GetPoliciesInvalidID(ctx, azClient)},
 	}
 
 	for _, testCase := range tests {
@@ -45,10 +129,10 @@ func TestPolicy(t *testing.T) {
 	}
 }
 
-func ListPolicies(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func ListPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
-		listPoliciesResponse, err := client.ListPolicies(ctx, &authorizer.ListPoliciesRequest{})
+		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{})
 
 		assert.NoError(err)
 		assert.NotNil(listPoliciesResponse.Result)
@@ -56,10 +140,10 @@ func ListPolicies(ctx context.Context, client authorizer.AuthorizerClient) func(
 	}
 }
 
-func ListPoliciesMasked(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func ListPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
-		listPoliciesResponse, err := client.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
+		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{
 					"raw",
@@ -75,10 +159,10 @@ func ListPoliciesMasked(ctx context.Context, client authorizer.AuthorizerClient)
 	}
 }
 
-func ListPoliciesMaskedComposed(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func ListPoliciesMaskedComposed(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
-		listPoliciesResponse, err := client.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
+		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{
 					"raw",
@@ -96,10 +180,10 @@ func ListPoliciesMaskedComposed(ctx context.Context, client authorizer.Authorize
 	}
 }
 
-func ListPoliciesInvalidMask(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func ListPoliciesInvalidMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
-		listPoliciesResponse, err := client.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
+		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{
 					"notexistantpath",
@@ -117,10 +201,10 @@ func ListPoliciesInvalidMask(ctx context.Context, client authorizer.AuthorizerCl
 	}
 }
 
-func ListPoliciesEmptyMask(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func ListPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
-		listPoliciesResponse, err := client.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
+		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{},
 			},
@@ -136,11 +220,11 @@ func ListPoliciesEmptyMask(ctx context.Context, client authorizer.AuthorizerClie
 	}
 }
 
-func GetPolicies(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func GetPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
-		apiModule := getOneModule(ctx, client, t)
-		getPoliciesResponse, err := client.GetPolicy(ctx, &authorizer.GetPolicyRequest{
+		apiModule := getOneModule(ctx, azClient, t)
+		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
 			Id: *apiModule.Id,
 		})
 
@@ -149,12 +233,12 @@ func GetPolicies(ctx context.Context, client authorizer.AuthorizerClient) func(*
 	}
 }
 
-func GetPoliciesMasked(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func GetPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
-		apiModule := getOneModule(ctx, client, t)
+		apiModule := getOneModule(ctx, azClient, t)
 
-		getPoliciesResponse, err := client.GetPolicy(ctx, &authorizer.GetPolicyRequest{
+		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
 			Id: *apiModule.Id,
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{
@@ -170,12 +254,12 @@ func GetPoliciesMasked(ctx context.Context, client authorizer.AuthorizerClient) 
 	}
 }
 
-func GetPoliciesMaskedComposed(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func GetPoliciesMaskedComposed(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
-		apiModule := getOneModule(ctx, client, t)
+		apiModule := getOneModule(ctx, azClient, t)
 
-		getPoliciesResponse, err := client.GetPolicy(ctx, &authorizer.GetPolicyRequest{
+		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
 			Id: *apiModule.Id,
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{
@@ -193,13 +277,13 @@ func GetPoliciesMaskedComposed(ctx context.Context, client authorizer.Authorizer
 	}
 }
 
-func GetPoliciesInvalidMask(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func GetPoliciesInvalidMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 
-		apiModule := getOneModule(ctx, client, t)
+		apiModule := getOneModule(ctx, azClient, t)
 
-		getPoliciesResponse, err := client.GetPolicy(ctx, &authorizer.GetPolicyRequest{
+		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
 			Id: *apiModule.Id,
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{
@@ -217,13 +301,13 @@ func GetPoliciesInvalidMask(ctx context.Context, client authorizer.AuthorizerCli
 	}
 }
 
-func GetPoliciesEmptyMask(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func GetPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 
-		apiModule := getOneModule(ctx, client, t)
+		apiModule := getOneModule(ctx, azClient, t)
 
-		getPoliciesResponse, err := client.GetPolicy(ctx, &authorizer.GetPolicyRequest{
+		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
 			Id: *apiModule.Id,
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{},
@@ -239,11 +323,11 @@ func GetPoliciesEmptyMask(ctx context.Context, client authorizer.AuthorizerClien
 	}
 }
 
-func GetPoliciesInvalidID(ctx context.Context, client authorizer.AuthorizerClient) func(*testing.T) {
+func GetPoliciesInvalidID(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 
-		_, err := client.GetPolicy(ctx, &authorizer.GetPolicyRequest{
+		_, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
 			Id: "doesnotexist",
 		})
 
@@ -252,9 +336,9 @@ func GetPoliciesInvalidID(ctx context.Context, client authorizer.AuthorizerClien
 	}
 }
 
-func getOneModule(ctx context.Context, client authorizer.AuthorizerClient, t *testing.T) *api.Module {
+func getOneModule(ctx context.Context, azClient authorizer.AuthorizerClient, t *testing.T) *api.Module {
 	assert := require.New(t)
-	listPoliciesResponse, err := client.ListPolicies(ctx, &authorizer.ListPoliciesRequest{})
+	listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{})
 	if err != nil {
 		assert.FailNow("failed to list policies", err.Error())
 	}

@@ -69,10 +69,15 @@ lint:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/golangci-lint run --config ${PWD}/.golangci.yaml
 
+.PHONY: test-snapshot
+test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot
+
 # github.com/aserto-dev/topaz/pkg/app/tests/$PKGS
 PKGS = authz builtin manifest policy query template
 .PHONY: test
-test: $(PKGS) test-xdg
+test: test-snapshot $(PKGS) test-xdg
 $(PKGS):
 	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/app/tests/$@/... $(NO_COLOR)"
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... github.com/aserto-dev/topaz/pkg/app/tests/$@/...;

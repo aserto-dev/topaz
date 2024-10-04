@@ -3,43 +3,119 @@ package manifest_test
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"os"
 	"path"
+	"runtime"
 	"testing"
 
+	client "github.com/aserto-dev/go-aserto"
+	dsc "github.com/aserto-dev/go-aserto/ds/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
-	atesting "github.com/aserto-dev/topaz/pkg/testing"
+	assets_test "github.com/aserto-dev/topaz/assets"
+	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func TestManifest(t *testing.T) {
-	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
+var addr string
+
+func TestMain(m *testing.M) {
+	rc := 0
+	defer func() {
+		os.Exit(rc)
+	}()
+
+	ctx := context.Background()
+
+	req := testcontainers.ContainerRequest{
+		Image: "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		// FromDockerfile: testcontainers.FromDockerfile{
+		// 	Context:    "../../../../",
+		// 	Dockerfile: "Dockerfile.test",
+		// 	BuildArgs: map[string]*string{
+		// 		"GOARCH": common_test.GoARCH(),
+		// 	},
+		// 	PrintBuildLog: true,
+		// 	KeepImage:     true,
+		// },
+		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		Env: map[string]string{
+			"TOPAZ_CERTS_DIR":     "/certs",
+			"TOPAZ_DB_DIR":        "/data",
+			"TOPAZ_DECISIONS_DIR": "/decisions",
+		},
+		Files: []testcontainers.ContainerFile{
+			{
+				Reader:            assets_test.ConfigReader(),
+				ContainerFilePath: "/config/config.yaml",
+				FileMode:          0x700,
+			},
+		},
+
+		WaitingFor: wait.ForExposedPort(),
+	}
+
+	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
 	})
-	t.Cleanup(harness.Cleanup)
+	if err != nil {
+		rc = 99
+		return
+	}
+	defer func() {
+		if err := container.Terminate(ctx); err != nil {
+			rc = 100
+		}
+	}()
+
+	host, err := container.Host(ctx)
+	if err != nil {
+		rc = 99
+		return
+	}
+
+	mappedPort, err := container.MappedPort(ctx, "9292")
+	if err != nil {
+		rc = 99
+		return
+	}
+
+	addr = fmt.Sprintf("%s:%s", host, mappedPort.Port())
+
+	rc = m.Run()
+}
+
+func TestManifest(t *testing.T) {
+	opts := []client.ConnectionOption{
+		client.WithAddr(addr),
+		client.WithInsecure(true),
+	}
+
+	dsClient, err := dsc.New(opts...)
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = dsClient.Close() })
 
 	ctx, cancel := context.WithCancel(context.Background())
 	t.Cleanup(cancel)
 
-	client := harness.CreateDirectoryClient(ctx)
-
-	r, err := os.Open(path.Join(atesting.AssetsDir(), "manifest.yaml"))
-	require.NoError(t, err)
-
 	// write manifest to store
-	bytesSend, err := setManifest(ctx, client.Model, r)
+	bytesSend, err := setManifest(ctx, dsClient.Model, assets_test.ManifestReader())
 	require.NoError(t, err)
 
-	w, err := os.Create(path.Join(harness.TopazDir(), "manifest.new.yaml"))
+	tmpDir := t.TempDir()
+	w, err := os.Create(path.Join(tmpDir, "manifest.new.yaml"))
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = w.Close() })
 
 	// get manifest from store
-	metadata, body, err := getManifest(ctx, client.Model)
+	metadata, body, err := getManifest(ctx, dsClient.Model)
 	require.NoError(t, err)
 	assert.NotNil(t, metadata)
 
@@ -50,17 +126,17 @@ func TestManifest(t *testing.T) {
 	assert.Equal(t, bytesSend, bytesRecv)
 
 	// delete manifest
-	if err := deleteManifest(ctx, client.Model); err != nil {
+	if err := deleteManifest(ctx, dsClient.Model); err != nil {
 		assert.NoError(t, err)
 	}
 
 	// delete deleted manifest should not result in an error
-	if err := deleteManifest(ctx, client.Model); err != nil {
+	if err := deleteManifest(ctx, dsClient.Model); err != nil {
 		assert.NoError(t, err)
 	}
 
 	// getManifest should not fail, but return an empty manifest.
-	if metadata, body, err := getManifest(ctx, client.Model); err == nil {
+	if metadata, body, err := getManifest(ctx, dsClient.Model); err == nil {
 		assert.NoError(t, err)
 		assert.NotNil(t, metadata)
 
@@ -75,8 +151,8 @@ func TestManifest(t *testing.T) {
 	}
 }
 
-func getManifest(ctx context.Context, client dsm3.ModelClient) (*dsm3.Metadata, io.Reader, error) {
-	stream, err := client.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
+func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, io.Reader, error) {
+	stream, err := dsm.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, nil, err
 	}
@@ -110,8 +186,8 @@ func getManifest(ctx context.Context, client dsm3.ModelClient) (*dsm3.Metadata, 
 
 const blockSize = 1024 // intentionally small block size for testing chunking
 
-func setManifest(ctx context.Context, client dsm3.ModelClient, r io.Reader) (int64, error) {
-	stream, err := client.SetManifest(ctx)
+func setManifest(ctx context.Context, dsm dsm3.ModelClient, r io.Reader) (int64, error) {
+	stream, err := dsm.SetManifest(ctx)
 	if err != nil {
 		return 0, err
 	}
@@ -149,7 +225,7 @@ func setManifest(ctx context.Context, client dsm3.ModelClient, r io.Reader) (int
 	return bytesSend, nil
 }
 
-func deleteManifest(ctx context.Context, client dsm3.ModelClient) error {
-	_, err := client.DeleteManifest(ctx, &dsm3.DeleteManifestRequest{Empty: &emptypb.Empty{}})
+func deleteManifest(ctx context.Context, dsm dsm3.ModelClient) error {
+	_, err := dsm.DeleteManifest(ctx, &dsm3.DeleteManifestRequest{Empty: &emptypb.Empty{}})
 	return err
 }
