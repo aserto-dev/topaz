@@ -3,7 +3,6 @@ package manifest_test
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"io"
 	"os"
 	"path"
@@ -32,18 +31,8 @@ func TestMain(m *testing.M) {
 	}()
 
 	ctx := context.Background()
-
-	req := testcontainers.ContainerRequest{
-		Image: "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
-		// FromDockerfile: testcontainers.FromDockerfile{
-		// 	Context:    "../../../../",
-		// 	Dockerfile: "Dockerfile.test",
-		// 	BuildArgs: map[string]*string{
-		// 		"GOARCH": common_test.GoARCH(),
-		// 	},
-		// 	PrintBuildLog: true,
-		// 	KeepImage:     true,
-		// },
+	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
+		Image:        "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
 		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
@@ -59,35 +48,19 @@ func TestMain(m *testing.M) {
 		},
 
 		WaitingFor: wait.ForExposedPort(),
-	}
-
-	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: req,
-		Started:          true,
 	})
 	if err != nil {
 		rc = 99
 		return
 	}
+
 	defer func() {
-		if err := container.Terminate(ctx); err != nil {
+		if err := h.Close(ctx); err != nil {
 			rc = 100
 		}
 	}()
 
-	host, err := container.Host(ctx)
-	if err != nil {
-		rc = 99
-		return
-	}
-
-	mappedPort, err := container.MappedPort(ctx, "9292")
-	if err != nil {
-		rc = 99
-		return
-	}
-
-	addr = fmt.Sprintf("%s:%s", host, mappedPort.Port())
+	addr = h.AddrGRPC(ctx)
 
 	rc = m.Run()
 }
