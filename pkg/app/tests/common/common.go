@@ -14,25 +14,6 @@ type Harness struct {
 }
 
 func NewHarness(ctx context.Context, req *testcontainers.ContainerRequest) (*Harness, error) {
-	// req := testcontainers.ContainerRequest{
-	// 	Image:        image, // "ghcr.io/aserto-dev/topaz:test-" + CommitSHA() + "-" + runtime.GOARCH,
-	// 	ExposedPorts: []string{"9292/tcp", "9393/tcp"},
-	// 	Env: map[string]string{
-	// 		"TOPAZ_CERTS_DIR":     "/certs",
-	// 		"TOPAZ_DB_DIR":        "/data",
-	// 		"TOPAZ_DECISIONS_DIR": "/decisions",
-	// 	},
-	// 	Files: []testcontainers.ContainerFile{
-	// 		{
-	// 			Reader:            assets_test.ConfigReader(),
-	// 			ContainerFilePath: "/config/config.yaml",
-	// 			FileMode:          0x700,
-	// 		},
-	// 	},
-
-	// 	WaitingFor: wait.ForExposedPort(),
-	// }
-
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: *req,
 		Started:          true,
