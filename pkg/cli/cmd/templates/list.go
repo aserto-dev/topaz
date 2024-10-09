@@ -29,10 +29,3 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 
 	return nil
 }
-
-func max(rhs, lhs int) int {
-	if rhs < lhs {
-		return lhs
-	}
-	return rhs
-}

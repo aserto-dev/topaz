@@ -111,15 +111,15 @@ func NewPunchCardWriter(w io.Writer) io.Writer {
 }
 
 type maxWidthWriter struct {
-	maxWidth     uint
-	currentWidth uint
-	written      uint
+	maxWidth     int
+	currentWidth int
+	written      int
 	writer       io.Writer
 }
 
 // NewMaxWidthWriter is a Writer that supports a limit of characters on every
 // line, but doesn't do any word wrapping automatically.
-func NewMaxWidthWriter(w io.Writer, maxWidth uint) io.Writer {
+func NewMaxWidthWriter(w io.Writer, maxWidth int) io.Writer {
 	return &maxWidthWriter{
 		maxWidth: maxWidth,
 		writer:   w,
@@ -137,7 +137,7 @@ func (m maxWidthWriter) Write(p []byte) (nn int, err error) {
 		}
 		_, err := m.writer.Write([]byte{b})
 		if err != nil {
-			return int(m.written), err
+			return m.written, err
 		}
 		m.written++
 		m.currentWidth++

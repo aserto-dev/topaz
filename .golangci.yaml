@@ -2,6 +2,9 @@
 # golangci.com configuration
 # https://github.com/golangci/golangci/wiki/Configuration
 
+run:
+  timeout: 5m
+
 linters-settings:
   depguard:
     list-type: blacklist
@@ -15,8 +18,6 @@ linters-settings:
   funlen:
     lines: 100
     statements: 80
-  gci:
-    local-prefixes: github.com/golangci/golangci-lint
   goconst:
     min-len: 2
     min-occurrences: 2
@@ -39,17 +40,8 @@ linters-settings:
     local-prefixes: github.com/golangci/golangci-lint
   golint:
     min-confidence: 0
-  gomnd:
-    settings:
-      mnd:
-        # don't include the "operation" and "assign"
-        checks: 
-          - argument
-          - case
-          - condition
-          - return
   govet:
-    check-shadowing: true
+    shadow: true
     settings:
       printf:
         funcs:
@@ -73,9 +65,9 @@ linters:
   enable:
     - asciicheck
     - bodyclose
+    - copyloopvar
     - dogsled
     - errcheck
-    - exportloopref
     - exhaustive
     - funlen
     - gochecknoinits
@@ -154,7 +146,3 @@ issues:
       linters:
       - gosec
 
-run:
-  timeout: 5m
-  skip-dirs:
-  - pkg/testharness/testdata
