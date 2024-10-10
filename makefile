@@ -77,18 +77,10 @@ test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot
 
-# github.com/aserto-dev/topaz/pkg/app/tests/$PKGS
-PKGS = authz builtin manifest policy query template
 .PHONY: test
-test: test-snapshot $(PKGS) test-xdg
-$(PKGS):
+test: test-snapshot
 	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/app/tests/$@/... $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... github.com/aserto-dev/topaz/pkg/app/tests/$@/...;
-
-.PHONY: test-xdg
-test-xdg:
-	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/cli/xdg/... $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... github.com/adrg/xdg/...;
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... ./...
 
 .PHONY: write-version
 write-version:

@@ -1,3 +1,5 @@
+version: 2
+
 project_name: topaz
 
 env:
@@ -55,7 +57,7 @@ builds:
 
 snapshot:
   # https://goreleaser.com/customization/snapshots/
-  name_template: "test-{{ .ShortCommit }}"
+  version_template: "test-{{ .ShortCommit }}"
 
 dockers:
   # https://goreleaser.com/customization/docker/
