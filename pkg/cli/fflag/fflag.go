@@ -20,9 +20,9 @@ const (
 	Prompter
 )
 
-var flags = map[int64]string{
-	int64(Editor):   "editor",
-	int64(Prompter): "prompter",
+var flags = map[uint64]string{
+	uint64(Editor):   "editor",
+	uint64(Prompter): "prompter",
 }
 
 var (
