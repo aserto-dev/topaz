@@ -171,8 +171,9 @@ jobs:
         run: exit 1
       -
         name: Setup syft
-        run: |
-          brew install syft
+        uses: anchore/sbom-action/download-syft@v0
+        with:
+          syft-version: ${{ env.SYFT_VERSION }}
       -
         name: Push image to GitHub Container Registry
         uses: goreleaser/goreleaser-action@v6
@@ -234,8 +235,9 @@ jobs:
           ssh-add $HOME/.ssh/id_rsa
       -
         name: Setup syft
-        run: |
-          brew install syft
+        uses: anchore/sbom-action/download-syft@v0
+        with:
+          syft-version: ${{ env.SYFT_VERSION }}
       -
         name: Release
         uses: goreleaser/goreleaser-action@v6
