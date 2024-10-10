@@ -16,11 +16,12 @@ EXT_DIR            := ./.ext
 EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
+GO_VER             := 1.23
 VAULT_VER	         := 1.8.12
 SVU_VER 	         := 1.12.0
 GOTESTSUM_VER      := 1.11.0
-GOLANGCI-LINT_VER  := 1.56.2
-GORELEASER_VER     := 1.24.0
+GOLANGCI-LINT_VER  := 1.61.0
+GORELEASER_VER     := 2.3.2
 WIRE_VER	         := 0.6.0
 BUF_VER            := 1.34.0
 CHECK2DECISION_VER := 0.1.0
@@ -41,8 +42,9 @@ deps: info install-vault install-buf install-svu install-goreleaser install-gola
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: build
-build:
+build: 
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@(go env GOVERSION | grep "go${GO_VER}") || (echo "go version check failed expected go${GO_VER} got $$(go env GOVERSION)"; exit 1)
 	@${EXT_BIN_DIR}/goreleaser build --clean --snapshot --single-target
 
 .PHONY: dev-release

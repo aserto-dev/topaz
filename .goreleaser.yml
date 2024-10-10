@@ -1,3 +1,5 @@
+version: 2
+
 project_name: topaz
 
 env:
@@ -99,7 +101,7 @@ checksum:
 
 snapshot:
   # https://goreleaser.com/customization/snapshots/
-  name_template: "{{ incpatch .Version }}-{{ .ShortCommit }}{{ if .IsGitDirty }}-dirty{{ end }}"
+  version_template: "{{ incpatch .Version }}-{{ .ShortCommit }}{{ if .IsGitDirty }}-dirty{{ end }}"
 
 source:
   # https://goreleaser.com/customization/source/

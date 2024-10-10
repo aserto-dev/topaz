@@ -27,7 +27,7 @@ import (
 const test = "Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube Kube"
 
 func TestWordWrapWriter(t *testing.T) {
-	testcases := map[string]struct {
+	testCases := map[string]struct {
 		input    string
 		maxWidth uint
 	}{
@@ -36,7 +36,7 @@ func TestWordWrapWriter(t *testing.T) {
 		"max 120":  {input: test, maxWidth: 120},
 		"max 5000": {input: test, maxWidth: 5000},
 	}
-	for k, tc := range testcases {
+	for k, tc := range testCases {
 		b := bytes.NewBufferString("")
 		w := term.NewWordWrapWriter(b, tc.maxWidth)
 		_, err := w.Write([]byte(tc.input))
@@ -51,7 +51,7 @@ func TestWordWrapWriter(t *testing.T) {
 			t.Errorf("%s: Unexpectedly short string, got %d wanted at least %d chars: %q", k, len(result), len(tc.input), result)
 		}
 		for _, line := range strings.Split(result, "\n") {
-			if len(line) > int(tc.maxWidth) {
+			if uint(len(line)) > tc.maxWidth {
 				t.Errorf("%s: Every line must be at most %d chars long, got %d: %q", k, tc.maxWidth, len(line), line)
 			}
 		}
@@ -64,16 +64,16 @@ func TestWordWrapWriter(t *testing.T) {
 }
 
 func TestMaxWidthWriter(t *testing.T) {
-	testcases := map[string]struct {
+	testCases := map[string]struct {
 		input    string
-		maxWidth uint
+		maxWidth int
 	}{
 		"max 10":   {input: test, maxWidth: 10},
 		"max 80":   {input: test, maxWidth: 80},
 		"max 120":  {input: test, maxWidth: 120},
 		"max 5000": {input: test, maxWidth: 5000},
 	}
-	for k, tc := range testcases {
+	for k, tc := range testCases {
 		b := bytes.NewBufferString("")
 		w := term.NewMaxWidthWriter(b, tc.maxWidth)
 		_, err := w.Write([]byte(tc.input))
@@ -89,10 +89,10 @@ func TestMaxWidthWriter(t *testing.T) {
 		}
 		lines := strings.Split(result, "\n")
 		for i, line := range lines {
-			if len(line) > int(tc.maxWidth) {
+			if len(line) > tc.maxWidth {
 				t.Errorf("%s: Every line must be at most %d chars long, got %d: %q", k, tc.maxWidth, len(line), line)
 			}
-			if i < len(lines)-1 && len(line) != int(tc.maxWidth) {
+			if i < len(lines)-1 && len(line) != tc.maxWidth {
 				t.Errorf("%s: Lines except the last one are expected to be exactly %d chars long, got %d: %q", k, tc.maxWidth, len(line), line)
 			}
 		}

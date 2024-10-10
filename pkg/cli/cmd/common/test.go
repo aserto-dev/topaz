@@ -138,7 +138,7 @@ func PrintDesc(descFlag, description string, result *CheckResult, expected bool)
 
 func NewTestResults(assertions []json.RawMessage) *TestResults {
 	return &TestResults{
-		total:   int32(len(assertions)),
+		total:   int32(len(assertions)), //nolint: gosec // G115: integer overflow conversion int -> int32.
 		passed:  0,
 		failed:  0,
 		errored: 0,

@@ -142,10 +142,10 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 
 		case protoreflect.EnumKind:
 			options := []string{}
-			lookup := map[string]int{}
+			lookup := map[string]int32{}
 			for v := 0; v < fields.Get(i).Enum().Values().Len(); v++ {
 				name := string(fields.Get(i).Enum().Values().Get(v).Name())
-				number := int(fields.Get(i).Enum().Values().Get(v).Number())
+				number := int32(fields.Get(i).Enum().Values().Get(v).Number())
 				options = append(options, name)
 				lookup[name] = number
 			}
@@ -233,13 +233,6 @@ func (f *prompt) setField(msg protoreflect.Message, fd protoreflect.FieldDescrip
 	return nil
 }
 
-func max(rhs, lhs int) int {
-	if rhs < lhs {
-		return lhs
-	}
-	return rhs
-}
-
 func (f *prompt) setProps(msg protoreflect.Message, fd protoreflect.FieldDescriptor, value string) error {
 	pbs := &structpb.Struct{Fields: make(map[string]*structpb.Value)}
 	if err := pbs.UnmarshalJSON([]byte(value)); err != nil {
@@ -259,7 +252,7 @@ func (f *prompt) setTimestamp(msg protoreflect.Message, fd protoreflect.FieldDes
 	return nil
 }
 
-func (f *prompt) setEnum(msg protoreflect.Message, fd protoreflect.FieldDescriptor, index int) error {
+func (f *prompt) setEnum(msg protoreflect.Message, fd protoreflect.FieldDescriptor, index int32) error {
 	msg.Set(fd, protoreflect.ValueOfEnum(protoreflect.EnumNumber(index)))
 	return nil
 }
