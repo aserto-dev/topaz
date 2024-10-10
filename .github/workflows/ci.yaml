@@ -170,6 +170,10 @@ jobs:
         if: steps.wait-for-tests.outputs.conclusion != 'success'
         run: exit 1
       -
+        name: Setup syft
+        run: |
+          brew install syft
+      -
         name: Push image to GitHub Container Registry
         uses: goreleaser/goreleaser-action@v6
         with:
