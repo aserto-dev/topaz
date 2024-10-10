@@ -1,12 +1,12 @@
 package configure
 
 import (
-	"fmt"
 	"regexp"
 
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
+	"github.com/pkg/errors"
 )
 
 type ConfigCmd struct {
@@ -25,11 +25,11 @@ type ConfigName string
 
 func (c ConfigName) AfterApply(ctx *kong.Context) error {
 	if string(c) == "" {
-		return fmt.Errorf("no configuration name value provided")
+		return errors.Errorf("no configuration name value provided")
 	}
 
 	if !restrictedNamePattern.MatchString(string(c)) {
-		return fmt.Errorf("configuration name is invalid, must match pattern %q", restrictedNamePattern.String())
+		return errors.Errorf("configuration name is invalid, must match pattern %q", restrictedNamePattern.String())
 	}
 
 	return nil

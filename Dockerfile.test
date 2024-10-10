@@ -1,0 +1,18 @@
+FROM alpine
+
+ARG GOARCH
+
+RUN apk add --no-cache bash tzdata ca-certificates
+
+RUN mkdir /config && \
+    mkdir /certs && \
+    mkdir /db && \
+    mkdir /decisions
+VOLUME ["/config", "/certs", "/db", "/decisions"]
+
+WORKDIR /app
+
+COPY dist/topaz*_linux_${GOARCH}/topaz* /app/
+
+ENTRYPOINT ["./topazd"]
+CMD ["run", "-c", "/config/config.yaml"]

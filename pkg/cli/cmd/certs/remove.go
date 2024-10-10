@@ -9,6 +9,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/table"
+	"github.com/pkg/errors"
 )
 
 type RemoveCertFileCmd struct {
@@ -18,7 +19,7 @@ type RemoveCertFileCmd struct {
 func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
-		return fmt.Errorf("directory %s not found", certsDir)
+		return errors.Errorf("directory %s not found", certsDir)
 	}
 
 	c.Con().Info().Msg("certs directory: %s", certsDir)

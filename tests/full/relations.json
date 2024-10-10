@@ -1,7 +1,0 @@
-{
-    "relations": [
-        {"object": {"type": "document", "key": "someresource"}, "relation": "reader", "subject": {"type": "user", "key": "somegal"}},
-        {"object": {"type": "document", "key": "someresource"}, "relation": "writer", "subject": {"type": "user", "key": "anotherguy"}},
-        {"object": {"type": "document", "key": "anotherresource"}, "relation": "writer", "subject": {"type": "user", "key": "somegal"}}
-    ]
-}

@@ -692,7 +692,7 @@ func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPol
 
 	if policy == nil {
 		// TODO: add cerr
-		return response, fmt.Errorf("policy with ID [%s] not found", req.Id)
+		return response, errors.Errorf("policy with ID [%s] not found", req.Id)
 	}
 
 	module, err := policyToModule(*policy)

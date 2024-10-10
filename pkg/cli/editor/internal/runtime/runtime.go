@@ -24,6 +24,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
@@ -168,7 +169,7 @@ func HandleError(err error) {
 //
 // In contrast to HandleError, passing nil for the error is still going to
 // trigger a log entry. Don't construct a new error or wrap an error
-// with fmt.Errorf. Instead, add additional information via the mssage
+// with errors.Errorf. Instead, add additional information via the message
 // and key/value pairs.
 //
 // This variant should be used instead of HandleError because it supports
@@ -239,7 +240,7 @@ func RecoverFromPanic(err *error) { //nolint: gocritic
 		stacktrace := make([]byte, size)
 		stacktrace = stacktrace[:runtime.Stack(stacktrace, false)]
 
-		*err = fmt.Errorf(
+		*err = errors.Errorf(
 			"recovered from panic %q. (err=%v) Call stack:\n%s",
 			r,
 			*err,

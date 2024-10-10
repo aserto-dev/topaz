@@ -195,7 +195,7 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 
 	case api.IdentityType_IDENTITY_TYPE_SUB:
 		if identityContext.Identity == "" {
-			return nil, fmt.Errorf("identity value not set (type: %s)", identityContext.Type.String())
+			return nil, errors.Errorf("identity value not set (type: %s)", identityContext.Type.String())
 		}
 
 		user, err := s.getUserFromIdentity(ctx, identityContext.Identity)
@@ -206,7 +206,7 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 		return user, nil
 	case api.IdentityType_IDENTITY_TYPE_JWT:
 		if identityContext.Identity == "" {
-			return nil, fmt.Errorf("identity value not set (type: %s)", identityContext.Type.String())
+			return nil, errors.Errorf("identity value not set (type: %s)", identityContext.Type.String())
 		}
 
 		user, err := s.getUserFromJWT(ctx, identityContext.Identity)
@@ -217,13 +217,13 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 		return user, nil
 	case api.IdentityType_IDENTITY_TYPE_MANUAL:
 		if identityContext.Identity == "" {
-			return nil, fmt.Errorf("identity value not set (type: %s)", identityContext.Type.String())
+			return nil, errors.Errorf("identity value not set (type: %s)", identityContext.Type.String())
 		}
 
 		// the resulting user object will be an empty object.
 		return pb.NewStruct(), nil
 	default:
-		return nil, fmt.Errorf("invalid identity type %s", identityContext.Type.String())
+		return nil, errors.Errorf("invalid identity type %s", identityContext.Type.String())
 	}
 }
 

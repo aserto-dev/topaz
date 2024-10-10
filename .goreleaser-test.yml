@@ -1,0 +1,107 @@
+version: 2
+
+project_name: topaz
+
+env:
+  # https://goreleaser.com/customization/env/
+  - REGISTRY=ghcr.io
+  - ORG=aserto-dev
+  - REPO=topaz
+  - DESCRIPTION="Topaz Authorization Service"
+  - LICENSE=Apache-2.0
+
+before:
+  # https://goreleaser.com/customization/hooks/
+  hooks:
+
+# https://goreleaser.com/customization/dist/
+dist: test
+
+builds:
+  # https://goreleaser.com/customization/build/
+  - id: topazd
+    main: ./cmd/topazd
+    binary: topazd
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: topaz
+    main: ./cmd/topaz
+    binary: topaz
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+snapshot:
+  # https://goreleaser.com/customization/snapshots/
+  version_template: "test-{{ .ShortCommit }}"
+
+dockers:
+  # https://goreleaser.com/customization/docker/
+  - use: buildx
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-amd64"
+    skip_push: false
+    dockerfile: Dockerfile.goreleaser
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      - "--label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}"
+      - "--label=org.opencontainers.image.licenses={{ .Env.LICENSE }}"
+
+  - use: buildx
+    goos: linux
+    goarch: arm64
+    image_templates:
+      - &arm64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-arm64"
+    skip_push: false
+    dockerfile: Dockerfile.goreleaser
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      - "--label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}"
+      - "--label=org.opencontainers.image.licenses={{ .Env.LICENSE }}"
+
+docker_manifests:
+  # https://goreleaser.com/customization/docker_manifest/
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:latest"
+    image_templates: [*amd64-image, *arm64-image]
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}"
+    image_templates: [*amd64-image, *arm64-image]
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}"
+    image_templates: [*amd64-image, *arm64-image]
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+    image_templates: [*amd64-image, *arm64-image]

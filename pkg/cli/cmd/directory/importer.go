@@ -1,7 +1,6 @@
 package directory
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -26,7 +25,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 		if !fi.IsDir() {
-			return fmt.Errorf("--directory argument %q is not a directory", cmd.Directory)
+			return errors.Errorf("--directory argument %q is not a directory", cmd.Directory)
 		}
 	}
 

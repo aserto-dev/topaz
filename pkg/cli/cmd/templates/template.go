@@ -203,3 +203,7 @@ func (i *tmplRef) getTemplate() (*template, error) {
 
 	return &tmpl, nil
 }
+
+func GetTemplateFromFile(file string) (*template, error) {
+	return getTemplateFromFile(file)
+}

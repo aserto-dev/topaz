@@ -17,7 +17,7 @@ type DeleteConfigCmd struct {
 
 func (cmd *DeleteConfigCmd) Run(c *cc.CommonCtx) error {
 	if c.CheckRunStatus(cc.ContainerName(fmt.Sprintf("%s.yaml", cmd.Name)), cc.StatusRunning) {
-		return fmt.Errorf("configuration %q is running, use 'topaz stop' to stop, before deleting", cmd.Name)
+		return errors.Errorf("configuration %q is running, use 'topaz stop' to stop, before deleting", cmd.Name)
 	}
 
 	c.Con().Info().Msg("Removing configuration %q", cmd.Name)

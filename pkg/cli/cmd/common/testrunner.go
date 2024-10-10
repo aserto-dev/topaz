@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/csv"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -17,6 +16,7 @@ import (
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -135,19 +135,19 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 
 		expected, ok := GetBool(&msg, Expected)
 		if !ok {
-			return fmt.Errorf("no expected outcome of assertion defined")
+			return errors.Errorf("no expected outcome of assertion defined")
 		}
 
 		description, _ := GetString(&msg, Description)
 
 		checkType := GetCheckType(&msg)
 		if checkType == CheckUnknown {
-			return fmt.Errorf("unknown check type")
+			return errors.Errorf("unknown check type")
 		}
 
 		reqVersion := getReqVersion(msg.Fields[CheckTypeMapStr[checkType]])
 		if reqVersion == 0 {
-			return fmt.Errorf("unknown request version")
+			return errors.Errorf("unknown request version")
 		}
 
 		var result *CheckResult
@@ -199,6 +199,10 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 
 	if runner.cmd.Summary {
 		runner.results.PrintSummary(os.Stdout)
+	}
+
+	if runner.results.failed != 0 || runner.results.errored != 0 {
+		return errors.Errorf("%d tests failed, %d tests errored", runner.results.failed, runner.results.errored)
 	}
 
 	return nil

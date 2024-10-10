@@ -2,26 +2,87 @@ package authz_test
 
 import (
 	"context"
+	"os"
+	"runtime"
 	"testing"
+	"time"
 
-	authz2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	authz_api_v2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
-	atesting "github.com/aserto-dev/topaz/pkg/testing"
+	client "github.com/aserto-dev/go-aserto"
+	azc "github.com/aserto-dev/go-aserto/az"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	assets_test "github.com/aserto-dev/topaz/assets"
+	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-func TestWithMissingIdentity(t *testing.T) {
-	harness := atesting.SetupOnline(t, func(cfg *config.Config) {
-		cfg.Edge.DBPath = atesting.AssetAcmeDBFilePath()
-	})
-	t.Cleanup(harness.Cleanup)
+var addr string
 
-	client := harness.CreateGRPCClient()
+func TestMain(m *testing.M) {
+	rc := 0
+	defer func() {
+		os.Exit(rc)
+	}()
+
+	ctx := context.Background()
+
+	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
+		Image:        "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		Env: map[string]string{
+			"TOPAZ_CERTS_DIR":     "/certs",
+			"TOPAZ_DB_DIR":        "/data",
+			"TOPAZ_DECISIONS_DIR": "/decisions",
+		},
+		Files: []testcontainers.ContainerFile{
+			{
+				Reader:            assets_test.PeoplefinderConfigReader(),
+				ContainerFilePath: "/config/config.yaml",
+				FileMode:          0x700,
+			},
+			{
+				Reader:            assets_test.AcmecorpReader(),
+				ContainerFilePath: "/data/test.db",
+				FileMode:          0x700,
+			},
+		},
+		WaitingFor: wait.ForAll(
+			wait.ForExposedPort(),
+			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
+		).WithStartupTimeoutDefault(120 * time.Second).WithDeadline(360 * time.Second),
+	})
+	if err != nil {
+		rc = 99
+		return
+	}
+
+	defer func() {
+		if err := h.Close(ctx); err != nil {
+			rc = 100
+		}
+	}()
+
+	addr = h.AddrGRPC(ctx)
+
+	rc = m.Run()
+}
+
+func TestWithMissingIdentity(t *testing.T) {
+	opts := []client.ConnectionOption{
+		client.WithAddr(addr),
+		client.WithInsecure(true),
+	}
+
+	azClient, err := azc.New(opts...)
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = azClient.Close() })
 
 	ctx, cancel := context.WithCancel(context.Background())
 	t.Cleanup(cancel)
@@ -30,10 +91,10 @@ func TestWithMissingIdentity(t *testing.T) {
 		name string
 		test func(*testing.T)
 	}{
-		{"TestDecisionTreeWithMissingIdentity", DecisionTreeWithMissingIdentity(ctx, client)},
-		{"TestDecisionTreeWithUserID", DecisionTreeWithUserID(ctx, client)},
-		{"TestIsWithMissingIdentity", IsWithMissingIdentity(ctx, client)},
-		{"TestQueryWithMissingIdentity", QueryWithMissingIdentity(ctx, client)},
+		{"TestDecisionTreeWithMissingIdentity", DecisionTreeWithMissingIdentity(ctx, azClient)},
+		{"TestDecisionTreeWithUserID", DecisionTreeWithUserID(ctx, azClient)},
+		{"TestIsWithMissingIdentity", IsWithMissingIdentity(ctx, azClient)},
+		{"TestQueryWithMissingIdentity", QueryWithMissingIdentity(ctx, azClient)},
 	}
 
 	for _, testCase := range tests {
@@ -41,18 +102,18 @@ func TestWithMissingIdentity(t *testing.T) {
 	}
 }
 
-func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient) func(*testing.T) {
+func DecisionTreeWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
-		respX, errX := client.DecisionTree(ctx, &authz2.DecisionTreeRequest{
-			PolicyContext: &authz_api_v2.PolicyContext{
+		respX, errX := azClient.DecisionTree(ctx, &authorizer.DecisionTreeRequest{
+			PolicyContext: &api.PolicyContext{
 				Path:      "",
 				Decisions: []string{},
 			},
-			IdentityContext: &authz_api_v2.IdentityContext{
+			IdentityContext: &api.IdentityContext{
 				Identity: "noexisting-user@acmecorp.com",
-				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
+				Type:     api.IdentityType_IDENTITY_TYPE_SUB,
 			},
-			Options:         &authz2.DecisionTreeOptions{},
+			Options:         &authorizer.DecisionTreeOptions{},
 			ResourceContext: &structpb.Struct{},
 		})
 
@@ -69,18 +130,18 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, client authz2.Authoriz
 	}
 }
 
-func DecisionTreeWithUserID(ctx context.Context, client authz2.AuthorizerClient) func(*testing.T) {
+func DecisionTreeWithUserID(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
-		respX, errX := client.DecisionTree(ctx, &authz2.DecisionTreeRequest{
-			PolicyContext: &authz_api_v2.PolicyContext{
+		respX, errX := azClient.DecisionTree(ctx, &authorizer.DecisionTreeRequest{
+			PolicyContext: &api.PolicyContext{
 				Path:      "peoplefinder.GET",
 				Decisions: []string{"allowed"},
 			},
-			IdentityContext: &authz_api_v2.IdentityContext{
+			IdentityContext: &api.IdentityContext{
 				Identity: "CiQyYmZhYTU1Mi1kOWE1LTQxZTktYTZjMy01YmU2MmI0NDMzYzgSBWxvY2Fs", // April Stewart
-				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
+				Type:     api.IdentityType_IDENTITY_TYPE_SUB,
 			},
-			Options:         &authz2.DecisionTreeOptions{},
+			Options:         &authorizer.DecisionTreeOptions{},
 			ResourceContext: &structpb.Struct{},
 		})
 
@@ -97,16 +158,16 @@ func DecisionTreeWithUserID(ctx context.Context, client authz2.AuthorizerClient)
 	}
 }
 
-func IsWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient) func(*testing.T) {
+func IsWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
-		respX, errX := client.Is(ctx, &authz2.IsRequest{
-			PolicyContext: &authz_api_v2.PolicyContext{
+		respX, errX := azClient.Is(ctx, &authorizer.IsRequest{
+			PolicyContext: &api.PolicyContext{
 				Path:      "peoplefinder.POST.api.users.__id",
 				Decisions: []string{"allowed"},
 			},
-			IdentityContext: &authz_api_v2.IdentityContext{
+			IdentityContext: &api.IdentityContext{
 				Identity: "noexisting-user@acmecorp.com",
-				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
+				Type:     api.IdentityType_IDENTITY_TYPE_SUB,
 			},
 			ResourceContext: &structpb.Struct{},
 		})
@@ -124,22 +185,22 @@ func IsWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient) 
 	}
 }
 
-func QueryWithMissingIdentity(ctx context.Context, client authz2.AuthorizerClient) func(*testing.T) {
+func QueryWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
-		respX, errX := client.Query(ctx, &authz2.QueryRequest{
-			IdentityContext: &authz_api_v2.IdentityContext{
+		respX, errX := azClient.Query(ctx, &authorizer.QueryRequest{
+			IdentityContext: &api.IdentityContext{
 				Identity: "noexisting-user@acmecorp.com",
-				Type:     authz_api_v2.IdentityType_IDENTITY_TYPE_SUB,
+				Type:     api.IdentityType_IDENTITY_TYPE_SUB,
 			},
 			Query: "x = true",
 			Input: "",
-			Options: &authz2.QueryOptions{
+			Options: &authorizer.QueryOptions{
 				Metrics:      false,
 				Instrument:   false,
-				Trace:        authz2.TraceLevel_TRACE_LEVEL_OFF,
+				Trace:        authorizer.TraceLevel_TRACE_LEVEL_OFF,
 				TraceSummary: false,
 			},
-			PolicyContext: &authz_api_v2.PolicyContext{
+			PolicyContext: &api.PolicyContext{
 				Path:      "",
 				Decisions: []string{},
 			},

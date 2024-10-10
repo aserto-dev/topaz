@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/editor/internal/term"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -110,7 +111,7 @@ func (e Editor) args(path string) []string {
 // SIGQUIT, SIGTERM, and SIGINT will all be trapped.
 func (e Editor) Launch(path string) error {
 	if len(e.Args) == 0 {
-		return fmt.Errorf("no editor defined, can't open %s", path)
+		return errors.Errorf("no editor defined, can't open %s", path)
 	}
 	abs, err := filepath.Abs(path)
 	if err != nil {
@@ -125,10 +126,10 @@ func (e Editor) Launch(path string) error {
 	if err := (term.TTY{In: os.Stdin, TryDev: true}).Safe(cmd.Run); err != nil {
 		if err, ok := err.(*exec.Error); ok { //nolint:gosec
 			if err.Err == exec.ErrNotFound {
-				return fmt.Errorf("unable to launch the editor %q", strings.Join(e.Args, " "))
+				return errors.Errorf("unable to launch the editor %q", strings.Join(e.Args, " "))
 			}
 		}
-		return fmt.Errorf("there was a problem with the editor %q", strings.Join(e.Args, " "))
+		return errors.Errorf("there was a problem with the editor %q", strings.Join(e.Args, " "))
 	}
 	return nil
 }

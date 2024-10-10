@@ -2,7 +2,6 @@ package directory
 
 import (
 	"encoding/json"
-	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -28,14 +27,12 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 			files = append(files, expanded...)
 		}
 	}
-	if len(files) == 0 {
-		return fmt.Errorf("no input file(s)")
-	}
 
 	runner, err := common.NewDirectoryTestRunner(
 		c,
 		&common.TestExecCmd{
 			Files:   files,
+			Stdin:   cmd.Stdin,
 			Summary: cmd.Summary,
 			Format:  cmd.Format,
 			Desc:    cmd.Desc,

@@ -15,6 +15,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/topaz"
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
 
@@ -54,7 +55,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	c.Config.Active.Config = tmpl.Name
 	if cmd.ConfigName != "" {
 		if !common.RestrictedNamePattern.MatchString(cmd.ConfigName) {
-			return fmt.Errorf("%s must match pattern %s", cmd.Name, common.RestrictedNamePattern.String())
+			return errors.Errorf("%s must match pattern %s", cmd.Name, common.RestrictedNamePattern.String())
 		}
 		fileName = fmt.Sprintf("%s.yaml", cmd.ConfigName)
 		c.Config.Active.Config = cmd.ConfigName
@@ -114,12 +115,12 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 	addr, _ := cfg.HealthService()
 	if health, err := cc.ServiceHealthStatus(c.Context, addr, "model"); err != nil {
-		return fmt.Errorf("unable to check health status: %w", err)
+		return errors.Wrapf(err, "unable to check health status")
 	} else if !health {
-		return fmt.Errorf("gRPC endpoint not SERVING")
+		return errors.Errorf("gRPC endpoint not SERVING")
 	}
 	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
-		return fmt.Errorf("model service not configured")
+		return errors.Errorf("model service not configured")
 	} else {
 		cmd.Config.Host = model.GRPC.ListenAddress
 	}

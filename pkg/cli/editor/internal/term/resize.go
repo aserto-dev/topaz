@@ -17,11 +17,10 @@ limitations under the License.
 package term
 
 import (
-	"fmt"
-
 	"github.com/aserto-dev/topaz/pkg/cli/editor/internal/remotecommand"
 	"github.com/aserto-dev/topaz/pkg/cli/editor/internal/runtime"
 	"github.com/moby/term"
+	"github.com/pkg/errors"
 )
 
 // GetSize returns the current size of the user's terminal. If it isn't a terminal,
@@ -38,7 +37,7 @@ func (t TTY) GetSize() *remotecommand.TerminalSize {
 func GetSize(fd uintptr) *remotecommand.TerminalSize {
 	winsize, err := term.GetWinsize(fd)
 	if err != nil {
-		runtime.HandleError(fmt.Errorf("unable to get terminal size: %v", err))
+		runtime.HandleError(errors.Errorf("unable to get terminal size: %v", err))
 	}
 
 	return &remotecommand.TerminalSize{Width: winsize.Width, Height: winsize.Height}

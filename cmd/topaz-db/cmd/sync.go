@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/datasync"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
@@ -24,7 +24,7 @@ func (cmd *SyncCmd) Run(ctx context.Context) error {
 	for _, m := range cmd.Mode {
 		mode := datasync.StrToMode(strings.ToLower(m))
 		if mode == datasync.Unknown {
-			return fmt.Errorf("unknown mode: %s", m)
+			return errors.Errorf("unknown mode: %s", m)
 		}
 		opts = append(opts, datasync.WithMode(mode))
 	}

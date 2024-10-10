@@ -25,6 +25,7 @@ GORELEASER_VER     := 2.3.2
 WIRE_VER	         := 0.6.0
 BUF_VER            := 1.34.0
 CHECK2DECISION_VER := 0.1.0
+SYFT_VER           := 1.13.0
 
 BUF_USER           := $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_USER kv/buf.build)
 BUF_TOKEN          := $(shell ${EXT_BIN_DIR}/vault kv get -field ASERTO_BUF_TOKEN kv/buf.build)
@@ -37,7 +38,7 @@ RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu)
 .DEFAULT_GOAL      := build
 
 .PHONY: deps
-deps: info install-vault install-buf install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire install-check2decision
+deps: info install-vault install-buf install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire install-check2decision install-syft
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: build
@@ -71,18 +72,15 @@ lint:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/golangci-lint run --config ${PWD}/.golangci.yaml
 
-# github.com/aserto-dev/topaz/pkg/app/tests/$PKGS
-PKGS = authz builtin manifest policy query
-.PHONY: test
-test: $(PKGS) test-xdg
-$(PKGS):
-	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/app/tests/$@/... $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... github.com/aserto-dev/topaz/pkg/app/tests/$@/...;
+.PHONY: test-snapshot
+test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot
 
-.PHONY: test-xdg
-test-xdg:
-	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/cli/xdg/... $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... github.com/adrg/xdg/...;
+.PHONY: test
+test: test-snapshot
+	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/app/tests/$@/... $(NO_COLOR)"
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... ./...
 
 .PHONY: write-version
 write-version:
@@ -235,6 +233,14 @@ install-check2decision: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@unzip -o ${EXT_TMP_DIR}/check2decision.zip check2decision -d ${EXT_BIN_DIR}/  &> /dev/null
 	@chmod +x ${EXT_BIN_DIR}/check2decision
 	@${EXT_BIN_DIR}/check2decision --version 
+
+.PHONY: install-syft
+install-syft: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@gh release download v${SYFT_VER} --repo https://github.com/anchore/syft --pattern "syft_${SYFT_VER}_${GOOS}_${GOARCH}.tar.gz" --output "${EXT_TMP_DIR}/syft.tar.gz" --clobber
+	@tar -xvf ${EXT_TMP_DIR}/syft.tar.gz --directory ${EXT_BIN_DIR} syft &> /dev/null
+	@chmod +x ${EXT_BIN_DIR}/syft
+	@${EXT_BIN_DIR}/syft --version 
 
 .PHONY: clean
 clean:
