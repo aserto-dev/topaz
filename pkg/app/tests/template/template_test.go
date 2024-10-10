@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"testing"
+	"time"
 
 	assets_test "github.com/aserto-dev/topaz/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
@@ -47,8 +48,10 @@ func TestMain(m *testing.M) {
 				FileMode:          0x700,
 			},
 		},
-
-		WaitingFor: wait.ForExposedPort(),
+		WaitingFor: wait.ForAll(
+			wait.ForExposedPort(),
+			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
+		).WithStartupTimeoutDefault(120 * time.Second).WithDeadline(360 * time.Second),
 	})
 	if err != nil {
 		rc = 99

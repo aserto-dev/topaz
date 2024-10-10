@@ -8,6 +8,7 @@ import (
 	"path"
 	"runtime"
 	"testing"
+	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	dsc "github.com/aserto-dev/go-aserto/ds/v3"
@@ -46,8 +47,10 @@ func TestMain(m *testing.M) {
 				FileMode:          0x700,
 			},
 		},
-
-		WaitingFor: wait.ForExposedPort(),
+		WaitingFor: wait.ForAll(
+			wait.ForExposedPort(),
+			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
+		).WithStartupTimeoutDefault(120 * time.Second).WithDeadline(360 * time.Second),
 	})
 	if err != nil {
 		rc = 99

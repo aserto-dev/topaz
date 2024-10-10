@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 	"testing"
+	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	azc "github.com/aserto-dev/go-aserto/az"
@@ -29,7 +30,7 @@ func TestMain(m *testing.M) {
 	ctx := context.Background()
 	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
 		Image:        "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
-		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		ExposedPorts: []string{"9292/tcp", "9393/tcp", "9494/tcp", "9595/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
 			"TOPAZ_DB_DIR":        "/data",
@@ -47,8 +48,10 @@ func TestMain(m *testing.M) {
 				FileMode:          0x700,
 			},
 		},
-
-		WaitingFor: wait.ForExposedPort(),
+		WaitingFor: wait.ForAll(
+			wait.ForExposedPort(),
+			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
+		).WithStartupTimeoutDefault(120 * time.Second).WithDeadline(360 * time.Second),
 	})
 	if err != nil {
 		rc = 99
