@@ -8,7 +8,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
-	"github.com/pkg/errors"
 )
 
 type TestCmd struct {
@@ -28,14 +27,12 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 			files = append(files, expanded...)
 		}
 	}
-	if len(files) == 0 {
-		return errors.Errorf("no input file(s)")
-	}
 
 	runner, err := common.NewDirectoryTestRunner(
 		c,
 		&common.TestExecCmd{
 			Files:   files,
+			Stdin:   cmd.Stdin,
 			Summary: cmd.Summary,
 			Format:  cmd.Format,
 			Desc:    cmd.Desc,
