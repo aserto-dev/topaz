@@ -210,7 +210,7 @@ sboms:
   # https://goreleaser.com/customization/sbom/
   - id: default
     documents:
-      - "${artifact}.spdx.sbom.json"
+      - "${artifact}-{{.Os}}-{{.Arch}}.spdx.sbom.json"
     cmd: syft
     args:
       - "$artifact"
