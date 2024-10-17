@@ -1,0 +1,34 @@
+{
+    "assertions": [
+      {
+        "check": {
+          "object_type": "employee",
+          "object_id": "daniel",
+          "relation": "can_manage",
+          "subject_type": "employee",
+          "subject_id": "matt"
+        },
+        "expected": true
+      },
+      {
+        "check": {
+          "object_type": "report",
+          "object_id": "daniel-chair1",
+          "relation": "can_approve",
+          "subject_type": "employee",
+          "subject_id": "emily"
+        },
+        "expected": true
+      },
+      {
+        "check": {
+          "object_type": "report",
+          "object_id": "daniel-chair1",
+          "relation": "approver",
+          "subject_type": "employee",
+          "subject_id": "daniel"
+        },
+        "expected": false
+      }
+    ]
+  }
