@@ -7,7 +7,6 @@ import (
 	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/gerr"
 	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/request"
 	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/tracing"
-	"github.com/aserto-dev/go-edge-ds/pkg/session"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/rs/zerolog"
@@ -25,8 +24,6 @@ func GetMiddlewaresForService(ctx context.Context, cfg *config.Config, logger *z
 		middlewareList = append(middlewareList, authmiddleware)
 	}
 
-	sessionMiddleware := session.HeaderMiddleware{DisableValidation: false}
-
 	// only attach policy instance information if discovery resource is configured.
 	if cfg.OPA.Config.Discovery != nil && cfg.OPA.Config.Discovery.Resource != nil {
 		middlewareList = append(middlewareList, NewInstanceMiddleware(cfg, logger))
@@ -37,7 +34,7 @@ func GetMiddlewaresForService(ctx context.Context, cfg *config.Config, logger *z
 		NewTenantIDMiddleware(cfg),
 		tracing.NewTracingMiddleware(logger),
 		gerr.NewErrorMiddleware(),
-		&sessionMiddleware)
+	)
 
 	var opts []grpc.ServerOption
 	unary, stream := middlewareList.AsGRPCOptions()

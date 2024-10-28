@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 
 	"github.com/aserto-dev/certs"
+	"github.com/aserto-dev/ds/pkg/directory"
 	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
 	builder "github.com/aserto-dev/service-host"

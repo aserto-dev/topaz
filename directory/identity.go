@@ -2,14 +2,14 @@ package directory
 
 import (
 	"context"
-	"errors"
 	"strings"
 
-	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func GetIdentityV2(ctx context.Context, client dsr3.ReaderClient, identity string) (*dsc3.Object, error) {
@@ -22,7 +22,7 @@ func GetIdentityV2(ctx context.Context, client dsr3.ReaderClient, identity strin
 	})
 
 	switch {
-	case err != nil && errors.Is(cerr.UnwrapAsertoError(err), derr.ErrNotFound):
+	case status.Code(err) == codes.NotFound:
 		return nil, aerr.ErrDirectoryObjectNotFound
 	case err != nil:
 		return nil, err
@@ -35,7 +35,7 @@ func GetIdentityV2(ctx context.Context, client dsr3.ReaderClient, identity strin
 	}
 
 	for k, v := range relResp.Objects {
-		if strings.HasPrefix(k, "user:") {
+		if strings.HasPrefix(k, "user.") {
 			return v, nil
 		}
 	}

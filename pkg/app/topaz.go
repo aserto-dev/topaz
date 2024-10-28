@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aserto-dev/ds"
 	cerr "github.com/aserto-dev/errors"
 	client "github.com/aserto-dev/go-aserto"
-	eds "github.com/aserto-dev/go-edge-ds"
 	console "github.com/aserto-dev/go-topaz-ui"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	builder "github.com/aserto-dev/service-host"
@@ -228,7 +228,7 @@ func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 func (e *Topaz) prepareServices() error {
 	// prepare services
 	if e.Configuration.Edge.DBPath != "" {
-		dir, err := eds.New(e.Context, &e.Configuration.Edge, e.Logger)
+		dir, err := ds.New(e.Context, &e.Configuration.Edge, e.Logger)
 		if err != nil {
 			return err
 		}
