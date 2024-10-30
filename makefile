@@ -18,7 +18,7 @@ EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
 GO_VER             := 1.23
 VAULT_VER	         := 1.8.12
-SVU_VER 	         := 1.12.0
+SVU_VER 	         := 2.2.0
 GOTESTSUM_VER      := 1.11.0
 GOLANGCI-LINT_VER  := 1.61.0
 GORELEASER_VER     := 2.3.2
@@ -187,13 +187,13 @@ install-svu: install-svu-${GOOS}
 .PHONY: install-svu-darwin
 install-svu-darwin: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@gh release download --repo https://github.com/caarlos0/svu --pattern "svu_*_darwin_all.tar.gz" --output "${EXT_TMP_DIR}/svu.tar.gz" --clobber
+	@gh release download v${SVU_VER} --repo https://github.com/caarlos0/svu --pattern "svu_${SVU_VER}_darwin_all.tar.gz" --output "${EXT_TMP_DIR}/svu.tar.gz" --clobber
 	@tar -xvf ${EXT_TMP_DIR}/svu.tar.gz --directory ${EXT_BIN_DIR} svu &> /dev/null
 
 .PHONY: install-svu-linux
 install-svu-linux: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@gh release download --repo https://github.com/caarlos0/svu --pattern "svu_*_linux_${GOARCH}.tar.gz" --output "${EXT_TMP_DIR}/svu.tar.gz" --clobber
+	@gh release download v${SVU_VER} --repo https://github.com/caarlos0/svu --pattern "svu_${SVU_VER}_linux_${GOARCH}.tar.gz" --output "${EXT_TMP_DIR}/svu.tar.gz" --clobber
 	@tar -xvf ${EXT_TMP_DIR}/svu.tar.gz --directory ${EXT_BIN_DIR} svu &> /dev/null
 
 .PHONY: install-gotestsum
