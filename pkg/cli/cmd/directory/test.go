@@ -29,7 +29,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	runner, err := common.NewDirectoryTestRunner(
-		c,
+		c.Context,
 		&common.TestExecCmd{
 			Files:   files,
 			Stdin:   cmd.Stdin,

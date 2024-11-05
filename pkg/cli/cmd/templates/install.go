@@ -355,7 +355,7 @@ func (i *tmplInstaller) runTemplateTests() error {
 	}
 
 	runner, err := common.NewTestRunner(
-		i.c,
+		i.c.Context,
 		&common.TestExecCmd{
 			Files:   tests,
 			Stdin:   false,

@@ -34,7 +34,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.Config)
+	dsClient, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return err
 	}

@@ -43,8 +43,8 @@ type TestRunner struct {
 	results  *TestResults
 }
 
-func NewDirectoryTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, dsConfig *dsc.Config) (*TestRunner, error) {
-	dsClient, err := dsc.NewClient(c, dsConfig)
+func NewDirectoryTestRunner(ctx context.Context, cmd *TestExecCmd, dsConfig *dsc.Config) (*TestRunner, error) {
+	dsClient, err := dsc.NewClient(ctx, dsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -55,8 +55,8 @@ func NewDirectoryTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, dsConfig *dsc.Con
 	}, nil
 }
 
-func NewAuthorizerTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Config) (*TestRunner, error) {
-	azClient, err := azc.NewClient(c, azConfig)
+func NewAuthorizerTestRunner(ctx context.Context, cmd *TestExecCmd, azConfig *azc.Config) (*TestRunner, error) {
+	azClient, err := azc.NewClient(ctx, azConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -67,13 +67,13 @@ func NewAuthorizerTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Co
 	}, nil
 }
 
-func NewTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Config, dsConfig *dsc.Config) (*TestRunner, error) {
-	dsClient, err := dsc.NewClient(c, dsConfig)
+func NewTestRunner(ctx context.Context, cmd *TestExecCmd, azConfig *azc.Config, dsConfig *dsc.Config) (*TestRunner, error) {
+	dsClient, err := dsc.NewClient(ctx, dsConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	azClient, err := azc.NewClient(c, azConfig)
+	azClient, err := azc.NewClient(ctx, azConfig)
 	if err != nil {
 		return nil, err
 	}

@@ -10,7 +10,6 @@ import (
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	"github.com/aserto-dev/topaz/pkg/cli/cc"
 
 	"github.com/fullstorydev/grpcurl"
 	"github.com/pkg/errors"
@@ -50,8 +49,8 @@ func New(conn *grpc.ClientConn) *Client {
 	}
 }
 
-func NewClient(c *cc.CommonCtx, cfg *Config) (*Client, error) {
-	conn, err := cfg.Connect(c.Context)
+func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
+	conn, err := cfg.Connect(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -27,7 +27,7 @@ func (cmd *QueryCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	azClient, err := azc.NewClient(c, &cmd.Config)
+	azClient, err := azc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get authorizer client")
 	}

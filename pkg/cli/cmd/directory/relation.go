@@ -28,7 +28,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
+	client, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -91,7 +91,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
+	client, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -158,7 +158,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
+	client, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -220,7 +220,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
+	client, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}

@@ -19,7 +19,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.Config)
+	dsClient, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return err
 	}

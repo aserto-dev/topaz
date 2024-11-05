@@ -22,7 +22,7 @@ func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
 	objectsFile := filepath.Join(cmd.Directory, "objects.json")
 	relationsFile := filepath.Join(cmd.Directory, "relations.json")
 
-	dsClient, err := dsc.NewClient(c, &cmd.Config)
+	dsClient, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return err
 	}

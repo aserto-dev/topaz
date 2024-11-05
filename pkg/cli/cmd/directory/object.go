@@ -61,7 +61,7 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
+	client, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -100,7 +100,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
+	client, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -169,7 +169,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
+	client, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
@@ -233,7 +233,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
+	client, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}

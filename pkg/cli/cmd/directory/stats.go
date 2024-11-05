@@ -23,7 +23,7 @@ type StatsCmd struct {
 }
 
 func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
-	client, err := dsc.NewClient(c, &cmd.Config)
+	client, err := dsc.NewClient(c.Context, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
