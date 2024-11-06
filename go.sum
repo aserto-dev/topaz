@@ -429,8 +429,8 @@ github.com/aserto-dev/errors v0.0.11 h1:CXo+Uwmh09doG2HvL1SC8Fnne8f9VPrGyEQPtogA
 github.com/aserto-dev/errors v0.0.11/go.mod h1:T1YQOtcxpgBriPTn5HXJkD/QukYz5YojYOIzGMo0ybM=
 github.com/aserto-dev/go-aserto v0.32.1 h1:cavSweinomGBIGx6PZxyY1aicfnTG5nnRoeLUa6cgLU=
 github.com/aserto-dev/go-aserto v0.32.1/go.mod h1:62sSMN5NvzoRJL9HjmR5x4mhVPs/7CX3/3Q/MuJQGIA=
-github.com/aserto-dev/go-authorizer v0.20.10 h1:H3IrMG7iti9bF0yWsiIQB7ApC9AaS6Zn7HIcLZlp4Jw=
-github.com/aserto-dev/go-authorizer v0.20.10/go.mod h1:lncQZDlVYhXMsVBYnPvrFhGjtuvmNBJfUkIamy1dtrM=
+github.com/aserto-dev/go-authorizer v0.20.11-0.20241106220059-15f480b0e1ba h1:srKf7DW5YWW7hdu+fs2t/qyenoBOMd8vVhI96/eZMmU=
+github.com/aserto-dev/go-authorizer v0.20.11-0.20241106220059-15f480b0e1ba/go.mod h1:iwVdTU2xOrNW0TZ+UWX+Mn2hgR2Lj1XmKgei0tt5pbY=
 github.com/aserto-dev/go-decision-logs v0.0.4 h1:beu/mhqZ92ovhSIPOv2f4q0Ci7HWNLla/j/x+ZD5eHw=
 github.com/aserto-dev/go-decision-logs v0.0.4/go.mod h1:W50DNu4HPCk+iyI39cP3+KBytdrQYVieSPXh9StuRzA=
 github.com/aserto-dev/go-directory v0.31.14-0.20241106210228-2398d57c8f5f h1:V06S/fWkDyEEg2F7r25IAgL/wHYUiEQIJawukytmWvY=
