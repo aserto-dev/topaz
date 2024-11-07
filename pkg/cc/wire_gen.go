@@ -30,8 +30,8 @@ func buildCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath con
 	if err != nil {
 		return nil, nil, err
 	}
-	generator := certs.NewGenerator(zerologLogger)
-	configConfig, err := config.NewConfig(configPath, zerologLogger, overrides, generator)
+	// generator := certs.NewGenerator(zerologLogger)
+	configConfig, err := config.NewConfig(configPath, zerologLogger, overrides, nil)
 	if err != nil {
 		return nil, nil, err
 	}

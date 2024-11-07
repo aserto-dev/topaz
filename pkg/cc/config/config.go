@@ -249,6 +249,12 @@ func setDefaultCerts(cfg *Config) error {
 		if config.GRPC.ListenAddress == "" {
 			return errors.New(fmt.Sprintf("%s must have a grpc listen address specified", srvName))
 		}
+
+		if config.GRPC.Certs.TLSCertPath == "" {
+			fmt.Fprintf(os.Stderr, "SKIPPED setDefaultCerts for %q\n", srvName)
+			continue
+		}
+
 		if config.GRPC.Certs.TLSCACertPath == "" || config.GRPC.Certs.TLSCertPath == "" || config.GRPC.Certs.TLSKeyPath == "" {
 			config.GRPC.Certs.TLSKeyPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc.key", srvName))
 			config.GRPC.Certs.TLSCertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc.crt", srvName))
