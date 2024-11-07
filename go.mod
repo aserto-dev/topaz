@@ -17,13 +17,13 @@ require (
 	github.com/alecthomas/kong v1.2.1
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.6
-	github.com/aserto-dev/azm v0.1.19-0.20241106213342-b8df93866e1b
+	github.com/aserto-dev/azm v0.1.19
 	github.com/aserto-dev/certs v0.0.7
 	github.com/aserto-dev/errors v0.0.11
 	github.com/aserto-dev/go-aserto v0.32.1
 	github.com/aserto-dev/go-authorizer v0.20.11
-	github.com/aserto-dev/go-directory v0.31.14-0.20241106210228-2398d57c8f5f
-	github.com/aserto-dev/go-edge-ds v0.32.10-0.20241106214545-b211bb71ee4a
+	github.com/aserto-dev/go-directory v0.31.14
+	github.com/aserto-dev/go-edge-ds v0.32.10
 	github.com/aserto-dev/go-grpc v0.8.69
 	github.com/aserto-dev/go-topaz-ui v0.1.12
 	github.com/aserto-dev/header v0.0.8
