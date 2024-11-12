@@ -3,7 +3,6 @@ package directory
 import (
 	client "github.com/aserto-dev/go-aserto"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 
 	"github.com/aserto-dev/topaz/resolvers"
@@ -22,12 +21,7 @@ func NewResolver(logger *zerolog.Logger, cfg *client.Config) (*Resolver, error) 
 	l := logger.With().Interface("client", cfg).Logger()
 	l.Debug().Msg("new directory resolver")
 
-	opts, err := cfg.ToConnectionOptions(client.NewDialOptionsProvider())
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to create connection options")
-	}
-
-	conn, err := client.NewConnection(opts...)
+	conn, err := cfg.Connect()
 	if err != nil {
 		return nil, err
 	}

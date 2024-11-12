@@ -7,7 +7,6 @@ import (
 	"time"
 
 	cerr "github.com/aserto-dev/errors"
-	client "github.com/aserto-dev/go-aserto"
 	eds "github.com/aserto-dev/go-edge-ds"
 	console "github.com/aserto-dev/go-topaz-ui"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
@@ -288,12 +287,12 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 	return portMap
 }
 
-func KeepAliveDialOptionsProvider() client.DialOptionsProvider {
+func KeepAliveDialOption() []grpc.DialOption {
 	kacp := keepalive.ClientParameters{
 		Time:    30 * time.Second, // send pings every 30 seconds if there is no activity
 		Timeout: 5 * time.Second,  // wait 5 seconds for ping ack before considering the connection dead
 	}
-	return client.NewDialOptionsProvider(grpc.WithKeepaliveParams(kacp))
+	return []grpc.DialOption{grpc.WithKeepaliveParams(kacp)}
 }
 
 func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
@@ -302,7 +301,7 @@ func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.Dec
 
 	switch cfg.Type {
 	case "self":
-		decisionlogger, err = self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOptionsProvider())
+		decisionlogger, err = self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
 		if err != nil {
 			return nil, err
 		}

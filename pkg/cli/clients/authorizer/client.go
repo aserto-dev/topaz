@@ -89,10 +89,5 @@ func (cfg *Config) connect() (*grpc.ClientConn, error) {
 		Headers:  cfg.Headers,
 	}
 
-	opts, err := clientCfg.ToConnectionOptions(client.NewDialOptionsProvider())
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to create directory connection options")
-	}
-
-	return client.NewConnection(opts...)
+	return clientCfg.Connect()
 }
