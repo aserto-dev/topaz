@@ -63,7 +63,7 @@ func run(cmd *cobra.Command, args []string) error {
 		controllerFactory := controller.NewFactory(
 			topazApp.Logger,
 			topazApp.Configuration.ControllerConfig,
-			app.KeepAliveDialOptionsProvider(),
+			app.KeepAliveDialOption(),
 		)
 
 		runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(

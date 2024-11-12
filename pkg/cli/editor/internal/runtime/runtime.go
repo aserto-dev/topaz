@@ -90,7 +90,7 @@ func handleCrash(ctx context.Context, r any, additionalHandlers ...func(context.
 
 // logPanic logs the caller tree when a panic occurs (except in the special case of http.ErrAbortHandler).
 func logPanic(ctx context.Context, r interface{}) {
-	if r == http.ErrAbortHandler {
+	if errors.Is(r.(error), http.ErrAbortHandler) {
 		// honor the http.ErrAbortHandler sentinel panic value:
 		//   ErrAbortHandler is a sentinel panic value to abort a handler.
 		//   While any panic from ServeHTTP aborts the response to the client,

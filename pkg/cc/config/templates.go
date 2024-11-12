@@ -138,7 +138,7 @@ remote_directory:
   client_cert_path: ""
   client_key_path: ""
   ca_cert_path: ""
-  timeout_in_seconds: 5
+  no_tls: false
   headers:
 
 # default jwt validation configuration

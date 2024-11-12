@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "http://json-schema.org/draft-2019-09/schema#",
     "title": "Topaz Config Schema",
     "description": "Schema for topaz configuration files.",
     "$ref": "#/definitions/Root",
@@ -165,11 +165,17 @@
                 },
                 "timeout_in_seconds": {
                     "type": "integer",
-                    "description": "gRPC connection timeout in seconds"
+                    "description": "gRPC connection timeout in seconds",
+                    "deprecated": true
                 },
                 "insecure": {
                     "type": "boolean",
                     "description": "skip TLS verification",
+                    "default": "false"
+                },
+                "no_tls": {
+                    "type": "boolean",
+                    "description": "disable TLS and use a plaintext connection",
                     "default": "false"
                 },
                 "headers": {
