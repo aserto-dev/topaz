@@ -40,6 +40,12 @@ linters-settings:
     local-prefixes: github.com/golangci/golangci-lint
   golint:
     min-confidence: 0
+  gomnd:
+    checks:
+      - argument
+      - case
+      - condition
+      - return
   govet:
     shadow: true
     settings:
@@ -75,7 +81,7 @@ linters:
     - gocritic
     - gocyclo
     - godot
-    # - goerr113 # temporary disabled
+    - err113
     - gofmt
     - goimports
     - goprintffuncname
@@ -86,7 +92,7 @@ linters:
     - misspell
     - nakedret
     - noctx
-    # - rowserrcheck # disable https://github.com/golangci/golangci-lint/issues/2649.
+    - rowserrcheck
     - staticcheck
     - stylecheck
     - testpackage
@@ -145,4 +151,6 @@ issues:
     - text: "G404"
       linters:
       - gosec
-
+    - text: "SA1019: \\S+ is deprecated"
+      linters:
+        - staticcheck

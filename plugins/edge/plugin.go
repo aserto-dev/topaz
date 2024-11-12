@@ -327,12 +327,7 @@ func (p *Plugin) remoteDirectoryClient() (*grpc.ClientConn, error) {
 		Headers:  p.topazConfig.DirectoryResolver.Headers,
 	}
 
-	opts, err := cfg.ToConnectionOptions(client.NewDialOptionsProvider())
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to create connection options")
-	}
-
-	conn, err := client.NewConnection(opts...)
+	conn, err := cfg.Connect()
 	if err != nil {
 		return nil, err
 	}
