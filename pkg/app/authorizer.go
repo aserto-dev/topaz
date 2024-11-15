@@ -7,7 +7,7 @@ import (
 
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/rapidoc"
@@ -32,7 +32,7 @@ const (
 )
 
 func NewAuthorizer(ctx context.Context, cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
-	if builder.TLS(&cfg.GRPC.Certs) {
+	if cfg.GRPC.Certs.HasCert() {
 		tlsCreds, err := cfg.GRPC.Certs.ServerCredentials()
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to calculate tls config")

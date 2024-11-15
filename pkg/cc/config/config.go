@@ -10,7 +10,7 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -200,7 +200,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 		}
 
 		if len(existingFiles) == 0 {
-			if builder.TLS(&config.GRPC.Certs) {
+			if config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
 				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
 					CommonName:  fmt.Sprintf("%s-grpc", commonName),
 					CertKeyPath: config.GRPC.Certs.Key,
@@ -213,7 +213,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 				log.Info().Str("service", serviceName).Msg("gRPC certs configured")
 			}
 
-			if builder.TLS(&config.Gateway.Certs) {
+			if config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
 				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
 					CommonName:  fmt.Sprintf("%s-gateway", commonName),
 					CertKeyPath: config.Gateway.Certs.Key,

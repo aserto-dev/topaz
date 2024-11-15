@@ -21,7 +21,7 @@ type GRPCRegistrations func(server *grpc.Server)
 
 type HandlerRegistrations func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error
 
-type Server struct {
+type Service struct {
 	Config   *API
 	Server   *grpc.Server
 	Listener net.Listener

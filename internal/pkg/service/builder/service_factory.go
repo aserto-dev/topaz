@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/aserto-dev/go-aserto"
+	"github.com/samber/lo"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
@@ -56,7 +57,7 @@ func (f *ServiceFactory) CreateService(
 	grpcOpts *GRPCOptions,
 	gatewayOpts *GatewayOptions,
 	cleanup ...func(),
-) (*Server, error) {
+) (*Service, error) {
 	grpcServer, err := prepareGrpcServer(&config.GRPC.Certs, grpcOpts.ServerOptions)
 	if err != nil {
 		return nil, err
@@ -77,7 +78,7 @@ func (f *ServiceFactory) CreateService(
 		}
 	}
 
-	return &Server{
+	return &Service{
 		Config:   config,
 		Server:   grpcServer,
 		Listener: listener,
@@ -109,7 +110,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 	runtimeMux := f.gatewayMux(config.Gateway.AllowedHeaders, gatewayOpts.ErrorHandler)
 
 	opts := []grpc.DialOption{}
-	if TLS(&config.GRPC.Certs) {
+	if config.GRPC.Certs.HasCert() {
 		tlsCreds, err := config.GRPC.Certs.ClientCredentials(true)
 		if err != nil {
 			return Gateway{}, errors.Wrapf(err, "failed to get TLS credentials")
@@ -141,9 +142,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 		IdleTimeout:       config.Gateway.IdleTimeout,
 	}
 
-	if NoTLS(&config.Gateway.Certs) {
-		config.Gateway.HTTP = true
-	}
+	config.Gateway.HTTP = !config.Gateway.Certs.HasCert()
 
 	if !config.Gateway.HTTP {
 		tlsServerConfig, err := config.Gateway.Certs.ServerConfig()
@@ -161,7 +160,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 func (f *ServiceFactory) gatewayMux(allowedHeaders []string, errorHandler runtime.ErrorHandlerFunc) *runtime.ServeMux {
 	opts := []runtime.ServeMuxOption{
 		runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
-			if contains(allowedHeaders, key) {
+			if lo.Contains(allowedHeaders, key) {
 				return key, true
 			}
 			return runtime.DefaultHeaderMatcher(key)
@@ -236,7 +235,7 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, p proto.Me
 // prepareGrpcServer provides a new grpc server with the provided grpc.ServerOptions using the provided certificates.
 func prepareGrpcServer(certCfg *aserto.TLSConfig, opts []grpc.ServerOption) (*grpc.Server, error) {
 	// NoTLS path.
-	if NoTLS(certCfg) {
+	if !certCfg.HasCert() {
 		opts = append(opts, grpc.Creds(insecure.NewCredentials()))
 		return grpc.NewServer(opts...), nil
 	}
@@ -264,15 +263,6 @@ func fieldsMaskHandler(h http.Handler) http.Handler {
 		}
 		h.ServeHTTP(w, r)
 	})
-}
-
-func contains[T comparable](slice []T, item T) bool {
-	for i := range slice {
-		if slice[i] == item {
-			return true
-		}
-	}
-	return false
 }
 
 type key int

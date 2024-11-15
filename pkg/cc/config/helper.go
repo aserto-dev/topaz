@@ -1,7 +1,7 @@
 package config
 
 import (
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/samber/lo"
 )
 

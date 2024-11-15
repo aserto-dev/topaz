@@ -24,7 +24,7 @@ type ServiceManager struct {
 	logger   *zerolog.Logger
 	errGroup *errgroup.Group
 
-	Servers         map[string]*Server
+	Servers         map[string]*Service
 	DependencyMap   map[string][]string
 	HealthServer    *Health
 	MetricServer    *http.Server
@@ -42,7 +42,7 @@ func NewServiceManager(logger *zerolog.Logger) *ServiceManager {
 	return &ServiceManager{
 		Context:         ctx,
 		logger:          &serviceLogger,
-		Servers:         make(map[string]*Server),
+		Servers:         make(map[string]*Service),
 		DependencyMap:   make(map[string][]string),
 		errGroup:        errGroup,
 		shutdownTimeout: 30,
@@ -54,7 +54,7 @@ func (s *ServiceManager) WithShutdownTimeout(seconds int) *ServiceManager {
 	return s
 }
 
-func (s *ServiceManager) AddGRPCServer(server *Server) error {
+func (s *ServiceManager) AddGRPCServer(server *Service) error {
 	s.Servers[server.Config.GRPC.ListenAddress] = server
 	return nil
 }
@@ -105,7 +105,7 @@ func (s *ServiceManager) SetupMetricsServer(address string, certCfg *aserto.TLSC
 
 	s.logger.Info().Msgf("Starting %s metric server", address)
 
-	if NoTLS(certCfg) {
+	if !certCfg.HasCert() {
 		s.errGroup.Go(metric.ListenAndServe)
 	} else {
 		s.errGroup.Go(func() error {
@@ -163,14 +163,13 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 			if httpServer.Server != nil {
 				s.errGroup.Go(func() error {
 					s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
-					if NoTLS(httpServer.Certs) {
-						err := httpServer.Server.ListenAndServe()
+					if httpServer.Certs.HasCert() {
+						err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key)
 						if err != nil {
 							return err
 						}
-					}
-					if TLS(httpServer.Certs) {
-						err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key)
+					} else {
+						err := httpServer.Server.ListenAndServe()
 						if err != nil {
 							return err
 						}
@@ -190,7 +189,7 @@ func (s *ServiceManager) logDetails(address string, element interface{}) {
 	ref := reflect.ValueOf(element).Elem()
 	typeOfT := ref.Type()
 
-	for i := 0; i < ref.NumField(); i++ {
+	for i := range ref.NumField() {
 		f := ref.Field(i)
 		s.logger.Debug().Str("address", address).Msgf("%s = %v\n", typeOfT.Field(i).Name, f.Interface())
 	}

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -111,9 +111,7 @@ func getGatewayAddress(serviceConfig *builder.API) string {
 	}
 	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
 
-	if builder.NoTLS(&serviceConfig.Gateway.Certs) {
-		serviceConfig.Gateway.HTTP = true
-	}
+	serviceConfig.Gateway.HTTP = !serviceConfig.Gateway.Certs.HasCert()
 
 	if serviceConfig.Gateway.HTTP {
 		return fmt.Sprintf("http://%s", addr)

@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"

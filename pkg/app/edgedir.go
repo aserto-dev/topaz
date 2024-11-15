@@ -13,7 +13,7 @@ import (
 	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/rapidoc"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
