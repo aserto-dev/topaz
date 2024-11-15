@@ -77,5 +77,5 @@ func CommitSHA() string {
 }
 
 func TestImage() string {
-	return "ghcr.io/aserto-dev/topaz:test-" + CommitSHA() + "-" + runtime.GOARCH
+	return "ghcr.io/aserto-dev/topaz:0.0.0-test-" + CommitSHA() + "-" + runtime.GOARCH
 }

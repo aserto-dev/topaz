@@ -13,6 +13,13 @@ func ConfigReader() io.Reader {
 	return bytes.NewReader(config)
 }
 
+//go:embed config/config-no-tls.yaml
+var configNoTLS []byte
+
+func ConfigNoTLSReader() io.Reader {
+	return bytes.NewReader(configNoTLS)
+}
+
 //go:embed config/peoplefinder.yaml
 var configOnline []byte
 

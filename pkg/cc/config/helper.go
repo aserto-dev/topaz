@@ -36,11 +36,3 @@ func (c *currentConfig) Services() ([]string, error) {
 		return k
 	}), nil
 }
-
-func (c *currentConfig) HealthService() (string, error) {
-	if c.err != nil {
-		return "", c.err
-	}
-
-	return c.Configuration.APIConfig.Health.ListenAddress, nil
-}

@@ -106,6 +106,7 @@ func run() (exitCode int) {
 			"authorizer_token":   cc.AuthorizerToken(),
 			"tenant_id":          cc.TenantID(),
 			"insecure":           strconv.FormatBool(cc.Insecure()),
+			"plaintext":          strconv.FormatBool(cc.Plaintext()),
 			"no_check":           strconv.FormatBool(cc.NoCheck()),
 			"no_color":           strconv.FormatBool(cc.NoColor()),
 			"active_config":      c.Config.Active.Config,

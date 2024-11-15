@@ -61,7 +61,7 @@ The health configuration allows topaz to spin up a health server.
 
 
 - *listen_address* - string - allows the health service to spin up on the configured port (default: "0.0.0.0:9494")
-- *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. By default the certificates are not configured.
+- *certs* - aserto.TLSConfig - based on [aserto-dev/go-aserto](https://github.com/aserto-dev/go-aserto) package allows setting the paths of your certificate files. By default the certificates are not configured.
 
 #### Metrics:
 
@@ -70,8 +70,7 @@ The metrics configuration allows topaz to spin up a metric server.
 
 
 - *listen_address* - string - allows the metric service to spin up on the configured port (default: "0.0.0.0:9696")
-- *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. By default the certificates are not configured.
-- *zpages* - bool - if enabled the metrics server will enable [zpages](https://opencensus.io/zpages/go/) on the "/debug" route
+- *certs* - certs.TLSConfig - based on [aserto-dev/go-aserto](https://github.com/aserto-dev/go-aserto) package allows setting the paths of your certificate files. By default the certificates are not configured.
 
 #### Services APIs:
 
@@ -84,7 +83,7 @@ The grpc section allows configuring the listen address, the connection timeout a
 - *fqdn* - string - optional value to set the fully qualified domain name for the service endpoint
 - *listen_address* - string - allows the topaz GRPC server to spin up on the requested port (default: "0.0.0.0:8282")
 - *connection_timeout_seconds* - uint32 - sets the timeout for a [connection establishment](https://pkg.go.dev/google.golang.org/grpc#ConnectionTimeout) (default: 120)
-- *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. If you do not have your certificates in the specified paths, topaz will generate self-signed certificates for you. By default topaz will generate the certificates in ` ~/.config/topaz/certs/` path
+- *certs* - aserto.TLSConfig - based on [aserto-dev/go-aserto](https://github.com/aserto-dev/go-aserto) package allows setting the paths of your certificate files. If you do not have your certificates in the specified paths, topaz will generate self-signed certificates for you. By default topaz will generate the certificates in ` ~/.config/topaz/certs/` path
 
 
 Example:
@@ -108,7 +107,7 @@ The gateway section allows configuring the [grpc gateway](https://github.com/grp
 - *fqdn* - string - optional value to set the fully qualified domain name for the service endpoint
 - *listen_address* - string - allows the topaz Gateway server to spin up on the requested port (default: "0.0.0.0:8383")
 - *http* - boolean - when set to true it allows the gateway service to respond to plain http request (default: false)
-- *certs* - certs.TLSCredsConfig - based on [aserto-dev/certs](https://github.com/aserto-dev/certs) package allows setting the paths of your certificate files. If you do not have your certificates in the specified paths, topaz will generate self-signed certificates for you. By default topaz will generate the certificates in ` ~/.config/topaz/certs/` path
+- *certs* - aserto.TLSConfig - based on [aserto-dev/go-aserto](https://github.com/aserto-dev/go-aserto) package allows setting the paths of your certificate files. If you do not have your certificates in the specified paths, topaz will generate self-signed certificates for you. By default topaz will generate the certificates in ` ~/.config/topaz/certs/` path
 - *allowed_origins* - []string - allows setting the paths for the [CORS handler](https://github.com/rs/cors)
 
 Detailed information about the gateway http server timeout configuration is available [here](https://pkg.go.dev/net/http#Server)

@@ -59,19 +59,15 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 			directoryServiceURL = readerURL
 		}
 	}
+
 	writerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
 		writerURL = getGatewayAddress(serviceConfig)
 	}
-	importerURL := ""
-	if serviceConfig, ok := cfg.APIConfig.Services[importerService]; ok {
-		importerURL = getGatewayAddress(serviceConfig)
-	}
 
-	exporterURL := ""
-	if serviceConfig, ok := cfg.APIConfig.Services[exporterService]; ok {
-		exporterURL = getGatewayAddress(serviceConfig)
-	}
+	importerURL := "" // always empty, no gateway service associated with the importer service.
+
+	exporterURL := "" // always empty, no gateway service associated with the exporter service.
 
 	modelURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
@@ -115,11 +111,14 @@ func getGatewayAddress(serviceConfig *builder.API) string {
 	}
 	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
 
+	if builder.NoTLS(&serviceConfig.Gateway.Certs) {
+		serviceConfig.Gateway.HTTP = true
+	}
+
 	if serviceConfig.Gateway.HTTP {
 		return fmt.Sprintf("http://%s", addr)
-	} else {
-		return fmt.Sprintf("https://%s", addr)
 	}
+	return fmt.Sprintf("https://%s", addr)
 }
 
 func serviceAddress(listenAddress string) string {

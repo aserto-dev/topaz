@@ -74,6 +74,7 @@ linters:
     - copyloopvar
     - dogsled
     - errcheck
+    - errname
     - exhaustive
     - funlen
     - gochecknoinits
@@ -81,6 +82,7 @@ linters:
     - gocritic
     - gocyclo
     - godot
+    - gosimple
     - err113
     - gofmt
     - goimports
@@ -88,6 +90,7 @@ linters:
     - gosec
     - gosimple
     - govet
+    - importas
     - ineffassign
     - misspell
     - nakedret
@@ -95,11 +98,13 @@ linters:
     - rowserrcheck
     - staticcheck
     - stylecheck
+    - testifylint
     - testpackage
     - typecheck
     - unconvert
     - unparam
     - unused
+    - wastedassign
 
   # don't enable:
     # - depguard

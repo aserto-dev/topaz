@@ -71,7 +71,6 @@ api:
       tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
       tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
       tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
-    zpages: true
 
   services:
     console:

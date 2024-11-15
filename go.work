@@ -1,0 +1,7 @@
+go 1.23.3
+
+use (
+	.
+	./internal/pkg/service/builder
+	./internal/pkg/xdg
+)

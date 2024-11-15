@@ -39,7 +39,7 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 
 	for {
 		msg, err := stream.Recv()
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		if err != nil {

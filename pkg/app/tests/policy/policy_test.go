@@ -3,7 +3,6 @@ package policy_test
 import (
 	"context"
 	"os"
-	"runtime"
 	"testing"
 	"time"
 
@@ -30,7 +29,7 @@ func TestMain(m *testing.M) {
 
 	ctx := context.Background()
 	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
-		Image:        "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
@@ -112,7 +111,7 @@ func ListPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) fun
 
 		assert.NoError(err)
 		assert.NotNil(listPoliciesResponse.Result)
-		assert.Greater(len(listPoliciesResponse.Result), 0)
+		assert.NotEmpty(listPoliciesResponse.Result)
 	}
 }
 
@@ -129,7 +128,7 @@ func ListPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClien
 
 		assert.NoError(err)
 		assert.NotNil(listPoliciesResponse.Result)
-		assert.Greater(len(listPoliciesResponse.Result), 0)
+		assert.NotEmpty(listPoliciesResponse.Result)
 		assert.Nil(listPoliciesResponse.Result[0].Id)
 		assert.NotNil(listPoliciesResponse.Result[0].Raw)
 	}
@@ -149,7 +148,7 @@ func ListPoliciesMaskedComposed(ctx context.Context, azClient authorizer.Authori
 
 		assert.NoError(err)
 		assert.NotNil(listPoliciesResponse.Result)
-		assert.Greater(len(listPoliciesResponse.Result), 0)
+		assert.NotEmpty(listPoliciesResponse.Result)
 		assert.Nil(listPoliciesResponse.Result[0].Id)
 		assert.NotNil(listPoliciesResponse.Result[0].Raw)
 		assert.NotNil(listPoliciesResponse.Result[0].PackagePath)
@@ -169,7 +168,7 @@ func ListPoliciesInvalidMask(ctx context.Context, azClient authorizer.Authorizer
 
 		assert.NoError(err)
 		assert.NotNil(listPoliciesResponse.Result)
-		assert.Greater(len(listPoliciesResponse.Result), 0)
+		assert.NotEmpty(listPoliciesResponse.Result)
 		assert.NotNil(listPoliciesResponse.Result[0].Id)
 		assert.NotNil(listPoliciesResponse.Result[0].Raw)
 		assert.NotNil(listPoliciesResponse.Result[0].PackagePath)
@@ -188,7 +187,7 @@ func ListPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerCl
 
 		assert.NoError(err)
 		assert.NotNil(listPoliciesResponse.Result)
-		assert.Greater(len(listPoliciesResponse.Result), 0)
+		assert.NotEmpty(listPoliciesResponse.Result)
 		assert.NotNil(listPoliciesResponse.Result[0].Id)
 		assert.NotNil(listPoliciesResponse.Result[0].Raw)
 		assert.NotNil(listPoliciesResponse.Result[0].PackagePath)

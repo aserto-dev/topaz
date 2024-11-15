@@ -59,3 +59,6 @@ go.work.sum
 
 # exclude DLV debugger generated binaries
 __debug_bin*
+
+# latest container test-snapshot
+.container-tag.env

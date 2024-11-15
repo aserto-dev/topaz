@@ -1,12 +1,10 @@
 module github.com/aserto-dev/topaz
 
-go 1.23
+go 1.23.3
 
-toolchain go1.23.3
+replace github.com/aserto-dev/service-host => ./internal/pkg/service/builder
 
-replace github.com/aserto-dev/service-host => ../service-host
-
-replace github.com/adrg/xdg => ./pkg/cli/xdg
+replace github.com/adrg/xdg => ./internal/pkg/xdg
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.0
@@ -15,9 +13,9 @@ require (
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.7
 	github.com/aserto-dev/azm v0.1.19
-	github.com/aserto-dev/certs v0.0.7
+	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.11
-	github.com/aserto-dev/go-aserto v0.33.0
+	github.com/aserto-dev/go-aserto v0.33.1
 	github.com/aserto-dev/go-authorizer v0.20.11
 	github.com/aserto-dev/go-directory v0.31.14
 	github.com/aserto-dev/go-edge-ds v0.32.12
@@ -29,11 +27,11 @@ require (
 	github.com/aserto-dev/openapi-directory v0.31.2
 	github.com/aserto-dev/runtime v0.69.1
 	github.com/aserto-dev/self-decision-logger v0.0.8
-	github.com/aserto-dev/service-host v0.0.17
+	github.com/aserto-dev/service-host v0.0.0-00010101000000-000000000000
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.1.1+incompatible
 	github.com/docker/go-connections v0.5.0
-	github.com/fatih/color v1.17.0
+	github.com/fatih/color v1.18.0
 	github.com/fullstorydev/grpcurl v1.9.1
 	github.com/gdamore/tcell/v2 v2.7.4
 	github.com/google/uuid v1.6.0
@@ -59,17 +57,15 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
 	github.com/testcontainers/testcontainers-go v0.34.0
-	go.opencensus.io v0.24.0
 	golang.org/x/sync v0.9.0
 	golang.org/x/sys v0.27.0
-	google.golang.org/grpc v1.67.1
-	google.golang.org/protobuf v1.35.1
+	google.golang.org/grpc v1.68.0
+	google.golang.org/protobuf v1.35.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.1-20240920164238-5a7b106cbb87.1 // indirect
-	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
@@ -84,7 +80,7 @@ require (
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/cncf/xds/go v0.0.0-20240723142845-024c85f92f20 // indirect
+	github.com/cncf/xds/go v0.0.0-20240905190251-b4127c9b8d78 // indirect
 	github.com/containerd/containerd v1.7.22 // indirect
 	github.com/containerd/errdefs v0.2.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect
@@ -104,15 +100,12 @@ require (
 	github.com/gdamore/encoding v1.0.1 // indirect
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
-	github.com/go-kit/log v0.2.1 // indirect
-	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/goccy/go-json v0.10.3 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/cel-go v0.21.0 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
@@ -164,7 +157,6 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.60.1 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
-	github.com/prometheus/statsd_exporter v0.27.1 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rs/cors v1.11.1 // indirect
