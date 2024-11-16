@@ -92,18 +92,6 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 				return err
 			}
 		}
-		if lo.Contains(services, importerService) {
-			err := dsi3.RegisterImporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-		}
-		if lo.Contains(services, exporterService) {
-			err := dse3.RegisterExporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-		}
 
 		if len(services) > 0 {
 			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler); err != nil {
