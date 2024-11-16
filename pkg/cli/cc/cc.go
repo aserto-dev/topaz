@@ -3,7 +3,6 @@ package cc
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -11,10 +10,13 @@ import (
 	"sync"
 	"time"
 
+	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/docker/docker/api/types"
 	"github.com/fullstorydev/grpcurl"
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -140,29 +142,35 @@ func (c *CommonCtx) GetRunningContainers() ([]*types.Container, error) {
 	return topazContainers, nil
 }
 
-func (c *CommonCtx) IsServing(grpcAddress string) bool {
+func (c *CommonCtx) IsServing(cfg *client.Config) (bool, error) {
 	if c.Config.Defaults.NoCheck {
-		return true
+		return true, nil
 	}
 
-	tlsConf, err := grpcurl.ClientTLSConfig(true, "", "", "")
-	if err != nil {
-		return false
-	}
+	var creds credentials.TransportCredentials
 
-	creds := credentials.NewTLS(tlsConf)
+	if cfg.Insecure {
+		tlsConf, err := grpcurl.ClientTLSConfig(cfg.Insecure, "", "", "")
+		if err != nil {
+			return false, errors.Wrap(err, "failed to create TLS config")
+		}
+		creds = credentials.NewTLS(tlsConf)
+	}
 
 	opts := []grpc.DialOption{
-		grpc.WithUserAgent("topaz/dev-build (no version set)"),
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithUserAgent(version.UserAgent()),
 	}
+
+	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	_, err = grpcurl.BlockingDial(ctx, "tcp", grpcAddress, creds, opts...)
+	if _, err := grpcurl.BlockingDial(ctx, "tcp", cfg.Address, creds, opts...); err != nil {
+		return false, err
+	}
 
-	return err == nil
+	return true, nil
 }
 
 func (c *CommonCtx) SaveContextConfig(configurationFile string) error {

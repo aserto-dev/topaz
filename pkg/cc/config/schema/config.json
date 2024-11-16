@@ -320,7 +320,8 @@
                 "zpages": {
                     "description": "enable zPages trace & metric endpoint",
                     "type": "boolean",
-                    "default": "false"
+                    "default": "false",
+                    "deprecated": true
                 }
             }
         },
@@ -442,7 +443,8 @@
                 "http": {
                     "description": "allow HTTP traffic",
                     "type": "boolean",
-                    "default": false
+                    "default": false,
+                    "deprecated": true
                 },
                 "read_timeout": {
                     "description": "ReadTimeout is the maximum duration for reading the entire request, including the body",

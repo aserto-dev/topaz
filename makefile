@@ -47,6 +47,11 @@ build:
 	@(go env GOVERSION | grep "go${GO_VER}") || (echo "go version check failed expected go${GO_VER} got $$(go env GOVERSION)"; exit 1)
 	@${EXT_BIN_DIR}/goreleaser build --clean --snapshot --single-target
 
+PHONY: go-mod-tidy
+go-mod-tidy:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@go work edit -json | jq -r '.Use[].DiskPath' | xargs -I{} bash -c 'cd {} && echo "${PWD}/go.mod" && go mod tidy -v && cd -'
+
 .PHONY: dev-release
 dev-release: 
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
@@ -77,10 +82,15 @@ test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot
 
+.PHONE: container-tag
+container-tag:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@scripts/container-tag.sh > .container-tag.env
+
 .PHONY: test
 test: test-snapshot
 	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/app/tests/$@/... $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -parallel=1 -v -coverprofile=cover.out -coverpkg=./... ./...
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./... ./...
 
 .PHONY: write-version
 write-version:
@@ -97,10 +107,10 @@ $(ASSETS): install-check2decision
 TEMPLATES = "assets/api-auth.json" "assets/gdrive.json" "assets/github.json" "assets/multi-tenant.json" "assets/peoplefinder.json" "assets/simple-rbac.json" "assets/slack.json" "assets/todo.json"
 .PHONY: test-templates
 test-templates: $(TEMPLATES)
-$(TEMPLATES): snapshot
+$(TEMPLATES): test-snapshot
 	@echo -e "$(ATTN_COLOR)==> github.com/aserto-dev/topaz/assets/$@ $(NO_COLOR)"
-	@echo topaz templates install $@ --force --no-console --container-tag=$$(${EXT_BIN_DIR}/svu patch --strip-prefix)-$$(git rev-parse --short HEAD)-dirty-${GOARCH}
-	@./dist/topaz_${GOOS}_${GOARCH}/topaz templates install $@ --force --no-console --container-tag=$$(${EXT_BIN_DIR}/svu patch --strip-prefix)-$$(git rev-parse --short HEAD)-dirty-${GOARCH}
+	@echo topaz templates install $@ --force --no-console --container-tag=test-$$(git rev-parse --short HEAD)-${GOARCH}
+	@./dist/topaz_${GOOS}_${GOARCH}/topaz templates install $@ --force --no-console --container-tag=test-$$(git rev-parse --short HEAD)-${GOARCH}
 	@./dist/topaz_${GOOS}_${GOARCH}/topaz stop --wait
 
 .PHONY: vault-login

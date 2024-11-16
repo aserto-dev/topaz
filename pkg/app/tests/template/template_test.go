@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	"runtime"
 	"testing"
 	"time"
 
@@ -34,7 +33,7 @@ func TestMain(m *testing.M) {
 
 	ctx := context.Background()
 	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
-		Image:        "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
@@ -85,18 +84,20 @@ var tcs = []string{
 func TestTemplate(t *testing.T) {
 	t.Logf("addr: %s", addr)
 
-	os.Setenv("TOPAZ_NO_COLOR", "true")
+	t.Setenv("TOPAZ_NO_COLOR", "true")
 	c, err := cc.NewCommonContext(context.Background(), true, filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile))
 	require.NoError(t, err)
 
 	dsConfig := &dsc.Config{
-		Host:     addr,
-		Insecure: true,
+		Host:      addr,
+		Insecure:  true,
+		Plaintext: false,
 	}
 
 	azConfig := &azc.Config{
-		Host:     addr,
-		Insecure: true,
+		Host:      addr,
+		Insecure:  true,
+		Plaintext: false,
 	}
 
 	for _, tmpl := range tcs {

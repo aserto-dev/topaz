@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 
 	"github.com/aserto-dev/certs"
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -20,10 +19,7 @@ import (
 // CommandMode -- enum type.
 type CommandMode int
 
-var (
-	DefaultTLSGenDir = os.ExpandEnv("$HOME/.config/topaz/certs")
-	CertificateSets  = []string{"grpc", "gateway"}
-)
+var CertificateSets = []string{"grpc", "gateway"}
 
 // CommandMode -- enum constants.
 const (
@@ -34,13 +30,13 @@ const (
 
 type ServicesConfig struct {
 	Health struct {
-		ListenAddress string                `json:"listen_address"`
-		Certificates  *certs.TLSCredsConfig `json:"certs"`
+		ListenAddress string            `json:"listen_address"`
+		Certificates  *client.TLSConfig `json:"certs"`
 	} `json:"health"`
 	Metrics struct {
-		ListenAddress string                `json:"listen_address"`
-		Certificates  *certs.TLSCredsConfig `json:"certs"`
-		ZPages        bool                  `json:"zpages"`
+		ListenAddress string            `json:"listen_address"`
+		Certificates  *client.TLSConfig `json:"certs"`
+		ZPages        bool              `json:"zpages"`
 	} `json:"metrics"`
 	Services map[string]*builder.API `json:"services"`
 }
@@ -151,11 +147,6 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		return nil, errors.Wrap(err, "failed to validate config file")
 	}
 
-	err = setDefaultCerts(configLoader.Configuration)
-	if err != nil {
-		return nil, err
-	}
-
 	if certsGenerator != nil {
 		err = configLoader.Configuration.setupCerts(log, certsGenerator)
 		if err != nil {
@@ -184,15 +175,17 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, erro
 }
 
 func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator) error {
+	commonName := "topaz"
+
 	existingFiles := []string{}
 	for serviceName, config := range c.APIConfig.Services {
 		for _, file := range []string{
-			config.GRPC.Certs.TLSCACertPath,
-			config.GRPC.Certs.TLSCertPath,
-			config.GRPC.Certs.TLSKeyPath,
-			config.Gateway.Certs.TLSCACertPath,
-			config.Gateway.Certs.TLSCertPath,
-			config.Gateway.Certs.TLSKeyPath,
+			config.GRPC.Certs.CA,
+			config.GRPC.Certs.Cert,
+			config.GRPC.Certs.Key,
+			config.Gateway.Certs.CA,
+			config.Gateway.Certs.Cert,
+			config.Gateway.Certs.Key,
 		} {
 			exists, err := FileExists(file)
 			if err != nil {
@@ -207,29 +200,32 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 		}
 
 		if len(existingFiles) == 0 {
-			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-				CommonName:       fmt.Sprintf("%s-grpc", serviceName),
-				CertKeyPath:      config.GRPC.Certs.TLSKeyPath,
-				CertPath:         config.GRPC.Certs.TLSCertPath,
-				CACertPath:       config.GRPC.Certs.TLSCACertPath,
-				DefaultTLSGenDir: DefaultTLSGenDir,
-			})
-			if err != nil {
-				return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
+			if config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
+				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+					CommonName:  fmt.Sprintf("%s-grpc", commonName),
+					CertKeyPath: config.GRPC.Certs.Key,
+					CertPath:    config.GRPC.Certs.Cert,
+					CertCAPath:  config.GRPC.Certs.CA,
+				})
+				if err != nil {
+					return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
+				}
+				log.Info().Str("service", serviceName).Msg("gRPC certs configured")
 			}
 
-			err = certsGenerator.MakeDevCert(&certs.CertGenConfig{
-				CommonName:       fmt.Sprintf("%s-gateway", serviceName),
-				CertKeyPath:      config.Gateway.Certs.TLSKeyPath,
-				CertPath:         config.Gateway.Certs.TLSCertPath,
-				CACertPath:       config.Gateway.Certs.TLSCACertPath,
-				DefaultTLSGenDir: DefaultTLSGenDir,
-			})
-			if err != nil {
-				return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
+			if config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
+				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+					CommonName:  fmt.Sprintf("%s-gateway", commonName),
+					CertKeyPath: config.Gateway.Certs.Key,
+					CertPath:    config.Gateway.Certs.Cert,
+					CertCAPath:  config.Gateway.Certs.CA,
+				})
+				if err != nil {
+					return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
+				}
+				log.Info().Str("service", serviceName).Msg("gateway certs configured")
 			}
 		}
-		log.Info().Str("service", serviceName).Msg("certs configured")
 	}
 	return nil
 }
@@ -242,23 +238,4 @@ func FileExists(path string) (bool, error) {
 	} else {
 		return false, errors.Wrapf(err, "failed to stat file '%s'", path)
 	}
-}
-
-func setDefaultCerts(cfg *Config) error {
-	for srvName, config := range cfg.APIConfig.Services {
-		if config.GRPC.ListenAddress == "" {
-			return errors.New(fmt.Sprintf("%s must have a grpc listen address specified", srvName))
-		}
-		if config.GRPC.Certs.TLSCACertPath == "" || config.GRPC.Certs.TLSCertPath == "" || config.GRPC.Certs.TLSKeyPath == "" {
-			config.GRPC.Certs.TLSKeyPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc.key", srvName))
-			config.GRPC.Certs.TLSCertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc.crt", srvName))
-			config.GRPC.Certs.TLSCACertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_grpc-ca.crt", srvName))
-		}
-		if config.Gateway.Certs.TLSCACertPath == "" || config.Gateway.Certs.TLSCertPath == "" || config.Gateway.Certs.TLSKeyPath == "" {
-			config.Gateway.Certs.TLSKeyPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_gateway.key", srvName))
-			config.Gateway.Certs.TLSCertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_gateway.crt", srvName))
-			config.Gateway.Certs.TLSCACertPath = filepath.Join(DefaultTLSGenDir, fmt.Sprintf("%s_gateway-ca.crt", srvName))
-		}
-	}
-	return nil
 }

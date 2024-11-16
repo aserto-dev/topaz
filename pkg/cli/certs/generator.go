@@ -58,12 +58,11 @@ func generate(c *cc.CommonCtx, dnsNames []string, certPaths ...*CertPaths) error
 
 	for _, certPaths := range certPaths {
 		if err := generator.MakeDevCert(&certs.CertGenConfig{
-			CommonName:       certPaths.Name,
-			CertKeyPath:      certPaths.Key,
-			CertPath:         certPaths.Cert,
-			CACertPath:       certPaths.CA,
-			DefaultTLSGenDir: certPaths.Dir,
-			DNSNames:         dnsNames,
+			CommonName:  certPaths.Name,
+			CertKeyPath: certPaths.Key,
+			CertPath:    certPaths.Cert,
+			CertCAPath:  certPaths.CA,
+			DNSNames:    dnsNames,
 		}); err != nil {
 			return errors.Wrap(err, "failed to create dev certs")
 		}

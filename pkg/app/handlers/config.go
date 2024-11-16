@@ -114,9 +114,8 @@ func authType(r *http.Request) string {
 	authEnabled := r.Context().Value(AuthEnabled)
 	if authEnabled != nil && authEnabled.(bool) {
 		return "apiKey"
-	} else {
-		return "anonymous"
 	}
+	return "anonymous"
 }
 
 func writeJSON(buf []byte, w http.ResponseWriter, _ *http.Request) {

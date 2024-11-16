@@ -3,7 +3,6 @@ package builtin_test
 import (
 	"context"
 	"os"
-	"runtime"
 	"testing"
 	"time"
 
@@ -29,7 +28,7 @@ func TestMain(m *testing.M) {
 
 	ctx := context.Background()
 	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
-		Image:        "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp", "9393/tcp", "9494/tcp", "9595/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",

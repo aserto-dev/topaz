@@ -15,7 +15,7 @@ type RestoreCmd struct {
 }
 
 func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
-	if !c.IsServing(cmd.Host) {
+	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 

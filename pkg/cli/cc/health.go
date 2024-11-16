@@ -13,11 +13,8 @@ const rpcTimeout = time.Second * 30
 
 // ServiceHealthStatus adopted from grpc-health-probe cli implementation
 // https://github.com/grpc-ecosystem/grpc-health-probe/blob/master/main.go.
-func ServiceHealthStatus(ctx context.Context, addr, service string) (bool, error) {
-	conn, err := client.NewConnection(
-		client.WithAddr(addr),
-		client.WithInsecure(true),
-	)
+func ServiceHealthStatus(ctx context.Context, cfg *client.Config, service string) (bool, error) {
+	conn, err := cfg.Connect()
 	if err != nil {
 		return false, err
 	}

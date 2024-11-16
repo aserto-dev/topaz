@@ -123,5 +123,5 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func movedErr(oldCmd, newCmd string) error {
-	return errors.Errorf("The command %q was moved to %q.", oldCmd, newCmd)
+	return errors.Errorf("the command %q was moved to %q.", oldCmd, newCmd)
 }

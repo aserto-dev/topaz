@@ -36,6 +36,8 @@ builds:
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
+    hooks:
+      post: make container-tag
 
   - id: topaz
     main: ./cmd/topaz
@@ -57,7 +59,7 @@ builds:
 
 snapshot:
   # https://goreleaser.com/customization/snapshots/
-  version_template: "test-{{ .ShortCommit }}"
+  version_template: "0.0.0-test-{{ .ShortCommit }}"
 
 dockers:
   # https://goreleaser.com/customization/docker/

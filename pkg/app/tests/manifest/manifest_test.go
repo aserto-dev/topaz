@@ -3,10 +3,10 @@ package manifest_test
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"os"
 	"path"
-	"runtime"
 	"testing"
 	"time"
 
@@ -33,7 +33,7 @@ func TestMain(m *testing.M) {
 
 	ctx := context.Background()
 	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
-		Image:        "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
@@ -97,7 +97,7 @@ func TestManifest(t *testing.T) {
 
 	// write manifest to temp manifest file
 	bytesRecv, err := io.Copy(w, body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, bytesSend, bytesRecv)
 
@@ -120,7 +120,7 @@ func TestManifest(t *testing.T) {
 
 		n, err := body.Read(buf)
 		assert.Error(t, err, "EOF")
-		assert.Equal(t, n, 0)
+		assert.Equal(t, 0, n)
 		assert.Len(t, buf, 1024)
 	} else {
 		assert.NoError(t, err)
@@ -139,7 +139,7 @@ func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, io.
 	bytesRecv := 0
 	for {
 		resp, err := stream.Recv()
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 

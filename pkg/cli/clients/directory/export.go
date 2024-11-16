@@ -2,6 +2,7 @@ package directory
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -39,7 +40,7 @@ func (c *Client) Export(ctx context.Context, objectsFile, relationsFile string) 
 
 	for {
 		msg, err := stream.Recv()
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		if err != nil {

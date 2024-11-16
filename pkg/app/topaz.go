@@ -10,10 +10,10 @@ import (
 	eds "github.com/aserto-dev/go-edge-ds"
 	console "github.com/aserto-dev/go-topaz-ui"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
-	builder "github.com/aserto-dev/service-host"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
@@ -215,7 +215,7 @@ func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 	if e.Configuration.APIConfig.Metrics.ListenAddress != "" {
 		metricsMiddleware, err := e.Manager.SetupMetricsServer(e.Configuration.APIConfig.Metrics.ListenAddress,
 			e.Configuration.APIConfig.Metrics.Certificates,
-			e.Configuration.APIConfig.Metrics.ZPages)
+			false)
 		if err != nil {
 			return nil, err
 		}
@@ -296,42 +296,38 @@ func KeepAliveDialOption() []grpc.DialOption {
 }
 
 func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
-	var decisionlogger decisionlog.DecisionLogger
+	var decisionLogger decisionlog.DecisionLogger
 	var err error
 
 	switch cfg.Type {
 	case "self":
-		decisionlogger, err = self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
+		decisionLogger, err = self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
 		if err != nil {
 			return nil, err
 		}
 
 	case "file":
-		maxsize := 0
-		maxfiles := 0
+		logPath := cfg.Config["log_file_path"]
+		maxSize, _ := cfg.Config["max_file_size_mb"].(int)
+		maxFiles, _ := cfg.Config["max_file_count"].(int)
 
-		logpath := cfg.Config["log_file_path"]
-		maxsize, _ = cfg.Config["max_file_size_mb"].(int)
-		maxfiles, _ = cfg.Config["max_file_count"].(int)
-
-		decisionlogger, err = file.New(e.Context, &file.Config{
-			LogFilePath:   fmt.Sprintf("%v", logpath),
-			MaxFileSizeMB: maxsize,
-			MaxFileCount:  maxfiles,
+		decisionLogger, err = file.New(e.Context, &file.Config{
+			LogFilePath:   fmt.Sprintf("%v", logPath),
+			MaxFileSizeMB: maxSize,
+			MaxFileCount:  maxFiles,
 		}, e.Logger)
 		if err != nil {
 			return nil, err
 		}
 
 	default:
-		decisionlogger, err = nop.New(e.Context, e.Logger)
+		decisionLogger, err = nop.New(e.Context, e.Logger)
 		if err != nil {
 			return nil, err
 		}
-
 	}
 
-	return decisionlogger, err
+	return decisionLogger, err
 }
 
 func (e *Topaz) validateConfig() error {

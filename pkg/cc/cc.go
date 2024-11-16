@@ -23,30 +23,30 @@ var (
 	once         sync.Once
 	cc           *CC
 	cleanup      func()
-	singletonErr error
+	errSingleton error
 )
 
 // NewCC creates a singleton CC.
 func NewCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*CC, func(), error) {
 	once.Do(func() {
-		cc, cleanup, singletonErr = buildCC(logOutput, errOutput, configPath, overrides)
+		cc, cleanup, errSingleton = buildCC(logOutput, errOutput, configPath, overrides)
 	})
 
 	return cc, func() {
 		cleanup()
 		once = sync.Once{}
-	}, singletonErr
+	}, errSingleton
 }
 
 // NewTestCC creates a singleton CC to be used for testing.
 // It uses a fake context (context.Background).
 func NewTestCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*CC, func(), error) {
 	once.Do(func() {
-		cc, cleanup, singletonErr = buildTestCC(logOutput, errOutput, configPath, overrides)
+		cc, cleanup, errSingleton = buildTestCC(logOutput, errOutput, configPath, overrides)
 	})
 
 	return cc, func() {
 		cleanup()
 		once = sync.Once{}
-	}, singletonErr
+	}, errSingleton
 }

@@ -29,7 +29,7 @@ type DeleteManifestCmd struct {
 }
 
 func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
-	if !c.IsServing(cmd.Host) {
+	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	dsClient, err := dsc.NewClient(c, &cmd.Config)
@@ -62,7 +62,7 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
-	if !c.IsServing(cmd.Host) {
+	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	dsClient, err := dsc.NewClient(c, &cmd.Config)
@@ -84,7 +84,7 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
-	if !c.IsServing(cmd.Host) {
+	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	dsClient, err := dsc.NewClient(c, &cmd.Config)

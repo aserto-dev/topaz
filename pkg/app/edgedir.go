@@ -13,8 +13,7 @@ import (
 	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
-	builder "github.com/aserto-dev/service-host"
-	"github.com/aserto-dev/topaz/pkg/rapidoc"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/samber/lo"
@@ -93,24 +92,9 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 				return err
 			}
 		}
-		if lo.Contains(services, importerService) {
-			err := dsi3.RegisterImporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-		}
-		if lo.Contains(services, exporterService) {
-			err := dse3.RegisterExporterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-		}
 
 		if len(services) > 0 {
 			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler); err != nil {
-				return err
-			}
-			if err := mux.HandlePath(http.MethodGet, directoryOpenAPIDocs, dsOpenAPIDocsHandler()); err != nil {
 				return err
 			}
 		}
@@ -121,7 +105,6 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 
 const (
 	directoryOpenAPISpec string = "/directory/openapi.json"
-	directoryOpenAPIDocs string = "/directory/docs"
 )
 
 func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
@@ -133,16 +116,4 @@ func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[str
 	w.Header().Add("Content-Type", "application/json")
 	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
 	_, _ = w.Write(buf)
-}
-
-func dsOpenAPIDocsHandler() runtime.HandlerFunc {
-	h := rapidoc.Handler(&rapidoc.Opts{
-		Path:    directoryOpenAPIDocs,
-		SpecURL: directoryOpenAPISpec,
-		Title:   "Aserto Directory HTTP API",
-	}, nil)
-
-	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-		h.ServeHTTP(w, r)
-	}
 }

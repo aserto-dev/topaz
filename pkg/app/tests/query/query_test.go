@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"os"
-	"runtime"
 	"testing"
 	"time"
 
@@ -31,7 +30,7 @@ func TestMain(m *testing.M) {
 
 	ctx := context.Background()
 	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
-		Image:        "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
@@ -118,7 +117,7 @@ var queryTests = []struct {
 			}
 
 			require.NotNil(t, result)
-			require.Greater(t, len(result.Result), 0)
+			require.NotEmpty(t, result.Result)
 			require.Contains(t, result.Result[0].Bindings, "x")
 			require.Contains(t, result.Result[0].Bindings["x"], "env")
 		},
@@ -141,7 +140,7 @@ var queryTests = []struct {
 				require.NoError(t, err)
 			}
 			require.NotNil(t, result)
-			require.Greater(t, len(result.Result), 0)
+			require.NotEmpty(t, result.Result)
 			require.Contains(t, result.Result[0].Bindings, "x")
 			require.Contains(t, result.Result[0].Bindings["x"], "rebac")
 		},
@@ -165,11 +164,11 @@ var queryTests = []struct {
 			}
 
 			require.NotNil(t, result)
-			require.Greater(t, len(result.Result), 0)
+			require.NotEmpty(t, result.Result)
 			require.Contains(t, result.Result[0].Bindings, "x")
 			require.Contains(t, result.Result[0].Bindings["x"], "id")
 			binding := result.Result[0].Bindings["x"].(map[string]interface{})
-			require.Equal(t, binding["id"], "euang@acmecorp.com")
+			require.Equal(t, "euang@acmecorp.com", binding["id"])
 		},
 	},
 	{
@@ -191,9 +190,9 @@ var queryTests = []struct {
 			}
 
 			require.NotNil(t, result)
-			require.Greater(t, len(result.Result), 0)
+			require.NotEmpty(t, result.Result)
 			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "euang@acmecorp.com")
+			require.Contains(t, "euang@acmecorp.com", result.Result[0].Bindings["x"])
 		},
 	},
 	{
@@ -219,7 +218,7 @@ var queryTests = []struct {
 			}
 
 			require.NotNil(t, result)
-			require.Greater(t, len(result.Result), 0)
+			require.NotEmpty(t, result.Result)
 			require.Contains(t, result.Result[0].Bindings, "x")
 			require.Contains(t, result.Result[0].Bindings["x"], "identity")
 			require.Contains(t, result.Result[0].Bindings["x"], "user")
@@ -252,7 +251,7 @@ var queryTests = []struct {
 			}
 
 			require.NotNil(t, result)
-			require.Greater(t, len(result.Result), 0)
+			require.NotEmpty(t, result.Result)
 			require.Contains(t, result.Result[0].Bindings, "x")
 			require.Contains(t, result.Result[0].Bindings["x"], "identity")
 			require.Contains(t, result.Result[0].Bindings["x"], "user")
@@ -260,7 +259,7 @@ var queryTests = []struct {
 			bindings := result.Result[0].Bindings["x"].(map[string]interface{})
 			require.Contains(t, bindings["identity"], "identity")
 			require.Contains(t, bindings["identity"], "type")
-			require.Equal(t, bindings["user"], map[string]interface{}{})
+			require.Equal(t, map[string]interface{}{}, bindings["user"])
 		},
 	},
 }

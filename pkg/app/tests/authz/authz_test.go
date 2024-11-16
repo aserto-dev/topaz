@@ -3,7 +3,6 @@ package authz_test
 import (
 	"context"
 	"os"
-	"runtime"
 	"testing"
 	"time"
 
@@ -34,7 +33,7 @@ func TestMain(m *testing.M) {
 	ctx := context.Background()
 
 	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
-		Image:        "ghcr.io/aserto-dev/topaz:test-" + tc.CommitSHA() + "-" + runtime.GOARCH,
+		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
@@ -123,8 +122,8 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, azClient authorizer.Au
 
 		if assert.Error(t, errX) {
 			s, ok := status.FromError(errX)
-			assert.Equal(t, ok, true)
-			assert.Equal(t, s.Code(), codes.NotFound)
+			assert.True(t, ok)
+			assert.Equal(t, codes.NotFound, s.Code())
 		}
 		assert.Nil(t, respX, "response object should be nil")
 	}
@@ -149,7 +148,7 @@ func DecisionTreeWithUserID(ctx context.Context, azClient authorizer.AuthorizerC
 			t.Logf("ERR >>> %s\n", errX)
 		}
 
-		assert.NoError(t, errX)
+		require.NoError(t, errX)
 		assert.NotNil(t, respX, "response object should not be nil")
 		assert.Equal(t, "peoplefinder.GET", respX.PathRoot)
 
@@ -178,8 +177,8 @@ func IsWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerCl
 
 		if assert.Error(t, errX) {
 			s, ok := status.FromError(errX)
-			assert.Equal(t, ok, true)
-			assert.Equal(t, s.Code(), codes.NotFound)
+			assert.True(t, ok, true)
+			assert.Equal(t, codes.NotFound, s.Code())
 		}
 		assert.Nil(t, respX, "response object should be nil")
 	}
@@ -213,8 +212,8 @@ func QueryWithMissingIdentity(ctx context.Context, azClient authorizer.Authorize
 
 		if assert.Error(t, errX) {
 			s, ok := status.FromError(errX)
-			assert.Equal(t, ok, true)
-			assert.Equal(t, s.Code(), codes.NotFound)
+			assert.True(t, ok, true)
+			assert.Equal(t, codes.NotFound, s.Code())
 		}
 		assert.Nil(t, respX, "response object should be nil")
 	}

@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
@@ -98,26 +98,26 @@ func (l *Loader) GetPaths() ([]string, error) {
 		paths[l.Configuration.Edge.DBPath] = true
 	}
 	if l.Configuration.APIConfig.Health.Certificates != nil {
-		if l.Configuration.APIConfig.Health.Certificates.TLSCACertPath != "" {
-			paths[l.Configuration.APIConfig.Health.Certificates.TLSCACertPath] = true
+		if l.Configuration.APIConfig.Health.Certificates.CA != "" {
+			paths[l.Configuration.APIConfig.Health.Certificates.CA] = true
 		}
-		if l.Configuration.APIConfig.Health.Certificates.TLSCertPath != "" {
-			paths[l.Configuration.APIConfig.Health.Certificates.TLSCertPath] = true
+		if l.Configuration.APIConfig.Health.Certificates.Cert != "" {
+			paths[l.Configuration.APIConfig.Health.Certificates.Cert] = true
 		}
-		if l.Configuration.APIConfig.Health.Certificates.TLSKeyPath != "" {
-			paths[l.Configuration.APIConfig.Health.Certificates.TLSKeyPath] = true
+		if l.Configuration.APIConfig.Health.Certificates.Key != "" {
+			paths[l.Configuration.APIConfig.Health.Certificates.Key] = true
 		}
 	}
 
 	if l.Configuration.APIConfig.Metrics.Certificates != nil {
-		if l.Configuration.APIConfig.Metrics.Certificates.TLSCACertPath != "" {
-			paths[l.Configuration.APIConfig.Metrics.Certificates.TLSCACertPath] = true
+		if l.Configuration.APIConfig.Metrics.Certificates.CA != "" {
+			paths[l.Configuration.APIConfig.Metrics.Certificates.CA] = true
 		}
-		if l.Configuration.APIConfig.Metrics.Certificates.TLSCertPath != "" {
-			paths[l.Configuration.APIConfig.Metrics.Certificates.TLSCertPath] = true
+		if l.Configuration.APIConfig.Metrics.Certificates.Cert != "" {
+			paths[l.Configuration.APIConfig.Metrics.Certificates.Cert] = true
 		}
-		if l.Configuration.APIConfig.Metrics.Certificates.TLSKeyPath != "" {
-			paths[l.Configuration.APIConfig.Metrics.Certificates.TLSKeyPath] = true
+		if l.Configuration.APIConfig.Metrics.Certificates.Key != "" {
+			paths[l.Configuration.APIConfig.Metrics.Certificates.Key] = true
 		}
 	}
 
@@ -231,23 +231,23 @@ func getPortFromAddress(address string) (string, error) {
 func getUniqueServiceCertPaths(services map[string]*builder.API) []string {
 	paths := make(map[string]bool)
 	for _, service := range services {
-		if service.GRPC.Certs.TLSCACertPath != "" {
-			paths[service.GRPC.Certs.TLSCACertPath] = true
+		if service.GRPC.Certs.CA != "" {
+			paths[service.GRPC.Certs.CA] = true
 		}
-		if service.GRPC.Certs.TLSCertPath != "" {
-			paths[service.GRPC.Certs.TLSCertPath] = true
+		if service.GRPC.Certs.Cert != "" {
+			paths[service.GRPC.Certs.Cert] = true
 		}
-		if service.GRPC.Certs.TLSKeyPath != "" {
-			paths[service.GRPC.Certs.TLSKeyPath] = true
+		if service.GRPC.Certs.Key != "" {
+			paths[service.GRPC.Certs.Key] = true
 		}
-		if service.Gateway.Certs.TLSCACertPath != "" {
-			paths[service.Gateway.Certs.TLSCACertPath] = true
+		if service.Gateway.Certs.CA != "" {
+			paths[service.Gateway.Certs.CA] = true
 		}
-		if service.Gateway.Certs.TLSCertPath != "" {
-			paths[service.Gateway.Certs.TLSCertPath] = true
+		if service.Gateway.Certs.Cert != "" {
+			paths[service.Gateway.Certs.Cert] = true
 		}
-		if service.Gateway.Certs.TLSKeyPath != "" {
-			paths[service.Gateway.Certs.TLSKeyPath] = true
+		if service.Gateway.Certs.Key != "" {
+			paths[service.Gateway.Certs.Key] = true
 		}
 	}
 	var pathList []string
@@ -278,7 +278,6 @@ func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) 
 		return []string{selfCfg.StoreDirectory, selfCfg.Scribe.CACertPath, selfCfg.Scribe.ClientCertPath, selfCfg.Scribe.ClientKeyPath}, nil
 	default:
 		return nil, nil // nop decision logger
-
 	}
 }
 

@@ -14,6 +14,7 @@ const (
 	defaultAuthorizerToken = ""
 	defaultTenantID        = ""
 	defaultInsecure        = false
+	defaultPlaintext       = false
 	defaultNoCheck         = false
 	defaultNoColor         = false
 )
@@ -74,6 +75,15 @@ func Insecure() bool {
 		}
 	}
 	return defaultInsecure
+}
+
+func Plaintext() bool {
+	if plaintext := os.Getenv("TOPAZ_PLAINTEXT"); plaintext != "" {
+		if b, err := strconv.ParseBool(plaintext); err == nil {
+			return b
+		}
+	}
+	return defaultPlaintext
 }
 
 func NoCheck() bool {

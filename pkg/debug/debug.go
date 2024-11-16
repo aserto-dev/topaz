@@ -81,18 +81,16 @@ func (srv *Server) Stop() {
 		return
 	}
 
-	if srv != nil {
-		var shutdown context.CancelFunc
-		ctx := context.Background()
-		if srv.cfg.ShutdownTimeout > 0 {
-			shutdownTimeout := time.Duration(srv.cfg.ShutdownTimeout) * time.Second
-			ctx, shutdown = context.WithTimeout(ctx, shutdownTimeout)
-			defer shutdown()
-		}
+	var shutdown context.CancelFunc
+	ctx := context.Background()
+	if srv.cfg.ShutdownTimeout > 0 {
+		shutdownTimeout := time.Duration(srv.cfg.ShutdownTimeout) * time.Second
+		ctx, shutdown = context.WithTimeout(ctx, shutdownTimeout)
+		defer shutdown()
+	}
 
-		err := srv.server.Shutdown(ctx)
-		if err != nil {
-			srv.logger.Info().Err(err).Str("state", "shutdown").Msg("debug-service")
-		}
+	err := srv.server.Shutdown(ctx)
+	if err != nil {
+		srv.logger.Info().Err(err).Str("state", "shutdown").Msg("debug-service")
 	}
 }

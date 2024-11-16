@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -59,19 +59,15 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 			directoryServiceURL = readerURL
 		}
 	}
+
 	writerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
 		writerURL = getGatewayAddress(serviceConfig)
 	}
-	importerURL := ""
-	if serviceConfig, ok := cfg.APIConfig.Services[importerService]; ok {
-		importerURL = getGatewayAddress(serviceConfig)
-	}
 
-	exporterURL := ""
-	if serviceConfig, ok := cfg.APIConfig.Services[exporterService]; ok {
-		exporterURL = getGatewayAddress(serviceConfig)
-	}
+	importerURL := "" // always empty, no gateway service associated with the importer service.
+
+	exporterURL := "" // always empty, no gateway service associated with the exporter service.
 
 	modelURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
@@ -115,11 +111,12 @@ func getGatewayAddress(serviceConfig *builder.API) string {
 	}
 	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
 
+	serviceConfig.Gateway.HTTP = !serviceConfig.Gateway.Certs.HasCert()
+
 	if serviceConfig.Gateway.HTTP {
 		return fmt.Sprintf("http://%s", addr)
-	} else {
-		return fmt.Sprintf("https://%s", addr)
 	}
+	return fmt.Sprintf("https://%s", addr)
 }
 
 func serviceAddress(listenAddress string) string {

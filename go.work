@@ -1,0 +1,6 @@
+go 1.23.3
+
+use (
+	.
+	./internal/pkg/xdg
+)

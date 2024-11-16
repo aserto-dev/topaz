@@ -1,7 +1,7 @@
 package config
 
 import (
-	builder "github.com/aserto-dev/service-host"
+	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/samber/lo"
 )
 
@@ -35,12 +35,4 @@ func (c *currentConfig) Services() ([]string, error) {
 	return lo.MapToSlice(c.Configuration.APIConfig.Services, func(k string, v *builder.API) string {
 		return k
 	}), nil
-}
-
-func (c *currentConfig) HealthService() (string, error) {
-	if c.err != nil {
-		return "", c.err
-	}
-
-	return c.Configuration.APIConfig.Health.ListenAddress, nil
 }

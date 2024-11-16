@@ -7,6 +7,7 @@ import (
 	"path"
 	"path/filepath"
 
+	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
@@ -113,12 +114,22 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 		fmt.Fprintln(c.StdErr(), "This configuration file still uses TOPAZ_DIR environment variable.")
 		fmt.Fprintln(c.StdErr(), "Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}
-	addr, _ := cfg.HealthService()
-	if health, err := cc.ServiceHealthStatus(c.Context, addr, "model"); err != nil {
+
+	healthCfg := &client.Config{
+		Address:        cfg.Configuration.APIConfig.Health.ListenAddress,
+		ClientCertPath: "", // cfg.Configuration.APIConfig.Health.Certificates.TLSCertPath,
+		ClientKeyPath:  "", // cfg.Configuration.APIConfig.Health.Certificates.TLSKeyPath,
+		CACertPath:     "", // cfg.Configuration.APIConfig.Health.Certificates.TLSCACertPath,
+		Insecure:       false,
+		NoTLS:          true,
+	}
+
+	if health, err := cc.ServiceHealthStatus(c.Context, healthCfg, "model"); err != nil {
 		return errors.Wrapf(err, "unable to check health status")
 	} else if !health {
 		return errors.Errorf("gRPC endpoint not SERVING")
 	}
+
 	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
 		return errors.Errorf("model service not configured")
 	} else {

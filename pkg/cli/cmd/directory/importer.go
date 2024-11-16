@@ -15,7 +15,7 @@ type ImportCmd struct {
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
-	if !c.IsServing(cmd.Host) {
+	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
 		return errors.Wrap(cc.ErrNotServing, cmd.Host)
 	}
 	c.Con().Info().Msg(">>> importing data from %s", cmd.Directory)

@@ -34,6 +34,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 			if err := dc.Stop(container.Names[0]); err != nil {
 				return err
 			}
+
 			if cmd.Wait {
 				var ports []string
 				for _, port := range container.Ports {
