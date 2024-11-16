@@ -14,7 +14,6 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
 	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
-	"github.com/aserto-dev/topaz/pkg/rapidoc"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/samber/lo"
@@ -110,9 +109,6 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler); err != nil {
 				return err
 			}
-			if err := mux.HandlePath(http.MethodGet, directoryOpenAPIDocs, dsOpenAPIDocsHandler()); err != nil {
-				return err
-			}
 		}
 
 		return nil
@@ -121,7 +117,6 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 
 const (
 	directoryOpenAPISpec string = "/directory/openapi.json"
-	directoryOpenAPIDocs string = "/directory/docs"
 )
 
 func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
@@ -133,16 +128,4 @@ func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[str
 	w.Header().Add("Content-Type", "application/json")
 	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
 	_, _ = w.Write(buf)
-}
-
-func dsOpenAPIDocsHandler() runtime.HandlerFunc {
-	h := rapidoc.Handler(&rapidoc.Opts{
-		Path:    directoryOpenAPIDocs,
-		SpecURL: directoryOpenAPISpec,
-		Title:   "Aserto Directory HTTP API",
-	}, nil)
-
-	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-		h.ServeHTTP(w, r)
-	}
 }

@@ -10,7 +10,6 @@ import (
 	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/pkg/rapidoc"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
@@ -74,9 +73,6 @@ func (e *Authorizer) GetGatewayRegistration(services ...string) builder.HandlerR
 			if err := mux.HandlePath(http.MethodGet, authorizerOpenAPISpec, azOpenAPIHandler); err != nil {
 				return err
 			}
-			if err := mux.HandlePath(http.MethodGet, authorizerOpenAPIDocs, azOpenAPIDocsHandler()); err != nil {
-				return err
-			}
 		}
 
 		return nil
@@ -89,7 +85,6 @@ func (e *Authorizer) Cleanups() []func() {
 
 const (
 	authorizerOpenAPISpec string = "/authorizer/openapi.json"
-	authorizerOpenAPIDocs string = "/authorizer/docs"
 )
 
 func azOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
@@ -101,16 +96,4 @@ func azOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[str
 	w.Header().Add("Content-Type", "application/json")
 	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
 	_, _ = w.Write(buf)
-}
-
-func azOpenAPIDocsHandler() runtime.HandlerFunc {
-	h := rapidoc.Handler(&rapidoc.Opts{
-		Path:    authorizerOpenAPIDocs,
-		SpecURL: authorizerOpenAPISpec,
-		Title:   "Aserto Directory HTTP API",
-	}, nil)
-
-	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-		h.ServeHTTP(w, r)
-	}
 }
