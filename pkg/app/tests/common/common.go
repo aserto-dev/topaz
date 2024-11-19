@@ -3,7 +3,9 @@ package common_test
 import (
 	"context"
 	"fmt"
+	"log"
 	"runtime"
+	"time"
 
 	"github.com/magefile/mage/sh"
 	"github.com/testcontainers/testcontainers-go"
@@ -16,9 +18,13 @@ type Harness struct {
 func NewHarness(ctx context.Context, req *testcontainers.ContainerRequest) (*Harness, error) {
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: *req,
-		Started:          true,
+		Started:          false,
 	})
 	if err != nil {
+		return nil, err
+	}
+
+	if err := container.Start(ctx); err != nil {
 		return nil, err
 	}
 
@@ -28,18 +34,22 @@ func NewHarness(ctx context.Context, req *testcontainers.ContainerRequest) (*Har
 }
 
 func (h *Harness) Close(ctx context.Context) error {
-	return h.container.Terminate(ctx)
+	timeout := 20 * time.Second
+	if err := h.container.Stop(ctx, &timeout); err != nil {
+		return h.container.Terminate(ctx)
+	}
+	return nil
 }
 
 func (h *Harness) AddrGRPC(ctx context.Context) string {
 	host, err := h.container.Host(ctx)
 	if err != nil {
-		return ""
+		log.Fatal(err)
 	}
 
 	mappedPort, err := h.container.MappedPort(ctx, "9292")
 	if err != nil {
-		return ""
+		log.Fatal(err)
 	}
 
 	return fmt.Sprintf("%s:%s", host, mappedPort.Port())
@@ -48,12 +58,13 @@ func (h *Harness) AddrGRPC(ctx context.Context) string {
 func (h *Harness) AddrREST(ctx context.Context) string {
 	host, err := h.container.Host(ctx)
 	if err != nil {
-		return ""
+		log.Fatal(err)
+		// return ""
 	}
 
 	mappedPort, err := h.container.MappedPort(ctx, "9393")
 	if err != nil {
-		return ""
+		log.Fatal(err)
 	}
 
 	return fmt.Sprintf("%s:%s", host, mappedPort.Port())

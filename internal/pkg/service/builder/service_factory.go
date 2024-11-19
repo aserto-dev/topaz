@@ -144,16 +144,17 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 
 	config.Gateway.HTTP = !config.Gateway.Certs.HasCert()
 
-	if !config.Gateway.HTTP {
-		tlsServerConfig, err := config.Gateway.Certs.ServerConfig()
-		if err != nil {
-			return Gateway{Server: gtwServer, Mux: mux, Certs: &config.Gateway.Certs}, err
-		}
-		gtwServer.TLSConfig = tlsServerConfig
-		return Gateway{Server: gtwServer, Mux: mux, Certs: &config.Gateway.Certs}, nil
+	if config.Gateway.HTTP {
+		return Gateway{Server: gtwServer, Mux: mux, Certs: nil}, nil
 	}
 
-	return Gateway{Server: gtwServer, Mux: mux, Certs: nil}, nil
+	tlsServerConfig, err := config.Gateway.Certs.ServerConfig()
+	if err != nil {
+		return Gateway{Server: gtwServer, Mux: mux, Certs: &config.Gateway.Certs}, err
+	}
+
+	gtwServer.TLSConfig = tlsServerConfig
+	return Gateway{Server: gtwServer, Mux: mux, Certs: &config.Gateway.Certs}, nil
 }
 
 // gatewayMux creates a gateway multiplexer for serving the API as an OpenAPI endpoint.
