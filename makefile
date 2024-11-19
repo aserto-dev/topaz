@@ -264,6 +264,7 @@ clean:
 	@rm -rf ${EXT_DIR}
 	@rm -rf ${BIN_DIR}
 	@rm -rf ./dist
+	@rm -rf ./test
 
 ${BIN_DIR}:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
