@@ -34,7 +34,7 @@ func TestMain(m *testing.M) {
 	ctx := context.Background()
 	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
 		Image:        tc.TestImage(),
-		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		ExposedPorts: []string{"9292/tcp", "9393/tcp", "9494/tcp", "9696/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
 			"TOPAZ_DB_DIR":        "/data",
@@ -50,7 +50,7 @@ func TestMain(m *testing.M) {
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
 			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
-		).WithStartupTimeoutDefault(120 * time.Second).WithDeadline(360 * time.Second),
+		).WithStartupTimeoutDefault(180 * time.Second).WithDeadline(360 * time.Second),
 	})
 	if err != nil {
 		rc = 99
@@ -81,7 +81,7 @@ var tcs = []string{
 	"../../../../assets/todo.json",
 }
 
-func TestTemplate(t *testing.T) {
+func TestTemplateNoTLS(t *testing.T) {
 	t.Logf("addr: %s", addr)
 
 	t.Setenv("TOPAZ_NO_COLOR", "true")
