@@ -1,10 +1,5 @@
 package config
 
-import (
-	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
-	"github.com/samber/lo"
-)
-
 type currentConfig struct {
 	*Loader
 	err error
@@ -25,14 +20,4 @@ func (c *currentConfig) Ports() ([]string, error) {
 	}
 
 	return c.GetPorts()
-}
-
-func (c *currentConfig) Services() ([]string, error) {
-	if c.err != nil {
-		return []string{}, c.err
-	}
-
-	return lo.MapToSlice(c.Configuration.APIConfig.Services, func(k string, v *builder.API) string {
-		return k
-	}), nil
 }
