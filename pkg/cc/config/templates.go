@@ -89,8 +89,8 @@ controller:
   enabled: true
   server:
     address: {{ .ControlPlane.Address }}
-    client_cert_path: {{ .ControlPlane.ClientCertPath }}
-    client_key_path: {{ .ControlPlane.ClientKeyPath }}
+    client_cert_path: '{{ .ControlPlane.ClientCertPath }}'
+    client_key_path: '{{ .ControlPlane.ClientKeyPath }}'
 {{ else }}
 controller:
   enabled: false
@@ -102,8 +102,8 @@ decision_logger:
     store_directory: {{ .DecisionLogger.StorePath }}
     scribe:
       address: {{ .DecisionLogger.EMSAddress }}
-      client_cert_path: {{ .DecisionLogger.ClientCertPath }}
-      client_key_path: {{ .DecisionLogger.ClientKeyPath }}
+      client_cert_path: '{{ .DecisionLogger.ClientCertPath }}'
+      client_key_path: '{{ .DecisionLogger.ClientKeyPath }}'
       ack_wait_seconds: 30
       headers:
         Aserto-Tenant-Id: {{ .TenantID }}
