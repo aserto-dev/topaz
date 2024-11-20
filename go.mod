@@ -13,7 +13,7 @@ require (
 	github.com/aserto-dev/azm v0.1.19
 	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.11
-	github.com/aserto-dev/go-aserto v0.33.1
+	github.com/aserto-dev/go-aserto v0.33.3
 	github.com/aserto-dev/go-authorizer v0.20.11
 	github.com/aserto-dev/go-directory v0.31.14
 	github.com/aserto-dev/go-edge-ds v0.32.12
@@ -24,7 +24,7 @@ require (
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.31.2
 	github.com/aserto-dev/runtime v0.70.0
-	github.com/aserto-dev/self-decision-logger v0.0.8
+	github.com/aserto-dev/self-decision-logger v0.0.9
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.3.1+incompatible
 	github.com/docker/go-connections v0.5.0
@@ -183,7 +183,6 @@ require (
 	go.opentelemetry.io/otel/metric v1.32.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.28.0 // indirect
 	go.opentelemetry.io/otel/trace v1.32.0 // indirect
-	go.uber.org/goleak v1.3.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.29.0 // indirect
 	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c // indirect
