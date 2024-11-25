@@ -13,11 +13,11 @@ import (
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/decision_log/logger/file"
 	"github.com/aserto-dev/topaz/decision_log/logger/nop"
-	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	builder "github.com/aserto-dev/topaz/pkg/service/builder"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"

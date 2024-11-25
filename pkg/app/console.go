@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strings"
 
-	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	builder "github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )

@@ -7,9 +7,9 @@ import (
 
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
-	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	builder "github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 

@@ -10,8 +10,8 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
-	builder "github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/debug"
+	builder "github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
