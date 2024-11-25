@@ -153,6 +153,10 @@ issues:
       text: "hugeParam:"
       linters:
       - gocritic
+    # integer overflow conversion      
+    - text: "G115"
+      linters:
+      - gosec
     - text: "G404"
       linters:
       - gosec

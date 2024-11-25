@@ -46,6 +46,7 @@ func NewRuntimeResolver(
 
 		// authorization check functions
 		runtime.WithBuiltin1(ds.RegisterCheck(logger, "ds.check", directoryResolver)),
+		runtime.WithBuiltin1(ds.RegisterChecks(logger, "ds.checks", directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, "ds.check_relation", directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, "ds.check_permission", directoryResolver)),
 
