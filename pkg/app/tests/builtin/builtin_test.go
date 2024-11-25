@@ -160,6 +160,32 @@ var BuiltinHelpTests = []struct {
 		},
 	},
 	{
+		name:  "ds.checks",
+		query: "x = ds.checks({})",
+		expected: map[string]interface{}{
+			"ds.checks": map[string]interface{}{
+				"default": map[string]interface{}{
+					"object_id":    "",
+					"object_type":  "",
+					"relation":     "",
+					"subject_id":   "",
+					"subject_type": "",
+					"trace":        false,
+				},
+				"checks": []interface{}{
+					(map[string]interface{}{
+						"object_id":    "",
+						"object_type":  "",
+						"relation":     "",
+						"subject_id":   "",
+						"subject_type": "",
+						"trace":        false,
+					}),
+				},
+			},
+		},
+	},
+	{
 		name:  "ds.check_relation",
 		query: "x = ds.check_relation({})",
 		expected: map[string]interface{}{
