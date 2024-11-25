@@ -8,10 +8,10 @@ package topaz
 
 import (
 	"github.com/aserto-dev/logger"
-	"github.com/aserto-dev/topaz/internal/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/google/wire"
 	"google.golang.org/grpc"
