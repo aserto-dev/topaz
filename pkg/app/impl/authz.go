@@ -12,21 +12,23 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/header"
-	"github.com/lestrrat-go/jwx/v2/jwk"
-
 	runtime "github.com/aserto-dev/runtime"
 	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decision_log"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/aserto-dev/topaz/resolvers"
+
 	"github.com/google/uuid"
+	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/mennanov/fmutils"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/server/types"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"github.com/samber/lo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -204,7 +206,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	log := s.logger.With().Str("api", "is").Logger()
 
 	resp := &authorizer.IsResponse{
-		Decisions: make([]*authorizer.Decision, 0),
+		Decisions: []*authorizer.Decision{},
 	}
 
 	if req.PolicyContext == nil {
@@ -220,11 +222,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	}
 
 	if req.ResourceContext == nil {
-		var err error
-		req.ResourceContext, err = structpb.NewStruct(make(map[string]interface{}))
-		if err != nil {
-			return resp, err
-		}
+		req.ResourceContext = pb.NewStruct()
 	}
 
 	if req.IdentityContext == nil {
@@ -248,14 +246,19 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		InputResource: req.ResourceContext,
 	}
 
-	log.Debug().Interface("input", input).Msg("calculating is")
+	log.Debug().Interface("input", input).Msg("is")
 
 	policyRuntime, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return resp, err
 	}
 
-	queryStmt := fmt.Sprintf("x = data.%s", req.PolicyContext.Path)
+	sb := strings.Builder{}
+	for i, decision := range req.PolicyContext.Decisions {
+		sb.WriteString(fmt.Sprintf("x%d = data.%s.%s\n", i, req.PolicyContext.Path, decision))
+	}
+
+	queryStmt := sb.String()
 
 	query, err := rego.New(
 		rego.Compiler(policyRuntime.GetPluginsManager().GetCompiler()),
@@ -267,30 +270,37 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	}
 
 	results, err := query.Eval(ctx, rego.EvalInput(input))
-
 	if err != nil {
 		return resp, aerr.ErrBadQuery.Err(err).Msgf("query evaluation failed: %s", queryStmt)
-	} else if len(results) == 0 {
+	}
+	if len(results) == 0 {
 		return resp, aerr.ErrBadQuery.Err(err).Msgf("undefined results: %s", queryStmt)
 	}
 
-	v := results[0].Bindings["x"]
-	outcomes := map[string]bool{}
+	for i, d := range req.PolicyContext.Decisions {
+		v, ok := results[0].Bindings[fmt.Sprintf("x%d", i)]
+		if !ok {
+			return nil, errors.Wrapf(err, "failed getting binding for decision [%s]", d)
+		}
 
-	for _, d := range req.PolicyContext.Decisions {
+		outcome, ok := v.(bool)
+		if !ok {
+			return nil, errors.Wrapf(err, "non-boolean outcome for decision [%s]: %s", d, v)
+		}
+
 		decision := authorizer.Decision{
 			Decision: d,
+			Is:       outcome,
 		}
-		decision.Is, err = is(v, d)
-		if err != nil {
-			return nil, errors.Wrapf(err, "failed getting outcome for decision [%s]", d)
-		}
+
 		resp.Decisions = append(resp.Decisions, &decision)
-		outcomes[decision.Decision] = decision.Is
 	}
 
 	dlPlugin := decisionlog_plugin.Lookup(policyRuntime.GetPluginsManager())
-	tenantID := getTenantID(ctx)
+	if dlPlugin == nil {
+		return resp, err
+	}
+
 	d := api.Decision{
 		Id:        uuid.NewString(),
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
@@ -304,13 +314,9 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 			Id:      getID(input),
 			Email:   getEmail(input),
 		},
-		TenantId: tenantID,
+		TenantId: getTenantID(ctx),
 		Resource: req.ResourceContext,
-		Outcomes: outcomes,
-	}
-
-	if dlPlugin == nil {
-		return resp, err
+		Outcomes: getOutcomes(resp.Decisions),
 	}
 
 	err = dlPlugin.Log(ctx, &d)
@@ -326,28 +332,13 @@ func getTenantID(ctx context.Context) *string {
 	if tenantID != "" {
 		return &tenantID
 	}
-
 	return nil
 }
 
-func is(v interface{}, decision string) (bool, error) {
-	switch x := v.(type) {
-	case bool:
-		outcome := v.(bool)
-		return outcome, nil
-	case map[string]interface{}:
-		m := v.(map[string]interface{})
-		if _, ok := m[decision]; !ok {
-			return false, aerr.ErrInvalidDecision.Msgf("decision element [%s] not found", decision)
-		}
-		outcome, err := is(m[decision], decision)
-		if err != nil {
-			return false, aerr.ErrInvalidDecision.Err(err)
-		}
-		return outcome, nil
-	default:
-		return false, aerr.ErrInvalidDecision.Msgf("is unexpected type %T", x)
-	}
+func getOutcomes(decisions []*authorizer.Decision) map[string]bool {
+	return lo.SliceToMap(decisions, func(item *authorizer.Decision) (string, bool) {
+		return item.Decision, item.Is
+	})
 }
 
 func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryRequest) (*authorizer.QueryResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
@@ -413,7 +404,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 		}
 	}
 
-	log.Debug().Str("query", req.Query).Interface("input", input).Msg("executing query")
+	log.Debug().Str("query", req.Query).Interface("input", input).Msg("query")
 
 	rt, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
@@ -575,7 +566,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 	if input == nil {
 		input = make(map[string]interface{})
 	}
-	log.Debug().Str("compile", req.Query).Interface("input", input).Msg("executing compile")
+	log.Debug().Str("compile", req.Query).Interface("input", input).Msg("compile")
 	rt, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return &authorizer.CompileResponse{}, err
