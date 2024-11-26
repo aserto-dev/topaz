@@ -6,7 +6,7 @@ version: 2
 # logger settings.
 logging:
   prod: true
-  log_level: info
+  log_level: trace
   grpc_log_level: info
 
 # edge directory configuration.
