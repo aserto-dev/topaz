@@ -285,7 +285,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 		outcome, ok := v.(bool)
 		if !ok {
-			return nil, errors.Wrapf(err, "failed getting outcome for decision [%s]", d)
+			return nil, errors.Wrapf(err, "non-boolean outcome for decision [%s]: %s", d, v)
 		}
 
 		decision := authorizer.Decision{
