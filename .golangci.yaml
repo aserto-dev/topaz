@@ -46,6 +46,9 @@ linters-settings:
       - case
       - condition
       - return
+  gosec:
+    excludes:
+      - G115 # potential integer overflow when converting between integer types
   govet:
     shadow: true
     settings:
@@ -153,10 +156,6 @@ issues:
       text: "hugeParam:"
       linters:
       - gocritic
-    # integer overflow conversion      
-    - text: "G115"
-      linters:
-      - gosec
     - text: "G404"
       linters:
       - gosec
