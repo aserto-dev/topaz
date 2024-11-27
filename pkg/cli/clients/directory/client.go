@@ -2,6 +2,7 @@ package directory
 
 import (
 	"context"
+	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	dsa3 "github.com/aserto-dev/go-directory/aserto/directory/assertion/v3"
@@ -28,6 +29,7 @@ type Config struct {
 	Plaintext bool              `flag:"plaintext" short:"P" default:"${plaintext}" env:"TOPAZ_PLAINTEXT" help:"use plain-text HTTP/2 (no TLS)"`
 	TenantID  string            `flag:"tenant-id" help:"" default:"${tenant_id}" env:"ASERTO_TENANT_ID" `
 	Headers   map[string]string `flag:"headers" env:"TOPAZ_DIRECTORY_HEADERS" help:"additional headers to send to the directory service"`
+	Timeout   time.Duration     `flag:"timeout" short:"T" default:"${timeout}" env:"TOPAZ_TIMEOUT" help:"command timeout"`
 }
 
 type Client struct {
