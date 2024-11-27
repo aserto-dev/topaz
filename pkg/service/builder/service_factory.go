@@ -70,7 +70,7 @@ func (f *ServiceFactory) CreateService(
 		return nil, err
 	}
 
-	gateway := Gateway{}
+	var gateway *Gateway
 	if gatewayOpts != nil && config.Gateway.ListenAddress != "" {
 		gateway, err = f.prepareGateway(config, gatewayOpts)
 		if err != nil {
@@ -89,7 +89,7 @@ func (f *ServiceFactory) CreateService(
 }
 
 // prepareGateway provides a http server that will have the registrations pointed to the corresponding configured grpc server.
-func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions) (Gateway, error) {
+func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions) (*Gateway, error) {
 	if len(config.Gateway.AllowedHeaders) == 0 {
 		config.Gateway.AllowedHeaders = DefaultGatewayAllowedHeaders
 	}
@@ -113,7 +113,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 	if config.GRPC.Certs.HasCert() {
 		tlsCreds, err := config.GRPC.Certs.ClientCredentials(true)
 		if err != nil {
-			return Gateway{}, errors.Wrapf(err, "failed to get TLS credentials")
+			return nil, errors.Wrapf(err, "failed to get TLS credentials")
 		}
 
 		opts = append(opts, grpc.WithTransportCredentials(tlsCreds))
@@ -124,7 +124,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 	grpcEndpoint := fmt.Sprintf("dns:///%s", config.GRPC.ListenAddress)
 
 	if err := gatewayOpts.HandlerRegistrations(context.Background(), runtimeMux, grpcEndpoint, opts); err != nil {
-		return Gateway{}, err
+		return nil, err
 	}
 
 	mux := http.NewServeMux()
@@ -145,16 +145,16 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 	config.Gateway.HTTP = !config.Gateway.Certs.HasCert()
 
 	if config.Gateway.HTTP {
-		return Gateway{Server: gtwServer, Mux: mux, Certs: nil}, nil
+		return &Gateway{Server: gtwServer, Mux: mux, Certs: nil}, nil
 	}
 
 	tlsServerConfig, err := config.Gateway.Certs.ServerConfig()
 	if err != nil {
-		return Gateway{Server: gtwServer, Mux: mux, Certs: &config.Gateway.Certs}, err
+		return nil, err
 	}
 
 	gtwServer.TLSConfig = tlsServerConfig
-	return Gateway{Server: gtwServer, Mux: mux, Certs: &config.Gateway.Certs}, nil
+	return &Gateway{Server: gtwServer, Mux: mux, Certs: &config.Gateway.Certs}, nil
 }
 
 // gatewayMux creates a gateway multiplexer for serving the API as an OpenAPI endpoint.

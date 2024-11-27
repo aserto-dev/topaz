@@ -25,7 +25,7 @@ type Service struct {
 	Config   *API
 	Server   *grpc.Server
 	Listener net.Listener
-	Gateway  Gateway
+	Gateway  *Gateway
 	Started  chan bool
 	Cleanup  []func()
 }
