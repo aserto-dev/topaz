@@ -88,8 +88,17 @@ container-tag:
 	@scripts/container-tag.sh > .container-tag.env
 
 .PHONY: test
-test: test-snapshot
-	@echo -e "$(ATTN_COLOR)==> test github.com/aserto-dev/topaz/pkg/app/tests/... $(NO_COLOR)"
+test: test-snapshot run-test
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+
+.PHONY: run-test
+run-test:
+	@echo -e "$(ATTN_COLOR)==> run-test github.com/aserto-dev/topaz/pkg/app/tests/... $(NO_COLOR)"
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/... github.com/aserto-dev/topaz/pkg/app/tests/...
+
+.PHONY: run-tests
+run-tests:
+	@echo -e "$(ATTN_COLOR)==> run-tests github.com/aserto-dev/topaz/pkg/app/tests/... $(NO_COLOR)"
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/authz/... github.com/aserto-dev/topaz/pkg/app/tests/authz/...
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/builtin/... github.com/aserto-dev/topaz/pkg/app/tests/builtin/...
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/manifest/... github.com/aserto-dev/topaz/pkg/app/tests/manifest/...

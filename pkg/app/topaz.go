@@ -109,6 +109,7 @@ func (e *Topaz) Start() error {
 	return nil
 }
 
+// nolint: gocyclo
 func (e *Topaz) ConfigServices() error {
 	metricsMiddleware, err := e.setupHealthAndMetrics()
 	if err != nil {
@@ -181,20 +182,22 @@ func (e *Topaz) ConfigServices() error {
 		}
 
 		if con, ok := e.Services[consoleService]; ok {
-			apiKeyAuthMiddleware, err := auth.NewAPIKeyAuthMiddleware(e.Context, &e.Configuration.Auth, e.Logger)
-			if err != nil {
-				return err
-			}
+			if lo.Contains(serviceConfig.registeredServices, consoleService) {
+				if server.Gateway != nil && server.Gateway.Mux != nil {
+					apiKeyAuthMiddleware, err := auth.NewAPIKeyAuthMiddleware(e.Context, &e.Configuration.Auth, e.Logger)
+					if err != nil {
+						return err
+					}
 
-			if lo.Contains(serviceConfig.registeredServices, "console") {
-				consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
-				// config service.
-				server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
-				server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
-				server.Gateway.Mux.HandleFunc("/api/v1/authorizers", handlers.AuthorizersHandler(consoleConfig))
-				// console service. depends on config service.
-				server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))
-				server.Gateway.Mux.Handle("/public/", handlers.UIHandler(http.FS(console.FS)))
+					consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
+					// config service.
+					server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
+					server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
+					server.Gateway.Mux.HandleFunc("/api/v1/authorizers", handlers.AuthorizersHandler(consoleConfig))
+					// console service. depends on config service.
+					server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))
+					server.Gateway.Mux.Handle("/public/", handlers.UIHandler(http.FS(console.FS)))
+				}
 			}
 		}
 

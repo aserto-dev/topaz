@@ -159,23 +159,25 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 				return grpcServer.Serve(listener)
 			})
 
-			httpServer := serverDetails.Gateway
-			if httpServer.Server != nil {
-				s.errGroup.Go(func() error {
-					s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
-					if httpServer.Certs.HasCert() {
-						err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key)
-						if err != nil {
-							return err
+			if serverDetails.Gateway != nil {
+				httpServer := serverDetails.Gateway
+				if httpServer.Server != nil {
+					s.errGroup.Go(func() error {
+						s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
+						if httpServer.Certs.HasCert() {
+							err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key)
+							if err != nil {
+								return err
+							}
+						} else {
+							err := httpServer.Server.ListenAndServe()
+							if err != nil {
+								return err
+							}
 						}
-					} else {
-						err := httpServer.Server.ListenAndServe()
-						if err != nil {
-							return err
-						}
-					}
-					return nil
-				})
+						return nil
+					})
+				}
 			}
 
 			serverDetails.Started <- true // send started information.
