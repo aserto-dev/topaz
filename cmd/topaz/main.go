@@ -111,6 +111,7 @@ func run() (exitCode int) {
 			"no_color":           strconv.FormatBool(cc.NoColor()),
 			"active_config":      c.Config.Active.Config,
 			"cwd":                cwd,
+			"timeout":            cc.Timeout().String(),
 		},
 	)
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))

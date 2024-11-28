@@ -30,7 +30,7 @@ func ServiceHealthStatus(ctx context.Context, cfg *client.Config, service string
 		}
 
 		if resp.GetStatus() != healthpb.HealthCheckResponse_SERVING {
-			return errors.Errorf("gRPC endpoint not SERVING")
+			return errors.Errorf("health service %q is %s", service, resp.GetStatus().String())
 		}
 
 		return nil

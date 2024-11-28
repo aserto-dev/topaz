@@ -3,6 +3,7 @@ package cc
 import (
 	"os"
 	"strconv"
+	"time"
 )
 
 const (
@@ -15,6 +16,7 @@ const (
 	defaultTenantID        = ""
 	defaultInsecure        = false
 	defaultPlaintext       = false
+	defaultTimeout         = 5 * time.Second
 	defaultNoCheck         = false
 	defaultNoColor         = false
 )
@@ -84,6 +86,15 @@ func Plaintext() bool {
 		}
 	}
 	return defaultPlaintext
+}
+
+func Timeout() time.Duration {
+	if timeout := os.Getenv("TOPAZ_TIMEOUT"); timeout != "" {
+		if dur, err := time.ParseDuration(timeout); err == nil {
+			return dur
+		}
+	}
+	return defaultTimeout
 }
 
 func NoCheck() bool {

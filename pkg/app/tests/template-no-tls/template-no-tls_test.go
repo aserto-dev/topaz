@@ -92,12 +92,14 @@ func TestTemplateNoTLS(t *testing.T) {
 		Host:      addr,
 		Insecure:  false,
 		Plaintext: true,
+		Timeout:   10 * time.Second,
 	}
 
 	azConfig := &azc.Config{
 		Host:      addr,
 		Insecure:  false,
 		Plaintext: true,
+		Timeout:   10 * time.Second,
 	}
 
 	for _, tmpl := range tcs {

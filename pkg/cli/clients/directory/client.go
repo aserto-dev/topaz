@@ -2,6 +2,7 @@ package directory
 
 import (
 	"context"
+	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	dsa3 "github.com/aserto-dev/go-directory/aserto/directory/assertion/v3"
@@ -11,13 +12,10 @@ import (
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/version"
+	"github.com/aserto-dev/topaz/pkg/cli/clients"
 
-	"github.com/fullstorydev/grpcurl"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Config struct {
@@ -28,7 +26,10 @@ type Config struct {
 	Plaintext bool              `flag:"plaintext" short:"P" default:"${plaintext}" env:"TOPAZ_PLAINTEXT" help:"use plain-text HTTP/2 (no TLS)"`
 	TenantID  string            `flag:"tenant-id" help:"" default:"${tenant_id}" env:"ASERTO_TENANT_ID" `
 	Headers   map[string]string `flag:"headers" env:"TOPAZ_DIRECTORY_HEADERS" help:"additional headers to send to the directory service"`
+	Timeout   time.Duration     `flag:"timeout" short:"T" default:"${timeout}" env:"TOPAZ_TIMEOUT" help:"command timeout"`
 }
+
+var _ clients.Config = &Config{}
 
 type Client struct {
 	conn      *grpc.ClientConn
@@ -66,34 +67,11 @@ func (cfg *Config) Connect(ctx context.Context) (*grpc.ClientConn, error) {
 		return nil, errors.Errorf("no host specified")
 	}
 
-	if err := cfg.Validate(ctx); err != nil {
+	if ok, err := clients.Validate(ctx, cfg); !ok {
 		return nil, err
 	}
 
 	return cfg.ClientConfig().Connect()
-}
-
-func (cfg *Config) Validate(ctx context.Context) error {
-	var creds credentials.TransportCredentials
-	if cfg.Insecure {
-		tlsConf, err := grpcurl.ClientTLSConfig(cfg.Insecure, "", "", "")
-		if err != nil {
-			return errors.Wrap(err, "failed to create TLS config")
-		}
-		creds = credentials.NewTLS(tlsConf)
-	}
-
-	opts := []grpc.DialOption{
-		grpc.WithUserAgent(version.UserAgent()),
-	}
-
-	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-
-	if _, err := grpcurl.BlockingDial(ctx, "tcp", cfg.Host, creds, opts...); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (cfg *Config) ClientConfig() *client.Config {
@@ -106,4 +84,8 @@ func (cfg *Config) ClientConfig() *client.Config {
 		TenantID: cfg.TenantID,
 		Headers:  cfg.Headers,
 	}
+}
+
+func (cfg *Config) CommandTimeout() time.Duration {
+	return cfg.Timeout
 }

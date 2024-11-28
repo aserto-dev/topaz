@@ -5,8 +5,8 @@ import (
 	"path"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
-	"github.com/pkg/errors"
 )
 
 type RestoreCmd struct {
@@ -15,8 +15,8 @@ type RestoreCmd struct {
 }
 
 func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
-	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
-		return errors.Wrap(cc.ErrNotServing, cmd.Host)
+	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+		return err
 	}
 
 	dsClient, err := dsc.NewClient(c, &cmd.Config)

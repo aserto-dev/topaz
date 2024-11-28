@@ -117,17 +117,17 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 
 	healthCfg := &client.Config{
 		Address:        cfg.Configuration.APIConfig.Health.ListenAddress,
-		ClientCertPath: "", // cfg.Configuration.APIConfig.Health.Certificates.TLSCertPath,
-		ClientKeyPath:  "", // cfg.Configuration.APIConfig.Health.Certificates.TLSKeyPath,
-		CACertPath:     "", // cfg.Configuration.APIConfig.Health.Certificates.TLSCACertPath,
+		ClientCertPath: "",
+		ClientKeyPath:  "",
+		CACertPath:     "",
 		Insecure:       false,
 		NoTLS:          true,
 	}
 
-	if health, err := cc.ServiceHealthStatus(c.Context, healthCfg, "model"); err != nil {
+	if healthy, err := cc.ServiceHealthStatus(c.Context, healthCfg, "model"); err != nil {
 		return errors.Wrapf(err, "unable to check health status")
-	} else if !health {
-		return errors.Errorf("gRPC endpoint not SERVING")
+	} else if !healthy {
+		return err
 	}
 
 	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
