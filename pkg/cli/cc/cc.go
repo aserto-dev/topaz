@@ -134,37 +134,6 @@ func (c *CommonCtx) GetRunningContainers() ([]*types.Container, error) {
 	return topazContainers, nil
 }
 
-// func (c *CommonCtx) IsServing(cfg *client.Config) (bool, error) {
-// 	if c.Config.Defaults.NoCheck {
-// 		return true, nil
-// 	}
-// 	common.Validate(c.Context, )
-// 	var creds credentials.TransportCredentials
-
-// 	if cfg.Insecure {
-// 		tlsConf, err := grpcurl.ClientTLSConfig(cfg.Insecure, "", "", "")
-// 		if err != nil {
-// 			return false, errors.Wrap(err, "failed to create TLS config")
-// 		}
-// 		creds = credentials.NewTLS(tlsConf)
-// 	}
-
-// 	opts := []grpc.DialOption{
-// 		grpc.WithUserAgent(version.UserAgent()),
-// 	}
-
-// 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-
-// 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-// 	defer cancel()
-
-// 	if _, err := grpcurl.BlockingDial(ctx, "tcp", cfg.Address, creds, opts...); err != nil {
-// 		return false, err
-// 	}
-
-// 	return true, nil
-// }
-
 func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 	cliConfig := filepath.Join(GetTopazDir(), configurationFile)
 
