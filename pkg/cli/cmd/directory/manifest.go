@@ -5,10 +5,9 @@ import (
 	"os"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
-
-	"github.com/pkg/errors"
 )
 
 type GetManifestCmd struct {
@@ -29,9 +28,10 @@ type DeleteManifestCmd struct {
 }
 
 func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
-	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
-		return errors.Wrap(cc.ErrNotServing, cmd.Host)
+	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+		return err
 	}
+
 	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
@@ -62,9 +62,10 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
-	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
-		return errors.Wrap(cc.ErrNotServing, cmd.Host)
+	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+		return err
 	}
+
 	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err
@@ -84,9 +85,10 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 }
 
 func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
-	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
-		return errors.Wrap(cc.ErrNotServing, cmd.Host)
+	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+		return err
 	}
+
 	dsClient, err := dsc.NewClient(c, &cmd.Config)
 	if err != nil {
 		return err

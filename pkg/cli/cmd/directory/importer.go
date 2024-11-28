@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/pkg/errors"
 )
@@ -15,9 +16,10 @@ type ImportCmd struct {
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
-	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
-		return errors.Wrap(cc.ErrNotServing, cmd.Host)
+	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+		return err
 	}
+
 	c.Con().Info().Msg(">>> importing data from %s", cmd.Directory)
 
 	if fi, err := os.Stat(cmd.Directory); err != nil || !fi.IsDir() {

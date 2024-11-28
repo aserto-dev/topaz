@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
-	"github.com/pkg/errors"
 )
 
 type ExportCmd struct {
@@ -14,9 +14,10 @@ type ExportCmd struct {
 }
 
 func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {
-	if ok, _ := c.IsServing(cmd.ClientConfig()); !ok {
-		return errors.Wrap(cc.ErrNotServing, cmd.Host)
+	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+		return err
 	}
+
 	c.Con().Info().Msg(">>> exporting data to %s", cmd.Directory)
 
 	objectsFile := filepath.Join(cmd.Directory, "objects.json")

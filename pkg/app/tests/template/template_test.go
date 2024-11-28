@@ -92,12 +92,14 @@ func TestTemplate(t *testing.T) {
 		Host:      addr,
 		Insecure:  true,
 		Plaintext: false,
+		Timeout:   10 * time.Second,
 	}
 
 	azConfig := &azc.Config{
 		Host:      addr,
 		Insecure:  true,
 		Plaintext: false,
+		Timeout:   10 * time.Second,
 	}
 
 	for _, tmpl := range tcs {
