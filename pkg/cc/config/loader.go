@@ -168,6 +168,14 @@ func (l *Loader) GetPorts() ([]string, error) {
 		portMap[port] = true
 	}
 
+	if l.Configuration.DebugService.Enabled && l.Configuration.DebugService.ListenAddress != "" {
+		port, err := getPortFromAddress(l.Configuration.DebugService.ListenAddress)
+		if err != nil {
+			return nil, err
+		}
+		portMap[port] = true
+	}
+
 	for _, value := range l.Configuration.APIConfig.Services {
 		if value.GRPC.ListenAddress != "" {
 			port, err := getPortFromAddress(value.GRPC.ListenAddress)
