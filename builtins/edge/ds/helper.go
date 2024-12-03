@@ -37,12 +37,13 @@ func helpMsg(fnName string, msg proto.Message) (*ast.Term, error) {
 // ProtoToBuf, marshal proto message to buffer.
 func ProtoToBuf(w io.Writer, msg proto.Message) error {
 	b, err := protojson.MarshalOptions{
-		Multiline:       false,
-		Indent:          "",
-		AllowPartial:    false,
-		UseProtoNames:   true,
-		UseEnumNumbers:  false,
-		EmitUnpopulated: false,
+		Multiline:         false,
+		Indent:            "",
+		AllowPartial:      false,
+		UseProtoNames:     true,
+		UseEnumNumbers:    false,
+		EmitUnpopulated:   false,
+		EmitDefaultValues: true,
 	}.Marshal(msg)
 	if err != nil {
 		return err
