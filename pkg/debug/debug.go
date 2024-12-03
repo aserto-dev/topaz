@@ -22,43 +22,43 @@ type Server struct {
 }
 
 func NewServer(cfg *Config, log *zerolog.Logger) *Server {
-	if cfg.Enabled {
-		http.DefaultServeMux = http.NewServeMux()
-
-		pprofServeMux := http.NewServeMux()
-
-		pprofServeMux.HandleFunc("/debug/pprof/", pprof.Index)
-		pprofServeMux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
-		pprofServeMux.HandleFunc("/debug/pprof/profile", pprof.Profile)
-		pprofServeMux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
-		pprofServeMux.HandleFunc("/debug/pprof/trace", pprof.Trace)
-
-		pprofServeMux.Handle("/debug/pprof/allocs", pprof.Handler("allocs"))
-		pprofServeMux.Handle("/debug/pprof/block", pprof.Handler("block"))
-		pprofServeMux.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
-		pprofServeMux.Handle("/debug/pprof/heap", pprof.Handler("heap"))
-		pprofServeMux.Handle("/debug/pprof/mutex", pprof.Handler("mutex"))
-		pprofServeMux.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
-
-		debugLogger := log.With().Str("component", "debug").Logger()
-
-		srv := &http.Server{
-			Addr:              cfg.ListenAddress,
-			Handler:           pprofServeMux,
-			ReadTimeout:       5 * time.Second,
-			ReadHeaderTimeout: 5 * time.Second,
-			WriteTimeout:      30 * time.Second,
-			IdleTimeout:       30 * time.Second,
-		}
-
-		return &Server{
-			server: srv,
-			logger: &debugLogger,
-			cfg:    cfg,
-		}
+	if !cfg.Enabled {
+		return nil
 	}
 
-	return nil
+	http.DefaultServeMux = http.NewServeMux()
+
+	pprofServeMux := http.NewServeMux()
+
+	pprofServeMux.HandleFunc("/debug/pprof/", pprof.Index)
+	pprofServeMux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	pprofServeMux.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	pprofServeMux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	pprofServeMux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+
+	pprofServeMux.Handle("/debug/pprof/allocs", pprof.Handler("allocs"))
+	pprofServeMux.Handle("/debug/pprof/block", pprof.Handler("block"))
+	pprofServeMux.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
+	pprofServeMux.Handle("/debug/pprof/heap", pprof.Handler("heap"))
+	pprofServeMux.Handle("/debug/pprof/mutex", pprof.Handler("mutex"))
+	pprofServeMux.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
+
+	debugLogger := log.With().Str("component", "debug").Logger()
+
+	srv := &http.Server{
+		Addr:              cfg.ListenAddress,
+		Handler:           pprofServeMux,
+		ReadTimeout:       5 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       30 * time.Second,
+	}
+
+	return &Server{
+		server: srv,
+		logger: &debugLogger,
+		cfg:    cfg,
+	}
 }
 
 func (srv *Server) Start() {
