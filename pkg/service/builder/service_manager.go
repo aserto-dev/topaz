@@ -208,6 +208,7 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 			s.logger.Warn().Msgf("Stopped %s health server forcefully", s.HealthServer.Address)
 		}
 	}
+
 	if s.MetricServer != nil {
 		s.logger.Info().Msgf("Stopping %s metric server", s.MetricServer.Addr)
 		err := s.MetricServer.Shutdown(timeoutContext)
@@ -219,12 +220,10 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 			}
 		}
 	}
+
 	for address, value := range s.Servers {
-		s.logger.Info().Msgf("Stopping %s gRPC server", address)
-		if !shutDown(value.Server, timeout) {
-			s.logger.Warn().Msgf("Stopped %s gRPC forcefully", address)
-		}
-		if value.Gateway.Server != nil {
+		// shutdown gateway service first, as it is layered on-top of the gRPC service.
+		if value.Gateway != nil && value.Gateway.Server != nil {
 			s.logger.Info().Msgf("Stopping %s gateway server", value.Gateway.Server.Addr)
 			err := value.Gateway.Server.Shutdown(timeoutContext)
 			if err != nil {
@@ -235,6 +234,14 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 				}
 			}
 		}
+
+		// shutdown gRPC service.
+		s.logger.Info().Msgf("Stopping %s gRPC server", address)
+		if !shutDown(value.Server, timeout) {
+			s.logger.Warn().Msgf("Stopped %s gRPC forcefully", address)
+		}
+
+		// run cleanup routines.
 		for _, cleanup := range value.Cleanup {
 			s.logger.Info().Msgf("Running cleanups for %s", address)
 			cleanup()
