@@ -2,6 +2,8 @@ module github.com/aserto-dev/topaz
 
 go 1.23.3
 
+replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
 replace github.com/adrg/xdg => ./internal/pkg/xdg
 
 require (
