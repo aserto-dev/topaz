@@ -128,6 +128,16 @@ $(TEMPLATES): test-snapshot
 	@./dist/topaz_${GOOS}_${GOARCH}/topaz templates install $@ --force --no-console --container-tag=test-$$(git rev-parse --short HEAD)-${GOARCH}
 	@./dist/topaz_${GOOS}_${GOARCH}/topaz stop --wait
 
+.PHONY: run-test-snapshot
+run-test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(go env GOARCH) $(NO_COLOR)"
+	@topaz run --container-tag="0.0.0-test-$$(git rev-parse --short HEAD)-$$(go env GOARCH)"
+
+.PHONY: start-test-snapshot
+start-test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ 0.0.0-test-$$(git rev-parse --short HEAD)-$$(go env GOARCH) $(NO_COLOR)"
+	@topaz start --container-tag="0.0.0-test-$$(git rev-parse --short HEAD)-$$(go env GOARCH)"
+
 .PHONY: vault-login
 vault-login:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
