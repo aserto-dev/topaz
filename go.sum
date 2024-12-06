@@ -427,12 +427,12 @@ github.com/aserto-dev/go-authorizer v0.20.11 h1:OaYJwyljt2yBuDtIiMl1mqjyMU0dUuv1
 github.com/aserto-dev/go-authorizer v0.20.11/go.mod h1:iwVdTU2xOrNW0TZ+UWX+Mn2hgR2Lj1XmKgei0tt5pbY=
 github.com/aserto-dev/go-decision-logs v0.1.2 h1:f26bgKDIroNeN71+Ot2AXfCAtausNcBykF94RWP5I0I=
 github.com/aserto-dev/go-decision-logs v0.1.2/go.mod h1:T7Pws/IBopk3he4kgAlmZH9/JcwX2s8T2pwc715Mobo=
-github.com/aserto-dev/go-directory v0.33.2-0.20241206162131-834ee9864013 h1:QCWLqjBputFLRaqYBb89HHykSOseX3ebe6bcUQnN3vk=
-github.com/aserto-dev/go-directory v0.33.2-0.20241206162131-834ee9864013/go.mod h1:0Ng9lPTahslSN/ONoWCceG6Q1ukpSfxYEu589eCReRM=
-github.com/aserto-dev/go-edge-ds v0.33.1-0.20241206214332-cfbce2d75061 h1:r5cAFybEi6tcYbqD1xL/vCPEJVFNu7wlx5oxeslsywQ=
-github.com/aserto-dev/go-edge-ds v0.33.1-0.20241206214332-cfbce2d75061/go.mod h1:PNXGb+nHvFKJa23vQ93BDGGWjJOLgCbNgs6XsKNP/p4=
+github.com/aserto-dev/go-directory v0.33.1 h1:jLyzMRu5Omw5KJ2cmqnGZZbrF091HFHnt9awhqZhSq8=
+github.com/aserto-dev/go-directory v0.33.1/go.mod h1:0Ng9lPTahslSN/ONoWCceG6Q1ukpSfxYEu589eCReRM=
 github.com/aserto-dev/go-edge-ds v0.33.1-0.20241206221117-df2798022b9c h1:mKp+qe1KeFdR5OlXSS0aWEXoTt2IJT9OnLkuYqxiyoM=
 github.com/aserto-dev/go-edge-ds v0.33.1-0.20241206221117-df2798022b9c/go.mod h1:PNXGb+nHvFKJa23vQ93BDGGWjJOLgCbNgs6XsKNP/p4=
+github.com/aserto-dev/go-edge-ds v0.33.1-0.20241206230110-b8d067d24863 h1:PduxtQzv/vKvn6qjAMuuJmMO2Duhu3cleyi/nBFiCKo=
+github.com/aserto-dev/go-edge-ds v0.33.1-0.20241206230110-b8d067d24863/go.mod h1:PNXGb+nHvFKJa23vQ93BDGGWjJOLgCbNgs6XsKNP/p4=
 github.com/aserto-dev/go-grpc v0.9.2 h1:NYhl1yRnLWlTMe/L051lRZwuvv/lUuP9vJ4gFPwzpSw=
 github.com/aserto-dev/go-grpc v0.9.2/go.mod h1:pKZdJ9+ITXPBvFQeU+CJmRtQE7rX/+cX9JFRzo8z0TQ=
 github.com/aserto-dev/go-topaz-ui v0.1.15 h1:ykez4Em2gEORDi96lDEzS2yWb510dzSKZzAoyP4tQ8Q=
@@ -694,7 +694,6 @@ github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 h1:pRhl55Yx1eC7BZ1N+BBWwn
 github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0/go.mod h1:XKMd7iuf/RGPSMJ/U4HP0zS2Z9Fh8Ps9a+6X26m/tmI=
 github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 h1:Ovs26xHkKqVztRpIrF/92BcuyuQ/YW4NSIpoGtfXNho=
 github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0/go.mod h1:8NvIoxWQoOIhqOTXgfV/d3M/q6VIi02HzZEHgUlZvzk=
-github.com/grpc-ecosystem/grpc-gateway v1.16.0 h1:gmcG1KaJ57LophUzW0Hy8NmPhnMZb4M0+kPpLofRdBo=
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.24.0 h1:TmHmbvxPmaegwhDubVz0lICL0J5Ka2vwTzhoePEXsGE=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.24.0/go.mod h1:qztMSjm835F2bXf+5HKAPIS5qsmQDqZna/PgVt4rWtI=
