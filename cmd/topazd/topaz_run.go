@@ -109,7 +109,9 @@ func configOverrides(cfg *config.Config) {
 		cfg.OPA.LocalBundles.Watch = true
 	}
 
-	cfg.Common.DebugService.Enabled = flagRunDebug
+	if flagRunDebug {
+		cfg.Common.DebugService.Enabled = true
+	}
 }
 
 // nolint: gochecknoinits, errcheck
