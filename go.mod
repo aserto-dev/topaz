@@ -2,10 +2,6 @@ module github.com/aserto-dev/topaz
 
 go 1.23.3
 
-replace github.com/aserto-dev/go-directory => ../go-directory
-
-replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-
 replace github.com/adrg/xdg => ./internal/pkg/xdg
 
 require (
@@ -14,13 +10,13 @@ require (
 	github.com/alecthomas/kong v1.4.0
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.7
-	github.com/aserto-dev/azm v0.2.2-0.20241206201857-3a4bb962aab6
+	github.com/aserto-dev/azm v0.2.2-0.20241206214205-05080ab71858
 	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.11
 	github.com/aserto-dev/go-aserto v0.33.3
 	github.com/aserto-dev/go-authorizer v0.20.11
 	github.com/aserto-dev/go-directory v0.33.2-0.20241206162131-834ee9864013
-	github.com/aserto-dev/go-edge-ds v0.33.1-0.20241206204623-2361a25c9cf9
+	github.com/aserto-dev/go-edge-ds v0.33.1-0.20241206221117-df2798022b9c
 	github.com/aserto-dev/go-grpc v0.9.2
 	github.com/aserto-dev/go-topaz-ui v0.1.15
 	github.com/aserto-dev/header v0.0.8
