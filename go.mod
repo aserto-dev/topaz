@@ -4,19 +4,23 @@ go 1.23.3
 
 replace github.com/adrg/xdg => ./internal/pkg/xdg
 
+replace github.com/aserto-dev/azm => ../azm
+
+replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/adrg/xdg v0.4.0
 	github.com/alecthomas/kong v1.4.0
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.7
-	github.com/aserto-dev/azm v0.2.2-0.20241206214205-05080ab71858
+	github.com/aserto-dev/azm v0.2.2-0.20241208220302-6161ae10603f
 	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.11
 	github.com/aserto-dev/go-aserto v0.33.3
 	github.com/aserto-dev/go-authorizer v0.20.11
 	github.com/aserto-dev/go-directory v0.33.1
-	github.com/aserto-dev/go-edge-ds v0.33.1-0.20241206230110-b8d067d24863
+	github.com/aserto-dev/go-edge-ds v0.33.1-0.20241208220454-3cc0dc3745b6
 	github.com/aserto-dev/go-grpc v0.9.2
 	github.com/aserto-dev/go-topaz-ui v0.1.15
 	github.com/aserto-dev/header v0.0.8
