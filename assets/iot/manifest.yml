@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+### filename: manifest.yaml ###
+### datetime: 2024-01-18T00:00:00-00:00 ###
+### description: iot manifest ###
+#
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  ### display_name: User ###
+  user: {}
+
+  ### display_name: Device Group ###
+  device_group:
+    relations:
+      it_admin: user
+      security_guard: user
+
+  ### display_name: Device ###
+  device:
+    relations:
+      it_admin: user | device_group#it_admin
+      security_guard: user | device_group#security_guard
+    permissions:
+      can_rename_device: it_admin
+      can_view_live_video: it_admin | security_guard
+      can_view_recorded_video: it_admin | security_guard
