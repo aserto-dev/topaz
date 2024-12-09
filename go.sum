@@ -415,6 +415,8 @@ github.com/aserto-dev/aserto-grpc v0.2.6 h1:h64MYALF5zLm2sSKcLEtyXyrJvZSxfqTOmQ1
 github.com/aserto-dev/aserto-grpc v0.2.6/go.mod h1:Vki74KINVfnwtJ8QGzRm+xHNjsJ2KUWFtXhezJK9DEg=
 github.com/aserto-dev/aserto-management v0.9.7 h1:nT7hu1BUEz9LMZ9vthEf9ML2blO+Ak+4ILX8n18XLXo=
 github.com/aserto-dev/aserto-management v0.9.7/go.mod h1:ErZ4BGsYkAt1IhQVEgs6Cuhzn+UGA0tuNVUmKeA+twk=
+github.com/aserto-dev/azm v0.2.2-0.20241209183007-db142a784585 h1:M5uD91qqFbibAWvv/9tSWy/xr2NeyX2W1nCdiAYuBvA=
+github.com/aserto-dev/azm v0.2.2-0.20241209183007-db142a784585/go.mod h1:LDCYFBjVtFaTi3+g4GBewZVkrvxTKPrCPmuas2TLbuk=
 github.com/aserto-dev/certs v0.1.0 h1:eklyoGdondx0uowVpY3+Oifz+Bhe615Ls5I6oWJrq34=
 github.com/aserto-dev/certs v0.1.0/go.mod h1:xWtPdSkBGgXnBXUUDUg5OD4SdFKiEOtVwkDlDIWMtTM=
 github.com/aserto-dev/errors v0.0.11 h1:CXo+Uwmh09doG2HvL1SC8Fnne8f9VPrGyEQPtogAfyY=
@@ -425,8 +427,10 @@ github.com/aserto-dev/go-authorizer v0.20.11 h1:OaYJwyljt2yBuDtIiMl1mqjyMU0dUuv1
 github.com/aserto-dev/go-authorizer v0.20.11/go.mod h1:iwVdTU2xOrNW0TZ+UWX+Mn2hgR2Lj1XmKgei0tt5pbY=
 github.com/aserto-dev/go-decision-logs v0.1.2 h1:f26bgKDIroNeN71+Ot2AXfCAtausNcBykF94RWP5I0I=
 github.com/aserto-dev/go-decision-logs v0.1.2/go.mod h1:T7Pws/IBopk3he4kgAlmZH9/JcwX2s8T2pwc715Mobo=
-github.com/aserto-dev/go-directory v0.33.1 h1:jLyzMRu5Omw5KJ2cmqnGZZbrF091HFHnt9awhqZhSq8=
-github.com/aserto-dev/go-directory v0.33.1/go.mod h1:0Ng9lPTahslSN/ONoWCceG6Q1ukpSfxYEu589eCReRM=
+github.com/aserto-dev/go-directory v0.33.2-0.20241209182914-962e2284a774 h1:EYzcBLxIFXZVeI6V+inh/9vucDlLWSyFo8V2nk9ipJA=
+github.com/aserto-dev/go-directory v0.33.2-0.20241209182914-962e2284a774/go.mod h1:8oIbHi7n0fTgTcqcuW/dNB8KigJndqMEqQQZjoEz5ws=
+github.com/aserto-dev/go-edge-ds v0.33.1-0.20241209183151-63413ae6ea67 h1:Xgt8gHyAnuKK7ihF78UNPleHMOg8+QX9xmQCP3GLO6M=
+github.com/aserto-dev/go-edge-ds v0.33.1-0.20241209183151-63413ae6ea67/go.mod h1:AZLL04l5Dkg6rxfLvF3v/OGR4vRb9cxfeFHvjgmJbfs=
 github.com/aserto-dev/go-grpc v0.9.2 h1:NYhl1yRnLWlTMe/L051lRZwuvv/lUuP9vJ4gFPwzpSw=
 github.com/aserto-dev/go-grpc v0.9.2/go.mod h1:pKZdJ9+ITXPBvFQeU+CJmRtQE7rX/+cX9JFRzo8z0TQ=
 github.com/aserto-dev/go-topaz-ui v0.1.15 h1:ykez4Em2gEORDi96lDEzS2yWb510dzSKZzAoyP4tQ8Q=
@@ -819,6 +823,8 @@ github.com/pelletier/go-toml/v2 v2.2.3/go.mod h1:MfCQTFTvCcUyyvvwm1+G6H/jORL20Xl
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 h1:GFCKgmp0tecUJ0sJuv4pzYCqS9+RGSn52M3FUwPs+uo=
+github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10/go.mod h1:t/avpk3KcrXxUnYOhZhMXJlSEyie6gQbtLq5NM3loB8=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 h1:Jamvg5psRIccs7FGNTlIRMkT8wgtp5eCXdBlqhYGL6U=
 github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

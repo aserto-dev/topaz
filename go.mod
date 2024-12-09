@@ -4,9 +4,11 @@ go 1.23.3
 
 replace github.com/adrg/xdg => ./internal/pkg/xdg
 
-replace github.com/aserto-dev/azm => ../azm
+// replace github.com/aserto-dev/azm => ../azm
 
-replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+
+// replace github.com/aserto-dev/go-directory => ../go-directory
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
@@ -14,13 +16,13 @@ require (
 	github.com/alecthomas/kong v1.4.0
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.7
-	github.com/aserto-dev/azm v0.2.2-0.20241208220302-6161ae10603f
+	github.com/aserto-dev/azm v0.2.2-0.20241209183007-db142a784585
 	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.11
 	github.com/aserto-dev/go-aserto v0.33.3
 	github.com/aserto-dev/go-authorizer v0.20.11
-	github.com/aserto-dev/go-directory v0.33.1
-	github.com/aserto-dev/go-edge-ds v0.33.1-0.20241208220454-3cc0dc3745b6
+	github.com/aserto-dev/go-directory v0.33.2-0.20241209182914-962e2284a774
+	github.com/aserto-dev/go-edge-ds v0.33.1-0.20241209183151-63413ae6ea67
 	github.com/aserto-dev/go-grpc v0.9.2
 	github.com/aserto-dev/go-topaz-ui v0.1.15
 	github.com/aserto-dev/header v0.0.8
@@ -148,6 +150,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/panmari/cuckoofilter v1.0.6 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
+	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
