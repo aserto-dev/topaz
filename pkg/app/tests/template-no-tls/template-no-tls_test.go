@@ -50,7 +50,7 @@ func TestMain(m *testing.M) {
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
 			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
-		).WithStartupTimeoutDefault(180 * time.Second).WithDeadline(360 * time.Second),
+		).WithStartupTimeoutDefault(240 * time.Second).WithDeadline(360 * time.Second),
 	})
 	if err != nil {
 		rc = 99

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/pprof"
+	"runtime"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -44,6 +45,9 @@ func NewServer(cfg *Config, log *zerolog.Logger) *Server {
 	pprofServeMux.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
 
 	debugLogger := log.With().Str("component", "debug").Logger()
+
+	runtime.SetMutexProfileFraction(10)
+	debugLogger.Info().Int("fraction", runtime.SetMutexProfileFraction(-1)).Msg("mutex profiler")
 
 	srv := &http.Server{
 		Addr:              cfg.ListenAddress,
