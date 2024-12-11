@@ -87,6 +87,18 @@ container-tag:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@scripts/container-tag.sh > .container-tag.env
 
+.PHONY: run-test-snapshot
+run-test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@echo "topaz run $$(${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz config info | jq '.runtime.active_configuration_file')"
+	@${PWD}/dist/topazd_${GOOS}_${GOARCH}/topazd run -c $$(${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz config info | jq -r '.runtime.active_configuration_file')
+
+.PHONY: start-test-snapshot
+start-test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@echo "topaz start $$(${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz config info | jq '.runtime.active_configuration_name')"
+	@${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz start --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
+
 .PHONY: test
 test: test-snapshot run-test
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
