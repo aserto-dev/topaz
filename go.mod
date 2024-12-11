@@ -11,16 +11,16 @@ replace github.com/adrg/xdg => ./internal/pkg/xdg
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/adrg/xdg v0.4.0
-	github.com/alecthomas/kong v1.4.0
+	github.com/alecthomas/kong v1.6.0
 	github.com/aserto-dev/aserto-grpc v0.2.6
 	github.com/aserto-dev/aserto-management v0.9.7
-	github.com/aserto-dev/azm v0.2.2-0.20241210213943-fc2b8ff516f0
+	github.com/aserto-dev/azm v0.2.2
 	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.11
-	github.com/aserto-dev/go-aserto v0.33.3
+	github.com/aserto-dev/go-aserto v0.33.4
 	github.com/aserto-dev/go-authorizer v0.20.11
-	github.com/aserto-dev/go-directory v0.33.2-0.20241210213355-3d02dab1a2bd
-	github.com/aserto-dev/go-edge-ds v0.33.1-0.20241210213846-deeb4f029e1a
+	github.com/aserto-dev/go-directory v0.33.2
+	github.com/aserto-dev/go-edge-ds v0.33.1
 	github.com/aserto-dev/go-grpc v0.9.2
 	github.com/aserto-dev/go-topaz-ui v0.1.15
 	github.com/aserto-dev/header v0.0.8
@@ -98,7 +98,6 @@ require (
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gdamore/encoding v1.0.1 // indirect
@@ -110,7 +109,6 @@ require (
 	github.com/goccy/go-json v0.10.3 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/cel-go v0.22.0 // indirect
-	github.com/google/pprof v0.0.0-20240727154555-813a5fbdbec8 // indirect
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 // indirect
@@ -150,7 +148,6 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/panmari/cuckoofilter v1.0.6 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
-	github.com/pkg/profile v1.7.0 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
