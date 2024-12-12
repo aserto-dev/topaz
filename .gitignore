@@ -14,19 +14,19 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 /.dev/
-/.ext
+/.ext/
 
 /bin/
-/release/
-/test/
-.opa/
-/bundle/
 /dist/
-/test/
+/dist-test/
 
 # runtime directories
 /cfg/
 /eds/
+
+# OPA related
+.opa/
+/bundle/
 
 # misc
 .DS_Store

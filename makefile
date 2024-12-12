@@ -52,11 +52,6 @@ go-mod-tidy:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@go work edit -json | jq -r '.Use[].DiskPath' | xargs -I{} bash -c 'cd {} && echo "${PWD}/go.mod" && go mod tidy -v && cd -'
 
-.PHONY: dev-release
-dev-release: 
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/goreleaser release --clean --snapshot
-
 .PHONY: release
 release:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
@@ -80,7 +75,7 @@ lint:
 .PHONY: test-snapshot
 test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot
+	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot --skip archive
 
 .PHONE: container-tag
 container-tag:
@@ -91,7 +86,7 @@ container-tag:
 run-test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@echo "topaz run $$(${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz config info | jq '.runtime.active_configuration_file')"
-	@${PWD}/dist/topazd_${GOOS}_${GOARCH}/topazd run -c $$(${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz config info | jq -r '.runtime.active_configuration_file')
+	@${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz run --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
 
 .PHONY: start-test-snapshot
 start-test-snapshot:
