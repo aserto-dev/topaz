@@ -15,7 +15,7 @@ before:
   hooks:
 
 # https://goreleaser.com/customization/dist/
-dist: test
+dist: dist-test
 
 builds:
   # https://goreleaser.com/customization/build/

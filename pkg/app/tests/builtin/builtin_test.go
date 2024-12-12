@@ -2,14 +2,13 @@ package builtin_test
 
 import (
 	"context"
-	"os"
 	"testing"
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	azc "github.com/aserto-dev/go-aserto/az"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	assets_test "github.com/aserto-dev/topaz/assets"
+	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 
 	"github.com/stretchr/testify/assert"
@@ -18,18 +17,14 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-var addr string
+func TestBuiltins(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
 
-func TestMain(m *testing.M) {
-	rc := 0
-	defer func() {
-		os.Exit(rc)
-	}()
+	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
-	ctx := context.Background()
-	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
+	req := testcontainers.ContainerRequest{
 		Image:        tc.TestImage(),
-		ExposedPorts: []string{"9292/tcp", "9393/tcp", "9494/tcp", "9595/tcp"},
+		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
 			"TOPAZ_DB_DIR":        "/data",
@@ -37,7 +32,7 @@ func TestMain(m *testing.M) {
 		},
 		Files: []testcontainers.ContainerFile{
 			{
-				Reader:            assets_test.ConfigReader(),
+				Reader:            assets_test.PeoplefinderConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
 				FileMode:          0x700,
 			},
@@ -49,76 +44,84 @@ func TestMain(m *testing.M) {
 		},
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
-			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
-		).WithStartupTimeoutDefault(240 * time.Second).WithDeadline(360 * time.Second),
-	})
-	if err != nil {
-		rc = 99
-		return
+			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
+		).WithStartupTimeoutDefault(300 * time.Second),
 	}
 
-	defer func() {
-		if err := h.Close(ctx); err != nil {
-			rc = 100
-		}
-	}()
+	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          false,
+	})
+	require.NoError(t, err)
 
-	addr = h.AddrGRPC(ctx)
+	if err := topaz.Start(ctx); err != nil {
+		require.NoError(t, err)
+	}
 
-	rc = m.Run()
+	t.Cleanup(func() {
+		testcontainers.CleanupContainer(t, topaz)
+		cancel()
+	})
+
+	grpcAddr, err := tc.MappedAddr(ctx, topaz, "9292")
+	require.NoError(t, err)
+
+	t.Run("testBuiltins", testBuiltins(grpcAddr))
 }
 
-func TestBuiltins(t *testing.T) {
-	opts := []client.ConnectionOption{
-		client.WithAddr(addr),
-		client.WithInsecure(true),
-	}
-
-	azClient, err := azc.New(opts...)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = azClient.Close() })
-
-	ctx, cancel := context.WithCancel(context.Background())
-	t.Cleanup(cancel)
-
-	// BuiltinHelptests(ctx, client)
-	for _, tc := range BuiltinHelpTests {
-		f := func(t *testing.T) {
-			resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
-				Query: tc.query,
-			})
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
-
-			r := resp.Response.AsMap()
-
-			v1 := r["result"].([]interface{})
-			v2 := v1[0].(map[string]interface{})
-			v3 := v2["bindings"].(map[string]interface{})
-			v := v3["x"]
-
-			assert.Equal(t, v, tc.expected)
+func testBuiltins(addr string) func(*testing.T) {
+	return func(t *testing.T) {
+		opts := []client.ConnectionOption{
+			client.WithAddr(addr),
+			client.WithInsecure(true),
 		}
 
-		t.Run(tc.name, f)
-	}
+		azClient, err := azc.New(opts...)
+		require.NoError(t, err)
+		t.Cleanup(func() { _ = azClient.Close() })
 
-	// BuiltinNotFoundErrTests
-	for _, tc := range BuiltinNotFoundErrTests {
-		f := func(t *testing.T) {
-			resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
-				Query: tc.query,
-			})
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+		ctx, cancel := context.WithCancel(context.Background())
+		t.Cleanup(cancel)
 
-			r := resp.Response.AsMap()
-			require.NotNil(t, r)
+		// BuiltinHelptests(ctx, client)
+		for _, tc := range BuiltinHelpTests {
+			f := func(t *testing.T) {
+				resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
+					Query: tc.query,
+				})
+				require.NoError(t, err)
+				require.NotNil(t, resp)
+				require.NotNil(t, resp.Response)
+
+				r := resp.Response.AsMap()
+
+				v1 := r["result"].([]interface{})
+				v2 := v1[0].(map[string]interface{})
+				v3 := v2["bindings"].(map[string]interface{})
+				v := v3["x"]
+
+				assert.Equal(t, v, tc.expected)
+			}
+
+			t.Run(tc.name, f)
 		}
 
-		t.Run(tc.name, f)
+		// BuiltinNotFoundErrTests
+		for _, tc := range BuiltinNotFoundErrTests {
+			f := func(t *testing.T) {
+				resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
+					Query: tc.query,
+				})
+				require.NoError(t, err)
+				require.NotNil(t, resp)
+				require.NotNil(t, resp.Response)
+
+				r := resp.Response.AsMap()
+				require.NotNil(t, r)
+			}
+
+			t.Run(tc.name, f)
+		}
 	}
 }
 
