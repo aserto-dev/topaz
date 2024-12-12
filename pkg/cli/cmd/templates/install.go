@@ -122,6 +122,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 		CACertPath:     "",
 		Insecure:       false,
 		NoTLS:          true,
+		NoProxy:        false,
 	}
 
 	if healthy, err := cc.ServiceHealthStatus(c.Context, healthCfg, "model"); err != nil {
@@ -375,20 +376,24 @@ func (i *tmplInstaller) runTemplateTests() error {
 			Desc:    "on-error",
 		},
 		&azc.Config{
-			Host:     cc.AuthorizerSvc(),
-			APIKey:   i.cfg.APIKey,
-			Token:    i.cfg.Token,
-			Insecure: i.cfg.Insecure,
-			TenantID: i.cfg.TenantID,
-			Headers:  i.cfg.Headers,
+			Host:      cc.AuthorizerSvc(),
+			APIKey:    i.cfg.APIKey,
+			Token:     i.cfg.Token,
+			Insecure:  i.cfg.Insecure,
+			Plaintext: i.cfg.Plaintext,
+			TenantID:  i.cfg.TenantID,
+			Headers:   i.cfg.Headers,
+			Timeout:   i.cfg.Timeout,
 		},
 		&dsc.Config{
-			Host:     i.cfg.Host,
-			APIKey:   i.cfg.APIKey,
-			Token:    i.cfg.Token,
-			Insecure: i.cfg.Insecure,
-			TenantID: i.cfg.TenantID,
-			Headers:  i.cfg.Headers,
+			Host:      i.cfg.Host,
+			APIKey:    i.cfg.APIKey,
+			Token:     i.cfg.Token,
+			Insecure:  i.cfg.Insecure,
+			Plaintext: i.cfg.Plaintext,
+			TenantID:  i.cfg.TenantID,
+			Headers:   i.cfg.Headers,
+			Timeout:   i.cfg.Timeout,
 		},
 	)
 	if err != nil {
