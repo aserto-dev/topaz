@@ -2,7 +2,7 @@ package template_no_tls_test
 
 import (
 	"context"
-	"os"
+	"fmt"
 	"path/filepath"
 	"testing"
 	"time"
@@ -16,6 +16,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/templates"
+	"github.com/docker/go-connections/nat"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -23,16 +24,10 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-var addr string
-
-func TestMain(m *testing.M) {
-	rc := 0
-	defer func() {
-		os.Exit(rc)
-	}()
-
+func TestTemplatesNoTLS(t *testing.T) {
 	ctx := context.Background()
-	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
+
+	req := testcontainers.ContainerRequest{
 		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp", "9393/tcp", "9494/tcp", "9696/tcp"},
 		Env: map[string]string{
@@ -51,21 +46,36 @@ func TestMain(m *testing.M) {
 			wait.ForExposedPort(),
 			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
 		).WithStartupTimeoutDefault(300 * time.Second),
-	})
-	if err != nil {
-		rc = 99
-		return
 	}
 
-	defer func() {
-		if err := h.Close(ctx); err != nil {
-			rc = 100
-		}
-	}()
+	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
+	})
+	require.NoError(t, err)
 
-	addr = h.AddrGRPC(ctx)
+	t.Cleanup(func() {
+		testcontainers.CleanupContainer(t, topaz)
+	})
 
-	rc = m.Run()
+	grpcAddr, err := MappedAddr(ctx, topaz, "9292")
+	require.NoError(t, err)
+
+	t.Run("testTemplatesWithNoTLS", testTemplateNoTLS(grpcAddr))
+}
+
+func MappedAddr(ctx context.Context, container testcontainers.Container, port string) (string, error) {
+	host, err := container.Host(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	mappedPort, err := container.MappedPort(ctx, nat.Port(port))
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s:%s", host, mappedPort.Port()), nil
 }
 
 var tcs = []string{
@@ -81,67 +91,69 @@ var tcs = []string{
 	"../../../../assets/todo.json",
 }
 
-func TestTemplateNoTLS(t *testing.T) {
-	t.Logf("addr: %s", addr)
+func testTemplateNoTLS(addr string) func(*testing.T) {
+	return func(t *testing.T) {
+		t.Logf("addr: %s", addr)
 
-	t.Setenv("TOPAZ_NO_COLOR", "true")
-	c, err := cc.NewCommonContext(context.Background(), true, filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile))
-	require.NoError(t, err)
-
-	dsConfig := &dsc.Config{
-		Host:      addr,
-		Insecure:  false,
-		Plaintext: true,
-		Timeout:   10 * time.Second,
-	}
-
-	azConfig := &azc.Config{
-		Host:      addr,
-		Insecure:  false,
-		Plaintext: true,
-		Timeout:   10 * time.Second,
-	}
-
-	for _, tmpl := range tcs {
-		absPath, err := filepath.Abs(tmpl)
+		t.Setenv("TOPAZ_NO_COLOR", "true")
+		c, err := cc.NewCommonContext(context.Background(), true, filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile))
 		require.NoError(t, err)
 
-		tmpl, err := templates.GetTemplateFromFile(absPath)
-		require.NoError(t, err)
-
-		t.Logf("name %s", tmpl.Name)
-		t.Logf("template: %s", absPath)
-
-		dirPath := filepath.Dir(absPath)
-		t.Logf("dir %s", dirPath)
-
-		manifestFile := filepath.Join(dirPath, tmpl.Assets.Manifest)
-		t.Logf("manifestFile: %s", manifestFile)
-		t.Run(tmpl.Name+"-DeleteManifest", DeleteManifest(c, dsConfig))
-		t.Run(tmpl.Name+"-SetManifest", SetManifest(c, dsConfig, manifestFile))
-
-		if len(tmpl.Assets.IdentityData) > 0 {
-			idpDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.IdentityData[0]))
-			t.Logf("idp_data: %s", idpDataDir)
-			t.Run(tmpl.Name+"-ImportIdentityData", ImportData(c, dsConfig, idpDataDir))
+		dsConfig := &dsc.Config{
+			Host:      addr,
+			Insecure:  false,
+			Plaintext: true,
+			Timeout:   10 * time.Second,
 		}
 
-		if len(tmpl.Assets.DomainData) > 0 {
-			domainDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.DomainData[0]))
-			t.Logf("domain_data: %s", domainDataDir)
-			t.Run(tmpl.Name+"-ImportDomainData", ImportData(c, dsConfig, domainDataDir))
+		azConfig := &azc.Config{
+			Host:      addr,
+			Insecure:  false,
+			Plaintext: true,
+			Timeout:   10 * time.Second,
 		}
 
-		if len(tmpl.Assets.Assertions) > 0 {
-			assertionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[0])
-			t.Logf("assertionsFile: %s", assertionsFile)
-			t.Run(tmpl.Name+"-ExecDirectoryTest", ExecDirectoryTests(c, dsConfig, []string{assertionsFile}))
-		}
+		for _, tmpl := range tcs {
+			absPath, err := filepath.Abs(tmpl)
+			require.NoError(t, err)
 
-		if len(tmpl.Assets.Assertions) > 1 {
-			decisionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[1])
-			t.Logf("decisionsFile: %s", decisionsFile)
-			t.Run(tmpl.Name+"-ExecAuthorizerTest", ExecAuthorizerTests(c, azConfig, []string{decisionsFile}))
+			tmpl, err := templates.GetTemplateFromFile(absPath)
+			require.NoError(t, err)
+
+			t.Logf("name %s", tmpl.Name)
+			t.Logf("template: %s", absPath)
+
+			dirPath := filepath.Dir(absPath)
+			t.Logf("dir %s", dirPath)
+
+			manifestFile := filepath.Join(dirPath, tmpl.Assets.Manifest)
+			t.Logf("manifestFile: %s", manifestFile)
+			t.Run(tmpl.Name+"-DeleteManifest", DeleteManifest(c, dsConfig))
+			t.Run(tmpl.Name+"-SetManifest", SetManifest(c, dsConfig, manifestFile))
+
+			if len(tmpl.Assets.IdentityData) > 0 {
+				idpDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.IdentityData[0]))
+				t.Logf("idp_data: %s", idpDataDir)
+				t.Run(tmpl.Name+"-ImportIdentityData", ImportData(c, dsConfig, idpDataDir))
+			}
+
+			if len(tmpl.Assets.DomainData) > 0 {
+				domainDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.DomainData[0]))
+				t.Logf("domain_data: %s", domainDataDir)
+				t.Run(tmpl.Name+"-ImportDomainData", ImportData(c, dsConfig, domainDataDir))
+			}
+
+			if len(tmpl.Assets.Assertions) > 0 {
+				assertionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[0])
+				t.Logf("assertionsFile: %s", assertionsFile)
+				t.Run(tmpl.Name+"-ExecDirectoryTest", ExecDirectoryTests(c, dsConfig, []string{assertionsFile}))
+			}
+
+			if len(tmpl.Assets.Assertions) > 1 {
+				decisionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[1])
+				t.Logf("decisionsFile: %s", decisionsFile)
+				t.Run(tmpl.Name+"-ExecAuthorizerTest", ExecAuthorizerTests(c, azConfig, []string{decisionsFile}))
+			}
 		}
 	}
 }
