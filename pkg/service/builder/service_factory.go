@@ -110,7 +110,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 	runtimeMux := f.gatewayMux(config.Gateway.AllowedHeaders, gatewayOpts.ErrorHandler)
 
 	opts := []grpc.DialOption{}
-	if config.GRPC.Certs.HasCert() {
+	if config.GRPC.Certs.HasCA() {
 		tlsCreds, err := config.GRPC.Certs.ClientCredentials(true)
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to get TLS credentials")

@@ -265,30 +265,22 @@ type services struct {
 
 func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 	portMap := make(map[string]services)
+
 	for key, config := range api {
-		serv := services{}
 		if existing, ok := portMap[config.GRPC.ListenAddress]; ok {
-			serv = existing
-			serv.registeredServices = append(serv.registeredServices, key)
+			existing.registeredServices = append(existing.registeredServices, key)
+			if existing.API.Gateway.ListenAddress == "" && config.Gateway.ListenAddress != "" {
+				existing.API.Gateway = config.Gateway
+			}
+			portMap[config.GRPC.ListenAddress] = existing
 		} else {
+			serv := services{}
 			serv.registeredServices = append(serv.registeredServices, key)
 			serv.API = config
+			portMap[config.GRPC.ListenAddress] = serv
 		}
-		// set default gateway timeouts
-		if serv.API.Gateway.ReadTimeout == 0 {
-			serv.API.Gateway.ReadTimeout = 2 * time.Second
-		}
-		if serv.API.Gateway.ReadHeaderTimeout == 0 {
-			serv.API.Gateway.ReadHeaderTimeout = 2 * time.Second
-		}
-		if serv.API.Gateway.WriteTimeout == 0 {
-			serv.API.Gateway.WriteTimeout = 2 * time.Second
-		}
-		if serv.API.Gateway.IdleTimeout == 0 {
-			serv.API.Gateway.IdleTimeout = 30 * time.Second
-		}
-		portMap[config.GRPC.ListenAddress] = serv
 	}
+
 	return portMap
 }
 
