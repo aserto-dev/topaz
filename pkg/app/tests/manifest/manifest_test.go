@@ -13,7 +13,7 @@ import (
 	client "github.com/aserto-dev/go-aserto"
 	dsc "github.com/aserto-dev/go-aserto/ds/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	assets_test "github.com/aserto-dev/topaz/assets"
+	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 
 	"github.com/stretchr/testify/assert"
@@ -23,18 +23,14 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-var addr string
+func TestManifest(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
 
-func TestMain(m *testing.M) {
-	rc := 0
-	defer func() {
-		os.Exit(rc)
-	}()
+	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
-	ctx := context.Background()
-	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
+	req := testcontainers.ContainerRequest{
 		Image:        tc.TestImage(),
-		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
 			"TOPAZ_DB_DIR":        "/data",
@@ -49,81 +45,89 @@ func TestMain(m *testing.M) {
 		},
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
-			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
-		).WithStartupTimeoutDefault(240 * time.Second).WithDeadline(360 * time.Second),
-	})
-	if err != nil {
-		rc = 99
-		return
+			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
+		).WithStartupTimeoutDefault(300 * time.Second),
 	}
 
-	defer func() {
-		if err := h.Close(ctx); err != nil {
-			rc = 100
-		}
-	}()
+	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          false,
+	})
+	require.NoError(t, err)
 
-	addr = h.AddrGRPC(ctx)
+	if err := topaz.Start(ctx); err != nil {
+		require.NoError(t, err)
+	}
 
-	rc = m.Run()
+	t.Cleanup(func() {
+		testcontainers.CleanupContainer(t, topaz)
+		cancel()
+	})
+
+	grpcAddr, err := tc.MappedAddr(ctx, topaz, "9292")
+	require.NoError(t, err)
+
+	t.Run("testManifest", testManifest(grpcAddr))
 }
 
-func TestManifest(t *testing.T) {
-	opts := []client.ConnectionOption{
-		client.WithAddr(addr),
-		client.WithInsecure(true),
-	}
+func testManifest(addr string) func(*testing.T) {
+	return func(t *testing.T) {
+		opts := []client.ConnectionOption{
+			client.WithAddr(addr),
+			client.WithInsecure(true),
+		}
 
-	dsClient, err := dsc.New(opts...)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = dsClient.Close() })
+		dsClient, err := dsc.New(opts...)
+		require.NoError(t, err)
+		t.Cleanup(func() { _ = dsClient.Close() })
 
-	ctx, cancel := context.WithCancel(context.Background())
-	t.Cleanup(cancel)
+		ctx, cancel := context.WithCancel(context.Background())
+		t.Cleanup(cancel)
 
-	// write manifest to store
-	bytesSend, err := setManifest(ctx, dsClient.Model, assets_test.ManifestReader())
-	require.NoError(t, err)
+		// write manifest to store
+		bytesSend, err := setManifest(ctx, dsClient.Model, assets_test.ManifestReader())
+		require.NoError(t, err)
 
-	tmpDir := t.TempDir()
-	w, err := os.Create(path.Join(tmpDir, "manifest.new.yaml"))
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = w.Close() })
+		tmpDir := t.TempDir()
+		w, err := os.Create(path.Join(tmpDir, "manifest.new.yaml"))
+		require.NoError(t, err)
+		t.Cleanup(func() { _ = w.Close() })
 
-	// get manifest from store
-	metadata, body, err := getManifest(ctx, dsClient.Model)
-	require.NoError(t, err)
-	assert.NotNil(t, metadata)
-
-	// write manifest to temp manifest file
-	bytesRecv, err := io.Copy(w, body)
-	require.NoError(t, err)
-
-	assert.Equal(t, bytesSend, bytesRecv)
-
-	// delete manifest
-	if err := deleteManifest(ctx, dsClient.Model); err != nil {
-		assert.NoError(t, err)
-	}
-
-	// delete deleted manifest should not result in an error
-	if err := deleteManifest(ctx, dsClient.Model); err != nil {
-		assert.NoError(t, err)
-	}
-
-	// getManifest should not fail, but return an empty manifest.
-	if metadata, body, err := getManifest(ctx, dsClient.Model); err == nil {
-		assert.NoError(t, err)
+		// get manifest from store
+		metadata, body, err := getManifest(ctx, dsClient.Model)
+		require.NoError(t, err)
 		assert.NotNil(t, metadata)
 
-		buf := make([]byte, 1024)
+		// write manifest to temp manifest file
+		bytesRecv, err := io.Copy(w, body)
+		require.NoError(t, err)
 
-		n, err := body.Read(buf)
-		assert.Error(t, err, "EOF")
-		assert.Equal(t, 0, n)
-		assert.Len(t, buf, 1024)
-	} else {
-		assert.NoError(t, err)
+		assert.Equal(t, bytesSend, bytesRecv)
+
+		// delete manifest
+		if err := deleteManifest(ctx, dsClient.Model); err != nil {
+			assert.NoError(t, err)
+		}
+
+		// delete deleted manifest should not result in an error
+		if err := deleteManifest(ctx, dsClient.Model); err != nil {
+			assert.NoError(t, err)
+		}
+
+		// getManifest should not fail, but return an empty manifest.
+		if metadata, body, err := getManifest(ctx, dsClient.Model); err == nil {
+			assert.NoError(t, err)
+			assert.NotNil(t, metadata)
+
+			buf := make([]byte, 1024)
+
+			n, err := body.Read(buf)
+			assert.Error(t, err, "EOF")
+			assert.Equal(t, 0, n)
+			assert.Len(t, buf, 1024)
+		} else {
+			assert.NoError(t, err)
+		}
 	}
 }
 

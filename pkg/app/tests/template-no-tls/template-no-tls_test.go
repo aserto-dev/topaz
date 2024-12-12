@@ -2,12 +2,11 @@ package template_no_tls_test
 
 import (
 	"context"
-	"fmt"
 	"path/filepath"
 	"testing"
 	"time"
 
-	assets_test "github.com/aserto-dev/topaz/assets"
+	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
@@ -16,7 +15,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/templates"
-	"github.com/docker/go-connections/nat"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -25,11 +23,13 @@ import (
 )
 
 func TestTemplatesNoTLS(t *testing.T) {
-	ctx := context.Background()
+	ctx, cancel := context.WithCancel(context.Background())
+
+	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
 	req := testcontainers.ContainerRequest{
 		Image:        tc.TestImage(),
-		ExposedPorts: []string{"9292/tcp", "9393/tcp", "9494/tcp", "9696/tcp"},
+		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
 			"TOPAZ_DB_DIR":        "/data",
@@ -44,38 +44,29 @@ func TestTemplatesNoTLS(t *testing.T) {
 		},
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
-			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
+			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
 		).WithStartupTimeoutDefault(300 * time.Second),
 	}
 
 	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: req,
-		Started:          true,
+		Started:          false,
 	})
 	require.NoError(t, err)
+
+	if err := topaz.Start(ctx); err != nil {
+		require.NoError(t, err)
+	}
 
 	t.Cleanup(func() {
 		testcontainers.CleanupContainer(t, topaz)
+		cancel()
 	})
 
-	grpcAddr, err := MappedAddr(ctx, topaz, "9292")
+	grpcAddr, err := tc.MappedAddr(ctx, topaz, "9292")
 	require.NoError(t, err)
 
 	t.Run("testTemplatesWithNoTLS", testTemplateNoTLS(grpcAddr))
-}
-
-func MappedAddr(ctx context.Context, container testcontainers.Container, port string) (string, error) {
-	host, err := container.Host(ctx)
-	if err != nil {
-		return "", err
-	}
-
-	mappedPort, err := container.MappedPort(ctx, nat.Port(port))
-	if err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf("%s:%s", host, mappedPort.Port()), nil
 }
 
 var tcs = []string{

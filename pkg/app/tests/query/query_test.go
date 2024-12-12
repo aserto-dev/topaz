@@ -3,7 +3,6 @@ package query_test
 import (
 	"context"
 	"encoding/json"
-	"os"
 	"testing"
 	"time"
 
@@ -12,7 +11,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	rt "github.com/aserto-dev/runtime"
-	assets_test "github.com/aserto-dev/topaz/assets"
+	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 
 	"github.com/stretchr/testify/require"
@@ -20,18 +19,14 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-var addr string
+func TestQuery(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
 
-func TestMain(m *testing.M) {
-	rc := 0
-	defer func() {
-		os.Exit(rc)
-	}()
+	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
-	ctx := context.Background()
-	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
+	req := testcontainers.ContainerRequest{
 		Image:        tc.TestImage(),
-		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
 			"TOPAZ_DB_DIR":        "/data",
@@ -51,45 +46,53 @@ func TestMain(m *testing.M) {
 		},
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
-			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
-		).WithStartupTimeoutDefault(240 * time.Second).WithDeadline(360 * time.Second),
-	})
-	if err != nil {
-		rc = 99
-		return
+			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
+		).WithStartupTimeoutDefault(300 * time.Second),
 	}
 
-	defer func() {
-		if err := h.Close(ctx); err != nil {
-			rc = 100
-		}
-	}()
+	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          false,
+	})
+	require.NoError(t, err)
 
-	addr = h.AddrGRPC(ctx)
+	if err := topaz.Start(ctx); err != nil {
+		require.NoError(t, err)
+	}
 
-	rc = m.Run()
+	t.Cleanup(func() {
+		testcontainers.CleanupContainer(t, topaz)
+		cancel()
+	})
+
+	grpcAddr, err := tc.MappedAddr(ctx, topaz, "9292")
+	require.NoError(t, err)
+
+	t.Run("testQuery", testQuery(grpcAddr))
 }
 
-func TestQuery(t *testing.T) {
-	opts := []client.ConnectionOption{
-		client.WithAddr(addr),
-		client.WithInsecure(true),
-	}
-
-	azClient, err := azc.New(opts...)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = azClient.Close() })
-
-	ctx, cancel := context.WithCancel(context.Background())
-	t.Cleanup(cancel)
-
-	for _, tc := range queryTests {
-		f := func(t *testing.T) {
-			resp, err := azClient.Query(ctx, tc.query)
-			tc.validate(t, resp, err)
+func testQuery(addr string) func(*testing.T) {
+	return func(t *testing.T) {
+		opts := []client.ConnectionOption{
+			client.WithAddr(addr),
+			client.WithInsecure(true),
 		}
 
-		t.Run(tc.name, f)
+		azClient, err := azc.New(opts...)
+		require.NoError(t, err)
+		t.Cleanup(func() { _ = azClient.Close() })
+
+		ctx, cancel := context.WithCancel(context.Background())
+		t.Cleanup(cancel)
+
+		for _, tc := range queryTests {
+			f := func(t *testing.T) {
+				resp, err := azClient.Query(ctx, tc.query)
+				tc.validate(t, resp, err)
+			}
+
+			t.Run(tc.name, f)
+		}
 	}
 }
 

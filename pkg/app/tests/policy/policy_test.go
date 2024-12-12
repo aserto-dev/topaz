@@ -2,7 +2,6 @@ package policy_test
 
 import (
 	"context"
-	"os"
 	"testing"
 	"time"
 
@@ -10,7 +9,7 @@ import (
 	azc "github.com/aserto-dev/go-aserto/az"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	assets_test "github.com/aserto-dev/topaz/assets"
+	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 
 	"github.com/stretchr/testify/require"
@@ -19,18 +18,14 @@ import (
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
-var addr string
+func TestPolicy(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
 
-func TestMain(m *testing.M) {
-	rc := 0
-	defer func() {
-		os.Exit(rc)
-	}()
+	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
-	ctx := context.Background()
-	h, err := tc.NewHarness(ctx, &testcontainers.ContainerRequest{
+	req := testcontainers.ContainerRequest{
 		Image:        tc.TestImage(),
-		ExposedPorts: []string{"9292/tcp", "9393/tcp"},
+		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
 			"TOPAZ_CERTS_DIR":     "/certs",
 			"TOPAZ_DB_DIR":        "/data",
@@ -50,57 +45,65 @@ func TestMain(m *testing.M) {
 		},
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
-			wait.ForLog("Starting 0.0.0.0:9393 gateway server"),
-		).WithStartupTimeoutDefault(240 * time.Second).WithDeadline(360 * time.Second),
-	})
-	if err != nil {
-		rc = 99
-		return
+			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
+		).WithStartupTimeoutDefault(300 * time.Second),
 	}
 
-	defer func() {
-		if err := h.Close(ctx); err != nil {
-			rc = 100
-		}
-	}()
+	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          false,
+	})
+	require.NoError(t, err)
 
-	addr = h.AddrGRPC(ctx)
+	if err := topaz.Start(ctx); err != nil {
+		require.NoError(t, err)
+	}
 
-	rc = m.Run()
+	t.Cleanup(func() {
+		testcontainers.CleanupContainer(t, topaz)
+		cancel()
+	})
+
+	grpcAddr, err := tc.MappedAddr(ctx, topaz, "9292")
+	require.NoError(t, err)
+
+	t.Run("testPolicy", testPolicy(grpcAddr))
 }
 
-func TestPolicy(t *testing.T) {
-	opts := []client.ConnectionOption{
-		client.WithAddr(addr),
-		client.WithInsecure(true),
-	}
+func testPolicy(addr string) func(*testing.T) {
+	return func(t *testing.T) {
+		opts := []client.ConnectionOption{
+			client.WithAddr(addr),
+			client.WithInsecure(true),
+		}
 
-	azClient, err := azc.New(opts...)
-	require.NoError(t, err)
-	t.Cleanup(func() { _ = azClient.Close() })
+		azClient, err := azc.New(opts...)
+		require.NoError(t, err)
+		t.Cleanup(func() { _ = azClient.Close() })
 
-	ctx, cancel := context.WithCancel(context.Background())
-	t.Cleanup(cancel)
+		ctx, cancel := context.WithCancel(context.Background())
+		t.Cleanup(cancel)
 
-	tests := []struct {
-		name string
-		test func(*testing.T)
-	}{
-		{"TestListPolicies", ListPolicies(ctx, azClient)},
-		{"TestListPoliciesMasked", ListPoliciesMasked(ctx, azClient)},
-		{"TestListPoliciesMaskedComposed", ListPoliciesMaskedComposed(ctx, azClient)},
-		{"TestListPoliciesInvalidMask", ListPoliciesInvalidMask(ctx, azClient)},
-		{"TestListPoliciesEmptyMask", ListPoliciesEmptyMask(ctx, azClient)},
-		{"TestGetPolicies", GetPolicies(ctx, azClient)},
-		{"TestGetPoliciesMasked", GetPoliciesMasked(ctx, azClient)},
-		{"TestGetPoliciesMaskedComposed", GetPoliciesMaskedComposed(ctx, azClient)},
-		{"TestGetPoliciesInvalidMask", GetPoliciesInvalidMask(ctx, azClient)},
-		{"TestGetPoliciesEmptyMask", GetPoliciesEmptyMask(ctx, azClient)},
-		{"TestGetPoliciesInvalidID", GetPoliciesInvalidID(ctx, azClient)},
-	}
+		tests := []struct {
+			name string
+			test func(*testing.T)
+		}{
+			{"TestListPolicies", ListPolicies(ctx, azClient)},
+			{"TestListPoliciesMasked", ListPoliciesMasked(ctx, azClient)},
+			{"TestListPoliciesMaskedComposed", ListPoliciesMaskedComposed(ctx, azClient)},
+			{"TestListPoliciesInvalidMask", ListPoliciesInvalidMask(ctx, azClient)},
+			{"TestListPoliciesEmptyMask", ListPoliciesEmptyMask(ctx, azClient)},
+			{"TestGetPolicies", GetPolicies(ctx, azClient)},
+			{"TestGetPoliciesMasked", GetPoliciesMasked(ctx, azClient)},
+			{"TestGetPoliciesMaskedComposed", GetPoliciesMaskedComposed(ctx, azClient)},
+			{"TestGetPoliciesInvalidMask", GetPoliciesInvalidMask(ctx, azClient)},
+			{"TestGetPoliciesEmptyMask", GetPoliciesEmptyMask(ctx, azClient)},
+			{"TestGetPoliciesInvalidID", GetPoliciesInvalidID(ctx, azClient)},
+		}
 
-	for _, testCase := range tests {
-		t.Run(testCase.name, testCase.test)
+		for _, testCase := range tests {
+			t.Run(testCase.name, testCase.test)
+		}
 	}
 }
 
