@@ -11,9 +11,9 @@ import (
 )
 
 type Config struct {
-	Enabled         bool   `json:"enabled"`
-	ListenAddress   string `json:"listen_address"`
-	ShutdownTimeout int    `json:"shutdown_timeout"`
+	Enabled         bool          `json:"enabled"`
+	ListenAddress   string        `json:"listen_address"`
+	ShutdownTimeout time.Duration `json:"shutdown_timeout"`
 }
 
 type Server struct {
@@ -88,8 +88,7 @@ func (srv *Server) Stop() {
 	var shutdown context.CancelFunc
 	ctx := context.Background()
 	if srv.cfg.ShutdownTimeout > 0 {
-		shutdownTimeout := time.Duration(srv.cfg.ShutdownTimeout) * time.Second
-		ctx, shutdown = context.WithTimeout(ctx, shutdownTimeout)
+		ctx, shutdown = context.WithTimeout(ctx, srv.cfg.ShutdownTimeout)
 		defer shutdown()
 	}
 

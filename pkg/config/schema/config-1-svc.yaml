@@ -38,13 +38,13 @@ debug:
 
 # health service settings.
 health:
-  enabled: false
-  listen_address: :9494
+  enabled: true
+  listen_address: "0.0.0.0:9494"
 
 # metric service settings.
 metrics:
-  enabled: false
-  listen_address: :9696
+  enabled: true
+  listen_address: "0.0.0.0:9696"
 
 # topaz services configuration
 services:
