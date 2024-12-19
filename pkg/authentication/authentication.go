@@ -3,7 +3,10 @@ package authentication
 import (
 	"strings"
 
+	"github.com/aserto-dev/topaz/pkg/config/handler"
+
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
 // authentication:
@@ -28,8 +31,18 @@ import (
 
 type Config struct {
 	Enabled  bool                   `json:"enabled"`
-	Plugin   string                 `json:"plugin"`
+	Plugin   string                 `json:"plugin,omitempty"`
 	Settings map[string]interface{} `json:"settings,omitempty"`
+}
+
+var _ = handler.Config(&Config{})
+
+func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
+	v.SetDefault(strings.Join(append(p, "enabled"), "."), false)
+}
+
+func (c *Config) Validate() (bool, error) {
+	return true, nil
 }
 
 // plugin: local - local authentication implementation.
@@ -75,6 +88,8 @@ func (co *CallOptions) ForPath(path string) *Options {
 	return &co.Default
 }
 
+// TODO: see /topaz/pkg/cc/config/topaz_config.go 32
+// nolint: unused
 func (c *LocalSettings) transposeKeys() {
 	if len(c.APIKeys) != 0 {
 		log.Warn().Msg("config: auth.api_keys is deprecated, please use auth.keys")

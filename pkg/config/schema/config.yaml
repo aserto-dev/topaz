@@ -48,165 +48,164 @@ metrics:
 
 # topaz services configuration
 services:
-  services:
-    console:
-      depends_on:
-        directory
-        authorizer
-      grpc:
-        listen_address: "0.0.0.0:8081"
-        fqdn: ""
-        certs:
-          tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
-          tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
-          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
-        connection_timeout: 5s
-      gateway:
-        listen_address: "0.0.0.0:8080"
-        fqdn: ""
-        certs:
-          tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
-          tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
-          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
-        allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-        allowed_headers:
-        - "Authorization"
-        - "Content-Type"
-        - "If-Match"
-        - "If-None-Match"
-        - "Depth"
-        allowed_methods:
-        - "GET"
-        - "POST"
-        - "HEAD"
-        - "DELETE"
-        - "PUT"
-        - "PATCH"
-        - "PROFIND"
-        - "MKCOL"
-        - "COPY"
-        - "MOVE"
-        http: false
-        read_timeout: 2s
-        read_header_timeout: 2s
-        write_timeout: 2s
-        idle_timeout: 30s
-      includes:
-        - console
+  console:
+    depends_on:
+    - directory
+    - authorizer
+    grpc:
+      listen_address: "0.0.0.0:8081"
+      fqdn: ""
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
+      connection_timeout: 5s
+    gateway:
+      listen_address: "0.0.0.0:8080"
+      fqdn: ""
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
+      allowed_origins:
+      - http://localhost
+      - http://localhost:*
+      - https://localhost
+      - https://localhost:*
+      - https://0.0.0.0:*
+      - https://*.aserto.com
+      - https://*aserto-console.netlify.app
+      allowed_headers:
+      - "Authorization"
+      - "Content-Type"
+      - "If-Match"
+      - "If-None-Match"
+      - "Depth"
+      allowed_methods:
+      - "GET"
+      - "POST"
+      - "HEAD"
+      - "DELETE"
+      - "PUT"
+      - "PATCH"
+      - "PROFIND"
+      - "MKCOL"
+      - "COPY"
+      - "MOVE"
+      http: false
+      read_timeout: 2s
+      read_header_timeout: 2s
+      write_timeout: 2s
+      idle_timeout: 30s
+    includes:
+      - console
 
-    directory:
-      depends_on:
-      grpc:
-        listen_address: "0.0.0.0:9292"
-        fqdn: ""
-        certs:
-          tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
-          tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
-          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
-        connection_timeout: 5s
-      gateway:
-        listen_address: "0.0.0.0:9393"
-        fqdn: ""
-        certs:
-          tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
-          tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
-          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
-        allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-        allowed_headers:
-        - "Authorization"
-        - "Content-Type"
-        - "If-Match"
-        - "If-None-Match"
-        - "Depth"
-        allowed_methods:
-        - "GET"
-        - "POST"
-        - "HEAD"
-        - "DELETE"
-        - "PUT"
-        - "PATCH"
-        - "PROFIND"
-        - "MKCOL"
-        - "COPY"
-        - "MOVE"
-        http: false
-        read_timeout: 2s
-        read_header_timeout: 2s
-        write_timeout: 2s
-        idle_timeout: 30s
-      includes:
-        - model
-        - reader
-        - writer
-        - importer
-        - exporter
-        - reflection
+  directory:
+    depends_on:
+    grpc:
+      listen_address: "0.0.0.0:9292"
+      fqdn: ""
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
+      connection_timeout: 5s
+    gateway:
+      listen_address: "0.0.0.0:9393"
+      fqdn: ""
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
+      allowed_origins:
+      - http://localhost
+      - http://localhost:*
+      - https://localhost
+      - https://localhost:*
+      - https://0.0.0.0:*
+      - https://*.aserto.com
+      - https://*aserto-console.netlify.app
+      allowed_headers:
+      - "Authorization"
+      - "Content-Type"
+      - "If-Match"
+      - "If-None-Match"
+      - "Depth"
+      allowed_methods:
+      - "GET"
+      - "POST"
+      - "HEAD"
+      - "DELETE"
+      - "PUT"
+      - "PATCH"
+      - "PROFIND"
+      - "MKCOL"
+      - "COPY"
+      - "MOVE"
+      http: false
+      read_timeout: 2s
+      read_header_timeout: 2s
+      write_timeout: 2s
+      idle_timeout: 30s
+    includes:
+      - model
+      - reader
+      - writer
+      - importer
+      - exporter
+      - reflection
 
-    authorizer:
-      depends_on:
-        directory.reader
-      grpc:
-        listen_address: "0.0.0.0:8282"
-        fqdn: ""
-        certs:
-          tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
-          tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
-          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
-        connection_timeout: 5s
-      gateway:
-        listen_address: "0.0.0.0:8383"
-        fqdn: ""
-        certs:
-          tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
-          tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
-          tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
-        allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-        allowed_headers:
-        - "Authorization"
-        - "Content-Type"
-        - "If-Match"
-        - "If-None-Match"
-        - "Depth"
-        allowed_methods:
-        - "GET"
-        - "POST"
-        - "HEAD"
-        - "DELETE"
-        - "PUT"
-        - "PATCH"
-        - "PROFIND"
-        - "MKCOL"
-        - "COPY"
-        - "MOVE"
-        http: false
-        read_timeout: 2s
-        read_header_timeout: 2s
-        write_timeout: 2s
-        idle_timeout: 30s
-      includes:
-        - authorizer
-        - reflection
+  authorizer:
+    depends_on:
+    - directory
+    grpc:
+      listen_address: "0.0.0.0:8282"
+      fqdn: ""
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
+      connection_timeout: 5s
+    gateway:
+      listen_address: "0.0.0.0:8383"
+      fqdn: ""
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
+      allowed_origins:
+      - http://localhost
+      - http://localhost:*
+      - https://localhost
+      - https://localhost:*
+      - https://0.0.0.0:*
+      - https://*.aserto.com
+      - https://*aserto-console.netlify.app
+      allowed_headers:
+      - "Authorization"
+      - "Content-Type"
+      - "If-Match"
+      - "If-None-Match"
+      - "Depth"
+      allowed_methods:
+      - "GET"
+      - "POST"
+      - "HEAD"
+      - "DELETE"
+      - "PUT"
+      - "PATCH"
+      - "PROFIND"
+      - "MKCOL"
+      - "COPY"
+      - "MOVE"
+      http: false
+      read_timeout: 2s
+      read_header_timeout: 2s
+      write_timeout: 2s
+      idle_timeout: 30s
+    includes:
+      - authorizer
+      - reflection
 
 # authorizer configuration.
 authorizer:

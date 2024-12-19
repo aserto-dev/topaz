@@ -6,7 +6,10 @@ import (
 
 	"github.com/aserto-dev/aserto-management/controller"
 	"github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/decisionlog"
+
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -17,8 +20,28 @@ type Config struct {
 	JWT         JWTConfig              `json:"jwt"`
 }
 
+var _ = handler.Config(&Config{})
+
+func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
+	c.JWT.SetDefaults(v)
+}
+
+func (c *Config) Validate() (bool, error) {
+	return true, nil
+}
+
+const DefaultAcceptableTimeSkew = time.Second * 5
+
 type JWTConfig struct {
-	AcceptableTimeSkew time.Duration `json:"acceptable_time_skew_seconds"`
+	AcceptableTimeSkew time.Duration `json:"acceptable_time_skew"`
+}
+
+func (c *JWTConfig) SetDefaults(v *viper.Viper, p ...string) {
+	v.SetDefault("acceptable_time_skew", DefaultAcceptableTimeSkew.String())
+}
+
+func (c *JWTConfig) Validate() (bool, error) {
+	return true, nil
 }
 
 // func (c *Config) OPA() (*runtime.Config, error) {
@@ -53,6 +76,6 @@ func (c *Config) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (c *Config) MarshalJSON(data []byte) error {
-	return nil
+func (c *Config) MarshalJSON() ([]byte, error) {
+	return []byte{}, nil
 }
