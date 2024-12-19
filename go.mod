@@ -28,7 +28,7 @@ require (
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.31.2
 	github.com/aserto-dev/runtime v0.70.0
-	github.com/aserto-dev/self-decision-logger v0.0.9
+	github.com/aserto-dev/self-decision-logger v0.0.10
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.3.1+incompatible
 	github.com/docker/go-connections v0.5.0

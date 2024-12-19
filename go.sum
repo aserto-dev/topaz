@@ -445,8 +445,8 @@ github.com/aserto-dev/openapi-directory v0.31.2 h1:cAyMxcnpXMXknsLfHWOMcpHFBtQDg
 github.com/aserto-dev/openapi-directory v0.31.2/go.mod h1:j7VK2dM9ELaI5xI5q53+EpHbvrheHz41yDhZ5rjw+tE=
 github.com/aserto-dev/runtime v0.70.0 h1:NHkn2v+oZffKT1iECoiG7U31KEYOvdb56Q9hrPYHPm4=
 github.com/aserto-dev/runtime v0.70.0/go.mod h1:+oUEAwQxtrHxMQxBAgAEkork9u6gqQXz0jlbFrsPm7Q=
-github.com/aserto-dev/self-decision-logger v0.0.9 h1:pun+ZNQSoUNmmObZG2dkgRiZNe9r7Q7EJfwDFW3tjtg=
-github.com/aserto-dev/self-decision-logger v0.0.9/go.mod h1:tJYUhVtj/LPcbQNgHj8VIzarQOaEvplPJ37VO3A+54w=
+github.com/aserto-dev/self-decision-logger v0.0.10 h1:9KuPRgoQzwK+ehHlr7YmcXWGekjgnqbp+jPUOyJY/w0=
+github.com/aserto-dev/self-decision-logger v0.0.10/go.mod h1:MYQuCHWVVrPkxgsdAd7lL4NJB4OJLnOuuFi7Avn1SDA=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
