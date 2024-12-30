@@ -13,7 +13,7 @@ require (
 	github.com/adrg/xdg v0.4.0
 	github.com/alecthomas/kong v1.6.0
 	github.com/aserto-dev/aserto-grpc v0.2.7
-	github.com/aserto-dev/aserto-management v0.9.7
+	github.com/aserto-dev/aserto-management v0.9.8
 	github.com/aserto-dev/azm v0.2.3
 	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.12
@@ -21,7 +21,7 @@ require (
 	github.com/aserto-dev/go-authorizer v0.20.12
 	github.com/aserto-dev/go-directory v0.33.3
 	github.com/aserto-dev/go-edge-ds v0.33.4
-	github.com/aserto-dev/go-grpc v0.9.2
+	github.com/aserto-dev/go-grpc v0.9.3
 	github.com/aserto-dev/go-topaz-ui v0.1.15
 	github.com/aserto-dev/header v0.0.8
 	github.com/aserto-dev/logger v0.0.6
