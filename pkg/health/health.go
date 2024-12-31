@@ -1,8 +1,11 @@
 package health
 
 import (
+	"html/template"
+	"os"
 	"strings"
 
+	"github.com/Masterminds/sprig"
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 
@@ -25,3 +28,34 @@ func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
 func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
+
+func (c *Config) Generate(w *os.File) error {
+	tmpl := template.New("HEALTH")
+
+	var funcMap template.FuncMap = map[string]interface{}{}
+	tmpl = tmpl.Funcs(sprig.TxtFuncMap()).Funcs(funcMap)
+
+	tmpl, err := tmpl.Parse(healthTemplate)
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.Execute(w, c); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+const healthTemplate = `
+# health service settings.
+health:
+  enabled: {{ .Enabled }}
+  listen_address: '{{ .ListenAddress}}'
+  {{- if .Certificates }}
+  certs:
+    tls_key_path: '{{ .Certificates.Key }}'
+    tls_cert_path: '{{ .Certificates.Cert }}'
+    tls_ca_cert_path: '{{ .Certificates.CA }}'
+  {{ end }}
+`

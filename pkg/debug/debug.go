@@ -2,8 +2,10 @@ package debug
 
 import (
 	"context"
+	"html/template"
 	"net/http"
 	"net/http/pprof"
+	"os"
 	"runtime"
 	"strings"
 	"time"
@@ -33,6 +35,27 @@ func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
 func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
+
+func (c *Config) Generate(w *os.File) error {
+	tmpl, err := template.New("DEBUG").Parse(debugTemplate)
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.Execute(w, c); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+const debugTemplate = `
+# debug service settings.
+debug:
+  enabled: {{ .Enabled }}
+  listen_address: '{{ .ListenAddress}}'
+  shutdown_timeout: {{ .ShutdownTimeout }}
+`
 
 type Server struct {
 	server *http.Server

@@ -1,3 +1,4 @@
+// nolint
 package config_test
 
 import (
@@ -8,7 +9,6 @@ import (
 	"strings"
 	"testing"
 
-	cfg2 "github.com/aserto-dev/topaz/pkg/cc/config"
 	cfg3 "github.com/aserto-dev/topaz/pkg/config"
 
 	"github.com/mitchellh/mapstructure"
@@ -25,9 +25,9 @@ func TestMigrateV2toV3(t *testing.T) {
 	// c3 := cfg3.Config{}
 }
 
-func loadConfigV2(r io.Reader) (*cfg2.Config, error) {
-	return nil, nil
-}
+// func loadConfigV2(r io.Reader) (*cfg2.Config, error) {
+// 	return nil, nil
+// }
 
 func TestLoadConfigV3(t *testing.T) {
 	r, err := os.Open("./schema/config.yaml")

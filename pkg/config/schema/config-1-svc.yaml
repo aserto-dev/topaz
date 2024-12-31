@@ -104,8 +104,35 @@ services:
       - console
       - reflection
 
+# directory configuration.
+directory:
+  read_timeout: 5s
+  write_timeout: 5s
+
+  # directory store configuration.
+  store:
+    plugin: boltdb
+    settings:
+      db_path: '${TOPAZ_DB_DIR}/test.db'
+
+    # plugin: remote_directory
+    # settings:
+    #   address: "directory.prod.aserto.com:8443"
+    #   tenant_id: ""
+    #   api_key: ""
+    #   token: ""
+    #   client_cert_path: ""
+    #   client_key_path: ""
+    #   ca_cert_path: ""
+    #   insecure: true
+    #   no_tls: false
+    #   no_proxy: false
+    #   headers:
+    #     aserto-account-id: "00000000-1111-2222-3333-444455556666"
+
 # authorizer configuration.
 authorizer:
+  # Open Policy Agent configuration.
   opa:
     instance_id: "-"
     graceful_shutdown_period_seconds: 2
@@ -129,9 +156,10 @@ authorizer:
               min_delay_seconds: 60
               max_delay_seconds: 120
 
+  # Decision logger configuration.
   decision_logger:
-    type: self
-    config:
+    plugin: self
+    settings:
       store_directory: "${TOPAZ_DIR}/decisions"
       scribe:
         address: ems.prod.aserto.com:8443
@@ -143,6 +171,7 @@ authorizer:
       shipper:
         publish_timeout_seconds: 2
 
+  # control plane configuration
   controller:
     enabled: true
     server:
@@ -151,31 +180,6 @@ authorizer:
       client_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
       client_key_path: "${TOPAZ_DIR}/certs/grpc.key"
 
-  # default jwt validation configuration
+  # jwt validation configuration
   jwt:
-    acceptable_time_skew_seconds: 5 # set as default, 5 secs
-
-# directory configuration.
-directory:
-  # directory store configuration.
-  store:
-    plugin: boltdb
-    settings:
-      db_path: '${TOPAZ_DB_DIR}/test.db'
-      request_timeout: 5s # set as default, 5 secs.
-
-    # plugin: remote_directory
-    # settings:
-    #   address: "directory.prod.aserto.com:8443"
-    #   tenant_id: ""
-    #   api_key: ""
-    #   token: ""
-    #   client_cert_path: ""
-    #   client_key_path: ""
-    #   ca_cert_path: ""
-    #   insecure: true
-    #   no_tls: false
-    #   no_proxy: false
-    #   timeout: 5s
-    #   headers:
-    #     aserto-account-id: "00000000-1111-2222-3333-444455556666"
+    acceptable_time_skew: 5s

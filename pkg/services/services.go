@@ -2,7 +2,9 @@ package services
 
 import (
 	"net/http"
+	"os"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/aserto-dev/go-aserto"
@@ -41,6 +43,69 @@ func (s *Service) SetDefaults(v *viper.Viper, p ...string) {
 func (s *Service) Validate() (bool, error) {
 	return true, nil
 }
+
+func (c *Config) Generate(w *os.File) error {
+	tmpl, err := template.New("SERVICES").Parse(servicesTemplate)
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.Execute(w, c); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+const servicesTemplate string = `
+# services configuration
+services:
+  {{- range $name, $service := . }}
+  {{ $name }}:
+    grpc:
+      listen_address: '{{ $service.GRPC.ListenAddress }}'
+      fqdn: '{{ $service.GRPC.FQDN }}'
+      {{- if $service.GRPC.Certs }}
+      certs:
+        tls_key_path: '{{ $service.GRPC.Certs.Key }}'
+        tls_cert_path: '{{ $service.GRPC.Certs.Cert }}'
+        tls_ca_cert_path: '{{ $service.GRPC.Certs.CA }}'
+      {{ end -}}
+      connection_timeout: {{ $service.GRPC.ConnectionTimeout }}
+      disable_reflection: {{ $service.GRPC.DisableReflection }}
+
+    gateway:
+      listen_address: '{{ $service.Gateway.ListenAddress }}'
+      fqdn: '{{ $service.Gateway.FQDN }}'
+      {{- if $service.Gateway.Certs }}
+      certs:
+        tls_key_path: '{{ $service.Gateway.Certs.Key }}'
+        tls_cert_path: '{{ $service.Gateway.Certs.Cert }}'
+        tls_ca_cert_path: '{{ $service.Gateway.Certs.CA }}'
+      {{ end -}}
+      allowed_origins:
+      {{- range $service.Gateway.AllowedOrigins }}
+        - {{ . -}}
+      {{ end }}
+      allowed_headers:
+      {{- range $service.Gateway.AllowedHeaders }}
+        - {{ . -}}
+      {{ end }}
+      allowed_methods:
+      {{- range $service.Gateway.AllowedMethods }}
+        - {{ . -}}
+      {{ end }}
+      http: {{ $service.Gateway.HTTP }}
+      read_timeout: {{ $service.Gateway.ReadTimeout }}
+      read_header_timeout: {{ $service.Gateway.ReadHeaderTimeout }}
+      write_timeout: {{ $service.Gateway.WriteTimeout }}
+      idle_timeout: {{ $service.Gateway.IdleTimeout }}
+    includes:
+    {{- range $service.Includes }}
+      - {{ . -}}
+    {{ end }}
+  {{ end }}
+`
 
 type GRPCService struct {
 	ListenAddress     string           `json:"listen_address"`

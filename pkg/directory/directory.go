@@ -1,53 +1,76 @@
 package directory
 
 import (
+	"os"
+	"text/template"
 	"time"
 
-	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/pkg/errors"
 
 	"github.com/spf13/viper"
 )
 
+const (
+	defaultReadTimeout         = 5 * time.Second
+	defaultWriteTimeout        = 5 * time.Second
+	defaultPlugin       string = BoltDBStorePlugin
+)
+
 type Config struct {
-	Store Store `json:"store"`
+	ReadTimeout  time.Duration `json:"read_timeout"`
+	WriteTimeout time.Duration `json:"write_timeout"`
+	Store        Store         `json:"store"`
 }
 
 var _ = handler.Config(&Config{})
 
 func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
-	v.SetDefault("plugin", "boltdb")
+	v.SetDefault("read_timeout", defaultReadTimeout)
+	v.SetDefault("write_timeout", defaultWriteTimeout)
+	v.SetDefault("plugin", defaultPlugin)
 }
 
 func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
+func (c *Config) Generate(w *os.File) error {
+	tmpl, err := template.New("DIRECTORY").Parse(directoryTemplate)
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.Execute(w, c); err != nil {
+		return err
+	}
+
+	switch c.Store.Plugin {
+	case BoltDBStorePlugin:
+		cfg := BoltDBStoreFromMap(c.Store.Settings)
+		return cfg.Generate(w)
+	case RemoteDirectoryStorePlugin:
+		cfg := RemoteDirectoryStoreFromMap(c.Store.Settings)
+		return cfg.Generate(w)
+	case PostgresStorePlugin:
+		cfg := PostgresStoreFromMap(c.Store.Settings)
+		return cfg.Generate(w)
+	case NATSKeyValueStorePlugin:
+		cfg := NATSKeyValueStoreFromMap(c.Store.Settings)
+		return cfg.Generate(w)
+	default:
+		return errors.Errorf("unknown store plugin %q", c.Store.Plugin)
+	}
+}
+
+const directoryTemplate = `
+# directory configuration.
+directory:
+  read_timeout: {{ .ReadTimeout }}
+  write_timeout: {{ .WriteTimeout }}
+`
+
 type Store struct {
 	Plugin   string                 `json:"plugin"`
 	Settings map[string]interface{} `json:"settings"`
 }
-
-type LocalStore struct {
-	directory.Config
-}
-
-const DefaultRequestTimeout = time.Second * 5
-
-func (c *LocalStore) SetDefaults(v *viper.Viper, p ...string) {
-	v.SetDefault("db_path", "${TOPAZ_DB_DIR}/directory.db")
-	v.SetDefault("request_timeout", DefaultRequestTimeout.String())
-}
-
-func (c *LocalStore) Validate() (bool, error) {
-	return true, nil
-}
-
-type RemoteStore struct {
-	client.Config
-}
-
-type PostgresStore struct{}
-
-type NATSKeyValueStore struct{}

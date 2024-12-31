@@ -1,11 +1,12 @@
 package authentication
 
 import (
+	"os"
 	"strings"
+	"text/template"
 
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
@@ -30,9 +31,9 @@ import (
 //           enable_api_key: false
 
 type Config struct {
-	Enabled  bool                   `json:"enabled"`
-	Plugin   string                 `json:"plugin,omitempty"`
-	Settings map[string]interface{} `json:"settings,omitempty"`
+	Enabled  bool          `json:"enabled"`
+	Plugin   string        `json:"plugin,omitempty"`
+	Settings LocalSettings `json:"settings,omitempty"`
 }
 
 var _ = handler.Config(&Config{})
@@ -45,11 +46,51 @@ func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
+func (c *Config) Generate(w *os.File) error {
+	tmpl, err := template.New("AUTHENTICATION").Parse(authenticationTemplate)
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.Execute(w, c); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+const LocalAuthenticationPlugin string = "local"
+
+const authenticationTemplate = `
+# local authentication configuration.
+authentication:
+  enabled: {{ .Enabled }}
+  plugin: {{ .Plugin }}
+  settings:
+    keys:
+      {{- range .Settings.Keys }}
+      - {{ . -}}
+      {{ end }}
+    options:
+      default:
+        enable_api_key: {{ .Settings.Options.Default.EnableAPIKey }}
+        enable_anonymous: {{ .Settings.Options.Default.EnableAnonymous }}
+      overrides:
+        {{- range .Settings.Options.Overrides }}
+        - override:
+            enable_api_key: {{ .Override.EnableAPIKey }}
+            enable_anonymous: {{ .Override.EnableAnonymous }}
+          paths:
+          {{- range .Paths }}
+          - {{ . -}}
+          {{ end -}}
+        {{ end }}
+`
+
 // plugin: local - local authentication implementation.
 type LocalSettings struct {
-	APIKeys map[string]string `json:"api_keys"`
-	Options CallOptions       `json:"options"`
-	Keys    []string          `json:"keys"`
+	Keys    []string    `json:"keys"`
+	Options CallOptions `json:"options"`
 }
 
 type APIKey struct {
@@ -86,18 +127,4 @@ func (co *CallOptions) ForPath(path string) *Options {
 	}
 
 	return &co.Default
-}
-
-// TODO: see /topaz/pkg/cc/config/topaz_config.go 32
-// nolint: unused
-func (c *LocalSettings) transposeKeys() {
-	if len(c.APIKeys) != 0 {
-		log.Warn().Msg("config: auth.api_keys is deprecated, please use auth.keys")
-	} else if c.APIKeys == nil {
-		c.APIKeys = make(map[string]string)
-	}
-
-	for _, apiKey := range c.Keys {
-		c.APIKeys[apiKey] = ""
-	}
 }

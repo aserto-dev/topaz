@@ -1,21 +1,27 @@
 package decisionlog
 
-import (
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+// import (
+// 	"os"
 
-	"github.com/spf13/viper"
-)
+// 	"github.com/aserto-dev/topaz/pkg/config/handler"
 
-type Config struct {
-	Plugin   string                 `json:"plugin"`
-	Settings map[string]interface{} `json:"settings"`
-}
+// 	"github.com/spf13/viper"
+// )
 
-var _ = handler.Config(&Config{})
+// type Config struct {
+// 	Plugin   string                 `json:"plugin"`
+// 	Settings map[string]interface{} `json:"settings"`
+// }
 
-func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
-}
+// var _ = handler.Config(&Config{})
 
-func (c *Config) Validate() (bool, error) {
-	return true, nil
-}
+// func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
+// }
+
+// func (c *Config) Validate() (bool, error) {
+// 	return true, nil
+// }
+
+// func (c *Config) Generate(w *os.File) error {
+// 	return nil
+// }
