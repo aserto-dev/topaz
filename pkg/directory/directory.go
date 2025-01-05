@@ -28,7 +28,7 @@ var _ = handler.Config(&Config{})
 func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
 	v.SetDefault("read_timeout", defaultReadTimeout)
 	v.SetDefault("write_timeout", defaultWriteTimeout)
-	v.SetDefault("plugin", defaultPlugin)
+	v.SetDefault("store.plugin", defaultPlugin)
 }
 
 func (c *Config) Validate() (bool, error) {

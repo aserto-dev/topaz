@@ -32,9 +32,11 @@ const controllerTemplate = `
   # control plane configuration
   controller:
     enabled: {{ .Enabled }}
+    {{- if .Enabled }}
     server:
       address: '{{ .Server.Address }}'
       api_key: '{{ .Server.APIKey }}'
       client_cert_path: '{{ .Server.ClientCertPath }}'
       client_key_path: '{{ .Server.ClientKeyPath }}'
+		{{ end }}
 `

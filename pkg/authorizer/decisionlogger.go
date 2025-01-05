@@ -13,6 +13,7 @@ import (
 )
 
 type DecisionLoggerConfig struct {
+	Enabled  bool                   `json:"enabled"`
 	Plugin   string                 `json:"plugin"`
 	Settings map[string]interface{} `json:"settings"`
 }
@@ -27,17 +28,49 @@ func (c *DecisionLoggerConfig) Validate() (bool, error) {
 }
 
 func (c *DecisionLoggerConfig) Generate(w *os.File) error {
-	switch c.Plugin {
-	case FileDecisionLoggerPlugin:
+	if !c.Enabled {
+		c.Plugin = DisabledDecisionLoggerPlugin
+	}
+
+	switch {
+	case !c.Enabled:
+		cfg := DisabledDecisionLoggerConfig{Enabled: c.Enabled}
+		return cfg.Generate(w)
+	case c.Plugin == FileDecisionLoggerPlugin:
 		cfg := FileDecisionLoggerConfigFromMap(c.Settings)
 		return cfg.Generate(w)
-	case SelfDecisionLoggerPlugin:
+	case c.Plugin == SelfDecisionLoggerPlugin:
 		cfg := SelfDecisionLoggerConfigFromMap(c.Settings)
 		return cfg.Generate(w)
 	default:
 		return errors.Errorf("unknown store plugin %q", c.Plugin)
 	}
 }
+
+type DisabledDecisionLoggerConfig struct {
+	Enabled bool `json:"enabled"`
+}
+
+func (c *DisabledDecisionLoggerConfig) Generate(w *os.File) error {
+	tmpl, err := template.New("DISABLED_DECISION_LOGGER").Parse(disabledDecisionLoggerTemplate)
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.Execute(w, c); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+const DisabledDecisionLoggerPlugin string = `disabled`
+
+const disabledDecisionLoggerTemplate string = `
+  # decision logger configuration.
+  decision_logger:
+    enabled: {{ .Enabled }}
+`
 
 type FileDecisionLoggerConfig struct {
 	file.Config
@@ -80,6 +113,7 @@ const FileDecisionLoggerPlugin string = `file`
 const fileDecisionLoggerTemplate string = `
   # decision logger configuration.
   decision_logger:
+		enabled: {{ .Enabled }}
     plugin: file
     settings:
       log_file_path: '{{ .LogFilePath }}'
@@ -96,6 +130,7 @@ const SelfDecisionLoggerPlugin string = `self`
 const selfDecisionLoggerTemplate string = `
   # decision logger configuration.
   decision_logger:
+		enabled: {{ .Enabled }}
     plugin: self
     settings:
       store_directory: '{{ .StoreDirectory }}'

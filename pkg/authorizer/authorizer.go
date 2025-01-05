@@ -60,39 +60,3 @@ const authorizerTemplate = `
 # authorizer configuration.
 authorizer:
 `
-
-// func (c *Config) OPA() (*runtime.Config, error) {
-// 	rCfg := &runtime.Config{}
-
-// 	b, err := json.Marshal(c.RawOPA)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	if err := json.Unmarshal(b, rCfg); err != nil {
-// 		return nil, err
-// 	}
-
-// 	return rCfg, nil
-// }
-
-// func (c *Config) UnmarshalJSON(data []byte) error {
-// 	rCfg := runtime.Config{}
-
-// 	b, err := json.Marshal(c.RawOPA)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	if err := json.Unmarshal(b, &rCfg); err != nil {
-// 		return err
-// 	}
-
-// 	c.OPA = rCfg
-
-// 	return nil
-// }
-
-// func (c *Config) MarshalJSON() ([]byte, error) {
-// 	return []byte{}, nil
-// }

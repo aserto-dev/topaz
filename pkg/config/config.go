@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"text/template"
 
@@ -92,6 +93,8 @@ func (c *Config) Generate(w *os.File) error {
 	if err := c.Authorizer.Generate(w); err != nil {
 		return err
 	}
+
+	_, _ = fmt.Fprintln(w)
 
 	return nil
 }
