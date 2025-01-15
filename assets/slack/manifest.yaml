@@ -34,7 +34,7 @@ types:
       ### display_name: group#member ###
       member: user | group#member
 
-
+  ### display_name: Channel ###
   channel:
     relations:
       parent_workspace: workspace
@@ -48,7 +48,7 @@ types:
       can_comment: commenter | can_write
       can_read:    can_comment
 
-
+  ### display_name: Workspace ###
   workspace:
     relations:
       channels_admin: user
