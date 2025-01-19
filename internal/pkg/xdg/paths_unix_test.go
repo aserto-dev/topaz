@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/adrg/xdg"
+	"github.com/aserto-dev/topaz/internal/pkg/xdg"
 )
 
 func TestDefaultBaseDirs(t *testing.T) {

@@ -6,10 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/aserto-dev/topaz/internal/pkg/xdg"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 
-	"github.com/adrg/xdg"
 	"github.com/itchyny/gojq"
 )
 
