@@ -8,6 +8,7 @@ model:
 
 # object type definitions
 types:
+  ### display_name: User ###
   # user represents a user that can be granted role(s)
   user:
     relations:
@@ -17,16 +18,19 @@ types:
       ### display_name: user#in_management_chain ###
       in_management_chain: manager | manager->in_management_chain
 
+  ### display_name: Group ###
   # group represents a collection of users and/or (nested) groups
   group:
     relations:
       member: user | group#member
 
+  ### display_name: Identity ###
   # identity represents a collection of identities for users
   identity:
     relations:
       identifier: user
 
+  ### display_name: Service ###
   # service represents a set of endpoints
   service:
     relations:
@@ -43,6 +47,7 @@ types:
       can_post: creator | can_delete
       can_delete: deleter | owner
 
+  ### display_name: Endpoint ###
   # endpoint represents a specific API endpoint
   endpoint:
     relations:

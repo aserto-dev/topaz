@@ -7,6 +7,7 @@ model:
 
 # object type definitions
 types:
+  ### display_name: User ###
   # user represents a user that can be granted role(s)
   user:
     relations:
@@ -15,16 +16,19 @@ types:
     permissions:
       in_management_chain: manager | manager->in_management_chain
 
+  ### display_name: Group ###
   # group represents a collection of users and/or (nested) groups
   group:
     relations:
       member: user | group#member
 
+  ### display_name: Identity ###
   # identity represents a collection of identities for users
   identity:
     relations:
       identifier: user
 
+  ### display_name: System ###
   # system represents the entire application and grants access to all tenants
   system:
     relations:
@@ -35,6 +39,7 @@ types:
     permissions:
       can_create_tenant: admin
 
+  ### display_name: Tenant ###
   # tenant represents a tenant in a multi-tenant system
   tenant:
     relations:
@@ -65,7 +70,7 @@ types:
       can_write_resources: can_edit
       can_read_resources: can_view
 
-
+  ### display_name: Resource ###
   # resource represents a resource within a tenant
   resource:
     relations:

@@ -35,7 +35,7 @@ types:
       ### display_name: group#member ###
       member: user | group#member
 
-
+  ### display_name: Folder ###
   # folder represents a collection of documents and/or other folders
   folder:
     relations:
@@ -50,7 +50,7 @@ types:
       can_write: editor | can_share | parent->can_write
       can_read:  viewer | can_write | parent->can_read
 
-
+  ### display_name: Document ###
   # doc represents a document within a folder
   doc:
     relations:
