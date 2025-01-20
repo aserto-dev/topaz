@@ -74,3 +74,77 @@ func (cmd *CheckCmd) template() proto.Message {
 		Trace:       false,
 	}
 }
+
+type ChecksCmd struct {
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to checks access request or '-' to read from stdin"`
+	Template bool   `name:"template" short:"t" help:"prints a checks access request template on stdout"`
+	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
+	dsc.Config
+}
+
+func (cmd *ChecksCmd) Run(c *cc.CommonCtx) error {
+	if cmd.Template {
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+	}
+
+	client, err := dsc.NewClient(c, &cmd.Config)
+	if err != nil {
+		return errors.Wrap(err, "failed to get directory client")
+	}
+
+	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
+		req, err := edit.Msg(cmd.template())
+		if err != nil {
+			return err
+		}
+		cmd.Request = req
+	}
+
+	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
+		p := prompter.New(cmd.template())
+		if err := p.Show(); err != nil {
+			return err
+		}
+		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
+	}
+
+	if cmd.Request == "" {
+		return errors.New("request argument is required")
+	}
+
+	var req reader.ChecksRequest
+	err = pb.UnmarshalRequest(cmd.Request, &req)
+	if err != nil {
+		return err
+	}
+
+	resp, err := client.Reader.Checks(c.Context, &req)
+	if err != nil {
+		return errors.Wrap(err, "access checks call failed")
+	}
+
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
+}
+
+func (cmd *ChecksCmd) template() proto.Message {
+	return &reader.ChecksRequest{
+		Default: &reader.CheckRequest{
+			ObjectType:  "",
+			ObjectId:    "",
+			Relation:    "",
+			SubjectType: "",
+			SubjectId:   "",
+			Trace:       false,
+		},
+		Checks: []*reader.CheckRequest{
+			{
+				ObjectType:  "",
+				ObjectId:    "",
+				Relation:    "",
+				SubjectType: "",
+				SubjectId:   "",
+				Trace:       false,
+			},
+		},
+	}
+}

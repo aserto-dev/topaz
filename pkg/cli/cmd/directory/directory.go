@@ -1,7 +1,8 @@
 package directory
 
 type DirectoryCmd struct {
-	Check   CheckCmd   `cmd:"" help:"check permission"`
+	Check   CheckCmd   `cmd:"" help:"access check"`
+	Checks  ChecksCmd  `cmd:"" help:"perform multiple access checks in a single request"`
 	Search  SearchCmd  `cmd:"" help:"search relation graph"`
 	Get     GetCmd     `cmd:"" help:"get object|relation|manifest"`
 	Set     SetCmd     `cmd:"" help:"set object|relation|manifest"`
