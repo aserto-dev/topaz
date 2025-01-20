@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/adrg/xdg"
+	"github.com/aserto-dev/topaz/internal/pkg/xdg"
 )
 
 // Common topaz directory paths and operations.

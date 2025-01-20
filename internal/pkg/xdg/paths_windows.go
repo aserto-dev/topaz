@@ -3,7 +3,8 @@ package xdg
 import (
 	"path/filepath"
 
-	"github.com/adrg/xdg/internal/pathutil"
+	"github.com/aserto-dev/topaz/internal/pkg/xdg/internal/pathutil"
+
 	"golang.org/x/sys/windows"
 )
 

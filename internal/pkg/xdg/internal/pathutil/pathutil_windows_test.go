@@ -6,7 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/adrg/xdg/internal/pathutil"
+	"github.com/aserto-dev/topaz/internal/pkg/xdg/internal/pathutil"
+
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sys/windows"
 )

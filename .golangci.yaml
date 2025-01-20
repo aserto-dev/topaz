@@ -161,4 +161,8 @@ issues:
       - gosec
     - text: "SA1019: \\S+ is deprecated"
       linters:
-        - staticcheck
+      - staticcheck
+    - path: internal/pkg/xdg/.*\.go
+      linters:
+      - gochecknoinits
+      - gocritic

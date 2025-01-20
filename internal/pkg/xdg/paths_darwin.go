@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/adrg/xdg/internal/pathutil"
+	"github.com/aserto-dev/topaz/internal/pkg/xdg/internal/pathutil"
 )
 
 func homeDir() string {

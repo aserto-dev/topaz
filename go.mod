@@ -6,11 +6,8 @@ go 1.23.4
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
-replace github.com/adrg/xdg => ./internal/pkg/xdg
-
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
-	github.com/adrg/xdg v0.4.0
 	github.com/alecthomas/kong v1.6.0
 	github.com/aserto-dev/aserto-grpc v0.2.7
 	github.com/aserto-dev/aserto-management v0.9.8
