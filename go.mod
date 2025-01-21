@@ -19,7 +19,7 @@ require (
 	github.com/aserto-dev/go-directory v0.33.3
 	github.com/aserto-dev/go-edge-ds v0.33.5
 	github.com/aserto-dev/go-grpc v0.9.3
-	github.com/aserto-dev/go-topaz-ui v0.1.16
+	github.com/aserto-dev/go-topaz-ui v0.1.17
 	github.com/aserto-dev/header v0.0.9
 	github.com/aserto-dev/logger v0.0.6
 	github.com/aserto-dev/openapi-authorizer v0.20.4
