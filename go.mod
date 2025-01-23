@@ -29,7 +29,7 @@ require (
 	github.com/aserto-dev/logger v0.0.7
 	github.com/aserto-dev/openapi-authorizer v0.20.4
 	github.com/aserto-dev/openapi-directory v0.31.2
-	github.com/aserto-dev/runtime v1.0.0
+	github.com/aserto-dev/runtime v0.70.0
 	github.com/aserto-dev/self-decision-logger v0.0.11
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.5.1+incompatible
