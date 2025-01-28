@@ -7,6 +7,7 @@ import (
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/prop"
+	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -70,7 +71,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   true,
-					Context: SetContext(prop.Reason, ""),
+					Context: tc.SetContext(prop.Reason, ""),
 				},
 			},
 		},
@@ -94,7 +95,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: folder2: folder2: object_type"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: folder2: folder2: object_type"),
 				},
 			},
 		},
@@ -118,7 +119,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20025 object not found: object folder:morty2"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: object folder:morty2"),
 				},
 			},
 		},
@@ -142,7 +143,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20035 relation not found: relation: folder#owner2"),
+					Context: tc.SetContext(prop.Reason, "E20035 relation not found: relation: folder#owner2"),
 				},
 			},
 		},
@@ -166,7 +167,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: user2: user2: subject_type"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: user2: user2: subject_type"),
 				},
 			},
 		},
@@ -190,7 +191,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20025 object not found: subject user:morty@the-citadel.com2"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: subject user:morty@the-citadel.com2"),
 				},
 			},
 		},
@@ -214,7 +215,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   true,
-					Context: SetContext(prop.Reason, ""),
+					Context: tc.SetContext(prop.Reason, ""),
 				},
 			},
 		},
@@ -238,7 +239,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: folder2: folder2: object_type"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: folder2: folder2: object_type"),
 				},
 			},
 		},
@@ -262,7 +263,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20025 object not found: object folder:morty2"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: object folder:morty2"),
 				},
 			},
 		},
@@ -286,7 +287,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20035 relation not found: relation: folder#owner2"),
+					Context: tc.SetContext(prop.Reason, "E20035 relation not found: relation: folder#owner2"),
 				},
 			},
 		},
@@ -310,7 +311,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: user2: user2: subject_type"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: user2: user2: subject_type"),
 				},
 			},
 		},
@@ -334,7 +335,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: SetContext(prop.Reason, "E20025 object not found: subject user:morty@the-citadel.com2"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: subject user:morty@the-citadel.com2"),
 				},
 			},
 		},
@@ -369,19 +370,19 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   true,
-					Context: SetContext(prop.Reason, ""),
+					Context: tc.SetContext(prop.Reason, ""),
 				},
 				{
 					Check:   true,
-					Context: SetContext(prop.Reason, ""),
+					Context: tc.SetContext(prop.Reason, ""),
 				},
 				{
 					Check:   true,
-					Context: SetContext(prop.Reason, ""),
+					Context: tc.SetContext(prop.Reason, ""),
 				},
 				{
 					Check:   true,
-					Context: SetContext(prop.Reason, ""),
+					Context: tc.SetContext(prop.Reason, ""),
 				},
 			},
 		},

@@ -7,6 +7,7 @@ import (
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/prop"
+	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/stretchr/testify/require"
 )
 
@@ -59,7 +60,7 @@ var checkTCs []*checkTestCase = []*checkTestCase{
 		},
 		resp: &dsr3.CheckResponse{
 			Check:   true,
-			Context: SetContext(prop.Reason, ""),
+			Context: tc.SetContext(prop.Reason, ""),
 		},
 		err: nil,
 	},
@@ -74,7 +75,7 @@ var checkTCs []*checkTestCase = []*checkTestCase{
 		},
 		resp: &dsr3.CheckResponse{
 			Check:   false,
-			Context: SetContext(prop.Reason, "E20026 object type not found: folder1"),
+			Context: tc.SetContext(prop.Reason, "E20026 object type not found: folder1"),
 		},
 		err: nil,
 	},
@@ -89,7 +90,7 @@ var checkTCs []*checkTestCase = []*checkTestCase{
 		},
 		resp: &dsr3.CheckResponse{
 			Check:   false,
-			Context: SetContext(prop.Reason, "E20025 object not found: object folder:morty1"),
+			Context: tc.SetContext(prop.Reason, "E20025 object not found: object folder:morty1"),
 		},
 		err: nil,
 	},
@@ -104,7 +105,7 @@ var checkTCs []*checkTestCase = []*checkTestCase{
 		},
 		resp: &dsr3.CheckResponse{
 			Check:   false,
-			Context: SetContext(prop.Reason, "E20035 relation not found: relation: folder#owner1"),
+			Context: tc.SetContext(prop.Reason, "E20035 relation not found: relation: folder#owner1"),
 		},
 		err: nil,
 	},
@@ -119,7 +120,7 @@ var checkTCs []*checkTestCase = []*checkTestCase{
 		},
 		resp: &dsr3.CheckResponse{
 			Check:   false,
-			Context: SetContext(prop.Reason, "E20026 object type not found: user1"),
+			Context: tc.SetContext(prop.Reason, "E20026 object type not found: user1"),
 		},
 		err: nil,
 	},
@@ -134,7 +135,7 @@ var checkTCs []*checkTestCase = []*checkTestCase{
 		},
 		resp: &dsr3.CheckResponse{
 			Check:   false,
-			Context: SetContext(prop.Reason, "E20025 object not found: subject user:morty@the-citadel.com1"),
+			Context: tc.SetContext(prop.Reason, "E20025 object not found: subject user:morty@the-citadel.com1"),
 		},
 		err: nil,
 	},
