@@ -5,9 +5,6 @@ go 1.23.5
 // replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
-replace github.com/aserto-dev/runtime => github.com/aserto-dev/runtime v0.70.0
-
-replace github.com/open-policy-agent/opa => github.com/open-policy-agent/opa v0.70.0
 
 replace github.com/bufbuild/protovalidate-go => github.com/bufbuild/protovalidate-go v0.7.3
 
@@ -22,14 +19,14 @@ require (
 	github.com/aserto-dev/go-aserto v0.33.6
 	github.com/aserto-dev/go-authorizer v0.20.13
 	github.com/aserto-dev/go-directory v0.33.4
-	github.com/aserto-dev/go-edge-ds v0.33.6
+	github.com/aserto-dev/go-edge-ds v0.33.7
 	github.com/aserto-dev/go-grpc v0.9.4
 	github.com/aserto-dev/go-topaz-ui v0.1.17
 	github.com/aserto-dev/header v0.0.10
 	github.com/aserto-dev/logger v0.0.7
-	github.com/aserto-dev/openapi-authorizer v0.20.4
-	github.com/aserto-dev/openapi-directory v0.31.2
-	github.com/aserto-dev/runtime v0.70.0
+	github.com/aserto-dev/openapi-authorizer v0.20.5
+	github.com/aserto-dev/openapi-directory v0.31.3
+	github.com/aserto-dev/runtime v1.1.0
 	github.com/aserto-dev/self-decision-logger v0.0.11
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.5.1+incompatible
@@ -52,14 +49,14 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/moby/term v0.5.2
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/open-policy-agent/opa v0.70.0
+	github.com/open-policy-agent/opa v1.1.0
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.20.5
 	github.com/rivo/tview v0.0.0-20241227133733-17b7edb88c57
 	github.com/rs/cors v1.11.1
 	github.com/rs/zerolog v1.33.0
-	github.com/samber/lo v1.47.0
+	github.com/samber/lo v1.49.0
 	github.com/slok/go-http-metrics v0.13.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
@@ -68,7 +65,7 @@ require (
 	golang.org/x/sync v0.10.0
 	golang.org/x/sys v0.29.0
 	google.golang.org/grpc v1.70.0
-	google.golang.org/protobuf v1.36.3
+	google.golang.org/protobuf v1.36.4
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
@@ -99,7 +96,6 @@ require (
 	github.com/dgryski/go-metro v0.0.0-20250106013310-edb8663e5e33 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
-	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/gdamore/encoding v1.0.1 // indirect
@@ -193,8 +189,8 @@ require (
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/time v0.9.0 // indirect
 	golang.org/x/tools v0.29.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20250122153221-138b5a5a4fd4 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250122153221-138b5a5a4fd4 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20250127172529-29210b9bc287 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250127172529-29210b9bc287 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.5.0 // indirect
