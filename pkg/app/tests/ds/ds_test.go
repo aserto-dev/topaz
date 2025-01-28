@@ -1,4 +1,4 @@
-package template_test
+package ds_test
 
 import (
 	"context"
@@ -6,15 +6,16 @@ import (
 	"testing"
 	"time"
 
+	client "github.com/aserto-dev/go-aserto"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
-	"github.com/aserto-dev/topaz/pkg/cli/cmd/authorizer"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/templates"
+	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -22,7 +23,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func TestTemplates(t *testing.T) {
+func TestDirectory(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
@@ -66,25 +67,42 @@ func TestTemplates(t *testing.T) {
 	grpcAddr, err := tc.MappedAddr(ctx, topaz, "9292")
 	require.NoError(t, err)
 
-	t.Run("testTemplate", testTemplate(grpcAddr))
+	t.Run("testDirectory", testDirectory(grpcAddr))
 }
 
-var tcs = []string{
-	"../../../../assets/acmecorp.json",
-	"../../../../assets/api-auth.json",
-	"../../../../assets/citadel.json",
-	"../../../../assets/gdrive.json",
-	"../../../../assets/github.json",
-	"../../../../assets/multi-tenant.json",
-	"../../../../assets/peoplefinder.json",
-	"../../../../assets/simple-rbac.json",
-	"../../../../assets/slack.json",
-	"../../../../assets/todo.json",
-}
-
-func testTemplate(addr string) func(*testing.T) {
+func testDirectory(addr string) func(*testing.T) {
 	return func(t *testing.T) {
-		t.Logf("addr: %s", addr)
+		opts := []client.ConnectionOption{
+			client.WithAddr(addr),
+			client.WithInsecure(true),
+		}
+
+		conn, err := client.NewConnection(opts...)
+		require.NoError(t, err)
+		t.Cleanup(func() { _ = conn.Close() })
+
+		ctx, cancel := context.WithCancel(context.Background())
+		t.Cleanup(cancel)
+
+		t.Run("", installTemplate(addr, "../../../../assets/gdrive.json"))
+
+		tests := []struct {
+			name string
+			test func(*testing.T)
+		}{
+			{"TestCheck", testCheck(ctx, dsr3.NewReaderClient(conn))},
+			{"TestChecks", testChecks(ctx, dsr3.NewReaderClient(conn))},
+		}
+
+		for _, testCase := range tests {
+			t.Run(testCase.name, testCase.test)
+		}
+	}
+}
+
+func installTemplate(addr, tmpl string) func(*testing.T) {
+	return func(t *testing.T) {
+		t.Logf("addr: %s tmpl: %s", addr, tmpl)
 
 		t.Setenv("TOPAZ_NO_COLOR", "true")
 		c, err := cc.NewCommonContext(context.Background(), true, filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile))
@@ -97,54 +115,39 @@ func testTemplate(addr string) func(*testing.T) {
 			Timeout:   10 * time.Second,
 		}
 
-		azConfig := &azc.Config{
-			Host:      addr,
-			Insecure:  true,
-			Plaintext: false,
-			Timeout:   10 * time.Second,
+		absPath, err := filepath.Abs(tmpl)
+		require.NoError(t, err)
+
+		tmpl, err := templates.GetTemplateFromFile(absPath)
+		require.NoError(t, err)
+
+		t.Logf("name %s", tmpl.Name)
+		t.Logf("template: %s", absPath)
+
+		dirPath := filepath.Dir(absPath)
+		t.Logf("dir %s", dirPath)
+
+		manifestFile := filepath.Join(dirPath, tmpl.Assets.Manifest)
+		t.Logf("manifestFile: %s", manifestFile)
+		t.Run(tmpl.Name+"-DeleteManifest", DeleteManifest(c, dsConfig))
+		t.Run(tmpl.Name+"-SetManifest", SetManifest(c, dsConfig, manifestFile))
+
+		if len(tmpl.Assets.IdentityData) > 0 {
+			idpDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.IdentityData[0]))
+			t.Logf("idp_data: %s", idpDataDir)
+			t.Run(tmpl.Name+"-ImportIdentityData", ImportData(c, dsConfig, idpDataDir))
 		}
 
-		for _, tmpl := range tcs {
-			absPath, err := filepath.Abs(tmpl)
-			require.NoError(t, err)
+		if len(tmpl.Assets.DomainData) > 0 {
+			domainDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.DomainData[0]))
+			t.Logf("domain_data: %s", domainDataDir)
+			t.Run(tmpl.Name+"-ImportDomainData", ImportData(c, dsConfig, domainDataDir))
+		}
 
-			tmpl, err := templates.GetTemplateFromFile(absPath)
-			require.NoError(t, err)
-
-			t.Logf("name %s", tmpl.Name)
-			t.Logf("template: %s", absPath)
-
-			dirPath := filepath.Dir(absPath)
-			t.Logf("dir %s", dirPath)
-
-			manifestFile := filepath.Join(dirPath, tmpl.Assets.Manifest)
-			t.Logf("manifestFile: %s", manifestFile)
-			t.Run(tmpl.Name+"-DeleteManifest", DeleteManifest(c, dsConfig))
-			t.Run(tmpl.Name+"-SetManifest", SetManifest(c, dsConfig, manifestFile))
-
-			if len(tmpl.Assets.IdentityData) > 0 {
-				idpDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.IdentityData[0]))
-				t.Logf("idp_data: %s", idpDataDir)
-				t.Run(tmpl.Name+"-ImportIdentityData", ImportData(c, dsConfig, idpDataDir))
-			}
-
-			if len(tmpl.Assets.DomainData) > 0 {
-				domainDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.DomainData[0]))
-				t.Logf("domain_data: %s", domainDataDir)
-				t.Run(tmpl.Name+"-ImportDomainData", ImportData(c, dsConfig, domainDataDir))
-			}
-
-			if len(tmpl.Assets.Assertions) > 0 {
-				assertionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[0])
-				t.Logf("assertionsFile: %s", assertionsFile)
-				t.Run(tmpl.Name+"-ExecDirectoryTest", ExecDirectoryTests(c, dsConfig, []string{assertionsFile}))
-			}
-
-			if len(tmpl.Assets.Assertions) > 1 {
-				decisionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[1])
-				t.Logf("decisionsFile: %s", decisionsFile)
-				t.Run(tmpl.Name+"-ExecAuthorizerTest", ExecAuthorizerTests(c, azConfig, []string{decisionsFile}))
-			}
+		if len(tmpl.Assets.Assertions) > 0 {
+			assertionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[0])
+			t.Logf("assertionsFile: %s", assertionsFile)
+			t.Run(tmpl.Name+"-ExecDirectoryTest", ExecDirectoryTests(c, dsConfig, []string{assertionsFile}))
 		}
 	}
 }
@@ -185,11 +188,10 @@ func ExecDirectoryTests(c *cc.CommonCtx, cfg *dsc.Config, files []string) func(*
 	}
 }
 
-func ExecAuthorizerTests(c *cc.CommonCtx, cfg *azc.Config, files []string) func(*testing.T) {
-	return func(t *testing.T) {
-		cmd := authorizer.TestExecCmd{Config: *cfg, TestExecCmd: common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}}
-		if err := cmd.Run(c); err != nil {
-			assert.NoError(t, err)
-		}
+func SetContext(k, v string) *structpb.Struct {
+	return &structpb.Struct{
+		Fields: map[string]*structpb.Value{
+			k: structpb.NewStringValue(v),
+		},
 	}
 }
