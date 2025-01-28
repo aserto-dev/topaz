@@ -6,10 +6,6 @@ go 1.23.5
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
-replace github.com/aserto-dev/runtime => github.com/aserto-dev/runtime v0.70.0
-
-replace github.com/open-policy-agent/opa => github.com/open-policy-agent/opa v0.70.0
-
 replace github.com/bufbuild/protovalidate-go => github.com/bufbuild/protovalidate-go v0.7.3
 
 require (
@@ -23,14 +19,14 @@ require (
 	github.com/aserto-dev/go-aserto v0.33.6
 	github.com/aserto-dev/go-authorizer v0.20.13
 	github.com/aserto-dev/go-directory v0.33.4
-	github.com/aserto-dev/go-edge-ds v0.33.7-0.20250128012919-66cb9179326f
+	github.com/aserto-dev/go-edge-ds v0.33.7
 	github.com/aserto-dev/go-grpc v0.9.4
 	github.com/aserto-dev/go-topaz-ui v0.1.17
 	github.com/aserto-dev/header v0.0.10
 	github.com/aserto-dev/logger v0.0.7
 	github.com/aserto-dev/openapi-authorizer v0.20.5
 	github.com/aserto-dev/openapi-directory v0.31.3
-	github.com/aserto-dev/runtime v0.70.0
+	github.com/aserto-dev/runtime v1.1.0
 	github.com/aserto-dev/self-decision-logger v0.0.11
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.5.1+incompatible
@@ -53,7 +49,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/moby/term v0.5.2
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/open-policy-agent/opa v0.70.0
+	github.com/open-policy-agent/opa v1.1.0
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.20.5
@@ -100,7 +96,6 @@ require (
 	github.com/dgryski/go-metro v0.0.0-20250106013310-edb8663e5e33 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
-	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/gdamore/encoding v1.0.1 // indirect
