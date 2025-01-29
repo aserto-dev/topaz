@@ -53,6 +53,7 @@ func testChecks(ctx context.Context, dsClient dsr3.ReaderClient) func(*testing.T
 }
 
 var checksTCs []*checksTestCase = []*checksTestCase{
+	// id = 0
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{
@@ -77,6 +78,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 1
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{
@@ -101,6 +103,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 2
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{
@@ -125,6 +128,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 3
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{
@@ -149,6 +153,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 4
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{
@@ -173,6 +178,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 5
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{
@@ -197,6 +203,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 6
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{},
@@ -221,6 +228,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 7
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{},
@@ -245,6 +253,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 8
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{},
@@ -269,6 +278,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 9
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{},
@@ -293,6 +303,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 10
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{},
@@ -317,6 +328,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 11
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{},
@@ -341,6 +353,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 		},
 		err: nil,
 	},
+	// id = 12
 	{
 		req: &dsr3.ChecksRequest{
 			Default: &dsr3.CheckRequest{
@@ -387,5 +400,128 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			},
 		},
 		err: nil,
+	},
+	// id = 13 - default checks request, no fields set.
+	{
+		req:  &dsr3.ChecksRequest{},
+		resp: &dsr3.ChecksResponse{},
+		err:  nil,
+	},
+	// id = 14 - default checks request, with empty "default" field.
+	{
+		req: &dsr3.ChecksRequest{
+			Default: &dsr3.CheckRequest{},
+		},
+		resp: &dsr3.ChecksResponse{},
+		err:  nil,
+	},
+	// id 15 - default checks request, with empty "checks" field.
+	{
+		req: &dsr3.ChecksRequest{
+			Checks: []*dsr3.CheckRequest{},
+		},
+		resp: &dsr3.ChecksResponse{
+			Checks: []*dsr3.CheckResponse{},
+		},
+		err: nil,
+	},
+	// id = 16 - default checks request, with empty "checks" field.
+	{
+		req: &dsr3.ChecksRequest{
+			Default: &dsr3.CheckRequest{},
+			Checks:  []*dsr3.CheckRequest{{}},
+		},
+		resp: &dsr3.ChecksResponse{
+			Checks: []*dsr3.CheckResponse{
+				{
+					Check:   false,
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20046 invalid argument object identifier: type: type: object_type"),
+				},
+			},
+		},
+		err: nil,
+	},
+	// id = 17 - default sub-request is nil
+	{
+		req: &dsr3.ChecksRequest{
+			Checks: []*dsr3.CheckRequest{
+				{
+					ObjectType:  "folder",
+					ObjectId:    "morty",
+					Relation:    "owner",
+					SubjectType: "user",
+					SubjectId:   "morty@the-citadel.com",
+					Trace:       false,
+				},
+			},
+		},
+		resp: &dsr3.ChecksResponse{
+			Checks: []*dsr3.CheckResponse{
+				{
+					Check: true,
+				},
+			},
+		},
+		err: nil,
+	},
+	// id = 18 - checks array in nil
+	{
+		req: &dsr3.ChecksRequest{
+			Default: &dsr3.CheckRequest{
+				ObjectType:  "folder",
+				ObjectId:    "morty",
+				Relation:    "owner",
+				SubjectType: "user",
+				SubjectId:   "morty@the-citadel.com",
+				Trace:       false,
+			},
+		},
+		resp: &dsr3.ChecksResponse{
+			Checks: []*dsr3.CheckResponse{},
+		},
+		err: nil,
+	},
+	// id = 19 - checks array is empty
+	{
+		req: &dsr3.ChecksRequest{
+			Default: &dsr3.CheckRequest{
+				ObjectType:  "folder",
+				ObjectId:    "morty",
+				Relation:    "owner",
+				SubjectType: "user",
+				SubjectId:   "morty@the-citadel.com",
+				Trace:       false,
+			},
+			Checks: []*dsr3.CheckRequest{},
+		},
+		resp: &dsr3.ChecksResponse{},
+		err:  nil,
+	},
+	// id = 20 - default + checks == nil
+	{
+		req: &dsr3.ChecksRequest{
+			Default: nil,
+			Checks:  nil,
+		},
+		resp: &dsr3.ChecksResponse{},
+		err:  nil,
+	},
+	// id = 20 - default = empty, checks = nil
+	{
+		req: &dsr3.ChecksRequest{
+			Default: &dsr3.CheckRequest{},
+			Checks:  nil,
+		},
+		resp: &dsr3.ChecksResponse{},
+		err:  nil,
+	},
+	// id = 20 - default = nil;, checks = empty
+	{
+		req: &dsr3.ChecksRequest{
+			Default: nil,
+			Checks:  []*dsr3.CheckRequest{},
+		},
+		resp: &dsr3.ChecksResponse{},
+		err:  nil,
 	},
 }
