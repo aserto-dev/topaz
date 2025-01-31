@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	objectsCounter   string = "objects"
-	relationsCounter string = "relations"
+	objectsCounter   string = "object"
+	relationsCounter string = "relation"
 	skipped          string = "skipped"
 )
 

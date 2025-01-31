@@ -68,7 +68,6 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 			switch m := msg.Msg.(type) {
 			case *dsi3.ImportResponse_Status:
 				printStatus(os.Stderr, m.Status)
-
 			case *dsi3.ImportResponse_Counter:
 				switch m.Counter.Type {
 				case objectsCounter:
@@ -76,15 +75,8 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 				case relationsCounter:
 					relCounter = m.Counter
 				}
-
-			// handle obsolete message usage as the default.
-			//nolint: staticcheck // SA1019
-			default:
-				msg.Object.Type = objectsCounter
-				objCounter = msg.Object
-				msg.Relation.Type = relationsCounter
-				relCounter = msg.Relation
 			}
+
 		}
 	}
 }

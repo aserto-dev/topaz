@@ -34,5 +34,5 @@ func (cmd *LoadCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	return dsClient.Import(ctx, files)
+	return dsClient.ImportFromDirectory(ctx, files)
 }
