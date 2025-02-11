@@ -44,7 +44,7 @@ types:
 
     permissions:
       can_share: owner  | owner->identifier  | parent->can_share
-      can_write: editor | editor->identifier | can_share | parent->can_write 
+      can_write: editor | editor->identifier | can_share | parent->can_write
       can_read:  viewer | viewer->identifier | can_write | parent->can_read
 
   ### display_name: Document ###
@@ -53,12 +53,13 @@ types:
     relations:
       parent: folder
 
-      owner:  user
-      editor: user | group#member
-      viewer: user | user:* | group#member
+      owner:   user
+      editor:  user | group#member
+      viewer:  user | group#member
+      viewers: user:* | identity:*
 
     permissions:
       can_share:  owner     | owner->identifier  | parent->can_share
       can_delete: can_share | parent->can_write
       can_write:  editor    | editor->identifier | can_delete | parent->can_write
-      can_read:   viewer    | viewer->identifier | can_write  | parent->can_read
+      can_read:   viewer    | viewer->identifier | viewers | can_write  | parent->can_read
