@@ -56,10 +56,11 @@ types:
       owner:   user
       editor:  user | group#member
       viewer:  user | group#member
-      viewers: user:* | identity:*
+
+      public_viewer: user:* | identity:*
 
     permissions:
       can_share:  owner     | owner->identifier  | parent->can_share
       can_delete: can_share | parent->can_write
       can_write:  editor    | editor->identifier | can_delete | parent->can_write
-      can_read:   viewer    | viewer->identifier | viewers | can_write  | parent->can_read
+      can_read:   viewer    | viewer->identifier | public_viewer | can_write  | parent->can_read
