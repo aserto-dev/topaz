@@ -16,18 +16,15 @@ import (
 
 func TestInitializeErrorController(t *testing.T) {
 	logger := zerolog.Nop()
-	ctrl, err := controller.NewController(&logger, context.Background(), "test", "test-host", &controller.Config{}, func(ctx context.Context, c *api.Command) error { return nil })
+	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{}, func(ctx context.Context, c *api.Command) error { return nil })
 	require.Error(t, err, "no server configuration provided")
 	assert.Nil(t, ctrl)
 }
 
 func TestNotEnabledController(t *testing.T) {
 	logger := zerolog.Nop()
-	ctrl, err := controller.NewController(&logger, context.Background(), "test", "test-host", &controller.Config{
+	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{
 		Enabled: false,
-		Server: &client.Config{
-			Address: "localhost:1234",
-		},
 	}, func(ctx context.Context, c *api.Command) error { return nil })
 	require.NoError(t, err)
 	assert.Nil(t, ctrl)
@@ -35,7 +32,7 @@ func TestNotEnabledController(t *testing.T) {
 
 func TestEnabledController(t *testing.T) {
 	logger := zerolog.Nop()
-	ctrl, err := controller.NewController(&logger, context.Background(), "test", "test-host", &controller.Config{
+	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{
 		Enabled: true,
 		Server: &client.Config{
 			Address: "localhost:1234",
@@ -48,7 +45,7 @@ func TestEnabledController(t *testing.T) {
 func TestControllerLogMessages(t *testing.T) {
 	buf := &bytes.Buffer{}
 	logger := zerolog.New(zerolog.ConsoleWriter{Out: buf, NoColor: true})
-	ctrl, err := controller.NewController(&logger, context.Background(), "test", "test-host", &controller.Config{
+	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{
 		Enabled: true,
 		Server: &client.Config{
 			Address: "localhost:1234",
@@ -56,7 +53,7 @@ func TestControllerLogMessages(t *testing.T) {
 	}, func(ctx context.Context, c *api.Command) error { return nil })
 	require.NoError(t, err)
 	assert.NotNil(t, ctrl)
-	cleanup := ctrl.Start()
+	cleanup := ctrl.Start(context.Background())
 	time.Sleep(1 * time.Second)
 	defer cleanup()
 	logMessages := buf.String()

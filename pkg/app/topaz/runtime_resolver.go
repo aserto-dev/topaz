@@ -69,17 +69,23 @@ func NewRuntimeResolver(
 				host = os.Getenv("HOSTNAME")
 			}
 		}
+		if cfg.OPA.Config.Discovery.Resource == nil {
+			return nil, func() {}, aerr.ErrBadRuntime.Msg("discovery resource must be provided")
+		}
 		details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
 		if cfg.ControllerConfig.Server.TenantID == "" {
 			cfg.ControllerConfig.Server.TenantID = cfg.OPA.InstanceID // get the tenant id from the opa instance id config.
 		}
-		ctrl, err := controller.NewController(logger, ctx, details[0], host, cfg.ControllerConfig, func(cmdCtx context.Context, cmd *api.Command) error {
+		if len(details) < 1 {
+			return nil, func() {}, aerr.ErrBadRuntime.Msg("provided discovery resource not formatted correctly")
+		}
+		ctrl, err := controller.NewController(logger, details[0], host, cfg.ControllerConfig, func(cmdCtx context.Context, cmd *api.Command) error {
 			return management.HandleCommand(cmdCtx, cmd, sidecarRuntime)
 		})
 		if err != nil {
 			return nil, func() {}, err
 		}
-		cleanupController := ctrl.Start()
+		cleanupController := ctrl.Start(ctx)
 
 		cleanup = func() {
 			if cleanupController != nil {
