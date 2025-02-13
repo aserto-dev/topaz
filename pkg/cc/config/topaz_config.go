@@ -5,7 +5,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/aserto-dev/aserto-management/controller"
+	"github.com/aserto-dev/topaz/controller"
 	"github.com/pkg/errors"
 )
 

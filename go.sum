@@ -413,8 +413,6 @@ github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0 h1:jfIu9sQUG6Ig
 github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0/go.mod h1:t2tdKJDJF9BV14lnkjHmOQgcvEKgtqs5a1N3LNdJhGE=
 github.com/aserto-dev/aserto-grpc v0.2.9 h1:17MKYEXaj8G7JwykcK9akCavVckNdXR/BvnLP3vdILQ=
 github.com/aserto-dev/aserto-grpc v0.2.9/go.mod h1:/86SRfxs45GX48X/AolNV1at/T6DRsjdPjjjC6CTVSI=
-github.com/aserto-dev/aserto-management v0.9.9 h1:9GrCi4N6wzjpR4d79gvuj186XCd/aBXLHuZpETeyAss=
-github.com/aserto-dev/aserto-management v0.9.9/go.mod h1:uCBNVW5TuP3Y4+/kINgCvwV5WCa6feANfhlHaR/Jd0w=
 github.com/aserto-dev/azm v0.2.5 h1:3OjcXbXUju5LjXYvG2VtUtvKhw3DB/l80BoX499uXLE=
 github.com/aserto-dev/azm v0.2.5/go.mod h1:vQfuAR4/mZXlHbu2S1Ogc38X7i+QTRSHJwATr8y9QrI=
 github.com/aserto-dev/certs v0.1.0 h1:eklyoGdondx0uowVpY3+Oifz+Bhe615Ls5I6oWJrq34=

@@ -12,7 +12,6 @@ require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/alecthomas/kong v1.6.1
 	github.com/aserto-dev/aserto-grpc v0.2.9
-	github.com/aserto-dev/aserto-management v0.9.9
 	github.com/aserto-dev/azm v0.2.5
 	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.13

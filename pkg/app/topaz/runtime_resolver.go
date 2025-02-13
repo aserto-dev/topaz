@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aserto-dev/aserto-management/controller"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	runtime "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
+	"github.com/aserto-dev/topaz/controller"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/pkg/app/management"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -31,7 +31,6 @@ func NewRuntimeResolver(
 	ctx context.Context,
 	logger *zerolog.Logger,
 	cfg *config.Config,
-	ctrlf *controller.Factory,
 	decisionLogger decisionlog.DecisionLogger,
 	directoryResolver resolvers.DirectoryResolver,
 ) (resolvers.RuntimeResolver, func(), error) {
@@ -63,7 +62,7 @@ func NewRuntimeResolver(
 		}
 	}
 
-	if cfg.OPA.Config.Discovery != nil && ctrlf != nil {
+	if cfg.OPA.Config.Discovery != nil {
 		host := os.Getenv("ASERTO_HOSTNAME")
 		if host == "" {
 			if host, err = os.Hostname(); err != nil {
@@ -71,11 +70,16 @@ func NewRuntimeResolver(
 			}
 		}
 		details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
-		cleanupController, err := ctrlf.OnRuntimeStarted(ctx, cfg.OPA.InstanceID, "", details[0],
-
-			details[1], host, func(cmdCtx context.Context, cmd *api.Command) error {
-				return management.HandleCommand(cmdCtx, cmd, sidecarRuntime)
-			})
+		if cfg.ControllerConfig.Server.TenantID == "" {
+			cfg.ControllerConfig.Server.TenantID = cfg.OPA.InstanceID // get the tenant id from the opa instance id config.
+		}
+		ctrl, err := controller.NewController(logger, ctx, details[0], host, cfg.ControllerConfig, func(cmdCtx context.Context, cmd *api.Command) error {
+			return management.HandleCommand(cmdCtx, cmd, sidecarRuntime)
+		})
+		if err != nil {
+			return nil, func() {}, err
+		}
+		cleanupController := ctrl.Start()
 
 		cleanup = func() {
 			if cleanupController != nil {

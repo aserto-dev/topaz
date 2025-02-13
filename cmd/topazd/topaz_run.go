@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 
-	"github.com/aserto-dev/aserto-management/controller"
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/app/directory"
 	"github.com/aserto-dev/topaz/pkg/app/topaz"
@@ -60,17 +59,10 @@ func run(cmd *cobra.Command, args []string) error {
 		}
 		defer decisionlog.Shutdown()
 
-		controllerFactory := controller.NewFactory(
-			topazApp.Logger,
-			topazApp.Configuration.ControllerConfig,
-			app.KeepAliveDialOption(),
-		)
-
 		runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(
 			topazApp.Context,
 			topazApp.Logger,
 			topazApp.Configuration,
-			controllerFactory,
 			decisionlog,
 			dirResolver,
 		)
