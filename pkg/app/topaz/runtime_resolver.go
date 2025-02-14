@@ -67,6 +67,9 @@ func NewRuntimeResolver(
 		if host == "" {
 			if host, err = os.Hostname(); err != nil {
 				host = os.Getenv("HOSTNAME")
+				if host == "" {
+					panic("hostname not set")
+				}
 			}
 		}
 		if cfg.OPA.Config.Discovery.Resource == nil {
