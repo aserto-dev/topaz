@@ -1,0 +1,184 @@
+{
+  "objects": [
+    {
+      "type": "identity",
+      "id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "identity",
+      "id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "group",
+      "id": "evil_genius",
+      "display_name": "evil_genius-group",
+      "properties": {}
+    },
+    {
+      "type": "identity",
+      "id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "group",
+      "id": "admin",
+      "display_name": "admin-group",
+      "properties": {}
+    },
+    {
+      "type": "identity",
+      "id": "summer@the-smiths.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "identity",
+      "id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "identity",
+      "id": "rick@the-citadel.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "identity",
+      "id": "beth@the-smiths.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "group",
+      "id": "viewer",
+      "display_name": "viewer-group",
+      "properties": {}
+    },
+    {
+      "type": "identity",
+      "id": "jerry@the-smiths.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "user",
+      "id": "jerry@the-smiths.com",
+      "display_name": "Jerry Smith",
+      "properties": {
+        "email": "jerry@the-smiths.com",
+        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Jerry%20Smith.jpg",
+        "roles": [
+          "viewer"
+        ],
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "type": "user",
+      "id": "beth@the-smiths.com",
+      "display_name": "Beth Smith",
+      "properties": {
+        "email": "beth@the-smiths.com",
+        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Beth%20Smith.jpg",
+        "roles": [
+          "viewer"
+        ],
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "type": "identity",
+      "id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "properties": {
+        "kind": "IDENTITY_KIND_PID",
+        "provider": "local",
+        "verified": true
+      }
+    },
+    {
+      "type": "user",
+      "id": "rick@the-citadel.com",
+      "display_name": "Rick Sanchez",
+      "properties": {
+        "email": "rick@the-citadel.com",
+        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Rick%20Sanchez.jpg",
+        "roles": [
+          "admin",
+          "evil_genius"
+        ],
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "type": "user",
+      "id": "morty@the-citadel.com",
+      "display_name": "Morty Smith",
+      "properties": {
+        "email": "morty@the-citadel.com",
+        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Morty%20Smith.jpg",
+        "roles": [
+          "editor"
+        ],
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "type": "user",
+      "id": "summer@the-smiths.com",
+      "display_name": "Summer Smith",
+      "properties": {
+        "email": "summer@the-smiths.com",
+        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Summer%20Smith.jpg",
+        "roles": [
+          "editor"
+        ],
+        "status": "USER_STATUS_ACTIVE"
+      }
+    },
+    {
+      "type": "group",
+      "id": "editor",
+      "display_name": "editor-group",
+      "properties": {}
+    },
+    {
+      "type": "identity",
+      "id": "morty@the-citadel.com",
+      "properties": {
+        "kind": "IDENTITY_KIND_EMAIL",
+        "provider": "local",
+        "verified": true
+      }
+    }
+  ]
+}
