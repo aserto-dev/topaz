@@ -6,13 +6,6 @@ run:
   timeout: 5m
 
 linters-settings:
-  depguard:
-    list-type: blacklist
-    packages:
-      # logging is allowed only by zerolog
-      - github.com/sirupsen/logrus
-    packages-with-error-message:
-      - github.com/sirupsen/logrus: "logging is allowed only by zerolog"
   dupl:
     threshold: 100
   funlen:
@@ -38,19 +31,10 @@ linters-settings:
     min-complexity: 18
   goimports:
     local-prefixes: github.com/golangci/golangci-lint
-  golint:
-    min-confidence: 0
-  gomnd:
-    checks:
-      - argument
-      - case
-      - condition
-      - return
   gosec:
     excludes:
       - G115 # potential integer overflow when converting between integer types
   govet:
-    shadow: true
     settings:
       printf:
         funcs:
@@ -58,8 +42,6 @@ linters-settings:
           - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
           - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
           - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
-  maligned:
-    suggest-new: true
   misspell:
     locale: US
   nolintlint:
