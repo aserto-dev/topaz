@@ -429,6 +429,10 @@ github.com/aserto-dev/go-directory v0.33.4 h1:LhAL0RGKB7L2dm4hjAYVeuUhsu+EreYTUv
 github.com/aserto-dev/go-directory v0.33.4/go.mod h1:p0wsjtpBBW2huPDgi6I8OqfhwJWyMRqJHlwPVb3kTSM=
 github.com/aserto-dev/go-edge-ds v0.33.9 h1:Y25wiIvIKo7uahOX5gLk2WweqGcfYFerBUnhlLAR3JU=
 github.com/aserto-dev/go-edge-ds v0.33.9/go.mod h1:Pm0JvA0CI/ctpk8krSQIZH2JSoLrh5DIam2dS9uyXvQ=
+github.com/aserto-dev/go-edge-ds v0.33.10-0.20250217090537-8dbf991d1f2e h1:B/1awou31nD9789dSRsPgcvlfnBFcDaramVna+7SZsM=
+github.com/aserto-dev/go-edge-ds v0.33.10-0.20250217090537-8dbf991d1f2e/go.mod h1:XraGxYRN0vpFdIUpVNJ2yV3CYJx+XUQNOcvv0tcuSJ0=
+github.com/aserto-dev/go-edge-ds v0.33.10 h1:LIi502/NxssxFf6/J8+3tue/Pmx8HD8eaXBQqqplcQw=
+github.com/aserto-dev/go-edge-ds v0.33.10/go.mod h1:XraGxYRN0vpFdIUpVNJ2yV3CYJx+XUQNOcvv0tcuSJ0=
 github.com/aserto-dev/go-grpc v0.9.4 h1:d5n1vOptiKw0wmIt6nhT0Us2ANjKBCYpSQ7+0r9Ll2s=
 github.com/aserto-dev/go-grpc v0.9.4/go.mod h1:R2bxW+34GuqclhWOnpTzEA9cIc9ay1U3WAOqS1a4TR8=
 github.com/aserto-dev/go-topaz-ui v0.1.19 h1:e+HViPk8mdrpb8AnxDydvd6VK/tVq+sa3ICBAN22RCc=
@@ -445,6 +449,8 @@ github.com/aserto-dev/runtime v1.1.0 h1:NMYHWMMjpnaQK+FWGXbVl56W+h071xDTWJyboCFj
 github.com/aserto-dev/runtime v1.1.0/go.mod h1:e6L/MB7t/IqU9fw9SA92D1L3pnDqvJE9gzOr2kcKhHk=
 github.com/aserto-dev/self-decision-logger v0.0.11 h1:390I9vzgoJr8lx+ysGB5ULDNuf91J6HzPJO7sC3dVNI=
 github.com/aserto-dev/self-decision-logger v0.0.11/go.mod h1:jgUEIc4s9i36JaZOneGI6Jyz/TIyzvTROJ9UsWZQOvk=
+github.com/authzen/access.go v0.0.0-20250123041208-d58afed67b50 h1:dcMm0TeleGlIttio5NqVo4RwquGIS3S4mn//hs2hhfI=
+github.com/authzen/access.go v0.0.0-20250123041208-d58afed67b50/go.mod h1:l+wym4Tax3t4UDb/usaRSr1lECxuSoTIoE1JRz0U4HA=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=

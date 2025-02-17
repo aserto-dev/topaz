@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"net/http"
+	"os"
+	"strconv"
 
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
@@ -14,6 +16,8 @@ import (
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
 	builder "github.com/aserto-dev/topaz/pkg/service/builder"
 
+	dsa1 "github.com/authzen/access.go/api/access/v1"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/samber/lo"
 	"google.golang.org/grpc"
@@ -24,11 +28,16 @@ type EdgeDir struct {
 }
 
 const (
+	EnvTopazAuthZEN = "TOPAZ_AUTHZEN"
+)
+
+const (
 	modelService    = "model"
 	readerService   = "reader"
 	writerService   = "writer"
 	exporterService = "exporter"
 	importerService = "importer"
+	accessService   = "access"
 )
 
 func NewEdgeDir(edge *directory.Directory) (ServiceTypes, error) {
@@ -45,7 +54,7 @@ func (e *EdgeDir) Cleanups() []func() {
 }
 
 func (e *EdgeDir) AvailableServices() []string {
-	return []string{modelService, readerService, writerService, exporterService, importerService}
+	return []string{modelService, readerService, writerService, exporterService, importerService, accessService}
 }
 
 func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
@@ -55,6 +64,9 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 		}
 		if lo.Contains(services, readerService) {
 			dsr3.RegisterReaderServer(server, e.dir.Reader3())
+			if authZEN, _ := strconv.ParseBool(os.Getenv(EnvTopazAuthZEN)); authZEN {
+				dsa1.RegisterAccessServer(server, e.dir.Access1())
+			}
 		}
 		if lo.Contains(services, writerService) {
 			dsw3.RegisterWriterServer(server, e.dir.Writer3())
@@ -83,6 +95,12 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 			err := dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
+			}
+			if authZEN, _ := strconv.ParseBool(os.Getenv(EnvTopazAuthZEN)); authZEN {
+				err := dsa1.RegisterAccessHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+				if err != nil {
+					return err
+				}
 			}
 		}
 		if lo.Contains(services, writerService) {
