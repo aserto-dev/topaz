@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
@@ -120,12 +119,5 @@ const (
 )
 
 func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	buf, err := dsOpenAPI.Static().ReadFile("openapi.json")
-	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
-	_, _ = w.Write(buf)
+	dsOpenAPI.OpenApiHandler(w, r)
 }
