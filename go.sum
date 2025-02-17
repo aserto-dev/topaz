@@ -431,6 +431,8 @@ github.com/aserto-dev/go-edge-ds v0.33.9 h1:Y25wiIvIKo7uahOX5gLk2WweqGcfYFerBUnh
 github.com/aserto-dev/go-edge-ds v0.33.9/go.mod h1:Pm0JvA0CI/ctpk8krSQIZH2JSoLrh5DIam2dS9uyXvQ=
 github.com/aserto-dev/go-edge-ds v0.33.10-0.20250217090537-8dbf991d1f2e h1:B/1awou31nD9789dSRsPgcvlfnBFcDaramVna+7SZsM=
 github.com/aserto-dev/go-edge-ds v0.33.10-0.20250217090537-8dbf991d1f2e/go.mod h1:XraGxYRN0vpFdIUpVNJ2yV3CYJx+XUQNOcvv0tcuSJ0=
+github.com/aserto-dev/go-edge-ds v0.33.10 h1:LIi502/NxssxFf6/J8+3tue/Pmx8HD8eaXBQqqplcQw=
+github.com/aserto-dev/go-edge-ds v0.33.10/go.mod h1:XraGxYRN0vpFdIUpVNJ2yV3CYJx+XUQNOcvv0tcuSJ0=
 github.com/aserto-dev/go-grpc v0.9.4 h1:d5n1vOptiKw0wmIt6nhT0Us2ANjKBCYpSQ7+0r9Ll2s=
 github.com/aserto-dev/go-grpc v0.9.4/go.mod h1:R2bxW+34GuqclhWOnpTzEA9cIc9ay1U3WAOqS1a4TR8=
 github.com/aserto-dev/go-topaz-ui v0.1.19 h1:e+HViPk8mdrpb8AnxDydvd6VK/tVq+sa3ICBAN22RCc=
