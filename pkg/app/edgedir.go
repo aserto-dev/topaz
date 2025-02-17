@@ -15,6 +15,8 @@ import (
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
 	builder "github.com/aserto-dev/topaz/pkg/service/builder"
 
+	dsa1 "github.com/authzen/access.go/api/access/v1"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/samber/lo"
 	"google.golang.org/grpc"
@@ -30,6 +32,7 @@ const (
 	writerService   = "writer"
 	exporterService = "exporter"
 	importerService = "importer"
+	accessService   = "access"
 )
 
 func NewEdgeDir(edge *directory.Directory) (ServiceTypes, error) {
@@ -46,7 +49,7 @@ func (e *EdgeDir) Cleanups() []func() {
 }
 
 func (e *EdgeDir) AvailableServices() []string {
-	return []string{modelService, readerService, writerService, exporterService, importerService}
+	return []string{modelService, readerService, writerService, exporterService, importerService, accessService}
 }
 
 func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
@@ -65,6 +68,9 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 		}
 		if lo.Contains(services, exporterService) {
 			dse3.RegisterExporterServer(server, e.dir.Exporter3())
+		}
+		if lo.Contains(services, accessService) {
+			dsa1.RegisterAccessServer(server, e.dir.Access1())
 		}
 	}
 }
@@ -88,6 +94,12 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 		}
 		if lo.Contains(services, writerService) {
 			err := dsw3.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+			if err != nil {
+				return err
+			}
+		}
+		if lo.Contains(services, accessService) {
+			err := dsa1.RegisterAccessHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
 			}
