@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"net/http"
+	"os"
+	"strconv"
 
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
@@ -24,6 +26,10 @@ import (
 type EdgeDir struct {
 	dir *directory.Directory
 }
+
+const (
+	EnvTopazAuthZEN = "TOPAZ_AUTHZEN"
+)
 
 const (
 	modelService    = "model"
@@ -58,6 +64,9 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 		}
 		if lo.Contains(services, readerService) {
 			dsr3.RegisterReaderServer(server, e.dir.Reader3())
+			if authZEN, _ := strconv.ParseBool(os.Getenv(EnvTopazAuthZEN)); authZEN {
+				dsa1.RegisterAccessServer(server, e.dir.Access1())
+			}
 		}
 		if lo.Contains(services, writerService) {
 			dsw3.RegisterWriterServer(server, e.dir.Writer3())
@@ -67,9 +76,6 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 		}
 		if lo.Contains(services, exporterService) {
 			dse3.RegisterExporterServer(server, e.dir.Exporter3())
-		}
-		if lo.Contains(services, accessService) {
-			dsa1.RegisterAccessServer(server, e.dir.Access1())
 		}
 	}
 }
@@ -90,15 +96,15 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 			if err != nil {
 				return err
 			}
+			if authZEN, _ := strconv.ParseBool(os.Getenv(EnvTopazAuthZEN)); authZEN {
+				err := dsa1.RegisterAccessHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+				if err != nil {
+					return err
+				}
+			}
 		}
 		if lo.Contains(services, writerService) {
 			err := dsw3.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
-		}
-		if lo.Contains(services, accessService) {
-			err := dsa1.RegisterAccessHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
 			}
