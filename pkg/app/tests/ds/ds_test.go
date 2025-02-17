@@ -1,21 +1,24 @@
-package template_no_tls_test
+package ds_test
 
 import (
 	"context"
 	"testing"
 	"time"
 
-	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
-	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+
+	client "github.com/aserto-dev/go-aserto"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
+	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func TestTemplatesNoTLS(t *testing.T) {
+func TestDirectory(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
@@ -30,7 +33,7 @@ func TestTemplatesNoTLS(t *testing.T) {
 		},
 		Files: []testcontainers.ContainerFile{
 			{
-				Reader:            assets_test.ConfigNoTLSReader(),
+				Reader:            assets_test.ConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
 				FileMode:          0x700,
 			},
@@ -61,32 +64,47 @@ func TestTemplatesNoTLS(t *testing.T) {
 
 	dsConfig := &dsc.Config{
 		Host:      addr,
-		Insecure:  false,
-		Plaintext: true,
+		Insecure:  true,
+		Plaintext: false,
 		Timeout:   10 * time.Second,
 	}
 
 	azConfig := &azc.Config{
 		Host:      addr,
-		Insecure:  false,
-		Plaintext: true,
+		Insecure:  true,
+		Plaintext: false,
 		Timeout:   10 * time.Second,
 	}
 
-	for _, tmpl := range tcs {
-		t.Run("testTemplatesWithNoTLS", tc.InstallTemplate(dsConfig, azConfig, tmpl))
-	}
+	t.Run("testDirectory", testDirectory(dsConfig, azConfig))
 }
 
-var tcs = []string{
-	"../../../../assets/acmecorp.json",
-	"../../../../assets/api-auth.json",
-	"../../../../assets/citadel.json",
-	"../../../../assets/gdrive.json",
-	"../../../../assets/github.json",
-	"../../../../assets/multi-tenant.json",
-	"../../../../assets/peoplefinder.json",
-	"../../../../assets/simple-rbac.json",
-	"../../../../assets/slack.json",
-	"../../../../assets/todo.json",
+func testDirectory(dsConfig *dsc.Config, azConfig *azc.Config) func(*testing.T) {
+	return func(t *testing.T) {
+		opts := []client.ConnectionOption{
+			client.WithAddr(dsConfig.Host),
+			client.WithInsecure(true),
+		}
+
+		conn, err := client.NewConnection(opts...)
+		require.NoError(t, err)
+		t.Cleanup(func() { _ = conn.Close() })
+
+		ctx, cancel := context.WithCancel(context.Background())
+		t.Cleanup(cancel)
+
+		t.Run("", tc.InstallTemplate(dsConfig, azConfig, "../../../../assets/gdrive.json"))
+
+		tests := []struct {
+			name string
+			test func(*testing.T)
+		}{
+			{"TestCheck", testCheck(ctx, dsr3.NewReaderClient(conn))},
+			{"TestChecks", testChecks(ctx, dsr3.NewReaderClient(conn))},
+		}
+
+		for _, testCase := range tests {
+			t.Run(testCase.name, testCase.test)
+		}
+	}
 }
