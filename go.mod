@@ -12,13 +12,13 @@ require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/alecthomas/kong v1.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.9
-	github.com/aserto-dev/azm v0.2.9-0.20250219152903-2ed39226cb19
+	github.com/aserto-dev/azm v0.2.9-0.20250219175915-bc3a02bc7ebd
 	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.13
 	github.com/aserto-dev/go-aserto v0.33.6
 	github.com/aserto-dev/go-authorizer v0.20.13
 	github.com/aserto-dev/go-directory v0.33.5-0.20250219151104-69a476b1e7c1
-	github.com/aserto-dev/go-edge-ds v0.33.11-0.20250219172814-6e006dcd219a
+	github.com/aserto-dev/go-edge-ds v0.33.11-0.20250219180033-9f4dd46292ad
 	github.com/aserto-dev/go-grpc v0.9.4
 	github.com/aserto-dev/go-topaz-ui v0.1.19
 	github.com/aserto-dev/header v0.0.10

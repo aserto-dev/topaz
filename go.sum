@@ -415,6 +415,8 @@ github.com/aserto-dev/aserto-grpc v0.2.9 h1:17MKYEXaj8G7JwykcK9akCavVckNdXR/BvnL
 github.com/aserto-dev/aserto-grpc v0.2.9/go.mod h1:/86SRfxs45GX48X/AolNV1at/T6DRsjdPjjjC6CTVSI=
 github.com/aserto-dev/azm v0.2.9-0.20250219152903-2ed39226cb19 h1:cR5XVnzqZxmPHwWuat0hSjat8Pym2tdkycuWwKFx/60=
 github.com/aserto-dev/azm v0.2.9-0.20250219152903-2ed39226cb19/go.mod h1:ToV9JzEsFzxGeXgJuttJ+BWw0v3H3FwS7YDNAV1dtFI=
+github.com/aserto-dev/azm v0.2.9-0.20250219175915-bc3a02bc7ebd h1:C9aAGmqsPb49/gG0usbMT4gV9mzmbcjta3AbtyJglRQ=
+github.com/aserto-dev/azm v0.2.9-0.20250219175915-bc3a02bc7ebd/go.mod h1:ToV9JzEsFzxGeXgJuttJ+BWw0v3H3FwS7YDNAV1dtFI=
 github.com/aserto-dev/certs v0.1.0 h1:eklyoGdondx0uowVpY3+Oifz+Bhe615Ls5I6oWJrq34=
 github.com/aserto-dev/certs v0.1.0/go.mod h1:xWtPdSkBGgXnBXUUDUg5OD4SdFKiEOtVwkDlDIWMtTM=
 github.com/aserto-dev/errors v0.0.13 h1:STx3azu5kymLiCCIwtPxqKvTF9LeyE6O3YP634Tapp8=
@@ -429,6 +431,8 @@ github.com/aserto-dev/go-directory v0.33.5-0.20250219151104-69a476b1e7c1 h1:sDjD
 github.com/aserto-dev/go-directory v0.33.5-0.20250219151104-69a476b1e7c1/go.mod h1:p0wsjtpBBW2huPDgi6I8OqfhwJWyMRqJHlwPVb3kTSM=
 github.com/aserto-dev/go-edge-ds v0.33.11-0.20250219172814-6e006dcd219a h1:ILQ2GOdp8Xo0ajmV46S1Nyda2bKBmn0Tzi6kXyrFom0=
 github.com/aserto-dev/go-edge-ds v0.33.11-0.20250219172814-6e006dcd219a/go.mod h1:UVFPg6hik0u4Q/eHX2BX1a0TUrEKR3FR1gtjpsJJCfk=
+github.com/aserto-dev/go-edge-ds v0.33.11-0.20250219180033-9f4dd46292ad h1:gAopzbHoOhAIud7lm5hSZeiWE2bVZLcllwsz/umJ6R8=
+github.com/aserto-dev/go-edge-ds v0.33.11-0.20250219180033-9f4dd46292ad/go.mod h1:OICLl2L9yrg0b1C2uFYl7vidnn29aHmOXsnnkrXtn/A=
 github.com/aserto-dev/go-grpc v0.9.4 h1:d5n1vOptiKw0wmIt6nhT0Us2ANjKBCYpSQ7+0r9Ll2s=
 github.com/aserto-dev/go-grpc v0.9.4/go.mod h1:R2bxW+34GuqclhWOnpTzEA9cIc9ay1U3WAOqS1a4TR8=
 github.com/aserto-dev/go-topaz-ui v0.1.19 h1:e+HViPk8mdrpb8AnxDydvd6VK/tVq+sa3ICBAN22RCc=
