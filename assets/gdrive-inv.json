@@ -1,0 +1,23 @@
+{
+    "name": "gdrive-inv",
+    "description": "Google Drive with inverted identities",
+    "assets": {
+        "manifest": "gdrive-inv/manifest.yaml",
+        "policy": {
+            "name": "gdrive-inv",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+            "citadel-inv/citadel_objects.json",
+            "citadel-inv/citadel_relations.json"
+        ],
+        "domain_data": [
+            "gdrive-inv/gdrive_objects.json",
+            "gdrive-inv/gdrive_relations.json"
+        ],
+        "assertions": [
+            "gdrive-inv/test/gdrive_assertions.json",
+            "gdrive-inv/test/gdrive_decisions.json"
+        ]
+    }
+}
