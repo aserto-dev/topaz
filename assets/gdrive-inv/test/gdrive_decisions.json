@@ -18,7 +18,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": true
@@ -41,7 +42,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -64,7 +66,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -87,7 +90,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -110,7 +114,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -133,7 +138,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -156,7 +162,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -179,7 +186,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -202,7 +210,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -225,7 +234,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -248,7 +258,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -271,7 +282,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -294,7 +306,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -317,7 +330,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -340,7 +354,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -363,7 +378,8 @@
         "resource_context": {
           "object_id": "root",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -386,7 +402,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": true
@@ -409,7 +426,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -432,7 +450,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -455,7 +474,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -478,7 +498,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": false
@@ -501,7 +522,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -524,7 +546,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -547,7 +570,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -570,7 +594,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -593,7 +618,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -616,7 +642,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -639,7 +666,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -662,7 +690,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -685,7 +714,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -708,7 +738,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -731,7 +762,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -754,7 +786,8 @@
         "resource_context": {
           "object_id": "rick",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -777,7 +810,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": true
@@ -800,7 +834,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -823,7 +858,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -846,7 +882,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -869,7 +906,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": false
@@ -892,7 +930,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -915,7 +954,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -938,7 +978,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -961,7 +1002,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -984,7 +1026,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1007,7 +1050,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1030,7 +1074,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1053,7 +1098,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1076,7 +1122,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1099,7 +1146,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1122,7 +1170,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1145,7 +1194,8 @@
         "resource_context": {
           "object_id": "morty",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1168,7 +1218,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": true
@@ -1191,7 +1242,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1214,7 +1266,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1237,7 +1290,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1260,7 +1314,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": false
@@ -1283,7 +1338,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1306,7 +1362,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1329,7 +1386,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1352,7 +1410,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1375,7 +1434,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1398,7 +1458,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1421,7 +1482,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1444,7 +1506,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1467,7 +1530,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1490,7 +1554,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1513,7 +1578,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1536,7 +1602,8 @@
         "resource_context": {
           "object_id": "summer",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1559,7 +1626,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": true
@@ -1582,7 +1650,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1605,7 +1674,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1628,7 +1698,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1651,7 +1722,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": false
@@ -1674,7 +1746,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1697,7 +1770,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1720,7 +1794,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1743,7 +1818,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1766,7 +1842,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1789,7 +1866,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1812,7 +1890,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1835,7 +1914,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1858,7 +1938,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1881,7 +1962,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1904,7 +1986,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1927,7 +2010,8 @@
         "resource_context": {
           "object_id": "jerry",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -1950,7 +2034,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1973,7 +2058,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -1996,7 +2082,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2019,7 +2106,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": false
@@ -2042,7 +2130,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2065,7 +2154,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2088,7 +2178,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2111,7 +2202,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2134,7 +2226,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2157,7 +2250,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2180,7 +2274,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2203,7 +2298,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2226,7 +2322,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2249,7 +2346,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2272,7 +2370,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2295,7 +2394,8 @@
         "resource_context": {
           "object_id": "morty.shared",
           "object_type": "folder",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2318,7 +2418,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": true
@@ -2341,7 +2442,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2364,7 +2466,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2387,7 +2490,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2410,7 +2514,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2433,7 +2538,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2456,7 +2562,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2479,7 +2586,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2502,7 +2610,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2525,7 +2634,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2548,7 +2658,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2571,7 +2682,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2594,7 +2706,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2617,7 +2730,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2640,7 +2754,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2663,7 +2778,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2686,7 +2802,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2709,7 +2826,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2732,7 +2850,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2755,7 +2874,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2778,7 +2898,8 @@
         "resource_context": {
           "object_id": "secrets",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2801,7 +2922,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": true
@@ -2824,7 +2946,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2847,7 +2970,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2870,7 +2994,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2893,7 +3018,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2916,7 +3042,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -2939,7 +3066,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2962,7 +3090,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -2985,7 +3114,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3008,7 +3138,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3031,7 +3162,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3054,7 +3186,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3077,7 +3210,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3100,7 +3234,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3123,7 +3258,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3146,7 +3282,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3169,7 +3306,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3192,7 +3330,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3215,7 +3354,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3238,7 +3378,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3261,7 +3402,8 @@
         "resource_context": {
           "object_id": "groceries",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3284,7 +3426,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": false
@@ -3307,7 +3450,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3330,7 +3474,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3353,7 +3498,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3376,7 +3522,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3399,7 +3546,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": true
@@ -3422,7 +3570,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3445,7 +3594,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3468,7 +3618,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3491,7 +3642,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3514,7 +3666,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3537,7 +3690,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3560,7 +3714,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3583,7 +3738,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3606,7 +3762,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3629,7 +3786,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3652,7 +3810,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3675,7 +3834,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3698,7 +3858,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3721,7 +3882,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3744,7 +3906,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3767,7 +3930,8 @@
         "resource_context": {
           "object_id": "rick.inventions",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3790,7 +3954,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": false
@@ -3813,7 +3978,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3836,7 +4002,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3859,7 +4026,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3882,7 +4050,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3905,7 +4074,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": false
@@ -3928,7 +4098,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3951,7 +4122,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -3974,7 +4146,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -3997,7 +4170,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -4020,7 +4194,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "owner"
+          "relation": "owner",
+          "subject_type": "user"
         }
       },
       "expected": true
@@ -4043,7 +4218,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -4066,7 +4242,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -4089,7 +4266,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -4112,7 +4290,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -4135,7 +4314,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -4158,7 +4338,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -4181,7 +4362,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -4204,7 +4386,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -4227,7 +4410,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_read"
+          "relation": "can_read",
+          "subject_type": "identity"
         }
       },
       "expected": true
@@ -4250,7 +4434,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_write"
+          "relation": "can_write",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -4273,7 +4458,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_share"
+          "relation": "can_share",
+          "subject_type": "identity"
         }
       },
       "expected": false
@@ -4296,7 +4482,8 @@
         "resource_context": {
           "object_id": "morty.shared.notes",
           "object_type": "doc",
-          "relation": "can_delete"
+          "relation": "can_delete",
+          "subject_type": "identity"
         }
       },
       "expected": false
