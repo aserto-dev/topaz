@@ -1,0 +1,181 @@
+{
+  "relations": [
+    {
+      "object_type": "FOLDER",
+      "object_id": "root",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "beth@the-smiths.com"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "secrets",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "secrets",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "beth@the-smiths.com"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "groceries",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "groceries",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "beth@the-smiths.com"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "groceries",
+      "relation": "PUBLIC-VIEWER",
+      "subject_type": "USER",
+      "subject_id": "*"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "groceries",
+      "relation": "PUBLIC-VIEWER",
+      "subject_type": "IDENTITY",
+      "subject_id": "*"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "rick",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "rick",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "rick.inventions",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "rick"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "rick.inventions",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "morty",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "morty",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "morty.journal",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "morty"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "morty.shared",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "morty"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "morty.shared",
+      "relation": "VIEWER",
+      "subject_type": "GROUP",
+      "subject_id": "viewer",
+      "subject_relation": "MEMBER"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "morty.shared",
+      "relation": "EDITOR",
+      "subject_type": "GROUP",
+      "subject_id": "editor",
+      "subject_relation": "MEMBER"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "morty.shared.notes",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "morty.shared"
+    },
+    {
+      "object_type": "DOC",
+      "object_id": "morty.shared.notes",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "summer",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "summer",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "summer@the-smiths.com"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "jerry",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "jerry",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "jerry@the-smiths.com"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "beth",
+      "relation": "PARENT",
+      "subject_type": "FOLDER",
+      "subject_id": "root"
+    },
+    {
+      "object_type": "FOLDER",
+      "object_id": "beth",
+      "relation": "OWNER",
+      "subject_type": "USER",
+      "subject_id": "beth@the-smiths.com"
+    }
+  ]
+}

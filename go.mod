@@ -12,13 +12,13 @@ require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/alecthomas/kong v1.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.9
-	github.com/aserto-dev/azm v0.2.8
+	github.com/aserto-dev/azm v0.2.9
 	github.com/aserto-dev/certs v0.1.0
-	github.com/aserto-dev/errors v0.0.13
+	github.com/aserto-dev/errors v0.0.15
 	github.com/aserto-dev/go-aserto v0.33.6
 	github.com/aserto-dev/go-authorizer v0.20.13
-	github.com/aserto-dev/go-directory v0.33.4
-	github.com/aserto-dev/go-edge-ds v0.33.10
+	github.com/aserto-dev/go-directory v0.33.5
+	github.com/aserto-dev/go-edge-ds v0.33.11
 	github.com/aserto-dev/go-grpc v0.9.4
 	github.com/aserto-dev/go-topaz-ui v0.1.19
 	github.com/aserto-dev/header v0.0.10
@@ -27,6 +27,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.31.4
 	github.com/aserto-dev/runtime v1.1.0
 	github.com/aserto-dev/self-decision-logger v0.0.11
+	github.com/authzen/access.go v0.0.0-20250123041208-d58afed67b50
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.5.1+incompatible
 	github.com/docker/go-connections v0.5.0
@@ -79,7 +80,6 @@ require (
 	github.com/agnivade/levenshtein v1.2.0 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/aserto-dev/go-decision-logs v0.1.4 // indirect
-	github.com/authzen/access.go v0.0.0-20250123041208-d58afed67b50 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bufbuild/protovalidate-go v0.8.2 // indirect
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
@@ -190,7 +190,7 @@ require (
 	golang.org/x/time v0.9.0 // indirect
 	golang.org/x/tools v0.29.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250212204824-5a70512c5d8b // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250212204824-5a70512c5d8b // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250218202821-56aae31c358a // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.5.0 // indirect

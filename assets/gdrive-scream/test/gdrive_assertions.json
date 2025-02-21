@@ -2,1870 +2,1870 @@
   "assertions": [
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "root",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_read",
-        "subject_type": "identity",
-        "subject_id": "beth@the-smiths.com"
-      },
-      "expected": true
-    },
-    {
-      "check": {
-        "object_type": "folder",
-        "object_id": "rick",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "FOLDER",
+        "object_id": "rick",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "rick",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "summer",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "jerry",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "folder",
+        "object_type": "FOLDER",
         "object_id": "morty.shared",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "secrets",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "groceries",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "rick.inventions",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "owner",
-        "subject_type": "user",
+        "relation": "OWNER",
+        "subject_type": "USER",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_read",
-        "subject_type": "identity",
+        "relation": "CAN_READ",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": true
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_write",
-        "subject_type": "identity",
+        "relation": "CAN_WRITE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_share",
-        "subject_type": "identity",
+        "relation": "CAN_SHARE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
     },
     {
       "check": {
-        "object_type": "doc",
+        "object_type": "DOC",
         "object_id": "morty.shared.notes",
-        "relation": "can_delete",
-        "subject_type": "identity",
+        "relation": "CAN_DELETE",
+        "subject_type": "IDENTITY",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false

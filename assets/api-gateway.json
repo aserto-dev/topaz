@@ -1,0 +1,17 @@
+{
+    "name": "api-gateway",
+    "description": "API Gateway",
+    "assets": {
+        "manifest": "api-gateway/manifest.yaml",
+        "policy": {
+            "name": "api-gateway",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+        ],
+        "domain_data": [
+        ],
+        "assertions": [
+        ]
+    }
+}

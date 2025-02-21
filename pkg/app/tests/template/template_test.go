@@ -91,4 +91,6 @@ var tcs = []string{
 	"../../../../assets/todo.json",
 	"../../../../assets/citadel-inv.json",
 	"../../../../assets/gdrive-inv.json",
+	"../../../../assets/gdrive-scream.json",
+	"../../../../assets/api-gateway.json",
 }
