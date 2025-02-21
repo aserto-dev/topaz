@@ -80,7 +80,7 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 	}
 }
 
-func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
+func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		if lo.Contains(services, modelService) {
 			err := dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
@@ -111,7 +111,7 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 		}
 
 		if len(services) > 0 {
-			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler); err != nil {
+			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler(port, services...)); err != nil {
 				return err
 			}
 		}
@@ -124,6 +124,9 @@ const (
 	directoryOpenAPISpec string = "/directory/openapi.json"
 )
 
-func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	dsOpenAPI.OpenApiHandler(w, r)
+func dsOpenAPIHandler(port string, services ...string) func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	handler := dsOpenAPI.OpenAPIHandler(port, services...)
+	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+		handler(w, r)
+	}
 }
