@@ -12,13 +12,13 @@ require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/alecthomas/kong v1.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.9
-	github.com/aserto-dev/azm v0.2.9-0.20250220002245-5ec95be39106
+	github.com/aserto-dev/azm v0.2.9
 	github.com/aserto-dev/certs v0.1.0
-	github.com/aserto-dev/errors v0.0.13
+	github.com/aserto-dev/errors v0.0.15
 	github.com/aserto-dev/go-aserto v0.33.6
 	github.com/aserto-dev/go-authorizer v0.20.13
 	github.com/aserto-dev/go-directory v0.33.5
-	github.com/aserto-dev/go-edge-ds v0.33.11-0.20250220002819-5ab1bd4db72b
+	github.com/aserto-dev/go-edge-ds v0.33.11
 	github.com/aserto-dev/go-grpc v0.9.4
 	github.com/aserto-dev/go-topaz-ui v0.1.19
 	github.com/aserto-dev/header v0.0.10
@@ -190,7 +190,7 @@ require (
 	golang.org/x/time v0.9.0 // indirect
 	golang.org/x/tools v0.29.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250212204824-5a70512c5d8b // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250212204824-5a70512c5d8b // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250218202821-56aae31c358a // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.5.0 // indirect
