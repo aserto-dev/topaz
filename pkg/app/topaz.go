@@ -109,7 +109,7 @@ func (e *Topaz) Start() error {
 	return nil
 }
 
-// nolint: gocyclo
+// nolint: gocyclo,funlen
 func (e *Topaz) ConfigServices() error {
 	metricsMiddleware, err := e.setupHealthAndMetrics()
 	if err != nil {
@@ -142,18 +142,20 @@ func (e *Topaz) ConfigServices() error {
 		var cleanups []func()
 
 		for _, serv := range e.Services {
-			notAdded := true
+			added := false
 			for _, serviceName := range serv.AvailableServices() {
-				if lo.Contains(serviceConfig.registeredServices, serviceName) && notAdded {
-					grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
-					gatewayPort, err := config.PortFromAddress(cfg.API.Gateway.ListenAddress)
-					if err != nil {
-						return errors.Wrapf(err, "invalid gateway address %q in service %q", cfg.API.Gateway.ListenAddress, serviceName)
-					}
-					gateways = append(gateways, serv.GetGatewayRegistration(gatewayPort, serviceConfig.registeredServices...))
-					cleanups = append(cleanups, serv.Cleanups()...)
-					notAdded = false
+				if added || !lo.Contains(serviceConfig.registeredServices, serviceName) {
+					continue
 				}
+
+				grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
+				gatewayPort, err := config.PortFromAddress(cfg.API.Gateway.ListenAddress)
+				if err != nil {
+					return errors.Wrapf(err, "invalid gateway address %q in service %q", cfg.API.Gateway.ListenAddress, serviceName)
+				}
+				gateways = append(gateways, serv.GetGatewayRegistration(gatewayPort, serviceConfig.registeredServices...))
+				cleanups = append(cleanups, serv.Cleanups()...)
+				added = true
 			}
 		}
 
