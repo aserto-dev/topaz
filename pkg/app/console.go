@@ -32,7 +32,7 @@ func (e *ConsoleService) GetGRPCRegistrations(services ...string) builder.GRPCRe
 	}
 }
 
-func (e *ConsoleService) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
+func (e *ConsoleService) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		return mux.HandlePath("GET", "/", runtime.HandlerFunc(func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
 			http.Redirect(w, r, "/ui/directory/model", http.StatusSeeOther)

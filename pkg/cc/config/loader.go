@@ -153,7 +153,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 	portMap := make(map[string]bool)
 
 	if l.Configuration.APIConfig.Health.ListenAddress != "" {
-		port, err := getPortFromAddress(l.Configuration.APIConfig.Health.ListenAddress)
+		port, err := PortFromAddress(l.Configuration.APIConfig.Health.ListenAddress)
 		if err != nil {
 			return nil, err
 		}
@@ -161,7 +161,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 	}
 
 	if l.Configuration.APIConfig.Metrics.ListenAddress != "" {
-		port, err := getPortFromAddress(l.Configuration.APIConfig.Metrics.ListenAddress)
+		port, err := PortFromAddress(l.Configuration.APIConfig.Metrics.ListenAddress)
 		if err != nil {
 			return nil, err
 		}
@@ -169,7 +169,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 	}
 
 	if l.Configuration.DebugService.Enabled && l.Configuration.DebugService.ListenAddress != "" {
-		port, err := getPortFromAddress(l.Configuration.DebugService.ListenAddress)
+		port, err := PortFromAddress(l.Configuration.DebugService.ListenAddress)
 		if err != nil {
 			return nil, err
 		}
@@ -178,7 +178,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 
 	for _, value := range l.Configuration.APIConfig.Services {
 		if value.GRPC.ListenAddress != "" {
-			port, err := getPortFromAddress(value.GRPC.ListenAddress)
+			port, err := PortFromAddress(value.GRPC.ListenAddress)
 			if err != nil {
 				return nil, err
 			}
@@ -186,7 +186,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 		}
 
 		if value.Gateway.ListenAddress != "" {
-			port, err := getPortFromAddress(value.Gateway.ListenAddress)
+			port, err := PortFromAddress(value.Gateway.ListenAddress)
 			if err != nil {
 				return nil, err
 			}
@@ -228,7 +228,7 @@ func filterPaths(paths map[string]bool) []string {
 	return args
 }
 
-func getPortFromAddress(address string) (string, error) {
+func PortFromAddress(address string) (string, error) {
 	_, port, err := net.SplitHostPort(address)
 	if err != nil {
 		return "", err
