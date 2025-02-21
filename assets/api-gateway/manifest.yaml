@@ -7,52 +7,57 @@ model:
 
 # object type definitions
 types:
-  # user represents a user that can be granted role(s)
-  user:
+  ### display_name: User ###
+  user: {}
+
+  ### display_name: Subject ###
+  subject:
     relations:
-      manager: user
+      ### display_name: identifier ###
+      identifier: user
+      ### display_name: subject#manager ###
+      manager: subject
 
     permissions:
-      ### display_name: user#in_management_chain ###
+      ### display_name: subject#in_management_chain ###
       in_management_chain: manager | manager->in_management_chain
 
-  # group represents a collection of users and/or (nested) groups
+  ### display_name: Group ###
   group:
     relations:
-      member: user | group#member
+      ### display_name: group#member ###
+      member: subject | group#member
 
-  # identity represents a collection of identities for users
-  identity:
-    relations:
-      identifier: user
-
+  ### display_name: Service ###
   # service represents a set of endpoints
   service:
     relations:
-      owner: user
-      deleter: user | group#member
-      creator: user | group#member
-      writer: user | group#member
-      reader: user | group#member
+      owner:   subject
+      deleter: subject | group#member
+      creator: subject | group#member
+      writer:  subject | group#member
+      reader:  subject | group#member
 
     permissions:
-      GET: reader | PUT
-      PUT: writer | POST
-      PATCH: writer | POST
-      POST: creator | DELETE
-      DELETE: deleter | owner
+      GET:    reader  | reader->identifier  | PUT
+      PUT:    writer  | writer->identifier  | POST
+      PATCH:  writer  | writer->identifier  | POST
+      POST:   creator | creator->identifier | DELETE
+      DELETE: deleter | deleter->identifier | owner
 
+  ### display_name: Route ###
   # endpoint represents a specific API endpoint
   route:
     relations:
       service: service
-      deleter: user | group#member
-      creator: user | group#member
-      writer: user | group#member
-      reader: user | group#member
+      deleter: subject | group#member
+      creator: subject | group#member
+      writer:  subject | group#member
+      reader:  subject | group#member
+
     permissions:
-      GET: reader | PUT | service->GET
-      PUT: writer | POST | service->PUT
-      PATCH: writer | POST | service->PATCH
-      POST: creator | DELETE | service->POST
-      DELETE: deleter | service->DELETE
+      GET:    reader  | reader->identifier  | PUT    | service->GET
+      PUT:    writer  | writer->identifier  | POST   | service->PUT
+      PATCH:  writer  | writer->identifier  | POST   | service->PATCH
+      POST:   creator | creator->identifier | DELETE | service->POST
+      DELETE: deleter | deleter->identifier | service->DELETE
