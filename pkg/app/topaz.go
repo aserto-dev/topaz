@@ -64,7 +64,7 @@ func SetServiceStatus(log *zerolog.Logger, service string, servingStatus grpc_he
 type ServiceTypes interface {
 	AvailableServices() []string
 	GetGRPCRegistrations(services ...string) builder.GRPCRegistrations
-	GetGatewayRegistration(services ...string) builder.HandlerRegistrations
+	GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations
 	Cleanups() []func()
 }
 
@@ -125,9 +125,9 @@ func (e *Topaz) ConfigServices() error {
 
 	serviceMap := mapToGRPCPorts(e.Configuration.APIConfig.Services)
 
-	for address, config := range serviceMap {
+	for address, cfg := range serviceMap {
 		e.Logger.Debug().Msgf("configuring address %s", address)
-		serviceConfig := config
+		serviceConfig := cfg
 
 		// get middlewares for edge services.
 		opts, err := middlewares.GetMiddlewaresForService(e.Context, e.Configuration, e.Logger)
@@ -146,7 +146,11 @@ func (e *Topaz) ConfigServices() error {
 			for _, serviceName := range serv.AvailableServices() {
 				if lo.Contains(serviceConfig.registeredServices, serviceName) && notAdded {
 					grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
-					gateways = append(gateways, serv.GetGatewayRegistration(serviceConfig.registeredServices...))
+					gatewayPort, err := config.PortFromAddress(cfg.API.Gateway.ListenAddress)
+					if err != nil {
+						return errors.Wrapf(err, "invalid gateway address %q in service %q", cfg.API.Gateway.ListenAddress, serviceName)
+					}
+					gateways = append(gateways, serv.GetGatewayRegistration(gatewayPort, serviceConfig.registeredServices...))
 					cleanups = append(cleanups, serv.Cleanups()...)
 					notAdded = false
 				}

@@ -63,7 +63,7 @@ func (e *Authorizer) GetGRPCRegistrations(services ...string) builder.GRPCRegist
 	}
 }
 
-func (e *Authorizer) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
+func (e *Authorizer) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		if err := authz.RegisterAuthorizerHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
 			return err
