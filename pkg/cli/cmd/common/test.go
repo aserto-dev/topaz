@@ -38,7 +38,7 @@ const (
 	CheckRelation
 	CheckPermission
 	CheckDecision
-	CheckEvaluation
+	Evaluation
 )
 
 const (
@@ -46,7 +46,7 @@ const (
 	CheckRelationStr   string = "check_relation"
 	CheckPermissionStr string = "check_permission"
 	CheckDecisionStr   string = "check_decision"
-	CheckEvaluationStr string = "check_evaluation"
+	EvaluationStr      string = "evaluation"
 )
 
 type CheckResult struct {
@@ -61,7 +61,7 @@ var CheckTypeMap = map[string]CheckType{
 	CheckRelationStr:   CheckRelation,
 	CheckPermissionStr: CheckPermission,
 	CheckDecisionStr:   CheckDecision,
-	CheckEvaluationStr: CheckEvaluation,
+	EvaluationStr:      Evaluation,
 }
 
 var CheckTypeMapStr = map[CheckType]string{
@@ -69,7 +69,7 @@ var CheckTypeMapStr = map[CheckType]string{
 	CheckRelation:   CheckRelationStr,
 	CheckPermission: CheckPermissionStr,
 	CheckDecision:   CheckDecisionStr,
-	CheckEvaluation: CheckEvaluationStr,
+	Evaluation:      EvaluationStr,
 }
 
 func GetCheckType(msg *structpb.Struct) CheckType {

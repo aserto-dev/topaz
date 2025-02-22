@@ -162,8 +162,8 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 			result = checkRelationV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
 		case checkType == CheckDecision:
 			result = checkDecisionV2(c.Context, runner.azClient, msg.Fields[CheckTypeMapStr[checkType]])
-		case checkType == CheckEvaluation:
-			result = checkEvaluation(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
+		case checkType == Evaluation:
+			result = evaluationV1(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
 		default:
 			continue
 		}
@@ -225,6 +225,9 @@ func getReqVersion(val *structpb.Value) int {
 		}
 		if _, ok := v.StructValue.Fields["identity_context"]; ok {
 			return 2
+		}
+		if _, ok := v.StructValue.Fields["action"]; ok {
+			return 1
 		}
 	}
 	return 0
@@ -357,7 +360,7 @@ func checkDecisionV2(ctx context.Context, c *azc.Client, msg *structpb.Value) *C
 	}
 }
 
-func checkEvaluation(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
+func evaluationV1(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
 	if c == nil {
 		return &CheckResult{
 			Outcome:  false,
