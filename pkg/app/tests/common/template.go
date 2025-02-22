@@ -8,7 +8,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
-	"github.com/aserto-dev/topaz/pkg/cli/cmd/authorizer"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/templates"
@@ -56,15 +55,11 @@ func InstallTemplate(dsConfig *dsc.Config, azConfig *azc.Config, tmpl string) fu
 		}
 
 		if len(tmpl.Assets.Assertions) > 0 {
-			assertionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[0])
-			t.Logf("assertionsFile: %s", assertionsFile)
-			t.Run(tmpl.Name+"-ExecDirectoryTest", ExecDirectoryTests(c, dsConfig, []string{assertionsFile}))
-		}
-
-		if len(tmpl.Assets.Assertions) > 1 {
-			decisionsFile := filepath.Join(dirPath, tmpl.Assets.Assertions[1])
-			t.Logf("decisionsFile: %s", decisionsFile)
-			t.Run(tmpl.Name+"-ExecAuthorizerTest", ExecAuthorizerTests(c, azConfig, []string{decisionsFile}))
+			for _, assertions := range tmpl.Assets.Assertions {
+				assertionsFile := filepath.Join(dirPath, assertions)
+				t.Logf("assertionsFile: %s", assertionsFile)
+				t.Run(assertions, ExecTests(c, dsConfig, azConfig, []string{assertionsFile}))
+			}
 		}
 	}
 }
@@ -96,18 +91,10 @@ func ImportData(c *cc.CommonCtx, cfg *dsc.Config, dir string) func(*testing.T) {
 	}
 }
 
-func ExecDirectoryTests(c *cc.CommonCtx, cfg *dsc.Config, files []string) func(*testing.T) {
+func ExecTests(c *cc.CommonCtx, dsConfig *dsc.Config, azConfig *azc.Config, files []string) func(*testing.T) {
 	return func(t *testing.T) {
-		cmd := directory.TestExecCmd{Config: *cfg, TestExecCmd: common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}}
-		if err := cmd.Run(c); err != nil {
-			assert.NoError(t, err)
-		}
-	}
-}
-
-func ExecAuthorizerTests(c *cc.CommonCtx, cfg *azc.Config, files []string) func(*testing.T) {
-	return func(t *testing.T) {
-		cmd := authorizer.TestExecCmd{Config: *cfg, TestExecCmd: common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}}
+		cmd, err := common.NewTestRunner(c, &common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}, azConfig, dsConfig)
+		require.NoError(t, err)
 		if err := cmd.Run(c); err != nil {
 			assert.NoError(t, err)
 		}

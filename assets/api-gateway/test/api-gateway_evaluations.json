@@ -1,5 +1,5 @@
 {
-  "evaluation": [
+  "assertions": [
     {
       "evaluation": {
         "subject": {
@@ -80,7 +80,6 @@
       },
       "expected": true
     },
-
     {
       "evaluation": {
         "subject": {
@@ -161,7 +160,6 @@
       },
       "expected": true
     },
-
     {
       "evaluation": {
         "subject": {
@@ -242,7 +240,6 @@
       },
       "expected": true
     },
-
     {
       "evaluation": {
         "subject": {
@@ -323,7 +320,6 @@
       },
       "expected": false
     },
-
     {
       "evaluation": {
         "subject": {

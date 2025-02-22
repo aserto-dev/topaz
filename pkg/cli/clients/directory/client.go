@@ -13,6 +13,7 @@ import (
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	acc1 "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -39,6 +40,7 @@ type Client struct {
 	Importer  dsi3.ImporterClient
 	Exporter  dse3.ExporterClient
 	Assertion dsa3.AssertionClient
+	Access    acc1.AccessClient
 }
 
 func New(conn *grpc.ClientConn) *Client {
@@ -50,6 +52,7 @@ func New(conn *grpc.ClientConn) *Client {
 		Importer:  dsi3.NewImporterClient(conn),
 		Exporter:  dse3.NewExporterClient(conn),
 		Assertion: dsa3.NewAssertionClient(conn),
+		Access:    acc1.NewAccessClient(conn),
 	}
 }
 
