@@ -7,10 +7,10 @@ model:
 
 # object type definitions
 types:
-  ### display_name: User ###
+  ### display_name: Identity ###
   identity: {}
 
-  ### display_name: Subject ###
+  ### display_name: User ###
   user:
     relations:
       ### display_name: identifier ###
