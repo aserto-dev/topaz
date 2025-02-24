@@ -8,35 +8,35 @@ model:
 # object type definitions
 types:
   ### display_name: User ###
-  user: {}
+  identity: {}
 
   ### display_name: Subject ###
-  subject:
+  user:
     relations:
       ### display_name: identifier ###
-      identifier: user
-      ### display_name: subject#manager ###
-      manager: subject
+      identifier: identity
+      ### display_name: user#manager ###
+      manager: user
 
     permissions:
-      ### display_name: subject#in_management_chain ###
+      ### display_name: user#in_management_chain ###
       in_management_chain: manager | manager->in_management_chain
 
   ### display_name: Group ###
   group:
     relations:
       ### display_name: group#member ###
-      member: subject | group#member
+      member: user | group#member
 
   ### display_name: Service ###
   # service represents a set of endpoints
   service:
     relations:
-      owner:   subject
-      deleter: subject | group#member
-      creator: subject | group#member
-      writer:  subject | group#member
-      reader:  subject | group#member
+      owner:   user
+      deleter: user | group#member
+      creator: user | group#member
+      writer:  user | group#member
+      reader:  user | group#member
 
     permissions:
       GET:    reader  | reader->identifier  | PUT
@@ -50,10 +50,10 @@ types:
   route:
     relations:
       service: service
-      deleter: subject | group#member
-      creator: subject | group#member
-      writer:  subject | group#member
-      reader:  subject | group#member
+      deleter: user | group#member
+      creator: user | group#member
+      writer:  user | group#member
+      reader:  user | group#member
 
     permissions:
       GET:    reader  | reader->identifier  | PUT    | service->GET
