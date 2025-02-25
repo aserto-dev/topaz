@@ -15,6 +15,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	acc1 "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -161,6 +162,8 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 			result = checkRelationV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
 		case checkType == CheckDecision:
 			result = checkDecisionV2(c.Context, runner.azClient, msg.Fields[CheckTypeMapStr[checkType]])
+		case checkType == Evaluation:
+			result = evaluationV1(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
 		default:
 			continue
 		}
@@ -222,6 +225,9 @@ func getReqVersion(val *structpb.Value) int {
 		}
 		if _, ok := v.StructValue.Fields["identity_context"]; ok {
 			return 2
+		}
+		if _, ok := v.StructValue.Fields["action"]; ok {
+			return 1
 		}
 	}
 	return 0
@@ -354,6 +360,35 @@ func checkDecisionV2(ctx context.Context, c *azc.Client, msg *structpb.Value) *C
 	}
 }
 
+func evaluationV1(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
+	if c == nil {
+		return &CheckResult{
+			Outcome:  false,
+			Duration: 0,
+			Err:      ErrSkippedDirectoryAssertion,
+			Str:      "SKIPPED",
+		}
+	}
+
+	var req acc1.EvaluationRequest
+	if err := UnmarshalReq(msg, &req); err != nil {
+		return &CheckResult{Err: err}
+	}
+
+	start := time.Now()
+
+	resp, err := c.Access.Evaluation(ctx, &req)
+
+	duration := time.Since(start)
+
+	return &CheckResult{
+		Outcome:  resp.GetDecision(),
+		Duration: duration,
+		Err:      err,
+		Str:      checkEvaluationStringV1(&req),
+	}
+}
+
 func checkStringV3(req *dsr3.CheckRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
@@ -383,5 +418,13 @@ func checkDecisionStringV2(req *az2.IsRequest) string {
 		req.PolicyContext.GetPath(),
 		req.PolicyContext.GetDecisions()[0],
 		req.IdentityContext.Identity,
+	)
+}
+
+func checkEvaluationStringV1(req *acc1.EvaluationRequest) string {
+	return fmt.Sprintf("%s:%s#%s@%s:%s",
+		req.GetResource().GetType(), req.GetResource().GetId(),
+		req.GetAction().GetName(),
+		req.GetSubject().GetType(), req.GetSubject().GetId(),
 	)
 }

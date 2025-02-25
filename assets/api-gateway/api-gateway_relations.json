@@ -1,0 +1,49 @@
+{
+  "relations": [
+    {
+      "objectType": "route",
+      "objectId": "/users/{userId}",
+      "relation": "service",
+      "subjectType": "service",
+      "subjectId": "todo"
+    },
+    {
+      "objectType": "route",
+      "objectId": "/todos/{todoId}",
+      "relation": "service",
+      "subjectType": "service",
+      "subjectId": "todo"
+    },
+    {
+      "objectType": "route",
+      "objectId": "/todos",
+      "relation": "service",
+      "subjectType": "service",
+      "subjectId": "todo"
+    },
+    {
+      "objectType": "service",
+      "objectId": "todo",
+      "relation": "deleter",
+      "subjectType": "group",
+      "subjectId": "admin",
+      "subjectRelation": "member"
+    },
+    {
+      "objectType": "service",
+      "objectId": "todo",
+      "relation": "deleter",
+      "subjectType": "group",
+      "subjectId": "editor",
+      "subjectRelation": "member"
+    },
+    {
+      "objectType": "service",
+      "objectId": "todo",
+      "relation": "reader",
+      "subjectType": "group",
+      "subjectId": "viewer",
+      "subjectRelation": "member"
+    }
+  ]  
+}

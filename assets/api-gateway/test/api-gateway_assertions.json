@@ -1,0 +1,254 @@
+{
+  "assertions": [
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/users/{userId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "POST",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "PUT",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "DELETE",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/users/{userId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "POST",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "PUT",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "DELETE",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/users/{userId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "POST",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "PUT",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "DELETE",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/users/{userId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "POST",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "PUT",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "DELETE",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/users/{userId}"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "GET",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "POST",
+        "object_type": "route",
+        "object_id": "/todos"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "PUT",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "subject_type": "identity",
+        "subject_id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+        "relation": "DELETE",
+        "object_type": "route",
+        "object_id": "/todos/{todoId}"
+      },
+      "expected": false
+    }
+  ]
+}

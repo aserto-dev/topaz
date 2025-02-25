@@ -1,8 +1,8 @@
 {
   "objects": [
     {
-      "key": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "type": "identity",
+      "id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -10,8 +10,8 @@
       }
     },
     {
-      "key": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "type": "identity",
+      "id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -19,14 +19,14 @@
       }
     },
     {
-      "key": "evil_genius",
       "type": "group",
+      "id": "evil_genius",
       "display_name": "evil_genius-group",
       "properties": {}
     },
     {
-      "key": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "type": "identity",
+      "id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -34,14 +34,14 @@
       }
     },
     {
-      "key": "admin",
       "type": "group",
+      "id": "admin",
       "display_name": "admin-group",
       "properties": {}
     },
     {
-      "key": "summer@the-smiths.com",
       "type": "identity",
+      "id": "summer@the-smiths.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",
@@ -49,8 +49,8 @@
       }
     },
     {
-      "key": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "type": "identity",
+      "id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -58,8 +58,8 @@
       }
     },
     {
-      "key": "rick@the-citadel.com",
       "type": "identity",
+      "id": "rick@the-citadel.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",
@@ -67,8 +67,8 @@
       }
     },
     {
-      "key": "beth@the-smiths.com",
       "type": "identity",
+      "id": "beth@the-smiths.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",
@@ -76,14 +76,14 @@
       }
     },
     {
-      "key": "viewer",
       "type": "group",
+      "id": "viewer",
       "display_name": "viewer-group",
       "properties": {}
     },
     {
-      "key": "jerry@the-smiths.com",
       "type": "identity",
+      "id": "jerry@the-smiths.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",
@@ -91,30 +91,34 @@
       }
     },
     {
-      "key": "jerry@the-smiths.com",
       "type": "user",
+      "id": "jerry@the-smiths.com",
       "display_name": "Jerry Smith",
       "properties": {
         "email": "jerry@the-smiths.com",
-        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Jerry%20Smith.jpg",
-        "status": "USER_STATUS_ACTIVE",
-        "roles": ["viewer"]
+        "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Jerry%20Smith.jpg",
+        "roles": [
+          "viewer"
+        ],
+        "status": "USER_STATUS_ACTIVE"
       }
     },
     {
-      "key": "beth@the-smiths.com",
       "type": "user",
+      "id": "beth@the-smiths.com",
       "display_name": "Beth Smith",
       "properties": {
         "email": "beth@the-smiths.com",
-        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Beth%20Smith.jpg",
-        "status": "USER_STATUS_ACTIVE",
-        "roles": ["viewer"]
+        "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Beth%20Smith.jpg",
+        "roles": [
+          "viewer"
+        ],
+        "status": "USER_STATUS_ACTIVE"
       }
     },
     {
-      "key": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "type": "identity",
+      "id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -122,47 +126,54 @@
       }
     },
     {
-      "key": "rick@the-citadel.com",
       "type": "user",
+      "id": "rick@the-citadel.com",
       "display_name": "Rick Sanchez",
       "properties": {
         "email": "rick@the-citadel.com",
-        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Rick%20Sanchez.jpg",
-        "status": "USER_STATUS_ACTIVE",
-        "roles": ["admin", "evil_genius"]
+        "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Rick%20Sanchez.jpg",
+        "roles": [
+          "admin",
+          "evil_genius"
+        ],
+        "status": "USER_STATUS_ACTIVE"
       }
     },
     {
-      "key": "morty@the-citadel.com",
       "type": "user",
+      "id": "morty@the-citadel.com",
       "display_name": "Morty Smith",
       "properties": {
         "email": "morty@the-citadel.com",
-        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Morty%20Smith.jpg",
-        "status": "USER_STATUS_ACTIVE",
-        "roles": ["editor"]
+        "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Morty%20Smith.jpg",
+        "roles": [
+          "editor"
+        ],
+        "status": "USER_STATUS_ACTIVE"
       }
     },
     {
-      "key": "summer@the-smiths.com",
       "type": "user",
+      "id": "summer@the-smiths.com",
       "display_name": "Summer Smith",
       "properties": {
         "email": "summer@the-smiths.com",
-        "picture": "https://www.topaz.sh/assets/templates/citadel/img/Summer%20Smith.jpg",
-        "status": "USER_STATUS_ACTIVE",
-        "roles": ["editor"]
+        "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Summer%20Smith.jpg",
+        "roles": [
+          "editor"
+        ],
+        "status": "USER_STATUS_ACTIVE"
       }
     },
     {
-      "key": "editor",
       "type": "group",
+      "id": "editor",
       "display_name": "editor-group",
       "properties": {}
     },
     {
-      "key": "morty@the-citadel.com",
       "type": "identity",
+      "id": "morty@the-citadel.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",

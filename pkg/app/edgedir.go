@@ -3,8 +3,6 @@ package app
 import (
 	"context"
 	"net/http"
-	"os"
-	"strconv"
 
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
@@ -64,9 +62,7 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 		}
 		if lo.Contains(services, readerService) {
 			dsr3.RegisterReaderServer(server, e.dir.Reader3())
-			if authZEN, _ := strconv.ParseBool(os.Getenv(EnvTopazAuthZEN)); authZEN {
-				dsa1.RegisterAccessServer(server, e.dir.Access1())
-			}
+			dsa1.RegisterAccessServer(server, e.dir.Access1())
 		}
 		if lo.Contains(services, writerService) {
 			dsw3.RegisterWriterServer(server, e.dir.Writer3())
@@ -80,7 +76,7 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 	}
 }
 
-func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
+func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		if lo.Contains(services, modelService) {
 			err := dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
@@ -92,11 +88,13 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 			}
 		}
 		if lo.Contains(services, readerService) {
-			err := dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
+			{
+				err := dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+				if err != nil {
+					return err
+				}
 			}
-			if authZEN, _ := strconv.ParseBool(os.Getenv(EnvTopazAuthZEN)); authZEN {
+			{
 				err := dsa1.RegisterAccessHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 				if err != nil {
 					return err
@@ -111,7 +109,7 @@ func (e *EdgeDir) GetGatewayRegistration(services ...string) builder.HandlerRegi
 		}
 
 		if len(services) > 0 {
-			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler); err != nil {
+			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler(port, services...)); err != nil {
 				return err
 			}
 		}
@@ -124,6 +122,9 @@ const (
 	directoryOpenAPISpec string = "/directory/openapi.json"
 )
 
-func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	dsOpenAPI.OpenApiHandler(w, r)
+func dsOpenAPIHandler(port string, services ...string) func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	handler := dsOpenAPI.OpenAPIHandler(port, services...)
+	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+		handler(w, r)
+	}
 }

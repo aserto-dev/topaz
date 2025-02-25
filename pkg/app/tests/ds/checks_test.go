@@ -97,7 +97,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: folder2: folder2: object_type"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: object_type: E20026 object type not found: folder2"),
 				},
 			},
 		},
@@ -172,7 +172,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: user2: user2: subject_type"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: subject_type: E20026 object type not found: user2"),
 				},
 			},
 		},
@@ -247,7 +247,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: folder2: folder2: object_type"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: object_type: E20026 object type not found: folder2"),
 				},
 			},
 		},
@@ -322,7 +322,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20026 object type not found: user2: user2: subject_type"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: subject_type: E20026 object type not found: user2"),
 				},
 			},
 		},
@@ -435,7 +435,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: E20046 invalid argument object identifier: type: type: object_type"),
+					Context: tc.SetContext(prop.Reason, "E20025 object not found: object_type: E20046 invalid argument object identifier: type"),
 				},
 			},
 		},
