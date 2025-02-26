@@ -4,7 +4,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -28,7 +28,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -52,7 +52,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -76,7 +76,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -100,7 +100,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -124,7 +124,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -148,7 +148,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -172,7 +172,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -196,7 +196,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -220,7 +220,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -244,7 +244,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -268,7 +268,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -292,7 +292,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -316,7 +316,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -340,7 +340,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -364,7 +364,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -388,7 +388,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -412,7 +412,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -436,7 +436,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -460,7 +460,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -484,7 +484,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -508,7 +508,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -532,7 +532,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -556,7 +556,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -580,7 +580,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -604,7 +604,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -628,7 +628,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -652,7 +652,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -676,7 +676,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -700,7 +700,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -724,7 +724,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -748,7 +748,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -772,7 +772,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -796,7 +796,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -820,7 +820,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -844,7 +844,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -868,7 +868,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -892,7 +892,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -916,7 +916,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -940,7 +940,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -964,7 +964,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -988,7 +988,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1012,7 +1012,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1036,7 +1036,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1060,7 +1060,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1084,7 +1084,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1108,7 +1108,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1132,7 +1132,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1156,7 +1156,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1180,7 +1180,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1204,7 +1204,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1228,7 +1228,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1252,7 +1252,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1276,7 +1276,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1300,7 +1300,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1324,7 +1324,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1348,7 +1348,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1372,7 +1372,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1396,7 +1396,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1420,7 +1420,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1444,7 +1444,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1468,7 +1468,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1492,7 +1492,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1516,7 +1516,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1540,7 +1540,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1564,7 +1564,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1588,7 +1588,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1612,7 +1612,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1636,7 +1636,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1660,7 +1660,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1684,7 +1684,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1708,7 +1708,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1732,7 +1732,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1756,7 +1756,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1780,7 +1780,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1804,7 +1804,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1828,7 +1828,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1852,7 +1852,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1876,7 +1876,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1900,7 +1900,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1924,7 +1924,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1948,7 +1948,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1972,7 +1972,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -1996,7 +1996,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2020,7 +2020,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2044,7 +2044,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2068,7 +2068,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2092,7 +2092,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2116,7 +2116,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2140,7 +2140,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2164,7 +2164,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2188,7 +2188,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2212,7 +2212,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2236,7 +2236,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2260,7 +2260,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2284,7 +2284,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2308,7 +2308,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2332,7 +2332,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2356,7 +2356,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2380,7 +2380,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2404,7 +2404,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2428,7 +2428,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2452,7 +2452,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2476,7 +2476,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2500,7 +2500,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2524,7 +2524,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2548,7 +2548,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2572,7 +2572,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2596,7 +2596,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2620,7 +2620,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2644,7 +2644,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2668,7 +2668,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2692,7 +2692,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2716,7 +2716,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2740,7 +2740,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2764,7 +2764,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2788,7 +2788,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2812,7 +2812,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2836,7 +2836,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2860,7 +2860,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2884,7 +2884,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2908,7 +2908,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2932,7 +2932,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2956,7 +2956,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -2980,7 +2980,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3004,7 +3004,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3028,7 +3028,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3052,7 +3052,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3076,7 +3076,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3100,7 +3100,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3124,7 +3124,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3148,7 +3148,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3172,7 +3172,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3196,7 +3196,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3220,7 +3220,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3244,7 +3244,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3268,7 +3268,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3292,7 +3292,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3316,7 +3316,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3340,7 +3340,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3364,7 +3364,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3388,7 +3388,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3412,7 +3412,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3436,7 +3436,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3460,7 +3460,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3484,7 +3484,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3508,7 +3508,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3532,7 +3532,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3556,7 +3556,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3580,7 +3580,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3604,7 +3604,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3628,7 +3628,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3652,7 +3652,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3676,7 +3676,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3700,7 +3700,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3724,7 +3724,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3748,7 +3748,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3772,7 +3772,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3796,7 +3796,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3820,7 +3820,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3844,7 +3844,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3868,7 +3868,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3892,7 +3892,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3916,7 +3916,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3940,7 +3940,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3964,7 +3964,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -3988,7 +3988,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4012,7 +4012,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4036,7 +4036,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "beth@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4060,7 +4060,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4084,7 +4084,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4108,7 +4108,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4132,7 +4132,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4156,7 +4156,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "rick@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4180,7 +4180,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4204,7 +4204,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4228,7 +4228,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4252,7 +4252,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4276,7 +4276,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "morty@the-citadel.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4300,7 +4300,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4324,7 +4324,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4348,7 +4348,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4372,7 +4372,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "summer@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4396,7 +4396,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4420,7 +4420,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4444,7 +4444,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
@@ -4468,7 +4468,7 @@
       "check_decision": {
         "identity_context": {
           "identity": "jerry@the-smiths.com",
-          "type": "IDENTITY_TYPE_MANUAL"
+          "type": "IDENTITY_TYPE_SUB"
         },
         "policy_context": {
           "decisions": [
