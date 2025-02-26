@@ -18,7 +18,7 @@ require (
 	github.com/aserto-dev/go-aserto v0.33.6
 	github.com/aserto-dev/go-authorizer v0.20.13
 	github.com/aserto-dev/go-directory v0.33.5
-	github.com/aserto-dev/go-edge-ds v0.33.12
+	github.com/aserto-dev/go-edge-ds v0.33.13-0.20250226070654-3ac17f067301
 	github.com/aserto-dev/go-grpc v0.9.5
 	github.com/aserto-dev/go-topaz-ui v0.1.19
 	github.com/aserto-dev/header v0.0.10
@@ -27,7 +27,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.31.5
 	github.com/aserto-dev/runtime v1.1.1
 	github.com/aserto-dev/self-decision-logger v0.0.11
-	github.com/authzen/access.go v0.0.0-20250225192010-dfb0e30b2a39
+	github.com/authzen/access.go v0.0.0-20250226070317-7215cd5b987b
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.5.1+incompatible
 	github.com/docker/go-connections v0.5.0
