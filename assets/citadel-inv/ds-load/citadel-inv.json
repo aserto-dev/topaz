@@ -97,7 +97,7 @@
         "display_name": "Jerry Smith",
         "properties": {
           "email": "jerry@the-smiths.com",
-          "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Jerry%20Smith.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/citadel/img/Jerry%20Smith.jpg",
           "roles": [
             "viewer"
           ],
@@ -110,7 +110,7 @@
         "display_name": "Beth Smith",
         "properties": {
           "email": "beth@the-smiths.com",
-          "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Beth%20Smith.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/citadel/img/Beth%20Smith.jpg",
           "roles": [
             "viewer"
           ],
@@ -132,7 +132,7 @@
         "display_name": "Rick Sanchez",
         "properties": {
           "email": "rick@the-citadel.com",
-          "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Rick%20Sanchez.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/citadel/img/Rick%20Sanchez.jpg",
           "roles": [
             "admin",
             "evil_genius"
@@ -146,7 +146,7 @@
         "display_name": "Morty Smith",
         "properties": {
           "email": "morty@the-citadel.com",
-          "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Morty%20Smith.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/citadel/img/Morty%20Smith.jpg",
           "roles": [
             "editor"
           ],
@@ -159,7 +159,7 @@
         "display_name": "Summer Smith",
         "properties": {
           "email": "summer@the-smiths.com",
-          "picture": "https://www.topaz.sh/assets/templates/citadel-inv/img/Summer%20Smith.jpg",
+          "picture": "https://www.topaz.sh/assets/templates/citadel/img/Summer%20Smith.jpg",
           "roles": [
             "editor"
           ],
