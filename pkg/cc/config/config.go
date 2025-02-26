@@ -154,6 +154,20 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		}
 	}
 
+	// set the default API key for the directory resolver to the first key in the auth section
+	// if there is no API key set for the directory resolver and there are API keys set in the auth section
+	if len(configLoader.Configuration.Auth.APIKeys) > 0 &&
+		configLoader.Configuration.DirectoryResolver.APIKey == "" {
+		var authAPIKey string
+		for key := range configLoader.Configuration.Auth.APIKeys {
+			// we only need a key
+			authAPIKey = key
+			break
+		}
+
+		configLoader.Configuration.DirectoryResolver.APIKey = authAPIKey
+	}
+
 	return configLoader.Configuration, nil
 }
 
