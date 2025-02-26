@@ -25,7 +25,7 @@ func ResolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity str
 	return resolveIdentityLegacy(ctx, client, identity)
 }
 
-// resolveIdentity, resolves object_type:user->subject_type:identity (inverted identity)
+// resolveIdentity, resolves object_type:user->subject_type:identity (inverted identity).
 func resolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity string) (*dsc3.Object, error) {
 	relReq := &dsr3.GetRelationRequest{
 		ObjectType:  User,
@@ -37,7 +37,7 @@ func resolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity str
 	return resolveIdentityToUser(ctx, client, relReq)
 }
 
-// resolveIdentityLegacy, resolves object_type:identity->subject_type:user (legacy)
+// resolveIdentityLegacy, resolves object_type:identity->subject_type:user (legacy).
 func resolveIdentityLegacy(ctx context.Context, client dsr3.ReaderClient, identity string) (*dsc3.Object, error) {
 	relReq := &dsr3.GetRelationRequest{
 		ObjectType:  Identity,
