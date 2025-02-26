@@ -233,8 +233,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	user, err := directory.ResolveIdentity(ctx, client, identity)
 	switch {
 	case status.Code(err) == codes.NotFound:
-		// Try to find a user with key == identity
-		return s.getObject(ctx, "user", identity)
+		return s.getUserObject(ctx, identity)
 	case err != nil:
 		return nil, err
 	default:
@@ -242,11 +241,12 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	}
 }
 
-func (s *AuthorizerServer) getObject(ctx context.Context, objType, objID string) (proto.Message, error) {
+// getUserObject, retrieves an user object, using the identity as the object_id (legacy).
+func (s *AuthorizerServer) getUserObject(ctx context.Context, objID string) (proto.Message, error) {
 	client := s.resolver.GetDirectoryResolver().GetDS()
 
 	objResp, err := client.GetObject(ctx, &dsr3.GetObjectRequest{
-		ObjectType: objType,
+		ObjectType: "user",
 		ObjectId:   objID,
 	})
 	if err != nil {
