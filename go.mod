@@ -12,22 +12,22 @@ require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/alecthomas/kong v1.8.1
 	github.com/aserto-dev/aserto-grpc v0.2.9
-	github.com/aserto-dev/azm v0.2.9
+	github.com/aserto-dev/azm v0.2.10
 	github.com/aserto-dev/certs v0.1.0
 	github.com/aserto-dev/errors v0.0.15
 	github.com/aserto-dev/go-aserto v0.33.6
 	github.com/aserto-dev/go-authorizer v0.20.13
 	github.com/aserto-dev/go-directory v0.33.5
-	github.com/aserto-dev/go-edge-ds v0.33.11
-	github.com/aserto-dev/go-grpc v0.9.4
-	github.com/aserto-dev/go-topaz-ui v0.1.19
+	github.com/aserto-dev/go-edge-ds v0.33.12
+	github.com/aserto-dev/go-grpc v0.9.5
+	github.com/aserto-dev/go-topaz-ui v0.1.20
 	github.com/aserto-dev/header v0.0.10
 	github.com/aserto-dev/logger v0.0.7
 	github.com/aserto-dev/openapi-authorizer v0.20.5
 	github.com/aserto-dev/openapi-directory v0.31.5
 	github.com/aserto-dev/runtime v1.1.1
 	github.com/aserto-dev/self-decision-logger v0.0.11
-	github.com/authzen/access.go v0.0.0-20250123041208-d58afed67b50
+	github.com/authzen/access.go v0.0.0-20250225192010-dfb0e30b2a39
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v27.5.1+incompatible
 	github.com/docker/go-connections v0.5.0
@@ -41,7 +41,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.1
 	github.com/itchyny/gojq v0.12.17
-	github.com/lestrrat-go/jwx/v2 v2.1.3
+	github.com/lestrrat-go/jwx/v2 v2.1.4
 	github.com/magefile/mage v1.15.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mennanov/fmutils v0.3.0
@@ -52,13 +52,13 @@ require (
 	github.com/open-policy-agent/opa v1.1.0
 	github.com/opencontainers/image-spec v1.1.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.20.5
+	github.com/prometheus/client_golang v1.21.0
 	github.com/rivo/tview v0.0.0-20241227133733-17b7edb88c57
 	github.com/rs/cors v1.11.1
 	github.com/rs/zerolog v1.33.0
 	github.com/samber/lo v1.49.1
 	github.com/slok/go-http-metrics v0.13.0
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.35.0
@@ -92,7 +92,7 @@ require (
 	github.com/cpuguy83/dockercfg v0.3.2 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/deckarep/golang-set/v2 v2.7.0 // indirect
-	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0 // indirect
 	github.com/dgryski/go-metro v0.0.0-20250106013310-edb8663e5e33 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
@@ -172,7 +172,7 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.12.0 // indirect
 	github.com/spf13/cast v1.7.1 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/tchap/go-patricia/v2 v2.3.2 // indirect
