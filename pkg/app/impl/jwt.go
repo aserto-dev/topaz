@@ -1,7 +1,6 @@
 package impl
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -20,8 +19,9 @@ import (
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/pkg/errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/structpb"
 )
 
 var (
@@ -230,15 +230,15 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
 	client := s.resolver.GetDirectoryResolver().GetDS()
 
-	user, err := directory.GetIdentityV2(ctx, client, identity)
+	user, err := directory.ResolveIdentity(ctx, client, identity)
 	switch {
-	case errors.Is(err, aerr.ErrDirectoryObjectNotFound):
+	case status.Code(err) == codes.NotFound:
 		// Try to find a user with key == identity
 		return s.getObject(ctx, "user", identity)
 	case err != nil:
 		return nil, err
 	default:
-		return addObjectKey(user)
+		return user, nil
 	}
 }
 
@@ -253,22 +253,5 @@ func (s *AuthorizerServer) getObject(ctx context.Context, objType, objID string)
 		return nil, err
 	}
 
-	return addObjectKey(objResp.Result)
-}
-
-func addObjectKey(in *dsc3.Object) (proto.Message, error) {
-	buf := new(bytes.Buffer)
-	if err := pb.ProtoToBuf(buf, in); err != nil {
-		return nil, err
-	}
-
-	out := pb.NewStruct()
-
-	if err := pb.BufToProto(bytes.NewReader(buf.Bytes()), out); err != nil {
-		return nil, err
-	}
-
-	out.Fields["key"] = structpb.NewStringValue(out.Fields["id"].GetStringValue())
-
-	return out, nil
+	return objResp.Result, nil
 }
