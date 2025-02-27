@@ -1,0 +1,23 @@
+{
+    "name": "api-auth",
+    "description": "API Authorization template",
+    "assets": {
+        "manifest": "api-auth-inv/manifest.yaml",
+        "policy": {
+            "name": "api-auth",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+            "citadel-inv/citadel_objects.json",
+            "citadel-inv/citadel_relations.json"
+        ],
+        "domain_data": [
+            "api-auth-inv/api-auth-objects.json",
+            "api-auth-inv/api-auth-relations.json"
+        ],
+        "assertions": [
+            "api-auth-inv/test/api-auth_assertions.json",
+            "api-auth-inv/test/api-auth_decisions.json"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "slack",
+  "description": "Slack with inverted identities",
+  "assets": {
+      "manifest": "slack-inv/manifest.yaml",
+      "policy": {
+          "name": "slack",
+          "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+      },
+      "idp_data": [
+        "citadel-inv/citadel_objects.json",
+        "citadel-inv/citadel_relations.json"
+      ],
+      "domain_data": [
+          "slack-inv/slack_objects.json",
+          "slack-inv/slack_relations.json"
+      ],
+      "assertions": [
+          "slack-inv/test/slack_assertions.json",
+          "slack-inv/test/slack_decisions.json"
+      ]
+  }
+}
