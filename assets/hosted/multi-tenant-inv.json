@@ -1,0 +1,19 @@
+{
+  "idp_data": [
+    {
+      "name": "Citadel",
+      "description": "Demo Citadel IDP",
+      "provider_id": "f8db605a-f309-11ef-9632-040ec95fb366",
+      "ds_load": "/assets/templates/citadel-inv/ds-load/citadel-inv.json"
+    }
+  ],
+  "domain_data": [
+    {
+      "name": "Multi-tenant",
+      "description": "Sample data for multi-tenant template",
+      "provider_id": "87be795c-4076-11ef-91b2-04a8cc1036f3",
+      "ds_load": "/assets/templates/multi-tenant-inv/ds-load/multi-tenant.json"
+    }
+  ]
+}
+

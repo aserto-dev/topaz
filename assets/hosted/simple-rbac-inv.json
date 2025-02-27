@@ -1,0 +1,18 @@
+{
+    "idp_data": [
+        {
+            "name": "Citadel",
+            "description": "Demo Citadel IDP",
+            "provider_id": "f8db605a-f309-11ef-9632-040ec95fb366",
+            "ds_load": "/assets/templates/citadel-inv/ds-load/citadel-inv.json"
+        }
+    ],
+    "domain_data": [
+        {
+            "name": "Simple RBAC",
+            "description": "Sample data for simple RBAC template",
+            "provider_id": "ec82482a-7ccd-11ee-a9fa-04ba54e1291f",
+            "ds_load":"/assets/templates/simple-rbac/ds-load/simple-rbac.json"
+        }
+    ]
+}

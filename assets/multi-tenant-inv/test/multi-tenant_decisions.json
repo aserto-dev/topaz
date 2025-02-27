@@ -1,0 +1,5342 @@
+{
+ "assertions": [
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "admin"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "can_create_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "can_create_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "can_create_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "can_create_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "can_create_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "editor"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "viewer"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "system",
+     "object_type": "system",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "owner"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "admin"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "editor"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "viewer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_administer"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_edit"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_view"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_manage_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_list_members"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_leave_tenant"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_create_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_delete_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_write_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "can_read_resources"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel-adventures",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "owner"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "writer"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "reader"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_delete"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": false
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_write"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "rick@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "morty@the-citadel.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "summer@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "beth@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "jerry@the-smiths.com",
+     "type": "IDENTITY_TYPE_SUB"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths-budget",
+     "object_type": "resource",
+     "relation": "can_read"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "system",
+     "type": "IDENTITY_TYPE_MANUAL"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "citadel",
+     "object_type": "tenant",
+     "relation": "system",
+     "subject_type": "system"
+    }
+   },
+   "expected": true
+  },
+  {
+   "check_decision": {
+    "identity_context": {
+     "identity": "system",
+     "type": "IDENTITY_TYPE_MANUAL"
+    },
+    "policy_context": {
+     "decisions": [
+      "allowed"
+     ],
+     "path": "rebac.check"
+    },
+    "policy_instance": {
+     "name": "policy-rebac"
+    },
+    "resource_context": {
+     "object_id": "smiths",
+     "object_type": "tenant",
+     "relation": "system",
+     "subject_type": "system"
+    }
+   },
+   "expected": true
+  }
+ ]
+}
