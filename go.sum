@@ -431,6 +431,8 @@ github.com/aserto-dev/go-edge-ds v0.33.12 h1:6MvLEhrm6sPn7GvIXl4sHyCKp1jhCH2RQaG
 github.com/aserto-dev/go-edge-ds v0.33.12/go.mod h1:k3la29VSUq4S/mXWtsOkA3hBpsp4ATx1jQfNY8Q1WSk=
 github.com/aserto-dev/go-edge-ds v0.33.13-0.20250226070654-3ac17f067301 h1:ZKou9yChs4Ptit2CpwtdO/JSWAkzSVG489aIlgcbytY=
 github.com/aserto-dev/go-edge-ds v0.33.13-0.20250226070654-3ac17f067301/go.mod h1:HNaMQsOS3Trr+lZviBUsBGDu6/YcFJxG6BgWBd8aHRM=
+github.com/aserto-dev/go-edge-ds v0.33.13-0.20250227010201-15d86cbe80b2 h1:MPQMebTsCCmwr4x6K4msX0DPdUveJtDv1hk9s/fnc+I=
+github.com/aserto-dev/go-edge-ds v0.33.13-0.20250227010201-15d86cbe80b2/go.mod h1:OJX69g3VP+3UEnZ5UznQVV+ggTi69kmKGooAKxpZBLo=
 github.com/aserto-dev/go-grpc v0.9.5 h1:0facPPhMKSDrd3FUroA0WPaeV8lMByPkY5cgqrDACUQ=
 github.com/aserto-dev/go-grpc v0.9.5/go.mod h1:R2bxW+34GuqclhWOnpTzEA9cIc9ay1U3WAOqS1a4TR8=
 github.com/aserto-dev/go-topaz-ui v0.1.20 h1:Z/wa9V4VZ5rysoqGMLzburemvfJ5c9ZmFlsGB/vMjS0=
@@ -451,6 +453,8 @@ github.com/authzen/access.go v0.0.0-20250225192010-dfb0e30b2a39 h1:iz+T5QcLM++rk
 github.com/authzen/access.go v0.0.0-20250225192010-dfb0e30b2a39/go.mod h1:l+wym4Tax3t4UDb/usaRSr1lECxuSoTIoE1JRz0U4HA=
 github.com/authzen/access.go v0.0.0-20250226070317-7215cd5b987b h1:WFQbekOcWgN+EPfFBvPjrNaIs8JsvDfTTuAMXP8sdaY=
 github.com/authzen/access.go v0.0.0-20250226070317-7215cd5b987b/go.mod h1:l+wym4Tax3t4UDb/usaRSr1lECxuSoTIoE1JRz0U4HA=
+github.com/authzen/access.go v0.0.0-20250226232048-71248046cf0a h1:N6Pj4GoKGJcfAD/ePhG5bgBsbcpbSzwR296XmlPSFlY=
+github.com/authzen/access.go v0.0.0-20250226232048-71248046cf0a/go.mod h1:l+wym4Tax3t4UDb/usaRSr1lECxuSoTIoE1JRz0U4HA=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
