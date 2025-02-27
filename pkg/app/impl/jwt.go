@@ -246,7 +246,7 @@ func (s *AuthorizerServer) getUserObject(ctx context.Context, objID string) (pro
 	client := s.resolver.GetDirectoryResolver().GetDS()
 
 	objResp, err := client.GetObject(ctx, &dsr3.GetObjectRequest{
-		ObjectType: "user",
+		ObjectType: directory.User,
 		ObjectId:   objID,
 	})
 	if err != nil {
