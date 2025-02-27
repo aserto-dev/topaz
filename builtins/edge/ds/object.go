@@ -21,19 +21,10 @@ import (
 
 // RegisterObject - ds.object
 //
-// v3 (latest) request format:
-//
 //	ds.object({
 //		"object_type": "",
 //		"object_id": "",
 //		"with_relation": false
-//	})
-//
-// v2 request format:
-//
-//	ds.object({
-//		"type": "",
-//		"key": ""
 //	})
 func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{

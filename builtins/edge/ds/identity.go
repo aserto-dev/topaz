@@ -41,7 +41,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return help(fnName, argsV3{})
 			}
 
-			user, err := directory.GetIdentityV2(bctx.Context, dr.GetDS(), args.ID)
+			user, err := directory.ResolveIdentity(bctx.Context, dr.GetDS(), args.ID)
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
