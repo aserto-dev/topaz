@@ -88,20 +88,18 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		}
 }
 
-// TODO : update v3 format
+// RegisterRelations - ds.relations
 //
-//	RegisterRelations - ds.relations({
-//		"ds.relations": {
-//			"object_type": "",
-//			"object_id": "",
-//			"relation": "",
-//			"subject_type": "",
-//			"subject_id": "",
-//			"subject_relation": "",
-//			"with_objects": false,
-//			"with_empty_subject_relation": false
-//		}
-//	})
+//	ds.relations: {
+//		object_type: "",
+//		object_id: "",
+//		relation: "",
+//		subject_type: "",
+//		subject_id: "",
+//		subject_relation: "",
+//		with_objects: false,
+//		with_empty_subject_relation: false
+//	}
 func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
