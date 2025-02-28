@@ -1,0 +1,27 @@
+{
+  "assertions": [
+    {
+      "check_decision": {
+        "policy_context": {
+          "path": "rebac.check",
+          "decisions": [
+            "allowed"
+          ]
+        },
+        "identity_context": {
+          "identity": "rick@the-citadel.com",
+          "type": "IDENTITY_TYPE_SUB"
+        },
+        "resource_context": {
+          "object_id": "admin",
+          "object_type": "group",
+          "relation": "member"
+        },
+        "policy_instance": {
+          "name": "policy-rebac"
+        }
+      },
+      "expected": true
+    }
+  ]
+}

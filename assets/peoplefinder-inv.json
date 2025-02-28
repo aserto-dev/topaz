@@ -1,0 +1,18 @@
+{
+    "name": "peoplefinder-inv",
+    "description": "A corporate directory application that includes a React front-end and a node.js back-end.  It demonstrates three styles of policies - RBAC, ABAC, and ReBAC.",
+    "assets": {
+        "manifest": "acmecorp-inv/manifest.yaml",
+        "policy": {
+            "name": "peoplefinder",
+            "resource": "ghcr.io/aserto-policies/policy-peoplefinder-rbac:latest"
+        },
+        "idp_data": [
+            "acmecorp-inv/acmecorp_objects.json",
+            "acmecorp-inv/acmecorp_relations.json"
+        ],
+        "domain_data": [
+        ],
+        "assertions": []
+    }
+}

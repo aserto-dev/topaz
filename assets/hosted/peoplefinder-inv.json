@@ -1,0 +1,10 @@
+{
+    "idp_data": [
+        {
+            "name": "Acmecorp Inv",
+            "description": "Demo Acmecorp IDP",
+            "provider_id": "fd1ef208-f309-11ef-84a3-04c60d8bda91",
+            "ds_load": "/assets/templates/acmecorp-inv/ds-load/acmecorp-inv.json"
+        }
+    ]
+}
