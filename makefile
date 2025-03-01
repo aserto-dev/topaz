@@ -76,6 +76,7 @@ lint:
 .PHONY: test-snapshot
 test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@docker image rm ghcr.io/aserto-dev/topaz:0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
 	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot --skip archive
 
 .PHONE: container-tag

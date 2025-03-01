@@ -3,10 +3,9 @@ module github.com/aserto-dev/topaz
 go 1.23.5
 
 // replace github.com/aserto-dev/azm => ../azm
-// replace github.com/aserto-dev/go-directory => ../go-directory
-// replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+replace github.com/aserto-dev/go-directory => ../go-directory
 
-replace github.com/bufbuild/protovalidate-go => github.com/bufbuild/protovalidate-go v0.7.3
+replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
@@ -24,7 +23,7 @@ require (
 	github.com/aserto-dev/header v0.0.10
 	github.com/aserto-dev/logger v0.0.7
 	github.com/aserto-dev/openapi-authorizer v0.20.5
-	github.com/aserto-dev/openapi-directory v0.31.5
+	github.com/aserto-dev/openapi-directory v0.33.3
 	github.com/aserto-dev/runtime v1.1.1
 	github.com/aserto-dev/self-decision-logger v0.0.11
 	github.com/authzen/access.go v0.0.0-20250226232048-71248046cf0a
