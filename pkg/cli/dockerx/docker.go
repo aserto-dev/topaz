@@ -430,6 +430,9 @@ func (dc *DockerClient) Start(opts ...RunOption) error {
 	}
 
 	if err := dc.cli.ContainerStart(dc.ctx, cont.ID, container.StartOptions{}); err != nil {
+		// The container can't be started (most likely port already in use, bad image, or bad volume configuration).
+		// Remove the container to free up the name.
+		_ = dc.cli.ContainerRemove(dc.ctx, cont.ID, container.RemoveOptions{})
 		return err
 	}
 
