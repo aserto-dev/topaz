@@ -1,0 +1,156 @@
+[
+  {
+    "objects": [
+      {
+        "type": "system",
+        "id": "system",
+        "display_name": "The entire system"
+      },
+      {
+        "type": "tenant",
+        "id": "citadel",
+        "display_name": "Citadel tenant",
+        "properties": {}
+      },
+      {
+        "type": "tenant",
+        "id": "smiths",
+        "display_name": "Smiths tenant",
+        "properties": {}
+      },
+      {
+        "type": "resource",
+        "id": "citadel-adventures",
+        "display_name": "The Citadel adventures resource",
+        "properties": {}
+      },
+      {
+        "type": "resource",
+        "id": "smiths-budget",
+        "display_name": "The Smiths family's budget",
+        "properties": {}
+      }
+    ],
+    "relations": [
+      {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "system",
+        "subject_type": "system",
+        "subject_id": "system"
+      },
+      {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "system",
+        "subject_type": "system",
+        "subject_id": "system"
+      },
+      {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "tenant",
+        "subject_type": "tenant",
+        "subject_id": "smiths"
+      },
+      {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "tenant",
+        "subject_type": "tenant",
+        "subject_id": "citadel"
+      },
+      {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      }
+    ]
+  }
+]
