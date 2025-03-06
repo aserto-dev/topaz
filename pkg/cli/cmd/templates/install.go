@@ -52,13 +52,13 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 			return nil
 		}
 	}
-	fileName := fmt.Sprintf("%s.yaml", tmpl.Name)
+	fileName := tmpl.Name + ".yaml"
 	c.Config.Active.Config = tmpl.Name
 	if cmd.ConfigName != "" {
 		if !common.RestrictedNamePattern.MatchString(cmd.ConfigName) {
 			return errors.Errorf("%s must match pattern %s", cmd.Name, common.RestrictedNamePattern.String())
 		}
-		fileName = fmt.Sprintf("%s.yaml", cmd.ConfigName)
+		fileName = cmd.ConfigName + ".yaml"
 		c.Config.Active.Config = cmd.ConfigName
 	}
 

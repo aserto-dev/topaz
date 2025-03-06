@@ -101,7 +101,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithContainerHostname(cmd.ContainerHostname),
 		dockerx.WithWorkingDir("/app"),
 		dockerx.WithEntrypoint([]string{"./topazd"}),
-		dockerx.WithCmd([]string{"run", "--config-file", fmt.Sprintf("/config/%s", filepath.Base(c.Config.Active.ConfigFile))}),
+		dockerx.WithCmd([]string{"run", "--config-file", "/config/" + filepath.Base(c.Config.Active.ConfigFile)}),
 		dockerx.WithAutoRemove(),
 		dockerx.WithEnvs(getEnvFromVolumes(volumes)),
 		dockerx.WithEnvs(cmd.Env),
@@ -159,15 +159,15 @@ func getVolumes(cfg *config.Loader) ([]string, error) {
 
 	volumeMap := lo.Associate(paths, func(path string) (string, string) {
 		dir := filepath.Dir(path)
-		return dir, fmt.Sprintf("%s:%s", dir, fmt.Sprintf("/%s", filepath.Base(dir)))
+		return dir, dir + ":/" + filepath.Base(dir)
 	})
 
 	volumes := []string{
-		fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir()), // manually attach the configuration folder
+		cc.GetTopazCfgDir() + ":/config:ro", // manually attach the configuration folder
 	}
 
 	if cfg.Configuration.OPA.LocalBundles.LocalPolicyImage != "" && dockerx.PolicyRoot() != "" {
-		volumes = append(volumes, fmt.Sprintf("%s:/root/.policy:ro", dockerx.PolicyRoot())) // manually attach policy store
+		volumes = append(volumes, dockerx.PolicyRoot()+":/root/.policy:ro") // manually attach policy store
 	}
 
 	for _, v := range volumeMap {
@@ -180,14 +180,14 @@ func getEnvFromVolumes(volumes []string) []string {
 	envs := []string{}
 	for i := range volumes {
 		destination := strings.Split(volumes[i], ":")
-		mountedPath := fmt.Sprintf("/%s", filepath.Base(destination[1])) // last value from split.
+		mountedPath := "/" + filepath.Base(destination[1]) // last value from split.
 		switch {
 		case strings.Contains(volumes[i], "certs"):
-			envs = append(envs, fmt.Sprintf("TOPAZ_CERTS_DIR=%s", mountedPath))
+			envs = append(envs, "TOPAZ_CERTS_DIR="+mountedPath)
 		case strings.Contains(volumes[i], "db"):
-			envs = append(envs, fmt.Sprintf("TOPAZ_DB_DIR=%s", mountedPath))
+			envs = append(envs, "TOPAZ_DB_DIR="+mountedPath)
 		case strings.Contains(volumes[i], "cfg"):
-			envs = append(envs, fmt.Sprintf("TOPAZ_CFG_DIR=%s", mountedPath))
+			envs = append(envs, "TOPAZ_CFG_DIR="+mountedPath)
 		}
 	}
 	return envs

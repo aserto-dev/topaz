@@ -1,7 +1,6 @@
 package certs
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -27,17 +26,17 @@ func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 
 	pathGateway := &certs.CertPaths{
 		Name: certCommonName + "-gateway",
-		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", gatewayFileName)),
-		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", gatewayFileName)),
-		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", gatewayFileName)),
+		Cert: filepath.Join(certsDir, gatewayFileName+".crt"),
+		CA:   filepath.Join(certsDir, gatewayFileName+"-ca.crt"),
+		Key:  filepath.Join(certsDir, gatewayFileName+".key"),
 		Dir:  certsDir,
 	}
 
 	pathGRPC := &certs.CertPaths{
 		Name: certCommonName + "-grpc",
-		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", grpcFileName)),
-		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", grpcFileName)),
-		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", grpcFileName)),
+		Cert: filepath.Join(certsDir, grpcFileName+".crt"),
+		CA:   filepath.Join(certsDir, grpcFileName+"-ca.crt"),
+		Key:  filepath.Join(certsDir, grpcFileName+".key"),
 		Dir:  certsDir,
 	}
 

@@ -3,7 +3,7 @@ package templates
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"strconv"
 
 	v3 "github.com/aserto-dev/azm/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -28,7 +28,6 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	tab.WithTableNoAutoWrapText()
 
 	for tmplName := range ctlg {
-
 		tmpl, err := getTemplate(tmplName, cmd.TemplatesURL)
 		if err != nil {
 			return err
@@ -40,7 +39,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 			if err != nil {
 				errStr = err.Error()
 			}
-			tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+			tab.WithRow(tmplName, absURL, strconv.FormatBool(exists), strconv.FormatBool(parsed), errStr)
 		}
 		{
 			assets := []string{}
@@ -55,7 +54,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 				if err != nil {
 					errStr = err.Error()
 				}
-				tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+				tab.WithRow(tmplName, absURL, strconv.FormatBool(exists), strconv.FormatBool(parsed), errStr)
 			}
 		}
 	}
@@ -65,7 +64,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	return nil
 }
 
-func validateManifest(absURL string) (exists, parsed bool, err error) {
+func validateManifest(absURL string) ( /*exists*/ bool /*parsed*/, bool /*err*/, error) {
 	b, err := getBytes(absURL)
 	if err != nil {
 		return false, false, err
@@ -78,7 +77,7 @@ func validateManifest(absURL string) (exists, parsed bool, err error) {
 	return true, true, nil
 }
 
-func validateJSON(absURL string) (exists, parsed bool, err error) {
+func validateJSON(absURL string) ( /*exists*/ bool /*parsed*/, bool /*err*/, error) {
 	b, err := getBytes(absURL)
 	if err != nil {
 		return false, false, err

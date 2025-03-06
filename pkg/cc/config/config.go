@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"io"
 	"os"
 
@@ -80,7 +79,8 @@ type Path string
 type Overrider func(*Config)
 
 // NewConfig creates the configuration by reading env & files.
-func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsGenerator *certs.Generator) (*Config, error) { // nolint:funlen // default list of values can be long
+// nolint:funlen // default list of values can be long
+func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsGenerator *certs.Generator) (*Config, error) {
 	newLogger := log.With().Str("component", "config").Logger()
 	log = &newLogger
 
@@ -111,7 +111,8 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 			return nil, err
 		}
 		if configLoader.HasTopazDir {
-			log.Warn().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+			log.Warn().Msg("This configuration file uses the deprecated environment variable TOPAZ_DIR.")
+			log.Warn().Msg("Please update to use the TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 		}
 
 		err = validateVersion(configLoader.Configuration.Version)
@@ -202,7 +203,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 		if len(existingFiles) == 0 {
 			if config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
 				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  fmt.Sprintf("%s-grpc", commonName),
+					CommonName:  commonName + "-grpc",
 					CertKeyPath: config.GRPC.Certs.Key,
 					CertPath:    config.GRPC.Certs.Cert,
 					CertCAPath:  config.GRPC.Certs.CA,
@@ -215,7 +216,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 
 			if config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
 				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  fmt.Sprintf("%s-gateway", commonName),
+					CommonName:  commonName + "-gateway",
 					CertKeyPath: config.Gateway.Certs.Key,
 					CertPath:    config.Gateway.Certs.Cert,
 					CertCAPath:  config.Gateway.Certs.CA,

@@ -2,7 +2,6 @@ package builder
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"net/http"
 	"strconv"
@@ -121,7 +120,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	grpcEndpoint := fmt.Sprintf("dns:///%s", config.GRPC.ListenAddress)
+	grpcEndpoint := "dns:///" + config.GRPC.ListenAddress
 
 	if err := gatewayOpts.HandlerRegistrations(context.Background(), runtimeMux, grpcEndpoint, opts); err != nil {
 		return nil, err

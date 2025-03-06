@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -45,7 +44,7 @@ func (e *ConsoleService) Cleanups() []func() {
 }
 
 func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
-	directoryServiceURL := serviceAddress(fmt.Sprintf("https://%s", strings.Split(cfg.DirectoryResolver.Address, ":")[0]))
+	directoryServiceURL := serviceAddress("https://" + strings.Split(cfg.DirectoryResolver.Address, ":")[0])
 
 	authorizerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
@@ -114,9 +113,9 @@ func getGatewayAddress(serviceConfig *builder.API) string {
 	serviceConfig.Gateway.HTTP = !serviceConfig.Gateway.Certs.HasCert()
 
 	if serviceConfig.Gateway.HTTP {
-		return fmt.Sprintf("http://%s", addr)
+		return "http://" + addr
 	}
-	return fmt.Sprintf("https://%s", addr)
+	return "https://" + addr
 }
 
 func serviceAddress(listenAddress string) string {
