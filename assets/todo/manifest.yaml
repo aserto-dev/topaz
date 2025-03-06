@@ -7,11 +7,17 @@ model:
 
 # object type definitions
 types:
+  ### display_name: Identity ###
+  # identity represents a collection of identities for users
+  identity: {}
+
   ### display_name: User ###
   # user represents a user that can be granted role(s)
   user:
     relations:
       manager: user
+      ### display_name: identifier ###
+      identifier: identity
 
     permissions:
       ### display_name: user#in_management_chain ###
@@ -22,12 +28,6 @@ types:
   group:
     relations:
       member: user | group#member
-
-  ### display_name: Identity ###
-  # identity represents a collection of identities for users
-  identity:
-    relations:
-      identifier: user
 
   ### display_name: Resource Creator ###
   # resource creator represents a user type that can create new resources

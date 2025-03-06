@@ -1,10 +1,10 @@
 {
-    "gdrive-inv": {
+    "gdrive": {
         "title": "Google Drive with inverted identities",
         "short_description": "Google Drive with inverted identities",
         "description": "Google Drive with inverted identities",
         "docs_url": "",
-        "topaz_url": "gdrive-inv.json",
+        "topaz_url": "gdrive.json",
         "hosted_url": ""
     },
     "gdrive-scream": {

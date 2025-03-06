@@ -3,7 +3,7 @@
     {
       "name": "Citadel",
       "description": "Demo Citadel IDP",
-      "provider_id": "6dd707ac-e7bd-11ec-808a-049ec1ced886",
+      "provider_id": "f8db605a-f309-11ef-9632-040ec95fb366",
       "ds_load": "/assets/templates/citadel/ds-load/citadel.json"
     }
   ],

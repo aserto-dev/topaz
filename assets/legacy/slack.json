@@ -1,0 +1,23 @@
+{
+  "name": "slack",
+  "description": "Slack",
+  "assets": {
+      "manifest": "slack/manifest.yaml",
+      "policy": {
+          "name": "slack",
+          "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+      },
+      "idp_data": [
+        "citadel/citadel_objects.json",
+        "citadel/citadel_relations.json"
+      ],
+      "domain_data": [
+          "slack/slack_objects.json",
+          "slack/slack_relations.json"
+      ],
+      "assertions": [
+          "slack/test/slack_assertions.json",
+          "slack/test/slack_decisions.json"
+      ]
+  }
+}

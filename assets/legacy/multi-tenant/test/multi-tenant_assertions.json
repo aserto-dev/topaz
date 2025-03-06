@@ -1,0 +1,2328 @@
+{
+  "assertions": [
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "can_create_tenant",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "can_create_tenant",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "can_create_tenant",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "can_create_tenant",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "can_create_tenant",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "system",
+        "object_id": "system",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "admin",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "editor",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "viewer",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_administer",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_edit",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_view",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_tenant",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_manage_members",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_list_members",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_leave_tenant",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_create_resources",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_delete_resources",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_write_resources",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "can_read_resources",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "citadel-adventures",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "writer",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "reader",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_delete",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": false
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_write",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "resource",
+        "object_id": "smiths-budget",
+        "relation": "can_read",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      "expected": true
+    },
+
+
+
+
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "citadel",
+        "relation": "system",
+        "subject_type": "system",
+        "subject_id": "system"
+      },
+      "expected": true
+    },
+    {
+      "check": {
+        "object_type": "tenant",
+        "object_id": "smiths",
+        "relation": "system",
+        "subject_type": "system",
+        "subject_id": "system"
+      },
+      "expected": true
+    }
+  ]
+}
