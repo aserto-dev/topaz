@@ -40,6 +40,7 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 			break
 		}
 		if err, ok := v.(error); ok {
+			// nolint: errorlint
 			if err, ok := err.(*gojq.HaltError); ok && err.Value() == nil {
 				break
 			}

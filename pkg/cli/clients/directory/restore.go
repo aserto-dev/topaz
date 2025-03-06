@@ -139,7 +139,7 @@ func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Read
 
 	for {
 		err := objects.Read(&m)
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 
@@ -170,7 +170,7 @@ func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.
 
 	for {
 		err := relations.Read(&m)
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		if err != nil {
