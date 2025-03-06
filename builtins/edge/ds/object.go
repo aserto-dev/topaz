@@ -7,9 +7,9 @@ import (
 	"github.com/aserto-dev/topaz/resolvers"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/types"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/rego"
+	"github.com/open-policy-agent/opa/v1/types"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"

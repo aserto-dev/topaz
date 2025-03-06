@@ -15,7 +15,7 @@ EXT_DIR            := ./.ext
 EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
-GO_VER             := 1.23
+GO_VER             := 1.24
 VAULT_VER	         := 1.8.12
 SVU_VER 	         := 3.1.0
 GOTESTSUM_VER      := 1.11.0
@@ -67,6 +67,7 @@ generate:
 .PHONY: lint
 lint: gover
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/golangci-lint config path
 	@${EXT_BIN_DIR}/golangci-lint config verify
 	@${EXT_BIN_DIR}/golangci-lint run --config ${PWD}/.golangci.yaml
 

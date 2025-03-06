@@ -17,7 +17,7 @@ import (
 	"google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/google/uuid"
-	"github.com/open-policy-agent/opa/plugins"
+	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
