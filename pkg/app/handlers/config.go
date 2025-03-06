@@ -8,6 +8,7 @@ import (
 	"github.com/aserto-dev/header"
 )
 
+// nolint: gochecknoglobals
 var (
 	AuthEnabled       = header.CtxKey("AuthEnabled")
 	AuthenticatedUser = header.CtxKey("AuthenticatedUser")

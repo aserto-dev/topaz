@@ -57,7 +57,7 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 
 		for {
 			msg, err := stream.Recv()
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return nil
 			}
 

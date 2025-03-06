@@ -3,6 +3,7 @@ package directory
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
@@ -21,7 +22,7 @@ func (c *Client) GetManifest(ctx context.Context) (io.Reader, error) {
 	bytesRecv := 0
 	for {
 		resp, err := stream.Recv()
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 

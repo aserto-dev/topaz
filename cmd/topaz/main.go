@@ -38,7 +38,7 @@ func main() {
 	os.Exit(run())
 }
 
-func run() (exitCode int) {
+func run() int {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 

@@ -202,7 +202,8 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 }
 
 // Is decision eval function.
-func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*authorizer.IsResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
+// nolint: funlen, gocyclo //TODO: split into smaller functions after merge with onebox
+func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*authorizer.IsResponse, error) {
 	log := s.logger.With().Str("api", "is").Logger()
 
 	resp := &authorizer.IsResponse{
@@ -651,7 +652,6 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 	}
 
 	for _, policy := range policies {
-
 		module, err := policyToModule(policy)
 		if err != nil {
 			return response, errors.Wrapf(err, "failed to parse policy with ID [%s]", policy.ID)
