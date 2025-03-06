@@ -1,7 +1,7 @@
 package noop
 
 import (
-	"github.com/open-policy-agent/opa/plugins"
+	"github.com/open-policy-agent/opa/v1/plugins"
 )
 
 type PluginFactory struct {

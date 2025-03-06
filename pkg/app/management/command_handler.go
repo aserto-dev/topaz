@@ -6,7 +6,7 @@ import (
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/plugins/edge"
-	"github.com/open-policy-agent/opa/plugins/discovery"
+	"github.com/open-policy-agent/opa/v1/plugins/discovery"
 	"github.com/pkg/errors"
 )
 

@@ -5,8 +5,8 @@ import (
 
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/mitchellh/mapstructure"
-	"github.com/open-policy-agent/opa/plugins"
-	"github.com/open-policy-agent/opa/util"
+	"github.com/open-policy-agent/opa/v1/plugins"
+	"github.com/open-policy-agent/opa/v1/util"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
