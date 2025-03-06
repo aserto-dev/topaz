@@ -75,7 +75,8 @@ func ConfigHandlerV2(confServices *TopazCfg) http.Handler {
 		authorizerAPIKey := ""
 		directoryAPIKey := ""
 		authenticatedUser := r.Context().Value(AuthenticatedUser)
-		if authenticatedUser != nil && authenticatedUser.(bool) {
+
+		if anyBool(authenticatedUser) {
 			authorizerAPIKey = confServices.AuthorizerAPIKey
 			directoryAPIKey = confServices.DirectoryAPIKey
 		}
@@ -113,7 +114,7 @@ func ConfigHandlerV2(confServices *TopazCfg) http.Handler {
 
 func authType(r *http.Request) string {
 	authEnabled := r.Context().Value(AuthEnabled)
-	if authEnabled != nil && authEnabled.(bool) {
+	if anyBool(authEnabled) {
 		return "apiKey"
 	}
 	return "anonymous"
@@ -123,4 +124,14 @@ func writeJSON(buf []byte, w http.ResponseWriter, _ *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
 	_, _ = w.Write(buf)
+}
+
+func anyBool(b any) bool {
+	if b == nil {
+		return false
+	}
+	if cb, ok := b.(bool); ok {
+		return cb
+	}
+	return false
 }

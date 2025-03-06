@@ -123,17 +123,21 @@ func registerJWKSURL(ctx context.Context, jwkCache *jwk.Cache, jwksURL string) e
 }
 
 func (s *AuthorizerServer) jwksURLFromCache(ctx context.Context, issuer string) (string, error) {
-	var jwksURL string
 	if val, ok := s.issuers.Load(issuer); ok {
-		jwksURL = val.(string)
-	} else {
-		jk, err := s.jwksURL(ctx, issuer)
-		if err != nil {
-			return "", err
+		jwksURL, ok := val.(string)
+		if !ok {
+			return "", errors.New("string cast failed")
 		}
-		jwksURL = jk.String()
-		s.issuers.Store(issuer, jwksURL)
+		return jwksURL, nil
 	}
+
+	jk, err := s.jwksURL(ctx, issuer)
+	if err != nil {
+		return "", err
+	}
+
+	jwksURL := jk.String()
+	s.issuers.Store(issuer, jwksURL)
 
 	return jwksURL, nil
 }

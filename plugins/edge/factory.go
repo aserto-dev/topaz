@@ -30,7 +30,11 @@ func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Lo
 }
 
 func (f PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugin {
-	cfg := config.(*Config)
+	cfg, ok := config.(*Config)
+	if !ok {
+		panic("cast failed")
+	}
+
 	if cfg.TenantID == "" {
 		cfg.TenantID = strings.Split(m.ID, "/")[0]
 	}

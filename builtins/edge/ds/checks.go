@@ -84,7 +84,7 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			result := pbs.Fields["checks"].AsInterface().([]interface{})
+			result := pbs.Fields["checks"].AsInterface() //.([]interface{})
 
 			v, err := ast.InterfaceToValue(result)
 			if err != nil {
