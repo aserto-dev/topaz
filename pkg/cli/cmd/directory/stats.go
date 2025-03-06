@@ -96,7 +96,12 @@ func statsTable(w io.Writer, s *stats.Stats) {
 
 func countStr(c int32) string { return fmt.Sprintf("%8d", c) }
 
-func tabRow(tab *table.TableWriter, objType model.ObjectName, objTypeCount int32, objRel model.RelationName, objRelCount int32, subType model.ObjectName, subTypeCount int32, subRel model.RelationName, subRelCount int32) {
+func tabRow(tab *table.TableWriter,
+	objType model.ObjectName, objTypeCount int32,
+	objRel model.RelationName, objRelCount int32,
+	subType model.ObjectName, subTypeCount int32,
+	subRel model.RelationName, subRelCount int32,
+) {
 	tab.WithRow(
 		objType.String(),
 		countStr(objTypeCount),

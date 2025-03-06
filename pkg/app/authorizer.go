@@ -30,7 +30,13 @@ const (
 	authorizerService = "authorizer"
 )
 
-func NewAuthorizer(ctx context.Context, cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
+func NewAuthorizer(
+	ctx context.Context,
+	cfg *builder.API,
+	commonConfig *config.Common,
+	authorizerOpts []grpc.ServerOption,
+	logger *zerolog.Logger,
+) (ServiceTypes, error) {
 	if cfg.GRPC.Certs.HasCert() {
 		tlsCreds, err := cfg.GRPC.Certs.ServerCredentials()
 		if err != nil {
