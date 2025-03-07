@@ -3,7 +3,7 @@ package noop
 import (
 	"context"
 
-	"github.com/open-policy-agent/opa/plugins"
+	"github.com/open-policy-agent/opa/v1/plugins"
 )
 
 type Noop struct {

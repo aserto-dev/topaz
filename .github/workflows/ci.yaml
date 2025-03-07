@@ -19,9 +19,9 @@ on:
 env:
   VAULT_ADDR: https://vault.eng.aserto.com/
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
-  GO_VERSION: "1.23"
+  GO_VERSION: "1.24"
   GO_RELEASER_VERSION: "v2.3.2"
-  GO_LANGCI_LINT_VERSION: "v1.61.0"
+  GO_LANGCI_LINT_VERSION: "v1.64.5"
   GO_TESTSUM_VERSION: "1.11.0"
   SYFT_VERSION: "v1.13.0"
 

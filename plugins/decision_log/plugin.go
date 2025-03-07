@@ -6,7 +6,7 @@ import (
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 
-	"github.com/open-policy-agent/opa/plugins"
+	"github.com/open-policy-agent/opa/v1/plugins"
 )
 
 const PluginName = "aserto_decision_log"
