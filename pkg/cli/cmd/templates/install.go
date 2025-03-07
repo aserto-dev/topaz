@@ -16,6 +16,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/topaz"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -68,11 +69,8 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
 	cmd.ContainerName = c.Config.Running.ContainerName
 
-	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
-		err = os.MkdirAll(cc.GetTopazDir(), 0o700)
-		if err != nil {
-			return err
-		}
+	if err := fs.EnsureDirPath(cc.GetTopazDir(), fs.FileMode0700); err != nil {
+		return err
 	}
 
 	cliConfig := filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
@@ -290,7 +288,7 @@ func (i *tmplInstaller) setManifest() error {
 		name = i.customName
 	}
 
-	if exists, _ := config.FileExists(manifest); !exists {
+	if !fs.FileExists(manifest) {
 		manifestDir := path.Join(i.topazTemplateDir, name, "model")
 		switch m, err := download(manifest, manifestDir); {
 		case err != nil:
@@ -319,7 +317,7 @@ func (i *tmplInstaller) importData() error {
 	dataDirs := map[string]struct{}{}
 	for _, v := range append(i.tmpl.Assets.IdentityData, i.tmpl.Assets.DomainData...) {
 		dataURL := i.tmpl.AbsURL(v)
-		if exists, _ := config.FileExists(dataURL); exists {
+		if fs.FileExists(dataURL) {
 			dataDirs[path.Dir(dataURL)] = struct{}{}
 			continue
 		}
@@ -354,7 +352,7 @@ func (i *tmplInstaller) runTemplateTests() error {
 	tests := []string{}
 	for _, v := range i.tmpl.Assets.Assertions {
 		assertionURL := i.tmpl.AbsURL(v)
-		if exists, _ := config.FileExists(assertionURL); exists {
+		if fs.FileExists(assertionURL) {
 			tests = append(tests, assertionURL)
 			continue
 		}

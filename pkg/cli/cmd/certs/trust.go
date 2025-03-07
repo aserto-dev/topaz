@@ -2,7 +2,6 @@ package certs
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -10,6 +9,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/table"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 )
 
@@ -20,11 +20,11 @@ type TrustCertsCmd struct {
 
 func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
-	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
-		return errors.Errorf("directory %s not found", certsDir)
+	if !fs.DirExists(certsDir) {
+		return errors.Errorf("directory %q not found", certsDir)
 	}
 
-	c.Con().Info().Msg("certs directory: %s", certsDir)
+	c.Con().Info().Msg("certs directory: %q", certsDir)
 
 	if runtime.GOOS == `linux` {
 		var err error
@@ -47,7 +47,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	for _, fqn := range list {
-		if fi, err := os.Stat(fqn); os.IsNotExist(err) || fi.IsDir() {
+		if !fs.FileExists(fqn) {
 			continue
 		}
 

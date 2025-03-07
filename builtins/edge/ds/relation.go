@@ -129,13 +129,13 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 					return nil, err
 				}
 
-				resp.Results = append(resp.Results, r.Results...)
-				resp.Objects = lo.Assign(resp.Objects, r.Objects)
+				resp.Results = append(resp.GetResults(), r.GetResults()...)
+				resp.Objects = lo.Assign(resp.GetObjects(), r.GetObjects())
 
-				if r.Page.NextToken == "" {
+				if r.GetPage().GetNextToken() == "" {
 					break
 				}
-				args.Page.Token = r.Page.NextToken
+				args.Page.Token = r.GetPage().GetNextToken()
 			}
 
 			buf := new(bytes.Buffer)

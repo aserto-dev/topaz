@@ -15,6 +15,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 
 	ver "github.com/aserto-dev/topaz/pkg/version"
@@ -155,15 +156,15 @@ func logLevel(level int) zerolog.Level {
 	}
 }
 
-func checkDBFiles(topazDBDir string) (bool, error) {
-	if _, err := os.Stat(topazDBDir); os.IsNotExist(err) {
+func checkDBFiles(oldDBPath string) (bool, error) {
+	if !fs.DirExists(oldDBPath) {
 		return false, nil
 	}
-	if topazDBDir == cc.GetTopazDataDir() {
+	if oldDBPath == cc.GetTopazDataDir() {
 		return false, nil
 	}
 
-	files, err := os.ReadDir(topazDBDir)
+	files, err := os.ReadDir(oldDBPath)
 	if err != nil {
 		return false, err
 	}

@@ -83,8 +83,8 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			result, _ := pbs.Fields["result"].AsInterface().(map[string]interface{})
-			relations := pbs.Fields["relations"].AsInterface()
+			result, _ := pbs.GetFields()["result"].AsInterface().(map[string]interface{})
+			relations := pbs.GetFields()["relations"].AsInterface()
 			result["relations"] = relations
 
 			v, err := ast.InterfaceToValue(result)

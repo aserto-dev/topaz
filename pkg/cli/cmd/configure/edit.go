@@ -2,12 +2,12 @@ package configure
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/editor"
+	"github.com/aserto-dev/topaz/pkg/fs"
 )
 
 type EditConfigCmd struct {
@@ -21,7 +21,7 @@ func (cmd *EditConfigCmd) Run(c *cc.CommonCtx) error {
 		cfg = filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
 	}
 
-	if _, err := os.Stat(cfg); err != nil {
+	if _, err := fs.FileExistsWithErr(cfg); err != nil {
 		return err
 	}
 

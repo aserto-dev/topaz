@@ -109,10 +109,10 @@ var queryTests = []struct {
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -133,10 +133,10 @@ var queryTests = []struct {
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -156,10 +156,10 @@ var queryTests = []struct {
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetMetrics())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -183,10 +183,10 @@ var queryTests = []struct {
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -211,10 +211,10 @@ var queryTests = []struct {
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -245,10 +245,10 @@ var queryTests = []struct {
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {

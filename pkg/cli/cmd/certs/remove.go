@@ -9,6 +9,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/table"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 )
 
@@ -18,17 +19,17 @@ type RemoveCertFileCmd struct {
 
 func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
-	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
-		return errors.Errorf("directory %s not found", certsDir)
+	if !fs.DirExists(certsDir) {
+		return errors.Errorf("directory %q not found", certsDir)
 	}
 
-	c.Con().Info().Msg("certs directory: %s", certsDir)
+	c.Con().Info().Msg("certs directory: %q", certsDir)
 
 	tab := table.New(c.StdOut()).WithColumns("File", "Action")
 
 	// remove cert from trust store, before delete cert file
 	for _, fqn := range getFileList(certsDir, withCACerts()) {
-		if fi, err := os.Stat(fqn); os.IsNotExist(err) || fi.IsDir() {
+		if !fs.FileExists(fqn) {
 			continue
 		}
 
@@ -42,7 +43,7 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	for _, fqn := range getFileList(certsDir, withAll()) {
-		if fi, err := os.Stat(fqn); os.IsNotExist(err) || fi.IsDir() {
+		if !fs.FileExists(fqn) {
 			continue
 		}
 		if err := os.Remove(fqn); err != nil {

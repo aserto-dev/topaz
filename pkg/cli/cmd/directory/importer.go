@@ -1,12 +1,12 @@
 package directory
 
 import (
-	"os"
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 )
 
@@ -22,13 +22,8 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 
 	c.Con().Info().Msg(">>> importing data from %s", cmd.Directory)
 
-	if fi, err := os.Stat(cmd.Directory); err != nil || !fi.IsDir() {
-		if err != nil {
-			return err
-		}
-		if !fi.IsDir() {
-			return errors.Errorf("--directory argument %q is not a directory", cmd.Directory)
-		}
+	if !fs.DirExists(cmd.Directory) {
+		return errors.Errorf("--directory argument %q does not exist", cmd.Directory)
 	}
 
 	files, err := filepath.Glob(filepath.Join(cmd.Directory, "*.json"))

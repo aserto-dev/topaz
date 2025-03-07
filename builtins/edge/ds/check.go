@@ -51,7 +51,7 @@ func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				return nil, err
 			}
 
-			return ast.BooleanTerm(resp.Check), nil
+			return ast.BooleanTerm(resp.GetCheck()), nil
 		}
 }
 
@@ -97,7 +97,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 				return nil, err
 			}
 
-			return ast.BooleanTerm(resp.Check), nil
+			return ast.BooleanTerm(resp.GetCheck()), nil
 		}
 }
 
@@ -143,6 +143,6 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 				return nil, err
 			}
 
-			return ast.BooleanTerm(resp.Check), nil
+			return ast.BooleanTerm(resp.GetCheck()), nil
 		}
 }

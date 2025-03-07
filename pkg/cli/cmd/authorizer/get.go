@@ -68,7 +68,7 @@ func (cmd *GetPolicyCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), resp)
 	}
 
-	c.Out().Msg(resp.Result.GetRaw())
+	c.Out().Msg(resp.GetResult().GetRaw())
 
 	return nil
 }

@@ -1,12 +1,12 @@
 package certs
 
 import (
-	"os"
 	"path/filepath"
 
 	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/table"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
@@ -22,11 +22,10 @@ type CertPaths struct {
 func (c *CertPaths) FindExisting() []string {
 	existing := []string{}
 	for _, cert := range []string{c.Cert, c.CA, c.Key} {
-		if fi, err := os.Stat(cert); !os.IsNotExist(err) && !fi.IsDir() {
+		if fs.FileExists(cert) {
 			existing = append(existing, cert)
 		}
 	}
-
 	return existing
 }
 

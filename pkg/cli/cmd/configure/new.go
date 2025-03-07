@@ -10,6 +10,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 )
 
@@ -86,7 +87,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		w = c.StdOut()
 	} else {
 		if !cmd.Force {
-			if _, err := os.Stat(c.Config.Active.ConfigFile); err == nil {
+			if fs.FileExists(c.Config.Active.ConfigFile) {
 				c.Con().Warn().Msg("Configuration file %q already exists.", c.Config.Active.ConfigFile)
 				if !common.PromptYesNo("Do you want to continue?", false) {
 					return nil

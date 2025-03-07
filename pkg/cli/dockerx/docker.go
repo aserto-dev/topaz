@@ -11,6 +11,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
@@ -38,7 +39,7 @@ func PolicyRoot() string {
 
 		policyRoot = path.Join(home, defaultPolicyRoot)
 	}
-	if fi, err := os.Stat(policyRoot); err == nil && fi.IsDir() {
+	if fs.DirExists(policyRoot) {
 		return policyRoot
 	}
 	return ""

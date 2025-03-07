@@ -3,9 +3,9 @@ package config
 import (
 	"html/template"
 	"io"
-	"os"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/fs"
 )
 
 type Generator struct {
@@ -81,29 +81,29 @@ func (g *Generator) GenerateConfig(w io.Writer, templateData string) error {
 
 func (g *Generator) CreateConfigDir() (string, error) {
 	configDir := cc.GetTopazCfgDir()
-	if fi, err := os.Stat(configDir); err == nil && fi.IsDir() {
+	if fs.DirExists(configDir) {
 		return configDir, nil
 	}
 
-	return configDir, os.MkdirAll(configDir, 0o700)
+	return configDir, fs.EnsureDirPath(configDir, fs.FileMode0700)
 }
 
 func (g *Generator) CreateCertsDir() (string, error) {
 	certsDir := cc.GetTopazCertsDir()
-	if fi, err := os.Stat(certsDir); err == nil && fi.IsDir() {
+	if fs.DirExists(certsDir) {
 		return certsDir, nil
 	}
 
-	return certsDir, os.MkdirAll(certsDir, 0o700)
+	return certsDir, fs.EnsureDirPath(certsDir, fs.FileMode0755)
 }
 
 func (g *Generator) CreateDataDir() (string, error) {
 	dataDir := cc.GetTopazDataDir()
-	if fi, err := os.Stat(dataDir); err == nil && fi.IsDir() {
+	if fs.DirExists(dataDir) {
 		return dataDir, nil
 	}
 
-	return dataDir, os.MkdirAll(dataDir, 0o700)
+	return dataDir, fs.EnsureDirPath(dataDir, fs.FileMode0700)
 }
 
 func (g *Generator) writeConfig(w io.Writer, templ string) error {

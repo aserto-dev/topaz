@@ -12,6 +12,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/table"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 )
 
@@ -21,16 +22,16 @@ type ListCertsCmd struct {
 
 func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
-	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
-		return errors.Errorf("directory %s not found", certsDir)
+	if !fs.DirExists(certsDir) {
+		return errors.Errorf("directory %q not found", certsDir)
 	}
 
-	c.Con().Info().Msg("certs directory: %s", certsDir)
+	c.Con().Info().Msg("certs directory: %q", certsDir)
 
 	certDetails := make(map[string]*x509.Certificate)
 
 	for _, fqn := range getFileList(certsDir, withCerts()) {
-		if fi, err := os.Stat(fqn); os.IsNotExist(err) || fi.IsDir() {
+		if !fs.FileExists(fqn) {
 			continue
 		}
 

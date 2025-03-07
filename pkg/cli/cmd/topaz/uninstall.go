@@ -6,6 +6,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 )
 
@@ -62,7 +63,7 @@ func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
 }
 
 func removeFile(fpath string) error {
-	if fi, err := os.Stat(fpath); err == nil && !fi.IsDir() {
+	if fs.FileExists(fpath) {
 		if err := os.Remove(fpath); err != nil {
 			return errors.Wrapf(err, "failed to delete %s", fpath)
 		}

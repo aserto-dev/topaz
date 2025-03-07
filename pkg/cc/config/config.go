@@ -2,7 +2,6 @@ package config
 
 import (
 	"io"
-	"os"
 
 	"github.com/aserto-dev/certs"
 	client "github.com/aserto-dev/go-aserto"
@@ -10,6 +9,7 @@ import (
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/pkg/debug"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	builder "github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -86,7 +86,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 
 	file := "config.yaml"
 	if configPath != "" {
-		exists, err := FileExists(string(configPath))
+		exists, err := fs.FileExistsWithErr(string(configPath))
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to determine if config file '%s' exists", configPath)
 		}
@@ -98,7 +98,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		file = string(configPath)
 	}
 
-	configExists, err := FileExists(file)
+	configExists, err := fs.FileExistsWithErr(file)
 	if err != nil {
 		return nil, errors.Wrapf(err, "filesystem error")
 	}
@@ -188,9 +188,9 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 			config.Gateway.Certs.Cert,
 			config.Gateway.Certs.Key,
 		} {
-			exists, err := FileExists(file)
+			exists, err := fs.FileExistsWithErr(file)
 			if err != nil {
-				return errors.Wrapf(err, "failed to determine if file '%s' exists (%s)", file, serviceName)
+				return errors.Wrapf(err, "failed to determine if file %q exists (%s)", file, serviceName)
 			}
 
 			if !exists {
@@ -200,43 +200,36 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 			existingFiles = append(existingFiles, file)
 		}
 
-		if len(existingFiles) == 0 {
-			if config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
-				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  commonName + "-grpc",
-					CertKeyPath: config.GRPC.Certs.Key,
-					CertPath:    config.GRPC.Certs.Cert,
-					CertCAPath:  config.GRPC.Certs.CA,
-				})
-				if err != nil {
-					return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
-				}
-				log.Info().Str("service", serviceName).Msg("gRPC certs configured")
-			}
+		if len(existingFiles) != 0 {
+			return nil
+		}
 
-			if config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
-				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  commonName + "-gateway",
-					CertKeyPath: config.Gateway.Certs.Key,
-					CertPath:    config.Gateway.Certs.Cert,
-					CertCAPath:  config.Gateway.Certs.CA,
-				})
-				if err != nil {
-					return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
-				}
-				log.Info().Str("service", serviceName).Msg("gateway certs configured")
+		if config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
+			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:  commonName + "-grpc",
+				CertKeyPath: config.GRPC.Certs.Key,
+				CertPath:    config.GRPC.Certs.Cert,
+				CertCAPath:  config.GRPC.Certs.CA,
+			})
+			if err != nil {
+				return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
 			}
+			log.Info().Str("service", serviceName).Msg("gRPC certs configured")
+		}
+
+		if config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
+			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:  commonName + "-gateway",
+				CertKeyPath: config.Gateway.Certs.Key,
+				CertPath:    config.Gateway.Certs.Cert,
+				CertCAPath:  config.Gateway.Certs.CA,
+			})
+			if err != nil {
+				return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
+			}
+			log.Info().Str("service", serviceName).Msg("gateway certs configured")
 		}
 	}
-	return nil
-}
 
-func FileExists(path string) (bool, error) {
-	if _, err := os.Stat(path); err == nil {
-		return true, nil
-	} else if os.IsNotExist(err) {
-		return false, nil
-	} else {
-		return false, errors.Wrapf(err, "failed to stat file '%s'", path)
-	}
+	return nil
 }

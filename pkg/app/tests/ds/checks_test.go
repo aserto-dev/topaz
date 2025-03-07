@@ -31,20 +31,20 @@ func testChecks(ctx context.Context, dsClient dsr3.ReaderClient) func(*testing.T
 
 				require.NotNil(t, resp, "response should not be nil")
 
-				assert.Equal(t, len(tc.req.Checks), len(resp.Checks))
+				assert.Equal(t, len(tc.req.GetChecks()), len(resp.GetChecks()))
 
-				for i := 0; i < len(tc.resp.Checks); i++ {
-					require.Equal(t, tc.resp.Checks[i].GetCheck(), resp.Checks[i].GetCheck(), "i=%d", i)
-					if tc.resp.Checks[i].Context == nil {
+				for i := 0; i < len(tc.resp.GetChecks()); i++ {
+					require.Equal(t, tc.resp.GetChecks()[i].GetCheck(), resp.GetChecks()[i].GetCheck(), "i=%d", i)
+					if tc.resp.GetChecks()[i].GetContext() == nil {
 						continue
 					}
 
-					if tc.resp.Checks[i].Context.Fields == nil {
+					if tc.resp.GetChecks()[i].GetContext().GetFields() == nil {
 						return
 					}
 
-					if v, ok := tc.resp.Checks[i].Context.Fields["reason"]; ok {
-						require.Equal(t, v.GetStringValue(), resp.Checks[i].Context.Fields["reason"].GetStringValue())
+					if v, ok := tc.resp.GetChecks()[i].GetContext().GetFields()["reason"]; ok {
+						require.Equal(t, v.GetStringValue(), resp.GetChecks()[i].GetContext().GetFields()["reason"].GetStringValue())
 					}
 				}
 			})

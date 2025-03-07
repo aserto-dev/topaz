@@ -193,41 +193,41 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 	}
 
 	// nolint: exhaustive
-	switch identityContext.Type {
+	switch identityContext.GetType() {
 	case api.IdentityType_IDENTITY_TYPE_NONE:
 		return nil, nil
 
 	case api.IdentityType_IDENTITY_TYPE_SUB:
-		if identityContext.Identity == "" {
-			return nil, errors.Errorf("identity value not set (type: %s)", identityContext.Type.String())
+		if identityContext.GetIdentity() == "" {
+			return nil, errors.Errorf("identity value not set (type: %s)", identityContext.GetType().String())
 		}
 
-		user, err := s.getUserFromIdentity(ctx, identityContext.Identity)
+		user, err := s.getUserFromIdentity(ctx, identityContext.GetIdentity())
 		if err != nil {
 			return nil, err
 		}
 
 		return user, nil
 	case api.IdentityType_IDENTITY_TYPE_JWT:
-		if identityContext.Identity == "" {
-			return nil, errors.Errorf("identity value not set (type: %s)", identityContext.Type.String())
+		if identityContext.GetIdentity() == "" {
+			return nil, errors.Errorf("identity value not set (type: %s)", identityContext.GetType().String())
 		}
 
-		user, err := s.getUserFromJWT(ctx, identityContext.Identity)
+		user, err := s.getUserFromJWT(ctx, identityContext.GetIdentity())
 		if err != nil {
 			return nil, err
 		}
 
 		return user, nil
 	case api.IdentityType_IDENTITY_TYPE_MANUAL:
-		if identityContext.Identity == "" {
-			return nil, errors.Errorf("identity value not set (type: %s)", identityContext.Type.String())
+		if identityContext.GetIdentity() == "" {
+			return nil, errors.Errorf("identity value not set (type: %s)", identityContext.GetType().String())
 		}
 
 		// the resulting user object will be an empty object.
 		return pb.NewStruct(), nil
 	default:
-		return nil, errors.Errorf("invalid identity type %s", identityContext.Type.String())
+		return nil, errors.Errorf("invalid identity type %s", identityContext.GetType().String())
 	}
 }
 
@@ -257,5 +257,5 @@ func (s *AuthorizerServer) getUserObject(ctx context.Context, objID string) (pro
 		return nil, err
 	}
 
-	return objResp.Result, nil
+	return objResp.GetResult(), nil
 }

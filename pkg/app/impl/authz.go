@@ -77,29 +77,29 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 	resp := &authorizer.DecisionTreeResponse{}
 
-	if req.PolicyContext == nil {
+	if req.GetPolicyContext() == nil {
 		return resp, aerr.ErrInvalidArgument.Msg("policy context not set")
 	}
 
-	if req.ResourceContext == nil {
+	if req.GetResourceContext() == nil {
 		req.ResourceContext = &structpb.Struct{Fields: make(map[string]*structpb.Value)}
 	}
 
-	if req.Options == nil {
+	if req.GetOptions() == nil {
 		req.Options = &authorizer.DecisionTreeOptions{
 			PathSeparator: authorizer.PathSeparator_PATH_SEPARATOR_DOT,
 		}
 	}
 
-	if req.IdentityContext == nil {
+	if req.GetIdentityContext() == nil {
 		return resp, aerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
-	if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+	if req.GetIdentityContext().GetType() == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
 		return resp, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 	}
 
-	user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
+	user, err := s.getUserFromIdentityContext(ctx, req.GetIdentityContext())
 	if err != nil {
 		log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
 		return resp, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
@@ -107,12 +107,12 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 	input := map[string]interface{}{
 		InputUser:     convert(user),
-		InputIdentity: convert(req.IdentityContext),
-		InputPolicy:   req.PolicyContext,
-		InputResource: req.ResourceContext,
+		InputIdentity: convert(req.GetIdentityContext()),
+		InputPolicy:   req.GetPolicyContext(),
+		InputResource: req.GetResourceContext(),
 	}
 
-	policyRuntime, err := s.getRuntime(ctx, req.PolicyInstance)
+	policyRuntime, err := s.getRuntime(ctx, req.GetPolicyInstance())
 	if err != nil {
 		return resp, err
 	}
@@ -122,13 +122,13 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		return resp, errors.Wrap(err, "get policy list")
 	}
 
-	decisionFilter := initDecisionFilter(req.PolicyContext.Decisions)
+	decisionFilter := initDecisionFilter(req.GetPolicyContext().GetDecisions())
 
 	queryStmt := strings.Builder{}
 	r := 0
 	for i := 0; i < len(listPolicies); i++ {
 		for _, rule := range listPolicies[i].AST.Rules {
-			if !strings.HasPrefix(listPolicies[i].AST.Package.Path.String(), "data."+req.PolicyContext.Path) {
+			if !strings.HasPrefix(listPolicies[i].AST.Package.Path.String(), "data."+req.GetPolicyContext().GetPath()) {
 				continue
 			}
 
@@ -169,7 +169,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		expr := strings.Split(expression.Text, "=")
 		rule := strings.TrimSpace(expr[0])
 		path := strings.TrimPrefix(strings.TrimSpace(expr[1]), "data.")
-		if req.Options.PathSeparator == authorizer.PathSeparator_PATH_SEPARATOR_SLASH {
+		if req.GetOptions().GetPathSeparator() == authorizer.PathSeparator_PATH_SEPARATOR_SLASH {
 			path = strings.ReplaceAll(path, ".", "/")
 		}
 
@@ -179,7 +179,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		}
 
 		outcomes := make(map[string]interface{})
-		for _, decision := range req.PolicyContext.Decisions {
+		for _, decision := range req.GetPolicyContext().GetDecisions() {
 			if r, ok := binding[decision].(bool); ok {
 				outcomes[decision] = r
 			}
@@ -194,7 +194,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 	}
 
 	resp = &authorizer.DecisionTreeResponse{
-		PathRoot: req.PolicyContext.Path,
+		PathRoot: req.GetPolicyContext().GetPath(),
 		Path:     paths,
 	}
 
@@ -210,31 +210,31 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		Decisions: []*authorizer.Decision{},
 	}
 
-	if req.PolicyContext == nil {
+	if req.GetPolicyContext() == nil {
 		return resp, aerr.ErrInvalidArgument.Msg("policy context not set")
 	}
 
-	if req.PolicyContext.Path == "" {
+	if req.GetPolicyContext().GetPath() == "" {
 		return resp, aerr.ErrInvalidArgument.Msg("policy context path not set")
 	}
 
-	if len(req.PolicyContext.Decisions) == 0 {
+	if len(req.GetPolicyContext().GetDecisions()) == 0 {
 		return resp, aerr.ErrInvalidArgument.Msg("policy context decisions not set")
 	}
 
-	if req.ResourceContext == nil {
+	if req.GetResourceContext() == nil {
 		req.ResourceContext = pb.NewStruct()
 	}
 
-	if req.IdentityContext == nil {
+	if req.GetIdentityContext() == nil {
 		return resp, aerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
-	if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+	if req.GetIdentityContext().GetType() == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
 		return resp, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
 	}
 
-	user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
+	user, err := s.getUserFromIdentityContext(ctx, req.GetIdentityContext())
 	if err != nil {
 		log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
 		return resp, aerr.ErrUserNotFound.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
@@ -242,21 +242,21 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 	input := map[string]interface{}{
 		InputUser:     convert(user),
-		InputIdentity: convert(req.IdentityContext),
-		InputPolicy:   req.PolicyContext,
-		InputResource: req.ResourceContext,
+		InputIdentity: convert(req.GetIdentityContext()),
+		InputPolicy:   req.GetPolicyContext(),
+		InputResource: req.GetResourceContext(),
 	}
 
 	log.Debug().Interface("input", input).Msg("is")
 
-	policyRuntime, err := s.getRuntime(ctx, req.PolicyInstance)
+	policyRuntime, err := s.getRuntime(ctx, req.GetPolicyInstance())
 	if err != nil {
 		return resp, err
 	}
 
 	sb := strings.Builder{}
-	for i, decision := range req.PolicyContext.Decisions {
-		sb.WriteString(fmt.Sprintf("x%d = data.%s.%s\n", i, req.PolicyContext.Path, decision))
+	for i, decision := range req.GetPolicyContext().GetDecisions() {
+		sb.WriteString(fmt.Sprintf("x%d = data.%s.%s\n", i, req.GetPolicyContext().GetPath(), decision))
 	}
 
 	queryStmt := sb.String()
@@ -278,7 +278,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		return resp, aerr.ErrBadQuery.Err(err).Msgf("undefined results: %s", queryStmt)
 	}
 
-	for i, d := range req.PolicyContext.Decisions {
+	for i, d := range req.GetPolicyContext().GetDecisions() {
 		v, ok := results[0].Bindings[fmt.Sprintf("x%d", i)]
 		if !ok {
 			return nil, errors.Wrapf(err, "failed getting binding for decision [%s]", d)
@@ -305,19 +305,19 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	d := api.Decision{
 		Id:        uuid.NewString(),
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
-		Path:      req.PolicyContext.Path,
+		Path:      req.GetPolicyContext().GetPath(),
 		Policy: &api.DecisionPolicy{
-			Context:        req.PolicyContext,
-			PolicyInstance: req.PolicyInstance,
+			Context:        req.GetPolicyContext(),
+			PolicyInstance: req.GetPolicyInstance(),
 		},
 		User: &api.DecisionUser{
-			Context: req.IdentityContext,
+			Context: req.GetIdentityContext(),
 			Id:      getID(input),
 			Email:   getEmail(input),
 		},
 		TenantId: getTenantID(ctx),
-		Resource: req.ResourceContext,
-		Outcomes: getOutcomes(resp.Decisions),
+		Resource: req.GetResourceContext(),
+		Outcomes: getOutcomes(resp.GetDecisions()),
 	}
 
 	err = dlPlugin.Log(ctx, &d)
@@ -338,18 +338,18 @@ func getTenantID(ctx context.Context) *string {
 
 func getOutcomes(decisions []*authorizer.Decision) map[string]bool {
 	return lo.SliceToMap(decisions, func(item *authorizer.Decision) (string, bool) {
-		return item.Decision, item.Is
+		return item.GetDecision(), item.GetIs()
 	})
 }
 
 func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryRequest) (*authorizer.QueryResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
 	log := s.logger.With().Str("api", "query").Logger()
 
-	if req.Query == "" {
+	if req.GetQuery() == "" {
 		return &authorizer.QueryResponse{}, aerr.ErrInvalidArgument.Msg("query not set")
 	}
 
-	if req.Options == nil {
+	if req.GetOptions() == nil {
 		req.Options = &authorizer.QueryOptions{
 			Metrics:      false,
 			Instrument:   false,
@@ -358,14 +358,14 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 		}
 	}
 
-	if req.Options.Trace == authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN {
+	if req.GetOptions().GetTrace() == authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN {
 		req.Options.Trace = authorizer.TraceLevel_TRACE_LEVEL_OFF
 	}
 
 	var input map[string]interface{}
 
-	if req.Input != "" {
-		if err := json.Unmarshal([]byte(req.Input), &input); err != nil {
+	if req.GetInput() != "" {
+		if err := json.Unmarshal([]byte(req.GetInput()), &input); err != nil {
 			return &authorizer.QueryResponse{}, errors.Wrap(err, "failed to unmarshal input - make sure it's a valid JSON object")
 		}
 	}
@@ -374,57 +374,38 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 		input = make(map[string]interface{})
 	}
 
-	if req.PolicyContext != nil {
-		input[InputPolicy] = req.PolicyContext
+	if req.GetPolicyContext() != nil {
+		input[InputPolicy] = req.GetPolicyContext()
 	}
 
-	if req.ResourceContext != nil {
-		input[InputResource] = req.ResourceContext
+	if req.GetResourceContext() != nil {
+		input[InputResource] = req.GetResourceContext()
 	}
 
-	if req.IdentityContext != nil {
-		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-			return &authorizer.QueryResponse{}, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
-		}
-
-		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-			input[InputIdentity] = convert(req.IdentityContext)
-		}
-
-		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-			user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
-			if err != nil || user == nil {
-				if err != nil {
-					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
-				}
-
-				return &authorizer.QueryResponse{}, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
-			}
-
-			input[InputUser] = convert(user)
-		}
+	if err := s.identityContext(ctx, req.GetIdentityContext(), input); err != nil {
+		return &authorizer.QueryResponse{}, err
 	}
 
-	log.Debug().Str("query", req.Query).Interface("input", input).Msg("query")
+	log.Debug().Str("query", req.GetQuery()).Interface("input", input).Msg("query")
 
-	rt, err := s.getRuntime(ctx, req.PolicyInstance)
+	rt, err := s.getRuntime(ctx, req.GetPolicyInstance())
 	if err != nil {
 		return &authorizer.QueryResponse{}, err
 	}
 
-	_, err = rt.ValidateQuery(req.Query)
+	_, err = rt.ValidateQuery(req.GetQuery())
 	if err != nil {
 		return &authorizer.QueryResponse{}, aerr.ErrBadQuery.Err(err)
 	}
 
 	queryResult, err := rt.Query(
 		ctx,
-		req.Query,
+		req.GetQuery(),
 		input,
-		req.Options.TraceSummary,
-		req.Options.Metrics,
-		req.Options.Instrument,
-		TraceLevelToExplainModeV2(req.Options.Trace),
+		req.GetOptions().GetTraceSummary(),
+		req.GetOptions().GetMetrics(),
+		req.GetOptions().GetInstrument(),
+		TraceLevelToExplainModeV2(req.GetOptions().GetTrace()),
 	)
 	if err != nil {
 		return &authorizer.QueryResponse{}, err
@@ -469,13 +450,13 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 			rt.Logger.Error().Err(err).Msg("newList")
 		}
 
-		if req.Options.TraceSummary {
-			for _, val := range list.Values {
-				resp.TraceSummary = append(resp.TraceSummary, val.GetStringValue())
+		if req.GetOptions().GetTraceSummary() {
+			for _, val := range list.GetValues() {
+				resp.TraceSummary = append(resp.GetTraceSummary(), val.GetStringValue())
 			}
 		} else {
-			for _, val := range list.Values {
-				resp.Trace = append(resp.Trace, val.GetStructValue())
+			for _, val := range list.GetValues() {
+				resp.Trace = append(resp.GetTrace(), val.GetStructValue())
 			}
 		}
 	}
@@ -483,12 +464,38 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	return resp, nil
 }
 
+func (s *AuthorizerServer) identityContext(ctx context.Context, idc *api.IdentityContext, input map[string]interface{}) error {
+	if idc != nil {
+		if idc.GetType() == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+			return aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+		}
+
+		if idc.GetType() != api.IdentityType_IDENTITY_TYPE_NONE {
+			input[InputIdentity] = convert(idc)
+		}
+
+		if idc.GetType() != api.IdentityType_IDENTITY_TYPE_NONE {
+			user, err := s.getUserFromIdentityContext(ctx, idc)
+			if err != nil || user == nil {
+				if err != nil {
+					s.logger.Error().Err(err).Msg("failed to resolve identity context")
+				}
+
+				return aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+			}
+
+			input[InputUser] = convert(user)
+		}
+	}
+	return nil
+}
+
 // nolint: staticcheck
 func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.PolicyInstance) (*runtime.Runtime, error) {
 	var rt *runtime.Runtime
 	var err error
 	if policyInstance != nil {
-		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyInstance.Name)
+		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyInstance.GetName())
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to procure tenant runtime")
 		}
@@ -504,11 +511,11 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.P
 func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileRequest) (*authorizer.CompileResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
 	log := s.logger.With().Str("api", "compile").Logger()
 
-	if req.Query == "" {
+	if req.GetQuery() == "" {
 		return &authorizer.CompileResponse{}, aerr.ErrInvalidArgument.Msg("query not set")
 	}
 
-	if req.Options == nil {
+	if req.GetOptions() == nil {
 		req.Options = &authorizer.QueryOptions{
 			Metrics:      false,
 			Instrument:   false,
@@ -517,14 +524,14 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 		}
 	}
 
-	if req.Options.Trace == authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN {
+	if req.GetOptions().GetTrace() == authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN {
 		req.Options.Trace = authorizer.TraceLevel_TRACE_LEVEL_OFF
 	}
 
 	var input map[string]interface{}
 
-	if req.Input != "" {
-		if err := json.Unmarshal([]byte(req.Input), &input); err != nil {
+	if req.GetInput() != "" {
+		if err := json.Unmarshal([]byte(req.GetInput()), &input); err != nil {
 			return &authorizer.CompileResponse{}, errors.Wrap(err, "failed to unmarshal input - make sure it's a valid JSON object")
 		}
 	}
@@ -533,59 +540,40 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 		input = make(map[string]interface{})
 	}
 
-	if req.ResourceContext != nil {
-		input[InputResource] = req.ResourceContext
+	if req.GetResourceContext() != nil {
+		input[InputResource] = req.GetResourceContext()
 	}
 
-	if req.IdentityContext != nil {
-		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-			return &authorizer.CompileResponse{}, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
-		}
-
-		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-			input[InputIdentity] = convert(req.IdentityContext)
-		}
-
-		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-			user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
-			if err != nil || user == nil {
-				if err != nil {
-					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
-				}
-
-				return &authorizer.CompileResponse{}, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
-			}
-
-			input[InputUser] = convert(user)
-		}
+	if err := s.identityContext(ctx, req.GetIdentityContext(), input); err != nil {
+		return &authorizer.CompileResponse{}, err
 	}
 
-	if req.PolicyContext != nil {
-		input[InputPolicy] = req.PolicyContext
+	if req.GetPolicyContext() != nil {
+		input[InputPolicy] = req.GetPolicyContext()
 	}
 
 	if input == nil {
 		input = make(map[string]interface{})
 	}
-	log.Debug().Str("compile", req.Query).Interface("input", input).Msg("compile")
-	rt, err := s.getRuntime(ctx, req.PolicyInstance)
+	log.Debug().Str("compile", req.GetQuery()).Interface("input", input).Msg("compile")
+	rt, err := s.getRuntime(ctx, req.GetPolicyInstance())
 	if err != nil {
 		return &authorizer.CompileResponse{}, err
 	}
 
-	_, err = rt.ValidateQuery(req.Query)
+	_, err = rt.ValidateQuery(req.GetQuery())
 	if err != nil {
 		return &authorizer.CompileResponse{}, aerr.ErrBadQuery.Err(err)
 	}
 
-	compileResult, err := rt.Compile(ctx, req.Query,
+	compileResult, err := rt.Compile(ctx, req.GetQuery(),
 		input,
-		req.Unknowns,
-		req.DisableInlining,
+		req.GetUnknowns(),
+		req.GetDisableInlining(),
 		true,
-		req.Options.Metrics,
-		req.Options.Instrument,
-		TraceLevelToExplainModeV2(req.Options.Trace))
+		req.GetOptions().GetMetrics(),
+		req.GetOptions().GetInstrument(),
+		TraceLevelToExplainModeV2(req.GetOptions().GetTrace()))
 	resp := &authorizer.CompileResponse{}
 	if err != nil {
 		return resp, err
@@ -625,12 +613,12 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 			rt.Logger.Error().Err(err).Msg("newList")
 		}
 
-		if req.Options.TraceSummary {
-			for _, val := range list.Values {
+		if req.GetOptions().GetTraceSummary() {
+			for _, val := range list.GetValues() {
 				resp.TraceSummary = append(resp.TraceSummary, val.GetStringValue())
 			}
 		} else {
-			for _, val := range list.Values {
+			for _, val := range list.GetValues() {
 				resp.Trace = append(resp.Trace, val.GetStructValue())
 			}
 		}
@@ -641,7 +629,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.ListPoliciesRequest) (*authorizer.ListPoliciesResponse, error) {
 	response := &authorizer.ListPoliciesResponse{}
 
-	rt, err := s.getRuntime(ctx, req.PolicyInstance)
+	rt, err := s.getRuntime(ctx, req.GetPolicyInstance())
 	if err != nil {
 		return response, errors.Wrap(err, "failed to get runtime")
 	}
@@ -657,13 +645,13 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 			return response, errors.Wrapf(err, "failed to parse policy with ID [%s]", policy.ID)
 		}
 
-		if req.FieldMask != nil {
-			paths := s.validateMask(req.FieldMask, &api.Module{})
+		if req.GetFieldMask() != nil {
+			paths := s.validateMask(req.GetFieldMask(), &api.Module{})
 			mask := fmutils.NestedMaskFromPaths(paths)
 			mask.Filter(module)
 		}
 
-		response.Result = append(response.Result, module)
+		response.Result = append(response.GetResult(), module)
 	}
 
 	return response, nil
@@ -671,19 +659,19 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 
 func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPolicyRequest) (*authorizer.GetPolicyResponse, error) {
 	response := &authorizer.GetPolicyResponse{}
-	rt, err := s.getRuntime(ctx, req.PolicyInstance)
+	rt, err := s.getRuntime(ctx, req.GetPolicyInstance())
 	if err != nil {
 		return response, errors.Wrap(err, "failed to get runtime")
 	}
 
-	policy, err := rt.GetPolicy(ctx, req.Id)
+	policy, err := rt.GetPolicy(ctx, req.GetId())
 	if err != nil {
-		return response, errors.Wrapf(err, "failed to get policy with ID [%s]", req.Id)
+		return response, errors.Wrapf(err, "failed to get policy with ID [%s]", req.GetId())
 	}
 
 	if policy == nil {
 		// TODO: add cerr
-		return response, errors.Errorf("policy with ID [%s] not found", req.Id)
+		return response, errors.Errorf("policy with ID [%s] not found", req.GetId())
 	}
 
 	module, err := policyToModule(*policy)
@@ -691,8 +679,8 @@ func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPol
 		return response, errors.Wrap(err, "failed to convert policy to api.module")
 	}
 
-	if req.FieldMask != nil {
-		paths := s.validateMask(req.FieldMask, &api.Module{})
+	if req.GetFieldMask() != nil {
+		paths := s.validateMask(req.GetFieldMask(), &api.Module{})
 		mask := fmutils.NestedMaskFromPaths(paths)
 		mask.Filter(module)
 	}
@@ -827,16 +815,16 @@ func getEmail(v map[string]interface{}) string {
 
 // validateMask checks if provided mask is validate.
 func (s *AuthorizerServer) validateMask(mask *fieldmaskpb.FieldMask, protomsg protoreflect.ProtoMessage) []string {
-	if len(mask.Paths) > 0 && mask.Paths[0] == "" {
+	if len(mask.GetPaths()) > 0 && mask.GetPaths()[0] == "" {
 		return []string{}
 	}
 
 	mask.Normalize()
 
 	if !mask.IsValid(protomsg) {
-		s.logger.Error().Msgf("field mask invalid %q", mask.Paths)
+		s.logger.Error().Msgf("field mask invalid %q", mask.GetPaths())
 		return []string{}
 	}
 
-	return mask.Paths
+	return mask.GetPaths()
 }

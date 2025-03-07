@@ -60,11 +60,11 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				})
 			}
 
-			if args.Default == nil {
+			if args.GetDefault() == nil {
 				args.Default = &dsr3.CheckRequest{}
 			}
 
-			if args.Checks == nil {
+			if args.GetChecks() == nil {
 				args.Checks = []*dsr3.CheckRequest{}
 			}
 
@@ -84,7 +84,7 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			result := pbs.Fields["checks"].AsInterface() //.([]interface{})
+			result := pbs.GetFields()["checks"].AsInterface() //.([]interface{})
 
 			v, err := ast.InterfaceToValue(result)
 			if err != nil {

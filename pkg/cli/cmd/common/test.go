@@ -74,7 +74,7 @@ var CheckTypeMapStr = map[CheckType]string{
 
 func GetCheckType(msg *structpb.Struct) CheckType {
 	for k, v := range CheckTypeMap {
-		if _, ok := msg.Fields[k]; ok {
+		if _, ok := msg.GetFields()[k]; ok {
 			return v
 		}
 	}
@@ -205,12 +205,12 @@ func (t *TestResults) Failed() int32 {
 }
 
 func GetBool(msg *structpb.Struct, fieldName string) (bool, bool) {
-	v, ok := msg.Fields[fieldName]
+	v, ok := msg.GetFields()[fieldName]
 	return v.GetBoolValue(), ok
 }
 
 func GetString(msg *structpb.Struct, fieldName string) (string, bool) {
-	v, ok := msg.Fields[fieldName]
+	v, ok := msg.GetFields()[fieldName]
 	return v.GetStringValue(), ok
 }
 

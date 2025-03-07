@@ -69,7 +69,7 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	slices.SortFunc(resp.Result, func(a, b *api.Module) int {
+	slices.SortFunc(resp.GetResult(), func(a, b *api.Module) int {
 		return cmp.Compare(a.GetPackagePath()+a.GetId(), b.GetPackagePath()+b.GetId())
 	})
 
@@ -78,7 +78,7 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	tab := table.New(c.StdOut()).WithColumns("package path", "id")
-	for _, module := range resp.Result {
+	for _, module := range resp.GetResult() {
 		tab.WithRow(strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId())
 	}
 	tab.Do()

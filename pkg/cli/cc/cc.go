@@ -11,6 +11,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/docker/docker/api/types"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -81,7 +82,7 @@ func NewCommonContext(ctx context.Context, noCheck bool, configFilePath string) 
 		},
 	}
 
-	if _, err := os.Stat(configFilePath); err == nil {
+	if fs.FileExists(configFilePath) {
 		data, err := os.ReadFile(configFilePath)
 		if err != nil {
 			return nil, err

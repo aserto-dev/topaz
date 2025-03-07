@@ -7,6 +7,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	"github.com/aserto-dev/topaz/pkg/fs"
 )
 
 type UseConfigCmd struct {
@@ -15,7 +16,8 @@ type UseConfigCmd struct {
 }
 
 func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
-	if _, err := os.Stat(filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))); err != nil {
+	cfgFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
+	if exists, err := fs.FileExistsWithErr(cfgFile); !exists {
 		return err
 	}
 

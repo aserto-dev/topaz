@@ -113,8 +113,8 @@ func (c *Controller) runCommandLoop(ctx context.Context) error {
 				return errRcv
 			}
 
-			c.logger.Debug().Msgf("processing remote command %v", cmd.Command)
-			err := c.handler(context.Background(), cmd.Command)
+			c.logger.Debug().Msgf("processing remote command %v", cmd.GetCommand())
+			err := c.handler(context.Background(), cmd.GetCommand())
 			if err != nil {
 				c.logger.Error().Err(err).Msg("error processing command")
 			}

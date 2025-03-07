@@ -35,8 +35,8 @@ func (c *Client) GetManifest(ctx context.Context) (io.Reader, error) {
 		}
 
 		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
-			data.Write(body.Body.Data)
-			bytesRecv += len(body.Body.Data)
+			data.Write(body.Body.GetData())
+			bytesRecv += len(body.Body.GetData())
 		}
 	}
 

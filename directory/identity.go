@@ -56,16 +56,16 @@ func resolveIdentityToUser(ctx context.Context, client dsr3.ReaderClient, relReq
 		return nil, aerr.ErrDirectoryObjectNotFound
 	case err != nil:
 		return nil, err
-	case relResp.Result == nil:
+	case relResp.GetResult() == nil:
 		return nil, aerr.ErrDirectoryObjectNotFound
-	case len(relResp.Objects) == 0:
+	case len(relResp.GetObjects()) == 0:
 		return &dsc3.Object{
 			Type: User,
-			Id:   lo.Ternary(relResp.Result.ObjectType == User, relResp.Result.ObjectId, relResp.Result.SubjectId),
+			Id:   lo.Ternary(relResp.GetResult().GetObjectType() == User, relResp.GetResult().GetObjectId(), relResp.GetResult().GetSubjectId()),
 		}, nil
 	}
 
-	for k, v := range relResp.Objects {
+	for k, v := range relResp.GetObjects() {
 		if strings.HasPrefix(k, User+":") {
 			return v, nil
 		}

@@ -11,6 +11,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/aserto-dev/topaz/pkg/fs"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -38,7 +39,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return cc.ErrIsRunning
 	}
 
-	if _, err := os.Stat(c.Config.Active.ConfigFile); errors.Is(err, os.ErrNotExist) {
+	if !fs.FileExists(c.Config.Active.ConfigFile) {
 		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(c.Config.Active.ConfigFile))
 	}
 
