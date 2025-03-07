@@ -65,7 +65,9 @@ linters:
     - copyloopvar
     # - cyclop
     - decorder
+    # - depguard
     - dogsled
+    - dupl
     - dupword
     - durationcheck
     - err113
@@ -77,12 +79,11 @@ linters:
     - forcetypeassert
     - funlen
     - gocheckcompilerdirectives
-    # - gochecknoinits
+    - gochecknoinits
     # - gochecknoglobals
-    # - gochecknoinits
     # - gocognit
     - goconst
-    # - gocritic
+    - gocritic
     # - gocyclo
     - godot
     - gofmt

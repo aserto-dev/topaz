@@ -92,3 +92,19 @@ func (cfg *Config) ClientConfig() *client.Config {
 func (cfg *Config) CommandTimeout() time.Duration {
 	return cfg.Timeout
 }
+
+func (c *Client) IReader() grpc.ClientConnInterface {
+	r, ok := c.Reader.(grpc.ClientConnInterface)
+	if ok {
+		return r
+	}
+	return nil
+}
+
+func (c *Client) IWriter() grpc.ClientConnInterface {
+	r, ok := c.Writer.(grpc.ClientConnInterface)
+	if ok {
+		return r
+	}
+	return nil
+}
