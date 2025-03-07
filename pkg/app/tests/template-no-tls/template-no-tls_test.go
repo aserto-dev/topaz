@@ -89,8 +89,9 @@ var tcs = []string{
 	"../../../../assets/simple-rbac.json",
 	"../../../../assets/slack.json",
 	"../../../../assets/todo.json",
-	"../../../../assets/citadel-inv.json",
-	"../../../../assets/gdrive-inv.json",
+	"../../../../assets/legacy/acmecorp.json",
+	"../../../../assets/legacy/citadel.json",
+	"../../../../assets/legacy/gdrive.json",
 	"../../../../assets/gdrive-scream.json",
 	"../../../../assets/api-gateway.json",
 }

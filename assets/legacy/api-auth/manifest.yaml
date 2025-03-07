@@ -1,0 +1,64 @@
+
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  ### display_name: User ###
+  # user represents a user that can be granted role(s)
+  user:
+    relations:
+      manager: user
+
+    permissions:
+      ### display_name: user#in_management_chain ###
+      in_management_chain: manager | manager->in_management_chain
+
+  ### display_name: Group ###
+  # group represents a collection of users and/or (nested) groups
+  group:
+    relations:
+      member: user | group#member
+
+  ### display_name: Identity ###
+  # identity represents a collection of identities for users
+  identity:
+    relations:
+      identifier: user
+
+  ### display_name: Service ###
+  # service represents a set of endpoints
+  service:
+    relations:
+      owner: user
+      deleter: user | group#member
+      creator: user | group#member
+      writer: user | group#member
+      reader: user | group#member
+
+    permissions:
+      can_get: reader | can_put
+      can_put: writer | can_post
+      can_patch: writer | can_post
+      can_post: creator | can_delete
+      can_delete: deleter | owner
+
+  ### display_name: Endpoint ###
+  # endpoint represents a specific API endpoint
+  endpoint:
+    relations:
+      # each endpoint picks the reader/writer/creator/deleter relation to the service
+      # based on the method (GET -> reader, PUT/PATCH -> writer, etc)
+      service-reader: service
+      service-writer: service
+      service-creator: service
+      service-deleter: service
+      # invoker allows a user or group to get access to invoke this specific endpoint
+      invoker: user | group#member
+    permissions:
+      can_invoke: invoker | service-reader->can_get | service-writer->can_put |
+        service-creator->can_post | service-deleter->can_delete

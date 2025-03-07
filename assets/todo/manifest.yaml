@@ -7,27 +7,27 @@ model:
 
 # object type definitions
 types:
+  ### display_name: Identity ###
+  # identity represents a collection of identities for users
+  identity: {}
+
   ### display_name: User ###
   # user represents a user that can be granted role(s)
   user:
     relations:
       manager: user
+      ### display_name: identifier ###
+      identifier: identity
 
     permissions:
       ### display_name: user#in_management_chain ###
-      in_management_chain: manager | manager->in_management_chain
+      in_management_chain: manager | manager->identifier | manager->in_management_chain
 
   ### display_name: Group ###
   # group represents a collection of users and/or (nested) groups
   group:
     relations:
       member: user | group#member
-
-  ### display_name: Identity ###
-  # identity represents a collection of identities for users
-  identity:
-    relations:
-      identifier: user
 
   ### display_name: Resource Creator ###
   # resource creator represents a user type that can create new resources
@@ -36,7 +36,7 @@ types:
       member: user | group#member
 
     permissions:
-      can_create_resource: member
+      can_create_resource: member | member->identifier
 
 
   # resource represents a protected resource
@@ -47,6 +47,6 @@ types:
       reader: user | group#member
 
     permissions:
-      can_read: reader | writer | owner
-      can_write: writer | owner
-      can_delete: owner
+      can_read: reader | reader->identifier | writer | writer->identifier | owner | owner->identifier
+      can_write: writer | writer->identifier | owner | owner->identifier
+      can_delete: owner | owner->identifier

@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+### filename: manifest.yaml ###
+### datetime: 2023-12-19T00:00:00-00:00 ###
+### description: github manifest ###
+#
+# model
+model:
+  version: 3
+
+types:
+  ### display_name: User ###
+  # user represents a user that can be granted role(s)
+  user:
+    relations:
+      manager: user
+
+    permissions:
+      ### display_name: user#in_management_chain ###
+      in_management_chain: manager | manager->in_management_chain
+
+  ### display_name: Group ###
+  # group represents a collection of users and/or (nested) groups
+  group:
+    relations:
+      member: user | group#member
+
+  ### display_name: Identity ###
+  # identity represents a collection of identities for users
+  identity:
+    relations:
+      identifier: user
+
+  ### display_name: Team ###
+  team:
+    relations:
+      member: user | team#member | group#member
+
+  ### display_name: Organization ###
+  organization:
+    relations:
+      member: user
+      owner: user
+
+      repo_admin: user | organization#member
+      repo_reader: user | organization#member
+      repo_writer: user | organization#member
+
+    permissions:
+      is_member:      member | owner
+      can_administer: repo_admin | owner
+      can_write:      repo_writer | can_administer
+      can_read:       repo_reader | can_write
+
+  ### display_name: Repository ###
+  repo:
+    relations:
+      owner: organization
+
+      admin:      user | team#member
+      maintainer: user | team#member
+      reader:     user | team#member
+      triager:    user | team#member
+      writer:     user | team#member
+
+    permissions:
+      can_administer: admin | owner->can_administer
+      can_delete:     can_administer
+      can_maintain:   maintainer | can_administer
+      can_write:      writer  | can_maintain | owner->can_write
+      can_triage:     triager | can_write
+      can_read:       reader  | can_triage   | owner->can_read

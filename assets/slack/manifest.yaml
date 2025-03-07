@@ -10,23 +10,20 @@ model:
 
 # object type definitions
 types:
+  ### display_name: Identity ###
+  identity: {}
+
   ### display_name: User ###
   user:
     relations:
       ### display_name: user#manager ###
       manager: user
+      ### display_name: identity#identifier ###
+      identifier: identity
 
     permissions:
       ### display_name: user#in_management_chain ###
-      in_management_chain: manager | manager->in_management_chain
-
-
-  ### display_name: Identity ###
-  identity:
-    relations:
-      ### display_name: identity#identifier ###
-      identifier: user
-
+      in_management_chain: manager | manager->identifier | manager->in_management_chain
 
   ### display_name: Group ###
   group:
@@ -44,8 +41,8 @@ types:
 
     permissions:
       can_delete:  parent_workspace->can_administer_channel
-      can_write:   writer    | can_delete
-      can_comment: commenter | can_write
+      can_write:   writer | writer->identifier    | can_delete
+      can_comment: commenter | commenter->identifier | can_write
       can_read:    can_comment
 
   ### display_name: Workspace ###
@@ -57,4 +54,5 @@ types:
       member:         user
 
     permissions:
-      can_administer_channel: channels_admin | legacy_admin
+      can_administer_channel: |
+        channels_admin | channels_admin->identifier | legacy_admin | legacy_admin->identifier

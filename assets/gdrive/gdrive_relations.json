@@ -38,8 +38,15 @@
     {
       "object_type": "doc",
       "object_id": "groceries",
-      "relation": "viewer",
+      "relation": "public-viewer",
       "subject_type": "user",
+      "subject_id": "*"
+    },
+    {
+      "object_type": "doc",
+      "object_id": "groceries",
+      "relation": "public-viewer",
+      "subject_type": "identity",
       "subject_id": "*"
     },
     {

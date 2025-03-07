@@ -3,7 +3,7 @@
         {
             "name": "Citadel",
             "description": "Demo Citadel IDP",
-            "provider_id": "6dd707ac-e7bd-11ec-808a-049ec1ced886",
+            "provider_id": "f8db605a-f309-11ef-9632-040ec95fb366",
             "ds_load": "/assets/templates/citadel/ds-load/citadel.json"
         }
     ],
@@ -11,7 +11,7 @@
         {
             "name": "GDrive",
             "description": "Sample data for GDrive template",
-            "provider_id": "b621b22b-7340-11ee-9420-04bc608bef02",
+            "provider_id": "03c88614-f30a-11ef-8a0d-04834b0b1258",
             "ds_load":"/assets/templates/gdrive/ds-load/gdrive.json"
         }
     ]

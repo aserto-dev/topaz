@@ -10,11 +10,16 @@ model:
   version: 3
 
 types:
+  ### display_name: Identity ###
+  # identity represents a collection of identities for users
+  identity: {}
+
   ### display_name: User ###
   # user represents a user that can be granted role(s)
   user:
     relations:
       manager: user
+      identifier: identity
 
     permissions:
       ### display_name: user#in_management_chain ###
@@ -25,12 +30,6 @@ types:
   group:
     relations:
       member: user | group#member
-
-  ### display_name: Identity ###
-  # identity represents a collection of identities for users
-  identity:
-    relations:
-      identifier: user
 
   ### display_name: Team ###
   team:
@@ -48,10 +47,10 @@ types:
       repo_writer: user | organization#member
 
     permissions:
-      is_member:      member | owner
-      can_administer: repo_admin | owner
-      can_write:      repo_writer | can_administer
-      can_read:       repo_reader | can_write
+      is_member:      member | member->identifier | owner | owner->identifier
+      can_administer: repo_admin | repo_admin->identifier | owner | owner->identifier
+      can_write:      repo_writer | repo_writer->identifier | can_administer
+      can_read:       repo_reader | repo_reader->identifier | can_write
 
   ### display_name: Repository ###
   repo:
@@ -65,9 +64,9 @@ types:
       writer:     user | team#member
 
     permissions:
-      can_administer: admin | owner->can_administer
+      can_administer: admin | admin->identifier | owner->can_administer
       can_delete:     can_administer
-      can_maintain:   maintainer | can_administer
-      can_write:      writer  | can_maintain | owner->can_write
-      can_triage:     triager | can_write
-      can_read:       reader  | can_triage   | owner->can_read
+      can_maintain:   maintainer | maintainer->identifier | can_administer
+      can_write:      writer | writer->identifier | can_maintain | owner->can_write
+      can_triage:     triager | triager->identifier | can_write
+      can_read:       reader | reader->identifier  | can_triage   | owner->can_read

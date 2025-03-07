@@ -5,7 +5,7 @@
         "object_type": "endpoint",
         "object_id": "todo:DELETE:/v1/todos/{todoId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
@@ -15,7 +15,7 @@
         "object_type": "endpoint",
         "object_id": "todo:DELETE:/v1/todos/{todoId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
@@ -25,7 +25,7 @@
         "object_type": "endpoint",
         "object_id": "todo:DELETE:/v1/todos/{todoId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
@@ -35,7 +35,7 @@
         "object_type": "endpoint",
         "object_id": "todo:DELETE:/v1/todos/{todoId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
@@ -45,7 +45,7 @@
         "object_type": "endpoint",
         "object_id": "todo:DELETE:/v1/todos/{todoId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
@@ -55,7 +55,7 @@
         "object_type": "endpoint",
         "object_id": "todo:GET:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
@@ -65,7 +65,7 @@
         "object_type": "endpoint",
         "object_id": "todo:GET:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
@@ -75,7 +75,7 @@
         "object_type": "endpoint",
         "object_id": "todo:GET:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": true
@@ -85,7 +85,7 @@
         "object_type": "endpoint",
         "object_id": "todo:GET:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": true
@@ -95,7 +95,7 @@
         "object_type": "endpoint",
         "object_id": "todo:GET:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": true
@@ -105,7 +105,7 @@
         "object_type": "endpoint",
         "object_id": "todo:POST:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
@@ -115,7 +115,7 @@
         "object_type": "endpoint",
         "object_id": "todo:POST:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
@@ -125,7 +125,7 @@
         "object_type": "endpoint",
         "object_id": "todo:POST:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
@@ -135,7 +135,7 @@
         "object_type": "endpoint",
         "object_id": "todo:POST:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
@@ -145,7 +145,7 @@
         "object_type": "endpoint",
         "object_id": "todo:POST:/v1/todos",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
@@ -155,7 +155,7 @@
         "object_type": "endpoint",
         "object_id": "rick-and-morty:GET:/v1/characters",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
@@ -165,7 +165,7 @@
         "object_type": "endpoint",
         "object_id": "rick-and-morty:GET:/v1/characters",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
@@ -175,7 +175,7 @@
         "object_type": "endpoint",
         "object_id": "rick-and-morty:GET:/v1/characters",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
@@ -185,7 +185,7 @@
         "object_type": "endpoint",
         "object_id": "rick-and-morty:GET:/v1/characters",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
@@ -195,7 +195,7 @@
         "object_type": "endpoint",
         "object_id": "rick-and-morty:GET:/v1/characters",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
@@ -205,7 +205,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:GET:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
@@ -215,7 +215,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:GET:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
@@ -225,7 +225,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:GET:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
@@ -235,7 +235,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:GET:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
@@ -245,7 +245,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:GET:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
@@ -255,7 +255,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:POST:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
@@ -265,7 +265,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:POST:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": true
@@ -275,7 +275,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:POST:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
@@ -285,7 +285,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:POST:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
@@ -295,7 +295,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:POST:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false
@@ -305,7 +305,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:DELETE:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "rick@the-citadel.com"
       },
       "expected": true
@@ -315,7 +315,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:DELETE:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "morty@the-citadel.com"
       },
       "expected": false
@@ -325,7 +325,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:DELETE:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "summer@the-smiths.com"
       },
       "expected": false
@@ -335,7 +335,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:DELETE:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "beth@the-smiths.com"
       },
       "expected": false
@@ -345,7 +345,7 @@
         "object_type": "endpoint",
         "object_id": "petstore:DELETE:/pet/{petId}",
         "relation": "can_invoke",
-        "subject_type": "user",
+        "subject_type": "identity",
         "subject_id": "jerry@the-smiths.com"
       },
       "expected": false

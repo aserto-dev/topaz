@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+### filename: manifest.yaml ###
+### description: slack manifest ###
+#
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  ### display_name: User ###
+  user:
+    relations:
+      ### display_name: user#manager ###
+      manager: user
+
+    permissions:
+      ### display_name: user#in_management_chain ###
+      in_management_chain: manager | manager->in_management_chain
+
+
+  ### display_name: Identity ###
+  identity:
+    relations:
+      ### display_name: identity#identifier ###
+      identifier: user
+
+
+  ### display_name: Group ###
+  group:
+    relations:
+      ### display_name: group#member ###
+      member: user | group#member
+
+  ### display_name: Channel ###
+  channel:
+    relations:
+      parent_workspace: workspace
+
+      commenter: user | workspace#member
+      writer:    user | workspace#member
+
+    permissions:
+      can_delete:  parent_workspace->can_administer_channel
+      can_write:   writer    | can_delete
+      can_comment: commenter | can_write
+      can_read:    can_comment
+
+  ### display_name: Workspace ###
+  workspace:
+    relations:
+      channels_admin: user
+      guest:          user
+      legacy_admin:   user
+      member:         user
+
+    permissions:
+      can_administer_channel: channels_admin | legacy_admin
