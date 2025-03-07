@@ -16,7 +16,7 @@ import (
 )
 
 type GetObjectCmd struct {
-	CommonArgs
+	RequestArgs
 	dsc.Config
 }
 
@@ -26,7 +26,7 @@ func (cmd *GetObjectCmd) BeforeReset(ctx *kong.Context) error {
 }
 
 func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
-	request, err := cmd.CommonArgs.Parse(c, cmd.template)
+	request, err := cmd.RequestArgs.Parse(c, cmd.template)
 	if err != nil {
 		return err
 	}
@@ -54,7 +54,7 @@ func (cmd *GetObjectCmd) template() proto.Message {
 }
 
 type SetObjectCmd struct {
-	CommonArgs
+	RequestArgs
 	dsc.Config
 }
 
@@ -64,7 +64,7 @@ func (cmd *SetObjectCmd) BeforeReset(ctx *kong.Context) error {
 }
 
 func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
-	request, err := cmd.CommonArgs.Parse(c, cmd.template)
+	request, err := cmd.RequestArgs.Parse(c, cmd.template)
 	if err != nil {
 		return err
 	}
@@ -97,7 +97,7 @@ func (cmd *SetObjectCmd) template() proto.Message {
 }
 
 type DeleteObjectCmd struct {
-	CommonArgs
+	RequestArgs
 	dsc.Config
 }
 
@@ -107,7 +107,7 @@ func (cmd *DeleteObjectCmd) BeforeReset(ctx *kong.Context) error {
 }
 
 func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
-	request, err := cmd.CommonArgs.Parse(c, cmd.template)
+	request, err := cmd.RequestArgs.Parse(c, cmd.template)
 	if err != nil {
 		return err
 	}
@@ -134,10 +134,7 @@ func (cmd *DeleteObjectCmd) template() proto.Message {
 }
 
 type ListObjectsCmd struct {
-	CommonArgs
-	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
-	Template bool   `name:"template" short:"t" help:"prints a list objects request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
+	RequestArgs
 	dsc.Config
 }
 
@@ -147,7 +144,7 @@ func (cmd *ListObjectsCmd) BeforeReset(ctx *kong.Context) error {
 }
 
 func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
-	request, err := cmd.CommonArgs.Parse(c, cmd.template)
+	request, err := cmd.RequestArgs.Parse(c, cmd.template)
 	if err != nil {
 		return err
 	}

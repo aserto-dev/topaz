@@ -73,7 +73,7 @@ func portStatus(listenAddress string) PortStatus {
 		return PortClosed
 	}
 	if conn != nil {
-		defer conn.Close()
+		_ = conn.Close()
 		return PortOpened
 	}
 	return PortClosed
