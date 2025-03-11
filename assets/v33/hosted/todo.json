@@ -1,18 +1,18 @@
 {
-    "idp_data": [
-        {
-            "name": "Citadel",
-            "description": "Demo Citadel IDP",
-            "provider_id": "f8db605a-f309-11ef-9632-040ec95fb366",
-            "ds_load": "/assets/templates/citadel/ds-load/citadel.json"
-        }
-    ],
-    "domain_data": [
-        {
-            "name": "Todo",
-            "description": "Sample data for Todo template",
-            "provider_id": "8277f2cc-bc80-11ee-a2eb-042027460e83",
-            "ds_load":"/assets/templates/todo/ds-load/todo.json"
-        }
-    ]
+  "idp_data": [
+    {
+      "name": "Citadel",
+      "description": "Demo Citadel IDP",
+      "provider_id": "f8db605a-f309-11ef-9632-040ec95fb366",
+      "ds_load": "/assets/templates/v33/citadel/ds-load/citadel.json"
+    }
+  ],
+  "domain_data": [
+    {
+      "name": "Todo",
+      "description": "Sample data for Todo template",
+      "provider_id": "8277f2cc-bc80-11ee-a2eb-042027460e83",
+      "ds_load": "/assets/templates/v33/todo/ds-load/todo.json"
+    }
+  ]
 }
