@@ -93,7 +93,7 @@ func testDirectory(dsConfig *dsc.Config, azConfig *azc.Config) func(*testing.T) 
 		ctx, cancel := context.WithCancel(context.Background())
 		t.Cleanup(cancel)
 
-		t.Run("", tc.InstallTemplate(dsConfig, azConfig, "../../../../assets/gdrive.json"))
+		t.Run("", tc.InstallTemplate(dsConfig, azConfig, "../../../../assets/v32/gdrive.json"))
 
 		tests := []struct {
 			name string

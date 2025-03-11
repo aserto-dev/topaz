@@ -120,14 +120,16 @@ write-version:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@git describe --tags > ./VERSION.txt
 
-ASSETS = "assets/api-auth/test/api-auth_" "assets/gdrive/test/gdrive_" "assets/github/test/github_" "assets/multi-tenant/test/multi-tenant_" "assets/slack/test/slack_"
+ASSETS = "assets/v32/api-auth/test/api-auth_" "assets/v32/gdrive/test/gdrive_" "assets/v32/github/test/github_" "assets/v32/multi-tenant/test/multi-tenant_" "assets/v32/slack/test/slack_" \
+		 "assets/v33/api-auth/test/api-auth_" "assets/v33/gdrive/test/gdrive_" "assets/v33/github/test/github_" "assets/v33/multi-tenant/test/multi-tenant_" "assets/v33/slack/test/slack_"
 .PHONY: update-assets
 update-assets: $(ASSETS)
 $(ASSETS): install-check2decision
-	@echo -e "$(ATTN_COLOR)==> github.com/aserto-dev/topaz/assets/$@ $(NO_COLOR)"
+	@echo -e "$(ATTN_COLOR)==> github.com/aserto-dev/topaz/$@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/check2decision -i "$@assertions.json" -o "$@decisions.json"
 
-TEMPLATES = "assets/api-auth.json" "assets/gdrive.json" "assets/github.json" "assets/multi-tenant.json" "assets/peoplefinder.json" "assets/simple-rbac.json" "assets/slack.json" "assets/todo.json"
+TEMPLATES = "assets/v32/api-auth.json" "assets/v32/gdrive.json" "assets/v32/github.json" "assets/v32/multi-tenant.json" "assets/v32/peoplefinder.json" "assets/v32/simple-rbac.json" "assets/v32/slack.json" "assets/v32/todo.json" \
+			"assets/v33/api-auth.json" "assets/v33/gdrive.json" "assets/v33/github.json" "assets/v33/multi-tenant.json" "assets/v33/peoplefinder.json" "assets/v33/simple-rbac.json" "assets/v33/slack.json" "assets/v33/todo.json"
 .PHONY: test-templates
 test-templates: $(TEMPLATES)
 $(TEMPLATES): test-snapshot
@@ -157,7 +159,7 @@ install-vault: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
 	@curl -s -o ${EXT_TMP_DIR}/vault.zip https://releases.hashicorp.com/vault/${VAULT_VER}/vault_${VAULT_VER}_${GOOS}_${GOARCH}.zip
 	@unzip -o ${EXT_TMP_DIR}/vault.zip vault -d ${EXT_BIN_DIR}/  &> /dev/null
 	@chmod +x ${EXT_BIN_DIR}/vault
-	@${EXT_BIN_DIR}/vault --version 
+	@${EXT_BIN_DIR}/vault --version
 
 .PHONY: install-svu
 install-svu: install-svu-${GOOS}
@@ -213,7 +215,7 @@ install-check2decision: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@gh release download v${CHECK2DECISION_VER} --repo https://github.com/aserto-dev/check2decision --pattern "check2decision-${GOOS}-${GOARCH}.zip" --output "${EXT_TMP_DIR}/check2decision.zip" --clobber
 	@unzip -o ${EXT_TMP_DIR}/check2decision.zip check2decision -d ${EXT_BIN_DIR}/  &> /dev/null
 	@chmod +x ${EXT_BIN_DIR}/check2decision
-	@${EXT_BIN_DIR}/check2decision --version 
+	@${EXT_BIN_DIR}/check2decision --version
 
 .PHONY: install-syft
 install-syft: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
@@ -221,7 +223,7 @@ install-syft: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@gh release download v${SYFT_VER} --repo https://github.com/anchore/syft --pattern "syft_${SYFT_VER}_${GOOS}_${GOARCH}.tar.gz" --output "${EXT_TMP_DIR}/syft.tar.gz" --clobber
 	@tar -xvf ${EXT_TMP_DIR}/syft.tar.gz --directory ${EXT_BIN_DIR} syft &> /dev/null
 	@chmod +x ${EXT_BIN_DIR}/syft
-	@${EXT_BIN_DIR}/syft --version 
+	@${EXT_BIN_DIR}/syft --version
 
 .PHONY: clean
 clean:
