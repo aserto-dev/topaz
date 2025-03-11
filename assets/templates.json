@@ -1,6 +1,6 @@
 {
   "peoplefinder": {
-    "title": "PeopleFinder",
+    "title": "PeopleFinder (legacy)",
     "short_description": "Corporate directory end-to-end sample",
     "description": "A corporate directory application that includes a React front-end and a node.js back-end.  It demonstrates three styles of policies - RBAC, ABAC, and ReBAC.",
     "docs_url": "https://docs.aserto.com/docs/getting-started/peoplefinder/peoplefinder-overview",
@@ -8,7 +8,7 @@
     "hosted_url": "v32/hosted/peoplefinder.json"
   },
   "todo": {
-    "title": "Todo",
+    "title": "Todo (legacy)",
     "short_description": "Todo application end-to-end sample",
     "description": "A simple Todo application with a back-end implementation in every language, and an interactive tutorial for the policy language. Provides a head start for learning how to integrate Aserto into your own app.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/todo/overview",
@@ -16,7 +16,7 @@
     "hosted_url": "v32/hosted/todo.json"
   },
   "simple-rbac": {
-    "title": "Simple RBAC",
+    "title": "Simple RBAC (legacy)",
     "short_description": "Simple RBAC authorization template",
     "description": "The Simple RBAC template defines a resource type, with read, write, and delete permissions, that are granted through the reader, writer, and owner roles. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/simple-rbac/overview",
@@ -24,7 +24,7 @@
     "hosted_url": "v32/hosted/simple-rbac.json"
   },
   "gdrive": {
-    "title": "Google Drive",
+    "title": "Google Drive (legacy)",
     "short_description": "Authorization template for nested folders and documents",
     "description": "The Google Drive template defines folder and document types, with read, write, share, and delete permissions. Folders can contain documents or other folders and access to a parent folder grants access to its children. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/gdrive/overview",
@@ -32,7 +32,7 @@
     "hosted_url": "v32/hosted/gdrive.json"
   },
   "api-auth": {
-    "title": "API Authorization",
+    "title": "API Authorization (legacy)",
     "short_description": "Template for authorization of servics and endpoints",
     "description": "The API Authorization template defines services and endpoints. You can import an OpenAPI spec and automatically generate services, endpoints, and groups for entitling users to a whole service, specific endpoints, or certain HTTP methods. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/api-auth/overview",
@@ -40,7 +40,7 @@
     "hosted_url": "v32/hosted/api-auth.json"
   },
   "slack": {
-    "title": "Slack",
+    "title": "Slack (legacy)",
     "short_description": "Authorization template for workspaces and channels",
     "description": "The Slack template defines workspaces with channel admin permissions, and channels inside of a workspace, with read, write, comment, and delete permissions. Channel commenters/writers can be members of an workspace. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/slack/overview",
@@ -48,7 +48,7 @@
     "hosted_url": "v32/hosted/slack.json"
   },
   "github": {
-    "title": "GitHub",
+    "title": "GitHub (legacy)",
     "short_description": "Authorization template for repositories, organizations and teams",
     "description": "The GitHub template defines repositories, organization and teams. Repos are owned by organizations, and their permissions are either assigned directly through relations, or inherited from the organization. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/github/overview",
@@ -56,7 +56,7 @@
     "hosted_url": "v32/hosted/github.json"
   },
   "multi-tenant": {
-    "title": "Multi-Tenant RBAC",
+    "title": "Multi-Tenant RBAC (legacy)",
     "short_description": "Multi-tenant RBAC authorization template",
     "description": "A multi-tenant authorization template in which resources belong to tenants and users can have different roles in different tenants, as well as system-wide roles. Tenant roles grant access to tenant resources, while system roles grant access to resources across all tenants. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/multi-tenant/overview",
