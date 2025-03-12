@@ -1,26 +1,10 @@
 {
-    "gdrive-inv": {
-        "title": "Google Drive with inverted identities",
-        "short_description": "Google Drive with inverted identities",
-        "description": "Google Drive with inverted identities",
-        "docs_url": "",
-        "topaz_url": "gdrive-inv.json",
-        "hosted_url": ""
-    },
-    "gdrive-scream": {
-        "title": "Google Drive (uppercase)",
-        "short_description": "Google Drive (uppercase)",
-        "description": "Google Drive (uppercase)",
-        "docs_url": "",
-        "topaz_url": "gdrive-scream.json",
-        "hosted_url": ""
-    },
-    "api-gateway": {
-        "title": "API Gateway",
-        "short_description": "API Gateway",
-        "description": "API Gateway",
-        "docs_url": "",
-        "topaz_url": "api-gateway.json",
-        "hosted_url": ""
-    }
+  "gdrive-scream": {
+    "title": "Google Drive (uppercase)",
+    "short_description": "Google Drive (uppercase)",
+    "description": "Google Drive (uppercase)",
+    "docs_url": "",
+    "topaz_url": "v33/gdrive-scream.json",
+    "hosted_url": ""
+  }
 }

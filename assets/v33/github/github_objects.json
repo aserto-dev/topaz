@@ -1,0 +1,28 @@
+{
+    "objects": [
+        {
+            "type": "organization",
+            "id": "smiths",
+            "display_name": "The Smiths organization",
+            "properties": {}
+        },
+        {
+            "type": "organization",
+            "id": "citadel",
+            "display_name": "The Citadel organization",
+            "properties": {}
+        },
+        {
+            "type": "repo",
+            "id": "smiths.budget",
+            "display_name": "The Smith's budget repository",
+            "properties": {}
+        },
+        {
+            "type": "repo",
+            "id": "citadel.missions",
+            "display_name": "The citadel missions repository",
+            "properties": {}
+        }
+    ]
+}

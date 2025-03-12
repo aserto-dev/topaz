@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  ### display_name: Identity ###
+  # identity represents a collection of identities for users
+  identity: {}
+
+  ### display_name: User ###
+  # user represents a user that can be granted role(s)
+  user:
+    relations:
+      manager: user
+      identifier: identity
+
+    permissions:
+      in_management_chain: manager | manager->identifier | manager->in_management_chain
+
+  ### display_name: Group ###
+  # group represents a collection of users and/or (nested) groups
+  group:
+    relations:
+      member: user | group#member
+
+  ### display_name: System ###
+  # system represents the entire application and grants access to all tenants
+  system:
+    relations:
+      admin: user | group#member
+      editor: user | group#member
+      viewer: user | group#member
+
+    permissions:
+      can_administer: admin | admin->identifier
+      can_create_tenant: can_administer
+      can_view: viewer | viewer->identifier
+      can_edit: editor | editor->identifier
+
+  ### display_name: Tenant ###
+  # tenant represents a tenant in a multi-tenant system
+  tenant:
+    relations:
+      # system that the tenant is part of.
+      system: system
+      owner: user
+      admin: user | group#member
+      editor: user | group#member
+      viewer: user | group#member
+
+    permissions:
+      # group members into 3 high-level categories: can_administer, can_edit, can_view.
+      # these are used to define fine-grained permission.
+      is_owner: owner | owner->identifier
+      can_administer: is_owner | admin | admin->identifier | system->can_administer
+      can_edit: editor | editor->identifier | can_administer | system->can_edit
+      can_view: viewer | viewer->identifier | can_edit | system->can_view
+      
+
+      # fine-grained permissions make it easier to change access levels without
+      # modifying application logic.
+      can_delete_tenant: is_owner | system->can_administer
+      can_manage_members: can_administer
+      can_list_members: can_view
+      # an owner cannot leave the tenant. they must be removed by another owner.
+      can_leave_tenant: can_view - is_owner
+
+      can_create_resources: can_edit
+      can_delete_resources: can_administer
+      can_write_resources: can_edit
+      can_read_resources: can_view
+
+  ### display_name: Resource ###
+  # resource represents a resource within a tenant
+  resource:
+    relations:
+      # tenant that the resource is part of.
+      tenant: tenant
+      owner: user
+      writer: user | group#member
+      reader: user | group#member
+
+    permissions:
+      can_delete: owner | owner->identifier | tenant->can_delete_resources
+      can_write: writer | writer->identifier | can_delete | tenant->can_write_resources
+      can_read:  reader | reader->identifier | can_write  | tenant->can_read_resources

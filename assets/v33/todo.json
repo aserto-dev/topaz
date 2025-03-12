@@ -1,0 +1,20 @@
+{
+    "name": "todo",
+    "description": "A simple Todo application with a back-end implementation in every language, and an interactive tutorial for the policy language. Provides a head start for learning how to integrate Aserto into your own app.",
+    "assets": {
+        "manifest": "todo/manifest.yaml",
+        "policy": {
+            "name": "todo",
+            "resource": "ghcr.io/aserto-policies/policy-todo:3.0.0"
+        },
+        "idp_data": [
+            "citadel/citadel_objects.json",
+            "citadel/citadel_relations.json"
+        ],
+        "domain_data": [
+          "todo/todo_objects.json",
+          "todo/todo_relations.json"
+        ],
+        "assertions": []
+    }
+}

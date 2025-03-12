@@ -1,0 +1,23 @@
+{
+    "name": "gdrive",
+    "description": "Google Drive",
+    "assets": {
+        "manifest": "gdrive/manifest.yaml",
+        "policy": {
+            "name": "gdrive",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+            "citadel/citadel_objects.json",
+            "citadel/citadel_relations.json"
+        ],
+        "domain_data": [
+            "gdrive/gdrive_objects.json",
+            "gdrive/gdrive_relations.json"
+        ],
+        "assertions": [
+            "gdrive/test/gdrive_assertions.json",
+            "gdrive/test/gdrive_decisions.json"
+        ]
+    }
+}
