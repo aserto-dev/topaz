@@ -218,14 +218,14 @@ func (e *Topaz) ConfigServices() error {
 
 func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 	if e.Configuration.APIConfig.Health.ListenAddress != "" {
-		err := e.Manager.SetupHealthServer(e.Configuration.APIConfig.Health.ListenAddress, e.Configuration.APIConfig.Health.Certificates)
+		err := e.Manager.SetupHealthServer(e.Configuration.APIConfig.Health.ListenAddress, &e.Configuration.APIConfig.Health.Certificates)
 		if err != nil {
 			return nil, err
 		}
 	}
 	if e.Configuration.APIConfig.Metrics.ListenAddress != "" {
 		metricsMiddleware, err := e.Manager.SetupMetricsServer(e.Configuration.APIConfig.Metrics.ListenAddress,
-			e.Configuration.APIConfig.Metrics.Certificates,
+			&e.Configuration.APIConfig.Metrics.Certificates,
 			false)
 		if err != nil {
 			return nil, err

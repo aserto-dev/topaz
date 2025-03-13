@@ -97,28 +97,25 @@ func (l *Loader) GetPaths() ([]string, error) {
 	if l.Configuration.Edge.DBPath != "" {
 		paths[l.Configuration.Edge.DBPath] = true
 	}
-	if l.Configuration.APIConfig.Health.Certificates != nil {
-		if l.Configuration.APIConfig.Health.Certificates.CA != "" {
-			paths[l.Configuration.APIConfig.Health.Certificates.CA] = true
-		}
-		if l.Configuration.APIConfig.Health.Certificates.Cert != "" {
-			paths[l.Configuration.APIConfig.Health.Certificates.Cert] = true
-		}
-		if l.Configuration.APIConfig.Health.Certificates.Key != "" {
-			paths[l.Configuration.APIConfig.Health.Certificates.Key] = true
-		}
+
+	if l.Configuration.APIConfig.Health.Certificates.CA != "" {
+		paths[l.Configuration.APIConfig.Health.Certificates.CA] = true
+	}
+	if l.Configuration.APIConfig.Health.Certificates.Cert != "" {
+		paths[l.Configuration.APIConfig.Health.Certificates.Cert] = true
+	}
+	if l.Configuration.APIConfig.Health.Certificates.Key != "" {
+		paths[l.Configuration.APIConfig.Health.Certificates.Key] = true
 	}
 
-	if l.Configuration.APIConfig.Metrics.Certificates != nil {
-		if l.Configuration.APIConfig.Metrics.Certificates.CA != "" {
-			paths[l.Configuration.APIConfig.Metrics.Certificates.CA] = true
-		}
-		if l.Configuration.APIConfig.Metrics.Certificates.Cert != "" {
-			paths[l.Configuration.APIConfig.Metrics.Certificates.Cert] = true
-		}
-		if l.Configuration.APIConfig.Metrics.Certificates.Key != "" {
-			paths[l.Configuration.APIConfig.Metrics.Certificates.Key] = true
-		}
+	if l.Configuration.APIConfig.Metrics.Certificates.CA != "" {
+		paths[l.Configuration.APIConfig.Metrics.Certificates.CA] = true
+	}
+	if l.Configuration.APIConfig.Metrics.Certificates.Cert != "" {
+		paths[l.Configuration.APIConfig.Metrics.Certificates.Cert] = true
+	}
+	if l.Configuration.APIConfig.Metrics.Certificates.Key != "" {
+		paths[l.Configuration.APIConfig.Metrics.Certificates.Key] = true
 	}
 
 	servicePaths := getUniqueServiceCertPaths(l.Configuration.APIConfig.Services)
@@ -126,7 +123,7 @@ func (l *Loader) GetPaths() ([]string, error) {
 		paths[servicePaths[i]] = true
 	}
 
-	if l.Configuration.ControllerConfig != nil && l.Configuration.ControllerConfig.Enabled {
+	if l.Configuration.ControllerConfig.Enabled {
 		if l.Configuration.ControllerConfig.Server.CACertPath != "" {
 			paths[l.Configuration.ControllerConfig.Server.CACertPath] = true
 		}
