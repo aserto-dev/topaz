@@ -37,14 +37,7 @@ func NewController(logger *zerolog.Logger, policyName, host string, cfg *Config,
 	if !cfg.Enabled {
 		return nil, nil
 	}
-	if cfg.Server == nil {
-		return nil, errors.New("no server configuration provided")
-	}
-	conn, err := cfg.Server.Connect()
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to initialize new connection")
-	}
-	remoteCli := management.NewControllerClient(conn)
+
 	newLogger := logger.With().Fields(map[string]interface{}{
 		"component":   "controller",
 		"tenant-id":   cfg.Server.TenantID,
@@ -52,8 +45,13 @@ func NewController(logger *zerolog.Logger, policyName, host string, cfg *Config,
 		"host":        host,
 	}).Logger()
 
+	conn, err := cfg.Server.Connect()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to initialize new connection")
+	}
+
 	return &Controller{
-		client: remoteCli,
+		client: management.NewControllerClient(conn),
 		instanceInfo: &api.InstanceInfo{
 			PolicyName:  policyName,
 			PolicyLabel: policyName,
