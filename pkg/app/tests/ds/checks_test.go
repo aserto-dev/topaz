@@ -97,7 +97,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: object_type: E20026 object type not found: folder2"),
+					Context: tc.SetContext(prop.Reason, "E20026 object type not found: folder2: object_type"),
 				},
 			},
 		},
@@ -147,7 +147,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20035 relation not found: relation: folder#owner2"),
+					Context: tc.SetContext(prop.Reason, "E20036 relation type not found: relation: folder#owner2"),
 				},
 			},
 		},
@@ -172,7 +172,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: subject_type: E20026 object type not found: user2"),
+					Context: tc.SetContext(prop.Reason, "E20026 object type not found: user2: subject_type"),
 				},
 			},
 		},
@@ -247,7 +247,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: object_type: E20026 object type not found: folder2"),
+					Context: tc.SetContext(prop.Reason, "E20026 object type not found: folder2: object_type"),
 				},
 			},
 		},
@@ -297,7 +297,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20035 relation not found: relation: folder#owner2"),
+					Context: tc.SetContext(prop.Reason, "E20036 relation type not found: relation: folder#owner2"),
 				},
 			},
 		},
@@ -322,7 +322,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: subject_type: E20026 object type not found: user2"),
+					Context: tc.SetContext(prop.Reason, "E20026 object type not found: user2: subject_type"),
 				},
 			},
 		},
@@ -435,7 +435,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 			Checks: []*dsr3.CheckResponse{
 				{
 					Check:   false,
-					Context: tc.SetContext(prop.Reason, "E20025 object not found: object_type: E20046 invalid argument object identifier: type"),
+					Context: tc.SetContext(prop.Reason, "E20046 invalid argument object identifier: type: object_type"),
 				},
 			},
 		},

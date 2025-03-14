@@ -75,7 +75,7 @@ var checkTCs []*checkTestCase = []*checkTestCase{
 		},
 		resp: &dsr3.CheckResponse{
 			Check:   false,
-			Context: tc.SetContext(prop.Reason, "E20026 object type not found: folder1"),
+			Context: tc.SetContext(prop.Reason, "E20026 object type not found: folder1: object_type"),
 		},
 		err: nil,
 	},
@@ -105,7 +105,7 @@ var checkTCs []*checkTestCase = []*checkTestCase{
 		},
 		resp: &dsr3.CheckResponse{
 			Check:   false,
-			Context: tc.SetContext(prop.Reason, "E20035 relation not found: relation: folder#owner1"),
+			Context: tc.SetContext(prop.Reason, "E20036 relation type not found: relation: folder#owner1"),
 		},
 		err: nil,
 	},
@@ -120,7 +120,7 @@ var checkTCs []*checkTestCase = []*checkTestCase{
 		},
 		resp: &dsr3.CheckResponse{
 			Check:   false,
-			Context: tc.SetContext(prop.Reason, "E20026 object type not found: user1"),
+			Context: tc.SetContext(prop.Reason, "E20026 object type not found: user1: subject_type"),
 		},
 		err: nil,
 	},
