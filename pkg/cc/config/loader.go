@@ -10,6 +10,7 @@ import (
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	builder "github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
@@ -65,7 +66,7 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 		return nil, err
 	}
 	withTopazDir := false
-	if strings.Contains(string(fileContents), "TOPAZ_DIR") {
+	if strings.Contains(string(fileContents), x.EnvTopazDir) {
 		withTopazDir = true
 	}
 	cfg := new(Config)
@@ -200,15 +201,15 @@ func (l *Loader) GetPorts() ([]string, error) {
 }
 
 func SetEnvVars(fileContents string) (string, error) {
-	err := os.Setenv("TOPAZ_CFG_DIR", cc.GetTopazCfgDir())
+	err := os.Setenv(x.EnvTopazCfgDir, cc.GetTopazCfgDir())
 	if err != nil {
 		return "", err
 	}
-	err = os.Setenv("TOPAZ_CERTS_DIR", cc.GetTopazCertsDir())
+	err = os.Setenv(x.EnvTopazCertsDir, cc.GetTopazCertsDir())
 	if err != nil {
 		return "", err
 	}
-	err = os.Setenv("TOPAZ_DB_DIR", cc.GetTopazDataDir())
+	err = os.Setenv(x.EnvTopazDBDir, cc.GetTopazDataDir())
 	if err != nil {
 		return "", err
 	}

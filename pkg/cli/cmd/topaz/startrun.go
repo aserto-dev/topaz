@@ -11,6 +11,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -183,11 +184,11 @@ func getEnvFromVolumes(volumes []string) []string {
 		mountedPath := fmt.Sprintf("/%s", filepath.Base(destination[1])) // last value from split.
 		switch {
 		case strings.Contains(volumes[i], "certs"):
-			envs = append(envs, fmt.Sprintf("TOPAZ_CERTS_DIR=%s", mountedPath))
+			envs = append(envs, x.EnvTopazCertsDir+"="+mountedPath)
 		case strings.Contains(volumes[i], "db"):
-			envs = append(envs, fmt.Sprintf("TOPAZ_DB_DIR=%s", mountedPath))
+			envs = append(envs, x.EnvTopazDBDir+"="+mountedPath)
 		case strings.Contains(volumes[i], "cfg"):
-			envs = append(envs, fmt.Sprintf("TOPAZ_CFG_DIR=%s", mountedPath))
+			envs = append(envs, x.EnvTopazCfgDir+"="+mountedPath)
 		}
 	}
 	return envs

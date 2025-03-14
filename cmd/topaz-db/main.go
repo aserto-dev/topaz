@@ -9,6 +9,7 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/cmd/topaz-db/cmd"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
 func main() {
@@ -31,10 +32,10 @@ func main() {
 			NoExpandSubcommands: true,
 		}),
 		kong.Vars{
-			"directory_svc":   os.Getenv("TOPAZ_DIRECTORY_SVC"),
-			"directory_key":   os.Getenv("TOPAZ_DIRECTORY_KEY"),
+			"directory_svc":   os.Getenv(x.EnvTopazDirectorySvc),
+			"directory_key":   os.Getenv(x.EnvTopazDirectoryKey),
 			"directory_token": "",
-			"tenant_id":       os.Getenv("ASERTO_TENANT_ID"),
+			"tenant_id":       os.Getenv(x.EnvAsertoTenantID),
 			"insecure":        strconv.FormatBool(false),
 			"no_check":        strconv.FormatBool(false),
 		},

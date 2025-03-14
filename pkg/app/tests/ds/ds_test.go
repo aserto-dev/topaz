@@ -7,6 +7,7 @@ import (
 
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 
 	client "github.com/aserto-dev/go-aserto"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
@@ -27,9 +28,9 @@ func TestDirectory(t *testing.T) {
 		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
-			"TOPAZ_CERTS_DIR":     "/certs",
-			"TOPAZ_DB_DIR":        "/data",
-			"TOPAZ_DECISIONS_DIR": "/decisions",
+			x.EnvTopazCertsDir:  x.DefCertsDir,
+			x.EnvTopazDBDir:     x.DefDBDir,
+			x.EnvTopazDecisions: x.DefDecisionsDir,
 		},
 		Files: []testcontainers.ContainerFile{
 			{

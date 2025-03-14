@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	ver "github.com/aserto-dev/topaz/pkg/version"
 	"github.com/samber/lo"
 )
@@ -32,7 +33,7 @@ func defaultContainerTag() string {
 
 // Container returns the fully qualified container name (registry/image:tag).
 func Container(registry, image, tag string) string {
-	if container := os.Getenv("CONTAINER"); container != "" {
+	if container := os.Getenv(x.EnvContainer); container != "" {
 		return container
 	}
 
@@ -45,7 +46,7 @@ func Container(registry, image, tag string) string {
 
 // ContainerRegistry returns the container registry (host[:port]/repo).
 func ContainerRegistry() string {
-	if containerRegistry := os.Getenv("CONTAINER_REGISTRY"); containerRegistry != "" {
+	if containerRegistry := os.Getenv(x.EnvContainerRegistry); containerRegistry != "" {
 		return containerRegistry
 	}
 	if defaults.ContainerRegistry != "" {
@@ -56,7 +57,7 @@ func ContainerRegistry() string {
 
 // ContainerImage returns the container image name.
 func ContainerImage() string {
-	if containerImage := os.Getenv("CONTAINER_IMAGE"); containerImage != "" {
+	if containerImage := os.Getenv(x.EnvContainerName); containerImage != "" {
 		return containerImage
 	}
 	if defaults.ContainerImage != "" {
@@ -67,7 +68,7 @@ func ContainerImage() string {
 
 // ContainerTag returns the container tag (label or semantic version).
 func ContainerTag() string {
-	if containerTag := os.Getenv("CONTAINER_TAG"); containerTag != "" {
+	if containerTag := os.Getenv(x.EnvContainerTag); containerTag != "" {
 		return containerTag
 	}
 	if defaults.ContainerTag != "" {
@@ -79,7 +80,7 @@ func ContainerTag() string {
 
 // ContainerPlatform, returns the container platform for multi-platform capable servers.
 func ContainerPlatform() string {
-	if containerPlatform := os.Getenv("CONTAINER_PLATFORM"); containerPlatform != "" {
+	if containerPlatform := os.Getenv(x.EnvContainerPlatform); containerPlatform != "" {
 		return containerPlatform
 	}
 	if defaults.ContainerPlatform != "" {
@@ -90,7 +91,7 @@ func ContainerPlatform() string {
 
 // ContainerName returns the container instance name (docker run --name CONTAINER_NAME).
 func ContainerName(defaultConfigFile string) string {
-	if containerName := os.Getenv("CONTAINER_NAME"); containerName != "" {
+	if containerName := os.Getenv(x.EnvContainerName); containerName != "" {
 		return containerName
 	}
 	if strings.Contains(defaultConfigFile, "config.yaml") {

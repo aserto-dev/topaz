@@ -15,6 +15,7 @@ import (
 	decisionlog "github.com/aserto-dev/topaz/decision_log"
 	"github.com/aserto-dev/topaz/pkg/app/management"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decision_log"
 	"github.com/aserto-dev/topaz/plugins/edge"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -63,10 +64,10 @@ func NewRuntimeResolver(
 	}
 
 	if cfg.OPA.Config.Discovery != nil {
-		host := os.Getenv("ASERTO_HOSTNAME")
+		host := os.Getenv(x.EnvAsertoHostName)
 		if host == "" {
 			if host, err = os.Hostname(); err != nil {
-				host = os.Getenv("HOSTNAME")
+				host = os.Getenv(x.EnvHostName)
 				if host == "" {
 					panic("hostname not set")
 				}

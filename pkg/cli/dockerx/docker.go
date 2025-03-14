@@ -11,6 +11,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
@@ -29,7 +30,7 @@ const (
 func PolicyRoot() string {
 	const defaultPolicyRoot = ".policy"
 
-	policyRoot := os.Getenv("POLICY_FILE_STORE_ROOT")
+	policyRoot := os.Getenv(x.EnvPolicyFileStoreRoot)
 	if policyRoot == "" {
 		home, err := os.UserHomeDir()
 		if err != nil {
