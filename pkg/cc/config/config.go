@@ -30,13 +30,13 @@ const (
 
 type ServicesConfig struct {
 	Health struct {
-		ListenAddress string            `json:"listen_address"`
-		Certificates  *client.TLSConfig `json:"certs"`
+		ListenAddress string           `json:"listen_address"`
+		Certificates  client.TLSConfig `json:"certs"`
 	} `json:"health"`
 	Metrics struct {
-		ListenAddress string            `json:"listen_address"`
-		Certificates  *client.TLSConfig `json:"certs"`
-		ZPages        bool              `json:"zpages"`
+		ListenAddress string           `json:"listen_address"`
+		Certificates  client.TLSConfig `json:"certs"`
+		ZPages        bool             `json:"zpages"`
 	} `json:"metrics"`
 	Services map[string]*builder.API `json:"services"`
 }

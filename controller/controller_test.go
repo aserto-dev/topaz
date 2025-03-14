@@ -34,7 +34,7 @@ func TestEnabledController(t *testing.T) {
 	logger := zerolog.Nop()
 	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{
 		Enabled: true,
-		Server: &client.Config{
+		Server: client.Config{
 			Address: "localhost:1234",
 		},
 	}, func(ctx context.Context, c *api.Command) error { return nil })
@@ -47,7 +47,7 @@ func TestControllerLogMessages(t *testing.T) {
 	logger := zerolog.New(zerolog.ConsoleWriter{Out: buf, NoColor: true})
 	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{
 		Enabled: true,
-		Server: &client.Config{
+		Server: client.Config{
 			Address: "localhost:1234",
 		},
 	}, func(ctx context.Context, c *api.Command) error { return nil })
