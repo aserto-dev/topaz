@@ -83,7 +83,7 @@ func NewRuntimeResolver(
 		if len(details) < 1 {
 			return nil, func() {}, aerr.ErrBadRuntime.Msg("provided discovery resource not formatted correctly")
 		}
-		ctrl, err := controller.NewController(logger, details[0], host, cfg.ControllerConfig, func(cmdCtx context.Context, cmd *api.Command) error {
+		ctrl, err := controller.NewController(logger, details[0], host, &cfg.ControllerConfig, func(cmdCtx context.Context, cmd *api.Command) error {
 			return management.HandleCommand(cmdCtx, cmd, sidecarRuntime)
 		})
 		if err != nil {

@@ -5,6 +5,6 @@ import (
 )
 
 type Config struct {
-	Enabled bool           `json:"enabled"`
-	Server  *client.Config `json:"server"`
+	Enabled bool          `json:"enabled"`
+	Server  client.Config `json:"server"`
 }
