@@ -1,69 +1,46 @@
 package authorizer
 
 import (
+	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
-	"github.com/aserto-dev/topaz/pkg/cli/edit"
+	com "github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
-	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
-	"github.com/aserto-dev/topaz/pkg/cli/pb"
-	"github.com/aserto-dev/topaz/pkg/cli/prompter"
+
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type QueryCmd struct {
-	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to check permission request or '-' to read from stdin"`
-	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
+	com.RequestArgs
 	azc.Config
 }
 
+func (cmd *QueryCmd) BeforeReset(ctx *kong.Context) error {
+	fflag.UnHideFlags(ctx)
+	return nil
+}
+
 func (cmd *QueryCmd) Run(c *cc.CommonCtx) error {
-	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
-	}
-
-	azClient, err := azc.NewClient(c, &cmd.Config)
-	if err != nil {
-		return errors.Wrap(err, "failed to get authorizer client")
-	}
-
-	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
-		req, err := edit.Msg(cmd.template())
-		if err != nil {
-			return err
-		}
-		cmd.Request = req
-	}
-
-	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
-		p := prompter.New(cmd.template())
-		if err := p.Show(); err != nil {
-			return err
-		}
-		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
-	}
-
-	if cmd.Request == "" {
-		return errors.New("request argument is required")
-	}
-
-	var req authorizer.QueryRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
+	request, err := cmd.RequestArgs.Parse(c, cmd.template)
 	if err != nil {
 		return err
 	}
 
-	resp, err := azClient.Authorizer.Query(c.Context, &req)
+	client, err := azc.NewClient(c, &cmd.Config)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), resp)
+	return com.Invoke[authorizer.QueryRequest](
+		c,
+		client.IAuthorizer(),
+		authorizer.Authorizer_Query_FullMethodName,
+		request,
+	)
 }
 
 func (cmd *QueryCmd) template() proto.Message {

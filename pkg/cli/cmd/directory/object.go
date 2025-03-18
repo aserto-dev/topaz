@@ -7,7 +7,10 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	com "github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
+	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
+	"github.com/aserto-dev/topaz/pkg/cli/pb"
 
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
@@ -16,7 +19,7 @@ import (
 )
 
 type GetObjectCmd struct {
-	RequestArgs
+	com.RequestArgs
 	dsc.Config
 }
 
@@ -26,6 +29,10 @@ func (cmd *GetObjectCmd) BeforeReset(ctx *kong.Context) error {
 }
 
 func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
+	if cmd.Template {
+		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+	}
+
 	request, err := cmd.RequestArgs.Parse(c, cmd.template)
 	if err != nil {
 		return err
@@ -36,12 +43,20 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return Invoke[reader.GetObjectRequest](
-		c,
-		client.IReader(),
-		reader.Reader_GetObject_FullMethodName,
-		request,
-	)
+	resp, err := client.Reader.GetObject(c.Context, cmd.msg(request))
+	if err != nil {
+		return err
+	}
+
+	return jsonx.OutputJSONPB(c.StdOut(), resp)
+}
+
+func (cmd *GetObjectCmd) msg(request string) *reader.GetObjectRequest {
+	req := &reader.GetObjectRequest{}
+	if err := pb.UnmarshalRequest(request, req); err != nil {
+		return nil
+	}
+	return req
 }
 
 func (cmd *GetObjectCmd) template() proto.Message {
@@ -54,7 +69,7 @@ func (cmd *GetObjectCmd) template() proto.Message {
 }
 
 type SetObjectCmd struct {
-	RequestArgs
+	com.RequestArgs
 	dsc.Config
 }
 
@@ -74,12 +89,20 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return Invoke[writer.SetObjectRequest](
+	return com.Invoke[writer.SetObjectRequest](
 		c,
 		client.IWriter(),
 		writer.Writer_SetObject_FullMethodName,
 		request,
 	)
+}
+
+func (cmd *SetObjectCmd) msg(request string) proto.Message {
+	var req *writer.SetObjectRequest
+	if err := pb.UnmarshalRequest(request, req); err != nil {
+		return nil
+	}
+	return req
 }
 
 func (cmd *SetObjectCmd) template() proto.Message {
@@ -97,7 +120,7 @@ func (cmd *SetObjectCmd) template() proto.Message {
 }
 
 type DeleteObjectCmd struct {
-	RequestArgs
+	com.RequestArgs
 	dsc.Config
 }
 
@@ -117,7 +140,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return Invoke[writer.DeleteObjectRequest](
+	return com.Invoke[writer.DeleteObjectRequest](
 		c,
 		client.IWriter(),
 		writer.Writer_DeleteObject_FullMethodName,
@@ -134,7 +157,7 @@ func (cmd *DeleteObjectCmd) template() proto.Message {
 }
 
 type ListObjectsCmd struct {
-	RequestArgs
+	com.RequestArgs
 	dsc.Config
 }
 
@@ -154,7 +177,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return Invoke[reader.GetObjectsRequest](
+	return com.Invoke[reader.GetObjectsRequest](
 		c,
 		client.IReader(),
 		reader.Reader_GetObjects_FullMethodName,

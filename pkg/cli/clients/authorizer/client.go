@@ -5,12 +5,12 @@ import (
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
-	"github.com/pkg/errors"
-	"google.golang.org/grpc"
-
 	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+
+	"github.com/pkg/errors"
+	"google.golang.org/grpc"
 )
 
 type Config struct {
@@ -73,4 +73,20 @@ func (cfg *Config) ClientConfig() *client.Config {
 
 func (cfg *Config) CommandTimeout() time.Duration {
 	return cfg.Timeout
+}
+
+func (c *Client) IAuthorizer() grpc.ClientConnInterface {
+	r, ok := c.Authorizer.(grpc.ClientConnInterface)
+	if ok {
+		return r
+	}
+	return nil
+}
+
+func (c *Client) Invoke(ctx context.Context, method string, in, out any, opts ...grpc.CallOption) error {
+	r, ok := c.Authorizer.(grpc.ClientConnInterface)
+	if !ok {
+		return errors.New("failed to cast grpc.ClientConnInterface")
+	}
+	return r.Invoke(ctx, method, in, out, opts...)
 }

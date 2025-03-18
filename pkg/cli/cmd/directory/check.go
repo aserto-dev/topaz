@@ -5,13 +5,15 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	com "github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 )
 
 type CheckCmd struct {
-	RequestArgs
+	com.RequestArgs
 	dsc.Config
 }
 
@@ -31,7 +33,7 @@ func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return Invoke[reader.CheckRequest](
+	return com.Invoke[reader.CheckRequest](
 		c,
 		client.IReader(),
 		reader.Reader_Check_FullMethodName,

@@ -6,6 +6,7 @@ import (
 
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/version"
+
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"

@@ -7,14 +7,16 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	com "github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
+
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type GetRelationCmd struct {
-	RequestArgs
+	com.RequestArgs
 	dsc.Config
 }
 
@@ -34,7 +36,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return Invoke[reader.GetRelationRequest](
+	return com.Invoke[reader.GetRelationRequest](
 		c,
 		client.IReader(),
 		reader.Reader_GetRelation_FullMethodName,
@@ -55,7 +57,7 @@ func (cmd *GetRelationCmd) template() proto.Message {
 }
 
 type SetRelationCmd struct {
-	RequestArgs
+	com.RequestArgs
 	dsc.Config
 }
 
@@ -75,7 +77,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return Invoke[writer.SetRelationRequest](
+	return com.Invoke[writer.SetRelationRequest](
 		c,
 		client.IWriter(),
 		writer.Writer_SetRelation_FullMethodName,
@@ -100,7 +102,7 @@ func (cmd *SetRelationCmd) template() proto.Message {
 }
 
 type DeleteRelationCmd struct {
-	RequestArgs
+	com.RequestArgs
 	dsc.Config
 }
 
@@ -120,7 +122,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return Invoke[writer.DeleteRelationRequest](
+	return com.Invoke[writer.DeleteRelationRequest](
 		c,
 		client.IWriter(),
 		writer.Writer_DeleteRelation_FullMethodName,
@@ -140,7 +142,7 @@ func (cmd *DeleteRelationCmd) template() proto.Message {
 }
 
 type ListRelationsCmd struct {
-	RequestArgs
+	com.RequestArgs
 	dsc.Config
 }
 
@@ -160,7 +162,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	return Invoke[reader.GetRelationsRequest](
+	return com.Invoke[reader.GetRelationsRequest](
 		c,
 		client.IReader(),
 		reader.Reader_GetRelations_FullMethodName,

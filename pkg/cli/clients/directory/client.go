@@ -2,6 +2,7 @@ package directory
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
@@ -107,4 +108,26 @@ func (c *Client) IWriter() grpc.ClientConnInterface {
 		return r
 	}
 	return nil
+}
+
+func (c *Client) Invoke(ctx context.Context, method string, in, out any, opts ...grpc.CallOption) error {
+	var (
+		i  grpc.ClientConnInterface
+		ok bool
+	)
+
+	switch {
+	case strings.HasPrefix(method, "/aserto.directory.reader.v3.Reader/"):
+		i, ok = c.Reader.(grpc.ClientConnInterface)
+	case strings.HasPrefix(method, "/aserto.directory.writer.v3.Writer/"):
+		i, ok = c.Writer.(grpc.ClientConnInterface)
+	default:
+		i, ok = nil, false
+	}
+
+	if !ok {
+		return errors.New("failed to cast grpc.ClientConnInterface")
+	}
+
+	return i.Invoke(ctx, method, in, out, opts...)
 }

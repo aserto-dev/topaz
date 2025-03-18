@@ -65,32 +65,44 @@ linters:
     - copyloopvar
     # - cyclop
     - decorder
-    # - depguard
+    # - depguard    # disabled - we do not use depguard
     - dogsled
     - dupl
     - dupword
     - durationcheck
     - err113
+    - errcheck
     - errchkjson
     - errname
     - errorlint
     - exhaustive
+    # - exhaustruct
+    - exptostd
     - fatcontext
+    # - forbidigo     # disabled
     - forcetypeassert
     - funlen
+    # - gci           # disabled - we do not use gci for import ordering/formatting
+    # - ginkgolinter  # disabled - we do not use ginkgo
     - gocheckcompilerdirectives
-    - gochecknoinits
     # - gochecknoglobals
+    - gochecknoinits
+    - gochecksumtype
     # - gocognit
     - goconst
     - gocritic
     # - gocyclo
     - godot
+    - godox
     - gofmt
     - gofumpt
+    - goheader
     - goimports
+    - gomoddirectives
+    - gomodguard
     - goprintffuncname
     # - gosec
+    - gosimple
     - gosmopolitan
     - grouper
     - importas
@@ -108,7 +120,7 @@ linters:
     # - nilerr
     # - nilnil
     # - noctx
-    # - nolintlint # conflicts with gofumpt and gofmt automatic formatting, which inject a space like `// nolint:` vs the lint requirement `//nolint:`
+    # - nolintlint    # disabled - conflicts with gofumpt and gofmt automatic formatting, which inject a space like `// nolint:` vs the lint requirement `//nolint:`
     - nonamedreturns
     - perfsprint
     - prealloc
@@ -161,7 +173,11 @@ issues:
         - dupword
         - errorlint
         - forcetypeassert
+        - godox
         - lll
         - makezero
         - mnd
         - nonamedreturns
+    - path: pkg/app/tests/
+      linters:
+        - dupl

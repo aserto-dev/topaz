@@ -5,27 +5,33 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
+	com "github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/edit"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
 	"github.com/aserto-dev/topaz/pkg/cli/pb"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 	"github.com/aserto-dev/topaz/pkg/cli/table"
+
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
 type ListPoliciesCmd struct {
-	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to list request or '-' to read from stdin"`
-	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
-	Raw      bool   `name:"raw" help:"return raw request output"`
+	com.RequestArgs
+	Raw bool `name:"raw" help:"return raw request output"`
 	azc.Config
+}
+
+func (cmd *ListPoliciesCmd) BeforeReset(ctx *kong.Context) error {
+	fflag.UnHideFlags(ctx)
+	return nil
 }
 
 func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {

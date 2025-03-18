@@ -7,6 +7,7 @@ import (
 	"sync/atomic"
 
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+
 	"github.com/mattn/go-isatty"
 	"google.golang.org/grpc/codes"
 )
