@@ -459,7 +459,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	// trace (explanation)
 	if queryResult.Explanation != nil {
 		var v []interface{}
-		if err = json.Unmarshal(queryResult.Explanation, &v); err != nil {
+		if err := json.Unmarshal(queryResult.Explanation, &v); err != nil {
 			return resp, errors.Wrap(err, "unmarshal json")
 		}
 
@@ -615,7 +615,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 	// trace (explanation)
 	if compileResult.Explanation != nil {
 		var v []interface{}
-		if err = json.Unmarshal(compileResult.Explanation, &v); err != nil {
+		if err := json.Unmarshal(compileResult.Explanation, &v); err != nil {
 			return resp, errors.Wrap(err, "unmarshal json")
 		}
 
