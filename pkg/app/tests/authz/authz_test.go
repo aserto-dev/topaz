@@ -11,6 +11,7 @@ import (
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -30,9 +31,9 @@ func TestAuthZ(t *testing.T) {
 		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
-			"TOPAZ_CERTS_DIR":     "/certs",
-			"TOPAZ_DB_DIR":        "/data",
-			"TOPAZ_DECISIONS_DIR": "/decisions",
+			x.EnvTopazCertsDir:  x.DefCertsDir,
+			x.EnvTopazDBDir:     x.DefDBDir,
+			x.EnvTopazDecisions: x.DefDecisionsDir,
 		},
 		Files: []testcontainers.ContainerFile{
 			{
