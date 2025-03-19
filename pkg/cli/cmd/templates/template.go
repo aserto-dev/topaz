@@ -12,12 +12,37 @@ import (
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type TemplateCmd struct {
 	List    ListTemplatesCmd   `cmd:"" help:"list template"`
 	Install InstallTemplateCmd `cmd:"" help:"install template"`
 	Verify  VerifyTemplateCmd  `cmd:"" help:"verify template content links" hidden:""`
+}
+
+type CatalogArgs struct {
+	Catalog    string `enum:"classic,modern,custom" default:"${catalog_name}" env:"TOPAZ_CATALOG_NAME" help:"template catalog (classic, modern, custom)"`
+	CatalogURL string `optional:"" default:"${catalog_url}" env:"TOPAZ_CATALOG_URL" help:"custom template catalog URL"`
+}
+
+func (c *CatalogArgs) URL() (string, error) {
+	switch c.Catalog {
+	case "classic":
+		return x.ClassicCatalogURL, nil
+	case "modern":
+		return x.ModernCatalogURL, nil
+	case "custom":
+		if c.CatalogURL == "" {
+			return "", status.Error(codes.InvalidArgument, "--catalog-url not set, required argument with --catalog=custom")
+		}
+		return c.CatalogURL, nil
+	default:
+		return cc.GetTopazTemplateDir(), nil
+	}
 }
 
 const (

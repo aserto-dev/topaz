@@ -3,5 +3,7 @@ package x
 // Default constants
 
 const (
-	DefTopazTmplURL string = "https://topaz.sh/assets/templates/templates.json"
+	ClassicCatalogURL string = "https://topaz.sh/assets/templates/templates.json"
+	ModernCatalogURL  string = "https://topaz.sh/assets/templates/templates-v33.json"
+	CatalogName       string = "classic"
 )

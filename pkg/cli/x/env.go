@@ -32,4 +32,6 @@ const (
 	EnvContainerPlatform    string = "CONTAINER_PLATFORM"
 	EnvContainerName        string = "CONTAINER_NAME"
 	EnvPolicyFileStoreRoot  string = "POLICY_FILE_STORE_ROOT"
+	EnvTopazCatalogName     string = "TOPAZ_CATALOG_NAME"
+	EnvTopazCatalogURL      string = "TOPAZ_CATALOG_URL"
 )

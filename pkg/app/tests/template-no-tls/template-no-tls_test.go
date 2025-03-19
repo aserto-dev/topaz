@@ -85,7 +85,6 @@ var tcs = []string{
 
 	"../../../../assets/v32/citadel.json",
 	"../../../../assets/v32/api-auth.json",
-	// "../../../../assets/v32/api-gateway.json", // v32/api-gateway.json does not exist.
 	"../../../../assets/v32/gdrive.json",
 	"../../../../assets/v32/github.json",
 	"../../../../assets/v32/multi-tenant.json",
@@ -100,6 +99,7 @@ var tcs = []string{
 	"../../../../assets/v33/api-auth.json",
 	"../../../../assets/v33/api-gateway.json",
 	"../../../../assets/v33/gdrive.json",
+	"../../../../assets/v33/gdrive-scream.json",
 	"../../../../assets/v33/github.json",
 	"../../../../assets/v33/multi-tenant.json",
 	"../../../../assets/v33/simple-rbac.json",

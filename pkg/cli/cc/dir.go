@@ -50,12 +50,20 @@ func GetTopazTemplateDir() string {
 	return filepath.Clean(filepath.Join(xdg.DataHome, "topaz", "tmpl"))
 }
 
-// GetTopazTemplateURL returns the URL to the templates container, can be local or remote.
-func GetTopazTemplateURL() string {
+// TopazCatalogName returns default catalog preset name.
+func TopazCatalogName() string {
+	if catalogName := os.Getenv(x.EnvTopazCatalogName); catalogName != "" {
+		return catalogName
+	}
+	return x.CatalogName
+}
+
+// TopazCatalogURL returns the URL to the templates container, can be local or remote.
+func TopazCatalogURL() string {
 	if tmplURL := os.Getenv(x.EnvTopazTmplURL); tmplURL != "" {
 		return tmplURL
 	}
-	return x.DefTopazTmplURL
+	return x.ClassicCatalogURL
 }
 
 func EnsureDirs() error {

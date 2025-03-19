@@ -6,23 +6,28 @@ import (
 )
 
 type ListTemplatesCmd struct {
-	TemplatesURL string `optional:"" default:"${topaz_tmpl_url}" env:"TOPAZ_TMPL_URL" help:"URL of template catalog"`
+	CatalogArgs
 }
 
 func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
-	ctlg, err := getCatalog(cmd.TemplatesURL)
+	catalogURL, err := cmd.CatalogArgs.URL()
+	if err != nil {
+		return err
+	}
+
+	catalog, err := getCatalog(catalogURL)
 	if err != nil {
 		return err
 	}
 
 	maxWidth := 0
-	for n := range ctlg {
+	for n := range catalog {
 		maxWidth = max(maxWidth, len(n)+1)
 	}
 
 	tab := table.New(c.StdOut()).WithColumns(colName, colDescription, colDocumentation)
 	tab.WithTableNoAutoWrapText()
-	for n, t := range ctlg {
+	for n, t := range catalog {
 		tab.WithRow(n, t.ShortDescription, t.DocumentationURL)
 	}
 	tab.Do()
