@@ -7,22 +7,64 @@ import (
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/samber/lo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 const (
-	User       string = "user"
-	Identifier string = "identifier"
-	Identity   string = "identity"
+	User          string = "user"
+	DummyUser     string = "topaz-user"
+	Identifier    string = "identifier"
+	Identity      string = "identity"
+	DummyIdentity string = "topaz-identity"
+	Reason        string = "reason"
 )
 
-func ResolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity string) (*dsc3.Object, error) {
-	if obj, err := resolveIdentity(ctx, client, identity); err == nil {
-		return obj, nil
+type identityResolutionDirection int
+
+const (
+	// object_type:identity->subject_type:user (legacy).
+	identityToUser identityResolutionDirection = iota + 1
+	// object_type:user->subject_type:identity.
+	userToIdentity
+)
+
+func resolutionDirection(ctx context.Context, client dsr3.ReaderClient) identityResolutionDirection {
+	resp, _ := client.Check(ctx, &dsr3.CheckRequest{
+		ObjectType:  User,
+		ObjectId:    DummyUser,
+		Relation:    Identifier,
+		SubjectType: Identity,
+		SubjectId:   DummyIdentity,
+	})
+
+	reason, ok := resp.Context.Fields[Reason]
+	if ok && strings.HasPrefix(reason.GetStringValue(), derr.ErrRelationTypeNotFound.Code+" "+derr.ErrRelationTypeNotFound.Message) {
+		return identityToUser
 	}
-	return resolveIdentityLegacy(ctx, client, identity)
+
+	return userToIdentity
+}
+
+func ResolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity string) (*dsc3.Object, error) {
+	switch resolutionDirection(ctx, client) {
+	// object_type:identity->subject_type:user (legacy).
+	case identityToUser:
+		return resolveIdentityLegacy(ctx, client, identity)
+
+	// object_type:user->subject_type:identity.
+	case userToIdentity:
+		return resolveIdentity(ctx, client, identity)
+
+	// fallback to validate both paths.
+	default:
+		if obj, err := resolveIdentity(ctx, client, identity); err == nil {
+			return obj, nil
+		}
+		return resolveIdentityLegacy(ctx, client, identity)
+	}
 }
 
 // resolveIdentity, resolves object_type:user->subject_type:identity (inverted identity).

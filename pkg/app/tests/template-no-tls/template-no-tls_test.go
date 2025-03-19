@@ -80,19 +80,29 @@ func TestTemplatesNoTLS(t *testing.T) {
 }
 
 var tcs = []string{
+	"../../../../assets/v32/acmecorp.json",
+	"../../../../assets/v32/peoplefinder.json",
+
+	"../../../../assets/v32/citadel.json",
+	"../../../../assets/v32/api-auth.json",
+	// "../../../../assets/v32/api-gateway.json", // v32/api-gateway.json does not exist.
+	"../../../../assets/v32/gdrive.json",
+	"../../../../assets/v32/github.json",
+	"../../../../assets/v32/multi-tenant.json",
+	"../../../../assets/v32/simple-rbac.json",
+	"../../../../assets/v32/slack.json",
+	"../../../../assets/v32/todo.json",
+
 	"../../../../assets/v33/acmecorp.json",
-	"../../../../assets/v33/api-auth.json",
+	"../../../../assets/v33/peoplefinder.json",
+
 	"../../../../assets/v33/citadel.json",
+	"../../../../assets/v33/api-auth.json",
+	"../../../../assets/v33/api-gateway.json",
 	"../../../../assets/v33/gdrive.json",
 	"../../../../assets/v33/github.json",
 	"../../../../assets/v33/multi-tenant.json",
-	"../../../../assets/v33/peoplefinder.json",
 	"../../../../assets/v33/simple-rbac.json",
 	"../../../../assets/v33/slack.json",
 	"../../../../assets/v33/todo.json",
-	"../../../../assets/v32/acmecorp.json",
-	"../../../../assets/v32/citadel.json",
-	"../../../../assets/v32/gdrive.json",
-	"../../../../assets/v33/gdrive-scream.json",
-	"../../../../assets/v33/api-gateway.json",
 }
