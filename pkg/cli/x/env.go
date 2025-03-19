@@ -1,0 +1,35 @@
+package x
+
+// Environment variable name constants
+
+const (
+	EnvTopazDir             string = "TOPAZ_DIR"
+	EnvTopazCfgDir          string = "TOPAZ_CFG_DIR"
+	EnvTopazCertsDir        string = "TOPAZ_CERTS_DIR"
+	EnvTopazDBDir           string = "TOPAZ_DB_DIR"
+	EnvTopazTmplDir         string = "TOPAZ_TMPL_DIR"
+	EnvTopazTmplURL         string = "TOPAZ_TMPL_URL"
+	EnvTopazDecisions       string = "TOPAZ_DECISIONS_DIR"
+	EnvTopazAuthorizerSvc   string = "TOPAZ_AUTHORIZER_SVC"
+	EnvTopazAuthorizerKey   string = "TOPAZ_AUTHORIZER_KEY"
+	EnvTopazAuthorizerToken string = "TOPAZ_AUTHORIZER_TOKEN"
+	EnvTopazDirectorySvc    string = "TOPAZ_DIRECTORY_SVC"
+	EnvTopazDirectoryKey    string = "TOPAZ_DIRECTORY_KEY"
+	EnvTopazDirectoryToken  string = "TOPAZ_DIRECTORY_TOKEN"
+	EnvTopazInsecure        string = "TOPAZ_INSECURE"
+	EnvTopazPlaintext       string = "TOPAZ_PLAINTEXT"
+	EnvTopazTimeout         string = "TOPAZ_TIMEOUT"
+	EnvTopazNoCheck         string = "TOPAZ_NO_CHECK"
+	EnvTopazNoColor         string = "TOPAZ_NO_COLOR"
+	EnvTopazFeatureFlag     string = "TOPAZ_FFLAG"
+	EnvAsertoTenantID       string = "ASERTO_TENANT_ID"
+	EnvAsertoHostName       string = "ASERTO_HOSTNAME"
+	EnvHostName             string = "HOSTNAME"
+	EnvContainer            string = "CONTAINER"
+	EnvContainerRegistry    string = "CONTAINER_REGISTRY"
+	EnvContainerImage       string = "CONTAINER_IMAGE"
+	EnvContainerTag         string = "CONTAINER_TAG"
+	EnvContainerPlatform    string = "CONTAINER_PLATFORM"
+	EnvContainerName        string = "CONTAINER_NAME"
+	EnvPolicyFileStoreRoot  string = "POLICY_FILE_STORE_ROOT"
+)

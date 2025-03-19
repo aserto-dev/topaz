@@ -93,6 +93,7 @@ func run() (exitCode int) {
 			"topaz_cfg_dir":      cc.GetTopazCfgDir(),
 			"topaz_db_dir":       cc.GetTopazDataDir(),
 			"topaz_tmpl_dir":     cc.GetTopazTemplateDir(),
+			"topaz_tmpl_url":     cc.GetTopazTemplateURL(),
 			"container_registry": cc.ContainerRegistry(),
 			"container_image":    cc.ContainerImage(),
 			"container_tag":      cc.ContainerTag(),
@@ -117,7 +118,7 @@ func run() (exitCode int) {
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
 
 	if cli.NoColor {
-		os.Setenv("TOPAZ_NO_COLOR", "TRUE")
+		os.Setenv(x.EnvTopazNoColor, strconv.FormatBool(true))
 	}
 
 	if err := cc.EnsureDirs(); err != nil {
