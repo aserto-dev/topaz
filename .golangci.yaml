@@ -119,6 +119,7 @@ issues:
     - path: _test\.go
       linters:
       - gomnd
+      - funlen
     # https://github.com/go-critic/go-critic/issues/926
     - text: "unnecessaryDefer:"
       linters:

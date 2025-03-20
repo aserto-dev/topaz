@@ -24,6 +24,30 @@ func TestPrompter(t *testing.T) {
 		t.Skip("skip interactive tests")
 	}
 
+	reqs := directoryRequests()
+	reqs = append(reqs, accessRequests()...)
+
+	for _, req := range reqs {
+		form := prompter.New(req)
+		require.NotNil(t, form)
+
+		if err := form.Show(); err != nil {
+			require.ErrorIs(t, err, prompter.ErrCancelled)
+		}
+
+		fmt.Fprint(os.Stderr, protojson.MarshalOptions{
+			Multiline:         true,
+			Indent:            "  ",
+			AllowPartial:      true,
+			UseProtoNames:     true,
+			UseEnumNumbers:    false,
+			EmitUnpopulated:   true,
+			EmitDefaultValues: true,
+		}.Format(form.Req()))
+	}
+}
+
+func directoryRequests() []proto.Message {
 	reqs := []proto.Message{
 		&reader.GetObjectRequest{
 			Page: &common.PaginationRequest{
@@ -56,15 +80,18 @@ func TestPrompter(t *testing.T) {
 			Relation: &common.Relation{},
 		},
 		&writer.DeleteRelationRequest{},
-
 		&reader.CheckRequest{},
 		&reader.ChecksRequest{
 			Default: &reader.CheckRequest{},
 			Checks:  []*reader.CheckRequest{},
 		},
-
 		&reader.GetGraphRequest{},
+	}
+	return reqs
+}
 
+func accessRequests() []proto.Message {
+	reqs := []proto.Message{
 		&access.EvaluationRequest{
 			Subject: &access.Subject{
 				Type:       "",
@@ -174,24 +201,5 @@ func TestPrompter(t *testing.T) {
 			Page:    &access.Page{},
 		},
 	}
-
-	for _, req := range reqs {
-		form := prompter.New(req)
-		require.NotNil(t, form)
-
-		if err := form.Show(); err != nil {
-			require.ErrorIs(t, err, prompter.ErrCancelled)
-			// require.NoError(t, err)
-		}
-
-		fmt.Fprint(os.Stderr, protojson.MarshalOptions{
-			Multiline:         true,
-			Indent:            "  ",
-			AllowPartial:      true,
-			UseProtoNames:     true,
-			UseEnumNumbers:    false,
-			EmitUnpopulated:   true,
-			EmitDefaultValues: true,
-		}.Format(form.Req()))
-	}
+	return reqs
 }
