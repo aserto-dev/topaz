@@ -186,6 +186,13 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 				continue
 			}
 
+			if strings.HasSuffix(string(fd.FullName()), ".context") {
+				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
+					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
+				})
+				continue
+			}
+
 			cm := msg.ProtoReflect().Get(fd).Message()
 			_ = f.addFields(cm.Interface(), fields.Get(c).Message(), path)
 
