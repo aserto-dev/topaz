@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/access"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/authorizer"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
@@ -24,8 +25,9 @@ type CLI struct {
 	Run        topaz.RunCmd             `cmd:"" help:"start topaz instance (console mode)"`
 	Templates  templates.TemplateCmd    `cmd:"" help:"template commands"`
 	Console    topaz.ConsoleCmd         `cmd:"" help:"open topaz console in the browser"`
-	Directory  directory.DirectoryCmd   `cmd:"" aliases:"ds" help:"directory commands"`
-	Authorizer authorizer.AuthorizerCmd `cmd:"" aliases:"az" help:"authorizer commands"`
+	Directory  directory.DirectoryCmd   `cmd:"" aliases:"ds" help:"directory service commands"`
+	Authorizer authorizer.AuthorizerCmd `cmd:"" aliases:"az" help:"authorizer service commands"`
+	Access     access.AccessCmd         `cmd:"" aliases:"ac" help:"access service commands "`
 	Certs      certs.CertsCmd           `cmd:"" help:"certificate management"`
 	Install    topaz.InstallCmd         `cmd:"" help:"install topaz container"`
 	Uninstall  topaz.UninstallCmd       `cmd:"" help:"uninstall topaz container"`

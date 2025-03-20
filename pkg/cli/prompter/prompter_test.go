@@ -10,7 +10,9 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
+	"github.com/authzen/access.go/api/access/v1"
 
+	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -56,12 +58,131 @@ func TestPrompter(t *testing.T) {
 		&writer.DeleteRelationRequest{},
 
 		&reader.CheckRequest{},
+		&reader.ChecksRequest{
+			Default: &reader.CheckRequest{},
+			Checks:  []*reader.CheckRequest{},
+		},
+
 		&reader.GetGraphRequest{},
+
+		&access.EvaluationRequest{
+			Subject: &access.Subject{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Action: &access.Action{
+				Name:       "",
+				Properties: &structpb.Struct{},
+			},
+			Resource: &access.Resource{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Context: &structpb.Struct{},
+		},
+		&access.EvaluationsRequest{
+			Subject: &access.Subject{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Action: &access.Action{
+				Name:       "",
+				Properties: &structpb.Struct{},
+			},
+			Resource: &access.Resource{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Context: &structpb.Struct{},
+			Evaluations: []*access.EvaluationRequest{
+				{
+					Subject: &access.Subject{
+						Type:       "",
+						Id:         "",
+						Properties: &structpb.Struct{},
+					},
+					Action: &access.Action{
+						Name:       "",
+						Properties: &structpb.Struct{},
+					},
+					Resource: &access.Resource{
+						Type:       "",
+						Id:         "",
+						Properties: &structpb.Struct{},
+					},
+					Context: &structpb.Struct{},
+				},
+			},
+			Options: &structpb.Struct{},
+		},
+		&access.ActionSearchRequest{
+			Subject: &access.Subject{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Action: &access.Action{
+				Name:       "",
+				Properties: &structpb.Struct{},
+			},
+			Resource: &access.Resource{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Context: &structpb.Struct{},
+			Page:    &access.Page{},
+		},
+		&access.ResourceSearchRequest{
+			Subject: &access.Subject{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Action: &access.Action{
+				Name:       "",
+				Properties: &structpb.Struct{},
+			},
+			Resource: &access.Resource{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Context: &structpb.Struct{},
+			Page:    &access.Page{},
+		},
+		&access.SubjectSearchRequest{
+			Subject: &access.Subject{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Action: &access.Action{
+				Name:       "",
+				Properties: &structpb.Struct{},
+			},
+			Resource: &access.Resource{
+				Type:       "",
+				Id:         "",
+				Properties: &structpb.Struct{},
+			},
+			Context: &structpb.Struct{},
+			Page:    &access.Page{},
+		},
 	}
 
 	for _, req := range reqs {
 		form := prompter.New(req)
-		_ = form.Show()
+		require.NotNil(t, form)
+
+		if err := form.Show(); err != nil {
+			require.ErrorIs(t, err, prompter.ErrCancelled)
+			// require.NoError(t, err)
+		}
 
 		fmt.Fprint(os.Stderr, protojson.MarshalOptions{
 			Multiline:         true,

@@ -41,7 +41,6 @@ gover:
 .PHONY: build
 build: gover
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@(go env GOVERSION | grep "go${GO_VER}") || (echo "go version check failed expected go${GO_VER} got $$(go env GOVERSION)"; exit 1)
 	@${EXT_BIN_DIR}/goreleaser build --clean --snapshot --single-target
 
 PHONY: go-mod-tidy
