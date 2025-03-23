@@ -12,7 +12,7 @@ import (
 	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
-	builder "github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/pkg/service/builder"
 
 	dsa1 "github.com/authzen/access.go/api/access/v1"
 
