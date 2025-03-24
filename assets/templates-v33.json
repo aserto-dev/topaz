@@ -62,5 +62,13 @@
     "docs_url": "https://docs.aserto.com/docs/quickstarts/multi-tenant/overview",
     "topaz_url": "v33/multi-tenant.json",
     "hosted_url": "v33/hosted/multi-tenant.json"
+  },
+  "api-gateway": {
+    "title": "API Gateway",
+    "short_description": "API Gateway authorization template",
+    "description": "The API Gateway authorization template defines services and routes. You can evolve it to fit your needs.",
+    "docs_url": "https://docs.aserto.com/docs/quickstarts/api-gateway/overview",
+    "topaz_url": "v33/api-gateway.json",
+    "hosted_url": "v33/hosted/api-gateway.json"
   }
 }
