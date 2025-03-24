@@ -61,7 +61,7 @@ snapshot:
 .PHONY: generate
 generate:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@GOBIN=${PWD}/${EXT_BIN_DIR} go generate ./...
+	@GOBIN=${EXT_BIN_DIR} go generate ./...
 
 .PHONY: lint
 lint: gover
@@ -196,7 +196,7 @@ install-goreleaser: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 .PHONY: install-wire
 install-wire: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@GOBIN=${PWD}/${EXT_BIN_DIR} go install github.com/google/wire/cmd/wire@v${WIRE_VER}
+	@GOBIN=${EXT_BIN_DIR} go install github.com/google/wire/cmd/wire@v${WIRE_VER}
 
 .PHONY: install-check2decision
 install-check2decision: ${EXT_TMP_DIR} ${EXT_BIN_DIR}

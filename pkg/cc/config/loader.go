@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
-	builder "github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 )
