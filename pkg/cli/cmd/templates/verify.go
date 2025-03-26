@@ -34,12 +34,12 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 		}
 		{
 			absURL := tmpl.AbsURL(tmpl.Assets.Manifest)
-			exists, parsed, err := validateManifest(absURL)
+			v := validateManifest(absURL)
 			errStr := ""
-			if err != nil {
-				errStr = err.Error()
+			if v.err != nil {
+				errStr = v.err.Error()
 			}
-			tab.WithRow(tmplName, absURL, strconv.FormatBool(exists), strconv.FormatBool(parsed), errStr)
+			tab.WithRow(tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr)
 		}
 		{
 			assets := []string{}
@@ -49,12 +49,12 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 
 			for _, assetURL := range assets {
 				absURL := tmpl.AbsURL(assetURL)
-				exists, parsed, err := validateJSON(absURL)
+				v := validateJSON(absURL)
 				errStr := ""
-				if err != nil {
-					errStr = err.Error()
+				if v.err != nil {
+					errStr = v.err.Error()
 				}
-				tab.WithRow(tmplName, absURL, strconv.FormatBool(exists), strconv.FormatBool(parsed), errStr)
+				tab.WithRow(tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr)
 			}
 		}
 	}
@@ -64,29 +64,35 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	return nil
 }
 
-func validateManifest(absURL string) (exists, parsed bool, err error) {
+type valid struct {
+	exists bool
+	parsed bool
+	err    error
+}
+
+func validateManifest(absURL string) valid {
 	b, err := getBytes(absURL)
 	if err != nil {
-		return false, false, err
+		return valid{exists: false, parsed: false, err: err}
 	}
 
 	if _, err := v3.Load(bytes.NewReader(b)); err != nil {
-		return true, false, err
+		return valid{exists: true, parsed: false, err: err}
 	}
 
-	return true, true, nil
+	return valid{exists: true, parsed: true, err: nil}
 }
 
-func validateJSON(absURL string) (exists, parsed bool, err error) {
+func validateJSON(absURL string) valid {
 	b, err := getBytes(absURL)
 	if err != nil {
-		return false, false, err
+		return valid{exists: false, parsed: false, err: err}
 	}
 
 	var v map[string]interface{}
 	if err := json.NewDecoder(bytes.NewReader(b)).Decode(&v); err != nil {
-		return true, false, err
+		return valid{exists: true, parsed: false, err: err}
 	}
 
-	return true, true, nil
+	return valid{exists: true, parsed: true, err: nil}
 }
