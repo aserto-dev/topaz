@@ -3,7 +3,7 @@ package templates
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"strconv"
 
 	v3 "github.com/aserto-dev/azm/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -39,7 +39,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 			if err != nil {
 				errStr = err.Error()
 			}
-			tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+			tab.WithRow(tmplName, absURL, strconv.FormatBool(exists), strconv.FormatBool(parsed), errStr)
 		}
 		{
 			assets := []string{}
@@ -54,7 +54,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 				if err != nil {
 					errStr = err.Error()
 				}
-				tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+				tab.WithRow(tmplName, absURL, strconv.FormatBool(exists), strconv.FormatBool(parsed), errStr)
 			}
 		}
 	}

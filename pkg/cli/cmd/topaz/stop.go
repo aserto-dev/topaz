@@ -3,6 +3,7 @@ package topaz
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -38,7 +39,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 			if cmd.Wait {
 				var ports []string
 				for _, port := range container.Ports {
-					ports = append(ports, fmt.Sprintf("%d", port.PublicPort))
+					ports = append(ports, strconv.FormatUint(uint64(port.PublicPort), 10))
 				}
 				if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
 					return err

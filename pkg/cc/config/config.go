@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"io"
 	"os"
 
@@ -202,7 +201,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 		if len(existingFiles) == 0 {
 			if config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
 				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  fmt.Sprintf("%s-grpc", commonName),
+					CommonName:  commonName + "-grpc",
 					CertKeyPath: config.GRPC.Certs.Key,
 					CertPath:    config.GRPC.Certs.Cert,
 					CertCAPath:  config.GRPC.Certs.CA,
@@ -215,7 +214,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 
 			if config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
 				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  fmt.Sprintf("%s-gateway", commonName),
+					CommonName:  commonName + "-gateway",
 					CertKeyPath: config.Gateway.Certs.Key,
 					CertPath:    config.Gateway.Certs.Cert,
 					CertCAPath:  config.Gateway.Certs.CA,
