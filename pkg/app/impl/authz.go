@@ -126,7 +126,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 	queryStmt := strings.Builder{}
 	r := 0
-	for i := 0; i < len(listPolicies); i++ {
+	for i := range listPolicies {
 		for _, rule := range listPolicies[i].AST.Rules {
 			if !strings.HasPrefix(listPolicies[i].AST.Package.Path.String(), "data."+req.PolicyContext.Path) {
 				continue

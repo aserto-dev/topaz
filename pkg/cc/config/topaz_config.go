@@ -123,8 +123,8 @@ func setDefaultCallsAuthz(cfg *Config) {
 	// and fix them up once we load the config, because of this bug:
 	// https://github.com/spf13/viper/issues/324
 	// Keys also become lowercase
-	for i := 0; i < len(cfg.Auth.Options.Overrides); i++ {
-		for j := 0; j < len(cfg.Auth.Options.Overrides[i].Paths); j++ {
+	for i := range cfg.Auth.Options.Overrides {
+		for j := range cfg.Auth.Options.Overrides[i].Paths {
 			cfg.Auth.Options.Overrides[i].Paths[j] = strings.ToLower(strings.ReplaceAll(cfg.Auth.Options.Overrides[i].Paths[j], "|", "."))
 		}
 	}

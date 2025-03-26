@@ -128,7 +128,7 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 
 	runner.results = NewTestResults(assertions.Assertions)
 
-	for i := 0; i < len(assertions.Assertions); i++ {
+	for i := range assertions.Assertions {
 		var msg structpb.Struct
 		if err := pbUnmarshal.Unmarshal(assertions.Assertions[i], &msg); err != nil {
 			return err

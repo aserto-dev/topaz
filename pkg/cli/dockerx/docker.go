@@ -92,7 +92,7 @@ func (dc *DockerClient) RemoveImage(img string) error {
 		return err
 	}
 
-	for i := 0; i < len(images); i++ {
+	for i := range images {
 		_, err := dc.cli.ImageRemove(dc.ctx, images[i].ID, image.RemoveOptions{Force: true})
 		if err != nil {
 			return err
@@ -134,7 +134,7 @@ func (dc *DockerClient) Stop(name string) error {
 	}
 
 	waitTimeout := 10
-	for i := 0; i < len(containers); i++ {
+	for i := range containers {
 		if err := dc.cli.ContainerStop(dc.ctx, containers[i].ID, container.StopOptions{Timeout: &waitTimeout}); err != nil {
 			return err
 		}

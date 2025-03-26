@@ -83,11 +83,13 @@ func (f *prompt) init() error {
 		f.app.Stop()
 	})
 
-	c := f.form.GetFormItemCount()
 	maxLabel := 0
-	for i := 0; i < c; i++ {
+
+	c := f.form.GetFormItemCount()
+	for i := range c {
 		maxLabel = max(maxLabel, len(f.form.GetFormItem(i).GetLabel()))
 	}
+
 	width := maxLabel + 6 + 64
 	f.form.SetRect(0, 0, width, ((c+3)*2)-1)
 
@@ -102,7 +104,7 @@ var (
 func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor, parent []string) error {
 	fields := md.Fields()
 
-	for i := 0; i < fields.Len(); i++ {
+	for i := range fields.Len() {
 		c := i
 		path := append(parent, fields.Get(i).TextName()) //nolint: gocritic
 		fieldName := strings.Join(path, ".")
@@ -143,7 +145,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 		case protoreflect.EnumKind:
 			options := []string{}
 			lookup := map[string]int32{}
-			for v := 0; v < fields.Get(i).Enum().Values().Len(); v++ {
+			for v := range fields.Get(i).Enum().Values().Len() {
 				name := string(fields.Get(i).Enum().Values().Get(v).Name())
 				number := int32(fields.Get(i).Enum().Values().Get(v).Number())
 				options = append(options, name)

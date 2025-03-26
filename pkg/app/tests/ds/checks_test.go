@@ -33,7 +33,7 @@ func testChecks(ctx context.Context, dsClient dsr3.ReaderClient) func(*testing.T
 
 				assert.Equal(t, len(tc.req.Checks), len(resp.Checks))
 
-				for i := 0; i < len(tc.resp.Checks); i++ {
+				for i := range tc.resp.Checks {
 					require.Equal(t, tc.resp.Checks[i].GetCheck(), resp.Checks[i].GetCheck(), "i=%d", i)
 					if tc.resp.Checks[i].Context == nil {
 						continue
