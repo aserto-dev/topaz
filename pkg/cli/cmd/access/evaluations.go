@@ -12,7 +12,6 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
@@ -63,7 +62,7 @@ func (cmd *EvaluationsCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *EvaluationsCmd) template() proto.Message {
+func (cmd *EvaluationsCmd) template() *dsa1.EvaluationsRequest {
 	return &dsa1.EvaluationsRequest{
 		Subject: &dsa1.Subject{
 			Type:       "",

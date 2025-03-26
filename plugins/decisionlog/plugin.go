@@ -4,7 +4,7 @@ import (
 	"context"
 
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	decisionlog "github.com/aserto-dev/topaz/decision_log"
+	"github.com/aserto-dev/topaz/decisionlog"
 
 	"github.com/open-policy-agent/opa/v1/plugins"
 )

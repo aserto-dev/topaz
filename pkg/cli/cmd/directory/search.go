@@ -11,7 +11,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/proto"
 )
 
 type SearchCmd struct {
@@ -65,7 +64,7 @@ func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *SearchCmd) template() proto.Message {
+func (cmd *SearchCmd) template() *reader.GetGraphRequest {
 	return &reader.GetGraphRequest{
 		ObjectType:      "",
 		ObjectId:        "",

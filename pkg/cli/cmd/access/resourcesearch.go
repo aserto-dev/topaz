@@ -11,7 +11,6 @@ import (
 	dsa1 "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
@@ -66,7 +65,7 @@ func (cmd *ResourceSearchCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *ResourceSearchCmd) template() proto.Message {
+func (cmd *ResourceSearchCmd) template() *dsa1.ResourceSearchRequest {
 	return &dsa1.ResourceSearchRequest{
 		Subject: &dsa1.Subject{
 			Type:       "",

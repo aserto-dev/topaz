@@ -11,7 +11,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (c *Client) GetManifest(ctx context.Context) (io.Reader, error) {
+func (c *Client) GetManifest(ctx context.Context) (*bytes.Reader, error) {
 	stream, err := c.Model.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, err

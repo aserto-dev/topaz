@@ -21,14 +21,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-type EdgeDir struct {
-	dir *directory.Directory
-}
-
-const (
-	EnvTopazAuthZEN = "TOPAZ_AUTHZEN"
-)
-
 const (
 	modelService    = "model"
 	readerService   = "reader"
@@ -38,7 +30,13 @@ const (
 	accessService   = "access"
 )
 
-func NewEdgeDir(edge *directory.Directory) (ServiceTypes, error) {
+type EdgeDir struct {
+	dir *directory.Directory
+}
+
+var _ ServiceTypes = (*EdgeDir)(nil)
+
+func NewEdgeDir(edge *directory.Directory) (*EdgeDir, error) {
 	return &EdgeDir{
 		dir: edge,
 	}, nil

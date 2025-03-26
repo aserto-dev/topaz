@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"sync"
@@ -156,10 +155,10 @@ func setDefaults(ctx *CommonCtx) {
 	})
 }
 
-func (c *CommonCtx) StdOut() io.Writer {
+func (c *CommonCtx) StdOut() *os.File {
 	return c.std.StdOut()
 }
 
-func (c *CommonCtx) StdErr() io.Writer {
+func (c *CommonCtx) StdErr() *os.File {
 	return c.std.StdErr()
 }

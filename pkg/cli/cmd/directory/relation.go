@@ -12,7 +12,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/pb"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -67,7 +66,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *GetRelationCmd) template() proto.Message {
+func (cmd *GetRelationCmd) template() *reader.GetRelationRequest {
 	return &reader.GetRelationRequest{
 		ObjectType:      "",
 		ObjectId:        "",
@@ -130,7 +129,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *SetRelationCmd) template() proto.Message {
+func (cmd *SetRelationCmd) template() *writer.SetRelationRequest {
 	return &writer.SetRelationRequest{
 		Relation: &common.Relation{
 			ObjectType:      "",
@@ -197,7 +196,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *DeleteRelationCmd) template() proto.Message {
+func (cmd *DeleteRelationCmd) template() *writer.DeleteRelationRequest {
 	return &writer.DeleteRelationRequest{
 		ObjectType:      "",
 		ObjectId:        "",
@@ -259,7 +258,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *ListRelationsCmd) template() proto.Message {
+func (cmd *ListRelationsCmd) template() *reader.GetRelationsRequest {
 	return &reader.GetRelationsRequest{
 		ObjectType:      "",
 		ObjectId:        "",

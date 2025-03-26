@@ -18,6 +18,10 @@ import (
 	"google.golang.org/grpc"
 )
 
+const (
+	authorizerService = "authorizer"
+)
+
 type Authorizer struct {
 	Resolver         *resolvers.Resolvers
 	AuthorizerServer *impl.AuthorizerServer
@@ -26,11 +30,9 @@ type Authorizer struct {
 	opts []grpc.ServerOption
 }
 
-const (
-	authorizerService = "authorizer"
-)
+var _ ServiceTypes = (*Authorizer)(nil)
 
-func NewAuthorizer(ctx context.Context, cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
+func NewAuthorizer(ctx context.Context, cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (*Authorizer, error) {
 	if cfg.GRPC.Certs.HasCert() {
 		tlsCreds, err := cfg.GRPC.Certs.ServerCredentials()
 		if err != nil {

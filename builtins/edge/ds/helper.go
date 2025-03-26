@@ -80,7 +80,7 @@ func traceError(bctx *topdown.BuiltinContext, fnName string, err error) {
 	}
 }
 
-func ProtoToInterface(msg proto.Message) (interface{}, error) {
+func ProtoToInterface(msg proto.Message) (any, error) {
 	b, err := protojson.MarshalOptions{
 		Multiline:       false,
 		Indent:          "",
@@ -93,7 +93,7 @@ func ProtoToInterface(msg proto.Message) (interface{}, error) {
 		return nil, err
 	}
 
-	var v interface{}
+	var v any
 	if err := json.Unmarshal(b, &v); err != nil {
 		return nil, err
 	}

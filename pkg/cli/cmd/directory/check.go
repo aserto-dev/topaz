@@ -10,7 +10,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/pb"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/proto"
 )
 
 type CheckCmd struct {
@@ -64,7 +63,7 @@ func (cmd *CheckCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *CheckCmd) template() proto.Message {
+func (cmd *CheckCmd) template() *reader.CheckRequest {
 	return &reader.CheckRequest{
 		ObjectType:  "",
 		ObjectId:    "",

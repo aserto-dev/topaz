@@ -12,13 +12,15 @@ import (
 	"google.golang.org/grpc"
 )
 
-type ConsoleService struct{}
-
 const (
 	consoleService = "console"
 )
 
-func NewConsole() ServiceTypes {
+type ConsoleService struct{}
+
+var _ ServiceTypes = (*ConsoleService)(nil)
+
+func NewConsole() *ConsoleService {
 	return &ConsoleService{}
 }
 

@@ -132,7 +132,7 @@ func testManifest(addr string) func(*testing.T) {
 	}
 }
 
-func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, io.Reader, error) {
+func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, *bytes.Reader, error) {
 	stream, err := dsm.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, nil, err

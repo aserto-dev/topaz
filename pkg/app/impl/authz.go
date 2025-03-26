@@ -15,7 +15,7 @@ import (
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/header"
 	runtime "github.com/aserto-dev/runtime"
-	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decision_log"
+	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decisionlog"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/version"
@@ -762,7 +762,7 @@ func TraceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
 
 // convert, explicitly converts from proto message interface{} in order
 // to preserve enum values as strings when marshaled to JSON.
-func convert(msg proto.Message) interface{} {
+func convert(msg proto.Message) any {
 	b, err := protojson.MarshalOptions{
 		Multiline:       false,
 		Indent:          "  ",
@@ -775,7 +775,7 @@ func convert(msg proto.Message) interface{} {
 		return nil
 	}
 
-	var v interface{}
+	var v any
 	if err := json.Unmarshal(b, &v); err != nil {
 		return nil
 	}

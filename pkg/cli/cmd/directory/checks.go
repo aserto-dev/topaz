@@ -12,7 +12,6 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/proto"
 )
 
 type ChecksCmd struct {
@@ -62,7 +61,7 @@ func (cmd *ChecksCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *ChecksCmd) template() proto.Message {
+func (cmd *ChecksCmd) template() *reader.ChecksRequest {
 	return &reader.ChecksRequest{
 		Default: &reader.CheckRequest{
 			ObjectType:  "",

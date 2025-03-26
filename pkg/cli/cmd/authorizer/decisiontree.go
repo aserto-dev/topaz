@@ -9,7 +9,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/pb"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
@@ -67,7 +66,7 @@ func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *DecisionTreeCmd) template() proto.Message {
+func (cmd *DecisionTreeCmd) template() *authorizer.DecisionTreeRequest {
 	return &authorizer.DecisionTreeRequest{
 		PolicyContext: &api.PolicyContext{
 			Path:      "",

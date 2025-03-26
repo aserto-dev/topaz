@@ -11,7 +11,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/pb"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
@@ -66,7 +65,7 @@ func (cmd *EvalCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *EvalCmd) template() proto.Message {
+func (cmd *EvalCmd) template() *authorizer.IsRequest {
 	return &authorizer.IsRequest{
 		PolicyContext: &api.PolicyContext{
 			Path:      "",

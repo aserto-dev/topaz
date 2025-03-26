@@ -11,7 +11,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/pb"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
@@ -73,7 +72,7 @@ func (cmd *GetPolicyCmd) Run(c *cc.CommonCtx) error {
 	return nil
 }
 
-func (cmd *GetPolicyCmd) template() proto.Message {
+func (cmd *GetPolicyCmd) template() *authorizer.GetPolicyRequest {
 	return &authorizer.GetPolicyRequest{
 		Id: "",
 		FieldMask: &fieldmaskpb.FieldMask{

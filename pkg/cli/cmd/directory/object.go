@@ -14,7 +14,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
 
 	"github.com/pkg/errors"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -74,7 +73,7 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *GetObjectCmd) template() proto.Message {
+func (cmd *GetObjectCmd) template() *reader.GetObjectRequest {
 	return &reader.GetObjectRequest{
 		ObjectType:    "",
 		ObjectId:      "",
@@ -138,7 +137,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *SetObjectCmd) template() proto.Message {
+func (cmd *SetObjectCmd) template() *writer.SetObjectRequest {
 	return &writer.SetObjectRequest{
 		Object: &common.Object{
 			Type:        "",
@@ -208,7 +207,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *DeleteObjectCmd) template() proto.Message {
+func (cmd *DeleteObjectCmd) template() *writer.DeleteObjectRequest {
 	return &writer.DeleteObjectRequest{
 		ObjectType:    "",
 		ObjectId:      "",
@@ -272,7 +271,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
-func (cmd *ListObjectsCmd) template() proto.Message {
+func (cmd *ListObjectsCmd) template() *reader.GetObjectsRequest {
 	return &reader.GetObjectsRequest{
 		ObjectType: "",
 		Page:       &common.PaginationRequest{Size: 100, Token: ""},
