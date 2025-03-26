@@ -33,7 +33,7 @@ type CLI struct {
 	Uninstall  topaz.UninstallCmd       `cmd:"" help:"uninstall topaz container"`
 	Update     topaz.UpdateCmd          `cmd:"" help:"update topaz container version"`
 	Version    VersionCmd               `cmd:"" help:"version information"`
-	NoCheck    bool                     `flag:"" name:"no-check" json:"noCheck,omitempty" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
+	NoCheck    bool                     `flag:"" name:"no-check" json:"no_check,omitempty" short:"N" env:"TOPAZ_NO_CHECK" help:"disable local container status check"`
 	NoColor    bool                     `flag:"" name:"no-color" json:"no_color,omitempty" env:"TOPAZ_NO_COLOR" help:"disable colored terminal output"`
 	LogLevel   int                      `flag:"" name:"verbosity" short:"v" type:"counter" default:"0" help:"log level"`
 	Import     ImportCmd                `cmd:"" help:"'topaz import' was moved to 'topaz directory import'" hidden:""`
