@@ -18,7 +18,7 @@ const (
 
 type ConsoleService struct{}
 
-var _ ServiceTypes = (*ConsoleService)(nil)
+var _ builder.ServiceTypes = (*ConsoleService)(nil)
 
 func NewConsole() *ConsoleService {
 	return &ConsoleService{}

@@ -40,7 +40,7 @@ type Topaz struct {
 	Configuration  *config.Config
 	ServiceBuilder *builder.ServiceFactory
 	Manager        *builder.ServiceManager
-	Services       map[string]ServiceTypes
+	Services       map[string]builder.ServiceTypes
 }
 
 var healthCheck *health.Server
@@ -61,13 +61,6 @@ func SetServiceStatus(log *zerolog.Logger, service string, servingStatus grpc_he
 		log.Info().Str("service", service).Str("status", servingStatus.String()).Msg("health")
 		healthCheck.SetServingStatus(service, servingStatus)
 	}
-}
-
-type ServiceTypes interface {
-	AvailableServices() []string
-	GetGRPCRegistrations(services ...string) builder.GRPCRegistrations
-	GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations
-	Cleanups() []func()
 }
 
 func (e *Topaz) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {

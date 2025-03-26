@@ -30,7 +30,7 @@ type Authorizer struct {
 	opts []grpc.ServerOption
 }
 
-var _ ServiceTypes = (*Authorizer)(nil)
+var _ builder.ServiceTypes = (*Authorizer)(nil)
 
 func NewAuthorizer(ctx context.Context, cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (*Authorizer, error) {
 	if cfg.GRPC.Certs.HasCert() {

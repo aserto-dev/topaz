@@ -34,7 +34,7 @@ type EdgeDir struct {
 	dir *directory.Directory
 }
 
-var _ ServiceTypes = (*EdgeDir)(nil)
+var _ builder.ServiceTypes = (*EdgeDir)(nil)
 
 func NewEdgeDir(edge *directory.Directory) (*EdgeDir, error) {
 	return &EdgeDir{
