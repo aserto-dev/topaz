@@ -45,10 +45,11 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 			}
 			return err
 		}
+
 		if s, ok := v.(string); ok && cmd.Raw {
 			fmt.Fprintln(c.StdOut(), s)
 		} else {
-			_ = enc.Encode(v)
+			_ = enc.Encode(v) //nolint:errchkjson // ok
 		}
 	}
 
@@ -144,7 +145,7 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 
 func (cmd InfoConfigCmd) json(c *cc.CommonCtx) map[string]any {
 	var j map[string]any
-	buf, _ := json.Marshal(cmd.info(c))
-	_ = json.Unmarshal(buf, &j)
+	buf, _ := json.Marshal(cmd.info(c)) //nolint:errchkjson // ok
+	_ = json.Unmarshal(buf, &j)         //nolint:errchkjson // ok
 	return j
 }
