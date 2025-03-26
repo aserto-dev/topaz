@@ -79,18 +79,18 @@ func portStatus(listenAddress string) PortStatus {
 	return PortClosed
 }
 
-func Retry(timeout, interval time.Duration, f func() error) (err error) {
-	err = errTimeout
+func Retry(timeout, interval time.Duration, f func() error) error {
+	err := errTimeout
 	for t := time.After(timeout); ; {
 		select {
 		case <-t:
-			return
+			return err
 		default:
 		}
 
 		err = f()
 		if err == nil {
-			return
+			return nil
 		}
 
 		if timeout > 0 {
