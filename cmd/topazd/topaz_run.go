@@ -104,7 +104,6 @@ func configOverrides(cfg *config.Config) {
 	cfg.Common.DebugService.Enabled = flagRunDebug
 }
 
-// nolint: gochecknoinits, errcheck
 func init() {
 	cmdRun.Flags().StringVarP(
 		&flagRunConfigFile,
@@ -126,6 +125,8 @@ func init() {
 		&flagRunDebug,
 		"debug", "", false,
 		"start debug service")
+
 	rootCmd.AddCommand(cmdRun)
-	cmdRun.MarkFlagRequired("config-file")
+
+	_ = cmdRun.MarkFlagRequired("config-file")
 }
