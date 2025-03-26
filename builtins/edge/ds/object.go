@@ -83,8 +83,13 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			result := pbs.Fields["result"].AsInterface().(map[string]interface{})
+			result, ok := pbs.Fields["result"].AsInterface().(map[string]interface{})
+			if !ok {
+				return nil, status.Errorf(codes.Internal, "failed type assertion %q", "result")
+			}
+
 			relations := pbs.Fields["relations"].AsInterface()
+
 			result["relations"] = relations
 
 			v, err := ast.InterfaceToValue(result)

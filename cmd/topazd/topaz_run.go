@@ -72,8 +72,10 @@ func run(cmd *cobra.Command, args []string) error {
 
 		defer runtimeCleanup()
 
-		topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(runtime)
-		topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(dirResolver)
+		if authorizer, ok := topazApp.Services["authorizer"].(*app.Authorizer); ok {
+			authorizer.Resolver.SetRuntimeResolver(runtime)
+			authorizer.Resolver.SetDirectoryResolver(dirResolver)
+		}
 	}
 
 	err = topazApp.Start()

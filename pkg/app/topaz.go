@@ -24,9 +24,11 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/samber/lo"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/keepalive"
+	"google.golang.org/grpc/status"
 )
 
 // Topaz is an authorizer service instance, responsible for managing
@@ -195,7 +197,13 @@ func (e *Topaz) ConfigServices() error {
 						return err
 					}
 
-					consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
+					consoleSvc, ok := con.(*ConsoleService)
+					if !ok {
+						return status.Errorf(codes.Internal, "failed type assertion %q", "ConsoleService")
+					}
+
+					consoleConfig := consoleSvc.PrepareConfig(e.Configuration)
+
 					// config service.
 					server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
 					server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))

@@ -125,7 +125,7 @@ func registerJWKSURL(ctx context.Context, jwkCache *jwk.Cache, jwksURL string) e
 func (s *AuthorizerServer) jwksURLFromCache(ctx context.Context, issuer string) (string, error) {
 	var jwksURL string
 	if val, ok := s.issuers.Load(issuer); ok {
-		jwksURL = val.(string)
+		jwksURL, _ = val.(string)
 	} else {
 		jk, err := s.jwksURL(ctx, issuer)
 		if err != nil {

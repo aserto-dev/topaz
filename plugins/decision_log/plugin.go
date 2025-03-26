@@ -48,7 +48,7 @@ func (plugin *DecisionLogsPlugin) Stop(ctx context.Context) {
 }
 
 func (plugin *DecisionLogsPlugin) Reconfigure(ctx context.Context, config interface{}) {
-	plugin.cfg = config.(*Config)
+	plugin.cfg, _ = config.(*Config)
 }
 
 func (plugin *DecisionLogsPlugin) Log(ctx context.Context, d *api.Decision) error {
@@ -69,6 +69,8 @@ func Lookup(m *plugins.Manager) *DecisionLogsPlugin {
 	if p == nil {
 		return nil
 	}
-	plugin := p.(*DecisionLogsPlugin)
+
+	plugin, _ := p.(*DecisionLogsPlugin)
+
 	return plugin
 }

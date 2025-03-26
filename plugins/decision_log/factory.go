@@ -22,18 +22,25 @@ func NewFactory(logger decisionlog.DecisionLogger) Factory {
 }
 
 func (f Factory) New(m *plugins.Manager, config interface{}) plugins.Plugin {
-	cfg := config.(*Config)
+	cfg, ok := config.(*Config)
+	if !ok {
+		return &DecisionLogsPlugin{}
+	}
+
 	return newDecisionLogger(cfg, m, f.logger)
 }
 
 func (Factory) Validate(m *plugins.Manager, config []byte) (interface{}, error) {
 	parsedConfig := Config{}
+
 	v := viper.New()
 	v.SetConfigType("json")
+
 	err := v.ReadConfig(bytes.NewReader(config))
 	if err != nil {
 		return nil, errors.Wrap(err, "error parsing decision logs config")
 	}
+
 	err = v.UnmarshalExact(&parsedConfig, func(dc *mapstructure.DecoderConfig) {
 		dc.TagName = "json"
 	})

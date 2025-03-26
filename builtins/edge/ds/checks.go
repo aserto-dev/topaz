@@ -11,6 +11,8 @@ import (
 	"github.com/open-policy-agent/opa/v1/types"
 
 	"github.com/rs/zerolog"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -84,9 +86,12 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			result := pbs.Fields["checks"].AsInterface().([]interface{})
+			results, ok := pbs.Fields["checks"].AsInterface().([]interface{})
+			if !ok {
+				return nil, status.Errorf(codes.Internal, "failed type assertion %q", "results")
+			}
 
-			v, err := ast.InterfaceToValue(result)
+			v, err := ast.InterfaceToValue(results)
 			if err != nil {
 				return nil, err
 			}

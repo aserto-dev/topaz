@@ -111,7 +111,7 @@ func (p *Plugin) Stop(ctx context.Context) {
 func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 	p.logger.Trace().Str("id", p.manager.ID).Interface("cur", p.config).Interface("new", config).Msg("EdgePlugin.Reconfigure")
 
-	newConfig := config.(*Config)
+	newConfig, _ := config.(*Config)
 
 	// handle enabled status changed
 	if p.config.Enabled != newConfig.Enabled && !p.hasLoopBack() {
@@ -126,7 +126,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 		}
 	}
 
-	p.config = config.(*Config)
+	p.config, _ = config.(*Config)
 	p.config.TenantID = strings.Split(p.manager.ID, "/")[0]
 	p.config.SessionID = uuid.NewString()
 }
