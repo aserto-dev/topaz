@@ -12,8 +12,9 @@ import (
 	"github.com/pkg/errors"
 )
 
+//nolint:lll
 type CheckCmd struct {
-	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to check permission request or '-' to read from stdin"`
+	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request, file path to check permission request or '-' to read from stdin"`
 	Template bool   `name:"template" short:"t" help:"prints a check permission request template on stdout"`
 	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
 	dsc.Config

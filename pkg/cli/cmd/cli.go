@@ -16,6 +16,7 @@ type SaveContext bool
 
 var Save SaveContext
 
+//nolint:lll
 type CLI struct {
 	Start      topaz.StartCmd           `cmd:"" help:"start topaz instance (daemon mode)"`
 	Stop       topaz.StopCmd            `cmd:"" help:"stop topaz instance"`

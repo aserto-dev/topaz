@@ -72,7 +72,7 @@ func NewAuthorizerServer(
 	}
 }
 
-func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.DecisionTreeRequest) (*authorizer.DecisionTreeResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
+func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.DecisionTreeRequest) (*authorizer.DecisionTreeResponse, error) {
 	log := s.logger.With().Str("api", "decision_tree").Logger()
 
 	resp := &authorizer.DecisionTreeResponse{}
@@ -201,8 +201,8 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 	return resp, nil
 }
 
-// Is decision eval function.
-func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*authorizer.IsResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
+//nolint:funlen,gocyclo
+func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*authorizer.IsResponse, error) {
 	log := s.logger.With().Str("api", "is").Logger()
 
 	resp := &authorizer.IsResponse{
@@ -341,7 +341,7 @@ func getOutcomes(decisions []*authorizer.Decision) map[string]bool {
 	})
 }
 
-func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryRequest) (*authorizer.QueryResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
+func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryRequest) (*authorizer.QueryResponse, error) {
 	log := s.logger.With().Str("api", "query").Logger()
 
 	if req.Query == "" {
@@ -500,7 +500,7 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.P
 	return rt, err
 }
 
-func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileRequest) (*authorizer.CompileResponse, error) { // nolint:funlen,gocyclo //TODO: split into smaller functions after merge with onebox
+func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileRequest) (*authorizer.CompileResponse, error) {
 	log := s.logger.With().Str("api", "compile").Logger()
 
 	if req.Query == "" {

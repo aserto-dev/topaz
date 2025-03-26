@@ -51,6 +51,7 @@ type TestTemplateCmd struct {
 	Pretty bool `flag:"" default:"false" help:"pretty print JSON"`
 }
 
+//nolint:lll
 const assertionsTemplate string = `{
   "assertions": [
 	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true, "description": ""},
