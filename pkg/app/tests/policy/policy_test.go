@@ -16,6 +16,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
@@ -310,8 +312,8 @@ func GetPoliciesInvalidID(ctx context.Context, azClient authorizer.AuthorizerCli
 			Id: "doesnotexist",
 		})
 
-		// TODO: replace this with aerr
-		assert.Error(err)
+		s := status.Convert(err)
+		assert.Equal(codes.NotFound, s.Code())
 	}
 }
 

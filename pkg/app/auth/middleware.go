@@ -16,15 +16,12 @@ import (
 
 type APIKeyAuthMiddleware struct {
 	apiAuth map[string]string
-
-	// TODO: figure out what we want to do with the config.
-	cfg    *config.AuthnConfig
-	logger *zerolog.Logger
+	cfg     *config.AuthnConfig
+	logger  *zerolog.Logger
 }
 
 func NewAPIKeyAuthMiddleware(
 	ctx context.Context,
-	// TODO: figure out what we want to do with the config.
 	cfg *config.AuthnConfig,
 	logger *zerolog.Logger,
 ) (*APIKeyAuthMiddleware, error) {

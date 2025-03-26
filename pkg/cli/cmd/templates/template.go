@@ -192,11 +192,11 @@ func (i *tmplRef) getTemplate() (*template, error) {
 		return nil, err
 	}
 
-	// TODO: remove after updating all templates to URLs relative to the template definition.
 	tmpl.Assets.Manifest = strings.TrimPrefix(tmpl.Assets.Manifest, base.Path)
 	for i, v := range tmpl.Assets.IdentityData {
 		tmpl.Assets.IdentityData[i] = strings.TrimPrefix(v, base.Path)
 	}
+
 	for i, v := range tmpl.Assets.DomainData {
 		tmpl.Assets.DomainData[i] = strings.TrimPrefix(v, base.Path)
 	}
