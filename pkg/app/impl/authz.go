@@ -651,7 +651,6 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 	}
 
 	for _, policy := range policies {
-
 		module, err := policyToModule(policy)
 		if err != nil {
 			return response, errors.Wrapf(err, "failed to parse policy with ID [%s]", policy.ID)

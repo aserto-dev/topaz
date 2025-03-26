@@ -44,7 +44,6 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 					return err
 				}
 			}
-
 		}
 	} else {
 		c.Config.Defaults.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.

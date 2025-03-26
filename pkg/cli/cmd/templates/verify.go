@@ -28,7 +28,6 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	tab.WithTableNoAutoWrapText()
 
 	for tmplName := range ctlg {
-
 		tmpl, err := getTemplate(tmplName, cmd.TemplatesURL)
 		if err != nil {
 			return err
