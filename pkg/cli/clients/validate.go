@@ -43,7 +43,7 @@ func Validate(ctx context.Context, cfg Config) (bool, error) {
 
 	g.Go(func() error {
 		in, err := stream.Recv()
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			return nil
 		}
 

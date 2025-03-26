@@ -124,7 +124,7 @@ func (e Editor) Launch(path string) error {
 	cmd.Stdin = os.Stdin
 
 	if err := (term.TTY{In: os.Stdin, TryDev: true}).Safe(cmd.Run); err != nil {
-		if err, ok := err.(*exec.Error); ok { //nolint:gosec
+		if err, ok := err.(*exec.Error); ok { //nolint:gosec,errorlint
 			if errors.Is(err.Err, exec.ErrNotFound) {
 				return errors.Errorf("unable to launch the editor %q", strings.Join(e.Args, " "))
 			}
