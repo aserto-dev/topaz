@@ -157,7 +157,7 @@ func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.UR
 	originalPath := u.Path
 	u.Path = path.Join(originalPath, wellknownConfig)
 
-	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), http.NoBody)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), http.NoBody)
 	if err != nil {
 		return nil, err
 	}
