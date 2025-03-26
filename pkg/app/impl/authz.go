@@ -72,6 +72,7 @@ func NewAuthorizerServer(
 	}
 }
 
+//nolint:funlen
 func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.DecisionTreeRequest) (*authorizer.DecisionTreeResponse, error) {
 	log := s.logger.With().Str("api", "decision_tree").Logger()
 
@@ -341,6 +342,7 @@ func getOutcomes(decisions []*authorizer.Decision) map[string]bool {
 	})
 }
 
+//nolint:funlen
 func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryRequest) (*authorizer.QueryResponse, error) {
 	log := s.logger.With().Str("api", "query").Logger()
 
@@ -482,7 +484,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	return resp, nil
 }
 
-// nolint: staticcheck
+//nolint:staticcheck
 func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.PolicyInstance) (*runtime.Runtime, error) {
 	var rt *runtime.Runtime
 	var err error
@@ -500,6 +502,7 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.P
 	return rt, err
 }
 
+//nolint:funlen,gocyclo
 func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileRequest) (*authorizer.CompileResponse, error) {
 	log := s.logger.With().Str("api", "compile").Logger()
 

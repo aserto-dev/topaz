@@ -28,6 +28,7 @@ type NewConfigCmd struct {
 	LocalPolicyImage string     `short:"l" help:"[deprecated: use --local instead] local policy image name"`
 }
 
+//nolint:funlen
 func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Resource == "" {
 		if cmd.LocalPolicyImage == "" {

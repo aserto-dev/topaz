@@ -90,6 +90,7 @@ func directoryRequests() []proto.Message {
 	return reqs
 }
 
+//nolint:funlen
 func accessRequests() []proto.Message {
 	reqs := []proto.Message{
 		&access.EvaluationRequest{

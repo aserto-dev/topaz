@@ -34,6 +34,7 @@ const (
 	modeInteractive
 )
 
+//nolint:funlen
 func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
 		return cc.ErrIsRunning

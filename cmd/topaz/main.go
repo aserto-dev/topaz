@@ -38,6 +38,7 @@ func main() {
 	os.Exit(run())
 }
 
+//nolint:funlen
 func run() int {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()

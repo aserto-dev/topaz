@@ -79,6 +79,8 @@ type Path string
 type Overrider func(*Config)
 
 // NewConfig creates the configuration by reading env & files.
+//
+//nolint:funlen
 func NewConfig(
 	configPath Path,
 	log *zerolog.Logger,

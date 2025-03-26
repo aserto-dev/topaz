@@ -101,6 +101,7 @@ var (
 	ErrCancelled   = status.Error(codes.Aborted, "canceled")
 )
 
+//nolint:funlen
 func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor, parent []string) error {
 	fields := md.Fields()
 

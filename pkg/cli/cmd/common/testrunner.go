@@ -151,22 +151,7 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 			return errors.Errorf("unknown request version")
 		}
 
-		var result *CheckResult
-
-		switch {
-		case checkType == Check && reqVersion == 3:
-			result = checkV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
-		case checkType == CheckPermission && reqVersion == 3:
-			result = checkPermissionV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
-		case checkType == CheckRelation && reqVersion == 3:
-			result = checkRelationV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
-		case checkType == CheckDecision:
-			result = checkDecisionV2(c.Context, runner.azClient, msg.Fields[CheckTypeMapStr[checkType]])
-		case checkType == Evaluation:
-			result = evaluationV1(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
-		default:
-			continue
-		}
+		result := setCheckType(checkType, reqVersion, c, runner, &msg)
 
 		runner.results.Passed(result.Outcome == expected)
 
@@ -209,6 +194,25 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 	}
 
 	return nil
+}
+
+func setCheckType(checkType CheckType, reqVersion int, c *cc.CommonCtx, runner *TestRunner, msg *structpb.Struct) *CheckResult {
+	var result *CheckResult
+
+	switch {
+	case checkType == Check && reqVersion == 3:
+		result = checkV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
+	case checkType == CheckPermission && reqVersion == 3:
+		result = checkPermissionV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
+	case checkType == CheckRelation && reqVersion == 3:
+		result = checkRelationV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
+	case checkType == CheckDecision:
+		result = checkDecisionV2(c.Context, runner.azClient, msg.Fields[CheckTypeMapStr[checkType]])
+	case checkType == Evaluation:
+		result = evaluationV1(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
+	}
+
+	return result
 }
 
 func getReqVersion(val *structpb.Value) int {
