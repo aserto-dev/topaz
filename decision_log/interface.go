@@ -5,6 +5,6 @@ import (
 )
 
 type DecisionLogger interface {
-	Log(*api.Decision) error
+	Log(decision *api.Decision) error
 	Shutdown()
 }
