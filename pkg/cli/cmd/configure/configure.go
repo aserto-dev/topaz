@@ -48,5 +48,6 @@ func (cmd *ConfigCmd) BeforeReset(ctx *kong.Context) error {
 	if n != nil {
 		fflag.UnHideCmds(ctx)
 	}
+
 	return nil
 }

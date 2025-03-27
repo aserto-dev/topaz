@@ -35,6 +35,7 @@ func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -43,6 +44,7 @@ func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -51,8 +53,7 @@ func (cmd *SearchCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetGraphRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 

@@ -26,6 +26,7 @@ func (m *TenantIDIDMiddleware) Unary() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		newCtx := header.ContextWithTenantID(ctx, m.tenantID)
 		result, err := handler(newCtx, req)
+
 		return result, err
 	}
 }
@@ -36,6 +37,7 @@ func (m *TenantIDIDMiddleware) Stream() grpc.StreamServerInterceptor {
 		newCtx := header.ContextWithTenantID(ctx, m.tenantID)
 		wrapped := grpcmiddleware.WrapServerStream(stream)
 		wrapped.WrappedContext = newCtx
+
 		return handler(srv, wrapped)
 	}
 }

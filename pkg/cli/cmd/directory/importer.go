@@ -26,6 +26,7 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		if !fi.IsDir() {
 			return errors.Errorf("--directory argument %q is not a directory", cmd.Directory)
 		}

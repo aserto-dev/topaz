@@ -73,6 +73,7 @@ func (srv *Server) Start() {
 	if srv != nil {
 		go func() {
 			srv.logger.Warn().Str("listen_address", srv.cfg.ListenAddress).Msg("debug-service")
+
 			if err := srv.server.ListenAndServe(); err != nil {
 				srv.logger.Error().Err(err).Msg("debug-service")
 			}
@@ -86,10 +87,13 @@ func (srv *Server) Stop() {
 	}
 
 	var shutdown context.CancelFunc
+
 	ctx := context.Background()
+
 	if srv.cfg.ShutdownTimeout > 0 {
 		shutdownTimeout := time.Duration(srv.cfg.ShutdownTimeout) * time.Second
 		ctx, shutdown = context.WithTimeout(ctx, shutdownTimeout)
+
 		defer shutdown()
 	}
 

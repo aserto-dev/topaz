@@ -37,6 +37,7 @@ func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -45,6 +46,7 @@ func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -53,8 +55,7 @@ func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req authorizer.DecisionTreeRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 

@@ -36,10 +36,13 @@ func (f *Writer) Close() error {
 		_, _ = f.w.WriteString("]\n")
 		_, _ = f.w.WriteString("}\n")
 		f.first = false
+
 		err := f.w.Close()
 		f.w = nil
+
 		return err
 	}
+
 	return nil
 }
 

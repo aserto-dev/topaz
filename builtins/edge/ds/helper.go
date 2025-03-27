@@ -14,10 +14,12 @@ import (
 
 func help(fnName string, args interface{}) (*ast.Term, error) {
 	m := map[string]interface{}{fnName: args}
+
 	val, err := ast.InterfaceToValue(m)
 	if err != nil {
 		return nil, err
 	}
+
 	return ast.NewTerm(val), nil
 }
 
@@ -26,11 +28,14 @@ func helpMsg(fnName string, msg proto.Message) (*ast.Term, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	m := map[string]interface{}{fnName: v}
+
 	val, err := ast.InterfaceToValue(m)
 	if err != nil {
 		return nil, err
 	}
+
 	return ast.NewTerm(val), nil
 }
 

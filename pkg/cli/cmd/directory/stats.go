@@ -42,6 +42,7 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 		if errors.Is(err, io.EOF) {
 			break
 		}
+
 		if err != nil {
 			return err
 		}
@@ -55,6 +56,7 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 		if err := jsonx.OutputJSONPB(c.StdOut(), pbStats); err != nil {
 			return err
 		}
+
 		return nil
 	}
 

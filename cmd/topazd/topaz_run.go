@@ -29,11 +29,14 @@ var cmdRun = &cobra.Command{
 
 func run(cmd *cobra.Command, args []string) error {
 	configPath := config.Path(flagRunConfigFile)
+
 	topazApp, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, configOverrides)
 	if err != nil {
 		return err
 	}
+
 	defer topazApp.Manager.StopServers(topazApp.Context)
+
 	defer cleanup()
 
 	if err := topazApp.ConfigServices(); err != nil {
@@ -43,6 +46,7 @@ func run(cmd *cobra.Command, args []string) error {
 	if topazApp.Configuration.DebugService.Enabled {
 		debugService = debug.NewServer(&topazApp.Configuration.DebugService, topazApp.Logger)
 		debugService.Start()
+
 		defer debugService.Stop()
 	}
 
@@ -51,12 +55,14 @@ func run(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+
 		defer dirResolver.Close()
 
 		decisionlog, err := topazApp.GetDecisionLogger(topazApp.Configuration.DecisionLogger)
 		if err != nil {
 			return err
 		}
+
 		defer decisionlog.Shutdown()
 
 		runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(

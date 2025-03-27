@@ -26,6 +26,7 @@ func (cmd *SyncCmd) Run(ctx context.Context) error {
 		if mode == datasync.Unknown {
 			return errors.Errorf("unknown mode: %s", m)
 		}
+
 		opts = append(opts, datasync.WithMode(mode))
 	}
 

@@ -131,6 +131,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
+
 	return nil
 }
 
@@ -175,14 +176,17 @@ func getVolumes(cfg *config.Loader) ([]string, error) {
 	for _, v := range volumeMap {
 		volumes = append(volumes, v)
 	}
+
 	return volumes, nil
 }
 
 func getEnvFromVolumes(volumes []string) []string {
 	envs := []string{}
+
 	for i := range volumes {
 		destination := strings.Split(volumes[i], ":")
 		mountedPath := "/" + filepath.Base(destination[1]) // last value from split.
+
 		switch {
 		case strings.Contains(volumes[i], "certs"):
 			envs = append(envs, x.EnvTopazCertsDir+"="+mountedPath)
@@ -192,5 +196,6 @@ func getEnvFromVolumes(volumes []string) []string {
 			envs = append(envs, x.EnvTopazCfgDir+"="+mountedPath)
 		}
 	}
+
 	return envs
 }

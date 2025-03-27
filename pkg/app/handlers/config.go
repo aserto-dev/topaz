@@ -142,5 +142,6 @@ func getValueFromCtx[T any](ctx context.Context, k header.CtxKey) (T, bool) {
 		var zero T
 		return zero, false
 	}
+
 	return typedVal, ok
 }

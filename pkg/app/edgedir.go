@@ -46,6 +46,7 @@ func (e *EdgeDir) Cleanups() []func() {
 	if e.dir != nil {
 		return []func(){e.dir.Close}
 	}
+
 	return nil
 }
 
@@ -58,16 +59,20 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 		if lo.Contains(services, modelService) {
 			dsm3.RegisterModelServer(server, e.dir.Model3())
 		}
+
 		if lo.Contains(services, readerService) {
 			dsr3.RegisterReaderServer(server, e.dir.Reader3())
 			dsa1.RegisterAccessServer(server, e.dir.Access1())
 		}
+
 		if lo.Contains(services, writerService) {
 			dsw3.RegisterWriterServer(server, e.dir.Writer3())
 		}
+
 		if lo.Contains(services, importerService) {
 			dsi3.RegisterImporterServer(server, e.dir.Importer3())
 		}
+
 		if lo.Contains(services, exporterService) {
 			dse3.RegisterExporterServer(server, e.dir.Exporter3())
 		}
@@ -81,10 +86,12 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 			if err != nil {
 				return err
 			}
+
 			if err := dsm3stream.RegisterModelStreamHandlersFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
 				return err
 			}
 		}
+
 		if lo.Contains(services, readerService) {
 			{
 				err := dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
@@ -99,6 +106,7 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 				}
 			}
 		}
+
 		if lo.Contains(services, writerService) {
 			err := dsw3.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
@@ -122,6 +130,7 @@ const (
 
 func dsOpenAPIHandler(port string, services ...string) func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
 	handler := dsOpenAPI.OpenAPIHandler(port, services...)
+
 	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
 		handler(w, r)
 	}

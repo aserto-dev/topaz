@@ -85,8 +85,8 @@ func NewCommonContext(ctx context.Context, noCheck bool, configFilePath string) 
 		if err != nil {
 			return nil, err
 		}
-		err = json.Unmarshal(data, commonCtx.Config)
-		if err != nil {
+
+		if err := json.Unmarshal(data, commonCtx.Config); err != nil {
 			return nil, err
 		}
 	}
@@ -126,10 +126,12 @@ func (c *CommonCtx) GetRunningContainers() ([]*types.Container, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	topazContainers, err := dc.GetRunningTopazContainers()
 	if err != nil {
 		return nil, err
 	}
+
 	return topazContainers, nil
 }
 
@@ -140,12 +142,13 @@ func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(cliConfig, kongConfigBytes, 0o666) // nolint
-	if err != nil {
+
+	if err := os.WriteFile(cliConfig, kongConfigBytes, 0o600); err != nil {
 		return err
 	}
 
 	defaults = c.Config.Defaults
+
 	return nil
 }
 

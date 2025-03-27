@@ -38,10 +38,12 @@ func HandleCommand(ctx context.Context, cmd *api.Command, r *runtime.Runtime) er
 		if !ok {
 			return errors.Errorf("failed to cast discovery plugin")
 		}
+
 		edgePlugin.SyncNow(msg.SyncEdgeDirectory.Mode)
 
 	default:
 		return errors.New("not implemented")
 	}
+
 	return nil
 }

@@ -36,9 +36,11 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 			absURL := tmpl.AbsURL(tmpl.Assets.Manifest)
 			v := validateManifest(absURL)
 			errStr := ""
+
 			if v.err != nil {
 				errStr = v.err.Error()
 			}
+
 			tab.WithRow(tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr)
 		}
 		{
@@ -51,9 +53,11 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 				absURL := tmpl.AbsURL(assetURL)
 				v := validateJSON(absURL)
 				errStr := ""
+
 				if v.err != nil {
 					errStr = v.err.Error()
 				}
+
 				tab.WithRow(tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr)
 			}
 		}

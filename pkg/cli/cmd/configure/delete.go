@@ -27,6 +27,7 @@ func (cmd *DeleteConfigCmd) Run(c *cc.CommonCtx) error {
 	if c.Config.Active.Config == cmd.Name.String() {
 		c.Config.Active.Config = ""
 		c.Config.Active.ConfigFile = ""
+
 		if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 			return errors.Wrap(err, "failed to update active context")
 		}

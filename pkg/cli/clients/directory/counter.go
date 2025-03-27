@@ -48,6 +48,7 @@ func (c *Counter) Objects() *Item {
 	if c.objects == nil {
 		c.objects = &Item{Name: objectsCounter}
 	}
+
 	return c.objects
 }
 
@@ -55,6 +56,7 @@ func (c *Counter) Relations() *Item {
 	if c.relations == nil {
 		c.relations = &Item{Name: relationsCounter}
 	}
+
 	return c.relations
 }
 
@@ -70,6 +72,7 @@ func (c *Counter) Print(w io.Writer) {
 		if c.objects.skipped > 0 {
 			msg = unknownFieldsMsg
 		}
+
 		fmt.Fprintf(w, "%-9s : %d%s\n", objectsCounter, c.objects.value, msg)
 	} else {
 		fmt.Fprintf(w, "%-9s : %s\n", objectsCounter, skipped)
@@ -80,6 +83,7 @@ func (c *Counter) Print(w io.Writer) {
 		if c.relations.skipped > 0 {
 			msg = unknownFieldsMsg
 		}
+
 		fmt.Fprintf(w, "%-9s : %d%s\n", relationsCounter, c.relations.value, msg)
 	} else {
 		fmt.Fprintf(w, "%-9s : %s\n", relationsCounter, skipped)

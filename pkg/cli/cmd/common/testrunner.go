@@ -108,12 +108,13 @@ func (runner *TestRunner) execFile(c *cc.CommonCtx, file string) error {
 	defer r.Close()
 
 	c.Con().Info().Msg(file)
+
 	return runner.exec(c, r)
 }
 
 var pbUnmarshal = protojson.UnmarshalOptions{DiscardUnknown: true}
 
-// nolint: gocyclo
+//nolint:gocyclo,funlen
 func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 	csvWriter := csv.NewWriter(c.StdOut())
 
@@ -159,9 +160,11 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 			switch {
 			case errors.Is(result.Err, ErrSkippedAuthorizerAssertion):
 				result.Err = nil
+
 				runner.results.IncrSkipped()
 			case errors.Is(result.Err, ErrSkippedDirectoryAssertion):
 				result.Err = nil
+
 				runner.results.IncrSkipped()
 			default:
 				runner.results.IncrErrored()
@@ -172,6 +175,7 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 			if i == 0 {
 				result.PrintCSVHeader(csvWriter)
 			}
+
 			result.PrintCSV(csvWriter, i, expected, checkType, description)
 		}
 
@@ -224,16 +228,20 @@ func getReqVersion(val *structpb.Value) int {
 		if _, ok := v.StructValue.Fields["object_type"]; ok {
 			return 3
 		}
+
 		if _, ok := v.StructValue.Fields["object"]; ok {
 			return 2
 		}
+
 		if _, ok := v.StructValue.Fields["identity_context"]; ok {
 			return 2
 		}
+
 		if _, ok := v.StructValue.Fields["action"]; ok {
 			return 1
 		}
 	}
+
 	return 0
 }
 

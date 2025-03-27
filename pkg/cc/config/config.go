@@ -94,6 +94,7 @@ func NewConfig(
 	log = &newLogger
 
 	file := "config.yaml"
+
 	if configPath != "" {
 		exists, err := FileExists(string(configPath))
 		if err != nil {
@@ -119,13 +120,13 @@ func NewConfig(
 		if err != nil {
 			return nil, err
 		}
+
 		if configLoader.HasTopazDir {
 			log.Warn().Msg("This configuration file uses the obsolete TOPAZ_DIR environment variable.")
 			log.Warn().Msg("Please update to use the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 		}
 
-		err = validateVersion(configLoader.Configuration.Version)
-		if err != nil {
+		if err := validateVersion(configLoader.Configuration.Version); err != nil {
 			return nil, err
 		}
 	}
@@ -158,8 +159,7 @@ func NewConfig(
 	}
 
 	if certsGenerator != nil {
-		err = configLoader.Configuration.setupCerts(log, certsGenerator)
-		if err != nil {
+		if err := configLoader.Configuration.setupCerts(log, certsGenerator); err != nil {
 			return nil, errors.Wrap(err, "failed to setup certs")
 		}
 	}
@@ -181,6 +181,7 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, erro
 		LogLevel:       cfg.Logging.LogLevel,
 		LogLevelParsed: cfg.Logging.LogLevelParsed,
 	}
+
 	return &lCfg, nil
 }
 
@@ -188,6 +189,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 	commonName := "topaz"
 
 	existingFiles := []string{}
+
 	for serviceName, config := range c.APIConfig.Services {
 		for _, file := range []string{
 			config.GRPC.Certs.CA,
@@ -220,6 +222,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 				if err != nil {
 					return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
 				}
+
 				log.Info().Str("service", serviceName).Msg("gRPC certs configured")
 			}
 
@@ -233,10 +236,12 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 				if err != nil {
 					return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
 				}
+
 				log.Info().Str("service", serviceName).Msg("gateway certs configured")
 			}
 		}
 	}
+
 	return nil
 }
 

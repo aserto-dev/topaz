@@ -39,9 +39,11 @@ func PolicyRoot() string {
 
 		policyRoot = path.Join(home, defaultPolicyRoot)
 	}
+
 	if fi, err := os.Stat(policyRoot); err == nil && fi.IsDir() {
 		return policyRoot
 	}
+
 	return ""
 }
 
@@ -53,7 +55,8 @@ type DockerClient struct {
 func New() (*DockerClient, error) {
 	cli, err := client.NewClientWithOpts(
 		client.FromEnv,
-		client.WithAPIVersionNegotiation())
+		client.WithAPIVersionNegotiation(),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -177,6 +180,7 @@ func (dc *DockerClient) GetRunningTopazContainers() ([]*types.Container, error) 
 	if err != nil {
 		return nil, err
 	}
+
 	var topazContainers []*types.Container
 
 	for i := range containers {
@@ -184,6 +188,7 @@ func (dc *DockerClient) GetRunningTopazContainers() ([]*types.Container, error) 
 			topazContainers = append(topazContainers, &containers[i])
 		}
 	}
+
 	return topazContainers, nil
 }
 
@@ -363,14 +368,17 @@ func (dc *DockerClient) Run(opts ...RunOption) error {
 	if err := dc.cli.ContainerStart(dc.ctx, cont.ID, container.StartOptions{}); err != nil {
 		return err
 	}
+
 	defer func() {
 		_ = dc.cli.ContainerRemove(dc.ctx, cont.ID, container.RemoveOptions{Force: true})
 	}()
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
 	go func() {
 		<-sigs
+
 		_ = dc.cli.ContainerStop(dc.ctx, cont.ID, container.StopOptions{})
 	}()
 

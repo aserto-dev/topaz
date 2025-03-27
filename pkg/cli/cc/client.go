@@ -27,6 +27,7 @@ func DirectorySvc() string {
 	if directorySvc := os.Getenv(x.EnvTopazDirectorySvc); directorySvc != "" {
 		return directorySvc
 	}
+
 	return defaultDirectorySvc
 }
 
@@ -34,6 +35,7 @@ func DirectoryKey() string {
 	if directoryKey := os.Getenv(x.EnvTopazDirectoryKey); directoryKey != "" {
 		return directoryKey
 	}
+
 	return defaultDirectoryKey
 }
 
@@ -41,6 +43,7 @@ func DirectoryToken() string {
 	if directoryToken := os.Getenv(x.EnvTopazDirectoryToken); directoryToken != "" {
 		return directoryToken
 	}
+
 	return defaultDirectoryToken
 }
 
@@ -48,6 +51,7 @@ func AuthorizerSvc() string {
 	if authorizerSvc := os.Getenv(x.EnvTopazAuthorizerSvc); authorizerSvc != "" {
 		return authorizerSvc
 	}
+
 	return defaultAuthorizerSvc
 }
 
@@ -55,6 +59,7 @@ func AuthorizerKey() string {
 	if authorizerKey := os.Getenv(x.EnvTopazAuthorizerKey); authorizerKey != "" {
 		return authorizerKey
 	}
+
 	return defaultAuthorizerKey
 }
 
@@ -62,6 +67,7 @@ func AuthorizerToken() string {
 	if authorizerToken := os.Getenv(x.EnvTopazAuthorizerToken); authorizerToken != "" {
 		return authorizerToken
 	}
+
 	return defaultAuthorizerToken
 }
 
@@ -69,6 +75,7 @@ func TenantID() string {
 	if tenantID := os.Getenv(x.EnvAsertoTenantID); tenantID != "" {
 		return tenantID
 	}
+
 	return defaultTenantID
 }
 
@@ -78,6 +85,7 @@ func Insecure() bool {
 			return b
 		}
 	}
+
 	return defaultInsecure
 }
 
@@ -87,6 +95,7 @@ func Plaintext() bool {
 			return b
 		}
 	}
+
 	return defaultPlaintext
 }
 
@@ -96,6 +105,7 @@ func Timeout() time.Duration {
 			return dur
 		}
 	}
+
 	return defaultTimeout
 }
 
@@ -105,6 +115,7 @@ func NoCheck() bool {
 			return b
 		}
 	}
+
 	return defaults.NoCheck
 }
 
@@ -114,5 +125,6 @@ func NoColor() bool {
 			return b
 		}
 	}
+
 	return defaults.NoColor
 }

@@ -38,6 +38,7 @@ func (m *PolicyInstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
 				Name: m.policyName,
 			}
 		}
+
 		return handler(ctx, req)
 	}
 }
@@ -48,6 +49,7 @@ func (m *PolicyInstanceMiddleware) Stream() grpc.StreamServerInterceptor {
 		ctx := stream.Context()
 		wrapped := grpcmiddleware.WrapServerStream(stream)
 		wrapped.WrappedContext = ctx
+
 		return handler(srv, wrapped)
 	}
 }

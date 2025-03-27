@@ -99,6 +99,7 @@ func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken j
 		if errX != nil {
 			return nil, errors.Wrap(errX, "failed to fetch JWK set for validation")
 		}
+
 		options = append(options, jwt.WithKeySet(jwkSet))
 	}
 
@@ -112,8 +113,7 @@ func registerJWKSURL(ctx context.Context, jwkCache *jwk.Cache, jwksURL string) e
 			return err
 		}
 
-		_, err = jwkCache.Refresh(ctx, jwksURL)
-		if err != nil {
+		if _, err := jwkCache.Refresh(ctx, jwksURL); err != nil {
 			fmt.Printf("failed to refresh JWKS: %s\n", err)
 			return err
 		}
@@ -123,17 +123,19 @@ func registerJWKSURL(ctx context.Context, jwkCache *jwk.Cache, jwksURL string) e
 }
 
 func (s *AuthorizerServer) jwksURLFromCache(ctx context.Context, issuer string) (string, error) {
-	var jwksURL string
 	if val, ok := s.issuers.Load(issuer); ok {
-		jwksURL, _ = val.(string)
-	} else {
-		jk, err := s.jwksURL(ctx, issuer)
-		if err != nil {
-			return "", err
-		}
-		jwksURL = jk.String()
-		s.issuers.Store(issuer, jwksURL)
+		jwksURL, _ := val.(string)
+		return jwksURL, nil
 	}
+
+	jk, err := s.jwksURL(ctx, issuer)
+	if err != nil {
+		return "", err
+	}
+
+	jwksURL := jk.String()
+
+	s.issuers.Store(issuer, jwksURL)
 
 	return jwksURL, nil
 }
@@ -167,9 +169,11 @@ func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.UR
 	resp, err := client.Do(req)
 	if err == nil {
 		defer resp.Body.Close()
+
 		var config struct {
 			URI string `json:"jwks_uri"`
 		}
+
 		if err := json.NewDecoder(resp.Body).Decode(&config); err == nil {
 			if u, err = url.Parse(config.URI); err == nil {
 				return u, nil
@@ -231,6 +235,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 	client := s.resolver.GetDirectoryResolver().GetDS()
 
 	user, err := directory.ResolveIdentity(ctx, client, identity)
+
 	switch {
 	case status.Code(err) == codes.NotFound:
 		return s.getUserObject(ctx, identity)

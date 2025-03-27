@@ -15,6 +15,7 @@ func (f *fsWithDefinition) Open(name string) (http.File, error) {
 	}
 
 	name = strings.TrimPrefix(name, "/public")
+
 	return f.consoleFS.Open("console" + name)
 }
 

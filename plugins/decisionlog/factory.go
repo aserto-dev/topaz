@@ -43,10 +43,9 @@ func (PluginFactory) Validate(m *plugins.Manager, config []byte) (any, error) {
 		return nil, errors.Wrap(err, "error parsing decision logs config")
 	}
 
-	err = v.UnmarshalExact(&parsedConfig, func(dc *mapstructure.DecoderConfig) {
+	if err := v.UnmarshalExact(&parsedConfig, func(dc *mapstructure.DecoderConfig) {
 		dc.TagName = "json"
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, errors.Wrap(err, "error parsing decision logs config")
 	}
 

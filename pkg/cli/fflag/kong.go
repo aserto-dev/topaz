@@ -24,6 +24,7 @@ func UnHideFlags(ctx *kong.Context) {
 	if n == nil {
 		return
 	}
+
 	for _, f := range n.Flags {
 		if strings.HasPrefix(f.Tag.Type, "fflag") && f.Tag.Hidden && FF().IsSet(Editor) {
 			f.Hidden = false

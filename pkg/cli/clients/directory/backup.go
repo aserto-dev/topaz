@@ -29,6 +29,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	if err != nil {
 		return err
 	}
+
 	defer func() {
 		_ = os.RemoveAll(tmpDir)
 	}()
@@ -46,6 +47,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	if err != nil {
 		return nil
 	}
+
 	defer func() {
 		tf.Close()
 	}()
@@ -54,11 +56,13 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	if err != nil {
 		return nil
 	}
+
 	defer func() {
 		gw.Close()
 	}()
 
 	tw := tar.NewWriter(gw)
+
 	defer func() {
 		tw.Close()
 	}()
@@ -119,6 +123,7 @@ func (c *Client) createBackupFiles(stream dse3.Exporter_ExportClient, dirPath st
 		if errors.Is(err, io.EOF) {
 			break
 		}
+
 		if err != nil {
 			return err
 		}
@@ -126,10 +131,12 @@ func (c *Client) createBackupFiles(stream dse3.Exporter_ExportClient, dirPath st
 		switch m := msg.Msg.(type) {
 		case *dse3.ExportResponse_Object:
 			err = objects.Write(m.Object)
+
 			objectsCounter.Incr().Print(os.Stdout)
 
 		case *dse3.ExportResponse_Relation:
 			err = relations.Write(m.Relation)
+
 			relationsCounter.Incr().Print(os.Stdout)
 
 		default:

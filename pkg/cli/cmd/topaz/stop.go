@@ -22,6 +22,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 	if err != nil {
 		return err
 	}
+
 	if strings.ContainsAny(cmd.ContainerName, "*") {
 		topazContainers, err := c.GetRunningContainers()
 		if err != nil {
@@ -29,6 +30,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 		}
 
 		c.Con().Info().Msg(">>> stopping topaz...")
+
 		for _, container := range topazContainers {
 			c.Con().Info().Msg(">>> stopping topaz %q...", c.Config.Running.Config)
 
@@ -41,6 +43,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 				for _, port := range container.Ports {
 					ports = append(ports, strconv.FormatUint(uint64(port.PublicPort), 10))
 				}
+
 				if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
 					return err
 				}
@@ -63,6 +66,7 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 			if err != nil {
 				return err
 			}
+
 			if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
 				return err
 			}
@@ -76,5 +80,6 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
+
 	return nil
 }

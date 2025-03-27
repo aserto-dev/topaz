@@ -22,6 +22,7 @@ func (cmd *InitCmd) Run(ctx context.Context) error {
 		if fi.IsDir() {
 			return errors.Errorf("%s is a directory", cmd.DBFile)
 		}
+
 		return errors.Errorf("%s already exists", cmd.DBFile)
 	}
 

@@ -121,8 +121,10 @@ func parseAuthHeader(val, expectedScheme string) (string, error) {
 	if len(splits) < 2 {
 		return "", aerr.ErrAuthenticationFailed.Msg("Bad authorization string")
 	}
+
 	if !strings.EqualFold(splits[0], expectedScheme) {
 		return "", aerr.ErrAuthenticationFailed.Msgf("Request unauthenticated with expected scheme, expected: %s", expectedScheme)
 	}
+
 	return splits[1], nil
 }

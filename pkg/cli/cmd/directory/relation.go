@@ -37,6 +37,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -45,6 +46,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -53,8 +55,7 @@ func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetRelationRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 
@@ -100,6 +101,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -108,6 +110,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -116,8 +119,7 @@ func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.SetRelationRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 
@@ -167,6 +169,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -175,6 +178,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -183,8 +187,7 @@ func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.DeleteRelationRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 
@@ -229,6 +232,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -237,6 +241,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -245,8 +250,7 @@ func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetRelationsRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 

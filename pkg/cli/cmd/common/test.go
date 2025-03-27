@@ -78,6 +78,7 @@ func GetCheckType(msg *structpb.Struct) CheckType {
 			return v
 		}
 	}
+
 	return CheckUnknown
 }
 
@@ -134,6 +135,7 @@ func PrintDesc(descFlag, description string, result *CheckResult, expected bool)
 		if descFlag == DescOn {
 			fmt.Printf(">>>> %s\n", description)
 		}
+
 		if descFlag == DescOnError && result.Outcome != expected {
 			fmt.Printf("!!!! %s\n", description)
 		}
@@ -182,6 +184,7 @@ func (t *TestResults) Passed(passed bool) {
 		t.IncrPassed()
 		return
 	}
+
 	t.IncrFailed()
 }
 

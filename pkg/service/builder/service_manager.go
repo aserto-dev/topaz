@@ -37,8 +37,10 @@ func NewServiceManager(logger *zerolog.Logger) *ServiceManager {
 	if reg == nil {
 		reg = prometheus.NewRegistry()
 	}
+
 	serviceLogger := logger.With().Str("component", "service-manager").Logger()
 	errGroup, ctx := errgroup.WithContext(context.Background())
+
 	return &ServiceManager{
 		Context:         ctx,
 		logger:          &serviceLogger,
@@ -65,13 +67,17 @@ func (s *ServiceManager) SetupHealthServer(address string, certCfg *aserto.TLSCo
 
 	s.HealthServer = healthServer
 	healthListener, err := net.Listen("tcp", address)
+
 	s.logger.Info().Msgf("Starting %s health server", address)
+
 	if err != nil {
 		return err
 	}
+
 	s.errGroup.Go(func() error {
 		return healthServer.GRPCServer.Serve(healthListener)
 	})
+
 	return nil
 }
 
@@ -119,6 +125,7 @@ func (s *ServiceManager) SetupMetricsServer(address string, certCfg *aserto.TLSC
 		if ok {
 			return prometheus.Labels{"method": method}
 		}
+
 		return nil
 	}
 
@@ -152,9 +159,12 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 					<-s.Servers[dependsOn].Started // wait for started from the dependent service.
 				}
 			}
+
 			grpcServer := serverDetails.Server
 			listener := serverDetails.Listener
+
 			s.logger.Info().Msgf("Starting %s gRPC server", address)
+
 			s.errGroup.Go(func() error {
 				return grpcServer.Serve(listener)
 			})
@@ -164,6 +174,7 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 				if httpServer.Server != nil {
 					s.errGroup.Go(func() error {
 						s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
+
 						if httpServer.Certs.HasCert() {
 							err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key)
 							if err != nil {
@@ -175,15 +186,18 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 								return err
 							}
 						}
+
 						return nil
 					})
 				}
 			}
 
 			serverDetails.Started <- true // send started information.
+
 			return nil
 		})
 	}
+
 	return nil
 }
 
@@ -200,10 +214,12 @@ func (s *ServiceManager) logDetails(address string, element interface{}) {
 func (s *ServiceManager) StopServers(ctx context.Context) {
 	timeout := time.Duration(s.shutdownTimeout) * time.Second
 	timeoutContext, cancel := context.WithTimeout(ctx, timeout)
+
 	defer cancel()
 
 	if s.HealthServer != nil {
 		s.logger.Info().Msgf("Stopping %s health server", s.HealthServer.Address)
+
 		if !shutDown(s.HealthServer.GRPCServer, timeout) {
 			s.logger.Warn().Msgf("Stopped %s health server forcefully", s.HealthServer.Address)
 		}
@@ -211,10 +227,11 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 
 	if s.MetricServer != nil {
 		s.logger.Info().Msgf("Stopping %s metric server", s.MetricServer.Addr)
-		err := s.MetricServer.Shutdown(timeoutContext)
-		if err != nil {
+
+		if err := s.MetricServer.Shutdown(timeoutContext); err != nil {
 			s.logger.Err(err).Msgf("failed to shutdown metric server %s", s.MetricServer.Addr)
 			s.logger.Debug().Msgf("forcefully closing metric server %s", s.MetricServer.Addr)
+
 			if err := s.MetricServer.Close(); err != nil {
 				s.logger.Err(err).Msgf("failed to close the metric server %s", s.MetricServer.Addr)
 			}
@@ -225,10 +242,11 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 		// shutdown gateway service first, as it is layered on-top of the gRPC service.
 		if value.Gateway != nil && value.Gateway.Server != nil {
 			s.logger.Info().Msgf("Stopping %s gateway server", value.Gateway.Server.Addr)
-			err := value.Gateway.Server.Shutdown(timeoutContext)
-			if err != nil {
+
+			if err := value.Gateway.Server.Shutdown(timeoutContext); err != nil {
 				s.logger.Err(err).Msgf("failed to shutdown gateway for %s", address)
 				s.logger.Debug().Msgf("forcefully closing gateway %s", address)
+
 				if err := value.Gateway.Server.Close(); err != nil {
 					s.logger.Err(err).Msgf("failed to close gateway server %s", address)
 				}
@@ -237,6 +255,7 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 
 		// shutdown gRPC service.
 		s.logger.Info().Msgf("Stopping %s gRPC server", address)
+
 		if !shutDown(value.Server, timeout) {
 			s.logger.Warn().Msgf("Stopped %s gRPC forcefully", address)
 		}

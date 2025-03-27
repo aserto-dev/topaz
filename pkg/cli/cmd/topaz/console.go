@@ -15,8 +15,10 @@ func (cmd *ConsoleCmd) Run(c *cc.CommonCtx) error {
 	if !strings.HasSuffix(cmd.ConsoleAddress, "/ui/directory") {
 		cmd.ConsoleAddress += "/ui/directory"
 	}
+
 	if !strings.HasPrefix(cmd.ConsoleAddress, "https://") {
 		cmd.ConsoleAddress = "https://" + cmd.ConsoleAddress
 	}
+
 	return browser.OpenURL(cmd.ConsoleAddress)
 }

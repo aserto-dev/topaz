@@ -42,6 +42,7 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -50,6 +51,7 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -58,8 +60,7 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req authorizer.ListPoliciesRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 
@@ -80,6 +81,7 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 	for _, module := range resp.Result {
 		tab.WithRow(strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId())
 	}
+
 	tab.Do()
 
 	return nil

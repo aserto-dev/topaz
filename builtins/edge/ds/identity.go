@@ -38,17 +38,21 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				type argsV3 struct {
 					ID string `json:"id"`
 				}
+
 				return help(fnName, argsV3{})
 			}
 
 			user, err := directory.ResolveIdentity(bctx.Context, dr.GetDS(), args.ID)
+
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
+
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
 					return nil, err
 				}
+
 				return ast.NewTerm(astVal), nil
 			case err != nil:
 				return nil, err

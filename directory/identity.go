@@ -63,6 +63,7 @@ func ResolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity str
 		if obj, err := resolveIdentity(ctx, client, identity); err == nil {
 			return obj, nil
 		}
+
 		return resolveIdentityLegacy(ctx, client, identity)
 	}
 }
@@ -76,6 +77,7 @@ func resolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity str
 		SubjectId:   identity,
 		WithObjects: true,
 	}
+
 	return resolveIdentityToUser(ctx, client, relReq)
 }
 
@@ -88,11 +90,13 @@ func resolveIdentityLegacy(ctx context.Context, client dsr3.ReaderClient, identi
 		SubjectType: User,
 		WithObjects: true,
 	}
+
 	return resolveIdentityToUser(ctx, client, relReq)
 }
 
 func resolveIdentityToUser(ctx context.Context, client dsr3.ReaderClient, relReq *dsr3.GetRelationRequest) (*dsc3.Object, error) {
 	relResp, err := client.GetRelation(ctx, relReq)
+
 	switch {
 	case err != nil && status.Code(err) == codes.NotFound:
 		return nil, aerr.ErrDirectoryObjectNotFound

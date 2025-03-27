@@ -69,14 +69,18 @@ func (c *Controller) Start(ctx context.Context) func() {
 
 	errGroup.Go(func() error {
 		c.logger.Trace().Msg("command loop running")
+
 		for retry := 0; ; retry++ {
 			retry++
+
 			err := c.runCommandLoop(ctx)
 			if err == nil { // graceful shutdown on context canceled.
 				c.logger.Trace().Msg("command loop ended")
 				return nil
 			}
+
 			c.logger.Info().Err(err).Msg("command loop exited with error, restarting")
+
 			backoff := timeout * time.Duration(math.Pow(2, float64(retry)))
 			if sleepWithContext(ctx, min(backoff, maxBackoff)) == Canceled {
 				c.logger.Trace().Msg("command loop canceled")
@@ -89,6 +93,7 @@ func (c *Controller) Start(ctx context.Context) func() {
 
 	return func() {
 		cancel()
+
 		if err := errGroup.Wait(); err != nil {
 			c.logger.Error().Err(err).Msg("cleanup error")
 		}
@@ -112,10 +117,11 @@ func (c *Controller) runCommandLoop(ctx context.Context) error {
 			}
 
 			c.logger.Debug().Msgf("processing remote command %v", cmd.Command)
-			err := c.handler(context.Background(), cmd.Command)
-			if err != nil {
+
+			if err := c.handler(context.Background(), cmd.Command); err != nil {
 				c.logger.Error().Err(err).Msg("error processing command")
 			}
+
 			c.logger.Trace().Msg("successfully processed remote command")
 		}
 	})

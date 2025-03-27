@@ -33,6 +33,7 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 	tr := tar.NewReader(gz)
 
 	g, iCtx := errgroup.WithContext(context.Background())
+
 	stream, err := c.Importer.Import(iCtx)
 	if err != nil {
 		return err
@@ -147,6 +148,7 @@ func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Read
 			if strings.Contains(err.Error(), "unknown field") {
 				continue
 			}
+
 			return err
 		}
 
@@ -173,10 +175,12 @@ func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.
 		if errors.Is(err, io.EOF) {
 			break
 		}
+
 		if err != nil {
 			if strings.Contains(err.Error(), "unknown field") {
 				continue
 			}
+
 			return err
 		}
 

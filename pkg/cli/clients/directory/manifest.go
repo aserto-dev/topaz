@@ -20,6 +20,7 @@ func (c *Client) GetManifest(ctx context.Context) (*bytes.Reader, error) {
 	data := bytes.Buffer{}
 
 	bytesRecv := 0
+
 	for {
 		resp, err := stream.Recv()
 		if errors.Is(err, io.EOF) {
@@ -52,11 +53,13 @@ func (c *Client) SetManifest(ctx context.Context, r io.Reader) error {
 	}
 
 	buf := make([]byte, blockSize)
+
 	for {
 		n, err := r.Read(buf)
 		if errors.Is(err, io.EOF) {
 			break
 		}
+
 		if err != nil {
 			return err
 		}

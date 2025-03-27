@@ -87,6 +87,7 @@ func directoryRequests() []proto.Message {
 		},
 		&reader.GetGraphRequest{},
 	}
+
 	return reqs
 }
 
@@ -202,5 +203,6 @@ func accessRequests() []proto.Message {
 			Page:    &access.Page{},
 		},
 	}
+
 	return reqs
 }

@@ -40,6 +40,7 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -48,6 +49,7 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -109,6 +111,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -117,6 +120,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -125,8 +129,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.SetObjectRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 
@@ -134,6 +137,7 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to set object")
 	}
+
 	return jsonx.OutputJSONPB(c.StdOut(), resp)
 }
 
@@ -178,6 +182,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -186,6 +191,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -194,8 +200,7 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req writer.DeleteObjectRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 
@@ -242,6 +247,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -250,6 +256,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 		if err := p.Show(); err != nil {
 			return err
 		}
+
 		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
 	}
 
@@ -258,8 +265,7 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.GetObjectsRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 

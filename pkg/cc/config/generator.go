@@ -55,6 +55,7 @@ func (g *Generator) WithTenantID(tenantID string) *Generator {
 func (g *Generator) WithDiscovery(url, key string) *Generator {
 	g.DiscoveryURL = url
 	g.TenantKey = key
+
 	return g
 }
 
@@ -63,6 +64,7 @@ func (g *Generator) WithController(url, clientCertPath, clientKeyPath string) *G
 	g.ControlPlane.Address = url
 	g.ControlPlane.ClientCertPath = clientCertPath
 	g.ControlPlane.ClientKeyPath = clientKeyPath
+
 	return g
 }
 
@@ -72,6 +74,7 @@ func (g *Generator) WithSelfDecisionLogger(emsURL, clientCertPath, clientKeyPath
 	g.DecisionLogger.ClientCertPath = clientCertPath
 	g.DecisionLogger.ClientKeyPath = clientKeyPath
 	g.DecisionLogger.StorePath = storePath
+
 	return g
 }
 

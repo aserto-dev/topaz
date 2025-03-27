@@ -91,6 +91,7 @@ func (e *Topaz) Start() error {
 	// Add registered services to the health service
 	if e.Manager.HealthServer != nil {
 		healthCheck = e.Manager.HealthServer.Server
+
 		for serviceName := range e.Configuration.APIConfig.Services {
 			e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_SERVING)
 		}
@@ -110,6 +111,7 @@ func (e *Topaz) ConfigServices() error {
 	if err != nil {
 		return err
 	}
+
 	if err := e.prepareServices(); err != nil {
 		return err
 	}
@@ -122,6 +124,7 @@ func (e *Topaz) ConfigServices() error {
 
 	for address, cfg := range serviceMap {
 		e.Logger.Debug().Msgf("configuring address %s", address)
+
 		serviceConfig := cfg
 
 		// get middlewares for edge services.
@@ -132,22 +135,27 @@ func (e *Topaz) ConfigServices() error {
 
 		opts = append(opts, metricsMiddleware...)
 
-		var grpcs []builder.GRPCRegistrations
-		var gateways []builder.HandlerRegistrations
-		var cleanups []func()
+		var (
+			grpcs    []builder.GRPCRegistrations
+			gateways []builder.HandlerRegistrations
+			cleanups []func()
+		)
 
 		for _, serv := range e.Services {
 			added := false
+
 			for _, serviceName := range serv.AvailableServices() {
 				if added || !lo.Contains(serviceConfig.registeredServices, serviceName) {
 					continue
 				}
 
 				grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
+
 				gatewayPort, err := config.PortFromAddress(cfg.API.Gateway.ListenAddress)
 				if err != nil {
 					return errors.Wrapf(err, "invalid gateway address %q in service %q", cfg.API.Gateway.ListenAddress, serviceName)
 				}
+
 				gateways = append(gateways, serv.GetGatewayRegistration(gatewayPort, serviceConfig.registeredServices...))
 				cleanups = append(cleanups, serv.Cleanups()...)
 				added = true
@@ -167,8 +175,7 @@ func (e *Topaz) ConfigServices() error {
 			&builder.GatewayOptions{
 				HandlerRegistrations: func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 					for _, f := range gateways {
-						err := f(ctx, mux, grpcEndpoint, opts)
-						if err != nil {
+						if err := f(ctx, mux, grpcEndpoint, opts); err != nil {
 							return err
 						}
 					}
@@ -208,8 +215,7 @@ func (e *Topaz) ConfigServices() error {
 			}
 		}
 
-		err = e.Manager.AddGRPCServer(server)
-		if err != nil {
+		if err := e.Manager.AddGRPCServer(server); err != nil {
 			return err
 		}
 	}
@@ -224,6 +230,7 @@ func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 			return nil, err
 		}
 	}
+
 	if e.Configuration.APIConfig.Metrics.ListenAddress != "" {
 		metricsMiddleware, err := e.Manager.SetupMetricsServer(e.Configuration.APIConfig.Metrics.ListenAddress,
 			&e.Configuration.APIConfig.Metrics.Certificates,
@@ -231,8 +238,10 @@ func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		return metricsMiddleware, nil
 	}
+
 	return nil, nil
 }
 
@@ -248,6 +257,7 @@ func (e *Topaz) prepareServices() error {
 		if err != nil {
 			return err
 		}
+
 		e.Services["edge"] = edgeDir
 	}
 
@@ -256,12 +266,14 @@ func (e *Topaz) prepareServices() error {
 		if err != nil {
 			return err
 		}
+
 		e.Services["authorizer"] = authorizer
 	}
 
 	if _, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
 		e.Services["console"] = NewConsole()
 	}
+
 	return nil
 }
 
@@ -279,6 +291,7 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 			if existing.API.Gateway.ListenAddress == "" && config.Gateway.ListenAddress != "" {
 				existing.API.Gateway = config.Gateway
 			}
+
 			portMap[config.GRPC.ListenAddress] = existing
 		} else {
 			serv := services{}
@@ -296,26 +309,26 @@ func KeepAliveDialOption() []grpc.DialOption {
 		Time:    30 * time.Second, // send pings every 30 seconds if there is no activity
 		Timeout: 5 * time.Second,  // wait 5 seconds for ping ack before considering the connection dead
 	}
+
 	return []grpc.DialOption{grpc.WithKeepaliveParams(kacp)}
 }
 
 func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
-	var decisionLogger decisionlog.DecisionLogger
-	var err error
-
 	switch cfg.Type {
 	case "self":
-		decisionLogger, err = self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
+		decisionLogger, err := self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
 		if err != nil {
 			return nil, err
 		}
+
+		return decisionLogger, err
 
 	case "file":
 		logPath := cfg.Config["log_file_path"]
 		maxSize, _ := cfg.Config["max_file_size_mb"].(int)
 		maxFiles, _ := cfg.Config["max_file_count"].(int)
 
-		decisionLogger, err = file.New(e.Context, &file.Config{
+		decisionLogger, err := file.New(e.Context, &file.Config{
 			LogFilePath:   fmt.Sprintf("%v", logPath),
 			MaxFileSizeMB: maxSize,
 			MaxFileCount:  maxFiles,
@@ -324,14 +337,16 @@ func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.Dec
 			return nil, err
 		}
 
+		return decisionLogger, err
+
 	default:
-		decisionLogger, err = nop.New(e.Context, e.Logger)
+		decisionLogger, err := nop.New(e.Context, e.Logger)
 		if err != nil {
 			return nil, err
 		}
-	}
 
-	return decisionLogger, err
+		return decisionLogger, err
+	}
 }
 
 func (e *Topaz) validateConfig() error {
@@ -340,7 +355,9 @@ func (e *Topaz) validateConfig() error {
 			for _, serviceName := range e.Services["edge"].AvailableServices() {
 				delete(e.Configuration.APIConfig.Services, serviceName)
 			}
+
 			delete(e.Services, "edge")
+
 			e.Logger.Info().Msg("disabling local directory services")
 		}
 	}
@@ -359,15 +376,18 @@ func (e *Topaz) validateConfig() error {
 
 	for key := range e.Configuration.APIConfig.Services {
 		validKey := false
+
 		for _, service := range e.Services {
 			if lo.Contains(service.AvailableServices(), key) {
 				validKey = true
 				break
 			}
 		}
+
 		if !validKey {
 			return errors.Errorf("unknown service type %s", key)
 		}
 	}
+
 	return nil
 }

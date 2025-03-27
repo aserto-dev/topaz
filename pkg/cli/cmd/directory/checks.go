@@ -37,6 +37,7 @@ func (cmd *ChecksCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.Request = req
 	}
 
@@ -49,8 +50,7 @@ func (cmd *ChecksCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	var req reader.ChecksRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
 		return err
 	}
 

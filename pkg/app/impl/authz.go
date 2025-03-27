@@ -127,6 +127,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 	queryStmt := strings.Builder{}
 	r := 0
+
 	for i := range listPolicies {
 		for _, rule := range listPolicies[i].AST.Rules {
 			if !strings.HasPrefix(listPolicies[i].AST.Package.Path.String(), "data."+req.PolicyContext.Path) {
@@ -138,7 +139,9 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 			}
 
 			queryStmt.WriteString(fmt.Sprintf("r%d = %s\n", i, listPolicies[i].AST.Package.Path))
+
 			r++
+
 			break
 		}
 	}
@@ -170,6 +173,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		expr := strings.Split(expression.Text, "=")
 		rule := strings.TrimSpace(expr[0])
 		path := strings.TrimPrefix(strings.TrimSpace(expr[1]), "data.")
+
 		if req.Options.PathSeparator == authorizer.PathSeparator_PATH_SEPARATOR_SLASH {
 			path = strings.ReplaceAll(path, ".", "/")
 		}
@@ -180,6 +184,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 		}
 
 		outcomes := make(map[string]interface{})
+
 		for _, decision := range req.PolicyContext.Decisions {
 			if r, ok := binding[decision].(bool); ok {
 				outcomes[decision] = r
@@ -274,6 +279,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	if err != nil {
 		return resp, aerr.ErrBadQuery.Err(err).Msgf("query evaluation failed: %s", queryStmt)
 	}
+
 	if len(results) == 0 {
 		return resp, aerr.ErrBadQuery.Err(err).Msgf("undefined results: %s", queryStmt)
 	}
@@ -320,8 +326,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		Outcomes: getOutcomes(resp.Decisions),
 	}
 
-	err = dlPlugin.Log(ctx, &d)
-	if err != nil {
+	if err := dlPlugin.Log(ctx, &d); err != nil {
 		return resp, err
 	}
 
@@ -333,6 +338,7 @@ func getTenantID(ctx context.Context) *string {
 	if tenantID != "" {
 		return &tenantID
 	}
+
 	return nil
 }
 
@@ -413,8 +419,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 		return &authorizer.QueryResponse{}, err
 	}
 
-	_, err = rt.ValidateQuery(req.Query)
-	if err != nil {
+	if _, err := rt.ValidateQuery(req.Query); err != nil {
 		return &authorizer.QueryResponse{}, aerr.ErrBadQuery.Err(err)
 	}
 
@@ -432,18 +437,20 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	}
 
 	resp := &authorizer.QueryResponse{}
+
 	queryResultJSON, err := json.Marshal(queryResult.Result)
 	if err != nil {
 		return resp, err
 	}
 
 	var queryResultMap []interface{}
-	err = json.Unmarshal(queryResultJSON, &queryResultMap)
-	if err != nil {
+	if err := json.Unmarshal(queryResultJSON, &queryResultMap); err != nil {
 		return resp, err
 	}
+
 	respMap := make(map[string]interface{})
 	respMap["result"] = queryResultMap
+
 	resp.Response, err = structpb.NewStruct(respMap)
 	if err != nil {
 		return resp, err
@@ -484,21 +491,21 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 	return resp, nil
 }
 
-//nolint:staticcheck
 func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.PolicyInstance) (*runtime.Runtime, error) {
-	var rt *runtime.Runtime
-	var err error
 	if policyInstance != nil {
-		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyInstance.Name)
+		rt, err := s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyInstance.Name)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to procure tenant runtime")
 		}
-	} else {
-		rt, err = s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, "")
-		if err != nil {
-			return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
-		}
+
+		return rt, err
 	}
+
+	rt, err := s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, "")
+	if err != nil {
+		return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
+	}
+
 	return rt, err
 }
 
@@ -569,16 +576,19 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 	if input == nil {
 		input = make(map[string]interface{})
 	}
+
 	log.Debug().Str("compile", req.Query).Interface("input", input).Msg("compile")
+
 	rt, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return &authorizer.CompileResponse{}, err
 	}
 
-	_, err = rt.ValidateQuery(req.Query)
-	if err != nil {
+	if _, err = rt.ValidateQuery(req.Query); err != nil {
 		return &authorizer.CompileResponse{}, aerr.ErrBadQuery.Err(err)
 	}
+
+	resp := &authorizer.CompileResponse{}
 
 	compileResult, err := rt.Compile(ctx, req.Query,
 		input,
@@ -588,20 +598,20 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 		req.Options.Metrics,
 		req.Options.Instrument,
 		TraceLevelToExplainModeV2(req.Options.Trace))
-	resp := &authorizer.CompileResponse{}
 	if err != nil {
 		return resp, err
 	}
+
 	compileResultJSON, err := json.Marshal(compileResult.Result)
 	if err != nil {
 		return resp, err
 	}
 
 	var compileResultMap map[string]interface{}
-	err = json.Unmarshal(compileResultJSON, &compileResultMap)
-	if err != nil {
+	if err := json.Unmarshal(compileResultJSON, &compileResultMap); err != nil {
 		return resp, err
 	}
+
 	resp.Result, err = structpb.NewStruct(compileResultMap)
 	if err != nil {
 		return resp, err
@@ -637,6 +647,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 			}
 		}
 	}
+
 	return resp, nil
 }
 
@@ -673,6 +684,7 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 
 func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPolicyRequest) (*authorizer.GetPolicyResponse, error) {
 	response := &authorizer.GetPolicyResponse{}
+
 	rt, err := s.getRuntime(ctx, req.PolicyInstance)
 	if err != nil {
 		return response, errors.Wrap(err, "failed to get runtime")
@@ -699,6 +711,7 @@ func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPol
 	}
 
 	response.Result = module
+
 	return response, nil
 }
 
@@ -709,8 +722,7 @@ func policyToModule(policy types.PolicyV1) (*api.Module, error) {
 	}
 
 	var v interface{}
-	err = json.Unmarshal(astBts, &v)
-	if err != nil {
+	if err := json.Unmarshal(astBts, &v); err != nil {
 		return nil, errors.Wrap(err, "failed to determine AST")
 	}
 
@@ -718,16 +730,19 @@ func policyToModule(policy types.PolicyV1) (*api.Module, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create astValue")
 	}
+
 	var packageName string
 	if policy.AST != nil {
 		packageName = policy.AST.Package.Path.String()
 	}
+
 	module := api.Module{
 		Id:          &policy.ID,
 		Raw:         &policy.Raw,
 		PackagePath: &packageName,
 		Ast:         astValue,
 	}
+
 	return &module, nil
 }
 
@@ -809,6 +824,7 @@ func getID(v map[string]interface{}) string {
 			return i
 		}
 	}
+
 	return ""
 }
 
@@ -817,12 +833,14 @@ func getEmail(v map[string]interface{}) string {
 		if e, ok := u["email"].(string); ok {
 			return e
 		}
+
 		if p, ok := u["properties"].(map[string]interface{}); ok {
 			if e, ok := p["email"].(string); ok {
 				return e
 			}
 		}
 	}
+
 	return ""
 }
 

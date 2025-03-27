@@ -67,5 +67,6 @@ func removeFile(fpath string) error {
 			return errors.Wrapf(err, "failed to delete %s", fpath)
 		}
 	}
+
 	return nil
 }

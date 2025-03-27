@@ -30,7 +30,9 @@ func (cmd *SetCmd) Run(ctx context.Context) error {
 	dsClient := dsc.New(conn)
 
 	var err error
+
 	r := os.Stdin
+
 	if cmd.Manifest != "" {
 		r, err = os.Open(cmd.Manifest)
 		if err != nil {

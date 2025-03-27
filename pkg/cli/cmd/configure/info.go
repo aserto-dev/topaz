@@ -34,15 +34,18 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	iter := query.Run(cmd.json(c))
+
 	for {
 		v, ok := iter.Next()
 		if !ok {
 			break
 		}
+
 		if err, ok := v.(error); ok {
 			if err, ok := err.(*gojq.HaltError); ok && err.Value() == nil { //nolint:errorlint
 				break
 			}
+
 			return err
 		}
 
@@ -145,7 +148,9 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 
 func (cmd InfoConfigCmd) json(c *cc.CommonCtx) map[string]any {
 	var j map[string]any
+
 	buf, _ := json.Marshal(cmd.info(c)) //nolint:errchkjson // ok
 	_ = json.Unmarshal(buf, &j)         //nolint:errchkjson // ok
+
 	return j
 }

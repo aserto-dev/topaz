@@ -40,6 +40,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				type argsV3 struct {
 					ID string `json:"id"`
 				}
+
 				return help(fnName, argsV3{})
 			}
 
@@ -48,19 +49,23 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				ObjectId:      args.ID,
 				WithRelations: false,
 			})
+
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
+
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
 					return nil, err
 				}
+
 				return ast.NewTerm(astVal), nil
 			case err != nil:
 				return nil, err
 			}
 
 			buf := new(bytes.Buffer)
+
 			var result proto.Message
 
 			if resp.Result != nil {

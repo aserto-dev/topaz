@@ -16,6 +16,7 @@ import (
 
 func Validate(ctx context.Context, cfg Config) (bool, error) {
 	g, ctx := errgroup.WithContext(ctx)
+
 	ctx, cancel := context.WithTimeout(ctx, cfg.CommandTimeout())
 	defer cancel()
 
@@ -33,11 +34,13 @@ func Validate(ctx context.Context, cfg Config) (bool, error) {
 	callOpts := []grpc.CallOption{}
 
 	refClient := grpc_reflection_v1.NewServerReflectionClient(conn)
+
 	stream, err := refClient.ServerReflectionInfo(ctx, callOpts...)
 	if err != nil {
 		if st, ok := status.FromError(err); ok {
 			return false, errors.Errorf("%s: %s", st.Code().String(), st.Message())
 		}
+
 		return false, err
 	}
 
@@ -54,6 +57,7 @@ func Validate(ctx context.Context, cfg Config) (bool, error) {
 		if in.GetValidHost() == "" {
 			return status.Errorf(codes.Unavailable, "no valid host")
 		}
+
 		return nil
 	})
 

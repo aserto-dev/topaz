@@ -52,6 +52,7 @@ func (f *prompt) Show() error {
 	if !rc {
 		return ErrCancelled
 	}
+
 	return nil
 }
 
@@ -63,8 +64,10 @@ func (f *prompt) init() error {
 		if event.Key() == tcell.KeyESC || event.Key() == tcell.KeyCtrlC {
 			f.rc <- false
 			f.app.Stop()
+
 			return nil
 		}
+
 		return event
 	})
 
@@ -117,6 +120,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 				f.form.AddInputField(fieldName, "[ ]", 64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
@@ -146,16 +150,18 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 		case protoreflect.EnumKind:
 			options := []string{}
 			lookup := map[string]int32{}
+
 			for v := range fields.Get(i).Enum().Values().Len() {
 				name := string(fields.Get(i).Enum().Values().Get(v).Name())
 				number := int32(fields.Get(i).Enum().Values().Get(v).Number())
+
 				options = append(options, name)
+
 				lookup[name] = number
 			}
 
 			f.form.AddDropDown(fieldName, options, 0, func(opt string, index int) {
-				number, ok := lookup[opt]
-				if ok {
+				if number, ok := lookup[opt]; ok {
 					_ = f.setEnum(msg.ProtoReflect(), fields.Get(c), number)
 				}
 			})
@@ -165,6 +171,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
@@ -172,6 +179,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
@@ -179,6 +187,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 				f.form.AddInputField(fieldName, "", 64, nil, func(s string) {
 					_ = f.setTimestamp(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
@@ -186,6 +195,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 				f.form.AddInputField(fieldName, "", 64, nil, func(s string) {
 					_ = f.setTimestamp(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
@@ -193,6 +203,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
@@ -248,7 +259,9 @@ func (f *prompt) setProps(msg protoreflect.Message, fd protoreflect.FieldDescrip
 	if err := pbs.UnmarshalJSON([]byte(value)); err != nil {
 		return err
 	}
+
 	msg.Set(fd, protoreflect.ValueOfMessage(pbs.ProtoReflect()))
+
 	return nil
 }
 
@@ -257,8 +270,10 @@ func (f *prompt) setTimestamp(msg protoreflect.Message, fd protoreflect.FieldDes
 	if err != nil {
 		return err
 	}
+
 	ts := timestamppb.New(t)
 	msg.Set(fd, protoreflect.ValueOfMessage(ts.ProtoReflect()))
+
 	return nil
 }
 

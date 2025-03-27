@@ -60,6 +60,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 	sort.Strings(fileNames)
 
 	tab.WithTableNoAutoWrapText()
+
 	for _, k := range fileNames {
 		isValid := true
 		if time.Until(certDetails[k].NotAfter) < 0 {
@@ -74,6 +75,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 			strings.Join(certDetails[k].DNSNames, ","),
 		)
 	}
+
 	tab.Do()
 
 	return nil

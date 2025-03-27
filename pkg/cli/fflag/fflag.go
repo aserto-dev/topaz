@@ -61,6 +61,7 @@ func F(s string) FFlag {
 			return FFlag(k)
 		}
 	}
+
 	return Default
 }
 
@@ -74,10 +75,12 @@ func (f FFlag) Base() uint64 {
 
 func (f FFlag) String() string {
 	str := []string{}
+
 	for k, v := range flags {
 		if f.IsSet(FFlag(k)) {
 			str = append(str, v)
 		}
 	}
+
 	return strings.Join(str, "|")
 }

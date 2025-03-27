@@ -59,6 +59,7 @@ type template struct {
 func (t *template) AbsURL(relative string) string {
 	abs := *t.base
 	abs.Path = path.Join(abs.Path, relative)
+
 	return abs.String()
 }
 
@@ -123,6 +124,7 @@ func getTemplate(name, templatesURL string) (*template, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	tmpl.Name = name
 
 	return tmpl, nil
@@ -153,6 +155,7 @@ func getTemplateRef(name string, templatesURL *url.URL) (*tmplRef, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		if parsed.Scheme == "" {
 			absURL := *templatesURL
 			absURL.Path = path.Join(path.Dir(absURL.Path), parsed.Path)
@@ -187,6 +190,7 @@ func (i *tmplRef) getTemplate() (*template, error) {
 
 	base := *i.absURL
 	base.Path = path.Dir(base.Path)
+
 	tmpl := template{base: &base}
 	if err := json.Unmarshal(buf, &tmpl); err != nil {
 		return nil, err

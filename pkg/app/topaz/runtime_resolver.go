@@ -58,6 +58,7 @@ func NewRuntimeResolver(
 	if err != nil {
 		return nil, cleanupRuntime, err
 	}
+
 	cleanup := func() {
 		if cleanupRuntime != nil {
 			cleanupRuntime()
@@ -74,28 +75,35 @@ func NewRuntimeResolver(
 				}
 			}
 		}
+
 		if cfg.OPA.Config.Discovery.Resource == nil {
 			return nil, func() {}, aerr.ErrBadRuntime.Msg("discovery resource must be provided")
 		}
+
 		details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
+
 		if cfg.ControllerConfig.Server.TenantID == "" {
 			cfg.ControllerConfig.Server.TenantID = cfg.OPA.InstanceID // get the tenant id from the opa instance id config.
 		}
+
 		if len(details) < 1 {
 			return nil, func() {}, aerr.ErrBadRuntime.Msg("provided discovery resource not formatted correctly")
 		}
+
 		ctrl, err := controller.NewController(logger, details[0], host, &cfg.ControllerConfig, func(cmdCtx context.Context, cmd *api.Command) error {
 			return management.HandleCommand(cmdCtx, cmd, sidecarRuntime)
 		})
 		if err != nil {
 			return nil, func() {}, err
 		}
+
 		cleanupController := ctrl.Start(ctx)
 
 		cleanup = func() {
 			if cleanupController != nil {
 				cleanupController()
 			}
+
 			if cleanupRuntime != nil {
 				cleanupRuntime()
 			}
@@ -105,16 +113,15 @@ func NewRuntimeResolver(
 		}
 	}
 
-	err = sidecarRuntime.Start(ctx)
-	if err != nil {
+	if err := sidecarRuntime.Start(ctx); err != nil {
 		return nil, cleanup, err
 	}
 
-	err = sidecarRuntime.WaitForPlugins(ctx, time.Duration(cfg.OPA.MaxPluginWaitTimeSeconds)*time.Second)
-	if err != nil {
+	if err := sidecarRuntime.WaitForPlugins(ctx, time.Duration(cfg.OPA.MaxPluginWaitTimeSeconds)*time.Second); err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
 			return nil, cleanup, aerr.ErrRuntimeLoading.Err(err).Msg("timeout while waiting for runtime to load")
 		}
+
 		return nil, cleanup, aerr.ErrBadRuntime.Err(err)
 	}
 

@@ -56,19 +56,23 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			}
 
 			resp, err := dr.GetDS().GetRelation(bctx.Context, &args)
+
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
+
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
 					return nil, err
 				}
+
 				return ast.NewTerm(astVal), nil
 			case err != nil:
 				return nil, err
 			}
 
 			buf := new(bytes.Buffer)
+
 			var result proto.Message
 
 			if resp != nil {
@@ -135,12 +139,13 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 				if r.Page.NextToken == "" {
 					break
 				}
+
 				args.Page.Token = r.Page.NextToken
 			}
 
 			buf := new(bytes.Buffer)
-			var result proto.Message
 
+			var result proto.Message
 			if resp.Results != nil {
 				result = resp
 			}

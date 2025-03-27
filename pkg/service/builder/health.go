@@ -26,6 +26,7 @@ func newGRPCHealthServer(certCfg *aserto.TLSConfig) *Health {
 
 	healthpb.RegisterHealthServer(grpcHealthServer, healthServer)
 	reflection.Register(grpcHealthServer)
+
 	return &Health{
 		Server:     healthServer,
 		GRPCServer: grpcHealthServer,

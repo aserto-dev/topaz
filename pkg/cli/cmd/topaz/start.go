@@ -20,6 +20,7 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		if err := cc.WaitForPorts(ports, cc.PortOpened); err != nil {
 			return err
 		}

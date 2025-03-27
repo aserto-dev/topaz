@@ -50,6 +50,7 @@ func run() int {
 	cliConfigFile := filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
 
 	oldDBPath := filepath.Join(cc.GetTopazDir(), "db")
+
 	warn, err := checkDBFiles(oldDBPath)
 	if err != nil {
 		return exitErr(err)
@@ -60,8 +61,7 @@ func run() int {
 		return exitErr(err)
 	}
 
-	err = checkVersion(c)
-	if err != nil {
+	if err := checkVersion(c); err != nil {
 		return exitErr(err)
 	}
 
@@ -116,6 +116,7 @@ func run() int {
 			"timeout":            cc.Timeout().String(),
 		},
 	)
+
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
 
 	if cli.NoColor {
@@ -161,6 +162,7 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 	if _, err := os.Stat(topazDBDir); os.IsNotExist(err) {
 		return false, nil
 	}
+
 	if topazDBDir == cc.GetTopazDataDir() {
 		return false, nil
 	}
@@ -183,6 +185,7 @@ func checkVersion(c *cc.CommonCtx) error {
 	if err != nil {
 		return err
 	}
+
 	if buildVer.Prerelease() != "" {
 		return nil
 	}
@@ -200,10 +203,12 @@ func checkVersion(c *cc.CommonCtx) error {
 		c.Config.Defaults.ContainerTag,
 		ver.GetInfo().Version,
 	)
+
 	if !common.PromptYesNo("Do you want to update the configuration setting?", false) {
 		return nil
 	}
 
 	c.Config.Defaults.ContainerTag = ver.GetInfo().Version
+
 	return c.SaveContextConfig(common.CLIConfigurationFile)
 }

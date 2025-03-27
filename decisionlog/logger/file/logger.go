@@ -26,6 +26,7 @@ func New(ctx context.Context, cfg *Config, logger *zerolog.Logger) (*fileLogger,
 	}
 
 	decisionLogger := zerolog.New(ljLogger)
+
 	return (*fileLogger)(&decisionLogger), nil
 }
 
@@ -36,6 +37,7 @@ func (l *fileLogger) Log(d *api.Decision) error {
 	}
 
 	(*zerolog.Logger)(l).Log().Msg(string(bytes))
+
 	return nil
 }
 

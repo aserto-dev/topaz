@@ -19,9 +19,11 @@ func (cfg *Config) SetDefaults() {
 			cfg.LogFilePath = pwd
 		}
 	}
+
 	if cfg.MaxFileSizeMB == 0 {
 		cfg.MaxFileSizeMB = 50
 	}
+
 	if cfg.MaxFileCount == 0 {
 		cfg.MaxFileCount = 2
 	}

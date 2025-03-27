@@ -29,6 +29,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		if err != nil {
 			return err
 		}
+
 		cmd.File = path.Join(currentDir, "backup.tar.gz")
 	}
 

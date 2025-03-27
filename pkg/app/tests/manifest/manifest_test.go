@@ -181,9 +181,11 @@ func setManifest(ctx context.Context, dsm dsm3.ModelClient, r io.Reader) (int64,
 		if err == io.EOF {
 			break
 		}
+
 		if err != nil {
 			return bytesSend, err
 		}
+
 		bytesSend += int64(n)
 
 		if err := stream.Send(&dsm3.SetManifestRequest{
