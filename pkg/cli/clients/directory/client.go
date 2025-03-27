@@ -92,3 +92,16 @@ func (cfg *Config) ClientConfig() *client.Config {
 func (cfg *Config) CommandTimeout() time.Duration {
 	return cfg.Timeout
 }
+
+func (cfg *Config) Invoke(ctx context.Context, method string, args any, reply any) error {
+	con, err := cfg.Connect(ctx)
+	if err != nil {
+		return errors.Wrap(err, "failed to get gRPC client connection")
+	}
+
+	if err := con.Invoke(ctx, method, args, reply, []grpc.CallOption{grpc.StaticMethod()}...); err != nil {
+		return errors.Wrapf(err, "invoke method %s failed", method)
+	}
+
+	return nil
+}
