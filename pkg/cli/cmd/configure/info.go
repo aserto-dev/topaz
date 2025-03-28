@@ -149,8 +149,14 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 func (cmd InfoConfigCmd) json(c *cc.CommonCtx) map[string]any {
 	var j map[string]any
 
-	buf, _ := json.Marshal(cmd.info(c)) //nolint:errchkjson // ok
-	_ = json.Unmarshal(buf, &j)         //nolint:errchkjson // ok
+	buf, err := json.Marshal(cmd.info(c))
+	if err != nil {
+		return map[string]any{}
+	}
+
+	if err := json.Unmarshal(buf, &j); err != nil {
+		return map[string]any{}
+	}
 
 	return j
 }

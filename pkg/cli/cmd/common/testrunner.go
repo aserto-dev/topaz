@@ -114,7 +114,7 @@ func (runner *TestRunner) execFile(c *cc.CommonCtx, file string) error {
 
 var pbUnmarshal = protojson.UnmarshalOptions{DiscardUnknown: true}
 
-//nolint:gocyclo,funlen
+//nolint:funlen
 func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 	csvWriter := csv.NewWriter(c.StdOut())
 

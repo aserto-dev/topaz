@@ -9,7 +9,6 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-//nolint:lll
 type ChecksCmd struct {
 	clients.RequestArgs
 	dsc.Config

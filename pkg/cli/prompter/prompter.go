@@ -114,7 +114,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 		fieldName := strings.Join(path, ".")
 		fd := fields.Get(i)
 
-		switch fields.Get(i).Kind() { //nolint: exhaustive
+		switch fields.Get(i).Kind() {
 		case protoreflect.StringKind:
 			if fields.Get(i).IsList() {
 				f.form.AddInputField(fieldName, "[ ]", 64, nil, func(s string) {
@@ -219,7 +219,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 }
 
 func (f *prompt) setField(msg protoreflect.Message, fd protoreflect.FieldDescriptor, value string) error {
-	switch fd.Kind() { //nolint: exhaustive
+	switch fd.Kind() {
 	case protoreflect.BoolKind:
 		b, err := strconv.ParseBool(lo.Ternary(value == "", "false", value))
 		if err != nil {

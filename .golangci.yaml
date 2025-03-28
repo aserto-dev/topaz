@@ -2,150 +2,196 @@
 # golangci.com configuration
 # https://github.com/golangci/golangci/wiki/Configuration
 
-run:
-  timeout: 5m
-
-linters-settings:
-  dupl:
-    threshold: 100
-  funlen:
-    lines: 100
-    statements: 80
-  goconst:
-    min-len: 2
-    min-occurrences: 2
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      - style
-    disabled-checks:
-      - dupImport # https://github.com/go-critic/go-critic/issues/845
-      - ifElseChain
-      - octalLiteral
-      - whyNoLint
-      - wrapperFunc
-  gocyclo:
-    min-complexity: 18
-  goimports:
-    local-prefixes: github.com/golangci/golangci-lint
-  gosec:
-    excludes:
-      - G115 # potential integer overflow when converting between integer types
-  govet:
-    settings:
-      printf:
-        funcs:
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
-  misspell:
-    locale: US
-  nolintlint:
-    allow-unused: false # report any unused nolint directives
-    require-explanation: false # don't require an explanation for nolint directives
-    require-specific: false # don't require nolint directives to be specific about which linter is being skipped
-
 linters:
-  # please, do not use `enable-all`: it's deprecated and will be removed soon.
-  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
-  disable-all: true
+  # https://golangci-lint.run/usage/linters/#enabled-by-default
   enable:
+    - asasalint
     - asciicheck
+    - bidichk
     - bodyclose
+    - canonicalheader
+    # - containedctx
+    # - contextcheck
     - copyloopvar
+    # - cyclop
+    - decorder
     - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    - err113
     - errcheck
+    - errchkjson
     - errname
-    - exhaustive
+    - errorlint
+    - exptostd
+    - fatcontext
+    - forcetypeassert
     - funlen
+    - ginkgolinter
+    - gocheckcompilerdirectives
     - gochecknoinits
+    - gochecksumtype
+    # - gocognit
     - goconst
     - gocritic
     - gocyclo
     - godot
-    - gosimple
-    - err113
+    - godox
     - gofmt
+    - gofumpt
+    - goheader
     - goimports
+    - gomoddirectives
+    - gomodguard
     - goprintffuncname
     - gosec
     - gosimple
+    - gosmopolitan
     - govet
+    - grouper
+    - iface
     - importas
+    - inamedparam
     - ineffassign
+    - interfacebloat
+    - intrange
+    - ireturn
+    - lll
+    - loggercheck
+    - maintidx
+    - makezero
+    - mirror
     - misspell
+    # - mnd
+    - musttag
     - nakedret
+    - nestif
+    - nilerr
+    - nilnesserr
     - noctx
+    - nolintlint
+    - nonamedreturns
+    - nosprintfhostport
+    - perfsprint
+    # - prealloc
+    - predeclared
+    - promlinter
+    # - protogetter
+    - reassign
+    - recvcheck
     - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
     - staticcheck
     - stylecheck
+    - tagliatelle
+    - testableexamples
     - testifylint
     - testpackage
-    - typecheck
+    - tparallel
     - unconvert
     - unparam
     - unused
+    - usestdlibvars
+    - usetesting
     - wastedassign
+    - whitespace
+    - wsl
+    - zerologlint
 
-  # don't enable:
-    # - depguard
-    # - dupl
-    # - gochecknoglobals
-    # - gocognit
-    # - godox
-    # - gomnd
-    # - lll
-    # - nestif
-    # - nolintlint # conflict with 1.19 gofmt changes
-    # - prealloc
-    # - revive
-    # - wsl
-    # - whitespace
+  # explicitly disabled linters
+  disable:
+    - depguard
+    - exhaustruct
+    - exhaustive
+    - forbidigo
+    - gci # use gofumpt
+    - gochecknoglobals # no configuration options
+    - nilnil
+    - nlreturn # redundant with wsl
+    - paralleltest
+    - revive
+    - tagalign
+    - thelper
+    - varnamelen
+    - wrapcheck
 
-issues:
-  # List of regexps of issue texts to exclude, empty list by default.
-  # But independently from this option we use default exclude patterns,
-  # it can be disabled by `exclude-use-default: false`. To list all
-  # excluded by default patterns execute `golangci-lint run --help`
-  exclude:
-  - declaration of "(err|ctx)" shadows declaration at
-  - shadow of imported from 'github.com/stretchr/testify/assert' package 'assert'
-  # Excluding configuration per-path, per-linter, per-text and per-source
-  exclude-rules:
-    - path: _test\.go
-      linters:
-      - gomnd
-      - funlen
-    # https://github.com/go-critic/go-critic/issues/926
-    - text: "unnecessaryDefer:"
-      linters:
-      - gocritic
-    - text: "unnamedResult:"
-      linters:
-      - gocritic
-    - path: \.resolvers\.go
-      text: "typeDefFirst:"
-      linters:
-      - gocritic
-    - path: \.resolvers\.go
-      text: "paramTypeCombine:"
-      linters:
-      - gocritic
-    - path: \.resolvers\.go
-      text: "hugeParam:"
-      linters:
-      - gocritic
-    - text: "G404"
-      linters:
-      - gosec
-    - text: "SA1019: \\S+ is deprecated"
-      linters:
-      - staticcheck
-    - path: internal/pkg/xdg/.*\.go
-      linters:
-      - gochecknoinits
-      - gocritic
+  exclusions:
+    rules:
+      - path: pkg/app/tests/
+        linters:
+        - dupl
+        - forbidigo
+        - wsl
+      
+      - path: internal/pkg/xdg/
+        linters:
+          - gochecknoinits
+          - testableexamples
+          - usetesting
+          - wsl
+
+      - path: pkg/cli/cmd/
+        linters:
+          - dupl
+
+      - path: pkg/cli/editor/
+        linters:
+          - dupword
+          - errorlint
+          - forcetypeassert
+          - gocritic
+          - godox
+          - ireturn
+          - lll
+          - makezero
+          - nonamedreturns
+          - recvcheck
+          - wsl
+
+      - path: pkg/app/handlers/authorizer.go
+        linters:
+          - tagliatelle
+
+      - path: pkg/app/handlers/config.go
+        linters:
+          - tagliatelle
+
+      - path: cmd/topaz-db/
+        linters:
+          - staticcheck
+
+linters-settings:
+  cyclop:
+    max-complexity: 12
+
+  funlen:
+    lines: 80
+    statements: 60
+    ignore-comments: true
+
+  ireturn:
+    allow:
+      - anon
+      - error
+      - empty
+      - stdlib
+      - generic
+      - plugins.Factory
+      - plugins.Plugin
+      - proto.Message
+      - v3.ReaderClient
+      - resolvers.DirectoryResolver
+      - resolvers.RuntimeResolver
+      - decisionlog.DecisionLogger
+
+  lll:
+    line-length: 150
+
+  tagliatelle:
+    case:
+      rules:
+        json: snake
+        yaml: snake

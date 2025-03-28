@@ -12,7 +12,7 @@ import (
 const ConfigFileVersion = 2
 
 type Config struct {
-	Common           `json:"common,squash"` // nolint:staticcheck // squash is used by mapstructure
+	Common           `json:"common,squash"` //nolint:staticcheck // squash is used by mapstructure
 	Auth             AuthnConfig            `json:"auth"`
 	DecisionLogger   DecisionLogConfig      `json:"decision_logger"`
 	ControllerConfig controller.Config      `json:"controller"`

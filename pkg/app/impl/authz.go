@@ -207,7 +207,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 	return resp, nil
 }
 
-//nolint:funlen,gocyclo
+//nolint:funlen
 func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*authorizer.IsResponse, error) {
 	log := s.logger.With().Str("api", "is").Logger()
 
@@ -503,7 +503,7 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.P
 	return rt, err
 }
 
-//nolint:funlen,gocyclo
+//nolint:funlen
 func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileRequest) (*authorizer.CompileResponse, error) {
 	log := s.logger.With().Str("api", "compile").Logger()
 

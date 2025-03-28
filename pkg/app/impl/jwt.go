@@ -192,7 +192,6 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 		return nil, aerr.ErrInvalidArgument.Msg("identity context not set")
 	}
 
-	// nolint: exhaustive
 	switch identityContext.Type {
 	case api.IdentityType_IDENTITY_TYPE_NONE:
 		return nil, nil

@@ -91,7 +91,7 @@ func getBytes(fileURL string) ([]byte, error) {
 		return os.ReadFile(fileURL)
 	}
 
-	resp, err := http.Get(fileURL) //nolint used to download the template files
+	resp, err := http.Get(fileURL) //nolint:gosec,noctx
 	if err != nil {
 		return nil, err
 	}
