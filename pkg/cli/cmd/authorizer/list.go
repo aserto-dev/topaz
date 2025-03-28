@@ -40,7 +40,7 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	tab := table.New(c.StdOut()).WithColumns("package path", "id")
-	for _, module := range cmd.resp.Result {
+	for _, module := range cmd.resp.GetResult() {
 		tab.WithRow(strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId())
 	}
 

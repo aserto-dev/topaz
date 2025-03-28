@@ -47,7 +47,7 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 
-		if m, ok := msg.Msg.(*dse3.ExportResponse_Stats); ok {
+		if m, ok := msg.GetMsg().(*dse3.ExportResponse_Stats); ok {
 			pbStats = m.Stats
 		}
 	}

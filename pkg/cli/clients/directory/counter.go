@@ -93,17 +93,17 @@ func (c *Counter) Print(w io.Writer) {
 func printStatus(w io.Writer, status *dsi3.ImportStatus) {
 	fmt.Fprintf(w, "%-9s : %s - %s (%d)\n",
 		"error",
-		status.Msg,
-		codes.Code(status.Code).String(),
-		status.Code)
+		status.GetMsg(),
+		codes.Code(status.GetCode()).String(),
+		status.GetCode())
 }
 
 func printCounter(w io.Writer, ctr *dsi3.ImportCounter) {
 	fmt.Fprintf(w, "%-9s : %d (set:%d delete:%d error:%d)\n",
-		ctr.Type,
-		ctr.Recv,
-		ctr.Set,
-		ctr.Delete,
-		ctr.Error,
+		ctr.GetType(),
+		ctr.GetRecv(),
+		ctr.GetSet(),
+		ctr.GetDelete(),
+		ctr.GetError(),
 	)
 }

@@ -129,7 +129,7 @@ func (c *Client) createBackupFiles(stream dse3.Exporter_ExportClient, dirPath st
 			return err
 		}
 
-		switch m := msg.Msg.(type) {
+		switch m := msg.GetMsg().(type) {
 		case *dse3.ExportResponse_Object:
 			err = objects.Write(m.Object)
 

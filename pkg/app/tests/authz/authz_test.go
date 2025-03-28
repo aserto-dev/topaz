@@ -153,9 +153,9 @@ func DecisionTreeWithUserID(ctx context.Context, azClient authorizer.AuthorizerC
 
 		require.NoError(t, errX)
 		assert.NotNil(t, respX, "response object should not be nil")
-		assert.Equal(t, "peoplefinder.GET", respX.PathRoot)
+		assert.Equal(t, "peoplefinder.GET", respX.GetPathRoot())
 
-		path := respX.Path.AsMap()
+		path := respX.GetPath().AsMap()
 		assert.Len(t, path, 2)
 	}
 }

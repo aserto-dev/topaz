@@ -157,8 +157,8 @@ func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, *by
 		}
 
 		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
-			data.Write(body.Body.Data)
-			bytesRecv += len(body.Body.Data)
+			data.Write(body.Body.GetData())
+			bytesRecv += len(body.Body.GetData())
 		}
 	}
 

@@ -62,7 +62,7 @@ func SetServiceStatus(log *zerolog.Logger, service string, servingStatus grpc_he
 	}
 
 	// only write log message when the health state changed.
-	if resp.Status != servingStatus {
+	if resp.GetStatus() != servingStatus {
 		log.Info().Str("service", service).Str("status", servingStatus.String()).Msg("health")
 		healthCheck.SetServingStatus(service, servingStatus)
 	}

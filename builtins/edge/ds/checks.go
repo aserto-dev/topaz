@@ -62,11 +62,11 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				})
 			}
 
-			if args.Default == nil {
+			if args.GetDefault() == nil {
 				args.Default = &dsr3.CheckRequest{}
 			}
 
-			if args.Checks == nil {
+			if args.GetChecks() == nil {
 				args.Checks = []*dsr3.CheckRequest{}
 			}
 
@@ -86,7 +86,7 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			results, ok := pbs.Fields["checks"].AsInterface().([]interface{})
+			results, ok := pbs.GetFields()["checks"].AsInterface().([]interface{})
 			if !ok {
 				return nil, status.Errorf(codes.Internal, "failed type assertion %q", "results")
 			}

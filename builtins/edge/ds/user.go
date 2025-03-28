@@ -68,8 +68,8 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 
 			var result proto.Message
 
-			if resp.Result != nil {
-				result = resp.Result
+			if resp.GetResult() != nil {
+				result = resp.GetResult()
 			}
 
 			if err := ProtoToBuf(buf, result); err != nil {

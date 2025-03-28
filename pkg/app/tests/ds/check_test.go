@@ -32,16 +32,16 @@ func testCheck(ctx context.Context, dsClient dsr3.ReaderClient) func(*testing.T)
 
 				require.Equal(t, tc.resp.GetCheck(), resp.GetCheck())
 
-				if tc.resp.Context == nil {
+				if tc.resp.GetContext() == nil {
 					return
 				}
 
-				if tc.resp.Context.Fields == nil {
+				if tc.resp.GetContext().GetFields() == nil {
 					return
 				}
 
-				if v, ok := tc.resp.Context.Fields["reason"]; ok {
-					require.Equal(t, v.GetStringValue(), resp.Context.Fields["reason"].GetStringValue())
+				if v, ok := tc.resp.GetContext().GetFields()["reason"]; ok {
+					require.Equal(t, v.GetStringValue(), resp.GetContext().GetFields()["reason"].GetStringValue())
 				}
 			})
 		}
