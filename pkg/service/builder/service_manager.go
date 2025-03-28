@@ -19,6 +19,14 @@ import (
 	"google.golang.org/grpc"
 )
 
+const (
+	shutdownTimeout   int = 30 // seconds
+	readTimeout           = 5 * time.Second
+	readHeaderTimeout     = 5 * time.Second
+	writeTimeout          = 30 * time.Second
+	idleTimeout           = 30 * time.Second
+)
+
 type ServiceManager struct {
 	Context  context.Context
 	logger   *zerolog.Logger
@@ -47,7 +55,7 @@ func NewServiceManager(logger *zerolog.Logger) *ServiceManager {
 		Servers:         make(map[string]*Service),
 		DependencyMap:   make(map[string][]string),
 		errGroup:        errGroup,
-		shutdownTimeout: 30,
+		shutdownTimeout: shutdownTimeout,
 	}
 }
 
@@ -85,10 +93,10 @@ func (s *ServiceManager) SetupMetricsServer(address string, certCfg *aserto.TLSC
 	error,
 ) {
 	metric := http.Server{
-		ReadTimeout:       5 * time.Second,
-		ReadHeaderTimeout: 5 * time.Second,
-		WriteTimeout:      30 * time.Second,
-		IdleTimeout:       30 * time.Second,
+		ReadTimeout:       readTimeout,
+		ReadHeaderTimeout: readHeaderTimeout,
+		WriteTimeout:      writeTimeout,
+		IdleTimeout:       idleTimeout,
 	}
 	s.MetricServer = &metric
 	mux := http.NewServeMux()

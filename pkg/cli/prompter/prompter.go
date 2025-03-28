@@ -18,6 +18,11 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+const (
+	fieldWidth10 int = 10
+	fieldWidth64 int = 64
+)
+
 type prompt struct {
 	app  *tview.Application
 	form *tview.Form
@@ -93,8 +98,20 @@ func (f *prompt) init() error {
 		maxLabel = max(maxLabel, len(f.form.GetFormItem(i).GetLabel()))
 	}
 
-	width := maxLabel + 6 + 64
-	f.form.SetRect(0, 0, width, ((c+3)*2)-1)
+	const (
+		padding  int = 6
+		maxWidth int = 64
+	)
+
+	width := maxLabel + padding + maxWidth
+
+	const (
+		addControls int = 3
+		lineSpacing int = 2
+		lastLine    int = 1
+	)
+
+	f.form.SetRect(0, 0, width, ((c+addControls)*lineSpacing)-lastLine)
 
 	return nil
 }
@@ -117,7 +134,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 		switch fields.Get(i).Kind() {
 		case protoreflect.StringKind:
 			if fields.Get(i).IsList() {
-				f.form.AddInputField(fieldName, "[ ]", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "[ ]", fieldWidth64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
 
@@ -125,19 +142,19 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 			}
 
 			v := msg.ProtoReflect().Get(fd)
-			f.form.AddInputField(fieldName, v.String(), 64, nil, func(s string) {
+			f.form.AddInputField(fieldName, v.String(), fieldWidth64, nil, func(s string) {
 				_ = f.setField(msg.ProtoReflect(), fields.Get(c), s)
 			})
 
 		case protoreflect.Int32Kind:
 			v := msg.ProtoReflect().Get(fd)
-			f.form.AddInputField(fieldName, v.String(), 10, nil, func(s string) {
+			f.form.AddInputField(fieldName, v.String(), fieldWidth10, nil, func(s string) {
 				_ = f.setField(msg.ProtoReflect(), fields.Get(c), s)
 			})
 
 		case protoreflect.Int64Kind:
 			v := msg.ProtoReflect().Get(fd)
-			f.form.AddInputField(fieldName, v.String(), 10, nil, func(s string) {
+			f.form.AddInputField(fieldName, v.String(), fieldWidth10, nil, func(s string) {
 				_ = f.setField(msg.ProtoReflect(), fields.Get(c), s)
 			})
 
@@ -168,7 +185,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 
 		case protoreflect.MessageKind:
 			if strings.HasSuffix(string(fd.FullName()), ".properties") {
-				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "{ }", fieldWidth64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
 
@@ -176,7 +193,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 			}
 
 			if strings.HasSuffix(string(fd.FullName()), ".resource_context") {
-				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "{ }", fieldWidth64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
 
@@ -184,7 +201,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 			}
 
 			if strings.HasSuffix(string(fd.FullName()), ".created_at") {
-				f.form.AddInputField(fieldName, "", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "", fieldWidth64, nil, func(s string) {
 					_ = f.setTimestamp(msg.ProtoReflect(), fields.Get(c), s)
 				})
 
@@ -192,7 +209,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 			}
 
 			if strings.HasSuffix(string(fd.FullName()), ".updated_at") {
-				f.form.AddInputField(fieldName, "", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "", fieldWidth64, nil, func(s string) {
 					_ = f.setTimestamp(msg.ProtoReflect(), fields.Get(c), s)
 				})
 
@@ -200,7 +217,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 			}
 
 			if strings.HasSuffix(string(fd.FullName()), ".context") {
-				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "{ }", fieldWidth64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
 

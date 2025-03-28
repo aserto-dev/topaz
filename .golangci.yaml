@@ -63,7 +63,7 @@ linters:
     - makezero
     - mirror
     - misspell
-    # - mnd
+    - mnd
     - musttag
     - nakedret
     - nestif
@@ -129,9 +129,14 @@ linters:
       - path: internal/pkg/xdg/
         linters:
           - gochecknoinits
+          - mnd
           - testableexamples
           - usetesting
           - wsl
+
+      - path: pkg/cc/signals/
+        linters:
+          - mnd
 
       - path: pkg/cli/cmd/
         linters:
@@ -144,6 +149,7 @@ linters:
           - forcetypeassert
           - gocritic
           - godox
+          - mnd
           - ireturn
           - lll
           - makezero

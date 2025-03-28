@@ -18,6 +18,8 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+const paginationSize int32 = 100
+
 // RegisterRelation - ds.relation
 //
 //	ds.relation: {
@@ -122,7 +124,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 				return helpMsg(fnName, &dsr3.GetRelationsRequest{})
 			}
 
-			args.Page = &dsc3.PaginationRequest{Size: 100, Token: ""}
+			args.Page = &dsc3.PaginationRequest{Size: paginationSize, Token: ""}
 
 			resp := &dsr3.GetRelationsResponse{}
 

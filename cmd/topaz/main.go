@@ -139,19 +139,28 @@ func exitErr(err error) int {
 	return rcErr
 }
 
+const (
+	logLevelDisabled int = iota
+	logLevelInfo
+	logLevelWarn
+	logLevelError
+	logLevelDebug
+	logLevelTrace
+)
+
 func logLevel(level int) zerolog.Level {
 	switch level {
-	case 0:
+	case logLevelDisabled:
 		return zerolog.Disabled
-	case 1:
+	case logLevelInfo:
 		return zerolog.InfoLevel
-	case 2:
+	case logLevelWarn:
 		return zerolog.WarnLevel
-	case 3:
+	case logLevelError:
 		return zerolog.ErrorLevel
-	case 4:
+	case logLevelDebug:
 		return zerolog.DebugLevel
-	case 5:
+	case logLevelTrace:
 		return zerolog.TraceLevel
 	default:
 		return zerolog.Disabled

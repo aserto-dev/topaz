@@ -6,6 +6,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/certs"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
 type GenerateCertsCmd struct {
@@ -19,7 +20,7 @@ type GenerateCertsCmd struct {
 func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(certsDir, 0o755); err != nil {
+		if err := os.MkdirAll(certsDir, x.FileMode0755); err != nil {
 			return err
 		}
 	}

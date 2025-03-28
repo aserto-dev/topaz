@@ -10,6 +10,14 @@ import (
 	"github.com/rs/zerolog"
 )
 
+const (
+	mutexProfileFractionRate int = 10
+	readTimeout                  = 5 * time.Second
+	readHeaderTimeout            = 5 * time.Second
+	writeTimeout                 = 30 * time.Second
+	idleTimeout                  = 30 * time.Second
+)
+
 type Config struct {
 	Enabled         bool   `json:"enabled"`
 	ListenAddress   string `json:"listen_address"`
@@ -46,16 +54,16 @@ func NewServer(cfg *Config, log *zerolog.Logger) *Server {
 
 	debugLogger := log.With().Str("component", "debug").Logger()
 
-	runtime.SetMutexProfileFraction(10)
+	runtime.SetMutexProfileFraction(mutexProfileFractionRate)
 	debugLogger.Info().Int("fraction", runtime.SetMutexProfileFraction(-1)).Msg("mutex profiler")
 
 	srv := &http.Server{
 		Addr:              cfg.ListenAddress,
 		Handler:           pprofServeMux,
-		ReadTimeout:       5 * time.Second,
-		ReadHeaderTimeout: 5 * time.Second,
-		WriteTimeout:      30 * time.Second,
-		IdleTimeout:       30 * time.Second,
+		ReadTimeout:       readTimeout,
+		ReadHeaderTimeout: readHeaderTimeout,
+		WriteTimeout:      writeTimeout,
+		IdleTimeout:       idleTimeout,
 	}
 
 	return &Server{

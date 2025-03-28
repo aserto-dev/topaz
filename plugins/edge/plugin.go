@@ -150,7 +150,7 @@ func (p *Plugin) SyncNow(mode api.SyncMode) {
 	p.syncNow <- mode
 }
 
-const cycles int = 4
+const cycles int64 = 4
 
 func (p *Plugin) scheduler() {
 	// scheduler startup delay 1s
@@ -240,7 +240,9 @@ func (p *Plugin) scheduler() {
 // 1m -> 60s -> 15s interval
 // 60m -> 3600s -> 900s interval.
 func (p *Plugin) calcInterval() time.Duration {
-	waitInSec := (p.config.SyncInterval * 60) / cycles
+	syncInterval := time.Duration(p.config.SyncInterval) * time.Minute
+	waitInSec := int64(syncInterval) / cycles
+
 	return time.Duration(waitInSec) * time.Second
 }
 

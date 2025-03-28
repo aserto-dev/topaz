@@ -188,9 +188,11 @@ func (t *TestResults) Passed(passed bool) {
 	t.IncrFailed()
 }
 
+const headerLen int = 23
+
 func (t *TestResults) PrintSummary(w io.Writer) {
 	fmt.Fprintf(w, "\nTest Execution Summary:\n")
-	fmt.Fprintf(w, "%s\n", strings.Repeat("-", 23))
+	fmt.Fprintf(w, "%s\n", strings.Repeat("-", headerLen))
 	fmt.Fprintf(w, "total:   %d\n", t.total)
 	fmt.Fprintf(w, "passed:  %d\n", t.passed)
 	fmt.Fprintf(w, "failed:  %d\n", t.failed)

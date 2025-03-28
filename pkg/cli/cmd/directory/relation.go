@@ -8,6 +8,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -152,6 +153,6 @@ func (cmd *ListRelationsCmd) template() proto.Message {
 		SubjectId:       "",
 		SubjectRelation: "",
 		WithObjects:     false,
-		Page:            &common.PaginationRequest{Size: 100, Token: ""},
+		Page:            &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""},
 	}
 }

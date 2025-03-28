@@ -20,9 +20,10 @@ import (
 	"google.golang.org/grpc/test/bufconn"
 )
 
+const bufSize int = 1024 * 1024
+
 func NewServer(ctx context.Context, logger *zerolog.Logger, cfg *directory.Config) (*grpc.ClientConn, func()) {
-	buffer := 1024 * 1024
-	listener := bufconn.Listen(buffer)
+	listener := bufconn.Listen(bufSize)
 
 	dsLogger := logger.With().Str("component", "ds").Logger()
 

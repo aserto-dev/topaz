@@ -14,6 +14,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+const requestTimeout = 5 * time.Second
+
 func (cmd *InitCmd) Run(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -28,7 +30,7 @@ func (cmd *InitCmd) Run(ctx context.Context) error {
 
 	cfg := &directory.Config{
 		DBPath:         cmd.DBFile,
-		RequestTimeout: 5 * time.Second,
+		RequestTimeout: requestTimeout,
 	}
 
 	logger := zerolog.New(io.Discard)

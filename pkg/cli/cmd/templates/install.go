@@ -16,6 +16,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/topaz"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -73,7 +74,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerName = c.Config.Running.ContainerName
 
 	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
-		if err := os.MkdirAll(cc.GetTopazDir(), 0o700); err != nil {
+		if err := os.MkdirAll(cc.GetTopazDir(), x.FileMode0700); err != nil {
 			return err
 		}
 	}
@@ -85,7 +86,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if err := os.WriteFile(cliConfig, kongConfigBytes, 0o600); err != nil {
+	if err := os.WriteFile(cliConfig, kongConfigBytes, x.FileMode0600); err != nil {
 		return err
 	}
 

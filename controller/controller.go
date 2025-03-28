@@ -62,6 +62,8 @@ func NewController(logger *zerolog.Logger, policyName, host string, cfg *Config,
 	}, nil
 }
 
+const expBackoff = 2
+
 // run context dependant controller.
 func (c *Controller) Start(ctx context.Context) func() {
 	ctx, cancel := context.WithCancel(ctx)
@@ -81,7 +83,7 @@ func (c *Controller) Start(ctx context.Context) func() {
 
 			c.logger.Info().Err(err).Msg("command loop exited with error, restarting")
 
-			backoff := timeout * time.Duration(math.Pow(2, float64(retry)))
+			backoff := timeout * time.Duration(math.Pow(expBackoff, float64(retry)))
 			if sleepWithContext(ctx, min(backoff, maxBackoff)) == Canceled {
 				c.logger.Trace().Msg("command loop canceled")
 				break

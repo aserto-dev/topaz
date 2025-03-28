@@ -117,8 +117,10 @@ func httpAuthHeader(r *http.Request) string {
 }
 
 func parseAuthHeader(val, expectedScheme string) (string, error) {
-	splits := strings.SplitN(val, " ", 2)
-	if len(splits) < 2 {
+	const numElements int = 2
+	splits := strings.SplitN(val, " ", numElements)
+
+	if len(splits) < numElements {
 		return "", aerr.ErrAuthenticationFailed.Msg("Bad authorization string")
 	}
 

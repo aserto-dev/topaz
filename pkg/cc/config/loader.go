@@ -16,6 +16,11 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	jwtAcceptableTimeSkewSeconds int = 5
+	opaMaxPluginWaitTimeSeconds  int = 30
+)
+
 type Loader struct {
 	Configuration *Config
 	HasTopazDir   bool
@@ -52,9 +57,9 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 	v.SetDefault("debug_service.listen_address", "localhost:6060")
 	v.SetDefault("debug_service.shutdown_timeout", 0)
 
-	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
+	v.SetDefault("jwt.acceptable_time_skew_seconds", jwtAcceptableTimeSkewSeconds)
 
-	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
+	v.SetDefault("opa.max_plugin_wait_time_seconds", opaMaxPluginWaitTimeSeconds)
 
 	v.SetDefault("remote_directory.address", "0.0.0.0:9292")
 	v.SetDefault("remote_directory.insecure", "true")
@@ -319,9 +324,11 @@ func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) 
 // subEnvVars will look for any environment variables in the passed in string
 // with the syntax of ${VAR_NAME} and replace that string with ENV[VAR_NAME].
 func subEnvVars(s string) string {
+	const minElements int = 3
+
 	updatedConfig := envRegex.ReplaceAllStringFunc(strings.ReplaceAll(s, `"`, `'`), func(s string) string {
 		// Trim off the '${' and '}'
-		if len(s) <= 3 {
+		if len(s) <= minElements {
 			// This should never happen..
 			return ""
 		}

@@ -24,6 +24,8 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+const jwtMinRefreshInterval = 15 * time.Minute
+
 var (
 	// ErrMissingMetadata - metadata element missing.
 	ErrMissingMetadata = aerr.ErrInvalidArgument.Msg("missing metadata")
@@ -108,7 +110,7 @@ func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken j
 
 func registerJWKSURL(ctx context.Context, jwkCache *jwk.Cache, jwksURL string) error {
 	if !jwkCache.IsRegistered(jwksURL) {
-		err := jwkCache.Register(jwksURL, jwk.WithMinRefreshInterval(15*time.Minute))
+		err := jwkCache.Register(jwksURL, jwk.WithMinRefreshInterval(jwtMinRefreshInterval))
 		if err != nil {
 			return err
 		}

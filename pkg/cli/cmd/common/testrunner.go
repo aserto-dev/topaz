@@ -219,30 +219,37 @@ func setCheckType(checkType CheckType, reqVersion int, c *cc.CommonCtx, runner *
 	return result
 }
 
+const (
+	msgVersionUnknown int = iota
+	msgVersionV1
+	msgVersionV2
+	msgVersionV3
+)
+
 func getReqVersion(val *structpb.Value) int {
 	if val == nil {
-		return 0
+		return msgVersionUnknown
 	}
 
 	if v, ok := val.Kind.(*structpb.Value_StructValue); ok {
 		if _, ok := v.StructValue.Fields["object_type"]; ok {
-			return 3
+			return msgVersionV3
 		}
 
 		if _, ok := v.StructValue.Fields["object"]; ok {
-			return 2
+			return msgVersionV2
 		}
 
 		if _, ok := v.StructValue.Fields["identity_context"]; ok {
-			return 2
+			return msgVersionV2
 		}
 
 		if _, ok := v.StructValue.Fields["action"]; ok {
-			return 1
+			return msgVersionV1
 		}
 	}
 
-	return 0
+	return msgVersionUnknown
 }
 
 func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {

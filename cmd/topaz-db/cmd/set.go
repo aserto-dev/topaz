@@ -4,7 +4,6 @@ import (
 	"context"
 	"io"
 	"os"
-	"time"
 
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/topaz/cmd/topaz-db/pkg/inproc"
@@ -19,7 +18,7 @@ func (cmd *SetCmd) Run(ctx context.Context) error {
 
 	cfg := &directory.Config{
 		DBPath:         cmd.DBFile,
-		RequestTimeout: 5 * time.Second,
+		RequestTimeout: requestTimeout,
 	}
 
 	logger := zerolog.New(io.Discard)

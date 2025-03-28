@@ -10,6 +10,7 @@ import (
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -49,7 +50,7 @@ func (cmd *GetObjectCmd) template() proto.Message {
 		ObjectType:    "",
 		ObjectId:      "",
 		WithRelations: false,
-		Page:          &common.PaginationRequest{Size: 100, Token: ""},
+		Page:          &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""},
 	}
 }
 
@@ -162,6 +163,6 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 func (cmd *ListObjectsCmd) template() proto.Message {
 	return &reader.GetObjectsRequest{
 		ObjectType: "",
-		Page:       &common.PaginationRequest{Size: 100, Token: ""},
+		Page:       &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""},
 	}
 }

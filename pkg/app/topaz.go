@@ -31,6 +31,11 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+const (
+	keepaliveTime    = 30 * time.Second // send pings every 30 seconds if there is no activity
+	keepaliveTimeout = 5 * time.Second  // wait 5 seconds for ping ack before considering the connection dead
+)
+
 // Topaz is an authorizer service instance, responsible for managing
 // the authorizer API, user directory instance and the OPA plugins.
 type Topaz struct {
@@ -306,8 +311,8 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 
 func KeepAliveDialOption() []grpc.DialOption {
 	kacp := keepalive.ClientParameters{
-		Time:    30 * time.Second, // send pings every 30 seconds if there is no activity
-		Timeout: 5 * time.Second,  // wait 5 seconds for ping ack before considering the connection dead
+		Time:    keepaliveTime,    // send pings every 30 seconds if there is no activity
+		Timeout: keepaliveTimeout, // wait 5 seconds for ping ack before considering the connection dead
 	}
 
 	return []grpc.DialOption{grpc.WithKeepaliveParams(kacp)}

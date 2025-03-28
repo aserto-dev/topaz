@@ -12,6 +12,7 @@ import (
 
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/js"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -35,7 +36,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	}()
 
 	dirPath := path.Join(tmpDir, "backup")
-	if err := os.MkdirAll(dirPath, 0o700); err != nil {
+	if err := os.MkdirAll(dirPath, x.FileMode0700); err != nil {
 		return err
 	}
 
