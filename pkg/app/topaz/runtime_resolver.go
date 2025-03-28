@@ -28,7 +28,7 @@ type RuntimeResolver struct {
 	runtime *runtime.Runtime
 }
 
-//nolint:funlen
+//nolint:funlen,nestif
 func NewRuntimeResolver(
 	ctx context.Context,
 	logger *zerolog.Logger,

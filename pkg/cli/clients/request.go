@@ -53,24 +53,25 @@ func (cmd *RequestArgs) Process(c *cc.CommonCtx, req proto.Message, tmpl func() 
 }
 
 func unmarshalRequest(src string, msg proto.Message) error {
-	var bytes []byte
-
 	if src == "-" {
 		reader := bufio.NewReader(os.Stdin)
-		if b, err := io.ReadAll(reader); err == nil {
-			bytes = b
-		} else {
+
+		bytes, err := io.ReadAll(reader)
+		if err != nil {
 			return errors.Wrap(err, "failed to read from stdin")
 		}
-	} else if fi, err := os.Stat(src); err == nil && !fi.IsDir() {
-		if b, err := os.ReadFile(src); err == nil {
-			bytes = b
-		} else {
-			return errors.Wrapf(err, "opening file [%s]", src)
-		}
-	} else {
-		bytes = []byte(src)
+
+		return protojson.Unmarshal(bytes, msg)
 	}
 
-	return protojson.Unmarshal(bytes, msg)
+	if fi, err := os.Stat(src); err == nil && !fi.IsDir() {
+		bytes, err := os.ReadFile(src)
+		if err != nil {
+			return errors.Wrapf(err, "opening file [%s]", src)
+		}
+
+		return protojson.Unmarshal(bytes, msg)
+	}
+
+	return protojson.Unmarshal([]byte(src), msg)
 }

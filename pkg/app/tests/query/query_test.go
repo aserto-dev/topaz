@@ -105,7 +105,8 @@ var queryTests = []struct {
 	{
 		name: "opa.runtime",
 		query: &authorizer.QueryRequest{
-			Query: "x := opa.runtime()",
+			Query:           "x := opa.runtime()",
+			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
@@ -129,7 +130,8 @@ var queryTests = []struct {
 	{
 		name: "data",
 		query: &authorizer.QueryRequest{
-			Query: "x = data",
+			Query:           "x = data",
+			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
@@ -152,7 +154,8 @@ var queryTests = []struct {
 	{
 		name: "ds.user",
 		query: &authorizer.QueryRequest{
-			Query: `x = ds.user({"id": "euang@acmecorp.com"})`,
+			Query:           `x = ds.user({"id": "euang@acmecorp.com"})`,
+			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
@@ -178,7 +181,8 @@ var queryTests = []struct {
 	{
 		name: "ds.identity",
 		query: &authorizer.QueryRequest{
-			Query: `x = ds.identity({"id": "euang@acmecorp.com"})`,
+			Query:           `x = ds.identity({"id": "euang@acmecorp.com"})`,
+			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)

@@ -8,6 +8,7 @@ import (
 	client "github.com/aserto-dev/go-aserto"
 	azc "github.com/aserto-dev/go-aserto/az"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
@@ -88,7 +89,8 @@ func testBuiltins(addr string) func(*testing.T) {
 		for _, tc := range BuiltinHelpTests {
 			f := func(t *testing.T) {
 				resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
-					Query: tc.query,
+					Query:           tc.query,
+					IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 				})
 				require.NoError(t, err)
 				require.NotNil(t, resp)
@@ -111,7 +113,8 @@ func testBuiltins(addr string) func(*testing.T) {
 		for _, tc := range BuiltinNotFoundErrTests {
 			f := func(t *testing.T) {
 				resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
-					Query: tc.query,
+					Query:           tc.query,
+					IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 				})
 				require.NoError(t, err)
 				require.NotNil(t, resp)

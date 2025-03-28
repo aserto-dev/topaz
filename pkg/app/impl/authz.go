@@ -356,6 +356,10 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 		return &authorizer.QueryResponse{}, aerr.ErrInvalidArgument.Msg("query not set")
 	}
 
+	if req.IdentityContext == nil || req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+		return &authorizer.QueryResponse{}, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+	}
+
 	if req.Options == nil {
 		req.Options = &authorizer.QueryOptions{
 			Metrics:      false,
@@ -389,27 +393,17 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 		input[InputResource] = req.ResourceContext
 	}
 
-	if req.IdentityContext != nil {
-		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-			return &authorizer.QueryResponse{}, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+	if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+		input[InputIdentity] = convert(req.IdentityContext)
+
+		user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
+		if err != nil || user == nil {
+			log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
+
+			return &authorizer.QueryResponse{}, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
 		}
 
-		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-			input[InputIdentity] = convert(req.IdentityContext)
-		}
-
-		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-			user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
-			if err != nil || user == nil {
-				if err != nil {
-					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
-				}
-
-				return &authorizer.QueryResponse{}, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
-			}
-
-			input[InputUser] = convert(user)
-		}
+		input[InputUser] = convert(user)
 	}
 
 	log.Debug().Str("query", req.Query).Interface("input", input).Msg("query")
@@ -517,6 +511,10 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 		return &authorizer.CompileResponse{}, aerr.ErrInvalidArgument.Msg("query not set")
 	}
 
+	if req.IdentityContext == nil || req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
+		return &authorizer.CompileResponse{}, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+	}
+
 	if req.Options == nil {
 		req.Options = &authorizer.QueryOptions{
 			Metrics:      false,
@@ -546,27 +544,17 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 		input[InputResource] = req.ResourceContext
 	}
 
-	if req.IdentityContext != nil {
-		if req.IdentityContext.Type == api.IdentityType_IDENTITY_TYPE_UNKNOWN {
-			return &authorizer.CompileResponse{}, aerr.ErrInvalidArgument.Msg("identity type UNKNOWN")
+	if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
+		input[InputIdentity] = convert(req.IdentityContext)
+
+		user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
+		if err != nil || user == nil {
+			log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
+
+			return &authorizer.CompileResponse{}, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
 		}
 
-		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-			input[InputIdentity] = convert(req.IdentityContext)
-		}
-
-		if req.IdentityContext.Type != api.IdentityType_IDENTITY_TYPE_NONE {
-			user, err := s.getUserFromIdentityContext(ctx, req.IdentityContext)
-			if err != nil || user == nil {
-				if err != nil {
-					log.Error().Err(err).Interface("req", req).Msg("failed to resolve identity context")
-				}
-
-				return &authorizer.CompileResponse{}, aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
-			}
-
-			input[InputUser] = convert(user)
-		}
+		input[InputUser] = convert(user)
 	}
 
 	if req.PolicyContext != nil {

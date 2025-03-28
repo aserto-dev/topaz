@@ -170,26 +170,7 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 			})
 
 			if serverDetails.Gateway != nil {
-				httpServer := serverDetails.Gateway
-				if httpServer.Server != nil {
-					s.errGroup.Go(func() error {
-						s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
-
-						if httpServer.Certs.HasCert() {
-							err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key)
-							if err != nil {
-								return err
-							}
-						} else {
-							err := httpServer.Server.ListenAndServe()
-							if err != nil {
-								return err
-							}
-						}
-
-						return nil
-					})
-				}
+				s.startGateway(serverDetails)
 			}
 
 			serverDetails.Started <- true // send started information.
@@ -199,6 +180,29 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (s *ServiceManager) startGateway(serverDetails *Service) {
+	httpServer := serverDetails.Gateway
+	if httpServer.Server == nil {
+		return
+	}
+
+	s.errGroup.Go(func() error {
+		s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
+
+		if httpServer.Certs.HasCert() {
+			if err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key); err != nil {
+				return err
+			}
+		} else {
+			if err := httpServer.Server.ListenAndServe(); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }
 
 func (s *ServiceManager) logDetails(address string, element interface{}) {

@@ -211,34 +211,34 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 			existingFiles = append(existingFiles, file)
 		}
 
-		if len(existingFiles) == 0 {
-			if config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
-				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  commonName + "-grpc",
-					CertKeyPath: config.GRPC.Certs.Key,
-					CertPath:    config.GRPC.Certs.Cert,
-					CertCAPath:  config.GRPC.Certs.CA,
-				})
-				if err != nil {
-					return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
-				}
+		noExistingFiles := len(existingFiles) == 0
 
-				log.Info().Str("service", serviceName).Msg("gRPC certs configured")
+		if noExistingFiles && config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
+			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:  commonName + "-grpc",
+				CertKeyPath: config.GRPC.Certs.Key,
+				CertPath:    config.GRPC.Certs.Cert,
+				CertCAPath:  config.GRPC.Certs.CA,
+			})
+			if err != nil {
+				return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
 			}
 
-			if config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
-				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  commonName + "-gateway",
-					CertKeyPath: config.Gateway.Certs.Key,
-					CertPath:    config.Gateway.Certs.Cert,
-					CertCAPath:  config.Gateway.Certs.CA,
-				})
-				if err != nil {
-					return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
-				}
+			log.Info().Str("service", serviceName).Msg("gRPC certs configured")
+		}
 
-				log.Info().Str("service", serviceName).Msg("gateway certs configured")
+		if noExistingFiles && config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
+			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:  commonName + "-gateway",
+				CertKeyPath: config.Gateway.Certs.Key,
+				CertPath:    config.Gateway.Certs.Cert,
+				CertCAPath:  config.Gateway.Certs.CA,
+			})
+			if err != nil {
+				return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
 			}
+
+			log.Info().Str("service", serviceName).Msg("gateway certs configured")
 		}
 	}
 

@@ -17,6 +17,7 @@ type Reader struct {
 	rootKey string
 }
 
+//nolint:nestif
 func NewReader(r io.Reader) (*Reader, error) {
 	dec := json.NewDecoder(r)
 

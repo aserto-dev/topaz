@@ -3,8 +3,6 @@ package topaz
 import (
 	"fmt"
 	"os"
-	"strconv"
-	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -23,53 +21,25 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if strings.ContainsAny(cmd.ContainerName, "*") {
-		topazContainers, err := c.GetRunningContainers()
+	c.Config.Defaults.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.
+	if c.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
+		return nil
+	}
+
+	c.Con().Info().Msg(">>> stopping topaz %q...", c.Config.Running.Config)
+
+	if err := dc.Stop(cmd.ContainerName); err != nil {
+		return err
+	}
+
+	if cmd.Wait {
+		ports, err := config.GetConfig(c.Config.Running.ConfigFile).Ports()
 		if err != nil {
 			return err
 		}
 
-		c.Con().Info().Msg(">>> stopping topaz...")
-
-		for _, container := range topazContainers {
-			c.Con().Info().Msg(">>> stopping topaz %q...", c.Config.Running.Config)
-
-			if err := dc.Stop(container.Names[0]); err != nil {
-				return err
-			}
-
-			if cmd.Wait {
-				var ports []string
-				for _, port := range container.Ports {
-					ports = append(ports, strconv.FormatUint(uint64(port.PublicPort), 10))
-				}
-
-				if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
-					return err
-				}
-			}
-		}
-	} else {
-		c.Config.Defaults.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.
-		if c.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
-			return nil
-		}
-
-		c.Con().Info().Msg(">>> stopping topaz %q...", c.Config.Running.Config)
-
-		if err := dc.Stop(cmd.ContainerName); err != nil {
+		if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
 			return err
-		}
-
-		if cmd.Wait {
-			ports, err := config.GetConfig(c.Config.Running.ConfigFile).Ports()
-			if err != nil {
-				return err
-			}
-
-			if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
-				return err
-			}
 		}
 	}
 
