@@ -10,7 +10,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -121,7 +121,7 @@ func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatu
 	return lo.Ternary(running, StatusRunning, StatusNotRunning) == expectedStatus
 }
 
-func (c *CommonCtx) GetRunningContainers() ([]*types.Container, error) {
+func (c *CommonCtx) GetRunningContainers() ([]container.Summary, error) {
 	dc, err := dockerx.New()
 	if err != nil {
 		return nil, err

@@ -12,7 +12,6 @@ import (
 	"syscall"
 
 	"github.com/aserto-dev/topaz/pkg/cli/x"
-	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
@@ -169,7 +168,7 @@ func (dc *DockerClient) IsRunning(name string) (bool, error) {
 	return rc, nil
 }
 
-func (dc *DockerClient) GetRunningTopazContainers() ([]*types.Container, error) {
+func (dc *DockerClient) GetRunningTopazContainers() ([]container.Summary, error) {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
@@ -181,11 +180,11 @@ func (dc *DockerClient) GetRunningTopazContainers() ([]*types.Container, error) 
 		return nil, err
 	}
 
-	var topazContainers []*types.Container
+	var topazContainers []container.Summary
 
 	for i := range containers {
 		if strings.Contains(containers[i].Image, "ghcr.io/aserto-dev/topaz") && containers[i].State == running {
-			topazContainers = append(topazContainers, &containers[i])
+			topazContainers = append(topazContainers, containers[i])
 		}
 	}
 
