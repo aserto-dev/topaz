@@ -146,10 +146,9 @@ func getPorts(cfg *config.Loader) ([]string, error) {
 		return port, fmt.Sprintf("%s:%s/tcp", port, port)
 	})
 
-	var ports []string
-	for _, v := range portMap {
-		ports = append(ports, v)
-	}
+	ports := lo.MapToSlice(portMap, func(_, v string) string {
+		return v
+	})
 
 	return ports, nil
 }

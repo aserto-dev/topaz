@@ -13,6 +13,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/mitchellh/mapstructure"
+	"github.com/samber/lo"
 	"github.com/spf13/viper"
 )
 
@@ -213,10 +214,9 @@ func (l *Loader) GetPorts() ([]string, error) {
 	}
 
 	// ensure unique assignment for each port
-	var args []string
-	for k := range portMap {
-		args = append(args, k)
-	}
+	args := lo.MapToSlice(portMap, func(k string, _ bool) string {
+		return k
+	})
 
 	return args, nil
 }
@@ -287,10 +287,9 @@ func getUniqueServiceCertPaths(services map[string]*builder.API) []string {
 		}
 	}
 
-	var pathList []string
-	for k := range paths {
-		pathList = append(pathList, k)
-	}
+	pathList := lo.MapToSlice(paths, func(k string, v bool) string {
+		return k
+	})
 
 	return pathList
 }
