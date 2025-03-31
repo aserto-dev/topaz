@@ -1,4 +1,3 @@
-//nolint:dupl
 package ds
 
 import (
@@ -66,6 +65,8 @@ func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 //		"subject_type": "",
 //		"trace": false
 //	  }
+//
+//nolint:dupl // RegisterCheck[Relation|Permission] are not identical, obsolete and will be removed in v33.
 func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -112,6 +113,8 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 //		"subject_type": "",
 //		"trace": false
 //	  }
+//
+//nolint:dupl // RegisterCheck[Relation|Permission] are not identical, obsolete and will be removed in v33.
 func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
