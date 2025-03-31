@@ -38,7 +38,6 @@ func main() {
 	os.Exit(run())
 }
 
-//nolint:funlen
 func run() int {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
@@ -75,7 +74,27 @@ func run() int {
 		return exitErr(errors.Wrap(err, "failed to determine current working directory"))
 	}
 
-	kongCtx := kong.Parse(&cli,
+	kongCtx := kongParse(c, &cli, cwd)
+
+	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
+
+	if cli.NoColor {
+		os.Setenv(x.EnvTopazNoColor, strconv.FormatBool(true))
+	}
+
+	if err := cc.EnsureDirs(); err != nil {
+		return exitErr(err)
+	}
+
+	if err := kongCtx.Run(c); err != nil {
+		return exitErr(err)
+	}
+
+	return rcOK
+}
+
+func kongParse(c *cc.CommonCtx, cli *cmd.CLI, cwd string) *kong.Context {
+	kongCtx := kong.Parse(cli,
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
@@ -117,21 +136,7 @@ func run() int {
 		},
 	)
 
-	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
-
-	if cli.NoColor {
-		os.Setenv(x.EnvTopazNoColor, strconv.FormatBool(true))
-	}
-
-	if err := cc.EnsureDirs(); err != nil {
-		return exitErr(err)
-	}
-
-	if err := kongCtx.Run(c); err != nil {
-		return exitErr(err)
-	}
-
-	return rcOK
+	return kongCtx
 }
 
 func exitErr(err error) int {
