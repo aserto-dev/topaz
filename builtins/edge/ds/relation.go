@@ -5,6 +5,7 @@ import (
 
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/samber/lo"
 
@@ -17,8 +18,6 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 )
-
-const paginationSize int32 = 100
 
 // RegisterRelation - ds.relation
 //
@@ -124,7 +123,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 				return helpMsg(fnName, &dsr3.GetRelationsRequest{})
 			}
 
-			args.Page = &dsc3.PaginationRequest{Size: paginationSize, Token: ""}
+			args.Page = &dsc3.PaginationRequest{Size: x.MaxPaginationSize, Token: ""}
 
 			resp := &dsr3.GetRelationsResponse{}
 
