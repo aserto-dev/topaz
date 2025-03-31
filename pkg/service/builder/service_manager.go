@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-aserto"
+	"github.com/aserto-dev/topaz/pkg/x"
 
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
 	go_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
@@ -17,14 +18,6 @@ import (
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
-)
-
-const (
-	shutdownTimeout   int = 30 // seconds
-	readTimeout           = 5 * time.Second
-	readHeaderTimeout     = 5 * time.Second
-	writeTimeout          = 30 * time.Second
-	idleTimeout           = 30 * time.Second
 )
 
 type ServiceManager struct {
@@ -55,7 +48,7 @@ func NewServiceManager(logger *zerolog.Logger) *ServiceManager {
 		Servers:         make(map[string]*Service),
 		DependencyMap:   make(map[string][]string),
 		errGroup:        errGroup,
-		shutdownTimeout: shutdownTimeout,
+		shutdownTimeout: x.ShutdownTimeout,
 	}
 }
 
@@ -93,10 +86,10 @@ func (s *ServiceManager) SetupMetricsServer(address string, certCfg *aserto.TLSC
 	error,
 ) {
 	metric := http.Server{
-		ReadTimeout:       readTimeout,
-		ReadHeaderTimeout: readHeaderTimeout,
-		WriteTimeout:      writeTimeout,
-		IdleTimeout:       idleTimeout,
+		ReadTimeout:       x.ReadTimeout,
+		ReadHeaderTimeout: x.ReadHeaderTimeout,
+		WriteTimeout:      x.WriteTimeout,
+		IdleTimeout:       x.IdleTimeout,
 	}
 	s.MetricServer = &metric
 	mux := http.NewServeMux()

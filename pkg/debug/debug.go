@@ -7,15 +7,8 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/aserto-dev/topaz/pkg/x"
 	"github.com/rs/zerolog"
-)
-
-const (
-	mutexProfileFractionRate int = 10
-	readTimeout                  = 5 * time.Second
-	readHeaderTimeout            = 5 * time.Second
-	writeTimeout                 = 30 * time.Second
-	idleTimeout                  = 30 * time.Second
 )
 
 type Config struct {
@@ -54,16 +47,16 @@ func NewServer(cfg *Config, log *zerolog.Logger) *Server {
 
 	debugLogger := log.With().Str("component", "debug").Logger()
 
-	runtime.SetMutexProfileFraction(mutexProfileFractionRate)
+	runtime.SetMutexProfileFraction(x.MutexProfileFractionRate)
 	debugLogger.Info().Int("fraction", runtime.SetMutexProfileFraction(-1)).Msg("mutex profiler")
 
 	srv := &http.Server{
 		Addr:              cfg.ListenAddress,
 		Handler:           pprofServeMux,
-		ReadTimeout:       readTimeout,
-		ReadHeaderTimeout: readHeaderTimeout,
-		WriteTimeout:      writeTimeout,
-		IdleTimeout:       idleTimeout,
+		ReadTimeout:       x.ReadTimeout,
+		ReadHeaderTimeout: x.ReadHeaderTimeout,
+		WriteTimeout:      x.WriteTimeout,
+		IdleTimeout:       x.IdleTimeout,
 	}
 
 	return &Server{
