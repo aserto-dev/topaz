@@ -66,14 +66,9 @@ func NewRuntimeResolver(
 	}
 
 	if cfg.OPA.Config.Discovery != nil {
-		host := os.Getenv(x.EnvAsertoHostName)
-		if host == "" {
-			if host, err = os.Hostname(); err != nil {
-				host = os.Getenv(x.EnvHostName)
-				if host == "" {
-					panic("hostname not set")
-				}
-			}
+		host, err := discoveryHostname()
+		if err != nil {
+			return nil, func() {}, err
 		}
 
 		if cfg.OPA.Config.Discovery.Resource == nil {
@@ -128,6 +123,22 @@ func NewRuntimeResolver(
 	return &RuntimeResolver{
 		runtime: sidecarRuntime,
 	}, cleanup, err
+}
+
+func discoveryHostname() (string, error) {
+	if host := os.Getenv(x.EnvAsertoHostName); host != "" {
+		return host, nil
+	}
+
+	if host, err := os.Hostname(); err == nil && host != "" {
+		return host, nil
+	}
+
+	if host := os.Getenv(x.EnvHostName); host != "" {
+		return host, nil
+	}
+
+	return "", aerr.ErrBadRuntime.Msg("discovery hostname not set")
 }
 
 func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName string) (*runtime.Runtime, error) {

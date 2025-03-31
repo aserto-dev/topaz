@@ -110,7 +110,7 @@ func (e *Topaz) Start() error {
 	return nil
 }
 
-//nolint:funlen,nestif
+//nolint:funlen,nestif,gocognit
 func (e *Topaz) ConfigServices() error {
 	metricsMiddleware, err := e.setupHealthAndMetrics()
 	if err != nil {
