@@ -114,7 +114,11 @@ func (p *Plugin) Stop(ctx context.Context) {
 func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 	p.logger.Trace().Str("id", p.manager.ID).Interface("cur", p.config).Interface("new", config).Msg("EdgePlugin.Reconfigure")
 
-	newConfig, _ := config.(*Config)
+	newConfig, ok := config.(*Config)
+	if !ok {
+		p.logger.Error().Str("config", "failed type assertion").Msg("EdgePlugin.Reconfigure")
+		return
+	}
 
 	// handle enabled status changed
 	if p.config.Enabled != newConfig.Enabled && !p.hasLoopBack() {
@@ -130,7 +134,12 @@ func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 		}
 	}
 
-	p.config, _ = config.(*Config)
+	p.config, ok = config.(*Config)
+	if !ok {
+		p.logger.Error().Str("config", "failed type assertion").Msg("EdgePlugin.Reconfigure")
+		return
+	}
+
 	p.config.TenantID = strings.Split(p.manager.ID, "/")[0]
 	p.config.SessionID = uuid.NewString()
 }
@@ -147,6 +156,11 @@ func (p *Plugin) hasLoopBack() bool {
 }
 
 func (p *Plugin) SyncNow(mode api.SyncMode) {
+	if p.hasLoopBack() {
+		p.logger.Trace().Str("mode", mode.String()).Msg("sync now event ignored, operating with remote directory mode")
+		return
+	}
+
 	p.syncNow <- mode
 }
 
@@ -232,6 +246,8 @@ func (p *Plugin) scheduler() {
 	}
 }
 
+const secsInMin int64 = 60
+
 // calcInterval - calculates the next time interval in secs,
 // based on the configuration SyncInterval (defined on the EdgeDirectory connection)
 // returning a time.Duration.
@@ -240,9 +256,7 @@ func (p *Plugin) scheduler() {
 // 1m -> 60s -> 15s interval
 // 60m -> 3600s -> 900s interval.
 func (p *Plugin) calcInterval() time.Duration {
-	syncInterval := time.Duration(p.config.SyncInterval) * time.Minute
-	waitInSec := int64(syncInterval) / cycles
-
+	waitInSec := (int64(p.config.SyncInterval) * secsInMin) / cycles
 	return time.Duration(waitInSec) * time.Second
 }
 
