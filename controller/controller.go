@@ -5,11 +5,14 @@ import (
 	"math"
 	"time"
 
+	client "github.com/aserto-dev/go-aserto"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v2"
 	management "github.com/aserto-dev/go-grpc/aserto/management/v2"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 )
 
 type CommandFunc func(context.Context, *api.Command) error
@@ -29,8 +32,11 @@ const (
 )
 
 const (
-	timeout    = 1 * time.Second
-	maxBackoff = 600 * time.Second // max waits between retries.
+	timeout          = 1 * time.Second
+	maxBackoff       = 600 * time.Second // max waits between retries.
+	keepaliveTime    = 30 * time.Second  // send pings every 30 seconds if there is no activity
+	keepaliveTimeout = 5 * time.Second   // wait 5 seconds for ping ack before considering the connection dead
+
 )
 
 func NewController(logger *zerolog.Logger, policyName, host string, cfg *Config, handler CommandFunc) (*Controller, error) {
@@ -45,7 +51,12 @@ func NewController(logger *zerolog.Logger, policyName, host string, cfg *Config,
 		"host":        host,
 	}).Logger()
 
-	conn, err := cfg.Server.Connect()
+	opts := []grpc.DialOption{grpc.WithKeepaliveParams(keepalive.ClientParameters{
+		Time:    keepaliveTime,    // send pings every 30 seconds if there is no activity
+		Timeout: keepaliveTimeout, // wait 5 seconds for ping ack before considering the connection dead
+	})}
+
+	conn, err := cfg.Server.Connect(client.WithDialOptions(opts...))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to initialize new connection")
 	}
