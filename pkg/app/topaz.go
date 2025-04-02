@@ -321,36 +321,21 @@ func KeepAliveDialOption() []grpc.DialOption {
 func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
 	switch cfg.Type {
 	case "self":
-		decisionLogger, err := self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
-		if err != nil {
-			return nil, err
-		}
-
-		return decisionLogger, err
+		return self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
 
 	case "file":
 		logPath := cfg.Config["log_file_path"]
 		maxSize, _ := cfg.Config["max_file_size_mb"].(int)
 		maxFiles, _ := cfg.Config["max_file_count"].(int)
 
-		decisionLogger, err := file.New(e.Context, &file.Config{
+		return file.New(e.Context, &file.Config{
 			LogFilePath:   fmt.Sprintf("%v", logPath),
 			MaxFileSizeMB: maxSize,
 			MaxFileCount:  maxFiles,
 		}, e.Logger)
-		if err != nil {
-			return nil, err
-		}
-
-		return decisionLogger, err
 
 	default:
-		decisionLogger, err := nop.New(e.Context, e.Logger)
-		if err != nil {
-			return nil, err
-		}
-
-		return decisionLogger, err
+		return nop.New(e.Context, e.Logger)
 	}
 }
 
