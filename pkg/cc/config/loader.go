@@ -287,11 +287,7 @@ func getUniqueServiceCertPaths(services map[string]*builder.API) []string {
 		}
 	}
 
-	pathList := lo.MapToSlice(paths, func(k string, v bool) string {
-		return k
-	})
-
-	return pathList
+	return lo.Keys(paths)
 }
 
 func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) {
