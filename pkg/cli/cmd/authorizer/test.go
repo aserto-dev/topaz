@@ -69,7 +69,7 @@ func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 
 	dec := json.NewDecoder(r)
 
-	var template interface{}
+	var template any
 	if err := dec.Decode(&template); err != nil {
 		return err
 	}

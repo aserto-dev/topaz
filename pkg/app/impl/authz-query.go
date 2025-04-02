@@ -134,13 +134,14 @@ func (s *AuthorizerServer) querySetResult(queryResult *runtime.Result) (*structp
 		return nil, err
 	}
 
-	var queryResultMap []interface{}
+	var queryResultMap []any
 	if err := json.Unmarshal(queryResultJSON, &queryResultMap); err != nil {
 		return nil, err
 	}
 
-	respMap := make(map[string]interface{})
-	respMap["result"] = queryResultMap
+	respMap := map[string]any{
+		"result": queryResultMap,
+	}
 
 	result, err := structpb.NewStruct(respMap)
 	if err != nil {

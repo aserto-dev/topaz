@@ -44,7 +44,7 @@ func NewController(logger *zerolog.Logger, policyName, host string, cfg *Config,
 		return nil, nil
 	}
 
-	newLogger := logger.With().Fields(map[string]interface{}{
+	newLogger := logger.With().Fields(map[string]any{
 		"component":   "controller",
 		"tenant-id":   cfg.Server.TenantID,
 		"policy-name": policyName,

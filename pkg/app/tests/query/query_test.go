@@ -174,7 +174,7 @@ var queryTests = []struct {
 			require.NotEmpty(t, result.Result)
 			require.Contains(t, result.Result[0].Bindings, "x")
 			require.Contains(t, result.Result[0].Bindings["x"], "id")
-			binding, _ := result.Result[0].Bindings["x"].(map[string]interface{})
+			binding, _ := result.Result[0].Bindings["x"].(map[string]any)
 			require.Equal(t, "euang@acmecorp.com", binding["id"])
 		},
 	},
@@ -231,7 +231,7 @@ var queryTests = []struct {
 			require.Contains(t, result.Result[0].Bindings["x"], "identity")
 			require.Contains(t, result.Result[0].Bindings["x"], "user")
 
-			bindings, _ := result.Result[0].Bindings["x"].(map[string]interface{})
+			bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
 			require.Contains(t, bindings["identity"], "type")
 			require.Contains(t, bindings["user"], "id")
 		},
@@ -264,10 +264,10 @@ var queryTests = []struct {
 			require.Contains(t, result.Result[0].Bindings["x"], "identity")
 			require.Contains(t, result.Result[0].Bindings["x"], "user")
 
-			bindings, _ := result.Result[0].Bindings["x"].(map[string]interface{})
+			bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
 			require.Contains(t, bindings["identity"], "identity")
 			require.Contains(t, bindings["identity"], "type")
-			require.Equal(t, map[string]interface{}{}, bindings["user"])
+			require.Equal(t, map[string]any{}, bindings["user"])
 		},
 	},
 }

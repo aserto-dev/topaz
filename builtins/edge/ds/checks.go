@@ -86,7 +86,7 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			results, ok := pbs.GetFields()["checks"].AsInterface().([]interface{})
+			results, ok := pbs.GetFields()["checks"].AsInterface().([]any)
 			if !ok {
 				return nil, status.Errorf(codes.Internal, "failed type assertion %q", "results")
 			}

@@ -86,7 +86,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			result, ok := pbs.GetFields()["result"].AsInterface().(map[string]interface{})
+			result, ok := pbs.GetFields()["result"].AsInterface().(map[string]any)
 			if !ok {
 				return nil, status.Errorf(codes.Internal, "failed type assertion %q", "result")
 			}

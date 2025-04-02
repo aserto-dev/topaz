@@ -47,7 +47,7 @@ func (plugin *DecisionLogsPlugin) Stop(ctx context.Context) {
 	plugin.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateNotReady})
 }
 
-func (plugin *DecisionLogsPlugin) Reconfigure(ctx context.Context, config interface{}) {
+func (plugin *DecisionLogsPlugin) Reconfigure(ctx context.Context, config any) {
 	plugin.cfg, _ = config.(*Config)
 }
 

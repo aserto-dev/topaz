@@ -177,9 +177,9 @@ func (*AuthorizerServer) decisionTreeBuildQuery(
 	queryStmt := strings.Builder{}
 	r := 0
 
-	for i := range listPolicies {
-		for _, rule := range listPolicies[i].AST.Rules {
-			if !strings.HasPrefix(listPolicies[i].AST.Package.Path.String(), "data."+req.GetPolicyContext().GetPath()) {
+	for i, policy := range listPolicies {
+		for _, rule := range policy.AST.Rules {
+			if !strings.HasPrefix(policy.AST.Package.Path.String(), "data."+req.GetPolicyContext().GetPath()) {
 				continue
 			}
 
@@ -187,7 +187,7 @@ func (*AuthorizerServer) decisionTreeBuildQuery(
 				continue
 			}
 
-			queryStmt.WriteString(fmt.Sprintf("r%d = %s\n", i, listPolicies[i].AST.Package.Path))
+			queryStmt.WriteString(fmt.Sprintf("r%d = %s\n", i, policy.AST.Package.Path))
 
 			r++
 

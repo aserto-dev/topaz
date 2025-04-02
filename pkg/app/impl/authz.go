@@ -126,7 +126,7 @@ func traceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
 	}
 }
 
-// convert, explicitly converts from proto message interface{} in order
+// convert, explicitly converts from proto message any in order
 // to preserve enum values as strings when marshaled to JSON.
 func convert(msg proto.Message) any {
 	b, err := protojson.MarshalOptions{

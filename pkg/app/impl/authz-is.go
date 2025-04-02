@@ -131,8 +131,8 @@ func getOutcomes(decisions []*authorizer.Decision) map[string]bool {
 	})
 }
 
-func getID(v map[string]interface{}) string {
-	if u, ok := v["user"].(map[string]interface{}); ok {
+func getID(v map[string]any) string {
+	if u, ok := v["user"].(map[string]any); ok {
 		if i, ok := u["id"].(string); ok {
 			return i
 		}
@@ -141,13 +141,13 @@ func getID(v map[string]interface{}) string {
 	return ""
 }
 
-func getEmail(v map[string]interface{}) string {
-	if u, ok := v["user"].(map[string]interface{}); ok {
+func getEmail(v map[string]any) string {
+	if u, ok := v["user"].(map[string]any); ok {
 		if e, ok := u["email"].(string); ok {
 			return e
 		}
 
-		if p, ok := u["properties"].(map[string]interface{}); ok {
+		if p, ok := u["properties"].(map[string]any); ok {
 			if e, ok := p["email"].(string); ok {
 				return e
 			}

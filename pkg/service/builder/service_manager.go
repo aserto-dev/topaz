@@ -206,7 +206,7 @@ func (s *ServiceManager) startGateway(serverDetails *Service) {
 	})
 }
 
-func (s *ServiceManager) logDetails(address string, element interface{}) {
+func (s *ServiceManager) logDetails(address string, element any) {
 	ref := reflect.ValueOf(element).Elem()
 	typeOfT := ref.Type()
 

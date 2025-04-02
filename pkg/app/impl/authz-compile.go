@@ -133,7 +133,7 @@ func (s *AuthorizerServer) compileSetResult(compileResult *runtime.CompileResult
 		return nil, err
 	}
 
-	var compileResultMap map[string]interface{}
+	var compileResultMap map[string]any
 	if err := json.Unmarshal(compileResultJSON, &compileResultMap); err != nil {
 		return nil, err
 	}

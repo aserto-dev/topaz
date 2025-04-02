@@ -12,8 +12,8 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func help(fnName string, args interface{}) (*ast.Term, error) {
-	m := map[string]interface{}{fnName: args}
+func help(fnName string, args any) (*ast.Term, error) {
+	m := map[string]any{fnName: args}
 
 	val, err := ast.InterfaceToValue(m)
 	if err != nil {
@@ -29,7 +29,7 @@ func helpMsg(fnName string, msg proto.Message) (*ast.Term, error) {
 		return nil, err
 	}
 
-	m := map[string]interface{}{fnName: v}
+	m := map[string]any{fnName: v}
 
 	val, err := ast.InterfaceToValue(m)
 	if err != nil {

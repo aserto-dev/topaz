@@ -93,7 +93,7 @@ func validateJSON(absURL string) valid {
 		return valid{exists: false, parsed: false, err: err}
 	}
 
-	var v map[string]interface{}
+	var v map[string]any
 	if err := json.NewDecoder(bytes.NewReader(b)).Decode(&v); err != nil {
 		return valid{exists: true, parsed: false, err: err}
 	}

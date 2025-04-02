@@ -86,7 +86,7 @@ func policyToModule(policy types.PolicyV1) (*api.Module, error) {
 		return nil, errors.Wrap(err, "failed to marshal AST")
 	}
 
-	var v interface{}
+	var v any
 	if err := json.Unmarshal(astBts, &v); err != nil {
 		return nil, errors.Wrap(err, "failed to determine AST")
 	}
