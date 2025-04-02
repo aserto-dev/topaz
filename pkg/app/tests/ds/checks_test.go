@@ -33,17 +33,17 @@ func testChecks(ctx context.Context, dsClient dsr3.ReaderClient) func(*testing.T
 
 				assert.Equal(t, len(tc.req.GetChecks()), len(resp.GetChecks()))
 
-				for i := range tc.resp.GetChecks() {
-					require.Equal(t, tc.resp.GetChecks()[i].GetCheck(), resp.GetChecks()[i].GetCheck(), "i=%d", i)
-					if tc.resp.GetChecks()[i].GetContext() == nil {
+				for i, check := range tc.resp.GetChecks() {
+					require.Equal(t, check.GetCheck(), resp.GetChecks()[i].GetCheck(), "i=%d", i)
+					if check.GetContext() == nil {
 						continue
 					}
 
-					if tc.resp.GetChecks()[i].GetContext().GetFields() == nil {
+					if check.GetContext().GetFields() == nil {
 						return
 					}
 
-					if v, ok := tc.resp.GetChecks()[i].GetContext().GetFields()["reason"]; ok {
+					if v, ok := check.GetContext().GetFields()["reason"]; ok {
 						require.Equal(t, v.GetStringValue(), resp.GetChecks()[i].GetContext().GetFields()["reason"].GetStringValue())
 					}
 				}
