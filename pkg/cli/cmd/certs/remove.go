@@ -36,6 +36,7 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		cn := fmt.Sprintf("%s-%s", certCommonName, strings.TrimSuffix(fn, filepath.Ext(fn)))
 
 		tab.WithRow(fn, "removed from trust store")
+
 		if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
 			return err
 		}
@@ -45,9 +46,11 @@ func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
 		if fi, err := os.Stat(fqn); os.IsNotExist(err) || fi.IsDir() {
 			continue
 		}
+
 		if err := os.Remove(fqn); err != nil {
 			return err
 		}
+
 		tab.WithRow(filepath.Base(fqn), "deleted")
 	}
 

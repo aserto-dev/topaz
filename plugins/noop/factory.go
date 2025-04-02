@@ -8,19 +8,21 @@ type PluginFactory struct {
 	name string
 }
 
+var _ plugins.Factory = (*PluginFactory)(nil)
+
 func NewPluginFactory(name string) PluginFactory {
 	return PluginFactory{
 		name: name,
 	}
 }
 
-func (p PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugin {
+func (f PluginFactory) New(m *plugins.Manager, config any) plugins.Plugin {
 	return &Noop{
 		Manager: m,
-		Name:    p.name,
+		Name:    f.name,
 	}
 }
 
-func (PluginFactory) Validate(m *plugins.Manager, config []byte) (interface{}, error) {
-	return map[string]interface{}{}, nil
+func (PluginFactory) Validate(m *plugins.Manager, config []byte) (any, error) {
+	return map[string]any{}, nil
 }

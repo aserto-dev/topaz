@@ -72,6 +72,7 @@ func NewWordWrapWriter(w io.Writer, limit uint) io.Writer {
 
 func getTerminalLimitWidth(terminalSize *remotecommand.TerminalSize) uint {
 	var limit uint
+
 	switch {
 	case terminalSize.Width >= 120:
 		limit = 120
@@ -80,6 +81,7 @@ func getTerminalLimitWidth(terminalSize *remotecommand.TerminalSize) uint {
 	case terminalSize.Width >= 80:
 		limit = 80
 	}
+
 	return limit
 }
 

@@ -12,6 +12,7 @@ import (
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
 type TemplateCmd struct {
@@ -59,6 +60,7 @@ type template struct {
 func (t *template) AbsURL(relative string) string {
 	abs := *t.base
 	abs.Path = path.Join(abs.Path, relative)
+
 	return abs.String()
 }
 
@@ -68,7 +70,7 @@ func download(src, dir string) (string, error) {
 		return "", err
 	}
 
-	if err := os.MkdirAll(dir, 0o700); err != nil {
+	if err := os.MkdirAll(dir, x.FileMode0700); err != nil {
 		return "", err
 	}
 
@@ -90,7 +92,7 @@ func getBytes(fileURL string) ([]byte, error) {
 		return os.ReadFile(fileURL)
 	}
 
-	resp, err := http.Get(fileURL) //nolint used to download the template files
+	resp, err := http.Get(fileURL) //nolint:gosec,noctx
 	if err != nil {
 		return nil, err
 	}
@@ -123,6 +125,7 @@ func getTemplate(name, templatesURL string) (*template, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	tmpl.Name = name
 
 	return tmpl, nil
@@ -153,6 +156,7 @@ func getTemplateRef(name string, templatesURL *url.URL) (*tmplRef, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		if parsed.Scheme == "" {
 			absURL := *templatesURL
 			absURL.Path = path.Join(path.Dir(absURL.Path), parsed.Path)
@@ -187,16 +191,17 @@ func (i *tmplRef) getTemplate() (*template, error) {
 
 	base := *i.absURL
 	base.Path = path.Dir(base.Path)
+
 	tmpl := template{base: &base}
 	if err := json.Unmarshal(buf, &tmpl); err != nil {
 		return nil, err
 	}
 
-	// TODO: remove after updating all templates to URLs relative to the template definition.
 	tmpl.Assets.Manifest = strings.TrimPrefix(tmpl.Assets.Manifest, base.Path)
 	for i, v := range tmpl.Assets.IdentityData {
 		tmpl.Assets.IdentityData[i] = strings.TrimPrefix(v, base.Path)
 	}
+
 	for i, v := range tmpl.Assets.DomainData {
 		tmpl.Assets.DomainData[i] = strings.TrimPrefix(v, base.Path)
 	}

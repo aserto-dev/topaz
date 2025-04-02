@@ -16,6 +16,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
@@ -114,8 +116,8 @@ func ListPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) fun
 		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{})
 
 		assert.NoError(err)
-		assert.NotNil(listPoliciesResponse.Result)
-		assert.NotEmpty(listPoliciesResponse.Result)
+		assert.NotNil(listPoliciesResponse.GetResult())
+		assert.NotEmpty(listPoliciesResponse.GetResult())
 	}
 }
 
@@ -131,10 +133,10 @@ func ListPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClien
 		})
 
 		assert.NoError(err)
-		assert.NotNil(listPoliciesResponse.Result)
-		assert.NotEmpty(listPoliciesResponse.Result)
-		assert.Nil(listPoliciesResponse.Result[0].Id)
-		assert.NotNil(listPoliciesResponse.Result[0].Raw)
+		assert.NotNil(listPoliciesResponse.GetResult())
+		assert.NotEmpty(listPoliciesResponse.GetResult())
+		assert.Empty(listPoliciesResponse.GetResult()[0].GetId())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetRaw())
 	}
 }
 
@@ -151,11 +153,11 @@ func ListPoliciesMaskedComposed(ctx context.Context, azClient authorizer.Authori
 		})
 
 		assert.NoError(err)
-		assert.NotNil(listPoliciesResponse.Result)
-		assert.NotEmpty(listPoliciesResponse.Result)
-		assert.Nil(listPoliciesResponse.Result[0].Id)
-		assert.NotNil(listPoliciesResponse.Result[0].Raw)
-		assert.NotNil(listPoliciesResponse.Result[0].PackagePath)
+		assert.NotNil(listPoliciesResponse.GetResult())
+		assert.NotEmpty(listPoliciesResponse.GetResult())
+		assert.Empty(listPoliciesResponse.GetResult()[0].GetId())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetRaw())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetPackagePath())
 	}
 }
 
@@ -171,12 +173,12 @@ func ListPoliciesInvalidMask(ctx context.Context, azClient authorizer.Authorizer
 		})
 
 		assert.NoError(err)
-		assert.NotNil(listPoliciesResponse.Result)
-		assert.NotEmpty(listPoliciesResponse.Result)
-		assert.NotNil(listPoliciesResponse.Result[0].Id)
-		assert.NotNil(listPoliciesResponse.Result[0].Raw)
-		assert.NotNil(listPoliciesResponse.Result[0].PackagePath)
-		assert.NotNil(listPoliciesResponse.Result[0].Ast)
+		assert.NotNil(listPoliciesResponse.GetResult())
+		assert.NotEmpty(listPoliciesResponse.GetResult())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetId())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetRaw())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetPackagePath())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetAst())
 	}
 }
 
@@ -190,12 +192,12 @@ func ListPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerCl
 		})
 
 		assert.NoError(err)
-		assert.NotNil(listPoliciesResponse.Result)
-		assert.NotEmpty(listPoliciesResponse.Result)
-		assert.NotNil(listPoliciesResponse.Result[0].Id)
-		assert.NotNil(listPoliciesResponse.Result[0].Raw)
-		assert.NotNil(listPoliciesResponse.Result[0].PackagePath)
-		assert.NotNil(listPoliciesResponse.Result[0].Ast)
+		assert.NotNil(listPoliciesResponse.GetResult())
+		assert.NotEmpty(listPoliciesResponse.GetResult())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetId())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetRaw())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetPackagePath())
+		assert.NotNil(listPoliciesResponse.GetResult()[0].GetAst())
 	}
 }
 
@@ -204,11 +206,11 @@ func GetPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) func
 		assert := require.New(t)
 		apiModule := getOneModule(ctx, azClient, t)
 		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
-			Id: *apiModule.Id,
+			Id: apiModule.GetId(),
 		})
 
 		assert.NoError(err)
-		assert.NotNil(getPoliciesResponse.Result)
+		assert.NotNil(getPoliciesResponse.GetResult())
 	}
 }
 
@@ -218,7 +220,7 @@ func GetPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClient
 		apiModule := getOneModule(ctx, azClient, t)
 
 		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
-			Id: *apiModule.Id,
+			Id: apiModule.GetId(),
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{
 					"raw",
@@ -227,9 +229,9 @@ func GetPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClient
 		})
 
 		assert.NoError(err)
-		assert.NotNil(getPoliciesResponse.Result)
-		assert.Nil(getPoliciesResponse.Result.Id)
-		assert.NotNil(getPoliciesResponse.Result.Raw)
+		assert.NotNil(getPoliciesResponse.GetResult())
+		assert.Empty(getPoliciesResponse.GetResult().GetId())
+		assert.NotNil(getPoliciesResponse.GetResult().GetRaw())
 	}
 }
 
@@ -239,7 +241,7 @@ func GetPoliciesMaskedComposed(ctx context.Context, azClient authorizer.Authoriz
 		apiModule := getOneModule(ctx, azClient, t)
 
 		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
-			Id: *apiModule.Id,
+			Id: apiModule.GetId(),
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{
 					"raw",
@@ -249,10 +251,10 @@ func GetPoliciesMaskedComposed(ctx context.Context, azClient authorizer.Authoriz
 		})
 
 		assert.NoError(err)
-		assert.NotNil(getPoliciesResponse.Result)
-		assert.Nil(getPoliciesResponse.Result.Id)
-		assert.NotNil(getPoliciesResponse.Result.Raw)
-		assert.NotNil(getPoliciesResponse.Result.PackagePath)
+		assert.NotNil(getPoliciesResponse.GetResult())
+		assert.Empty(getPoliciesResponse.GetResult().GetId())
+		assert.NotNil(getPoliciesResponse.GetResult().GetRaw())
+		assert.NotNil(getPoliciesResponse.GetResult().GetPackagePath())
 	}
 }
 
@@ -263,7 +265,7 @@ func GetPoliciesInvalidMask(ctx context.Context, azClient authorizer.AuthorizerC
 		apiModule := getOneModule(ctx, azClient, t)
 
 		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
-			Id: *apiModule.Id,
+			Id: apiModule.GetId(),
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{
 					"notexistantpath",
@@ -272,11 +274,11 @@ func GetPoliciesInvalidMask(ctx context.Context, azClient authorizer.AuthorizerC
 		})
 
 		assert.NoError(err)
-		assert.NotNil(getPoliciesResponse.Result)
-		assert.NotNil(getPoliciesResponse.Result.Id)
-		assert.NotNil(getPoliciesResponse.Result.Raw)
-		assert.NotNil(getPoliciesResponse.Result.PackagePath)
-		assert.NotNil(getPoliciesResponse.Result.Ast)
+		assert.NotNil(getPoliciesResponse.GetResult())
+		assert.NotNil(getPoliciesResponse.GetResult().GetId())
+		assert.NotNil(getPoliciesResponse.GetResult().GetRaw())
+		assert.NotNil(getPoliciesResponse.GetResult().GetPackagePath())
+		assert.NotNil(getPoliciesResponse.GetResult().GetAst())
 	}
 }
 
@@ -287,18 +289,18 @@ func GetPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerCli
 		apiModule := getOneModule(ctx, azClient, t)
 
 		getPoliciesResponse, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
-			Id: *apiModule.Id,
+			Id: apiModule.GetId(),
 			FieldMask: &fieldmaskpb.FieldMask{
 				Paths: []string{},
 			},
 		})
 
 		assert.NoError(err)
-		assert.NotNil(getPoliciesResponse.Result)
-		assert.NotNil(getPoliciesResponse.Result.Id)
-		assert.NotNil(getPoliciesResponse.Result.Raw)
-		assert.NotNil(getPoliciesResponse.Result.PackagePath)
-		assert.NotNil(getPoliciesResponse.Result.Ast)
+		assert.NotNil(getPoliciesResponse.GetResult())
+		assert.NotNil(getPoliciesResponse.GetResult().GetId())
+		assert.NotNil(getPoliciesResponse.GetResult().GetRaw())
+		assert.NotNil(getPoliciesResponse.GetResult().GetPackagePath())
+		assert.NotNil(getPoliciesResponse.GetResult().GetAst())
 	}
 }
 
@@ -310,8 +312,8 @@ func GetPoliciesInvalidID(ctx context.Context, azClient authorizer.AuthorizerCli
 			Id: "doesnotexist",
 		})
 
-		// TODO: replace this with aerr
-		assert.Error(err)
+		s := status.Convert(err)
+		assert.Equal(codes.NotFound, s.Code())
 	}
 }
 
@@ -322,8 +324,8 @@ func getOneModule(ctx context.Context, azClient authorizer.AuthorizerClient, t *
 		assert.FailNow("failed to list policies", err.Error())
 	}
 
-	if len(listPoliciesResponse.Result) == 0 {
+	if len(listPoliciesResponse.GetResult()) == 0 {
 		assert.FailNow("no policy modules loaded")
 	}
-	return listPoliciesResponse.Result[0]
+	return listPoliciesResponse.GetResult()[0]
 }

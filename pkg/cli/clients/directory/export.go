@@ -43,17 +43,20 @@ func (c *Client) Export(ctx context.Context, objectsFile, relationsFile string) 
 		if errors.Is(err, io.EOF) {
 			break
 		}
+
 		if err != nil {
 			return err
 		}
 
-		switch m := msg.Msg.(type) {
+		switch m := msg.GetMsg().(type) {
 		case *dse3.ExportResponse_Object:
 			err = objects.Write(m.Object)
+
 			objectsCounter.Incr().Print(os.Stdout)
 
 		case *dse3.ExportResponse_Relation:
 			err = relations.Write(m.Relation)
+
 			relationsCounter.Incr().Print(os.Stdout)
 
 		default:

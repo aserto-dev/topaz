@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-aserto"
+	"github.com/aserto-dev/topaz/pkg/x"
 
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
 	go_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
@@ -37,15 +38,17 @@ func NewServiceManager(logger *zerolog.Logger) *ServiceManager {
 	if reg == nil {
 		reg = prometheus.NewRegistry()
 	}
+
 	serviceLogger := logger.With().Str("component", "service-manager").Logger()
 	errGroup, ctx := errgroup.WithContext(context.Background())
+
 	return &ServiceManager{
 		Context:         ctx,
 		logger:          &serviceLogger,
 		Servers:         make(map[string]*Service),
 		DependencyMap:   make(map[string][]string),
 		errGroup:        errGroup,
-		shutdownTimeout: 30,
+		shutdownTimeout: x.ShutdownTimeout,
 	}
 }
 
@@ -65,13 +68,17 @@ func (s *ServiceManager) SetupHealthServer(address string, certCfg *aserto.TLSCo
 
 	s.HealthServer = healthServer
 	healthListener, err := net.Listen("tcp", address)
+
 	s.logger.Info().Msgf("Starting %s health server", address)
+
 	if err != nil {
 		return err
 	}
+
 	s.errGroup.Go(func() error {
 		return healthServer.GRPCServer.Serve(healthListener)
 	})
+
 	return nil
 }
 
@@ -79,10 +86,10 @@ func (s *ServiceManager) SetupMetricsServer(address string, certCfg *aserto.TLSC
 	error,
 ) {
 	metric := http.Server{
-		ReadTimeout:       5 * time.Second,
-		ReadHeaderTimeout: 5 * time.Second,
-		WriteTimeout:      30 * time.Second,
-		IdleTimeout:       30 * time.Second,
+		ReadTimeout:       x.ReadTimeout,
+		ReadHeaderTimeout: x.ReadHeaderTimeout,
+		WriteTimeout:      x.WriteTimeout,
+		IdleTimeout:       x.IdleTimeout,
 	}
 	s.MetricServer = &metric
 	mux := http.NewServeMux()
@@ -119,6 +126,7 @@ func (s *ServiceManager) SetupMetricsServer(address string, certCfg *aserto.TLSC
 		if ok {
 			return prometheus.Labels{"method": method}
 		}
+
 		return nil
 	}
 
@@ -152,42 +160,53 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 					<-s.Servers[dependsOn].Started // wait for started from the dependent service.
 				}
 			}
+
 			grpcServer := serverDetails.Server
 			listener := serverDetails.Listener
+
 			s.logger.Info().Msgf("Starting %s gRPC server", address)
+
 			s.errGroup.Go(func() error {
 				return grpcServer.Serve(listener)
 			})
 
 			if serverDetails.Gateway != nil {
-				httpServer := serverDetails.Gateway
-				if httpServer.Server != nil {
-					s.errGroup.Go(func() error {
-						s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
-						if httpServer.Certs.HasCert() {
-							err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key)
-							if err != nil {
-								return err
-							}
-						} else {
-							err := httpServer.Server.ListenAndServe()
-							if err != nil {
-								return err
-							}
-						}
-						return nil
-					})
-				}
+				s.startGateway(serverDetails)
 			}
 
 			serverDetails.Started <- true // send started information.
+
 			return nil
 		})
 	}
+
 	return nil
 }
 
-func (s *ServiceManager) logDetails(address string, element interface{}) {
+func (s *ServiceManager) startGateway(serverDetails *Service) {
+	httpServer := serverDetails.Gateway
+	if httpServer.Server == nil {
+		return
+	}
+
+	s.errGroup.Go(func() error {
+		s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
+
+		if httpServer.Certs.HasCert() {
+			if err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key); err != nil {
+				return err
+			}
+		} else {
+			if err := httpServer.Server.ListenAndServe(); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+}
+
+func (s *ServiceManager) logDetails(address string, element any) {
 	ref := reflect.ValueOf(element).Elem()
 	typeOfT := ref.Type()
 
@@ -200,10 +219,12 @@ func (s *ServiceManager) logDetails(address string, element interface{}) {
 func (s *ServiceManager) StopServers(ctx context.Context) {
 	timeout := time.Duration(s.shutdownTimeout) * time.Second
 	timeoutContext, cancel := context.WithTimeout(ctx, timeout)
+
 	defer cancel()
 
 	if s.HealthServer != nil {
 		s.logger.Info().Msgf("Stopping %s health server", s.HealthServer.Address)
+
 		if !shutDown(s.HealthServer.GRPCServer, timeout) {
 			s.logger.Warn().Msgf("Stopped %s health server forcefully", s.HealthServer.Address)
 		}
@@ -211,10 +232,11 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 
 	if s.MetricServer != nil {
 		s.logger.Info().Msgf("Stopping %s metric server", s.MetricServer.Addr)
-		err := s.MetricServer.Shutdown(timeoutContext)
-		if err != nil {
+
+		if err := s.MetricServer.Shutdown(timeoutContext); err != nil {
 			s.logger.Err(err).Msgf("failed to shutdown metric server %s", s.MetricServer.Addr)
 			s.logger.Debug().Msgf("forcefully closing metric server %s", s.MetricServer.Addr)
+
 			if err := s.MetricServer.Close(); err != nil {
 				s.logger.Err(err).Msgf("failed to close the metric server %s", s.MetricServer.Addr)
 			}
@@ -225,10 +247,11 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 		// shutdown gateway service first, as it is layered on-top of the gRPC service.
 		if value.Gateway != nil && value.Gateway.Server != nil {
 			s.logger.Info().Msgf("Stopping %s gateway server", value.Gateway.Server.Addr)
-			err := value.Gateway.Server.Shutdown(timeoutContext)
-			if err != nil {
+
+			if err := value.Gateway.Server.Shutdown(timeoutContext); err != nil {
 				s.logger.Err(err).Msgf("failed to shutdown gateway for %s", address)
 				s.logger.Debug().Msgf("forcefully closing gateway %s", address)
+
 				if err := value.Gateway.Server.Close(); err != nil {
 					s.logger.Err(err).Msgf("failed to close gateway server %s", address)
 				}
@@ -237,6 +260,7 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 
 		// shutdown gRPC service.
 		s.logger.Info().Msgf("Stopping %s gRPC server", address)
+
 		if !shutDown(value.Server, timeout) {
 			s.logger.Warn().Msgf("Stopped %s gRPC forcefully", address)
 		}

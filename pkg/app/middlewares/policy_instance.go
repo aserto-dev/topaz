@@ -31,23 +31,25 @@ var _ grpcutil.Middleware = &PolicyInstanceMiddleware{}
 
 // If the unary operation is an Is request attach configured instance information to request.
 func (m *PolicyInstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 		request, ok := req.(*authorizer.IsRequest)
 		if ok {
 			request.PolicyInstance = &api.PolicyInstance{
 				Name: m.policyName,
 			}
 		}
+
 		return handler(ctx, req)
 	}
 }
 
 // passthrough as Is call is Unary type operation.
 func (m *PolicyInstanceMiddleware) Stream() grpc.StreamServerInterceptor {
-	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+	return func(srv any, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
 		wrapped := grpcmiddleware.WrapServerStream(stream)
 		wrapped.WrappedContext = ctx
+
 		return handler(srv, wrapped)
 	}
 }

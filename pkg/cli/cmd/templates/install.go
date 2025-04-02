@@ -16,6 +16,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/topaz"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -48,17 +49,21 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 
 	if !cmd.Force {
 		fmt.Fprintln(c.StdErr(), "Installing this template will completely reset your topaz configuration.")
+
 		if !common.PromptYesNo("Do you want to continue?", false) {
 			return nil
 		}
 	}
-	fileName := fmt.Sprintf("%s.yaml", tmpl.Name)
+
+	fileName := tmpl.Name + ".yaml"
 	c.Config.Active.Config = tmpl.Name
+
 	if cmd.ConfigName != "" {
 		if !common.RestrictedNamePattern.MatchString(cmd.ConfigName) {
 			return errors.Errorf("%s must match pattern %s", cmd.Name, common.RestrictedNamePattern.String())
 		}
-		fileName = fmt.Sprintf("%s.yaml", cmd.ConfigName)
+
+		fileName = cmd.ConfigName + ".yaml"
 		c.Config.Active.Config = cmd.ConfigName
 	}
 
@@ -69,8 +74,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerName = c.Config.Running.ContainerName
 
 	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
-		err = os.MkdirAll(cc.GetTopazDir(), 0o700)
-		if err != nil {
+		if err := os.MkdirAll(cc.GetTopazDir(), x.FileMode0700); err != nil {
 			return err
 		}
 	}
@@ -81,8 +85,8 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(cliConfig, kongConfigBytes, 0o666) // nolint
-	if err != nil {
+
+	if err := os.WriteFile(cliConfig, kongConfigBytes, x.FileMode0600); err != nil {
 		return err
 	}
 
@@ -279,6 +283,7 @@ func (i *tmplInstaller) deleteManifest() error {
 		Force:  true,
 		Config: *i.cfg,
 	}
+
 	return command.Run(i.c)
 }
 
@@ -292,6 +297,7 @@ func (i *tmplInstaller) setManifest() error {
 
 	if exists, _ := config.FileExists(manifest); !exists {
 		manifestDir := path.Join(i.topazTemplateDir, name, "model")
+
 		switch m, err := download(manifest, manifestDir); {
 		case err != nil:
 			return err
@@ -317,6 +323,7 @@ func (i *tmplInstaller) importData() error {
 	defaultDataDir := path.Join(i.topazTemplateDir, name, "data")
 
 	dataDirs := map[string]struct{}{}
+
 	for _, v := range append(i.tmpl.Assets.IdentityData, i.tmpl.Assets.DomainData...) {
 		dataURL := i.tmpl.AbsURL(v)
 		if exists, _ := config.FileExists(dataURL); exists {
@@ -327,6 +334,7 @@ func (i *tmplInstaller) importData() error {
 		if _, err := download(dataURL, defaultDataDir); err != nil {
 			return err
 		}
+
 		dataDirs[defaultDataDir] = struct{}{}
 	}
 
@@ -349,15 +357,19 @@ func (i *tmplInstaller) runTemplateTests() error {
 	if i.customName != "" {
 		name = i.customName
 	}
+
 	assertionsDir := path.Join(i.topazTemplateDir, name, "assertions")
 
 	tests := []string{}
+
 	for _, v := range i.tmpl.Assets.Assertions {
 		assertionURL := i.tmpl.AbsURL(v)
 		if exists, _ := config.FileExists(assertionURL); exists {
 			tests = append(tests, assertionURL)
+
 			continue
 		}
+
 		switch t, err := download(assertionURL, assertionsDir); {
 		case err != nil:
 			return err

@@ -23,6 +23,7 @@ type TestExecCmd struct {
 
 func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	files := []string{}
+
 	for _, file := range cmd.Files {
 		if expanded, err := filepath.Glob(file); err == nil {
 			files = append(files, expanded...)
@@ -51,6 +52,7 @@ type TestTemplateCmd struct {
 	Pretty bool `flag:"" default:"false" help:"pretty print JSON"`
 }
 
+//nolint:lll
 const assertionsTemplate string = `{
   "assertions": [
 	{"check_decision": {"identity_context": {"identity": "", "type": ""}, "resource_context": {}, "policy_context": {"path": "", "decisions": [""]}}, "expected":true, "description": ""},
@@ -67,7 +69,7 @@ func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 
 	dec := json.NewDecoder(r)
 
-	var template interface{}
+	var template any
 	if err := dec.Decode(&template); err != nil {
 		return err
 	}
@@ -75,6 +77,7 @@ func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 	enc := json.NewEncoder(c.StdOut())
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
+
 	if err := enc.Encode(template); err != nil {
 		return err
 	}

@@ -34,6 +34,7 @@ const (
 	modeInteractive
 )
 
+//nolint:funlen
 func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
 		return cc.ErrIsRunning
@@ -102,7 +103,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithContainerHostname(cmd.ContainerHostname),
 		dockerx.WithWorkingDir("/app"),
 		dockerx.WithEntrypoint([]string{"./topazd"}),
-		dockerx.WithCmd([]string{"run", "--config-file", fmt.Sprintf("/config/%s", filepath.Base(c.Config.Active.ConfigFile))}),
+		dockerx.WithCmd([]string{"run", "--config-file", "/config/" + filepath.Base(c.Config.Active.ConfigFile)}),
 		dockerx.WithAutoRemove(),
 		dockerx.WithEnvs(getEnvFromVolumes(volumes)),
 		dockerx.WithEnvs(cmd.Env),
@@ -130,6 +131,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
+
 	return nil
 }
 
@@ -144,10 +146,9 @@ func getPorts(cfg *config.Loader) ([]string, error) {
 		return port, fmt.Sprintf("%s:%s/tcp", port, port)
 	})
 
-	var ports []string
-	for _, v := range portMap {
-		ports = append(ports, v)
-	}
+	ports := lo.MapToSlice(portMap, func(_, v string) string {
+		return v
+	})
 
 	return ports, nil
 }
@@ -160,28 +161,31 @@ func getVolumes(cfg *config.Loader) ([]string, error) {
 
 	volumeMap := lo.Associate(paths, func(path string) (string, string) {
 		dir := filepath.Dir(path)
-		return dir, fmt.Sprintf("%s:%s", dir, fmt.Sprintf("/%s", filepath.Base(dir)))
+		return dir, dir + ":/" + filepath.Base(dir)
 	})
 
 	volumes := []string{
-		fmt.Sprintf("%s:/config:ro", cc.GetTopazCfgDir()), // manually attach the configuration folder
+		cc.GetTopazCfgDir() + ":/config:ro", // manually attach the configuration folder
 	}
 
 	if cfg.Configuration.OPA.LocalBundles.LocalPolicyImage != "" && dockerx.PolicyRoot() != "" {
-		volumes = append(volumes, fmt.Sprintf("%s:/root/.policy:ro", dockerx.PolicyRoot())) // manually attach policy store
+		volumes = append(volumes, dockerx.PolicyRoot()+":/root/.policy:ro") // manually attach policy store
 	}
 
 	for _, v := range volumeMap {
 		volumes = append(volumes, v)
 	}
+
 	return volumes, nil
 }
 
 func getEnvFromVolumes(volumes []string) []string {
 	envs := []string{}
+
 	for i := range volumes {
 		destination := strings.Split(volumes[i], ":")
-		mountedPath := fmt.Sprintf("/%s", filepath.Base(destination[1])) // last value from split.
+		mountedPath := "/" + filepath.Base(destination[1]) // last value from split.
+
 		switch {
 		case strings.Contains(volumes[i], "certs"):
 			envs = append(envs, x.EnvTopazCertsDir+"="+mountedPath)
@@ -191,5 +195,6 @@ func getEnvFromVolumes(volumes []string) []string {
 			envs = append(envs, x.EnvTopazCfgDir+"="+mountedPath)
 		}
 	}
+
 	return envs
 }

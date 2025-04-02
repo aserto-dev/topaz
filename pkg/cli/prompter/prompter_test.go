@@ -10,6 +10,7 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/prompter"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/authzen/access.go/api/access/v1"
 
 	"github.com/stretchr/testify/require"
@@ -51,13 +52,13 @@ func directoryRequests() []proto.Message {
 	reqs := []proto.Message{
 		&reader.GetObjectRequest{
 			Page: &common.PaginationRequest{
-				Size:  100,
+				Size:  x.MaxPaginationSize,
 				Token: "",
 			},
 		},
 		&reader.GetObjectsRequest{
 			Page: &common.PaginationRequest{
-				Size:  100,
+				Size:  x.MaxPaginationSize,
 				Token: "",
 			},
 		},
@@ -72,7 +73,7 @@ func directoryRequests() []proto.Message {
 		&reader.GetRelationRequest{},
 		&reader.GetRelationsRequest{
 			Page: &common.PaginationRequest{
-				Size:  100,
+				Size:  x.MaxPaginationSize,
 				Token: "",
 			},
 		},
@@ -87,9 +88,11 @@ func directoryRequests() []proto.Message {
 		},
 		&reader.GetGraphRequest{},
 	}
+
 	return reqs
 }
 
+//nolint:funlen
 func accessRequests() []proto.Message {
 	reqs := []proto.Message{
 		&access.EvaluationRequest{
@@ -201,5 +204,6 @@ func accessRequests() []proto.Message {
 			Page:    &access.Page{},
 		},
 	}
+
 	return reqs
 }

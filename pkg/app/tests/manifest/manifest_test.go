@@ -132,7 +132,7 @@ func testManifest(addr string) func(*testing.T) {
 	}
 }
 
-func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, io.Reader, error) {
+func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, *bytes.Reader, error) {
 	stream, err := dsm.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, nil, err
@@ -157,8 +157,8 @@ func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, io.
 		}
 
 		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
-			data.Write(body.Body.Data)
-			bytesRecv += len(body.Body.Data)
+			data.Write(body.Body.GetData())
+			bytesRecv += len(body.Body.GetData())
 		}
 	}
 
@@ -181,9 +181,11 @@ func setManifest(ctx context.Context, dsm dsm3.ModelClient, r io.Reader) (int64,
 		if err == io.EOF {
 			break
 		}
+
 		if err != nil {
 			return bytesSend, err
 		}
+
 		bytesSend += int64(n)
 
 		if err := stream.Send(&dsm3.SetManifestRequest{

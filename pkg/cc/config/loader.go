@@ -13,7 +13,13 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/mitchellh/mapstructure"
+	"github.com/samber/lo"
 	"github.com/spf13/viper"
+)
+
+const (
+	jwtAcceptableTimeSkewSeconds int = 5
+	opaMaxPluginWaitTimeSeconds  int = 30
 )
 
 type Loader struct {
@@ -52,9 +58,9 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 	v.SetDefault("debug_service.listen_address", "localhost:6060")
 	v.SetDefault("debug_service.shutdown_timeout", 0)
 
-	v.SetDefault("jwt.acceptable_time_skew_seconds", 5)
+	v.SetDefault("jwt.acceptable_time_skew_seconds", jwtAcceptableTimeSkewSeconds)
 
-	v.SetDefault("opa.max_plugin_wait_time_seconds", "30")
+	v.SetDefault("opa.max_plugin_wait_time_seconds", opaMaxPluginWaitTimeSeconds)
 
 	v.SetDefault("remote_directory.address", "0.0.0.0:9292")
 	v.SetDefault("remote_directory.insecure", "true")
@@ -65,24 +71,27 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	withTopazDir := false
 	if strings.Contains(string(fileContents), x.EnvTopazDir) {
 		withTopazDir = true
 	}
+
 	cfg := new(Config)
+
 	subBuf, err := SetEnvVars(string(fileContents))
 	if err != nil {
 		return nil, err
 	}
-	r := bytes.NewReader([]byte(subBuf))
 
+	r := bytes.NewReader([]byte(subBuf))
 	if err := v.ReadConfig(r); err != nil {
 		return nil, err
 	}
-	err = v.UnmarshalExact(cfg, func(dc *mapstructure.DecoderConfig) {
+
+	if err := v.UnmarshalExact(cfg, func(dc *mapstructure.DecoderConfig) {
 		dc.TagName = "json"
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 
@@ -102,9 +111,11 @@ func (l *Loader) GetPaths() ([]string, error) {
 	if l.Configuration.APIConfig.Health.Certificates.CA != "" {
 		paths[l.Configuration.APIConfig.Health.Certificates.CA] = true
 	}
+
 	if l.Configuration.APIConfig.Health.Certificates.Cert != "" {
 		paths[l.Configuration.APIConfig.Health.Certificates.Cert] = true
 	}
+
 	if l.Configuration.APIConfig.Health.Certificates.Key != "" {
 		paths[l.Configuration.APIConfig.Health.Certificates.Key] = true
 	}
@@ -112,9 +123,11 @@ func (l *Loader) GetPaths() ([]string, error) {
 	if l.Configuration.APIConfig.Metrics.Certificates.CA != "" {
 		paths[l.Configuration.APIConfig.Metrics.Certificates.CA] = true
 	}
+
 	if l.Configuration.APIConfig.Metrics.Certificates.Cert != "" {
 		paths[l.Configuration.APIConfig.Metrics.Certificates.Cert] = true
 	}
+
 	if l.Configuration.APIConfig.Metrics.Certificates.Key != "" {
 		paths[l.Configuration.APIConfig.Metrics.Certificates.Key] = true
 	}
@@ -128,9 +141,11 @@ func (l *Loader) GetPaths() ([]string, error) {
 		if l.Configuration.ControllerConfig.Server.CACertPath != "" {
 			paths[l.Configuration.ControllerConfig.Server.CACertPath] = true
 		}
+
 		if l.Configuration.ControllerConfig.Server.ClientCertPath != "" {
 			paths[l.Configuration.ControllerConfig.Server.ClientCertPath] = true
 		}
+
 		if l.Configuration.ControllerConfig.Server.ClientKeyPath != "" {
 			paths[l.Configuration.ControllerConfig.Server.ClientKeyPath] = true
 		}
@@ -140,6 +155,7 @@ func (l *Loader) GetPaths() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	for i := range decisionLogPaths {
 		paths[decisionLogPaths[i]] = true
 	}
@@ -155,6 +171,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		portMap[port] = true
 	}
 
@@ -163,6 +180,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		portMap[port] = true
 	}
 
@@ -171,6 +189,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		portMap[port] = true
 	}
 
@@ -180,6 +199,7 @@ func (l *Loader) GetPorts() ([]string, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			portMap[port] = true
 		}
 
@@ -188,41 +208,44 @@ func (l *Loader) GetPorts() ([]string, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			portMap[port] = true
 		}
 	}
 
 	// ensure unique assignment for each port
-	var args []string
-	for k := range portMap {
-		args = append(args, k)
-	}
+	args := lo.MapToSlice(portMap, func(k string, _ bool) string {
+		return k
+	})
+
 	return args, nil
 }
 
 func SetEnvVars(fileContents string) (string, error) {
-	err := os.Setenv(x.EnvTopazCfgDir, cc.GetTopazCfgDir())
-	if err != nil {
+	if err := os.Setenv(x.EnvTopazCfgDir, cc.GetTopazCfgDir()); err != nil {
 		return "", err
 	}
-	err = os.Setenv(x.EnvTopazCertsDir, cc.GetTopazCertsDir())
-	if err != nil {
+
+	if err := os.Setenv(x.EnvTopazCertsDir, cc.GetTopazCertsDir()); err != nil {
 		return "", err
 	}
-	err = os.Setenv(x.EnvTopazDBDir, cc.GetTopazDataDir())
-	if err != nil {
+
+	if err := os.Setenv(x.EnvTopazDBDir, cc.GetTopazDataDir()); err != nil {
 		return "", err
 	}
+
 	return subEnvVars(fileContents), nil
 }
 
 func filterPaths(paths map[string]bool) []string {
 	var args []string
+
 	for k := range paths {
 		if k != "" { // append only not empty paths.
 			args = append(args, k)
 		}
 	}
+
 	return args
 }
 
@@ -231,35 +254,43 @@ func PortFromAddress(address string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	return port, nil
 }
 
 func getUniqueServiceCertPaths(services map[string]*builder.API) []string {
 	paths := make(map[string]bool)
+
 	for _, service := range services {
 		if service.GRPC.Certs.CA != "" {
 			paths[service.GRPC.Certs.CA] = true
 		}
+
 		if service.GRPC.Certs.Cert != "" {
 			paths[service.GRPC.Certs.Cert] = true
 		}
+
 		if service.GRPC.Certs.Key != "" {
 			paths[service.GRPC.Certs.Key] = true
 		}
+
 		if service.Gateway.Certs.CA != "" {
 			paths[service.Gateway.Certs.CA] = true
 		}
+
 		if service.Gateway.Certs.Cert != "" {
 			paths[service.Gateway.Certs.Cert] = true
 		}
+
 		if service.Gateway.Certs.Key != "" {
 			paths[service.Gateway.Certs.Key] = true
 		}
 	}
-	var pathList []string
-	for k := range paths {
-		pathList = append(pathList, k)
-	}
+
+	pathList := lo.MapToSlice(paths, func(k string, v bool) string {
+		return k
+	})
+
 	return pathList
 }
 
@@ -270,6 +301,7 @@ func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) 
 		return []string{logpath}, nil
 	case "self":
 		selfCfg := self.Config{}
+
 		dec, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
 			Result:  &selfCfg,
 			TagName: "json",
@@ -277,10 +309,11 @@ func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) 
 		if err != nil {
 			return nil, err
 		}
-		err = dec.Decode(decisionLogConfig.Config)
-		if err != nil {
+
+		if err := dec.Decode(decisionLogConfig.Config); err != nil {
 			return nil, err
 		}
+
 		return []string{selfCfg.StoreDirectory, selfCfg.Scribe.CACertPath, selfCfg.Scribe.ClientCertPath, selfCfg.Scribe.ClientKeyPath}, nil
 	default:
 		return nil, nil // nop decision logger
@@ -290,12 +323,15 @@ func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) 
 // subEnvVars will look for any environment variables in the passed in string
 // with the syntax of ${VAR_NAME} and replace that string with ENV[VAR_NAME].
 func subEnvVars(s string) string {
+	const minElements int = 3
+
 	updatedConfig := envRegex.ReplaceAllStringFunc(strings.ReplaceAll(s, `"`, `'`), func(s string) string {
 		// Trim off the '${' and '}'
-		if len(s) <= 3 {
+		if len(s) <= minElements {
 			// This should never happen..
 			return ""
 		}
+
 		varName := s[2 : len(s)-1]
 
 		// Lookup the variable in the environment. We play by

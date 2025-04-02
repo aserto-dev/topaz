@@ -22,12 +22,14 @@ func (cmd *RenameConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	c.Con().Info().Msg("Renaming configuration %q to %q", cmd.Name, cmd.NewName)
+
 	oldFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	newFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.NewName))
 
 	if c.Config.Active.Config == cmd.Name.String() {
 		c.Config.Active.Config = cmd.NewName.String()
 		c.Config.Active.ConfigFile = newFile
+
 		if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 			return errors.Wrap(err, "failed to update active context")
 		}

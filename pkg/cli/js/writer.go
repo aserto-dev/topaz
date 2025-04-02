@@ -25,7 +25,7 @@ func NewWriter(path, key string) (*Writer, error) {
 	}
 
 	_, _ = f.w.WriteString("{\n")
-	_, _ = f.w.WriteString(fmt.Sprintf("%q:\n", key)) //nolint: gocritic
+	_, _ = f.w.WriteString(fmt.Sprintf("%q:\n", key))
 	_, _ = f.w.WriteString("[\n")
 
 	return &f, nil
@@ -36,10 +36,13 @@ func (f *Writer) Close() error {
 		_, _ = f.w.WriteString("]\n")
 		_, _ = f.w.WriteString("}\n")
 		f.first = false
+
 		err := f.w.Close()
 		f.w = nil
+
 		return err
 	}
+
 	return nil
 }
 

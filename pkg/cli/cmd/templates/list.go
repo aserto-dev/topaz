@@ -22,9 +22,11 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 
 	tab := table.New(c.StdOut()).WithColumns(colName, colDescription, colDocumentation)
 	tab.WithTableNoAutoWrapText()
+
 	for n, t := range ctlg {
 		tab.WithRow(n, t.ShortDescription, t.DocumentationURL)
 	}
+
 	tab.Do()
 
 	return nil

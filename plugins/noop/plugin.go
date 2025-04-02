@@ -20,5 +20,5 @@ func (dl *Noop) Stop(ctx context.Context) {
 	dl.Manager.UpdatePluginStatus(dl.Name, &plugins.Status{State: plugins.StateNotReady})
 }
 
-func (dl *Noop) Reconfigure(ctx context.Context, config interface{}) {
+func (dl *Noop) Reconfigure(ctx context.Context, config any) {
 }

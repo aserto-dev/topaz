@@ -12,11 +12,11 @@ import (
 	runtime "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/aserto-dev/topaz/controller"
-	decisionlog "github.com/aserto-dev/topaz/decision_log"
+	"github.com/aserto-dev/topaz/decisionlog"
 	"github.com/aserto-dev/topaz/pkg/app/management"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
-	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decision_log"
+	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decisionlog"
 	"github.com/aserto-dev/topaz/plugins/edge"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/rs/zerolog"
@@ -28,6 +28,7 @@ type RuntimeResolver struct {
 	runtime *runtime.Runtime
 }
 
+//nolint:funlen,nestif
 func NewRuntimeResolver(
 	ctx context.Context,
 	logger *zerolog.Logger,
@@ -57,6 +58,7 @@ func NewRuntimeResolver(
 	if err != nil {
 		return nil, cleanupRuntime, err
 	}
+
 	cleanup := func() {
 		if cleanupRuntime != nil {
 			cleanupRuntime()
@@ -64,37 +66,39 @@ func NewRuntimeResolver(
 	}
 
 	if cfg.OPA.Config.Discovery != nil {
-		host := os.Getenv(x.EnvAsertoHostName)
-		if host == "" {
-			if host, err = os.Hostname(); err != nil {
-				host = os.Getenv(x.EnvHostName)
-				if host == "" {
-					panic("hostname not set")
-				}
-			}
+		host, err := discoveryHostname()
+		if err != nil {
+			return nil, func() {}, err
 		}
+
 		if cfg.OPA.Config.Discovery.Resource == nil {
 			return nil, func() {}, aerr.ErrBadRuntime.Msg("discovery resource must be provided")
 		}
+
 		details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
+
 		if cfg.ControllerConfig.Server.TenantID == "" {
 			cfg.ControllerConfig.Server.TenantID = cfg.OPA.InstanceID // get the tenant id from the opa instance id config.
 		}
+
 		if len(details) < 1 {
 			return nil, func() {}, aerr.ErrBadRuntime.Msg("provided discovery resource not formatted correctly")
 		}
+
 		ctrl, err := controller.NewController(logger, details[0], host, &cfg.ControllerConfig, func(cmdCtx context.Context, cmd *api.Command) error {
 			return management.HandleCommand(cmdCtx, cmd, sidecarRuntime)
 		})
 		if err != nil {
 			return nil, func() {}, err
 		}
+
 		cleanupController := ctrl.Start(ctx)
 
 		cleanup = func() {
 			if cleanupController != nil {
 				cleanupController()
 			}
+
 			if cleanupRuntime != nil {
 				cleanupRuntime()
 			}
@@ -104,22 +108,37 @@ func NewRuntimeResolver(
 		}
 	}
 
-	err = sidecarRuntime.Start(ctx)
-	if err != nil {
+	if err := sidecarRuntime.Start(ctx); err != nil {
 		return nil, cleanup, err
 	}
 
-	err = sidecarRuntime.WaitForPlugins(ctx, time.Duration(cfg.OPA.MaxPluginWaitTimeSeconds)*time.Second)
-	if err != nil {
+	if err := sidecarRuntime.WaitForPlugins(ctx, time.Duration(cfg.OPA.MaxPluginWaitTimeSeconds)*time.Second); err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
 			return nil, cleanup, aerr.ErrRuntimeLoading.Err(err).Msg("timeout while waiting for runtime to load")
 		}
+
 		return nil, cleanup, aerr.ErrBadRuntime.Err(err)
 	}
 
 	return &RuntimeResolver{
 		runtime: sidecarRuntime,
 	}, cleanup, err
+}
+
+func discoveryHostname() (string, error) {
+	if host := os.Getenv(x.EnvAsertoHostName); host != "" {
+		return host, nil
+	}
+
+	if host, err := os.Hostname(); err == nil && host != "" {
+		return host, nil
+	}
+
+	if host := os.Getenv(x.EnvHostName); host != "" {
+		return host, nil
+	}
+
+	return "", aerr.ErrBadRuntime.Msg("discovery hostname not set")
 }
 
 func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName string) (*runtime.Runtime, error) {

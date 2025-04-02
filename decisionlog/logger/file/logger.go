@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	decisionlog "github.com/aserto-dev/topaz/decision_log"
+	"github.com/aserto-dev/topaz/decisionlog"
 	"github.com/pkg/errors"
 
 	"github.com/rs/zerolog"
@@ -14,7 +14,9 @@ import (
 
 type fileLogger zerolog.Logger
 
-func New(ctx context.Context, cfg *Config, logger *zerolog.Logger) (decisionlog.DecisionLogger, error) {
+var _ decisionlog.DecisionLogger = (*fileLogger)(nil)
+
+func New(ctx context.Context, cfg *Config, logger *zerolog.Logger) (*fileLogger, error) {
 	cfg.SetDefaults()
 
 	ljLogger := &lumberjack.Logger{
@@ -24,6 +26,7 @@ func New(ctx context.Context, cfg *Config, logger *zerolog.Logger) (decisionlog.
 	}
 
 	decisionLogger := zerolog.New(ljLogger)
+
 	return (*fileLogger)(&decisionLogger), nil
 }
 
@@ -34,6 +37,7 @@ func (l *fileLogger) Log(d *api.Decision) error {
 	}
 
 	(*zerolog.Logger)(l).Log().Msg(string(bytes))
+
 	return nil
 }
 

@@ -11,7 +11,7 @@ import (
 )
 
 func HandleCommand(ctx context.Context, cmd *api.Command, r *runtime.Runtime) error {
-	switch msg := cmd.Data.(type) {
+	switch msg := cmd.GetData().(type) {
 	case *api.Command_Discovery:
 		plugin := r.GetPluginsManager().Plugin(discovery.Name)
 		if plugin == nil {
@@ -36,12 +36,14 @@ func HandleCommand(ctx context.Context, cmd *api.Command, r *runtime.Runtime) er
 
 		edgePlugin, ok := plugin.(*edge.Plugin)
 		if !ok {
-			return errors.Errorf("failed to cast discovery plugin")
+			return errors.Errorf("failed to cast edge directory plugin")
 		}
-		edgePlugin.SyncNow(msg.SyncEdgeDirectory.Mode)
+
+		edgePlugin.SyncNow(msg.SyncEdgeDirectory.GetMode())
 
 	default:
 		return errors.New("not implemented")
 	}
+
 	return nil
 }

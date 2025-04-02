@@ -6,24 +6,22 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/clients"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
-	"github.com/aserto-dev/topaz/pkg/cli/edit"
 	"github.com/aserto-dev/topaz/pkg/cli/fflag"
 	"github.com/aserto-dev/topaz/pkg/cli/jsonx"
-	"github.com/aserto-dev/topaz/pkg/cli/pb"
-	"github.com/aserto-dev/topaz/pkg/cli/prompter"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 
-	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type GetObjectCmd struct {
-	Request  string `arg:"" type:"string" name:"request" optional:"" help:"json request or file path to get object request or '-' to read from stdin"`
-	Template bool   `name:"template" short:"t" help:"prints a get object request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
+	clients.RequestArgs
 	dsc.Config
+	req  reader.GetObjectRequest
+	resp reader.GetObjectResponse
 }
 
 func (cmd *GetObjectCmd) BeforeReset(ctx *kong.Context) error {
@@ -36,42 +34,15 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
-		req, err := edit.Msg(cmd.template())
-		if err != nil {
-			return err
-		}
-		cmd.Request = req
-	}
-
-	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
-		p := prompter.New(cmd.template())
-		if err := p.Show(); err != nil {
-			return err
-		}
-		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
-	}
-
-	if cmd.Request == "" {
-		return errors.New("request argument is required")
-	}
-
-	var req reader.GetObjectRequest
-	if err := pb.UnmarshalRequest(cmd.Request, &req); err != nil {
+	if err := cmd.RequestArgs.Process(c, &cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
-	if err != nil {
-		return errors.Wrap(err, "failed to get directory client")
+	if err := cmd.Config.Invoke(c.Context, reader.Reader_GetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+		return err
 	}
 
-	resp, err := client.Reader.GetObject(c.Context, &req)
-	if err != nil {
-		return errors.Wrap(err, "get object call failed")
-	}
-
-	return jsonx.OutputJSONPB(c.StdOut(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
 }
 
 func (cmd *GetObjectCmd) template() proto.Message {
@@ -79,15 +50,15 @@ func (cmd *GetObjectCmd) template() proto.Message {
 		ObjectType:    "",
 		ObjectId:      "",
 		WithRelations: false,
-		Page:          &common.PaginationRequest{Size: 100, Token: ""},
+		Page:          &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""},
 	}
 }
 
 type SetObjectCmd struct {
-	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to set object request or '-' to read from stdin"`
-	Template bool   `name:"template" short:"t" help:"prints a set object request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
+	clients.RequestArgs
 	dsc.Config
+	req  writer.SetObjectRequest
+	resp writer.SetObjectResponse
 }
 
 func (cmd *SetObjectCmd) BeforeReset(ctx *kong.Context) error {
@@ -100,42 +71,15 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
-	if err != nil {
-		return errors.Wrap(err, "failed to get directory client")
-	}
-
-	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
-		req, err := edit.Msg(cmd.template())
-		if err != nil {
-			return err
-		}
-		cmd.Request = req
-	}
-
-	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
-		p := prompter.New(cmd.template())
-		if err := p.Show(); err != nil {
-			return err
-		}
-		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
-	}
-
-	if cmd.Request == "" {
-		return errors.New("request argument is required")
-	}
-
-	var req writer.SetObjectRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := cmd.RequestArgs.Process(c, &cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	resp, err := client.Writer.SetObject(c.Context, &req)
-	if err != nil {
-		return errors.Wrap(err, "failed to set object")
+	if err := cmd.Config.Invoke(c.Context, writer.Writer_SetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+		return err
 	}
-	return jsonx.OutputJSONPB(c.StdOut(), resp)
+
+	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
 }
 
 func (cmd *SetObjectCmd) template() proto.Message {
@@ -153,10 +97,10 @@ func (cmd *SetObjectCmd) template() proto.Message {
 }
 
 type DeleteObjectCmd struct {
-	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to delete object request or '-' to read from stdin"`
-	Template bool   `name:"template" short:"t" help:"prints a delete object request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
+	clients.RequestArgs
 	dsc.Config
+	req  writer.DeleteObjectRequest
+	resp writer.DeleteObjectResponse
 }
 
 func (cmd *DeleteObjectCmd) BeforeReset(ctx *kong.Context) error {
@@ -169,43 +113,15 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
-	if err != nil {
-		return errors.Wrap(err, "failed to get directory client")
-	}
-
-	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
-		req, err := edit.Msg(cmd.template())
-		if err != nil {
-			return err
-		}
-		cmd.Request = req
-	}
-
-	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
-		p := prompter.New(cmd.template())
-		if err := p.Show(); err != nil {
-			return err
-		}
-		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
-	}
-
-	if cmd.Request == "" {
-		return errors.New("request argument is required")
-	}
-
-	var req writer.DeleteObjectRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := cmd.RequestArgs.Process(c, &cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	resp, err := client.Writer.DeleteObject(c.Context, &req)
-	if err != nil {
-		return errors.Wrap(err, "delete object call failed")
+	if err := cmd.Config.Invoke(c.Context, writer.Writer_DeleteObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
 }
 
 func (cmd *DeleteObjectCmd) template() proto.Message {
@@ -217,10 +133,10 @@ func (cmd *DeleteObjectCmd) template() proto.Message {
 }
 
 type ListObjectsCmd struct {
-	Request  string `arg:"" type:"string" name:"request" optional:"" help:"file path to list objects request or '-' to read from stdin"`
-	Template bool   `name:"template" short:"t" help:"prints a list objects request template on stdout"`
-	Editor   bool   `name:"edit" short:"e" help:"edit request" hidden:"" type:"fflag.Editor"`
+	clients.RequestArgs
 	dsc.Config
+	req  reader.GetObjectsRequest
+	resp reader.GetObjectsResponse
 }
 
 func (cmd *ListObjectsCmd) BeforeReset(ctx *kong.Context) error {
@@ -233,48 +149,20 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	client, err := dsc.NewClient(c, &cmd.Config)
-	if err != nil {
-		return errors.Wrap(err, "failed to get directory client")
-	}
-
-	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
-		req, err := edit.Msg(cmd.template())
-		if err != nil {
-			return err
-		}
-		cmd.Request = req
-	}
-
-	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
-		p := prompter.New(cmd.template())
-		if err := p.Show(); err != nil {
-			return err
-		}
-		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
-	}
-
-	if cmd.Request == "" {
-		return errors.New("request argument is required")
-	}
-
-	var req reader.GetObjectsRequest
-	err = pb.UnmarshalRequest(cmd.Request, &req)
-	if err != nil {
+	if err := cmd.RequestArgs.Process(c, &cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	resp, err := client.Reader.GetObjects(c.Context, &req)
-	if err != nil {
-		return errors.Wrap(err, "get objects call failed")
+	if err := cmd.Config.Invoke(c.Context, reader.Reader_GetObjects_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), resp)
+	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
 }
 
 func (cmd *ListObjectsCmd) template() proto.Message {
 	return &reader.GetObjectsRequest{
 		ObjectType: "",
-		Page:       &common.PaginationRequest{Size: 100, Token: ""},
+		Page:       &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""},
 	}
 }

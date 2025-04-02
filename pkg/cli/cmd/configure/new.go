@@ -28,6 +28,7 @@ type NewConfigCmd struct {
 	LocalPolicyImage string     `short:"l" help:"[deprecated: use --local instead] local policy image name"`
 }
 
+//nolint:funlen,nestif
 func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	if cmd.Resource == "" {
 		if cmd.LocalPolicyImage == "" {
@@ -61,8 +62,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		WithLocalPolicy(local).
 		WithEdgeDirectory(cmd.EdgeDirectory)
 
-	_, err := configGenerator.CreateConfigDir()
-	if err != nil {
+	if _, err := configGenerator.CreateConfigDir(); err != nil {
 		return err
 	}
 
@@ -71,8 +71,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	certGenerator := certs.GenerateCertsCmd{CertsDir: cc.GetTopazCertsDir()}
-	err = certGenerator.Run(c)
-	if err != nil {
+	if err := certGenerator.Run(c); err != nil {
 		return err
 	}
 
@@ -80,7 +79,10 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	var w io.Writer
+	var (
+		w   io.Writer
+		err error
+	)
 
 	if cmd.Stdout {
 		w = c.StdOut()
@@ -88,11 +90,13 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		if !cmd.Force {
 			if _, err := os.Stat(c.Config.Active.ConfigFile); err == nil {
 				c.Con().Warn().Msg("Configuration file %q already exists.", c.Config.Active.ConfigFile)
+
 				if !common.PromptYesNo("Do you want to continue?", false) {
 					return nil
 				}
 			}
 		}
+
 		w, err = os.Create(c.Config.Active.ConfigFile)
 		if err != nil {
 			return err

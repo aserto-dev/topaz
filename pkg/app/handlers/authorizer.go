@@ -12,6 +12,7 @@ func AuthorizersHandler(confServices *TopazCfg) func(w http.ResponseWriter, r *h
 			URL    string `json:"url"`
 			APIKey string `json:"apiKey"`
 		}
+
 		type authorizersResult struct {
 			Results []AuthorizerInstance `json:"results"`
 		}

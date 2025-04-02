@@ -16,28 +16,50 @@ import (
 
 func TestInitializeErrorController(t *testing.T) {
 	logger := zerolog.Nop()
-	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{}, func(ctx context.Context, c *api.Command) error { return nil })
+
+	ctrl, err := controller.NewController(
+		&logger, "test", "test-host",
+		&controller.Config{},
+		func(ctx context.Context, c *api.Command) error {
+			return nil
+		},
+	)
+
 	require.Error(t, err, "no server configuration provided")
 	assert.Nil(t, ctrl)
 }
 
 func TestNotEnabledController(t *testing.T) {
 	logger := zerolog.Nop()
-	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{
-		Enabled: false,
-	}, func(ctx context.Context, c *api.Command) error { return nil })
+	ctrl, err := controller.NewController(
+		&logger, "test", "test-host",
+		&controller.Config{
+			Enabled: false,
+		},
+		func(ctx context.Context, c *api.Command) error {
+			return nil
+		},
+	)
+
 	require.NoError(t, err)
 	assert.Nil(t, ctrl)
 }
 
 func TestEnabledController(t *testing.T) {
 	logger := zerolog.Nop()
-	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{
-		Enabled: true,
-		Server: client.Config{
-			Address: "localhost:1234",
+	ctrl, err := controller.NewController(
+		&logger, "test", "test-host",
+		&controller.Config{
+			Enabled: true,
+			Server: client.Config{
+				Address: "localhost:1234",
+			},
 		},
-	}, func(ctx context.Context, c *api.Command) error { return nil })
+		func(ctx context.Context, c *api.Command) error {
+			return nil
+		},
+	)
+
 	require.NoError(t, err)
 	assert.NotNil(t, ctrl)
 }
@@ -45,19 +67,32 @@ func TestEnabledController(t *testing.T) {
 func TestControllerLogMessages(t *testing.T) {
 	buf := &bytes.Buffer{}
 	logger := zerolog.New(zerolog.ConsoleWriter{Out: buf, NoColor: true})
-	ctrl, err := controller.NewController(&logger, "test", "test-host", &controller.Config{
-		Enabled: true,
-		Server: client.Config{
-			Address: "localhost:1234",
+	ctrl, err := controller.NewController(
+		&logger, "test", "test-host",
+		&controller.Config{
+			Enabled: true,
+			Server: client.Config{
+				Address: "localhost:1234",
+			},
 		},
-	}, func(ctx context.Context, c *api.Command) error { return nil })
+		func(ctx context.Context, c *api.Command) error {
+			return nil
+		},
+	)
+
 	require.NoError(t, err)
 	assert.NotNil(t, ctrl)
+
 	cleanup := ctrl.Start(context.Background())
+
 	time.Sleep(1 * time.Second)
+
 	defer cleanup()
+
 	logMessages := buf.String()
+
 	t.Log(logMessages)
+
 	assert.Contains(t, logMessages, "command loop exited with error, restarting")
 	assert.Contains(t, logMessages, "component=controller")
 	assert.Contains(t, logMessages, "host=test-host")

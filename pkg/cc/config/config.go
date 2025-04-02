@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"io"
 	"os"
 
@@ -80,11 +79,22 @@ type Path string
 type Overrider func(*Config)
 
 // NewConfig creates the configuration by reading env & files.
-func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsGenerator *certs.Generator) (*Config, error) { // nolint:funlen // default list of values can be long
+//
+//nolint:funlen
+func NewConfig(
+	configPath Path,
+	log *zerolog.Logger,
+	overrides Overrider,
+	certsGenerator *certs.Generator,
+) (
+	*Config,
+	error,
+) {
 	newLogger := log.With().Str("component", "config").Logger()
 	log = &newLogger
 
 	file := "config.yaml"
+
 	if configPath != "" {
 		exists, err := FileExists(string(configPath))
 		if err != nil {
@@ -110,12 +120,13 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 		if err != nil {
 			return nil, err
 		}
+
 		if configLoader.HasTopazDir {
-			log.Warn().Msg("This configuration file still uses TOPAZ_DIR environment variable. Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+			log.Warn().Msg("This configuration file uses the obsolete TOPAZ_DIR environment variable.")
+			log.Warn().Msg("Please update to use the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 		}
 
-		err = validateVersion(configLoader.Configuration.Version)
-		if err != nil {
+		if err := validateVersion(configLoader.Configuration.Version); err != nil {
 			return nil, err
 		}
 	}
@@ -148,8 +159,7 @@ func NewConfig(configPath Path, log *zerolog.Logger, overrides Overrider, certsG
 	}
 
 	if certsGenerator != nil {
-		err = configLoader.Configuration.setupCerts(log, certsGenerator)
-		if err != nil {
+		if err := configLoader.Configuration.setupCerts(log, certsGenerator); err != nil {
 			return nil, errors.Wrap(err, "failed to setup certs")
 		}
 	}
@@ -171,6 +181,7 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, erro
 		LogLevel:       cfg.Logging.LogLevel,
 		LogLevelParsed: cfg.Logging.LogLevelParsed,
 	}
+
 	return &lCfg, nil
 }
 
@@ -178,6 +189,7 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 	commonName := "topaz"
 
 	existingFiles := []string{}
+
 	for serviceName, config := range c.APIConfig.Services {
 		for _, file := range []string{
 			config.GRPC.Certs.CA,
@@ -199,34 +211,37 @@ func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator
 			existingFiles = append(existingFiles, file)
 		}
 
-		if len(existingFiles) == 0 {
-			if config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
-				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  fmt.Sprintf("%s-grpc", commonName),
-					CertKeyPath: config.GRPC.Certs.Key,
-					CertPath:    config.GRPC.Certs.Cert,
-					CertCAPath:  config.GRPC.Certs.CA,
-				})
-				if err != nil {
-					return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
-				}
-				log.Info().Str("service", serviceName).Msg("gRPC certs configured")
+		noExistingFiles := len(existingFiles) == 0
+
+		if noExistingFiles && config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
+			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:  commonName + "-grpc",
+				CertKeyPath: config.GRPC.Certs.Key,
+				CertPath:    config.GRPC.Certs.Cert,
+				CertCAPath:  config.GRPC.Certs.CA,
+			})
+			if err != nil {
+				return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
 			}
 
-			if config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
-				err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-					CommonName:  fmt.Sprintf("%s-gateway", commonName),
-					CertKeyPath: config.Gateway.Certs.Key,
-					CertPath:    config.Gateway.Certs.Cert,
-					CertCAPath:  config.Gateway.Certs.CA,
-				})
-				if err != nil {
-					return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
-				}
-				log.Info().Str("service", serviceName).Msg("gateway certs configured")
+			log.Info().Str("service", serviceName).Msg("gRPC certs configured")
+		}
+
+		if noExistingFiles && config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
+			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
+				CommonName:  commonName + "-gateway",
+				CertKeyPath: config.Gateway.Certs.Key,
+				CertPath:    config.Gateway.Certs.Cert,
+				CertCAPath:  config.Gateway.Certs.CA,
+			})
+			if err != nil {
+				return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
 			}
+
+			log.Info().Str("service", serviceName).Msg("gateway certs configured")
 		}
 	}
+
 	return nil
 }
 

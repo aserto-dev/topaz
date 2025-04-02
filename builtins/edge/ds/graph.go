@@ -60,7 +60,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			}
 
 			buf := new(bytes.Buffer)
-			if len(resp.Results) > 0 {
+			if len(resp.GetResults()) > 0 {
 				if err := ProtoToBuf(buf, resp); err != nil {
 					return nil, err
 				}

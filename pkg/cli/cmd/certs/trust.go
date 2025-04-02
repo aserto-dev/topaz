@@ -33,11 +33,14 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		} else {
 			err = certs.AddTrustedCert("")
 		}
+
 		c.Con().Error().Msg(err.Error())
+
 		return nil
 	}
 
 	tab := table.New(c.StdOut()).WithColumns("File", "Action")
+
 	defer tab.Do()
 
 	list := getFileList(certsDir, withCACerts())
@@ -58,7 +61,9 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 			if err := certs.RemoveTrustedCert(fqn, cn); err != nil {
 				return err
 			}
+
 			tab.WithRow(fn, "removed from trust store")
+
 			continue
 		}
 
@@ -66,7 +71,9 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 			if err := certs.AddTrustedCert(fqn); err != nil {
 				return err
 			}
+
 			tab.WithRow(filepath.Base(fqn), "added to trust store")
+
 			continue
 		}
 	}

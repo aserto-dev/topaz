@@ -12,6 +12,7 @@ import (
 
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/js"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -29,12 +30,13 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	if err != nil {
 		return err
 	}
+
 	defer func() {
 		_ = os.RemoveAll(tmpDir)
 	}()
 
 	dirPath := path.Join(tmpDir, "backup")
-	if err := os.MkdirAll(dirPath, 0o700); err != nil {
+	if err := os.MkdirAll(dirPath, x.FileMode0700); err != nil {
 		return err
 	}
 
@@ -46,6 +48,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	if err != nil {
 		return nil
 	}
+
 	defer func() {
 		tf.Close()
 	}()
@@ -54,11 +57,13 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	if err != nil {
 		return nil
 	}
+
 	defer func() {
 		gw.Close()
 	}()
 
 	tw := tar.NewWriter(gw)
+
 	defer func() {
 		tw.Close()
 	}()
@@ -119,17 +124,20 @@ func (c *Client) createBackupFiles(stream dse3.Exporter_ExportClient, dirPath st
 		if errors.Is(err, io.EOF) {
 			break
 		}
+
 		if err != nil {
 			return err
 		}
 
-		switch m := msg.Msg.(type) {
+		switch m := msg.GetMsg().(type) {
 		case *dse3.ExportResponse_Object:
 			err = objects.Write(m.Object)
+
 			objectsCounter.Incr().Print(os.Stdout)
 
 		case *dse3.ExportResponse_Relation:
 			err = relations.Write(m.Relation)
+
 			relationsCounter.Incr().Print(os.Stdout)
 
 		default:

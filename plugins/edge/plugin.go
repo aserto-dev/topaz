@@ -86,13 +86,16 @@ func (p *Plugin) resetContext() {
 
 func (p *Plugin) Start(ctx context.Context) error {
 	p.logger.Info().Str("id", p.manager.ID).Bool("enabled", p.config.Enabled).Int("interval", p.config.SyncInterval).Msg("EdgePlugin.Start")
+
 	p.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateOK})
+
 	if p.hasLoopBack() {
 		p.logger.Warn().
 			Str("edge-directory", p.config.Addr).
 			Str("remote-directory", p.topazConfig.DirectoryResolver.Address).
 			Bool("has-loopback", p.hasLoopBack()).
 			Msg("EdgePlugin.Start")
+
 		return nil
 	}
 
@@ -108,14 +111,19 @@ func (p *Plugin) Stop(ctx context.Context) {
 	p.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateNotReady})
 }
 
-func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
+func (p *Plugin) Reconfigure(ctx context.Context, config any) {
 	p.logger.Trace().Str("id", p.manager.ID).Interface("cur", p.config).Interface("new", config).Msg("EdgePlugin.Reconfigure")
 
-	newConfig := config.(*Config)
+	newConfig, ok := config.(*Config)
+	if !ok {
+		p.logger.Error().Str("config", "failed type assertion").Msg("EdgePlugin.Reconfigure")
+		return
+	}
 
 	// handle enabled status changed
 	if p.config.Enabled != newConfig.Enabled && !p.hasLoopBack() {
 		p.logger.Info().Str("id", p.manager.ID).Bool("old", p.config.Enabled).Bool("new", newConfig.Enabled).Msg("sync enabled changed")
+
 		if newConfig.Enabled {
 			p.resetContext()
 			go p.scheduler()
@@ -126,7 +134,12 @@ func (p *Plugin) Reconfigure(ctx context.Context, config interface{}) {
 		}
 	}
 
-	p.config = config.(*Config)
+	p.config, ok = config.(*Config)
+	if !ok {
+		p.logger.Error().Str("config", "failed type assertion").Msg("EdgePlugin.Reconfigure")
+		return
+	}
+
 	p.config.TenantID = strings.Split(p.manager.ID, "/")[0]
 	p.config.SessionID = uuid.NewString()
 }
@@ -143,10 +156,15 @@ func (p *Plugin) hasLoopBack() bool {
 }
 
 func (p *Plugin) SyncNow(mode api.SyncMode) {
+	if p.hasLoopBack() {
+		p.logger.Trace().Str("mode", mode.String()).Msg("sync now event ignored, operating with remote directory mode")
+		return
+	}
+
 	p.syncNow <- mode
 }
 
-const cycles int = 4
+const cycles int64 = 4
 
 func (p *Plugin) scheduler() {
 	// scheduler startup delay 1s
@@ -154,6 +172,7 @@ func (p *Plugin) scheduler() {
 	defer interval.Stop()
 
 	var running atomic.Bool
+
 	running.Store(false)
 
 	cycle := cycles
@@ -177,11 +196,14 @@ func (p *Plugin) scheduler() {
 				intervalMode = api.SyncMode_SYNC_MODE_DIFF
 				cycle = 0
 			}
+
 			cycle++
+
 			p.logger.Debug().Str("mode", printMode(intervalMode)).Msg("interval handler")
 
 		case mode := <-p.syncNow:
 			p.logger.Info().Time("dispatch", time.Now()).Msg(syncOnDemand)
+
 			interval.Stop()
 
 			onDemandMode = fold(onDemandMode, mode)
@@ -202,6 +224,7 @@ func (p *Plugin) scheduler() {
 				p.logger.Debug().Str("mode", printMode(runMode)).Msg("start task")
 
 				running.Store(true)
+
 				defer func() {
 					p.logger.Debug().Str("mode", printMode(runMode)).Msg("finished task")
 					running.Store(false)
@@ -223,6 +246,8 @@ func (p *Plugin) scheduler() {
 	}
 }
 
+const secsInMin int64 = 60
+
 // calcInterval - calculates the next time interval in secs,
 // based on the configuration SyncInterval (defined on the EdgeDirectory connection)
 // returning a time.Duration.
@@ -231,7 +256,7 @@ func (p *Plugin) scheduler() {
 // 1m -> 60s -> 15s interval
 // 60m -> 3600s -> 900s interval.
 func (p *Plugin) calcInterval() time.Duration {
-	waitInSec := (p.config.SyncInterval * 60) / cycles
+	waitInSec := (int64(p.config.SyncInterval) * secsInMin) / cycles
 	return time.Duration(waitInSec) * time.Second
 }
 
@@ -257,6 +282,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 	conn, err := p.remoteDirectoryClient()
 	if err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
+
 		return
 	}
 	defer conn.Close()
@@ -264,6 +290,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 	ds, err := directory.Get()
 	if err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
+
 		return
 	}
 
@@ -272,6 +299,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Full),
 		})
+
 		return
 	}
 
@@ -287,6 +315,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Diff),
 		})
+
 		return
 	}
 
@@ -295,6 +324,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Full),
 		})
+
 		return
 	}
 
@@ -302,6 +332,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 		})
+
 		return
 	}
 }
@@ -334,6 +365,7 @@ func (p *Plugin) remoteDirectoryClient() (*grpc.ClientConn, error) {
 
 	ctx, cancel := context.WithTimeout(p.ctx, p.config.ConnectionTimeout)
 	defer cancel()
+
 	if !conn.WaitForStateChange(ctx, connectivity.Ready) {
 		return nil, errors.Errorf("failed to connect to remote directory %s", p.config.Addr)
 	}
@@ -343,9 +375,11 @@ func (p *Plugin) remoteDirectoryClient() (*grpc.ClientConn, error) {
 
 func fold(m ...api.SyncMode) api.SyncMode {
 	r := api.SyncMode_SYNC_MODE_UNKNOWN
+
 	for _, v := range m {
 		r |= v
 	}
+
 	return r
 }
 
@@ -354,18 +388,23 @@ func printMode(mode api.SyncMode) string {
 	if mode&api.SyncMode_SYNC_MODE_MANIFEST != 0 {
 		modes = append(modes, "MANIFEST")
 	}
+
 	if mode&api.SyncMode_SYNC_MODE_FULL != 0 {
 		modes = append(modes, "FULL")
 	}
+
 	if mode&api.SyncMode_SYNC_MODE_DIFF != 0 {
 		modes = append(modes, "DIFF")
 	}
+
 	if mode&api.SyncMode_SYNC_MODE_WATERMARK != 0 {
 		modes = append(modes, "WATERMARK")
 	}
+
 	if mode == api.SyncMode_SYNC_MODE_UNKNOWN {
 		modes = append(modes, "UNKNOWN")
 	}
+
 	return strings.Join(modes, "|")
 }
 

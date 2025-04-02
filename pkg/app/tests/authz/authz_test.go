@@ -92,6 +92,7 @@ func testAuthZ(addr string) func(*testing.T) {
 			name string
 			test func(*testing.T)
 		}{
+			{"TestDecisionTreeWithMissingPath", DecisionTreeWithMissingPath(ctx, azClient)},
 			{"TestDecisionTreeWithMissingIdentity", DecisionTreeWithMissingIdentity(ctx, azClient)},
 			{"TestDecisionTreeWithUserID", DecisionTreeWithUserID(ctx, azClient)},
 			{"TestIsWithMissingIdentity", IsWithMissingIdentity(ctx, azClient)},
@@ -104,12 +105,40 @@ func testAuthZ(addr string) func(*testing.T) {
 	}
 }
 
-func DecisionTreeWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func DecisionTreeWithMissingPath(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := azClient.DecisionTree(ctx, &authorizer.DecisionTreeRequest{
 			PolicyContext: &api.PolicyContext{
 				Path:      "",
 				Decisions: []string{},
+			},
+			IdentityContext: &api.IdentityContext{
+				Identity: "noexisting-user@acmecorp.com",
+				Type:     api.IdentityType_IDENTITY_TYPE_SUB,
+			},
+			Options:         &authorizer.DecisionTreeOptions{},
+			ResourceContext: &structpb.Struct{},
+		})
+
+		if errX != nil {
+			t.Logf("ERR >>> %s\n", errX)
+		}
+
+		if assert.Error(t, errX) {
+			s, ok := status.FromError(errX)
+			assert.True(t, ok)
+			assert.Equal(t, codes.InvalidArgument, s.Code())
+		}
+		assert.Nil(t, respX, "response object should be nil")
+	}
+}
+
+func DecisionTreeWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+	return func(t *testing.T) {
+		respX, errX := azClient.DecisionTree(ctx, &authorizer.DecisionTreeRequest{
+			PolicyContext: &api.PolicyContext{
+				Path:      "peoplefinder.GET",
+				Decisions: []string{"allowed"},
 			},
 			IdentityContext: &api.IdentityContext{
 				Identity: "noexisting-user@acmecorp.com",
@@ -153,9 +182,9 @@ func DecisionTreeWithUserID(ctx context.Context, azClient authorizer.AuthorizerC
 
 		require.NoError(t, errX)
 		assert.NotNil(t, respX, "response object should not be nil")
-		assert.Equal(t, "peoplefinder.GET", respX.PathRoot)
+		assert.Equal(t, "peoplefinder.GET", respX.GetPathRoot())
 
-		path := respX.Path.AsMap()
+		path := respX.GetPath().AsMap()
 		assert.Len(t, path, 2)
 	}
 }

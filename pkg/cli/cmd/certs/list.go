@@ -3,10 +3,10 @@ package certs
 import (
 	"crypto/x509"
 	"encoding/pem"
-	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -60,6 +60,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 	sort.Strings(fileNames)
 
 	tab.WithTableNoAutoWrapText()
+
 	for _, k := range fileNames {
 		isValid := true
 		if time.Until(certDetails[k].NotAfter) < 0 {
@@ -69,11 +70,12 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 		tab.WithRow(k,
 			certDetails[k].NotBefore.Format(time.RFC3339),
 			certDetails[k].NotAfter.Format(time.RFC3339),
-			fmt.Sprintf("%t", isValid),
+			strconv.FormatBool(isValid),
 			certDetails[k].Issuer.CommonName,
 			strings.Join(certDetails[k].DNSNames, ","),
 		)
 	}
+
 	tab.Do()
 
 	return nil

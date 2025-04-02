@@ -29,11 +29,14 @@ var cmdRun = &cobra.Command{
 
 func run(cmd *cobra.Command, args []string) error {
 	configPath := config.Path(flagRunConfigFile)
+
 	topazApp, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, configOverrides)
 	if err != nil {
 		return err
 	}
+
 	defer topazApp.Manager.StopServers(topazApp.Context)
+
 	defer cleanup()
 
 	if err := topazApp.ConfigServices(); err != nil {
@@ -43,6 +46,7 @@ func run(cmd *cobra.Command, args []string) error {
 	if topazApp.Configuration.DebugService.Enabled {
 		debugService = debug.NewServer(&topazApp.Configuration.DebugService, topazApp.Logger)
 		debugService.Start()
+
 		defer debugService.Stop()
 	}
 
@@ -51,12 +55,14 @@ func run(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+
 		defer dirResolver.Close()
 
 		decisionlog, err := topazApp.GetDecisionLogger(topazApp.Configuration.DecisionLogger)
 		if err != nil {
 			return err
 		}
+
 		defer decisionlog.Shutdown()
 
 		runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(
@@ -72,8 +78,10 @@ func run(cmd *cobra.Command, args []string) error {
 
 		defer runtimeCleanup()
 
-		topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetRuntimeResolver(runtime)
-		topazApp.Services["authorizer"].(*app.Authorizer).Resolver.SetDirectoryResolver(dirResolver)
+		if authorizer, ok := topazApp.Services["authorizer"].(*app.Authorizer); ok {
+			authorizer.Resolver.SetRuntimeResolver(runtime)
+			authorizer.Resolver.SetDirectoryResolver(dirResolver)
+		}
 	}
 
 	err = topazApp.Start()
@@ -102,30 +110,4 @@ func configOverrides(cfg *config.Config) {
 	}
 
 	cfg.Common.DebugService.Enabled = flagRunDebug
-}
-
-// nolint: gochecknoinits, errcheck
-func init() {
-	cmdRun.Flags().StringVarP(
-		&flagRunConfigFile,
-		"config-file", "c", "",
-		"set path of configuration file")
-	cmdRun.Flags().StringSliceVarP(
-		&flagRunBundleFiles,
-		"bundle", "b", []string{},
-		"load paths as bundle files or root directories (can be specified more than once)")
-	cmdRun.Flags().BoolVarP(
-		&flagRunWatchLocalBundles,
-		"watch", "w", false,
-		"if set, local changes to bundle paths trigger a reload")
-	cmdRun.Flags().StringSliceVarP(
-		&flagRunIgnorePaths,
-		"ignore", "", []string{},
-		"set file and directory names to ignore during loading local bundles (e.g., '.*' excludes hidden files)")
-	cmdRun.Flags().BoolVarP(
-		&flagRunDebug,
-		"debug", "", false,
-		"start debug service")
-	rootCmd.AddCommand(cmdRun)
-	cmdRun.MarkFlagRequired("config-file")
 }

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -73,8 +74,8 @@ func ConfigHandlerV2(confServices *TopazCfg) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorizerAPIKey := ""
 		directoryAPIKey := ""
-		authenticatedUser := r.Context().Value(AuthenticatedUser)
-		if authenticatedUser != nil && authenticatedUser.(bool) {
+
+		if authenticatedUser, ok := getValueFromCtx[bool](r.Context(), AuthenticatedUser); ok && authenticatedUser {
 			authorizerAPIKey = confServices.AuthorizerAPIKey
 			directoryAPIKey = confServices.DirectoryAPIKey
 		}
@@ -110,16 +111,37 @@ func ConfigHandlerV2(confServices *TopazCfg) http.Handler {
 	})
 }
 
+const (
+	AuthTypeAnonymous string = "anonymous"
+	AuthTypeAPIKey    string = "apiKey"
+)
+
 func authType(r *http.Request) string {
-	authEnabled := r.Context().Value(AuthEnabled)
-	if authEnabled != nil && authEnabled.(bool) {
-		return "apiKey"
+	if authEnabled, ok := getValueFromCtx[bool](r.Context(), AuthEnabled); !ok || !authEnabled {
+		return AuthTypeAnonymous
 	}
-	return "anonymous"
+
+	return AuthTypeAPIKey
 }
 
 func writeJSON(buf []byte, w http.ResponseWriter, _ *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
 	_, _ = w.Write(buf)
+}
+
+func getValueFromCtx[T any](ctx context.Context, k header.CtxKey) (T, bool) {
+	val := ctx.Value(k)
+	if val == nil {
+		var zero T
+		return zero, false
+	}
+
+	typedVal, ok := val.(T)
+	if !ok {
+		var zero T
+		return zero, false
+	}
+
+	return typedVal, ok
 }

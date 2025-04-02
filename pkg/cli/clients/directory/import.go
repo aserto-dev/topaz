@@ -14,6 +14,7 @@ import (
 
 func (c *Client) Import(ctx context.Context, files []string) error {
 	g, iCtx := errgroup.WithContext(context.Background())
+
 	stream, err := c.Importer.Import(iCtx)
 	if err != nil {
 		return err

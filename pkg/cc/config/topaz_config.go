@@ -12,15 +12,15 @@ import (
 const ConfigFileVersion = 2
 
 type Config struct {
-	Common           `json:",squash"`  // nolint:staticcheck // squash is used by mapstructure
-	Auth             AuthnConfig       `json:"auth"`
-	DecisionLogger   DecisionLogConfig `json:"decision_logger"`
-	ControllerConfig controller.Config `json:"controller"`
+	Common           `json:"common,squash"` //nolint:staticcheck // squash is used by mapstructure
+	Auth             AuthnConfig            `json:"auth"`
+	DecisionLogger   DecisionLogConfig      `json:"decision_logger"`
+	ControllerConfig controller.Config      `json:"controller"`
 }
 
 type DecisionLogConfig struct {
-	Type   string                 `json:"type"`
-	Config map[string]interface{} `json:"config"`
+	Type   string         `json:"type"`
+	Config map[string]any `json:"config"`
 }
 
 type AuthnConfig struct {
@@ -81,6 +81,7 @@ func validateVersion(version int) error {
 	if version != ConfigFileVersion {
 		return errors.New("unsupported config version")
 	}
+
 	return nil
 }
 
@@ -89,6 +90,7 @@ func (c *Config) validation() error {
 		if c.Command.Mode == CommandModeRun && c.OPA.InstanceID == "" {
 			return errors.New("opa.instance_id not set")
 		}
+
 		if len(c.OPA.Config.Bundles) > 1 {
 			return errors.New("opa.config.bundles - too many bundles")
 		}
@@ -123,8 +125,8 @@ func setDefaultCallsAuthz(cfg *Config) {
 	// and fix them up once we load the config, because of this bug:
 	// https://github.com/spf13/viper/issues/324
 	// Keys also become lowercase
-	for i := 0; i < len(cfg.Auth.Options.Overrides); i++ {
-		for j := 0; j < len(cfg.Auth.Options.Overrides[i].Paths); j++ {
+	for i := range cfg.Auth.Options.Overrides {
+		for j := range cfg.Auth.Options.Overrides[i].Paths {
 			cfg.Auth.Options.Overrides[i].Paths[j] = strings.ToLower(strings.ReplaceAll(cfg.Auth.Options.Overrides[i].Paths[j], "|", "."))
 		}
 	}

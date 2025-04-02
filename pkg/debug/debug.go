@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/aserto-dev/topaz/pkg/x"
 	"github.com/rs/zerolog"
 )
 
@@ -46,16 +47,16 @@ func NewServer(cfg *Config, log *zerolog.Logger) *Server {
 
 	debugLogger := log.With().Str("component", "debug").Logger()
 
-	runtime.SetMutexProfileFraction(10)
+	runtime.SetMutexProfileFraction(x.MutexProfileFractionRate)
 	debugLogger.Info().Int("fraction", runtime.SetMutexProfileFraction(-1)).Msg("mutex profiler")
 
 	srv := &http.Server{
 		Addr:              cfg.ListenAddress,
 		Handler:           pprofServeMux,
-		ReadTimeout:       5 * time.Second,
-		ReadHeaderTimeout: 5 * time.Second,
-		WriteTimeout:      30 * time.Second,
-		IdleTimeout:       30 * time.Second,
+		ReadTimeout:       x.ReadTimeout,
+		ReadHeaderTimeout: x.ReadHeaderTimeout,
+		WriteTimeout:      x.WriteTimeout,
+		IdleTimeout:       x.IdleTimeout,
 	}
 
 	return &Server{
@@ -73,6 +74,7 @@ func (srv *Server) Start() {
 	if srv != nil {
 		go func() {
 			srv.logger.Warn().Str("listen_address", srv.cfg.ListenAddress).Msg("debug-service")
+
 			if err := srv.server.ListenAndServe(); err != nil {
 				srv.logger.Error().Err(err).Msg("debug-service")
 			}
@@ -86,10 +88,13 @@ func (srv *Server) Stop() {
 	}
 
 	var shutdown context.CancelFunc
+
 	ctx := context.Background()
+
 	if srv.cfg.ShutdownTimeout > 0 {
 		shutdownTimeout := time.Duration(srv.cfg.ShutdownTimeout) * time.Second
 		ctx, shutdown = context.WithTimeout(ctx, shutdownTimeout)
+
 		defer shutdown()
 	}
 

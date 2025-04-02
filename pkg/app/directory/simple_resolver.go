@@ -2,7 +2,7 @@ package directory
 
 import (
 	client "github.com/aserto-dev/go-aserto"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"google.golang.org/grpc"
 
 	"github.com/aserto-dev/topaz/resolvers"
@@ -36,6 +36,6 @@ func (r *Resolver) Close() {
 }
 
 // GetDS - returns a directory reader service client.
-func (r *Resolver) GetDS() dsr3.ReaderClient {
-	return dsr3.NewReaderClient(r.dirConn)
+func (r *Resolver) GetDS() reader.ReaderClient {
+	return reader.NewReaderClient(r.dirConn)
 }

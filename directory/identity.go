@@ -40,7 +40,7 @@ func resolutionDirection(ctx context.Context, client dsr3.ReaderClient) identity
 		SubjectId:   DummyIdentity,
 	})
 
-	reason, ok := resp.Context.Fields[Reason]
+	reason, ok := resp.GetContext().GetFields()[Reason]
 	if ok && strings.HasPrefix(reason.GetStringValue(), derr.ErrRelationTypeNotFound.Code+" "+derr.ErrRelationTypeNotFound.Message) {
 		return identityToUser
 	}
@@ -63,6 +63,7 @@ func ResolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity str
 		if obj, err := resolveIdentity(ctx, client, identity); err == nil {
 			return obj, nil
 		}
+
 		return resolveIdentityLegacy(ctx, client, identity)
 	}
 }
@@ -76,6 +77,7 @@ func resolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity str
 		SubjectId:   identity,
 		WithObjects: true,
 	}
+
 	return resolveIdentityToUser(ctx, client, relReq)
 }
 
@@ -88,26 +90,32 @@ func resolveIdentityLegacy(ctx context.Context, client dsr3.ReaderClient, identi
 		SubjectType: User,
 		WithObjects: true,
 	}
+
 	return resolveIdentityToUser(ctx, client, relReq)
 }
 
 func resolveIdentityToUser(ctx context.Context, client dsr3.ReaderClient, relReq *dsr3.GetRelationRequest) (*dsc3.Object, error) {
 	relResp, err := client.GetRelation(ctx, relReq)
+
 	switch {
 	case err != nil && status.Code(err) == codes.NotFound:
 		return nil, aerr.ErrDirectoryObjectNotFound
 	case err != nil:
 		return nil, err
-	case relResp.Result == nil:
+	case relResp.GetResult() == nil:
 		return nil, aerr.ErrDirectoryObjectNotFound
-	case len(relResp.Objects) == 0:
+	case len(relResp.GetObjects()) == 0:
 		return &dsc3.Object{
 			Type: User,
-			Id:   lo.Ternary(relResp.Result.ObjectType == User, relResp.Result.ObjectId, relResp.Result.SubjectId),
+			Id: lo.Ternary(
+				relResp.GetResult().GetObjectType() == User,
+				relResp.GetResult().GetObjectId(),
+				relResp.GetResult().GetSubjectId(),
+			),
 		}, nil
 	}
 
-	for k, v := range relResp.Objects {
+	for k, v := range relResp.GetObjects() {
 		if strings.HasPrefix(k, User+":") {
 			return v, nil
 		}

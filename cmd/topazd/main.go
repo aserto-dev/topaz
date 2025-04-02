@@ -23,6 +23,31 @@ var versionCmd = &cobra.Command{
 }
 
 func main() {
+	cmdRun.Flags().StringVarP(
+		&flagRunConfigFile,
+		"config-file", "c", "",
+		"set path of configuration file")
+	cmdRun.Flags().StringSliceVarP(
+		&flagRunBundleFiles,
+		"bundle", "b", []string{},
+		"load paths as bundle files or root directories (can be specified more than once)")
+	cmdRun.Flags().BoolVarP(
+		&flagRunWatchLocalBundles,
+		"watch", "w", false,
+		"if set, local changes to bundle paths trigger a reload")
+	cmdRun.Flags().StringSliceVarP(
+		&flagRunIgnorePaths,
+		"ignore", "", []string{},
+		"set file and directory names to ignore during loading local bundles (e.g., '.*' excludes hidden files)")
+	cmdRun.Flags().BoolVarP(
+		&flagRunDebug,
+		"debug", "", false,
+		"start debug service")
+
+	rootCmd.AddCommand(cmdRun)
+
+	_ = cmdRun.MarkFlagRequired("config-file")
+
 	rootCmd.AddCommand(
 		versionCmd,
 	)

@@ -26,8 +26,10 @@ func defaultContainerTag() string {
 		if v.String() == "0.0.0" || v.Prerelease() != "" {
 			return defaultContainerTagFallback
 		}
+
 		return v.String()
 	}
+
 	return defaultContainerTagFallback
 }
 
@@ -49,9 +51,11 @@ func ContainerRegistry() string {
 	if containerRegistry := os.Getenv(x.EnvContainerRegistry); containerRegistry != "" {
 		return containerRegistry
 	}
+
 	if defaults.ContainerRegistry != "" {
 		return defaults.ContainerRegistry
 	}
+
 	return defaultContainerRegistry
 }
 
@@ -60,9 +64,11 @@ func ContainerImage() string {
 	if containerImage := os.Getenv(x.EnvContainerName); containerImage != "" {
 		return containerImage
 	}
+
 	if defaults.ContainerImage != "" {
 		return defaults.ContainerImage
 	}
+
 	return defaultContainerImage
 }
 
@@ -71,6 +77,7 @@ func ContainerTag() string {
 	if containerTag := os.Getenv(x.EnvContainerTag); containerTag != "" {
 		return containerTag
 	}
+
 	if defaults.ContainerTag != "" {
 		return defaults.ContainerTag
 	}
@@ -83,9 +90,11 @@ func ContainerPlatform() string {
 	if containerPlatform := os.Getenv(x.EnvContainerPlatform); containerPlatform != "" {
 		return containerPlatform
 	}
+
 	if defaults.ContainerPlatform != "" {
 		return defaults.ContainerPlatform
 	}
+
 	return "linux/" + runtime.GOARCH
 }
 
@@ -94,9 +103,11 @@ func ContainerName(defaultConfigFile string) string {
 	if containerName := os.Getenv(x.EnvContainerName); containerName != "" {
 		return containerName
 	}
+
 	if strings.Contains(defaultConfigFile, "config.yaml") {
 		return defaultContainerName
 	}
+
 	return fmt.Sprintf("%s-%s", defaultContainerName, strings.Split(filepath.Base(defaultConfigFile), ".")[0])
 }
 
@@ -108,7 +119,9 @@ func ContainerVersionTag(version, tag string) string {
 		fmt.Fprintf(os.Stderr, "!!! --container-version incl $CONTAINER_VERSION are obsolete !!!\n")
 		fmt.Fprintf(os.Stderr, "instead use: --container-tag and/or $CONTAINER_TAG\n")
 		fmt.Fprintf(os.Stderr, "the current --container-version value %q is propagated to --container-tag\n", version)
+
 		return version
 	}
+
 	return tag
 }

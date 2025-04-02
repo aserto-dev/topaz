@@ -1,12 +1,12 @@
 package certs
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/certs"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
 type GenerateCertsCmd struct {
@@ -20,30 +20,30 @@ type GenerateCertsCmd struct {
 func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(certsDir, 0o755); err != nil {
+		if err := os.MkdirAll(certsDir, x.FileMode0755); err != nil {
 			return err
 		}
 	}
 
 	pathGateway := &certs.CertPaths{
 		Name: certCommonName + "-gateway",
-		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", gatewayFileName)),
-		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", gatewayFileName)),
-		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", gatewayFileName)),
+		Cert: filepath.Join(certsDir, gatewayFileName+".crt"),
+		CA:   filepath.Join(certsDir, gatewayFileName+"-ca.crt"),
+		Key:  filepath.Join(certsDir, gatewayFileName+".key"),
 		Dir:  certsDir,
 	}
 
 	pathGRPC := &certs.CertPaths{
 		Name: certCommonName + "-grpc",
-		Cert: filepath.Join(certsDir, fmt.Sprintf("%s.crt", grpcFileName)),
-		CA:   filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", grpcFileName)),
-		Key:  filepath.Join(certsDir, fmt.Sprintf("%s.key", grpcFileName)),
+		Cert: filepath.Join(certsDir, grpcFileName+".crt"),
+		CA:   filepath.Join(certsDir, grpcFileName+"-ca.crt"),
+		Key:  filepath.Join(certsDir, grpcFileName+".key"),
 		Dir:  certsDir,
 	}
 
 	c.Con().Info().Msg("certs directory: %s", certsDir)
-	err := certs.GenerateCerts(c, cmd.Force, cmd.DNSNames, pathGateway, pathGRPC)
-	if err != nil {
+
+	if err := certs.GenerateCerts(c, cmd.Force, cmd.DNSNames, pathGateway, pathGRPC); err != nil {
 		return err
 	}
 

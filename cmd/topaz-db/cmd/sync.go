@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"strings"
-	"time"
 
 	eds "github.com/aserto-dev/go-edge-ds"
 	"github.com/aserto-dev/go-edge-ds/pkg/datasync"
@@ -26,6 +25,7 @@ func (cmd *SyncCmd) Run(ctx context.Context) error {
 		if mode == datasync.Unknown {
 			return errors.Errorf("unknown mode: %s", m)
 		}
+
 		opts = append(opts, datasync.WithMode(mode))
 	}
 
@@ -38,7 +38,7 @@ func (cmd *SyncCmd) Run(ctx context.Context) error {
 
 	cfg := &directory.Config{
 		DBPath:         cmd.DBFile,
-		RequestTimeout: 5 * time.Second,
+		RequestTimeout: requestTimeout,
 	}
 
 	logger := zerolog.New(os.Stderr).Level(zerolog.InfoLevel)

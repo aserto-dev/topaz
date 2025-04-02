@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -13,13 +12,15 @@ import (
 	"google.golang.org/grpc"
 )
 
-type ConsoleService struct{}
-
 const (
 	consoleService = "console"
 )
 
-func NewConsole() ServiceTypes {
+type ConsoleService struct{}
+
+var _ builder.ServiceTypes = (*ConsoleService)(nil)
+
+func NewConsole() *ConsoleService {
 	return &ConsoleService{}
 }
 
@@ -45,14 +46,20 @@ func (e *ConsoleService) Cleanups() []func() {
 }
 
 func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
-	directoryServiceURL := serviceAddress(fmt.Sprintf("https://%s", strings.Split(cfg.DirectoryResolver.Address, ":")[0]))
+	directoryServiceURL := serviceAddress("https://" + strings.Split(cfg.DirectoryResolver.Address, ":")[0])
 
 	authorizerURL := ""
+	readerURL := ""
+	writerURL := ""
+	importerURL := "" // always empty, no gateway service associated with the importer service.
+	exporterURL := "" // always empty, no gateway service associated with the exporter service.
+	modelURL := ""
+	consoleURL := ""
+
 	if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		authorizerURL = getGatewayAddress(serviceConfig)
 	}
 
-	readerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[readerService]; ok {
 		readerURL = getGatewayAddress(serviceConfig)
 		if cfg.DirectoryResolver.Address == serviceConfig.GRPC.ListenAddress {
@@ -60,26 +67,20 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 		}
 	}
 
-	writerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
 		writerURL = getGatewayAddress(serviceConfig)
 	}
 
-	importerURL := "" // always empty, no gateway service associated with the importer service.
-
-	exporterURL := "" // always empty, no gateway service associated with the exporter service.
-
-	modelURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
 		modelURL = getGatewayAddress(serviceConfig)
 	}
 
-	consoleURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[consoleService]; ok {
 		consoleURL = getGatewayAddress(serviceConfig)
 	}
 
 	authorizerAPIKey := ""
+
 	if _, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		for key := range cfg.Auth.APIKeys {
 			// we only need a key
@@ -109,14 +110,16 @@ func getGatewayAddress(serviceConfig *builder.API) string {
 	if serviceConfig.Gateway.FQDN != "" {
 		return serviceConfig.Gateway.FQDN
 	}
+
 	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
 
 	serviceConfig.Gateway.HTTP = !serviceConfig.Gateway.Certs.HasCert()
 
 	if serviceConfig.Gateway.HTTP {
-		return fmt.Sprintf("http://%s", addr)
+		return "http://" + addr
 	}
-	return fmt.Sprintf("https://%s", addr)
+
+	return "https://" + addr
 }
 
 func serviceAddress(listenAddress string) string {

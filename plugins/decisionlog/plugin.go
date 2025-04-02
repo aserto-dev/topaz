@@ -4,7 +4,7 @@ import (
 	"context"
 
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	decisionlog "github.com/aserto-dev/topaz/decision_log"
+	"github.com/aserto-dev/topaz/decisionlog"
 
 	"github.com/open-policy-agent/opa/v1/plugins"
 )
@@ -47,8 +47,8 @@ func (plugin *DecisionLogsPlugin) Stop(ctx context.Context) {
 	plugin.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateNotReady})
 }
 
-func (plugin *DecisionLogsPlugin) Reconfigure(ctx context.Context, config interface{}) {
-	plugin.cfg = config.(*Config)
+func (plugin *DecisionLogsPlugin) Reconfigure(ctx context.Context, config any) {
+	plugin.cfg, _ = config.(*Config)
 }
 
 func (plugin *DecisionLogsPlugin) Log(ctx context.Context, d *api.Decision) error {
@@ -69,6 +69,8 @@ func Lookup(m *plugins.Manager) *DecisionLogsPlugin {
 	if p == nil {
 		return nil
 	}
-	plugin := p.(*DecisionLogsPlugin)
+
+	plugin, _ := p.(*DecisionLogsPlugin)
+
 	return plugin
 }

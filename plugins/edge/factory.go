@@ -21,6 +21,8 @@ type PluginFactory struct {
 	logger *zerolog.Logger
 }
 
+var _ plugins.Factory = (*PluginFactory)(nil)
+
 func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Logger) PluginFactory {
 	return PluginFactory{
 		ctx:    ctx,
@@ -29,8 +31,8 @@ func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Lo
 	}
 }
 
-func (f PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugin {
-	cfg := config.(*Config)
+func (f PluginFactory) New(m *plugins.Manager, config any) plugins.Plugin {
+	cfg, _ := config.(*Config)
 	if cfg.TenantID == "" {
 		cfg.TenantID = strings.Split(m.ID, "/")[0]
 	}
@@ -45,7 +47,7 @@ func (f PluginFactory) New(m *plugins.Manager, config interface{}) plugins.Plugi
 	return newEdgePlugin(f.logger, cfg, f.cfg, m)
 }
 
-func (PluginFactory) Validate(m *plugins.Manager, config []byte) (interface{}, error) {
+func (PluginFactory) Validate(m *plugins.Manager, config []byte) (any, error) {
 	parsedConfig := Config{}
 
 	v := viper.New()

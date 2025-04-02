@@ -1,25 +1,24 @@
 package iostream
 
 import (
-	"io"
 	"os"
 )
 
 type StdIO struct {
-	in  io.Reader
-	out io.Writer
-	err io.Writer
+	in  *os.File
+	out *os.File
+	err *os.File
 }
 
-func (i *StdIO) StdIn() io.Reader {
+func (i *StdIO) StdIn() *os.File {
 	return i.in
 }
 
-func (i *StdIO) StdOut() io.Writer {
+func (i *StdIO) StdOut() *os.File {
 	return i.out
 }
 
-func (i *StdIO) StdErr() io.Writer {
+func (i *StdIO) StdErr() *os.File {
 	return i.err
 }
 

@@ -108,12 +108,13 @@ func (runner *TestRunner) execFile(c *cc.CommonCtx, file string) error {
 	defer r.Close()
 
 	c.Con().Info().Msg(file)
+
 	return runner.exec(c, r)
 }
 
 var pbUnmarshal = protojson.UnmarshalOptions{DiscardUnknown: true}
 
-// nolint: gocyclo
+//nolint:funlen
 func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 	csvWriter := csv.NewWriter(c.StdOut())
 
@@ -128,7 +129,7 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 
 	runner.results = NewTestResults(assertions.Assertions)
 
-	for i := 0; i < len(assertions.Assertions); i++ {
+	for i := range assertions.Assertions {
 		var msg structpb.Struct
 		if err := pbUnmarshal.Unmarshal(assertions.Assertions[i], &msg); err != nil {
 			return err
@@ -146,27 +147,12 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 			return errors.Errorf("unknown check type")
 		}
 
-		reqVersion := getReqVersion(msg.Fields[CheckTypeMapStr[checkType]])
+		reqVersion := getReqVersion(msg.GetFields()[CheckTypeMapStr[checkType]])
 		if reqVersion == 0 {
 			return errors.Errorf("unknown request version")
 		}
 
-		var result *CheckResult
-
-		switch {
-		case checkType == Check && reqVersion == 3:
-			result = checkV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
-		case checkType == CheckPermission && reqVersion == 3:
-			result = checkPermissionV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
-		case checkType == CheckRelation && reqVersion == 3:
-			result = checkRelationV3(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
-		case checkType == CheckDecision:
-			result = checkDecisionV2(c.Context, runner.azClient, msg.Fields[CheckTypeMapStr[checkType]])
-		case checkType == Evaluation:
-			result = evaluationV1(c.Context, runner.dsClient, msg.Fields[CheckTypeMapStr[checkType]])
-		default:
-			continue
-		}
+		result := setCheckType(checkType, reqVersion, c, runner, &msg)
 
 		runner.results.Passed(result.Outcome == expected)
 
@@ -174,9 +160,11 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 			switch {
 			case errors.Is(result.Err, ErrSkippedAuthorizerAssertion):
 				result.Err = nil
+
 				runner.results.IncrSkipped()
 			case errors.Is(result.Err, ErrSkippedDirectoryAssertion):
 				result.Err = nil
+
 				runner.results.IncrSkipped()
 			default:
 				runner.results.IncrErrored()
@@ -187,6 +175,7 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 			if i == 0 {
 				result.PrintCSVHeader(csvWriter)
 			}
+
 			result.PrintCSV(csvWriter, i, expected, checkType, description)
 		}
 
@@ -211,26 +200,56 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 	return nil
 }
 
-func getReqVersion(val *structpb.Value) int {
-	if val == nil {
-		return 0
+func setCheckType(checkType CheckType, reqVersion int, c *cc.CommonCtx, runner *TestRunner, msg *structpb.Struct) *CheckResult {
+	var result *CheckResult
+
+	switch {
+	case checkType == Check && reqVersion == 3:
+		result = checkV3(c.Context, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
+	case checkType == CheckPermission && reqVersion == 3:
+		result = checkPermissionV3(c.Context, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
+	case checkType == CheckRelation && reqVersion == 3:
+		result = checkRelationV3(c.Context, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
+	case checkType == CheckDecision:
+		result = checkDecisionV2(c.Context, runner.azClient, msg.GetFields()[CheckTypeMapStr[checkType]])
+	case checkType == Evaluation:
+		result = evaluationV1(c.Context, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	}
 
-	if v, ok := val.Kind.(*structpb.Value_StructValue); ok {
-		if _, ok := v.StructValue.Fields["object_type"]; ok {
-			return 3
+	return result
+}
+
+const (
+	msgVersionUnknown int = iota
+	msgVersionV1
+	msgVersionV2
+	msgVersionV3
+)
+
+func getReqVersion(val *structpb.Value) int {
+	if val == nil {
+		return msgVersionUnknown
+	}
+
+	if v, ok := val.GetKind().(*structpb.Value_StructValue); ok {
+		if _, ok := v.StructValue.GetFields()["object_type"]; ok {
+			return msgVersionV3
 		}
-		if _, ok := v.StructValue.Fields["object"]; ok {
-			return 2
+
+		if _, ok := v.StructValue.GetFields()["object"]; ok {
+			return msgVersionV2
 		}
-		if _, ok := v.StructValue.Fields["identity_context"]; ok {
-			return 2
+
+		if _, ok := v.StructValue.GetFields()["identity_context"]; ok {
+			return msgVersionV2
 		}
-		if _, ok := v.StructValue.Fields["action"]; ok {
-			return 1
+
+		if _, ok := v.StructValue.GetFields()["action"]; ok {
+			return msgVersionV1
 		}
 	}
-	return 0
+
+	return msgVersionUnknown
 }
 
 func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
@@ -353,7 +372,7 @@ func checkDecisionV2(ctx context.Context, c *azc.Client, msg *structpb.Value) *C
 	}
 
 	return &CheckResult{
-		Outcome:  lo.Ternary(err != nil, false, resp.Decisions[0].GetIs()),
+		Outcome:  lo.Ternary(err != nil, false, resp.GetDecisions()[0].GetIs()),
 		Duration: duration,
 		Err:      err,
 		Str:      checkDecisionStringV2(&req),
@@ -415,9 +434,9 @@ func checkPermissionStringV3(req *dsr3.CheckPermissionRequest) string {
 
 func checkDecisionStringV2(req *az2.IsRequest) string {
 	return fmt.Sprintf("%s/%s:%s",
-		req.PolicyContext.GetPath(),
-		req.PolicyContext.GetDecisions()[0],
-		req.IdentityContext.Identity,
+		req.GetPolicyContext().GetPath(),
+		req.GetPolicyContext().GetDecisions()[0],
+		req.GetIdentityContext().GetIdentity(),
 	)
 }
 

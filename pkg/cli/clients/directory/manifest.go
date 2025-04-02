@@ -3,6 +3,7 @@ package directory
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
@@ -10,7 +11,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (c *Client) GetManifest(ctx context.Context) (io.Reader, error) {
+func (c *Client) GetManifest(ctx context.Context) (*bytes.Reader, error) {
 	stream, err := c.Model.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, err
@@ -19,9 +20,10 @@ func (c *Client) GetManifest(ctx context.Context) (io.Reader, error) {
 	data := bytes.Buffer{}
 
 	bytesRecv := 0
+
 	for {
 		resp, err := stream.Recv()
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 
@@ -34,8 +36,8 @@ func (c *Client) GetManifest(ctx context.Context) (io.Reader, error) {
 		}
 
 		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
-			data.Write(body.Body.Data)
-			bytesRecv += len(body.Body.Data)
+			data.Write(body.Body.GetData())
+			bytesRecv += len(body.Body.GetData())
 		}
 	}
 
@@ -51,11 +53,13 @@ func (c *Client) SetManifest(ctx context.Context, r io.Reader) error {
 	}
 
 	buf := make([]byte, blockSize)
+
 	for {
 		n, err := r.Read(buf)
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
+
 		if err != nil {
 			return err
 		}
