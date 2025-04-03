@@ -16,9 +16,11 @@ import (
 )
 
 type TemplateCmd struct {
-	List    ListTemplatesCmd   `cmd:"" help:"list template"`
-	Install InstallTemplateCmd `cmd:"" help:"install template"`
-	Verify  VerifyTemplateCmd  `cmd:"" help:"verify template content links" hidden:""`
+	List     ListTemplatesCmd    `cmd:"" help:"list template"`
+	Install  InstallTemplateCmd  `cmd:"" help:"install template"`
+	Verify   VerifyTemplateCmd   `cmd:"" help:"verify template content links" hidden:""`
+	Download DownloadTemplateCmd `cmd:"" help:"download template" hidden:""`
+	Apply    ApplyTemplateCmd    `cmd:"" help:"apply template to directory" hidden:""`
 }
 
 const (
