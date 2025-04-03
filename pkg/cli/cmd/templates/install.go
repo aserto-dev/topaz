@@ -107,6 +107,11 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	topazTemplateDir := cc.GetTopazTemplateDir()
 
 	cmd.Config.Insecure = true
+	if cmd.Config.ClientConfig().NoTLS {
+		cmd.Config.Insecure = false
+		cmd.Config.Plaintext = true
+	}
+
 	// 1-3 - stop topaz, configure, start
 	if err := cmd.prepareTopaz(c, tmpl, cmd.ConfigName); err != nil {
 		return err
