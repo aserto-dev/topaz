@@ -12,11 +12,12 @@ import (
 )
 
 type VerifyTemplateCmd struct {
+	Name         string `arg:"" optional:"" help:"template name"`
 	TemplatesURL string `optional:"" default:"${topaz_tmpl_url}" env:"TOPAZ_TMPL_URL" help:"URL of template catalog"`
 }
 
 func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
-	ctlg, err := getCatalog(cmd.TemplatesURL)
+	catalog, err := getCatalog(cmd.TemplatesURL)
 	if err != nil {
 		return err
 	}
@@ -27,7 +28,11 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	tab := table.New(c.StdOut()).WithColumns("template", "asset", "exists", "parsed", "error")
 	tab.WithTableNoAutoWrapText()
 
-	for tmplName := range ctlg {
+	for tmplName := range catalog {
+		if cmd.Name != "" && tmplName != cmd.Name {
+			continue
+		}
+
 		tmpl, err := getTemplate(tmplName, cmd.TemplatesURL)
 		if err != nil {
 			return err
