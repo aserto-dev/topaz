@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/signal"
 	"regexp"
 	"strings"
+	"syscall"
 )
 
 type SaveContext bool
@@ -25,27 +27,41 @@ func PromptYesNo(label string, def bool) bool {
 		choices = "y/N"
 	}
 
-	r := bufio.NewReader(os.Stdin)
+	sigChan := make(chan os.Signal, 1)
+	defer close(sigChan)
 
-	var s string
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	inputChan := make(chan string)
+	defer close(inputChan)
+
+	fmt.Fprintf(os.Stderr, "%s (%s) ", label, choices)
+
+	go func() {
+		reader := bufio.NewReader(os.Stdin)
+
+		for {
+			text, _ := reader.ReadString('\n')
+			inputChan <- strings.TrimSpace(text)
+		}
+	}()
 
 	for {
-		fmt.Fprintf(os.Stderr, "%s (%s) ", label, choices)
+		select {
+		case input := <-inputChan:
+			switch {
+			case input == "Y" || input == "y":
+				return true
+			case input == "N" || input == "n":
+				return false
+			case input == "":
+				return def
+			}
 
-		s, _ = r.ReadString('\n')
-		s = strings.TrimSpace(s)
-
-		if s == "" {
-			return def
-		}
-
-		s = strings.ToLower(s)
-		if s == "y" || s == "yes" {
-			return true
-		}
-
-		if s == "n" || s == "no" {
+		case <-sigChan:
 			return false
 		}
+
+		fmt.Fprintf(os.Stderr, "%s (%s) ", label, choices)
 	}
 }
