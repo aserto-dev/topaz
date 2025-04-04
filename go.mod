@@ -20,7 +20,7 @@ require (
 	github.com/aserto-dev/go-directory v0.33.9
 	github.com/aserto-dev/go-edge-ds v0.33.15-0.20250326000552-0ae481239c2d
 	github.com/aserto-dev/go-grpc v0.9.6
-	github.com/aserto-dev/go-topaz-ui v0.1.23
+	github.com/aserto-dev/go-topaz-ui v0.1.24
 	github.com/aserto-dev/header v0.0.10
 	github.com/aserto-dev/logger v0.0.7
 	github.com/aserto-dev/openapi-authorizer v0.20.5
@@ -162,9 +162,7 @@ require (
 	github.com/sagikazarmark/locafero v0.7.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
-	github.com/shirou/gopsutil/v3 v3.24.5 // indirect
 	github.com/shirou/gopsutil/v4 v4.25.1 // indirect
-	github.com/shoenig/go-m1cpu v0.1.6 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.12.0 // indirect
