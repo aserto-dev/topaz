@@ -27,7 +27,7 @@ func (cmd *QueryCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if err := cmd.Config.Invoke(c.Context, authorizer.Authorizer_Is_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Config.Invoke(c.Context, authorizer.Authorizer_Query_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
