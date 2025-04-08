@@ -34,11 +34,11 @@ func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	if err := cmd.RequestArgs.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Config.Invoke(c.Context, reader.Reader_GetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(c.Context, reader.Reader_GetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
@@ -71,11 +71,11 @@ func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	if err := cmd.RequestArgs.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Config.Invoke(c.Context, writer.Writer_SetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(c.Context, writer.Writer_SetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
@@ -113,11 +113,11 @@ func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	if err := cmd.RequestArgs.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Config.Invoke(c.Context, writer.Writer_DeleteObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(c.Context, writer.Writer_DeleteObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
@@ -149,11 +149,11 @@ func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	if err := cmd.RequestArgs.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Config.Invoke(c.Context, reader.Reader_GetObjects_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(c.Context, reader.Reader_GetObjects_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 

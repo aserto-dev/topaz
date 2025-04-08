@@ -23,11 +23,11 @@ func (cmd *ResourceSearchCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
 	}
 
-	if err := cmd.RequestArgs.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Config.Invoke(c.Context, dsa1.Access_ResourceSearch_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(c.Context, dsa1.Access_ResourceSearch_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 

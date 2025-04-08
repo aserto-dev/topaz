@@ -72,10 +72,7 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 		return nil, err
 	}
 
-	withTopazDir := false
-	if strings.Contains(string(fileContents), x.EnvTopazDir) {
-		withTopazDir = true
-	}
+	withTopazDir := strings.Contains(string(fileContents), x.EnvTopazDir)
 
 	cfg := new(Config)
 
