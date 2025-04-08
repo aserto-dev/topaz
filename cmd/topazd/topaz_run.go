@@ -109,5 +109,5 @@ func configOverrides(cfg *config.Config) {
 		cfg.OPA.LocalBundles.Watch = true
 	}
 
-	cfg.Common.DebugService.Enabled = flagRunDebug
+	cfg.DebugService.Enabled = flagRunDebug
 }

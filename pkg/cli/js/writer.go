@@ -25,7 +25,7 @@ func NewWriter(path, key string) (*Writer, error) {
 	}
 
 	_, _ = f.w.WriteString("{\n")
-	_, _ = f.w.WriteString(fmt.Sprintf("%q:\n", key))
+	fmt.Fprintf(w, "%q:\n", key)
 	_, _ = f.w.WriteString("[\n")
 
 	return &f, nil

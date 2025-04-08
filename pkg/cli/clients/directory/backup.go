@@ -50,7 +50,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	}
 
 	defer func() {
-		tf.Close()
+		_ = tf.Close()
 	}()
 
 	gw, err := gzip.NewWriterLevel(tf, gzip.BestCompression)
@@ -59,13 +59,13 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	}
 
 	defer func() {
-		gw.Close()
+		_ = gw.Close()
 	}()
 
 	tw := tar.NewWriter(gw)
 
 	defer func() {
-		tw.Close()
+		_ = tw.Close()
 	}()
 
 	_ = addToArchive(tw, path.Join(dirPath, ObjectsFileName))

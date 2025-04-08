@@ -31,7 +31,7 @@ func testChecks(ctx context.Context, dsClient dsr3.ReaderClient) func(*testing.T
 
 				require.NotNil(t, resp, "response should not be nil")
 
-				assert.Equal(t, len(tc.req.GetChecks()), len(resp.GetChecks()))
+				assert.Len(t, resp.GetChecks(), len(tc.req.GetChecks()))
 
 				for i, check := range tc.resp.GetChecks() {
 					require.Equal(t, check.GetCheck(), resp.GetChecks()[i].GetCheck(), "i=%d", i)

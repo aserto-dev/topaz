@@ -49,12 +49,12 @@ func PromptYesNo(label string, def bool) bool {
 	for {
 		select {
 		case input := <-inputChan:
-			switch {
-			case input == "Y" || input == "y":
+			switch input {
+			case "Y", "y":
 				return true
-			case input == "N" || input == "n":
+			case "N", "n":
 				return false
-			case input == "":
+			case "":
 				return def
 			}
 
