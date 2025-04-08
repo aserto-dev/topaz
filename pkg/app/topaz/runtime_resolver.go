@@ -165,5 +165,6 @@ func (r *RuntimeResolver) ListRuntimes(ctx context.Context) (map[string]*runtime
 	return map[string]*runtime.Runtime{r.runtime.Config.InstanceID: r.runtime}, nil
 }
 
-func (r *RuntimeResolver) UnloadRuntime(ctx context.Context, opaInstanceID, policyName string) {
+func (r *RuntimeResolver) UnloadRuntime(ctx context.Context, opaInstanceID, policyName string) error {
+	return nil
 }
