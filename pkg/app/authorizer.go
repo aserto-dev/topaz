@@ -25,6 +25,7 @@ const (
 type Authorizer struct {
 	Resolver         *resolvers.Resolvers
 	AuthorizerServer *impl.AuthorizerServer
+	CleanupFunctions []func()
 
 	cfg  *builder.API
 	opts []grpc.ServerOption
@@ -90,7 +91,7 @@ func (e *Authorizer) GetGatewayRegistration(port string, services ...string) bui
 }
 
 func (e *Authorizer) Cleanups() []func() {
-	return nil
+	return e.CleanupFunctions
 }
 
 const (
