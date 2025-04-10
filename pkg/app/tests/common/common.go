@@ -17,6 +17,7 @@ func GoARCH() *string {
 	} else {
 		goarch = runtime.GOARCH
 	}
+
 	return &goarch
 }
 
@@ -24,6 +25,7 @@ func CommitSHA() string {
 	if commitSHA, err := sh.Output("git", "rev-parse", "--short", "HEAD"); err == nil {
 		return commitSHA
 	}
+
 	return ""
 }
 

@@ -178,6 +178,7 @@ func DefaultAllowedOrigins(useHTTP bool) []string {
 			"http://0.0.0.0:*",
 		}
 	}
+
 	return []string{
 		"https://localhost",
 		"https://localhost:*",

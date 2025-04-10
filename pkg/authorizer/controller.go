@@ -4,7 +4,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/aserto-dev/aserto-management/controller"
+	"github.com/aserto-dev/topaz/controller"
 )
 
 type ControllerConfig struct {

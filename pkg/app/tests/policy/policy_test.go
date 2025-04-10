@@ -319,6 +319,7 @@ func GetPoliciesInvalidID(ctx context.Context, azClient authorizer.AuthorizerCli
 
 func getOneModule(ctx context.Context, azClient authorizer.AuthorizerClient, t *testing.T) *api.Module {
 	assert := require.New(t)
+
 	listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{})
 	if err != nil {
 		assert.FailNow("failed to list policies", err.Error())
@@ -327,5 +328,6 @@ func getOneModule(ctx context.Context, azClient authorizer.AuthorizerClient, t *
 	if len(listPoliciesResponse.GetResult()) == 0 {
 		assert.FailNow("no policy modules loaded")
 	}
+
 	return listPoliciesResponse.GetResult()[0]
 }

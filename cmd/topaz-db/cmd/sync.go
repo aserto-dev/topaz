@@ -30,7 +30,7 @@ func (cmd *SyncCmd) Run(ctx context.Context) error {
 	}
 
 	// create client conn
-	conn, err := cmd.Config.Connect(ctx)
+	conn, err := cmd.Connect(ctx)
 	if err != nil {
 		return err
 	}

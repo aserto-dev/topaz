@@ -36,6 +36,7 @@ func (c RemoteDirectoryStore) Map() map[string]interface{} {
 	if err := mapstructure.Decode(c, &result); err != nil {
 		return nil
 	}
+
 	return result
 }
 
@@ -53,6 +54,7 @@ func RemoteDirectoryStoreMap(cfg *RemoteDirectoryStore) map[string]interface{} {
 	if err := mapstructure.Decode(cfg, &result); err != nil {
 		return nil
 	}
+
 	return result
 }
 

@@ -36,6 +36,7 @@ type Config struct {
 
 var _ = handler.Config(&Config{})
 
+//nolint:mnd  // this is where defaults are defined.
 func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
 	v.SetDefault("version", 3)
 	v.SetDefault("logging.prod", false)
@@ -161,7 +162,7 @@ logging:
   grpc_log_level: {{ .GrpcLogLevel }}
 `
 
-func (c *ConfigV3) data() map[string]any {
+func (c *ConfigV3) data() map[string]any { //nolint:unused
 	b, err := json.Marshal(c)
 	if err != nil {
 		return nil

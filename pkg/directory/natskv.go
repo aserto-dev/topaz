@@ -32,5 +32,6 @@ func NATSKeyValueStoreMap(cfg *NATSKeyValueStore) map[string]interface{} {
 	if err := mapstructure.Decode(cfg, &result); err != nil {
 		return nil
 	}
+
 	return result
 }

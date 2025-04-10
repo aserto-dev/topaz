@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/aserto-dev/aserto-management/controller"
+	"github.com/aserto-dev/topaz/controller"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	config2 "github.com/aserto-dev/topaz/pkg/cc/config"
@@ -76,10 +76,10 @@ func migAuthentication(cfg2 *config2.Config, cfg3 *config3.Config) {
 				EnableAPIKey:    cfg2.Auth.Options.Default.EnableAPIKey,
 				EnableAnonymous: cfg2.Auth.Options.Default.EnableAnonymous,
 			},
+			Overrides: []authentication.OptionOverrides{},
 		},
 	}
 
-	cfg3.Authentication.Settings.Options.Overrides = []authentication.OptionOverrides{}
 	for _, override2 := range cfg2.Auth.Options.Overrides {
 		override3 := authentication.OptionOverrides{
 			Paths:    override2.Paths,
@@ -136,17 +136,19 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 	}
 
 	svcCounter := 0
+
 	for addr, host := range svcHosts {
 		includes := port2names[addr]
 
 		svcCounter++
+
 		var svc string
 
 		switch {
 		case len(svcHosts) == 1:
 			svc = "topaz-svc"
 		case len(includes) == 1:
-			svc = fmt.Sprintf("%s-svc", includes[0])
+			svc = includes[0] + "-svc"
 		case lo.Contains(includes, "reader"):
 			svc = "directory-svc"
 		default:
@@ -217,7 +219,7 @@ func migAuthorizer(cfg2 *config2.Config, cfg3 *config3.Config) {
 	}
 
 	// *ControllerConfig
-	if cfg2.ControllerConfig != nil && cfg2.ControllerConfig.Enabled {
+	if cfg2.ControllerConfig.Enabled {
 		cfg3.Authorizer.Controller = authorizer.ControllerConfig{
 			Config: controller.Config{
 				Enabled: cfg2.ControllerConfig.Enabled,

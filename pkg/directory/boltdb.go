@@ -11,7 +11,7 @@ import (
 )
 
 type BoltDBStore struct {
-	directory.Config `json:"config"` // nolint:staticcheck // squash is used by mapstructure
+	directory.Config `json:"config"`
 }
 
 const BoltDBDefaultRequestTimeout = time.Second * 5
@@ -63,6 +63,7 @@ func BoltDBStoreMap(cfg *BoltDBStore) map[string]interface{} {
 	if err := mapstructure.Decode(cfg, &result); err != nil {
 		return nil
 	}
+
 	return result
 }
 
@@ -71,6 +72,7 @@ func (c *BoltDBStore) ToMap() map[string]interface{} {
 	if err := mapstructure.Decode(c, &result); err != nil {
 		return nil
 	}
+
 	return result
 }
 

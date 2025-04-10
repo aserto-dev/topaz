@@ -22,6 +22,7 @@ func InstallTemplate(dsConfig *dsc.Config, azConfig *azc.Config, tmpl string) fu
 		t.Logf("addr: %s tmpl: %s", dsConfig.Host, tmpl)
 
 		t.Setenv("TOPAZ_NO_COLOR", "true")
+
 		c, err := cc.NewCommonContext(context.Background(), true, filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile))
 		require.NoError(t, err)
 
@@ -95,6 +96,7 @@ func ExecTests(c *cc.CommonCtx, dsConfig *dsc.Config, azConfig *azc.Config, file
 	return func(t *testing.T) {
 		cmd, err := common.NewTestRunner(c, &common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}, azConfig, dsConfig)
 		require.NoError(t, err)
+
 		if err := cmd.Run(c); err != nil {
 			assert.NoError(t, err)
 		}

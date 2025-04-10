@@ -13,9 +13,9 @@ import (
 )
 
 type Config struct {
-	Enabled       bool              `json:"enabled"`
-	ListenAddress string            `json:"listen_address"`
-	Certificates  *client.TLSConfig `json:"certs,omitempty"`
+	Enabled       bool             `json:"enabled"`
+	ListenAddress string           `json:"listen_address"`
+	Certificates  client.TLSConfig `json:"certs,omitempty"`
 }
 
 var _ = handler.Config(&Config{})

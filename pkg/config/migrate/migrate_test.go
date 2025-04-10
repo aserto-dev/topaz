@@ -1,7 +1,6 @@
 package migrate_test
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -22,11 +21,12 @@ func TestLoadConfigV2(t *testing.T) {
 func TestMigrateConfig(t *testing.T) {
 	r, err := os.Open("/Users/gertd/.config/topaz/cfg/gdrive.yaml")
 	require.NoError(t, err)
-	defer func() {
+
+	t.Cleanup(func() {
 		if err := r.Close(); err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
+			t.Log(err.Error())
 		}
-	}()
+	})
 
 	cfg2, err := migrate.LoadConfigV2(r)
 	require.NoError(t, err)

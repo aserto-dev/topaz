@@ -108,24 +108,9 @@ var queryTests = []struct {
 			Query:           "x := opa.runtime()",
 			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
-		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.GetResponse())
-
-			var result *rt.Result
-			buf, err := resp.GetResponse().MarshalJSON()
-			require.NoError(t, err)
-
-			if err := json.Unmarshal(buf, &result); err != nil {
-				require.NoError(t, err)
-			}
-
-			require.NotNil(t, result)
-			require.NotEmpty(t, result.Result)
-			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "env")
-		},
+		validate: validateResult(
+			contains("env"),
+		),
 	},
 	{
 		name: "data",
@@ -133,23 +118,9 @@ var queryTests = []struct {
 			Query:           "x = data",
 			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
-		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.GetResponse())
-
-			var result *rt.Result
-			buf, err := resp.GetResponse().MarshalJSON()
-			require.NoError(t, err)
-
-			if err := json.Unmarshal(buf, &result); err != nil {
-				require.NoError(t, err)
-			}
-			require.NotNil(t, result)
-			require.NotEmpty(t, result.Result)
-			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "rebac")
-		},
+		validate: validateResult(
+			contains("rebac"),
+		),
 	},
 	{
 		name: "ds.user",
@@ -157,26 +128,13 @@ var queryTests = []struct {
 			Query:           `x = ds.user({"id": "euang@acmecorp.com"})`,
 			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
-		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.GetResponse())
-
-			var result *rt.Result
-			buf, err := resp.GetResponse().MarshalJSON()
-			require.NoError(t, err)
-
-			if err := json.Unmarshal(buf, &result); err != nil {
-				require.NoError(t, err)
-			}
-
-			require.NotNil(t, result)
-			require.NotEmpty(t, result.Result)
-			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "id")
-			binding, _ := result.Result[0].Bindings["x"].(map[string]any)
-			require.Equal(t, "euang@acmecorp.com", binding["id"])
-		},
+		validate: validateResult(
+			contains("id"),
+			func(t *testing.T, result *rt.Result) {
+				binding, _ := result.Result[0].Bindings["x"].(map[string]any)
+				require.Equal(t, "euang@acmecorp.com", binding["id"])
+			},
+		),
 	},
 	{
 		name: "ds.identity",
@@ -184,24 +142,9 @@ var queryTests = []struct {
 			Query:           `x = ds.identity({"id": "euang@acmecorp.com"})`,
 			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
-		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.GetResponse())
-
-			var result *rt.Result
-			buf, err := resp.GetResponse().MarshalJSON()
-			require.NoError(t, err)
-
-			if err := json.Unmarshal(buf, &result); err != nil {
-				require.NoError(t, err)
-			}
-
-			require.NotNil(t, result)
-			require.NotEmpty(t, result.Result)
-			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, "euang@acmecorp.com", result.Result[0].Bindings["x"])
-		},
+		validate: validateResult(
+			contains("euang@acmecorp.com"),
+		),
 	},
 	{
 		name: "identity_context_sub",
@@ -212,29 +155,15 @@ var queryTests = []struct {
 				Identity: "euang@acmecorp.com",
 			},
 		},
-		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.GetResponse())
-
-			var result *rt.Result
-			buf, err := resp.GetResponse().MarshalJSON()
-			require.NoError(t, err)
-
-			if err := json.Unmarshal(buf, &result); err != nil {
-				require.NoError(t, err)
-			}
-
-			require.NotNil(t, result)
-			require.NotEmpty(t, result.Result)
-			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "identity")
-			require.Contains(t, result.Result[0].Bindings["x"], "user")
-
-			bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
-			require.Contains(t, bindings["identity"], "type")
-			require.Contains(t, bindings["user"], "id")
-		},
+		validate: validateResult(
+			contains("identity"),
+			contains("user"),
+			func(t *testing.T, result *rt.Result) {
+				bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
+				require.Contains(t, bindings["identity"], "type")
+				require.Contains(t, bindings["user"], "id")
+			},
+		),
 	},
 	{
 		name: "identity_context_manual",
@@ -245,29 +174,48 @@ var queryTests = []struct {
 				Identity: "euang@acmecorp.com",
 			},
 		},
-		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
-			require.NoError(t, err)
-			require.NotNil(t, resp)
-			require.NotNil(t, resp.GetResponse())
-
-			var result *rt.Result
-			buf, err := resp.GetResponse().MarshalJSON()
-			require.NoError(t, err)
-
-			if err := json.Unmarshal(buf, &result); err != nil {
-				require.NoError(t, err)
-			}
-
-			require.NotNil(t, result)
-			require.NotEmpty(t, result.Result)
-			require.Contains(t, result.Result[0].Bindings, "x")
-			require.Contains(t, result.Result[0].Bindings["x"], "identity")
-			require.Contains(t, result.Result[0].Bindings["x"], "user")
-
-			bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
-			require.Contains(t, bindings["identity"], "identity")
-			require.Contains(t, bindings["identity"], "type")
-			require.Equal(t, map[string]any{}, bindings["user"])
-		},
+		validate: validateResult(
+			contains("identity"),
+			contains("user"),
+			func(t *testing.T, result *rt.Result) {
+				bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
+				require.Contains(t, bindings["identity"], "identity")
+				require.Contains(t, bindings["identity"], "type")
+				require.Equal(t, map[string]any{}, bindings["user"])
+			},
+		),
 	},
+}
+
+func contains(val string) resultValidator {
+	return func(t *testing.T, result *rt.Result) {
+		require.Contains(t, result.Result[0].Bindings, "x")
+		require.Contains(t, result.Result[0].Bindings["x"], val)
+	}
+}
+
+type resultValidator func(t *testing.T, result *rt.Result)
+
+func validateResult(check ...resultValidator) func(t *testing.T, resp *authorizer.QueryResponse, err error) {
+	return func(t *testing.T, resp *authorizer.QueryResponse, err error) {
+		require.NoError(t, err)
+		require.NotNil(t, resp)
+		require.NotNil(t, resp.GetResponse())
+
+		var result *rt.Result
+
+		buf, err := resp.GetResponse().MarshalJSON()
+		require.NoError(t, err)
+
+		if err := json.Unmarshal(buf, &result); err != nil {
+			require.NoError(t, err)
+		}
+
+		require.NotNil(t, result)
+		require.NotEmpty(t, result.Result)
+
+		for _, v := range check {
+			v(t, result)
+		}
+	}
 }
