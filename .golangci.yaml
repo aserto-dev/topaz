@@ -28,64 +28,6 @@ linters:
     - varnamelen
     - wrapcheck
 
-  exclusions:
-    generated: lax
-
-    rules:
-      - path: pkg/app/tests/
-        linters:
-        - dupl
-        - forbidigo
-        - wsl
-      
-      - path: internal/pkg/xdg/
-        linters:
-          - gochecknoinits
-          - gosec
-          - mnd
-          - testableexamples
-          - testifylint
-          - usetesting
-          - wsl
-
-      - path: pkg/cc/signals/
-        linters:
-          - mnd
-
-      - path: pkg/cli/cmd/
-        linters:
-          - dupl
-
-      - path: pkg/cli/editor/
-        linters:
-          - dupword
-          - errcheck
-          - errorlint
-          - forcetypeassert
-          - gocritic
-          - godox
-          - gosec
-          - mnd
-          - ireturn
-          - lll
-          - makezero
-          - nonamedreturns
-          - recvcheck
-          - wsl
-
-      - path: pkg/app/handlers/authorizer.go
-        linters:
-          - tagliatelle
-
-      - path: pkg/app/handlers/config.go
-        linters:
-          - tagliatelle
-
-      - path: cmd/topaz-db/
-        linters:
-          - staticcheck
-
-
   settings:
     cyclop:
       max-complexity: 12
@@ -108,45 +50,53 @@ linters:
 
     gosec:
       excludes:
-        - G104 # Errors unhandled 
-        - G304 # Potential file inclusion via variable (see https://github.com/golang/go/issues/67002)
+        - G104  # Errors unhandled
+        - G304  # Potential file inclusion via variable (see https://github.com/golang/go/issues/67002)
 
     ireturn:
       allow:
-        # stdlib
-        - anon
         - error
         - empty
         - stdlib
         - generic
-        - context.Context
-        - http.Handler
-        - io.Reader
-        # 3rd-party
-        - credentials.TransportCredentials
-        - jwt.Token
-        - metrics.Recorder
-        - testcontainers-go.Container
-        - plugins.Factory
-        - plugins.Plugin
         - proto.Message
-        - v3.ReaderClient
+        - plugins.Plugin
+        - decisionlog.DecisionLogger
         - resolvers.DirectoryResolver
         - resolvers.RuntimeResolver
-        - decisionlog.DecisionLogger
+        - v3.ReaderClient
 
     lll:
       line-length: 150
 
     recvcheck:
       exclusions:
-        - "*.UnmarshalGQL"
+        - "*.Map"
 
     tagliatelle:
       case:
         rules:
           json: snake
           yaml: snake
+
+        overrides:
+          - pkg: pkg/app/handlers
+            rules:
+              json: camel
+
+  exclusions:
+    generated: lax
+
+    # Paths to exclude
+    paths:
+      - internal/pkg/xdg/
+      - pkg/cc/signals/
+      - pkg/cli/editor/
+
+    rules:
+      - path: pkg/cli/cmd/
+        linters:
+          - dupl
 
 formatters:
   enable:

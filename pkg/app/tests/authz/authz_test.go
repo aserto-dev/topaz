@@ -129,6 +129,7 @@ func DecisionTreeWithMissingPath(ctx context.Context, azClient authorizer.Author
 			assert.True(t, ok)
 			assert.Equal(t, codes.InvalidArgument, s.Code())
 		}
+
 		assert.Nil(t, respX, "response object should be nil")
 	}
 }
@@ -157,6 +158,7 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, azClient authorizer.Au
 			assert.True(t, ok)
 			assert.Equal(t, codes.NotFound, s.Code())
 		}
+
 		assert.Nil(t, respX, "response object should be nil")
 	}
 }
@@ -212,6 +214,7 @@ func IsWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerCl
 			assert.True(t, ok, true)
 			assert.Equal(t, codes.NotFound, s.Code())
 		}
+
 		assert.Nil(t, respX, "response object should be nil")
 	}
 }
@@ -247,6 +250,7 @@ func QueryWithMissingIdentity(ctx context.Context, azClient authorizer.Authorize
 			assert.True(t, ok, true)
 			assert.Equal(t, codes.NotFound, s.Code())
 		}
+
 		assert.Nil(t, respX, "response object should be nil")
 	}
 }
