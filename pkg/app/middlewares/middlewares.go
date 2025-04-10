@@ -3,10 +3,10 @@ package middlewares
 import (
 	"context"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
-	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/gerr"
-	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/request"
-	"github.com/aserto-dev/aserto-grpc/grpcutil/middlewares/tracing"
+	grpcutil "github.com/aserto-dev/aserto-grpc"
+	"github.com/aserto-dev/aserto-grpc/middlewares/gerr"
+	"github.com/aserto-dev/aserto-grpc/middlewares/request"
+	"github.com/aserto-dev/aserto-grpc/middlewares/tracing"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/rs/zerolog"
