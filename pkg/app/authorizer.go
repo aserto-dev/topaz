@@ -94,6 +94,14 @@ func (e *Authorizer) Cleanups() []func() {
 	return e.CleanupFunctions
 }
 
+func (e *Authorizer) Close() {
+	for _, f := range e.CleanupFunctions {
+		if f != nil {
+			f()
+		}
+	}
+}
+
 const (
 	authorizerOpenAPISpec string = "/authorizer/openapi.json"
 )
