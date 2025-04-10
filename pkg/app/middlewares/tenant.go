@@ -3,7 +3,7 @@ package middlewares
 import (
 	"context"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
+	grpcutil "github.com/aserto-dev/aserto-grpc"
 	"github.com/aserto-dev/header"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
