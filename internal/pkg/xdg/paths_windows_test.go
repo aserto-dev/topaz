@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/adrg/xdg"
+	"github.com/aserto-dev/topaz/internal/pkg/xdg"
 	"github.com/stretchr/testify/require"
 )
 

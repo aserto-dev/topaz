@@ -18,6 +18,11 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+const (
+	fieldWidth10 int = 10
+	fieldWidth64 int = 64
+)
+
 type prompt struct {
 	app  *tview.Application
 	form *tview.Form
@@ -52,6 +57,7 @@ func (f *prompt) Show() error {
 	if !rc {
 		return ErrCancelled
 	}
+
 	return nil
 }
 
@@ -63,8 +69,10 @@ func (f *prompt) init() error {
 		if event.Key() == tcell.KeyESC || event.Key() == tcell.KeyCtrlC {
 			f.rc <- false
 			f.app.Stop()
+
 			return nil
 		}
+
 		return event
 	})
 
@@ -83,13 +91,27 @@ func (f *prompt) init() error {
 		f.app.Stop()
 	})
 
-	c := f.form.GetFormItemCount()
 	maxLabel := 0
-	for i := 0; i < c; i++ {
+
+	c := f.form.GetFormItemCount()
+	for i := range c {
 		maxLabel = max(maxLabel, len(f.form.GetFormItem(i).GetLabel()))
 	}
-	width := maxLabel + 6 + 64
-	f.form.SetRect(0, 0, width, ((c+3)*2)-1)
+
+	const (
+		padding  int = 6
+		maxWidth int = 64
+	)
+
+	width := maxLabel + padding + maxWidth
+
+	const (
+		addControls int = 3
+		lineSpacing int = 2
+		lastLine    int = 1
+	)
+
+	f.form.SetRect(0, 0, width, ((c+addControls)*lineSpacing)-lastLine)
 
 	return nil
 }
@@ -99,38 +121,40 @@ var (
 	ErrCancelled   = status.Error(codes.Aborted, "canceled")
 )
 
+//nolint:funlen
 func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor, parent []string) error {
 	fields := md.Fields()
 
-	for i := 0; i < fields.Len(); i++ {
+	for i := range fields.Len() {
 		c := i
 		path := append(parent, fields.Get(i).TextName()) //nolint: gocritic
 		fieldName := strings.Join(path, ".")
 		fd := fields.Get(i)
 
-		switch fields.Get(i).Kind() { //nolint: exhaustive
+		switch fields.Get(i).Kind() {
 		case protoreflect.StringKind:
 			if fields.Get(i).IsList() {
-				f.form.AddInputField(fieldName, "[ ]", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "[ ]", fieldWidth64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
 			v := msg.ProtoReflect().Get(fd)
-			f.form.AddInputField(fieldName, v.String(), 64, nil, func(s string) {
+			f.form.AddInputField(fieldName, v.String(), fieldWidth64, nil, func(s string) {
 				_ = f.setField(msg.ProtoReflect(), fields.Get(c), s)
 			})
 
 		case protoreflect.Int32Kind:
 			v := msg.ProtoReflect().Get(fd)
-			f.form.AddInputField(fieldName, v.String(), 10, nil, func(s string) {
+			f.form.AddInputField(fieldName, v.String(), fieldWidth10, nil, func(s string) {
 				_ = f.setField(msg.ProtoReflect(), fields.Get(c), s)
 			})
 
 		case protoreflect.Int64Kind:
 			v := msg.ProtoReflect().Get(fd)
-			f.form.AddInputField(fieldName, v.String(), 10, nil, func(s string) {
+			f.form.AddInputField(fieldName, v.String(), fieldWidth10, nil, func(s string) {
 				_ = f.setField(msg.ProtoReflect(), fields.Get(c), s)
 			})
 
@@ -143,46 +167,60 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 		case protoreflect.EnumKind:
 			options := []string{}
 			lookup := map[string]int32{}
-			for v := 0; v < fields.Get(i).Enum().Values().Len(); v++ {
+
+			for v := range fields.Get(i).Enum().Values().Len() {
 				name := string(fields.Get(i).Enum().Values().Get(v).Name())
 				number := int32(fields.Get(i).Enum().Values().Get(v).Number())
+
 				options = append(options, name)
+
 				lookup[name] = number
 			}
 
 			f.form.AddDropDown(fieldName, options, 0, func(opt string, index int) {
-				number, ok := lookup[opt]
-				if ok {
+				if number, ok := lookup[opt]; ok {
 					_ = f.setEnum(msg.ProtoReflect(), fields.Get(c), number)
 				}
 			})
 
 		case protoreflect.MessageKind:
 			if strings.HasSuffix(string(fd.FullName()), ".properties") {
-				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "{ }", fieldWidth64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
 			if strings.HasSuffix(string(fd.FullName()), ".resource_context") {
-				f.form.AddInputField(fieldName, "{ }", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "{ }", fieldWidth64, nil, func(s string) {
 					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
 			if strings.HasSuffix(string(fd.FullName()), ".created_at") {
-				f.form.AddInputField(fieldName, "", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "", fieldWidth64, nil, func(s string) {
 					_ = f.setTimestamp(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
 				continue
 			}
 
 			if strings.HasSuffix(string(fd.FullName()), ".updated_at") {
-				f.form.AddInputField(fieldName, "", 64, nil, func(s string) {
+				f.form.AddInputField(fieldName, "", fieldWidth64, nil, func(s string) {
 					_ = f.setTimestamp(msg.ProtoReflect(), fields.Get(c), s)
 				})
+
+				continue
+			}
+
+			if strings.HasSuffix(string(fd.FullName()), ".context") {
+				f.form.AddInputField(fieldName, "{ }", fieldWidth64, nil, func(s string) {
+					_ = f.setProps(msg.ProtoReflect(), fields.Get(c), s)
+				})
+
 				continue
 			}
 
@@ -198,7 +236,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 }
 
 func (f *prompt) setField(msg protoreflect.Message, fd protoreflect.FieldDescriptor, value string) error {
-	switch fd.Kind() { //nolint: exhaustive
+	switch fd.Kind() {
 	case protoreflect.BoolKind:
 		b, err := strconv.ParseBool(lo.Ternary(value == "", "false", value))
 		if err != nil {
@@ -238,7 +276,9 @@ func (f *prompt) setProps(msg protoreflect.Message, fd protoreflect.FieldDescrip
 	if err := pbs.UnmarshalJSON([]byte(value)); err != nil {
 		return err
 	}
+
 	msg.Set(fd, protoreflect.ValueOfMessage(pbs.ProtoReflect()))
+
 	return nil
 }
 
@@ -247,8 +287,10 @@ func (f *prompt) setTimestamp(msg protoreflect.Message, fd protoreflect.FieldDes
 	if err != nil {
 		return err
 	}
+
 	ts := timestamppb.New(t)
 	msg.Set(fd, protoreflect.ValueOfMessage(ts.ProtoReflect()))
+
 	return nil
 }
 

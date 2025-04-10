@@ -5,12 +5,13 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
 // feature flags package.
 const (
-	Env     string = "TOPAZ_FFLAG"
-	Default FFlag  = 0
+	Default FFlag = 0
 )
 
 type FFlag uint64
@@ -32,12 +33,12 @@ var (
 
 func Init() {
 	ffOnce.Do(func() {
-		env := os.Getenv(Env)
+		env := os.Getenv(x.EnvTopazFeatureFlag)
 		if env == "" {
 			ff = Default
 		}
 
-		f, err := strconv.ParseUint(os.Getenv(Env), 10, 8)
+		f, err := strconv.ParseUint(os.Getenv(x.EnvTopazFeatureFlag), 10, 8)
 		if err != nil {
 			ff = Default
 		}
@@ -60,6 +61,7 @@ func F(s string) FFlag {
 			return FFlag(k)
 		}
 	}
+
 	return Default
 }
 
@@ -73,10 +75,12 @@ func (f FFlag) Base() uint64 {
 
 func (f FFlag) String() string {
 	str := []string{}
+
 	for k, v := range flags {
 		if f.IsSet(FFlag(k)) {
 			str = append(str, v)
 		}
 	}
+
 	return strings.Join(str, "|")
 }

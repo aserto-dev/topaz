@@ -28,6 +28,7 @@ func New(w io.Writer) *TableWriter {
 func (u *TableWriter) WithColumns(columns ...string) *TableWriter {
 	u.table.columns = append(u.table.columns, columns)
 	u.table.data = append(u.table.data, [][]string{})
+
 	return u
 }
 

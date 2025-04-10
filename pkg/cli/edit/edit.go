@@ -22,6 +22,7 @@ func Msg(tmpl proto.Message) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	defer func() { _ = os.Remove(path) }()
 
 	return string(buf), nil

@@ -8,8 +8,10 @@ import (
 	client "github.com/aserto-dev/go-aserto"
 	azc "github.com/aserto-dev/go-aserto/az"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -26,9 +28,9 @@ func TestBuiltins(t *testing.T) {
 		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
-			"TOPAZ_CERTS_DIR":     "/certs",
-			"TOPAZ_DB_DIR":        "/data",
-			"TOPAZ_DECISIONS_DIR": "/decisions",
+			x.EnvTopazCertsDir:  x.DefCertsDir,
+			x.EnvTopazDBDir:     x.DefDBDir,
+			x.EnvTopazDecisions: x.DefDecisionsDir,
 		},
 		Files: []testcontainers.ContainerFile{
 			{
@@ -87,20 +89,25 @@ func testBuiltins(addr string) func(*testing.T) {
 		for _, tc := range BuiltinHelpTests {
 			f := func(t *testing.T) {
 				resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
-					Query: tc.query,
+					Query:           tc.query,
+					IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 				})
 				require.NoError(t, err)
 				require.NotNil(t, resp)
-				require.NotNil(t, resp.Response)
+				require.NotNil(t, resp.GetResponse())
 
-				r := resp.Response.AsMap()
+				r := resp.GetResponse().AsMap()
 
-				v1 := r["result"].([]interface{})
-				v2 := v1[0].(map[string]interface{})
-				v3 := v2["bindings"].(map[string]interface{})
+				v1, ok := r["result"].([]any)
+				require.True(t, ok)
+				v2, ok := v1[0].(map[string]any)
+				require.True(t, ok)
+				v3, ok := v2["bindings"].(map[string]any)
+				require.True(t, ok)
+
 				v := v3["x"]
 
-				assert.Equal(t, v, tc.expected)
+				assert.Equal(t, tc.expected, v)
 			}
 
 			t.Run(tc.name, f)
@@ -110,13 +117,14 @@ func testBuiltins(addr string) func(*testing.T) {
 		for _, tc := range BuiltinNotFoundErrTests {
 			f := func(t *testing.T) {
 				resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
-					Query: tc.query,
+					Query:           tc.query,
+					IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 				})
 				require.NoError(t, err)
 				require.NotNil(t, resp)
-				require.NotNil(t, resp.Response)
+				require.NotNil(t, resp.GetResponse())
 
-				r := resp.Response.AsMap()
+				r := resp.GetResponse().AsMap()
 				require.NotNil(t, r)
 			}
 
@@ -128,13 +136,13 @@ func testBuiltins(addr string) func(*testing.T) {
 var BuiltinHelpTests = []struct {
 	name     string
 	query    string
-	expected map[string]interface{}
+	expected map[string]any
 }{
 	{
 		name:  "ds.identity",
 		query: "x = ds.identity({})",
-		expected: map[string]interface{}{
-			"ds.identity": map[string]interface{}{
+		expected: map[string]any{
+			"ds.identity": map[string]any{
 				"id": "",
 			},
 		},
@@ -142,8 +150,8 @@ var BuiltinHelpTests = []struct {
 	{
 		name:  "ds.user",
 		query: "x = ds.user({})",
-		expected: map[string]interface{}{
-			"ds.user": map[string]interface{}{
+		expected: map[string]any{
+			"ds.user": map[string]any{
 				"id": "",
 			},
 		},
@@ -151,8 +159,8 @@ var BuiltinHelpTests = []struct {
 	{
 		name:  "ds.check",
 		query: "x = ds.check({})",
-		expected: map[string]interface{}{
-			"ds.check": map[string]interface{}{
+		expected: map[string]any{
+			"ds.check": map[string]any{
 				"object_type":  "",
 				"object_id":    "",
 				"relation":     "",
@@ -165,9 +173,9 @@ var BuiltinHelpTests = []struct {
 	{
 		name:  "ds.checks",
 		query: "x = ds.checks({})",
-		expected: map[string]interface{}{
-			"ds.checks": map[string]interface{}{
-				"default": map[string]interface{}{
+		expected: map[string]any{
+			"ds.checks": map[string]any{
+				"default": map[string]any{
 					"object_id":    "",
 					"object_type":  "",
 					"relation":     "",
@@ -175,8 +183,8 @@ var BuiltinHelpTests = []struct {
 					"subject_type": "",
 					"trace":        false,
 				},
-				"checks": []interface{}{
-					(map[string]interface{}{
+				"checks": []any{
+					(map[string]any{
 						"object_id":    "",
 						"object_type":  "",
 						"relation":     "",
@@ -191,8 +199,8 @@ var BuiltinHelpTests = []struct {
 	{
 		name:  "ds.check_relation",
 		query: "x = ds.check_relation({})",
-		expected: map[string]interface{}{
-			"ds.check_relation": map[string]interface{}{
+		expected: map[string]any{
+			"ds.check_relation": map[string]any{
 				"object_type":  "",
 				"object_id":    "",
 				"relation":     "",
@@ -205,8 +213,8 @@ var BuiltinHelpTests = []struct {
 	{
 		name:  "ds.check_permission",
 		query: "x = ds.check_permission({})",
-		expected: map[string]interface{}{
-			"ds.check_permission": map[string]interface{}{
+		expected: map[string]any{
+			"ds.check_permission": map[string]any{
 				"object_type":  "",
 				"object_id":    "",
 				"permission":   "",
@@ -219,8 +227,8 @@ var BuiltinHelpTests = []struct {
 	{
 		name:  "ds.graph",
 		query: "x = ds.graph({})",
-		expected: map[string]interface{}{
-			"ds.graph": map[string]interface{}{
+		expected: map[string]any{
+			"ds.graph": map[string]any{
 				"object_type":      "",
 				"object_id":        "",
 				"relation":         "",
@@ -235,8 +243,8 @@ var BuiltinHelpTests = []struct {
 	{
 		name:  "ds.object",
 		query: "x = ds.object({})",
-		expected: map[string]interface{}{
-			"ds.object": map[string]interface{}{
+		expected: map[string]any{
+			"ds.object": map[string]any{
 				"object_type":    "",
 				"object_id":      "",
 				"page":           nil,
@@ -247,8 +255,8 @@ var BuiltinHelpTests = []struct {
 	{
 		name:  "ds.relation",
 		query: "x = ds.relation({})",
-		expected: map[string]interface{}{
-			"ds.relation": map[string]interface{}{
+		expected: map[string]any{
+			"ds.relation": map[string]any{
 				"object_id":        "",
 				"object_type":      "",
 				"relation":         "",
@@ -262,8 +270,8 @@ var BuiltinHelpTests = []struct {
 	{
 		name:  "ds.relations",
 		query: "x = ds.relations({})",
-		expected: map[string]interface{}{
-			"ds.relations": map[string]interface{}{
+		expected: map[string]any{
+			"ds.relations": map[string]any{
 				"object_id":                   "",
 				"object_type":                 "",
 				"page":                        nil,
@@ -281,7 +289,7 @@ var BuiltinHelpTests = []struct {
 var BuiltinNotFoundErrTests = []struct {
 	name     string
 	query    string
-	expected map[string]interface{}
+	expected map[string]any
 }{
 	{
 		name:  "ds.identity",

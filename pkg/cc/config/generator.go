@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
 type Generator struct {
@@ -55,6 +56,7 @@ func (g *Generator) WithTenantID(tenantID string) *Generator {
 func (g *Generator) WithDiscovery(url, key string) *Generator {
 	g.DiscoveryURL = url
 	g.TenantKey = key
+
 	return g
 }
 
@@ -63,6 +65,7 @@ func (g *Generator) WithController(url, clientCertPath, clientKeyPath string) *G
 	g.ControlPlane.Address = url
 	g.ControlPlane.ClientCertPath = clientCertPath
 	g.ControlPlane.ClientKeyPath = clientKeyPath
+
 	return g
 }
 
@@ -72,6 +75,7 @@ func (g *Generator) WithSelfDecisionLogger(emsURL, clientCertPath, clientKeyPath
 	g.DecisionLogger.ClientCertPath = clientCertPath
 	g.DecisionLogger.ClientKeyPath = clientKeyPath
 	g.DecisionLogger.StorePath = storePath
+
 	return g
 }
 
@@ -85,7 +89,7 @@ func (g *Generator) CreateConfigDir() (string, error) {
 		return configDir, nil
 	}
 
-	return configDir, os.MkdirAll(configDir, 0o700)
+	return configDir, os.MkdirAll(configDir, x.FileMode0700)
 }
 
 func (g *Generator) CreateCertsDir() (string, error) {
@@ -94,7 +98,7 @@ func (g *Generator) CreateCertsDir() (string, error) {
 		return certsDir, nil
 	}
 
-	return certsDir, os.MkdirAll(certsDir, 0o700)
+	return certsDir, os.MkdirAll(certsDir, x.FileMode0700)
 }
 
 func (g *Generator) CreateDataDir() (string, error) {
@@ -103,7 +107,7 @@ func (g *Generator) CreateDataDir() (string, error) {
 		return dataDir, nil
 	}
 
-	return dataDir, os.MkdirAll(dataDir, 0o700)
+	return dataDir, os.MkdirAll(dataDir, x.FileMode0700)
 }
 
 func (g *Generator) writeConfig(w io.Writer, templ string) error {

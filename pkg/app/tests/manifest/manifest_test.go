@@ -15,6 +15,7 @@ import (
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -32,9 +33,9 @@ func TestManifest(t *testing.T) {
 		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
-			"TOPAZ_CERTS_DIR":     "/certs",
-			"TOPAZ_DB_DIR":        "/data",
-			"TOPAZ_DECISIONS_DIR": "/decisions",
+			x.EnvTopazCertsDir:  x.DefCertsDir,
+			x.EnvTopazDBDir:     x.DefDBDir,
+			x.EnvTopazDecisions: x.DefDecisionsDir,
 		},
 		Files: []testcontainers.ContainerFile{
 			{
@@ -131,7 +132,7 @@ func testManifest(addr string) func(*testing.T) {
 	}
 }
 
-func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, io.Reader, error) {
+func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, *bytes.Reader, error) {
 	stream, err := dsm.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, nil, err
@@ -156,8 +157,8 @@ func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, io.
 		}
 
 		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
-			data.Write(body.Body.Data)
-			bytesRecv += len(body.Body.Data)
+			data.Write(body.Body.GetData())
+			bytesRecv += len(body.Body.GetData())
 		}
 	}
 
@@ -180,9 +181,11 @@ func setManifest(ctx context.Context, dsm dsm3.ModelClient, r io.Reader) (int64,
 		if err == io.EOF {
 			break
 		}
+
 		if err != nil {
 			return bytesSend, err
 		}
+
 		bytesSend += int64(n)
 
 		if err := stream.Send(&dsm3.SetManifestRequest{

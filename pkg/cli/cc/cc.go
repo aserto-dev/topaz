@@ -4,14 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"sync"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/docker/docker/api/types"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/docker/docker/api/types/container"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -86,8 +86,8 @@ func NewCommonContext(ctx context.Context, noCheck bool, configFilePath string) 
 		if err != nil {
 			return nil, err
 		}
-		err = json.Unmarshal(data, commonCtx.Config)
-		if err != nil {
+
+		if err := json.Unmarshal(data, commonCtx.Config); err != nil {
 			return nil, err
 		}
 	}
@@ -122,15 +122,17 @@ func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatu
 	return lo.Ternary(running, StatusRunning, StatusNotRunning) == expectedStatus
 }
 
-func (c *CommonCtx) GetRunningContainers() ([]*types.Container, error) {
+func (c *CommonCtx) GetRunningContainers() ([]container.Summary, error) {
 	dc, err := dockerx.New()
 	if err != nil {
 		return nil, err
 	}
+
 	topazContainers, err := dc.GetRunningTopazContainers()
 	if err != nil {
 		return nil, err
 	}
+
 	return topazContainers, nil
 }
 
@@ -141,12 +143,13 @@ func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(cliConfig, kongConfigBytes, 0o666) // nolint
-	if err != nil {
+
+	if err := os.WriteFile(cliConfig, kongConfigBytes, x.FileMode0600); err != nil {
 		return err
 	}
 
 	defaults = c.Config.Defaults
+
 	return nil
 }
 
@@ -156,10 +159,10 @@ func setDefaults(ctx *CommonCtx) {
 	})
 }
 
-func (c *CommonCtx) StdOut() io.Writer {
+func (c *CommonCtx) StdOut() *os.File {
 	return c.std.StdOut()
 }
 
-func (c *CommonCtx) StdErr() io.Writer {
+func (c *CommonCtx) StdErr() *os.File {
 	return c.std.StdErr()
 }

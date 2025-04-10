@@ -13,6 +13,7 @@ import (
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/clients"
+	acc1 "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
@@ -39,6 +40,7 @@ type Client struct {
 	Importer  dsi3.ImporterClient
 	Exporter  dse3.ExporterClient
 	Assertion dsa3.AssertionClient
+	Access    acc1.AccessClient
 }
 
 func New(conn *grpc.ClientConn) *Client {
@@ -50,6 +52,7 @@ func New(conn *grpc.ClientConn) *Client {
 		Importer:  dsi3.NewImporterClient(conn),
 		Exporter:  dse3.NewExporterClient(conn),
 		Assertion: dsa3.NewAssertionClient(conn),
+		Access:    acc1.NewAccessClient(conn),
 	}
 }
 
@@ -88,4 +91,17 @@ func (cfg *Config) ClientConfig() *client.Config {
 
 func (cfg *Config) CommandTimeout() time.Duration {
 	return cfg.Timeout
+}
+
+func (cfg *Config) Invoke(ctx context.Context, method string, args any, reply any) error {
+	con, err := cfg.Connect(ctx)
+	if err != nil {
+		return errors.Wrap(err, "failed to get gRPC client connection")
+	}
+
+	if err := con.Invoke(ctx, method, args, reply, []grpc.CallOption{grpc.StaticMethod()}...); err != nil {
+		return errors.Wrapf(err, "invoke method %s failed", method)
+	}
+
+	return nil
 }

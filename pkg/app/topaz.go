@@ -10,23 +10,30 @@ import (
 	eds "github.com/aserto-dev/go-edge-ds"
 	console "github.com/aserto-dev/go-topaz-ui"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
-	decisionlog "github.com/aserto-dev/topaz/decision_log"
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
-	"github.com/aserto-dev/topaz/decision_log/logger/nop"
+	"github.com/aserto-dev/topaz/decisionlog"
+	"github.com/aserto-dev/topaz/decisionlog/logger/file"
+	"github.com/aserto-dev/topaz/decisionlog/logger/nop"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	builder "github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/pkg/service/builder"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/samber/lo"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/keepalive"
+	"google.golang.org/grpc/status"
+)
+
+const (
+	keepaliveTime    = 30 * time.Second // send pings every 30 seconds if there is no activity
+	keepaliveTimeout = 5 * time.Second  // wait 5 seconds for ping ack before considering the connection dead
 )
 
 // Topaz is an authorizer service instance, responsible for managing
@@ -38,7 +45,7 @@ type Topaz struct {
 	Configuration  *config.Config
 	ServiceBuilder *builder.ServiceFactory
 	Manager        *builder.ServiceManager
-	Services       map[string]ServiceTypes
+	Services       map[string]builder.ServiceTypes
 }
 
 var healthCheck *health.Server
@@ -55,17 +62,10 @@ func SetServiceStatus(log *zerolog.Logger, service string, servingStatus grpc_he
 	}
 
 	// only write log message when the health state changed.
-	if resp.Status != servingStatus {
+	if resp.GetStatus() != servingStatus {
 		log.Info().Str("service", service).Str("status", servingStatus.String()).Msg("health")
 		healthCheck.SetServingStatus(service, servingStatus)
 	}
-}
-
-type ServiceTypes interface {
-	AvailableServices() []string
-	GetGRPCRegistrations(services ...string) builder.GRPCRegistrations
-	GetGatewayRegistration(services ...string) builder.HandlerRegistrations
-	Cleanups() []func()
 }
 
 func (e *Topaz) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
@@ -96,6 +96,7 @@ func (e *Topaz) Start() error {
 	// Add registered services to the health service
 	if e.Manager.HealthServer != nil {
 		healthCheck = e.Manager.HealthServer.Server
+
 		for serviceName := range e.Configuration.APIConfig.Services {
 			e.Manager.HealthServer.SetServiceStatus(serviceName, grpc_health_v1.HealthCheckResponse_SERVING)
 		}
@@ -109,12 +110,13 @@ func (e *Topaz) Start() error {
 	return nil
 }
 
-// nolint: gocyclo
+//nolint:funlen,nestif,gocognit
 func (e *Topaz) ConfigServices() error {
 	metricsMiddleware, err := e.setupHealthAndMetrics()
 	if err != nil {
 		return err
 	}
+
 	if err := e.prepareServices(); err != nil {
 		return err
 	}
@@ -125,9 +127,10 @@ func (e *Topaz) ConfigServices() error {
 
 	serviceMap := mapToGRPCPorts(e.Configuration.APIConfig.Services)
 
-	for address, config := range serviceMap {
+	for address, cfg := range serviceMap {
 		e.Logger.Debug().Msgf("configuring address %s", address)
-		serviceConfig := config
+
+		serviceConfig := cfg
 
 		// get middlewares for edge services.
 		opts, err := middlewares.GetMiddlewaresForService(e.Context, e.Configuration, e.Logger)
@@ -137,19 +140,30 @@ func (e *Topaz) ConfigServices() error {
 
 		opts = append(opts, metricsMiddleware...)
 
-		var grpcs []builder.GRPCRegistrations
-		var gateways []builder.HandlerRegistrations
-		var cleanups []func()
+		var (
+			grpcs    []builder.GRPCRegistrations
+			gateways []builder.HandlerRegistrations
+			cleanups []func()
+		)
 
 		for _, serv := range e.Services {
-			notAdded := true
+			added := false
+
 			for _, serviceName := range serv.AvailableServices() {
-				if lo.Contains(serviceConfig.registeredServices, serviceName) && notAdded {
-					grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
-					gateways = append(gateways, serv.GetGatewayRegistration(serviceConfig.registeredServices...))
-					cleanups = append(cleanups, serv.Cleanups()...)
-					notAdded = false
+				if added || !lo.Contains(serviceConfig.registeredServices, serviceName) {
+					continue
 				}
+
+				grpcs = append(grpcs, serv.GetGRPCRegistrations(serviceConfig.registeredServices...))
+
+				gatewayPort, err := config.PortFromAddress(cfg.API.Gateway.ListenAddress)
+				if err != nil {
+					return errors.Wrapf(err, "invalid gateway address %q in service %q", cfg.API.Gateway.ListenAddress, serviceName)
+				}
+
+				gateways = append(gateways, serv.GetGatewayRegistration(gatewayPort, serviceConfig.registeredServices...))
+				cleanups = append(cleanups, serv.Cleanups()...)
+				added = true
 			}
 		}
 
@@ -166,8 +180,7 @@ func (e *Topaz) ConfigServices() error {
 			&builder.GatewayOptions{
 				HandlerRegistrations: func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 					for _, f := range gateways {
-						err := f(ctx, mux, grpcEndpoint, opts)
-						if err != nil {
+						if err := f(ctx, mux, grpcEndpoint, opts); err != nil {
 							return err
 						}
 					}
@@ -189,7 +202,13 @@ func (e *Topaz) ConfigServices() error {
 						return err
 					}
 
-					consoleConfig := con.(*ConsoleService).PrepareConfig(e.Configuration)
+					consoleSvc, ok := con.(*ConsoleService)
+					if !ok {
+						return status.Errorf(codes.Internal, "failed type assertion %q", "ConsoleService")
+					}
+
+					consoleConfig := consoleSvc.PrepareConfig(e.Configuration)
+
 					// config service.
 					server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
 					server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
@@ -201,8 +220,7 @@ func (e *Topaz) ConfigServices() error {
 			}
 		}
 
-		err = e.Manager.AddGRPCServer(server)
-		if err != nil {
+		if err := e.Manager.AddGRPCServer(server); err != nil {
 			return err
 		}
 	}
@@ -212,20 +230,23 @@ func (e *Topaz) ConfigServices() error {
 
 func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 	if e.Configuration.APIConfig.Health.ListenAddress != "" {
-		err := e.Manager.SetupHealthServer(e.Configuration.APIConfig.Health.ListenAddress, e.Configuration.APIConfig.Health.Certificates)
+		err := e.Manager.SetupHealthServer(e.Configuration.APIConfig.Health.ListenAddress, &e.Configuration.APIConfig.Health.Certificates)
 		if err != nil {
 			return nil, err
 		}
 	}
+
 	if e.Configuration.APIConfig.Metrics.ListenAddress != "" {
 		metricsMiddleware, err := e.Manager.SetupMetricsServer(e.Configuration.APIConfig.Metrics.ListenAddress,
-			e.Configuration.APIConfig.Metrics.Certificates,
+			&e.Configuration.APIConfig.Metrics.Certificates,
 			false)
 		if err != nil {
 			return nil, err
 		}
+
 		return metricsMiddleware, nil
 	}
+
 	return nil, nil
 }
 
@@ -241,6 +262,7 @@ func (e *Topaz) prepareServices() error {
 		if err != nil {
 			return err
 		}
+
 		e.Services["edge"] = edgeDir
 	}
 
@@ -249,12 +271,14 @@ func (e *Topaz) prepareServices() error {
 		if err != nil {
 			return err
 		}
+
 		e.Services["authorizer"] = authorizer
 	}
 
 	if _, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
 		e.Services["console"] = NewConsole()
 	}
+
 	return nil
 }
 
@@ -272,6 +296,7 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 			if existing.API.Gateway.ListenAddress == "" && config.Gateway.ListenAddress != "" {
 				existing.API.Gateway = config.Gateway
 			}
+
 			portMap[config.GRPC.ListenAddress] = existing
 		} else {
 			serv := services{}
@@ -286,45 +311,32 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 
 func KeepAliveDialOption() []grpc.DialOption {
 	kacp := keepalive.ClientParameters{
-		Time:    30 * time.Second, // send pings every 30 seconds if there is no activity
-		Timeout: 5 * time.Second,  // wait 5 seconds for ping ack before considering the connection dead
+		Time:    keepaliveTime,    // send pings every 30 seconds if there is no activity
+		Timeout: keepaliveTimeout, // wait 5 seconds for ping ack before considering the connection dead
 	}
+
 	return []grpc.DialOption{grpc.WithKeepaliveParams(kacp)}
 }
 
 func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
-	var decisionLogger decisionlog.DecisionLogger
-	var err error
-
 	switch cfg.Type {
 	case "self":
-		decisionLogger, err = self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
-		if err != nil {
-			return nil, err
-		}
+		return self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
 
 	case "file":
 		logPath := cfg.Config["log_file_path"]
 		maxSize, _ := cfg.Config["max_file_size_mb"].(int)
 		maxFiles, _ := cfg.Config["max_file_count"].(int)
 
-		decisionLogger, err = file.New(e.Context, &file.Config{
+		return file.New(e.Context, &file.Config{
 			LogFilePath:   fmt.Sprintf("%v", logPath),
 			MaxFileSizeMB: maxSize,
 			MaxFileCount:  maxFiles,
 		}, e.Logger)
-		if err != nil {
-			return nil, err
-		}
 
 	default:
-		decisionLogger, err = nop.New(e.Context, e.Logger)
-		if err != nil {
-			return nil, err
-		}
+		return nop.New(e.Context, e.Logger)
 	}
-
-	return decisionLogger, err
 }
 
 func (e *Topaz) validateConfig() error {
@@ -333,7 +345,9 @@ func (e *Topaz) validateConfig() error {
 			for _, serviceName := range e.Services["edge"].AvailableServices() {
 				delete(e.Configuration.APIConfig.Services, serviceName)
 			}
+
 			delete(e.Services, "edge")
+
 			e.Logger.Info().Msg("disabling local directory services")
 		}
 	}
@@ -352,15 +366,18 @@ func (e *Topaz) validateConfig() error {
 
 	for key := range e.Configuration.APIConfig.Services {
 		validKey := false
+
 		for _, service := range e.Services {
 			if lo.Contains(service.AvailableServices(), key) {
 				validKey = true
 				break
 			}
 		}
+
 		if !validKey {
 			return errors.Errorf("unknown service type %s", key)
 		}
 	}
+
 	return nil
 }

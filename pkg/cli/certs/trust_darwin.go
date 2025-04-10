@@ -50,5 +50,6 @@ func findCert(name, keyChain string) bool {
 	if _, err := sh.Output("security", "find-certificate", "-c", name, keyChain); err != nil {
 		return false
 	}
+
 	return true
 }

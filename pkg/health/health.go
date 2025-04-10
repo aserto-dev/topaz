@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Masterminds/sprig"
+	"github.com/Masterminds/sprig/v3"
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 

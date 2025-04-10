@@ -2,24 +2,25 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	builder "github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
-
-type ConsoleService struct{}
 
 const (
 	consoleService = "console"
 )
 
-func NewConsole() ServiceTypes {
+type ConsoleService struct{}
+
+var _ builder.ServiceTypes = (*ConsoleService)(nil)
+
+func NewConsole() *ConsoleService {
 	return &ConsoleService{}
 }
 
@@ -32,7 +33,7 @@ func (e *ConsoleService) GetGRPCRegistrations(services ...string) builder.GRPCRe
 	}
 }
 
-func (e *ConsoleService) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
+func (e *ConsoleService) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		return mux.HandlePath("GET", "/", runtime.HandlerFunc(func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
 			http.Redirect(w, r, "/ui/directory/model", http.StatusSeeOther)
@@ -45,14 +46,20 @@ func (e *ConsoleService) Cleanups() []func() {
 }
 
 func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
-	directoryServiceURL := serviceAddress(fmt.Sprintf("https://%s", strings.Split(cfg.DirectoryResolver.Address, ":")[0]))
+	directoryServiceURL := serviceAddress("https://" + strings.Split(cfg.DirectoryResolver.Address, ":")[0])
 
 	authorizerURL := ""
+	readerURL := ""
+	writerURL := ""
+	importerURL := "" // always empty, no gateway service associated with the importer service.
+	exporterURL := "" // always empty, no gateway service associated with the exporter service.
+	modelURL := ""
+	consoleURL := ""
+
 	if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		authorizerURL = getGatewayAddress(serviceConfig)
 	}
 
-	readerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[readerService]; ok {
 		readerURL = getGatewayAddress(serviceConfig)
 		if cfg.DirectoryResolver.Address == serviceConfig.GRPC.ListenAddress {
@@ -60,26 +67,20 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 		}
 	}
 
-	writerURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
 		writerURL = getGatewayAddress(serviceConfig)
 	}
 
-	importerURL := "" // always empty, no gateway service associated with the importer service.
-
-	exporterURL := "" // always empty, no gateway service associated with the exporter service.
-
-	modelURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
 		modelURL = getGatewayAddress(serviceConfig)
 	}
 
-	consoleURL := ""
 	if serviceConfig, ok := cfg.APIConfig.Services[consoleService]; ok {
 		consoleURL = getGatewayAddress(serviceConfig)
 	}
 
 	authorizerAPIKey := ""
+
 	if _, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		for key := range cfg.Auth.APIKeys {
 			// we only need a key
@@ -109,14 +110,16 @@ func getGatewayAddress(serviceConfig *builder.API) string {
 	if serviceConfig.Gateway.FQDN != "" {
 		return serviceConfig.Gateway.FQDN
 	}
+
 	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
 
 	serviceConfig.Gateway.HTTP = !serviceConfig.Gateway.Certs.HasCert()
 
 	if serviceConfig.Gateway.HTTP {
-		return fmt.Sprintf("http://%s", addr)
+		return "http://" + addr
 	}
-	return fmt.Sprintf("https://%s", addr)
+
+	return "https://" + addr
 }
 
 func serviceAddress(listenAddress string) string {

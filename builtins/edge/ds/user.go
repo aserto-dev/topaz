@@ -6,9 +6,9 @@ import (
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/resolvers"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/types"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/rego"
+	"github.com/open-policy-agent/opa/v1/types"
 
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
@@ -40,6 +40,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				type argsV3 struct {
 					ID string `json:"id"`
 				}
+
 				return help(fnName, argsV3{})
 			}
 
@@ -48,23 +49,27 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				ObjectId:      args.ID,
 				WithRelations: false,
 			})
+
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
+
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
 					return nil, err
 				}
+
 				return ast.NewTerm(astVal), nil
 			case err != nil:
 				return nil, err
 			}
 
 			buf := new(bytes.Buffer)
+
 			var result proto.Message
 
-			if resp.Result != nil {
-				result = resp.Result
+			if resp.GetResult() != nil {
+				result = resp.GetResult()
 			}
 
 			if err := ProtoToBuf(buf, result); err != nil {

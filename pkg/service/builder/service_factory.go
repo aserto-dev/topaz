@@ -2,7 +2,6 @@ package builder
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"net/http"
 	"strconv"
@@ -33,6 +32,7 @@ func NewServiceFactory() *ServiceFactory {
 	if reg == nil {
 		reg = prometheus.NewRegistry()
 	}
+
 	mdlw = middleware.New(middleware.Config{
 		Recorder: metrics.NewRecorder(metrics.Config{
 			Registry: reg,
@@ -62,6 +62,7 @@ func (f *ServiceFactory) CreateService(
 	if err != nil {
 		return nil, err
 	}
+
 	grpcOpts.Registrations(grpcServer)
 	reflection.Register(grpcServer)
 
@@ -71,9 +72,9 @@ func (f *ServiceFactory) CreateService(
 	}
 
 	var gateway *Gateway
+
 	if gatewayOpts != nil && config.Gateway.ListenAddress != "" {
-		gateway, err = f.prepareGateway(config, gatewayOpts)
-		if err != nil {
+		if gateway, err = f.prepareGateway(config, gatewayOpts); err != nil {
 			return nil, err
 		}
 	}
@@ -93,9 +94,11 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 	if len(config.Gateway.AllowedHeaders) == 0 {
 		config.Gateway.AllowedHeaders = DefaultGatewayAllowedHeaders
 	}
+
 	if len(config.Gateway.AllowedOrigins) == 0 {
 		config.Gateway.AllowedOrigins = DefaultGatewayAllowedOrigins
 	}
+
 	if len(config.Gateway.AllowedMethods) == 0 {
 		config.Gateway.AllowedMethods = DefaultGatewayAllowedMethods
 	}
@@ -110,6 +113,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 	runtimeMux := f.gatewayMux(config.Gateway.AllowedHeaders, gatewayOpts.ErrorHandler)
 
 	opts := []grpc.DialOption{}
+
 	if config.GRPC.Certs.HasCA() {
 		tlsCreds, err := config.GRPC.Certs.ClientCredentials(true)
 		if err != nil {
@@ -121,7 +125,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	grpcEndpoint := fmt.Sprintf("dns:///%s", config.GRPC.ListenAddress)
+	grpcEndpoint := "dns:///" + config.GRPC.ListenAddress
 
 	if err := gatewayOpts.HandlerRegistrations(context.Background(), runtimeMux, grpcEndpoint, opts); err != nil {
 		return nil, err
@@ -154,6 +158,7 @@ func (f *ServiceFactory) prepareGateway(config *API, gatewayOpts *GatewayOptions
 	}
 
 	gtwServer.TLSConfig = tlsServerConfig
+
 	return &Gateway{Server: gtwServer, Mux: mux, Certs: &config.Gateway.Certs}, nil
 }
 
@@ -262,6 +267,7 @@ func fieldsMaskHandler(h http.Handler) http.Handler {
 		if p, ok := r.URL.Query()["fields.mask"]; ok && len(p) > 0 && p[0] != "" {
 			r.Header.Set("Content-Type", "application/json+masked")
 		}
+
 		h.ServeHTTP(w, r)
 	})
 }
@@ -280,6 +286,7 @@ func captureGatewayRoute(ctx context.Context, r *http.Request) metadata.MD {
 			gwPathPattern.PathPattern = pattern
 		}
 	}
+
 	return nil
 }
 

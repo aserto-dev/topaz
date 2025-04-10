@@ -52,45 +52,53 @@ func WaitForPorts(ports []string, expectedStatus PortStatus) error {
 
 		if err := Retry(timeout, interval, func() error {
 			status := portStatus(listenAddress)
+
 			if status != expectedStatus {
 				log.Debug().Str("addr", listenAddress).Stringer("status", status).Stringer("expected", expectedStatus).Msg("WaitForPorts")
 				return errors.Errorf("%s %s", listenAddress, status)
 			}
+
 			log.Debug().Str("addr", listenAddress).Stringer("status", status).Stringer("expected", expectedStatus).Msg("WaitForPorts")
+
 			return nil
 		}); err != nil {
 			return err
 		}
 	}
+
 	return nil
 }
 
 // PortStatus returns true if there's a socket listening on the specified listenAddress.
 func portStatus(listenAddress string) PortStatus {
-	timeout := time.Second
+	timeout := 1 * time.Second
+
 	conn, err := net.DialTimeout("tcp", listenAddress, timeout)
 	if err != nil {
 		return PortClosed
 	}
+
 	if conn != nil {
 		defer conn.Close()
 		return PortOpened
 	}
+
 	return PortClosed
 }
 
-func Retry(timeout, interval time.Duration, f func() error) (err error) {
-	err = errTimeout
+func Retry(timeout, interval time.Duration, f func() error) error {
+	err := errTimeout
+
 	for t := time.After(timeout); ; {
 		select {
 		case <-t:
-			return
+			return err
 		default:
 		}
 
 		err = f()
 		if err == nil {
-			return
+			return nil
 		}
 
 		if timeout > 0 {

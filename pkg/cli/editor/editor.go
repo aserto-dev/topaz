@@ -118,13 +118,13 @@ func (e Editor) Launch(path string) error {
 		return err
 	}
 	args := e.args(abs)
-	cmd := exec.Command(args[0], args[1:]...) //nolint:gosec
+	cmd := exec.Command(args[0], args[1:]...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 
 	if err := (term.TTY{In: os.Stdin, TryDev: true}).Safe(cmd.Run); err != nil {
-		if err, ok := err.(*exec.Error); ok { //nolint:gosec
+		if err, ok := err.(*exec.Error); ok {
 			if errors.Is(err.Err, exec.ErrNotFound) {
 				return errors.Errorf("unable to launch the editor %q", strings.Join(e.Args, " "))
 			}

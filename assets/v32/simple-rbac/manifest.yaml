@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  ### display_name: User ###
+  # user represents a user that can be granted role(s)
+  user:
+    relations:
+      manager: user
+
+    permissions:
+      ### display_name: user#in_management_chain ###
+      in_management_chain: manager | manager->in_management_chain
+
+
+  ### display_name: Group ###
+  # group represents a collection of users and/or (nested) groups
+  group:
+    relations:
+      member: user | group#member
+
+  ### display_name: Identity ###
+  # identity represents a collection of identities for users
+  identity:
+    relations:
+      identifier: user
+
+  ### display_name: Resource Creator ###
+  # resource creator represents a user type that can create new resources
+  resource-creator:
+    relations:
+      member: user | group#member
+
+    permissions:
+      can_create_resource: member
+
+  ### display_name: Resource ###
+  # resource represents a protected resource
+  resource:
+    relations:
+      owner: user
+      writer: user | group#member
+      reader: user | group#member
+
+    permissions:
+      can_read: reader | writer | owner
+      can_write: writer | owner
+      can_delete: owner

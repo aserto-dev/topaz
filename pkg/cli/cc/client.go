@@ -4,6 +4,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
 const (
@@ -22,95 +24,107 @@ const (
 )
 
 func DirectorySvc() string {
-	if directorySvc := os.Getenv("TOPAZ_DIRECTORY_SVC"); directorySvc != "" {
+	if directorySvc := os.Getenv(x.EnvTopazDirectorySvc); directorySvc != "" {
 		return directorySvc
 	}
+
 	return defaultDirectorySvc
 }
 
 func DirectoryKey() string {
-	if directoryKey := os.Getenv("TOPAZ_DIRECTORY_KEY"); directoryKey != "" {
+	if directoryKey := os.Getenv(x.EnvTopazDirectoryKey); directoryKey != "" {
 		return directoryKey
 	}
+
 	return defaultDirectoryKey
 }
 
 func DirectoryToken() string {
-	if directoryToken := os.Getenv("TOPAZ_DIRECTORY_TOKEN"); directoryToken != "" {
+	if directoryToken := os.Getenv(x.EnvTopazDirectoryToken); directoryToken != "" {
 		return directoryToken
 	}
+
 	return defaultDirectoryToken
 }
 
 func AuthorizerSvc() string {
-	if authorizerSvc := os.Getenv("TOPAZ_AUTHORIZER_SVC"); authorizerSvc != "" {
+	if authorizerSvc := os.Getenv(x.EnvTopazAuthorizerSvc); authorizerSvc != "" {
 		return authorizerSvc
 	}
+
 	return defaultAuthorizerSvc
 }
 
 func AuthorizerKey() string {
-	if authorizerKey := os.Getenv("TOPAZ_AUTHORIZER_KEY"); authorizerKey != "" {
+	if authorizerKey := os.Getenv(x.EnvTopazAuthorizerKey); authorizerKey != "" {
 		return authorizerKey
 	}
+
 	return defaultAuthorizerKey
 }
 
 func AuthorizerToken() string {
-	if authorizerToken := os.Getenv("TOPAZ_AUTHORIZER_TOKEN"); authorizerToken != "" {
+	if authorizerToken := os.Getenv(x.EnvTopazAuthorizerToken); authorizerToken != "" {
 		return authorizerToken
 	}
+
 	return defaultAuthorizerToken
 }
 
 func TenantID() string {
-	if tenantID := os.Getenv("ASERTO_TENANT_ID"); tenantID != "" {
+	if tenantID := os.Getenv(x.EnvAsertoTenantID); tenantID != "" {
 		return tenantID
 	}
+
 	return defaultTenantID
 }
 
 func Insecure() bool {
-	if insecure := os.Getenv("TOPAZ_INSECURE"); insecure != "" {
+	if insecure := os.Getenv(x.EnvTopazInsecure); insecure != "" {
 		if b, err := strconv.ParseBool(insecure); err == nil {
 			return b
 		}
 	}
+
 	return defaultInsecure
 }
 
 func Plaintext() bool {
-	if plaintext := os.Getenv("TOPAZ_PLAINTEXT"); plaintext != "" {
+	if plaintext := os.Getenv(x.EnvTopazPlaintext); plaintext != "" {
 		if b, err := strconv.ParseBool(plaintext); err == nil {
 			return b
 		}
 	}
+
 	return defaultPlaintext
 }
 
 func Timeout() time.Duration {
-	if timeout := os.Getenv("TOPAZ_TIMEOUT"); timeout != "" {
+	if timeout := os.Getenv(x.EnvTopazTimeout); timeout != "" {
 		if dur, err := time.ParseDuration(timeout); err == nil {
 			return dur
 		}
 	}
+
 	return defaultTimeout
 }
 
 func NoCheck() bool {
-	if noCheck := os.Getenv("TOPAZ_NO_CHECK"); noCheck != "" {
+	if noCheck := os.Getenv(x.EnvTopazNoCheck); noCheck != "" {
 		if b, err := strconv.ParseBool(noCheck); err == nil {
 			return b
 		}
 	}
+
 	return defaults.NoCheck
 }
 
 func NoColor() bool {
-	if noColor := os.Getenv("TOPAZ_NO_COLOR"); noColor != "" {
+	if noColor := os.Getenv(x.EnvTopazNoColor); noColor != "" {
 		if b, err := strconv.ParseBool(noColor); err == nil {
 			return b
 		}
 	}
+
 	return defaults.NoColor
 }

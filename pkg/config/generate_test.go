@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
+	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	"github.com/aserto-dev/topaz/pkg/config"

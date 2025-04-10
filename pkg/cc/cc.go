@@ -34,6 +34,7 @@ func NewCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath confi
 
 	return cc, func() {
 		cleanup()
+
 		once = sync.Once{}
 	}, errSingleton
 }
@@ -47,6 +48,7 @@ func NewTestCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath c
 
 	return cc, func() {
 		cleanup()
+
 		once = sync.Once{}
 	}, errSingleton
 }

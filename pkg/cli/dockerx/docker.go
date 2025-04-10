@@ -11,7 +11,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/docker/docker/api/types"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
@@ -29,7 +29,7 @@ const (
 func PolicyRoot() string {
 	const defaultPolicyRoot = ".policy"
 
-	policyRoot := os.Getenv("POLICY_FILE_STORE_ROOT")
+	policyRoot := os.Getenv(x.EnvPolicyFileStoreRoot)
 	if policyRoot == "" {
 		home, err := os.UserHomeDir()
 		if err != nil {
@@ -38,9 +38,11 @@ func PolicyRoot() string {
 
 		policyRoot = path.Join(home, defaultPolicyRoot)
 	}
+
 	if fi, err := os.Stat(policyRoot); err == nil && fi.IsDir() {
 		return policyRoot
 	}
+
 	return ""
 }
 
@@ -52,7 +54,8 @@ type DockerClient struct {
 func New() (*DockerClient, error) {
 	cli, err := client.NewClientWithOpts(
 		client.FromEnv,
-		client.WithAPIVersionNegotiation())
+		client.WithAPIVersionNegotiation(),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +94,7 @@ func (dc *DockerClient) RemoveImage(img string) error {
 		return err
 	}
 
-	for i := 0; i < len(images); i++ {
+	for i := range images {
 		_, err := dc.cli.ImageRemove(dc.ctx, images[i].ID, image.RemoveOptions{Force: true})
 		if err != nil {
 			return err
@@ -133,7 +136,7 @@ func (dc *DockerClient) Stop(name string) error {
 	}
 
 	waitTimeout := 10
-	for i := 0; i < len(containers); i++ {
+	for i := range containers {
 		if err := dc.cli.ContainerStop(dc.ctx, containers[i].ID, container.StopOptions{Timeout: &waitTimeout}); err != nil {
 			return err
 		}
@@ -165,7 +168,7 @@ func (dc *DockerClient) IsRunning(name string) (bool, error) {
 	return rc, nil
 }
 
-func (dc *DockerClient) GetRunningTopazContainers() ([]*types.Container, error) {
+func (dc *DockerClient) GetRunningTopazContainers() ([]container.Summary, error) {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
@@ -176,13 +179,15 @@ func (dc *DockerClient) GetRunningTopazContainers() ([]*types.Container, error) 
 	if err != nil {
 		return nil, err
 	}
-	var topazContainers []*types.Container
+
+	var topazContainers []container.Summary
 
 	for i := range containers {
 		if strings.Contains(containers[i].Image, "ghcr.io/aserto-dev/topaz") && containers[i].State == running {
-			topazContainers = append(topazContainers, &containers[i])
+			topazContainers = append(topazContainers, containers[i])
 		}
 	}
+
 	return topazContainers, nil
 }
 
@@ -362,14 +367,17 @@ func (dc *DockerClient) Run(opts ...RunOption) error {
 	if err := dc.cli.ContainerStart(dc.ctx, cont.ID, container.StartOptions{}); err != nil {
 		return err
 	}
+
 	defer func() {
 		_ = dc.cli.ContainerRemove(dc.ctx, cont.ID, container.RemoveOptions{Force: true})
 	}()
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
 	go func() {
 		<-sigs
+
 		_ = dc.cli.ContainerStop(dc.ctx, cont.ID, container.StopOptions{})
 	}()
 
@@ -430,6 +438,9 @@ func (dc *DockerClient) Start(opts ...RunOption) error {
 	}
 
 	if err := dc.cli.ContainerStart(dc.ctx, cont.ID, container.StartOptions{}); err != nil {
+		// The container can't be started (most likely port already in use, bad image, or bad volume configuration).
+		// Remove the container to free up the name.
+		_ = dc.cli.ContainerRemove(dc.ctx, cont.ID, container.RemoveOptions{})
 		return err
 	}
 

@@ -42,11 +42,12 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 		if errors.Is(err, io.EOF) {
 			break
 		}
+
 		if err != nil {
 			return err
 		}
 
-		if m, ok := msg.Msg.(*dse3.ExportResponse_Stats); ok {
+		if m, ok := msg.GetMsg().(*dse3.ExportResponse_Stats); ok {
 			pbStats = m.Stats
 		}
 	}
@@ -55,6 +56,7 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 		if err := jsonx.OutputJSONPB(c.StdOut(), pbStats); err != nil {
 			return err
 		}
+
 		return nil
 	}
 
@@ -96,7 +98,11 @@ func statsTable(w io.Writer, s *stats.Stats) {
 
 func countStr(c int32) string { return fmt.Sprintf("%8d", c) }
 
-func tabRow(tab *table.TableWriter, objType model.ObjectName, objTypeCount int32, objRel model.RelationName, objRelCount int32, subType model.ObjectName, subTypeCount int32, subRel model.RelationName, subRelCount int32) {
+func tabRow(
+	tab *table.TableWriter,
+	objType model.ObjectName, objTypeCount int32, objRel model.RelationName, objRelCount int32,
+	subType model.ObjectName, subTypeCount int32, subRel model.RelationName, subRelCount int32,
+) {
 	tab.WithRow(
 		objType.String(),
 		countStr(objTypeCount),

@@ -41,6 +41,7 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 	if !dc.ImageExists(image) {
 		c.Con().Warn().Msg("!!! container image %q does not exist locally", image)
 		c.Con().Msg("!!! run 'topaz install' to download")
+
 		return nil
 	}
 

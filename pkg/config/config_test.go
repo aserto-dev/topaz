@@ -11,7 +11,7 @@ import (
 
 	cfg3 "github.com/aserto-dev/topaz/pkg/config"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"

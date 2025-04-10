@@ -5,11 +5,13 @@ import (
 
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/samber/lo"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/types"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/rego"
+	"github.com/open-policy-agent/opa/v1/types"
 
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
@@ -55,19 +57,23 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			}
 
 			resp, err := dr.GetDS().GetRelation(bctx.Context, &args)
+
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
+
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
 					return nil, err
 				}
+
 				return ast.NewTerm(astVal), nil
 			case err != nil:
 				return nil, err
 			}
 
 			buf := new(bytes.Buffer)
+
 			var result proto.Message
 
 			if resp != nil {
@@ -87,20 +93,18 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		}
 }
 
-// TODO : update v3 format
+// RegisterRelations - ds.relations
 //
-//	RegisterRelations - ds.relations({
-//		"ds.relations": {
-//			"object_type": "",
-//			"object_id": "",
-//			"relation": "",
-//			"subject_type": "",
-//			"subject_id": "",
-//			"subject_relation": "",
-//			"with_objects": false,
-//			"with_empty_subject_relation": false
-//		}
-//	})
+//	ds.relations: {
+//		object_type: "",
+//		object_id: "",
+//		relation: "",
+//		subject_type: "",
+//		subject_id: "",
+//		subject_relation: "",
+//		with_objects: false,
+//		with_empty_subject_relation: false
+//	}
 func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -119,7 +123,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 				return helpMsg(fnName, &dsr3.GetRelationsRequest{})
 			}
 
-			args.Page = &dsc3.PaginationRequest{Size: 100, Token: ""}
+			args.Page = &dsc3.PaginationRequest{Size: x.MaxPaginationSize, Token: ""}
 
 			resp := &dsr3.GetRelationsResponse{}
 
@@ -130,17 +134,19 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 					return nil, err
 				}
 
-				resp.Results = append(resp.Results, r.Results...)
+				resp.Results = append(resp.GetResults(), r.GetResults()...)
+				resp.Objects = lo.Assign(resp.GetObjects(), r.GetObjects())
 
-				if r.Page.NextToken == "" {
+				if r.GetPage().GetNextToken() == "" {
 					break
 				}
-				args.Page.Token = r.Page.NextToken
+
+				args.Page.Token = r.GetPage().GetNextToken()
 			}
 
 			buf := new(bytes.Buffer)
-			var result proto.Message
 
+			var result proto.Message
 			if resp.Results != nil {
 				result = resp
 			}

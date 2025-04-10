@@ -253,7 +253,7 @@ decision_logger:
     max_file_count: 2
 ```
 
-To use the decision logger the OPA configuration must contain the [configuration information](https://github.com/aserto-dev/topaz/blob/main/plugins/decision_log/plugin.go#L23) for the decision log plugin.
+To use the decision logger the OPA configuration must contain the [configuration information](https://github.com/aserto-dev/topaz/blob/main/plugins/decisionlog/plugin.go#L23) for the decision log plugin.
 
 Example of the decision log plugin configuration:
 

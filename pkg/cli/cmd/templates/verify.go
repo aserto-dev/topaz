@@ -3,7 +3,7 @@ package templates
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"strconv"
 
 	v3 "github.com/aserto-dev/azm/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -12,11 +12,12 @@ import (
 )
 
 type VerifyTemplateCmd struct {
-	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
+	Name         string `arg:"" optional:"" help:"template name"`
+	TemplatesURL string `optional:"" default:"${topaz_tmpl_url}" env:"TOPAZ_TMPL_URL" help:"URL of template catalog"`
 }
 
 func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
-	ctlg, err := getCatalog(cmd.TemplatesURL)
+	catalog, err := getCatalog(cmd.TemplatesURL)
 	if err != nil {
 		return err
 	}
@@ -27,7 +28,10 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	tab := table.New(c.StdOut()).WithColumns("template", "asset", "exists", "parsed", "error")
 	tab.WithTableNoAutoWrapText()
 
-	for tmplName := range ctlg {
+	for tmplName := range catalog {
+		if cmd.Name != "" && tmplName != cmd.Name {
+			continue
+		}
 
 		tmpl, err := getTemplate(tmplName, cmd.TemplatesURL)
 		if err != nil {
@@ -35,12 +39,14 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 		}
 		{
 			absURL := tmpl.AbsURL(tmpl.Assets.Manifest)
-			exists, parsed, err := validateManifest(absURL)
+			v := validateManifest(absURL)
 			errStr := ""
-			if err != nil {
-				errStr = err.Error()
+
+			if v.err != nil {
+				errStr = v.err.Error()
 			}
-			tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+
+			tab.WithRow(tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr)
 		}
 		{
 			assets := []string{}
@@ -50,12 +56,14 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 
 			for _, assetURL := range assets {
 				absURL := tmpl.AbsURL(assetURL)
-				exists, parsed, err := validateJSON(absURL)
+				v := validateJSON(absURL)
 				errStr := ""
-				if err != nil {
-					errStr = err.Error()
+
+				if v.err != nil {
+					errStr = v.err.Error()
 				}
-				tab.WithRow(tmplName, absURL, fmt.Sprintf("%t", exists), fmt.Sprintf("%t", parsed), errStr)
+
+				tab.WithRow(tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr)
 			}
 		}
 	}
@@ -65,29 +73,35 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	return nil
 }
 
-func validateManifest(absURL string) (exists, parsed bool, err error) {
+type valid struct {
+	exists bool
+	parsed bool
+	err    error
+}
+
+func validateManifest(absURL string) valid {
 	b, err := getBytes(absURL)
 	if err != nil {
-		return false, false, err
+		return valid{exists: false, parsed: false, err: err}
 	}
 
 	if _, err := v3.Load(bytes.NewReader(b)); err != nil {
-		return true, false, err
+		return valid{exists: true, parsed: false, err: err}
 	}
 
-	return true, true, nil
+	return valid{exists: true, parsed: true, err: nil}
 }
 
-func validateJSON(absURL string) (exists, parsed bool, err error) {
+func validateJSON(absURL string) valid {
 	b, err := getBytes(absURL)
 	if err != nil {
-		return false, false, err
+		return valid{exists: false, parsed: false, err: err}
 	}
 
-	var v map[string]interface{}
+	var v map[string]any
 	if err := json.NewDecoder(bytes.NewReader(b)).Decode(&v); err != nil {
-		return true, false, err
+		return valid{exists: true, parsed: false, err: err}
 	}
 
-	return true, true, nil
+	return valid{exists: true, parsed: true, err: nil}
 }

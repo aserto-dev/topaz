@@ -38,6 +38,7 @@ const (
 	CheckRelation
 	CheckPermission
 	CheckDecision
+	Evaluation
 )
 
 const (
@@ -45,6 +46,7 @@ const (
 	CheckRelationStr   string = "check_relation"
 	CheckPermissionStr string = "check_permission"
 	CheckDecisionStr   string = "check_decision"
+	EvaluationStr      string = "evaluation"
 )
 
 type CheckResult struct {
@@ -59,6 +61,7 @@ var CheckTypeMap = map[string]CheckType{
 	CheckRelationStr:   CheckRelation,
 	CheckPermissionStr: CheckPermission,
 	CheckDecisionStr:   CheckDecision,
+	EvaluationStr:      Evaluation,
 }
 
 var CheckTypeMapStr = map[CheckType]string{
@@ -66,14 +69,16 @@ var CheckTypeMapStr = map[CheckType]string{
 	CheckRelation:   CheckRelationStr,
 	CheckPermission: CheckPermissionStr,
 	CheckDecision:   CheckDecisionStr,
+	Evaluation:      EvaluationStr,
 }
 
 func GetCheckType(msg *structpb.Struct) CheckType {
 	for k, v := range CheckTypeMap {
-		if _, ok := msg.Fields[k]; ok {
+		if _, ok := msg.GetFields()[k]; ok {
 			return v
 		}
 	}
+
 	return CheckUnknown
 }
 
@@ -130,6 +135,7 @@ func PrintDesc(descFlag, description string, result *CheckResult, expected bool)
 		if descFlag == DescOn {
 			fmt.Printf(">>>> %s\n", description)
 		}
+
 		if descFlag == DescOnError && result.Outcome != expected {
 			fmt.Printf("!!!! %s\n", description)
 		}
@@ -178,12 +184,15 @@ func (t *TestResults) Passed(passed bool) {
 		t.IncrPassed()
 		return
 	}
+
 	t.IncrFailed()
 }
 
+const headerLen int = 23
+
 func (t *TestResults) PrintSummary(w io.Writer) {
 	fmt.Fprintf(w, "\nTest Execution Summary:\n")
-	fmt.Fprintf(w, "%s\n", strings.Repeat("-", 23))
+	fmt.Fprintf(w, "%s\n", strings.Repeat("-", headerLen))
 	fmt.Fprintf(w, "total:   %d\n", t.total)
 	fmt.Fprintf(w, "passed:  %d\n", t.passed)
 	fmt.Fprintf(w, "failed:  %d\n", t.failed)
@@ -201,12 +210,12 @@ func (t *TestResults) Failed() int32 {
 }
 
 func GetBool(msg *structpb.Struct, fieldName string) (bool, bool) {
-	v, ok := msg.Fields[fieldName]
+	v, ok := msg.GetFields()[fieldName]
 	return v.GetBoolValue(), ok
 }
 
 func GetString(msg *structpb.Struct, fieldName string) (string, bool) {
-	v, ok := msg.Fields[fieldName]
+	v, ok := msg.GetFields()[fieldName]
 	return v.GetStringValue(), ok
 }
 

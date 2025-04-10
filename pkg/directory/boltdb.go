@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/spf13/viper"
 )
 

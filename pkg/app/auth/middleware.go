@@ -16,15 +16,12 @@ import (
 
 type APIKeyAuthMiddleware struct {
 	apiAuth map[string]string
-
-	// TODO: figure out what we want to do with the config.
-	cfg    *config.AuthnConfig
-	logger *zerolog.Logger
+	cfg     *config.AuthnConfig
+	logger  *zerolog.Logger
 }
 
 func NewAPIKeyAuthMiddleware(
 	ctx context.Context,
-	// TODO: figure out what we want to do with the config.
 	cfg *config.AuthnConfig,
 	logger *zerolog.Logger,
 ) (*APIKeyAuthMiddleware, error) {
@@ -36,7 +33,7 @@ func NewAPIKeyAuthMiddleware(
 }
 
 func (a *APIKeyAuthMiddleware) Unary() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 		newCtx, err := a.grpcAuthenticate(ctx)
 		if err != nil {
 			return nil, err
@@ -47,7 +44,7 @@ func (a *APIKeyAuthMiddleware) Unary() grpc.UnaryServerInterceptor {
 }
 
 func (a *APIKeyAuthMiddleware) Stream() grpc.StreamServerInterceptor {
-	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+	return func(srv any, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
 
 		newCtx, err := a.grpcAuthenticate(ctx)
@@ -120,12 +117,14 @@ func httpAuthHeader(r *http.Request) string {
 }
 
 func parseAuthHeader(val, expectedScheme string) (string, error) {
-	splits := strings.SplitN(val, " ", 2)
-	if len(splits) < 2 {
+	scheme, header, ok := strings.Cut(val, " ")
+	if !ok {
 		return "", aerr.ErrAuthenticationFailed.Msg("Bad authorization string")
 	}
-	if !strings.EqualFold(splits[0], expectedScheme) {
+
+	if !strings.EqualFold(scheme, expectedScheme) {
 		return "", aerr.ErrAuthenticationFailed.Msgf("Request unauthenticated with expected scheme, expected: %s", expectedScheme)
 	}
-	return splits[1], nil
+
+	return header, nil
 }

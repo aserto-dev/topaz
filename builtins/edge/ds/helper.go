@@ -6,18 +6,20 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/topdown"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/topdown"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
 
-func help(fnName string, args interface{}) (*ast.Term, error) {
-	m := map[string]interface{}{fnName: args}
+func help(fnName string, args any) (*ast.Term, error) {
+	m := map[string]any{fnName: args}
+
 	val, err := ast.InterfaceToValue(m)
 	if err != nil {
 		return nil, err
 	}
+
 	return ast.NewTerm(val), nil
 }
 
@@ -26,11 +28,14 @@ func helpMsg(fnName string, msg proto.Message) (*ast.Term, error) {
 	if err != nil {
 		return nil, err
 	}
-	m := map[string]interface{}{fnName: v}
+
+	m := map[string]any{fnName: v}
+
 	val, err := ast.InterfaceToValue(m)
 	if err != nil {
 		return nil, err
 	}
+
 	return ast.NewTerm(val), nil
 }
 
@@ -80,7 +85,7 @@ func traceError(bctx *topdown.BuiltinContext, fnName string, err error) {
 	}
 }
 
-func ProtoToInterface(msg proto.Message) (interface{}, error) {
+func ProtoToInterface(msg proto.Message) (any, error) {
 	b, err := protojson.MarshalOptions{
 		Multiline:       false,
 		Indent:          "",
@@ -93,7 +98,7 @@ func ProtoToInterface(msg proto.Message) (interface{}, error) {
 		return nil, err
 	}
 
-	var v interface{}
+	var v any
 	if err := json.Unmarshal(b, &v); err != nil {
 		return nil, err
 	}

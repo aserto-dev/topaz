@@ -5,7 +5,7 @@ import (
 	"text/template"
 
 	client "github.com/aserto-dev/go-aserto"
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 )
 
 const RemoteDirectoryStorePlugin string = "remote_directory"

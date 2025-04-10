@@ -1,0 +1,23 @@
+{
+    "name": "github",
+    "description": "Github",
+    "assets": {
+        "manifest": "github/manifest.yaml",
+        "policy": {
+            "name": "github",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+            "citadel/citadel_objects.json",
+            "citadel/citadel_relations.json"
+        ],
+        "domain_data": [
+            "github/github_objects.json",
+            "github/github_relations.json"
+        ],
+        "assertions": [
+            "github/test/github_assertions.json",
+            "github/test/github_decisions.json"
+        ]
+    }
+}

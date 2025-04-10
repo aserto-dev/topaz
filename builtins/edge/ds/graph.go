@@ -6,9 +6,9 @@ import (
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/resolvers"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/types"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/rego"
+	"github.com/open-policy-agent/opa/v1/types"
 
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/proto"
@@ -60,7 +60,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			}
 
 			buf := new(bytes.Buffer)
-			if len(resp.Results) > 0 {
+			if len(resp.GetResults()) > 0 {
 				if err := ProtoToBuf(buf, resp); err != nil {
 					return nil, err
 				}

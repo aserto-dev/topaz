@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  ### display_name: Identity ###
+  identity: {}
+
+  ### display_name: User ###
+  user:
+    relations:
+      ### display_name: identifier ###
+      identifier: identity
+      ### display_name: user#manager ###
+      manager: user
+
+    permissions:
+      ### display_name: user#in_management_chain ###
+      in_management_chain: manager | manager->in_management_chain
+
+  ### display_name: Group ###
+  group:
+    relations:
+      ### display_name: group#member ###
+      member: user | group#member
+
+  ### display_name: Service ###
+  # service represents a set of endpoints
+  service:
+    relations:
+      owner:   user
+      deleter: user | group#member
+      creator: user | group#member
+      writer:  user | group#member
+      reader:  user | group#member
+
+    permissions:
+      GET:    reader  | reader->identifier  | PUT
+      PUT:    writer  | writer->identifier  | POST
+      PATCH:  writer  | writer->identifier  | POST
+      POST:   creator | creator->identifier | DELETE
+      DELETE: deleter | deleter->identifier | owner
+
+  ### display_name: Route ###
+  # endpoint represents a specific API endpoint
+  route:
+    relations:
+      service: service
+      deleter: user | group#member
+      creator: user | group#member
+      writer:  user | group#member
+      reader:  user | group#member
+
+    permissions:
+      GET:    reader  | reader->identifier  | PUT    | service->GET
+      PUT:    writer  | writer->identifier  | POST   | service->PUT
+      PATCH:  writer  | writer->identifier  | POST   | service->PATCH
+      POST:   creator | creator->identifier | DELETE | service->POST
+      DELETE: deleter | deleter->identifier | service->DELETE

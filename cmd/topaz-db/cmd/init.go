@@ -14,6 +14,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+const requestTimeout = 5 * time.Second
+
 func (cmd *InitCmd) Run(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -22,12 +24,13 @@ func (cmd *InitCmd) Run(ctx context.Context) error {
 		if fi.IsDir() {
 			return errors.Errorf("%s is a directory", cmd.DBFile)
 		}
+
 		return errors.Errorf("%s already exists", cmd.DBFile)
 	}
 
 	cfg := &directory.Config{
 		DBPath:         cmd.DBFile,
-		RequestTimeout: 5 * time.Second,
+		RequestTimeout: requestTimeout,
 	}
 
 	logger := zerolog.New(io.Discard)

@@ -17,7 +17,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/aserto-dev/topaz/pkg/services"
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
 )

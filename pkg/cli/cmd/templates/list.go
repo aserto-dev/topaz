@@ -6,7 +6,7 @@ import (
 )
 
 type ListTemplatesCmd struct {
-	TemplatesURL string `arg:"" required:"false" default:"https://topaz.sh/assets/templates/templates.json" help:"URL of template catalog"`
+	TemplatesURL string `optional:"" default:"${topaz_tmpl_url}" env:"TOPAZ_TMPL_URL" help:"URL of template catalog"`
 }
 
 func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
@@ -22,9 +22,11 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 
 	tab := table.New(c.StdOut()).WithColumns(colName, colDescription, colDocumentation)
 	tab.WithTableNoAutoWrapText()
+
 	for n, t := range ctlg {
 		tab.WithRow(n, t.ShortDescription, t.DocumentationURL)
 	}
+
 	tab.Do()
 
 	return nil

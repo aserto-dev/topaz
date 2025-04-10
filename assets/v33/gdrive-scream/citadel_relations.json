@@ -1,0 +1,160 @@
+{
+  "relations": [
+    {
+      "object_type": "USER",
+      "object_id": "jerry@the-smiths.com",
+      "relation": "MANAGER",
+      "subject_type": "USER",
+      "subject_id": "beth@the-smiths.com"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "beth@the-smiths.com",
+      "relation": "MANAGER",
+      "subject_type": "USER",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "morty@the-citadel.com",
+      "relation": "MANAGER",
+      "subject_type": "USER",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "summer@the-smiths.com",
+      "relation": "MANAGER",
+      "subject_type": "USER",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "beth@the-smiths.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "beth@the-smiths.com"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "rick@the-citadel.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "morty@the-citadel.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "summer@the-smiths.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "beth@the-smiths.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "jerry@the-smiths.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "jerry@the-smiths.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "jerry@the-smiths.com"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "morty@the-citadel.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "rick@the-citadel.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "USER",
+      "object_id": "summer@the-smiths.com",
+      "relation": "IDENTIFIER",
+      "subject_type": "IDENTITY",
+      "subject_id": "summer@the-smiths.com"
+    },
+    {
+      "object_type": "GROUP",
+      "object_id": "admin",
+      "relation": "MEMBER",
+      "subject_type": "USER",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "GROUP",
+      "object_id": "editor",
+      "relation": "MEMBER",
+      "subject_type": "USER",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "GROUP",
+      "object_id": "editor",
+      "relation": "MEMBER",
+      "subject_type": "USER",
+      "subject_id": "summer@the-smiths.com"
+    },
+    {
+      "object_type": "GROUP",
+      "object_id": "editor",
+      "relation": "MEMBER",
+      "subject_type": "GROUP",
+      "subject_id": "admin",
+      "subject_relation": "MEMBER"
+    },
+    {
+      "object_type": "GROUP",
+      "object_id": "evil_genius",
+      "relation": "MEMBER",
+      "subject_type": "USER",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "GROUP",
+      "object_id": "viewer",
+      "relation": "MEMBER",
+      "subject_type": "USER",
+      "subject_id": "beth@the-smiths.com"
+    },
+    {
+      "object_type": "GROUP",
+      "object_id": "viewer",
+      "relation": "MEMBER",
+      "subject_type": "USER",
+      "subject_id": "jerry@the-smiths.com"
+    },
+    {
+      "object_type": "GROUP",
+      "object_id": "viewer",
+      "relation": "MEMBER",
+      "subject_type": "GROUP",
+      "subject_id": "editor",
+      "subject_relation": "MEMBER"
+    }
+  ]
+}

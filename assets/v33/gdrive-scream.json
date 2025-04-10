@@ -1,0 +1,23 @@
+{
+    "name": "gdrive-scream",
+    "description": "Google Drive with inverted identities (SCREAM)",
+    "assets": {
+        "manifest": "gdrive-scream/manifest.yaml",
+        "policy": {
+            "name": "gdrive-scream",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+            "gdrive-scream/citadel_objects.json",
+            "gdrive-scream/citadel_relations.json"
+        ],
+        "domain_data": [
+            "gdrive-scream/gdrive_objects.json",
+            "gdrive-scream/gdrive_relations.json"
+        ],
+        "assertions": [
+            "gdrive-scream/test/gdrive_assertions.json",
+            "gdrive-scream/test/gdrive_decisions.json"
+        ]
+    }
+}

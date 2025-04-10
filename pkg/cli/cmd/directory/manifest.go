@@ -52,6 +52,7 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 	}
+
 	defer w.Close()
 
 	if _, err := io.Copy(w, r); err != nil {
@@ -95,9 +96,11 @@ func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	c.Con().Warn().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
+
 	if cmd.Force || common.PromptYesNo("Do you want to continue?", false) {
 		c.Con().Info().Msg(">>> delete manifest")
 		return dsClient.DeleteManifest(c.Context)
 	}
+
 	return nil
 }

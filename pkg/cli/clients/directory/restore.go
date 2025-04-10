@@ -33,6 +33,7 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 	tr := tar.NewReader(gz)
 
 	g, iCtx := errgroup.WithContext(context.Background())
+
 	stream, err := c.Importer.Import(iCtx)
 	if err != nil {
 		return err
@@ -57,7 +58,7 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 
 		for {
 			msg, err := stream.Recv()
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return nil
 			}
 
@@ -65,12 +66,12 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 				return err
 			}
 
-			switch m := msg.Msg.(type) {
+			switch m := msg.GetMsg().(type) {
 			case *dsi3.ImportResponse_Status:
 				printStatus(os.Stderr, m.Status)
 
 			case *dsi3.ImportResponse_Counter:
-				switch m.Counter.Type {
+				switch m.Counter.GetType() {
 				case objectsCounter:
 					objCounter = m.Counter
 				case relationsCounter:
@@ -81,9 +82,9 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 			//nolint: staticcheck // SA1019
 			default:
 				msg.Object.Type = objectsCounter
-				objCounter = msg.Object
+				objCounter = msg.GetObject()
 				msg.Relation.Type = relationsCounter
-				relCounter = msg.Relation
+				relCounter = msg.GetRelation()
 			}
 		}
 	}
@@ -139,7 +140,7 @@ func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Read
 
 	for {
 		err := objects.Read(&m)
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 
@@ -147,6 +148,7 @@ func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Read
 			if strings.Contains(err.Error(), "unknown field") {
 				continue
 			}
+
 			return err
 		}
 
@@ -170,13 +172,15 @@ func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.
 
 	for {
 		err := relations.Read(&m)
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
+
 		if err != nil {
 			if strings.Contains(err.Error(), "unknown field") {
 				continue
 			}
+
 			return err
 		}
 

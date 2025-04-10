@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"github.com/aserto-dev/topaz/internal/pkg/xdg/internal/pathutil"
 
-	"github.com/adrg/xdg/internal/pathutil"
+	"github.com/stretchr/testify/require"
 )
 
 func TestExpandHome(t *testing.T) {

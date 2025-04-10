@@ -1,7 +1,6 @@
 package certs
 
 import (
-	"fmt"
 	"path/filepath"
 )
 
@@ -57,22 +56,22 @@ func getFileList(certsDir string, opts ...fileListOption) []string {
 
 	if args.inclCACerts {
 		filePaths = append(filePaths,
-			filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", grpcFileName)),
-			filepath.Join(certsDir, fmt.Sprintf("%s-ca.crt", gatewayFileName)),
+			filepath.Join(certsDir, grpcFileName+"-ca.crt"),
+			filepath.Join(certsDir, gatewayFileName+"-ca.crt"),
 		)
 	}
 
 	if args.inclCerts {
 		filePaths = append(filePaths,
-			filepath.Join(certsDir, fmt.Sprintf("%s.crt", grpcFileName)),
-			filepath.Join(certsDir, fmt.Sprintf("%s.crt", gatewayFileName)),
+			filepath.Join(certsDir, grpcFileName+".crt"),
+			filepath.Join(certsDir, gatewayFileName+".crt"),
 		)
 	}
 
 	if args.inclKeys {
 		filePaths = append(filePaths,
-			filepath.Join(certsDir, fmt.Sprintf("%s.key", grpcFileName)),
-			filepath.Join(certsDir, fmt.Sprintf("%s.key", gatewayFileName)),
+			filepath.Join(certsDir, grpcFileName+".key"),
+			filepath.Join(certsDir, gatewayFileName+".key"),
 		)
 	}
 

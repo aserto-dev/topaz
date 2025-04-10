@@ -1,0 +1,60 @@
+{
+    "relations": [
+      {
+        "object_type": "organization",
+        "object_id": "smiths",
+        "relation": "repo_reader",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      {
+        "object_type": "organization",
+        "object_id": "smiths",
+        "relation": "repo_writer",
+        "subject_type": "user",
+        "subject_id": "summer@the-smiths.com"
+      },
+      {
+        "object_type": "organization",
+        "object_id": "smiths",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "beth@the-smiths.com"
+      },
+      {
+        "object_type": "organization",
+        "object_id": "smiths",
+        "relation": "owner",
+        "subject_type": "user",
+        "subject_id": "jerry@the-smiths.com"
+      },
+      {
+        "object_type": "organization",
+        "object_id": "citadel",
+        "relation": "repo_admin",
+        "subject_type": "user",
+        "subject_id": "morty@the-citadel.com"
+      },
+      {
+        "object_type": "organization",
+        "object_id": "citadel",
+        "relation": "repo_admin",
+        "subject_type": "user",
+        "subject_id": "rick@the-citadel.com"
+      },
+      {
+        "object_type": "repo",
+        "object_id": "smiths.budget",
+        "relation": "owner",
+        "subject_type": "organization",
+        "subject_id": "smiths"
+      },
+      {
+        "object_type": "repo",
+        "object_id": "citadel.missions",
+        "relation": "owner",
+        "subject_type": "organization",
+        "subject_id": "citadel"
+      }
+    ]
+}

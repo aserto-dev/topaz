@@ -3,7 +3,7 @@ package middlewares
 import (
 	"context"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
+	grpcutil "github.com/aserto-dev/aserto-grpc"
 	"github.com/aserto-dev/header"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -23,19 +23,21 @@ func NewTenantIDMiddleware(cfg *config.Config) *TenantIDIDMiddleware {
 var _ grpcutil.Middleware = &TenantIDIDMiddleware{}
 
 func (m *TenantIDIDMiddleware) Unary() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 		newCtx := header.ContextWithTenantID(ctx, m.tenantID)
 		result, err := handler(newCtx, req)
+
 		return result, err
 	}
 }
 
 func (m *TenantIDIDMiddleware) Stream() grpc.StreamServerInterceptor {
-	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+	return func(srv any, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
 		newCtx := header.ContextWithTenantID(ctx, m.tenantID)
 		wrapped := grpcmiddleware.WrapServerStream(stream)
 		wrapped.WrappedContext = newCtx
+
 		return handler(srv, wrapped)
 	}
 }

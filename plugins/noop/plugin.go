@@ -3,7 +3,7 @@ package noop
 import (
 	"context"
 
-	"github.com/open-policy-agent/opa/plugins"
+	"github.com/open-policy-agent/opa/v1/plugins"
 )
 
 type Noop struct {
@@ -20,5 +20,5 @@ func (dl *Noop) Stop(ctx context.Context) {
 	dl.Manager.UpdatePluginStatus(dl.Name, &plugins.Status{State: plugins.StateNotReady})
 }
 
-func (dl *Noop) Reconfigure(ctx context.Context, config interface{}) {
+func (dl *Noop) Reconfigure(ctx context.Context, config any) {
 }

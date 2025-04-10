@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 )
@@ -16,7 +15,8 @@ func (f *fsWithDefinition) Open(name string) (http.File, error) {
 	}
 
 	name = strings.TrimPrefix(name, "/public")
-	return f.consoleFS.Open(fmt.Sprintf("console%s", name))
+
+	return f.consoleFS.Open("console" + name)
 }
 
 func UIHandler(consoleFS http.FileSystem) http.Handler {

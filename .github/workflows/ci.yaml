@@ -19,10 +19,10 @@ on:
 env:
   VAULT_ADDR: https://vault.eng.aserto.com/
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
-  GO_VERSION: "1.23"
-  GO_RELEASER_VERSION: "v2.3.2"
-  GO_LANGCI_LINT_VERSION: "v1.61.0"
-  GO_TESTSUM_VERSION: "1.11.0"
+  GO_VERSION: "1.24"
+  GO_RELEASER_VERSION: "v2.8.2"
+  GO_LANGCI_LINT_VERSION: "v2.0.2"
+  GO_TESTSUM_VERSION: "1.12.1"
   SYFT_VERSION: "v1.13.0"
 
 jobs:
@@ -80,7 +80,7 @@ jobs:
           args: build --clean --snapshot --single-target
       -
         name: Lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
           version: ${{ env.GO_LANGCI_LINT_VERSION }}
           args: --timeout=30m
@@ -103,6 +103,7 @@ jobs:
         run: |
           gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/authz/... github.com/aserto-dev/topaz/pkg/app/tests/authz/...
           gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/builtin/... github.com/aserto-dev/topaz/pkg/app/tests/builtin/...
+          gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/ds/... github.com/aserto-dev/topaz/pkg/app/tests/ds/...
           gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/manifest/... github.com/aserto-dev/topaz/pkg/app/tests/manifest/...
           gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/policy/... github.com/aserto-dev/topaz/pkg/app/tests/policy/...
           gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/query/... github.com/aserto-dev/topaz/pkg/app/tests/query/...

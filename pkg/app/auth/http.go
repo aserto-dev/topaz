@@ -17,34 +17,40 @@ func (a *APIKeyAuthMiddleware) ConfigAuth(h http.Handler, authCfg config.AuthnCo
 		if options.EnableAnonymous {
 			ctx := context.WithValue(r.Context(), handlers.AuthenticatedUser, true)
 			h.ServeHTTP(w, r.WithContext(ctx))
+
 			return
 		}
 
 		if (len(authCfg.APIKeys) == 0) || !options.EnableAPIKey {
 			ctx := context.WithValue(r.Context(), handlers.AuthenticatedUser, true)
 			h.ServeHTTP(w, r.WithContext(ctx))
+
 			return
 		}
 
 		// if we reached this point, auth is enabled
 		ctx := context.WithValue(r.Context(), handlers.AuthEnabled, true)
+
 		authHeader := httpAuthHeader(r)
 		if authHeader == "" {
 			// auth header is not present =>  the user is unauthenticated and did not provide a token
 			ctx = context.WithValue(ctx, handlers.AuthenticatedUser, false)
 			h.ServeHTTP(w, r.WithContext(ctx))
+
 			return
 		}
 
 		basicAPIKey, err := parseAuthHeader(authHeader, "basic")
 		if err != nil {
 			returnStatusUnauthorized(w, "Invalid authorization header. expected 'basic' scheme.", a.logger)
+
 			return
 		}
 
 		if _, ok := authCfg.APIKeys[basicAPIKey]; ok {
 			ctx = context.WithValue(ctx, handlers.AuthenticatedUser, true)
 			h.ServeHTTP(w, r.WithContext(ctx))
+
 			return
 		}
 
@@ -55,8 +61,8 @@ func (a *APIKeyAuthMiddleware) ConfigAuth(h http.Handler, authCfg config.AuthnCo
 
 func returnStatusUnauthorized(w http.ResponseWriter, errMsg string, log *zerolog.Logger) {
 	w.WriteHeader(http.StatusUnauthorized)
-	_, err := w.Write([]byte(errMsg))
-	if err != nil {
+
+	if _, err := w.Write([]byte(errMsg)); err != nil {
 		log.Error().Err(err).Msg("could not write response message")
 	}
 }

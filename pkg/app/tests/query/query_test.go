@@ -13,6 +13,7 @@ import (
 	rt "github.com/aserto-dev/runtime"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
@@ -28,9 +29,9 @@ func TestQuery(t *testing.T) {
 		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
-			"TOPAZ_CERTS_DIR":     "/certs",
-			"TOPAZ_DB_DIR":        "/data",
-			"TOPAZ_DECISIONS_DIR": "/decisions",
+			x.EnvTopazCertsDir:  x.DefCertsDir,
+			x.EnvTopazDBDir:     x.DefDBDir,
+			x.EnvTopazDecisions: x.DefDecisionsDir,
 		},
 		Files: []testcontainers.ContainerFile{
 			{
@@ -104,15 +105,16 @@ var queryTests = []struct {
 	{
 		name: "opa.runtime",
 		query: &authorizer.QueryRequest{
-			Query: "x := opa.runtime()",
+			Query:           "x := opa.runtime()",
+			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -128,15 +130,16 @@ var queryTests = []struct {
 	{
 		name: "data",
 		query: &authorizer.QueryRequest{
-			Query: "x = data",
+			Query:           "x = data",
+			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -151,15 +154,16 @@ var queryTests = []struct {
 	{
 		name: "ds.user",
 		query: &authorizer.QueryRequest{
-			Query: `x = ds.user({"id": "euang@acmecorp.com"})`,
+			Query:           `x = ds.user({"id": "euang@acmecorp.com"})`,
+			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -170,22 +174,23 @@ var queryTests = []struct {
 			require.NotEmpty(t, result.Result)
 			require.Contains(t, result.Result[0].Bindings, "x")
 			require.Contains(t, result.Result[0].Bindings["x"], "id")
-			binding := result.Result[0].Bindings["x"].(map[string]interface{})
+			binding, _ := result.Result[0].Bindings["x"].(map[string]any)
 			require.Equal(t, "euang@acmecorp.com", binding["id"])
 		},
 	},
 	{
 		name: "ds.identity",
 		query: &authorizer.QueryRequest{
-			Query: `x = ds.identity({"id": "euang@acmecorp.com"})`,
+			Query:           `x = ds.identity({"id": "euang@acmecorp.com"})`,
+			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
 		},
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -210,10 +215,10 @@ var queryTests = []struct {
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -226,7 +231,7 @@ var queryTests = []struct {
 			require.Contains(t, result.Result[0].Bindings["x"], "identity")
 			require.Contains(t, result.Result[0].Bindings["x"], "user")
 
-			bindings := result.Result[0].Bindings["x"].(map[string]interface{})
+			bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
 			require.Contains(t, bindings["identity"], "type")
 			require.Contains(t, bindings["user"], "id")
 		},
@@ -243,10 +248,10 @@ var queryTests = []struct {
 		validate: func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
-			require.NotNil(t, resp.Response)
+			require.NotNil(t, resp.GetResponse())
 
 			var result *rt.Result
-			buf, err := resp.Response.MarshalJSON()
+			buf, err := resp.GetResponse().MarshalJSON()
 			require.NoError(t, err)
 
 			if err := json.Unmarshal(buf, &result); err != nil {
@@ -259,10 +264,10 @@ var queryTests = []struct {
 			require.Contains(t, result.Result[0].Bindings["x"], "identity")
 			require.Contains(t, result.Result[0].Bindings["x"], "user")
 
-			bindings := result.Result[0].Bindings["x"].(map[string]interface{})
+			bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
 			require.Contains(t, bindings["identity"], "identity")
 			require.Contains(t, bindings["identity"], "type")
-			require.Equal(t, map[string]interface{}{}, bindings["user"])
+			require.Equal(t, map[string]any{}, bindings["user"])
 		},
 	},
 }

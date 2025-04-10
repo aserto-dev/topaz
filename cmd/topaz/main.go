@@ -38,7 +38,7 @@ func main() {
 	os.Exit(run())
 }
 
-func run() (exitCode int) {
+func run() int {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
@@ -49,6 +49,7 @@ func run() (exitCode int) {
 	cliConfigFile := filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
 
 	oldDBPath := filepath.Join(cc.GetTopazDir(), "db")
+
 	warn, err := checkDBFiles(oldDBPath)
 	if err != nil {
 		return exitErr(err)
@@ -59,8 +60,7 @@ func run() (exitCode int) {
 		return exitErr(err)
 	}
 
-	err = checkVersion(c)
-	if err != nil {
+	if err := checkVersion(c); err != nil {
 		return exitErr(err)
 	}
 
@@ -74,7 +74,27 @@ func run() (exitCode int) {
 		return exitErr(errors.Wrap(err, "failed to determine current working directory"))
 	}
 
-	kongCtx := kong.Parse(&cli,
+	kongCtx := kongParse(c, &cli, cwd)
+
+	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
+
+	if cli.NoColor {
+		_ = os.Setenv(x.EnvTopazNoColor, strconv.FormatBool(true))
+	}
+
+	if err := cc.EnsureDirs(); err != nil {
+		return exitErr(err)
+	}
+
+	if err := kongCtx.Run(c); err != nil {
+		return exitErr(err)
+	}
+
+	return rcOK
+}
+
+func kongParse(c *cc.CommonCtx, cli *cmd.CLI, cwd string) *kong.Context {
+	kongCtx := kong.Parse(cli,
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
@@ -93,6 +113,7 @@ func run() (exitCode int) {
 			"topaz_cfg_dir":      cc.GetTopazCfgDir(),
 			"topaz_db_dir":       cc.GetTopazDataDir(),
 			"topaz_tmpl_dir":     cc.GetTopazTemplateDir(),
+			"topaz_tmpl_url":     cc.GetTopazTemplateURL(),
 			"container_registry": cc.ContainerRegistry(),
 			"container_image":    cc.ContainerImage(),
 			"container_tag":      cc.ContainerTag(),
@@ -114,21 +135,8 @@ func run() (exitCode int) {
 			"timeout":            cc.Timeout().String(),
 		},
 	)
-	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
 
-	if cli.NoColor {
-		os.Setenv("TOPAZ_NO_COLOR", "TRUE")
-	}
-
-	if err := cc.EnsureDirs(); err != nil {
-		return exitErr(err)
-	}
-
-	if err := kongCtx.Run(c); err != nil {
-		return exitErr(err)
-	}
-
-	return rcOK
+	return kongCtx
 }
 
 func exitErr(err error) int {
@@ -136,19 +144,28 @@ func exitErr(err error) int {
 	return rcErr
 }
 
+const (
+	logLevelDisabled int = iota
+	logLevelInfo
+	logLevelWarn
+	logLevelError
+	logLevelDebug
+	logLevelTrace
+)
+
 func logLevel(level int) zerolog.Level {
 	switch level {
-	case 0:
+	case logLevelDisabled:
 		return zerolog.Disabled
-	case 1:
+	case logLevelInfo:
 		return zerolog.InfoLevel
-	case 2:
+	case logLevelWarn:
 		return zerolog.WarnLevel
-	case 3:
+	case logLevelError:
 		return zerolog.ErrorLevel
-	case 4:
+	case logLevelDebug:
 		return zerolog.DebugLevel
-	case 5:
+	case logLevelTrace:
 		return zerolog.TraceLevel
 	default:
 		return zerolog.Disabled
@@ -159,6 +176,7 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 	if _, err := os.Stat(topazDBDir); os.IsNotExist(err) {
 		return false, nil
 	}
+
 	if topazDBDir == cc.GetTopazDataDir() {
 		return false, nil
 	}
@@ -181,6 +199,7 @@ func checkVersion(c *cc.CommonCtx) error {
 	if err != nil {
 		return err
 	}
+
 	if buildVer.Prerelease() != "" {
 		return nil
 	}
@@ -198,10 +217,12 @@ func checkVersion(c *cc.CommonCtx) error {
 		c.Config.Defaults.ContainerTag,
 		ver.GetInfo().Version,
 	)
+
 	if !common.PromptYesNo("Do you want to update the configuration setting?", false) {
 		return nil
 	}
 
 	c.Config.Defaults.ContainerTag = ver.GetInfo().Version
+
 	return c.SaveContextConfig(common.CLIConfigurationFile)
 }

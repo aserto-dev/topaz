@@ -5,9 +5,9 @@ import (
 	"text/template"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
-	"github.com/aserto-dev/topaz/decision_log/logger/file"
+	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )

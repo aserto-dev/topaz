@@ -34,6 +34,7 @@ func SetupSignalHandler() context.Context {
 
 	c := make(chan os.Signal, 2)
 	signal.Notify(c, shutdownSignals...)
+
 	go func() {
 		<-c
 		cancel()

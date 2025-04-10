@@ -3,7 +3,7 @@ package directory
 import (
 	"os"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 )
 
 const NATSKeyValueStorePlugin string = "nats_kv"

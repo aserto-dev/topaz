@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	ver "github.com/aserto-dev/topaz/pkg/version"
 	"github.com/samber/lo"
 )
@@ -25,14 +26,16 @@ func defaultContainerTag() string {
 		if v.String() == "0.0.0" || v.Prerelease() != "" {
 			return defaultContainerTagFallback
 		}
+
 		return v.String()
 	}
+
 	return defaultContainerTagFallback
 }
 
 // Container returns the fully qualified container name (registry/image:tag).
 func Container(registry, image, tag string) string {
-	if container := os.Getenv("CONTAINER"); container != "" {
+	if container := os.Getenv(x.EnvContainer); container != "" {
 		return container
 	}
 
@@ -45,31 +48,36 @@ func Container(registry, image, tag string) string {
 
 // ContainerRegistry returns the container registry (host[:port]/repo).
 func ContainerRegistry() string {
-	if containerRegistry := os.Getenv("CONTAINER_REGISTRY"); containerRegistry != "" {
+	if containerRegistry := os.Getenv(x.EnvContainerRegistry); containerRegistry != "" {
 		return containerRegistry
 	}
+
 	if defaults.ContainerRegistry != "" {
 		return defaults.ContainerRegistry
 	}
+
 	return defaultContainerRegistry
 }
 
 // ContainerImage returns the container image name.
 func ContainerImage() string {
-	if containerImage := os.Getenv("CONTAINER_IMAGE"); containerImage != "" {
+	if containerImage := os.Getenv(x.EnvContainerName); containerImage != "" {
 		return containerImage
 	}
+
 	if defaults.ContainerImage != "" {
 		return defaults.ContainerImage
 	}
+
 	return defaultContainerImage
 }
 
 // ContainerTag returns the container tag (label or semantic version).
 func ContainerTag() string {
-	if containerTag := os.Getenv("CONTAINER_TAG"); containerTag != "" {
+	if containerTag := os.Getenv(x.EnvContainerTag); containerTag != "" {
 		return containerTag
 	}
+
 	if defaults.ContainerTag != "" {
 		return defaults.ContainerTag
 	}
@@ -79,23 +87,27 @@ func ContainerTag() string {
 
 // ContainerPlatform, returns the container platform for multi-platform capable servers.
 func ContainerPlatform() string {
-	if containerPlatform := os.Getenv("CONTAINER_PLATFORM"); containerPlatform != "" {
+	if containerPlatform := os.Getenv(x.EnvContainerPlatform); containerPlatform != "" {
 		return containerPlatform
 	}
+
 	if defaults.ContainerPlatform != "" {
 		return defaults.ContainerPlatform
 	}
+
 	return "linux/" + runtime.GOARCH
 }
 
 // ContainerName returns the container instance name (docker run --name CONTAINER_NAME).
 func ContainerName(defaultConfigFile string) string {
-	if containerName := os.Getenv("CONTAINER_NAME"); containerName != "" {
+	if containerName := os.Getenv(x.EnvContainerName); containerName != "" {
 		return containerName
 	}
+
 	if strings.Contains(defaultConfigFile, "config.yaml") {
 		return defaultContainerName
 	}
+
 	return fmt.Sprintf("%s-%s", defaultContainerName, strings.Split(filepath.Base(defaultConfigFile), ".")[0])
 }
 
@@ -107,7 +119,9 @@ func ContainerVersionTag(version, tag string) string {
 		fmt.Fprintf(os.Stderr, "!!! --container-version incl $CONTAINER_VERSION are obsolete !!!\n")
 		fmt.Fprintf(os.Stderr, "instead use: --container-tag and/or $CONTAINER_TAG\n")
 		fmt.Fprintf(os.Stderr, "the current --container-version value %q is propagated to --container-tag\n", version)
+
 		return version
 	}
+
 	return tag
 }

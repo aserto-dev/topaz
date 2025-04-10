@@ -91,6 +91,6 @@ func DefaultGRPCOptions() []grpc.ServerOption {
 	return nil
 }
 
-func DefaultServices() map[string]app.ServiceTypes {
-	return make(map[string]app.ServiceTypes)
+func DefaultServices() map[string]builder.ServiceTypes {
+	return make(map[string]builder.ServiceTypes)
 }

@@ -21,6 +21,7 @@ type CertPaths struct {
 
 func (c *CertPaths) FindExisting() []string {
 	existing := []string{}
+
 	for _, cert := range []string{c.Cert, c.CA, c.Key} {
 		if fi, err := os.Stat(cert); !os.IsNotExist(err) && !fi.IsDir() {
 			existing = append(existing, cert)
@@ -42,7 +43,9 @@ func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...
 			for _, fqn := range existingFiles {
 				tab.WithRow(filepath.Base(fqn), "skipped, file already exists")
 			}
+
 			tab.Do()
+
 			return nil
 		}
 	}

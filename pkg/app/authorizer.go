@@ -3,19 +3,22 @@ package app
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	builder "github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
+)
+
+const (
+	authorizerService = "authorizer"
 )
 
 type Authorizer struct {
@@ -26,11 +29,17 @@ type Authorizer struct {
 	opts []grpc.ServerOption
 }
 
-const (
-	authorizerService = "authorizer"
-)
+var _ builder.ServiceTypes = (*Authorizer)(nil)
 
-func NewAuthorizer(ctx context.Context, cfg *builder.API, commonConfig *config.Common, authorizerOpts []grpc.ServerOption, logger *zerolog.Logger) (ServiceTypes, error) {
+func NewAuthorizer(
+	ctx context.Context,
+	cfg *builder.API,
+	commonConfig *config.Common,
+	authorizerOpts []grpc.ServerOption,
+	logger *zerolog.Logger,
+) (*Authorizer,
+	error,
+) {
 	if cfg.GRPC.Certs.HasCert() {
 		tlsCreds, err := cfg.GRPC.Certs.ServerCredentials()
 		if err != nil {
@@ -63,7 +72,7 @@ func (e *Authorizer) GetGRPCRegistrations(services ...string) builder.GRPCRegist
 	}
 }
 
-func (e *Authorizer) GetGatewayRegistration(services ...string) builder.HandlerRegistrations {
+func (e *Authorizer) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		if err := authz.RegisterAuthorizerHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
 			return err
@@ -88,12 +97,5 @@ const (
 )
 
 func azOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	buf, err := azOpenAPI.Static().ReadFile("openapi.json")
-	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
-	_, _ = w.Write(buf)
+	azOpenAPI.OpenApiHandler(w, r)
 }

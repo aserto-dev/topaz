@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/cc"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	builder "github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/aserto-dev/topaz/resolvers"
 )
 
@@ -55,6 +55,6 @@ func DefaultGRPCOptions() []grpc.ServerOption {
 	return nil
 }
 
-func DefaultServices() map[string]app.ServiceTypes {
-	return make(map[string]app.ServiceTypes)
+func DefaultServices() map[string]builder.ServiceTypes {
+	return make(map[string]builder.ServiceTypes)
 }

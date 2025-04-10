@@ -7,9 +7,9 @@ import (
 	"github.com/aserto-dev/topaz/resolvers"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/types"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/rego"
+	"github.com/open-policy-agent/opa/v1/types"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -21,19 +21,10 @@ import (
 
 // RegisterObject - ds.object
 //
-// v3 (latest) request format:
-//
 //	ds.object({
 //		"object_type": "",
 //		"object_id": "",
 //		"with_relation": false
-//	})
-//
-// v2 request format:
-//
-//	ds.object({
-//		"type": "",
-//		"key": ""
 //	})
 func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
@@ -70,13 +61,16 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			resp, err := dr.GetDS().GetObject(bctx.Context, req)
+
 			switch {
 			case status.Code(err) == codes.NotFound:
 				traceError(&bctx, fnName, err)
+
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
 					return nil, err
 				}
+
 				return ast.NewTerm(astVal), nil
 			case err != nil:
 				return nil, err
@@ -92,8 +86,13 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return nil, err
 			}
 
-			result := pbs.Fields["result"].AsInterface().(map[string]interface{})
-			relations := pbs.Fields["relations"].AsInterface()
+			result, ok := pbs.GetFields()["result"].AsInterface().(map[string]any)
+			if !ok {
+				return nil, status.Errorf(codes.Internal, "failed type assertion %q", "result")
+			}
+
+			relations := pbs.GetFields()["relations"].AsInterface()
+
 			result["relations"] = relations
 
 			v, err := ast.InterfaceToValue(result)
