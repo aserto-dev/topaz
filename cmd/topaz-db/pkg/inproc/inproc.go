@@ -27,7 +27,7 @@ func NewServer(ctx context.Context, logger *zerolog.Logger, cfg *directory.Confi
 
 	dsLogger := logger.With().Str("component", "ds").Logger()
 
-	inProcDirectory, err := eds.New(context.Background(), cfg, &dsLogger)
+	inProcDirectory, err := eds.New(ctx, cfg, &dsLogger)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to start edge directory server")
 	}
@@ -50,9 +50,12 @@ func NewServer(ctx context.Context, logger *zerolog.Logger, cfg *directory.Confi
 		}
 	}()
 
-	conn, _ := grpc.DialContext(ctx, "", grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
-		return listener.Dial()
-	}), grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+	conn, _ := grpc.NewClient("",
+		grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
+			return listener.Dial()
+		}),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 
 	return conn, s.GracefulStop
 }
