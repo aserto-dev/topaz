@@ -24,10 +24,9 @@ const (
 type Authorizer struct {
 	Resolver         *resolvers.Resolvers
 	AuthorizerServer *impl.AuthorizerServer
-	CleanupFunctions []func()
-
-	cfg  *builder.API
-	opts []grpc.ServerOption
+	cfg              *builder.API
+	opts             []grpc.ServerOption
+	cleanupFunctions []func()
 }
 
 var _ builder.ServiceTypes = (*Authorizer)(nil)
@@ -90,11 +89,11 @@ func (e *Authorizer) GetGatewayRegistration(port string, services ...string) bui
 }
 
 func (e *Authorizer) Cleanups() []func() {
-	return e.CleanupFunctions
+	return e.cleanupFunctions
 }
 
 func (e *Authorizer) Close() {
-	for _, f := range e.CleanupFunctions {
+	for _, f := range e.cleanupFunctions {
 		if f != nil {
 			f()
 		}
