@@ -12,5 +12,5 @@ type RuntimeResolver interface {
 	PeekRuntime(ctx context.Context, tenantID, policyName string) (*runtime.Runtime, error)
 	ReloadRuntime(ctx context.Context, tenantID, policyName string) error
 	ListRuntimes(ctx context.Context) (map[string]*runtime.Runtime, error)
-	UnloadRuntime(ctx context.Context, tenantID, policyName string)
+	UnloadRuntime(ctx context.Context, tenantID, policyName string) error
 }

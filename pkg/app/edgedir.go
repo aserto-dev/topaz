@@ -42,12 +42,10 @@ func NewEdgeDir(edge *directory.Directory) (*EdgeDir, error) {
 	}, nil
 }
 
-func (e *EdgeDir) Cleanups() []func() {
+func (e *EdgeDir) Close() {
 	if e.dir != nil {
-		return []func(){e.dir.Close}
+		e.dir.Close()
 	}
-
-	return nil
 }
 
 func (e *EdgeDir) AvailableServices() []string {
