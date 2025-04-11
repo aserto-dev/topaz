@@ -7,7 +7,7 @@ import (
 
 	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/plugins/noop"
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/util"
 	"github.com/pkg/errors"

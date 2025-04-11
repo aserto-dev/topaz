@@ -94,16 +94,20 @@ func testBuiltins(addr string) func(*testing.T) {
 				})
 				require.NoError(t, err)
 				require.NotNil(t, resp)
-				require.NotNil(t, resp.Response)
+				require.NotNil(t, resp.GetResponse())
 
-				r := resp.Response.AsMap()
+				r := resp.GetResponse().AsMap()
 
-				v1 := r["result"].([]any)
-				v2 := v1[0].(map[string]any)
-				v3 := v2["bindings"].(map[string]any)
+				v1, ok := r["result"].([]any)
+				require.True(t, ok)
+				v2, ok := v1[0].(map[string]any)
+				require.True(t, ok)
+				v3, ok := v2["bindings"].(map[string]any)
+				require.True(t, ok)
+
 				v := v3["x"]
 
-				assert.Equal(t, v, tc.expected)
+				assert.Equal(t, tc.expected, v)
 			}
 
 			t.Run(tc.name, f)
@@ -118,9 +122,9 @@ func testBuiltins(addr string) func(*testing.T) {
 				})
 				require.NoError(t, err)
 				require.NotNil(t, resp)
-				require.NotNil(t, resp.Response)
+				require.NotNil(t, resp.GetResponse())
 
-				r := resp.Response.AsMap()
+				r := resp.GetResponse().AsMap()
 				require.NotNil(t, r)
 			}
 

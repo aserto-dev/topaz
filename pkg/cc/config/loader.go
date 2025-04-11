@@ -12,7 +12,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
 )
@@ -72,10 +72,7 @@ func LoadConfiguration(fileName string) (*Loader, error) {
 		return nil, err
 	}
 
-	withTopazDir := false
-	if strings.Contains(string(fileContents), x.EnvTopazDir) {
-		withTopazDir = true
-	}
+	withTopazDir := strings.Contains(string(fileContents), x.EnvTopazDir)
 
 	cfg := new(Config)
 

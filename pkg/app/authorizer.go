@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
@@ -107,12 +106,5 @@ const (
 )
 
 func azOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	buf, err := azOpenAPI.Static().ReadFile("openapi.json")
-	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	w.Header().Add("Content-Length", strconv.FormatInt(int64(len(buf)), 10))
-	_, _ = w.Write(buf)
+	azOpenAPI.OpenApiHandler(w, r)
 }

@@ -79,7 +79,7 @@ func run() int {
 	zerolog.SetGlobalLevel(logLevel(cli.LogLevel))
 
 	if cli.NoColor {
-		os.Setenv(x.EnvTopazNoColor, strconv.FormatBool(true))
+		_ = os.Setenv(x.EnvTopazNoColor, strconv.FormatBool(true))
 	}
 
 	if err := cc.EnsureDirs(); err != nil {

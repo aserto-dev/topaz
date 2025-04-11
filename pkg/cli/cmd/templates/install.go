@@ -106,10 +106,10 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) error {
 	topazTemplateDir := cc.GetTopazTemplateDir()
 
-	cmd.Config.Insecure = true
-	if cmd.Config.ClientConfig().NoTLS {
-		cmd.Config.Insecure = false
-		cmd.Config.Plaintext = true
+	cmd.Insecure = true
+	if cmd.ClientConfig().NoTLS {
+		cmd.Insecure = false
+		cmd.Plaintext = true
 	}
 
 	// 1-3 - stop topaz, configure, start
@@ -143,7 +143,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
 		return errors.Errorf("model service not configured")
 	} else {
-		cmd.Config.Host = model.GRPC.ListenAddress
+		cmd.Host = model.GRPC.ListenAddress
 	}
 
 	// 5-7 - reset directory, apply (manifest, IDP and domain data) template.

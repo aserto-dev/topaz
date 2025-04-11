@@ -118,7 +118,7 @@ func (e Editor) Launch(path string) error {
 		return err
 	}
 	args := e.args(abs)
-	cmd := exec.Command(args[0], args[1:]...) //nolint: gosec
+	cmd := exec.Command(args[0], args[1:]...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin

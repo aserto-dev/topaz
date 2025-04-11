@@ -1,116 +1,26 @@
 ---
-# golangci.com configuration
-# https://github.com/golangci/golangci/wiki/Configuration
+# Configuration
+# https://golangci-lint.run/usage/configuration/
+
+version: "2"
 
 linters:
-  # https://golangci-lint.run/usage/linters/#enabled-by-default
-  enable:
-    - asasalint
-    - asciicheck
-    - bidichk
-    - bodyclose
-    - canonicalheader
-    # - containedctx
-    # - contextcheck
-    - copyloopvar
-    # - cyclop
-    - decorder
-    - dogsled
-    - dupl
-    - dupword
-    - durationcheck
-    - err113
-    - errcheck
-    - errchkjson
-    - errname
-    - errorlint
-    - exptostd
-    - fatcontext
-    - forcetypeassert
-    - funlen
-    - ginkgolinter
-    - gocheckcompilerdirectives
-    - gochecknoinits
-    - gochecksumtype
-    - gocognit
-    - goconst
-    - gocritic
-    - gocyclo
-    - godot
-    - godox
-    - gofmt
-    - gofumpt
-    - goheader
-    - goimports
-    - gomoddirectives
-    - gomodguard
-    - goprintffuncname
-    - gosec
-    - gosimple
-    - gosmopolitan
-    - govet
-    - grouper
-    - iface
-    - importas
-    - inamedparam
-    - ineffassign
-    - interfacebloat
-    - intrange
-    - ireturn
-    - lll
-    - loggercheck
-    - maintidx
-    - makezero
-    - mirror
-    - misspell
-    - mnd
-    - musttag
-    - nakedret
-    - nestif
-    - nilerr
-    - nilnesserr
-    - noctx
-    - nolintlint
-    - nonamedreturns
-    - nosprintfhostport
-    - perfsprint
-    - prealloc
-    - predeclared
-    - promlinter
-    - protogetter
-    - reassign
-    - recvcheck
-    - rowserrcheck
-    - sloglint
-    - spancheck
-    - sqlclosecheck
-    - staticcheck
-    - stylecheck
-    - tagliatelle
-    - testableexamples
-    - testifylint
-    - testpackage
-    - tparallel
-    - unconvert
-    - unparam
-    - unused
-    - usestdlibvars
-    - usetesting
-    - wastedassign
-    - whitespace
-    - wsl
-    - zerologlint
+  # https://golangci-lint.run/usage/configuration/#linters-configuration
+  default: all
 
   # explicitly disabled linters
   disable:
+    - containedctx
+    - contextcheck
+    - cyclop
     - depguard
+    - errcheck
     - exhaustruct
     - exhaustive
     - forbidigo
-    - gci # use gofumpt
-    - gochecknoglobals # no configuration options
+    - gochecknoglobals  # no configuration options
     - nilnil
-    - nlreturn # redundant with wsl
+    - nlreturn          # redundant with wsl
     - paralleltest
     - revive
     - tagalign
@@ -118,86 +28,78 @@ linters:
     - varnamelen
     - wrapcheck
 
+  settings:
+    cyclop:
+      max-complexity: 12
+
+    errcheck:
+      exclude-functions:
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
+        - os.Close
+
+    funlen:
+      lines: 80
+      statements: 60
+      ignore-comments: true
+
+    gomoddirectives:
+      replace-allow-list:
+        - github.com/slok/go-http-metrics
+
+    gosec:
+      excludes:
+        - G104  # Errors unhandled
+        - G304  # Potential file inclusion via variable (see https://github.com/golang/go/issues/67002)
+
+    ireturn:
+      allow:
+        - error
+        - empty
+        - stdlib
+        - generic
+        - proto.Message
+        - plugins.Plugin
+        - decisionlog.DecisionLogger
+        - resolvers.DirectoryResolver
+        - resolvers.RuntimeResolver
+        - v3.ReaderClient
+
+    lll:
+      line-length: 150
+
+    recvcheck:
+      exclusions:
+        - "*.Map"
+
+    tagliatelle:
+      case:
+        rules:
+          json: snake
+          yaml: snake
+
+        overrides:
+          - pkg: pkg/app/handlers
+            rules:
+              json: camel
+
   exclusions:
+    generated: lax
+
+    # Paths to exclude
+    paths:
+      - internal/pkg/xdg/
+      - pkg/cc/signals/
+      - pkg/cli/editor/
+
     rules:
-      - path: pkg/app/tests/
-        linters:
-        - dupl
-        - forbidigo
-        - wsl
-      
-      - path: internal/pkg/xdg/
-        linters:
-          - gochecknoinits
-          - mnd
-          - testableexamples
-          - usetesting
-          - wsl
-
-      - path: pkg/cc/signals/
-        linters:
-          - mnd
-
       - path: pkg/cli/cmd/
         linters:
           - dupl
 
-      - path: pkg/cli/editor/
-        linters:
-          - dupword
-          - errorlint
-          - forcetypeassert
-          - gocritic
-          - godox
-          - mnd
-          - ireturn
-          - lll
-          - makezero
-          - nonamedreturns
-          - recvcheck
-          - wsl
-
-      - path: pkg/app/handlers/authorizer.go
-        linters:
-          - tagliatelle
-
-      - path: pkg/app/handlers/config.go
-        linters:
-          - tagliatelle
-
-      - path: cmd/topaz-db/
-        linters:
-          - staticcheck
-
-linters-settings:
-  cyclop:
-    max-complexity: 12
-
-  funlen:
-    lines: 80
-    statements: 60
-    ignore-comments: true
-
-  ireturn:
-    allow:
-      - anon
-      - error
-      - empty
-      - stdlib
-      - generic
-      - plugins.Factory
-      - plugins.Plugin
-      - proto.Message
-      - v3.ReaderClient
-      - resolvers.DirectoryResolver
-      - resolvers.RuntimeResolver
-      - decisionlog.DecisionLogger
-
-  lll:
-    line-length: 150
-
-  tagliatelle:
-    case:
-      rules:
-        json: snake
-        yaml: snake
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports

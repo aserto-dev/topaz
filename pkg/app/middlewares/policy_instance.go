@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/aserto-dev/aserto-grpc/grpcutil"
+	grpcutil "github.com/aserto-dev/aserto-grpc"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/pkg/cc/config"

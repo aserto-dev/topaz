@@ -138,10 +138,12 @@ func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, *by
 		return nil, nil, err
 	}
 
-	var metadata *dsm3.Metadata
-	data := bytes.Buffer{}
+	var (
+		metadata  *dsm3.Metadata
+		data      bytes.Buffer
+		bytesRecv int
+	)
 
-	bytesRecv := 0
 	for {
 		resp, err := stream.Recv()
 		if errors.Is(err, io.EOF) {
@@ -174,8 +176,8 @@ func setManifest(ctx context.Context, dsm dsm3.ModelClient, r io.Reader) (int64,
 	}
 
 	bytesSend := int64(0)
-
 	buf := make([]byte, blockSize)
+
 	for {
 		n, err := r.Read(buf)
 		if err == io.EOF {
