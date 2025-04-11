@@ -143,7 +143,7 @@ func (e *Topaz) ConfigServices() error {
 		var (
 			grpcs    []builder.GRPCRegistrations
 			gateways []builder.HandlerRegistrations
-			cleanups []func()
+			cleanup  func()
 		)
 
 		for _, serv := range e.Services {
@@ -162,7 +162,7 @@ func (e *Topaz) ConfigServices() error {
 				}
 
 				gateways = append(gateways, serv.GetGatewayRegistration(gatewayPort, serviceConfig.registeredServices...))
-				cleanups = append(cleanups, serv.Cleanups()...)
+				cleanup = serv.Close
 				added = true
 			}
 		}
@@ -188,7 +188,7 @@ func (e *Topaz) ConfigServices() error {
 				},
 				ErrorHandler: cerr.CustomErrorHandler,
 			},
-			cleanups...,
+			cleanup,
 		)
 		if err != nil {
 			return err

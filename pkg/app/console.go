@@ -41,8 +41,7 @@ func (e *ConsoleService) GetGatewayRegistration(port string, services ...string)
 	}
 }
 
-func (e *ConsoleService) Cleanups() []func() {
-	return nil
+func (e *ConsoleService) Close() {
 }
 
 func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
