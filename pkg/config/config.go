@@ -1,9 +1,8 @@
 package config
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
+	"io"
 	"text/template"
 
 	"github.com/aserto-dev/logger"
@@ -23,19 +22,20 @@ import (
 const Version int = 3
 
 type Config struct {
-	Version        int                   `json:"version" yaml:"version"`
-	Logging        logger.Config         `json:"logging" yaml:"logging"`
-	Authentication authentication.Config `json:"authentication,omitempty" yaml:"authentication,omitempty"`
-	Debug          debug.Config          `json:"debug,omitempty" yaml:"debug,omitempty"`
-	Health         health.Config         `json:"health,omitempty" yaml:"health,omitempty"`
-	Metrics        metrics.Config        `json:"metrics,omitempty" yaml:"metrics,omitempty"`
-	Services       services.Config       `json:"services" yaml:"services"`
-	Directory      directory.Config      `json:"directory" yaml:"directory"`
-	Authorizer     authorizer.Config     `json:"authorizer" yaml:"authorizer"`
+	Version        int                   `json:"version"`
+	Logging        logger.Config         `json:"logging"`
+	Authentication authentication.Config `json:"authentication,omitempty"`
+	Debug          debug.Config          `json:"debug,omitempty"`
+	Health         health.Config         `json:"health,omitempty"`
+	Metrics        metrics.Config        `json:"metrics,omitempty"`
+	Services       services.Config       `json:"services"`
+	Directory      directory.Config      `json:"directory"`
+	Authorizer     authorizer.Config     `json:"authorizer"`
 }
 
 var _ = handler.Config(&Config{})
 
+//nolint:mnd  // this is where default values are defined.
 func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
 	v.SetDefault("version", 3)
 	v.SetDefault("logging.prod", false)
@@ -59,7 +59,7 @@ func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *Config) Generate(w *os.File) error {
+func (c *Config) Generate(w io.Writer) error {
 	cfgV3 := ConfigV3{Version: c.Version, Logging: c.Logging}
 
 	if err := cfgV3.Generate(w); err != nil {
@@ -113,7 +113,7 @@ func (c *ConfigV3) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *ConfigV3) Generate(w *os.File) error {
+func (c *ConfigV3) Generate(w io.Writer) error {
 	{
 		tmpl := template.Must(template.New("base").Funcs(sprig.FuncMap()).Parse(templateConfigHeader))
 
@@ -161,16 +161,16 @@ logging:
   grpc_log_level: {{ .GrpcLogLevel }}
 `
 
-func (c *ConfigV3) data() map[string]any {
-	b, err := json.Marshal(c)
-	if err != nil {
-		return nil
-	}
-
-	v := map[string]any{}
-	if err := json.Unmarshal(b, &v); err != nil {
-		return nil
-	}
-
-	return v
-}
+// func (c *ConfigV3) data() map[string]any {
+// 	b, err := json.Marshal(c)
+// 	if err != nil {
+// 		return nil
+// 	}
+//
+// 	v := map[string]any{}
+// 	if err := json.Unmarshal(b, &v); err != nil {
+// 		return nil
+// 	}
+//
+// 	return v
+// }

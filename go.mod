@@ -2,7 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.23.7
 
-toolchain go1.24.1
+toolchain go1.24.2
 
 // replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-directory => ../go-directory
@@ -14,7 +14,6 @@ require (
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/alecthomas/kong v1.10.0
 	github.com/aserto-dev/aserto-grpc v0.2.10
-	github.com/aserto-dev/aserto-management v0.9.9
 	github.com/aserto-dev/azm v0.2.12
 	github.com/aserto-dev/certs v0.1.1
 	github.com/aserto-dev/errors v0.0.17

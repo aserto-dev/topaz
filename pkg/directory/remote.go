@@ -1,7 +1,7 @@
 package directory
 
 import (
-	"os"
+	"io"
 	"text/template"
 
 	client "github.com/aserto-dev/go-aserto"
@@ -11,14 +11,14 @@ import (
 const RemoteDirectoryStorePlugin string = "remote_directory"
 
 type RemoteDirectoryStore struct {
-	client.Config
+	client.Config `json:"config,squash"` //nolint:staticcheck  //squash accepted by mapstructure
 }
 
 func (c *RemoteDirectoryStore) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *RemoteDirectoryStore) Generate(w *os.File) error {
+func (c *RemoteDirectoryStore) Generate(w io.Writer) error {
 	tmpl, err := template.New("STORE").Parse(remoteDirectoryStoreTemplate)
 	if err != nil {
 		return err
@@ -36,6 +36,7 @@ func (c RemoteDirectoryStore) Map() map[string]interface{} {
 	if err := mapstructure.Decode(c, &result); err != nil {
 		return nil
 	}
+
 	return result
 }
 
@@ -53,14 +54,11 @@ func RemoteDirectoryStoreMap(cfg *RemoteDirectoryStore) map[string]interface{} {
 	if err := mapstructure.Decode(cfg, &result); err != nil {
 		return nil
 	}
+
 	return result
 }
 
 const remoteDirectoryStoreTemplate = `
-  # directory store configuration.
-  store:
-    plugin: remote_directory
-      settings:
         address: '{{ .Address }}'
         tenant_id: '{{ .TenantID }}'
         api_key: '{{ .APIKey }}'

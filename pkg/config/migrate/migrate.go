@@ -6,11 +6,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/aserto-dev/aserto-management/controller"
+	"github.com/aserto-dev/topaz/controller"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	config2 "github.com/aserto-dev/topaz/pkg/cc/config"
 	config3 "github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
@@ -67,25 +68,27 @@ func Migrate(cfg2 *config2.Config) (*config3.Config, error) {
 }
 
 func migAuthentication(cfg2 *config2.Config, cfg3 *config3.Config) {
-	cfg3.Authentication.Enabled = len(cfg2.Auth.Keys) != 0
-	cfg3.Authentication.Plugin = authentication.LocalAuthenticationPlugin
-	cfg3.Authentication.Settings = authentication.LocalSettings{
-		Keys: cfg2.Auth.Keys,
-		Options: authentication.CallOptions{
-			Default: authentication.Options{
-				EnableAPIKey:    cfg2.Auth.Options.Default.EnableAPIKey,
-				EnableAnonymous: cfg2.Auth.Options.Default.EnableAnonymous,
+	cfg3.Authentication = authentication.Config{
+		Enabled: len(cfg2.Auth.Keys) != 0,
+		Plugin:  authentication.LocalAuthenticationPlugin,
+		Settings: authentication.LocalSettings{
+			Keys: cfg2.Auth.Keys,
+			Options: authentication.CallOptions{
+				Default: authentication.Options{
+					EnableAPIKey:    cfg2.Auth.Options.Default.EnableAPIKey,
+					EnableAnonymous: cfg2.Auth.Options.Default.EnableAnonymous,
+				},
+				Overrides: lo.Map(
+					cfg2.Auth.Options.Overrides,
+					func(override2 config2.OptionOverrides, _ int) authentication.OptionOverrides {
+						return authentication.OptionOverrides{
+							Paths:    override2.Paths,
+							Override: authentication.Options(override2.Override),
+						}
+					},
+				),
 			},
 		},
-	}
-
-	cfg3.Authentication.Settings.Options.Overrides = []authentication.OptionOverrides{}
-	for _, override2 := range cfg2.Auth.Options.Overrides {
-		override3 := authentication.OptionOverrides{
-			Paths:    override2.Paths,
-			Override: authentication.Options(override2.Override),
-		}
-		cfg3.Authentication.Settings.Options.Overrides = append(cfg3.Authentication.Settings.Options.Overrides, override3)
 	}
 }
 
@@ -123,30 +126,24 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 	port2names := map[string][]string{}
 
 	for name, service := range cfg2.APIConfig.Services {
-		if _, ok := svcHosts[service.GRPC.ListenAddress]; !ok {
-			svcHosts[service.GRPC.ListenAddress] = service
-		}
-
-		if names, ok := port2names[service.GRPC.ListenAddress]; !ok {
-			port2names[service.GRPC.ListenAddress] = []string{name}
-		} else {
-			names = append(names, name)
-			port2names[service.GRPC.ListenAddress] = names
-		}
+		svcHosts[service.GRPC.ListenAddress] = service
+		port2names[service.GRPC.ListenAddress] = append(port2names[service.GRPC.ListenAddress], name)
 	}
 
 	svcCounter := 0
+
 	for addr, host := range svcHosts {
 		includes := port2names[addr]
 
 		svcCounter++
+
 		var svc string
 
 		switch {
 		case len(svcHosts) == 1:
 			svc = "topaz-svc"
 		case len(includes) == 1:
-			svc = fmt.Sprintf("%s-svc", includes[0])
+			svc = includes[0] + "-svc"
 		case lo.Contains(includes, "reader"):
 			svc = "directory-svc"
 		default:
@@ -181,22 +178,26 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 }
 
 func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
-	cfg3.Directory = directory.Config{}
-
+	// when directory resolver address == directory gRPC reader address
 	// use BoltDB plugin (DEFAULT)
 	if cfg2.DirectoryResolver.Address == cfg2.APIConfig.Services["reader"].GRPC.ListenAddress {
-		cfg3.Directory.ReadTimeout = cfg2.Edge.RequestTimeout
-		cfg3.Directory.WriteTimeout = cfg2.Edge.RequestTimeout
-		cfg3.Directory.Store.Plugin = directory.BoltDBStorePlugin
-		cfg3.Directory.Store.Settings = directory.BoltDBStore{Config: cfg2.Edge}.Map()
-	}
-
-	// use remote directory plugin when directory resolver address != directory gRPC reader address.
-	if cfg2.DirectoryResolver.Address != cfg2.APIConfig.Services["reader"].GRPC.ListenAddress {
-		cfg3.Directory.ReadTimeout = cfg2.Edge.RequestTimeout
-		cfg3.Directory.WriteTimeout = cfg2.Edge.RequestTimeout
-		cfg3.Directory.Store.Plugin = directory.RemoteDirectoryStorePlugin
-		cfg3.Directory.Store.Settings = directory.RemoteDirectoryStore{Config: cfg2.DirectoryResolver}.Map()
+		cfg3.Directory = directory.Config{
+			ReadTimeout:  cfg2.Edge.RequestTimeout,
+			WriteTimeout: cfg2.Edge.RequestTimeout,
+			Store: directory.Store{
+				PluginConfig: handler.PluginConfig{Plugin: directory.BoltDBStorePlugin},
+				Bolt:         &directory.BoltDBStore{Config: cfg2.Edge},
+			},
+		}
+	} else {
+		cfg3.Directory = directory.Config{
+			ReadTimeout:  cfg2.Edge.RequestTimeout,
+			WriteTimeout: cfg2.Edge.RequestTimeout,
+			Store: directory.Store{
+				PluginConfig: handler.PluginConfig{Plugin: directory.RemoteDirectoryStorePlugin},
+				Remote:       &directory.RemoteDirectoryStore{Config: cfg2.DirectoryResolver},
+			},
+		}
 	}
 }
 
@@ -217,7 +218,7 @@ func migAuthorizer(cfg2 *config2.Config, cfg3 *config3.Config) {
 	}
 
 	// *ControllerConfig
-	if cfg2.ControllerConfig != nil && cfg2.ControllerConfig.Enabled {
+	if cfg2.ControllerConfig.Enabled {
 		cfg3.Authorizer.Controller = authorizer.ControllerConfig{
 			Config: controller.Config{
 				Enabled: cfg2.ControllerConfig.Enabled,

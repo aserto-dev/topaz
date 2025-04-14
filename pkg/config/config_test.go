@@ -1,4 +1,3 @@
-// nolint
 package config_test
 
 import (
@@ -10,6 +9,7 @@ import (
 	"testing"
 
 	cfg3 "github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/config/handler"
 
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/pkg/errors"
@@ -17,7 +17,6 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gopkg.in/yaml.v3"
 )
 
 func TestMigrateV2toV3(t *testing.T) {
@@ -48,11 +47,9 @@ func TestLoadConfigV3(t *testing.T) {
 	}
 
 	// print interpreted yaml config.
-	yEnc := yaml.NewEncoder(os.Stdout)
-	yEnc.SetIndent(2)
-	if err := yEnc.Encode(cfg3); err != nil {
-		require.NoError(t, err)
-	}
+	require.NoError(t,
+		cfg3.Generate(os.Stdout),
+	)
 
 	// opa, err := cfg3.Authorizer.OPA
 	// require.NoError(t, err)
@@ -77,7 +74,7 @@ func TestLoadConfigV3(t *testing.T) {
 func loadConfigV3(r io.Reader) (*cfg3.Config, error) {
 	init := &cfg3.ConfigV3{}
 
-	v := viper.NewWithOptions(viper.EnvKeyReplacer(newReplacer()))
+	v := viper.NewWithOptions(viper.EnvKeyReplacer(newReplacer()), viper.WithDecodeHook(handler.PluginDecodeHook()))
 	v.SetConfigType("yaml")
 	v.SetEnvPrefix("TOPAZ")
 	v.AutomaticEnv()

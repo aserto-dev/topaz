@@ -1,7 +1,7 @@
 package directory
 
 import (
-	"os"
+	"io"
 
 	"github.com/go-viper/mapstructure/v2"
 )
@@ -14,7 +14,7 @@ func (c *NATSKeyValueStore) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *NATSKeyValueStore) Generate(w *os.File) error {
+func (c *NATSKeyValueStore) Generate(w io.Writer) error {
 	return nil
 }
 
@@ -32,5 +32,6 @@ func NATSKeyValueStoreMap(cfg *NATSKeyValueStore) map[string]interface{} {
 	if err := mapstructure.Decode(cfg, &result); err != nil {
 		return nil
 	}
+
 	return result
 }

@@ -1,10 +1,10 @@
 package authorizer
 
 import (
-	"os"
+	"io"
 	"text/template"
 
-	"github.com/aserto-dev/aserto-management/controller"
+	"github.com/aserto-dev/topaz/controller"
 )
 
 type ControllerConfig struct {
@@ -15,7 +15,7 @@ func (c *ControllerConfig) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *ControllerConfig) Generate(w *os.File) error {
+func (c *ControllerConfig) Generate(w io.Writer) error {
 	tmpl, err := template.New("CONTROLLER").Parse(controllerTemplate)
 	if err != nil {
 		return err

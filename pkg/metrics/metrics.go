@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	"os"
+	"io"
 	"strings"
 	"text/template"
 
@@ -12,9 +12,9 @@ import (
 )
 
 type Config struct {
-	Enabled       bool              `json:"enabled"`
-	ListenAddress string            `json:"listen_address"`
-	Certificates  *client.TLSConfig `json:"certs,omitempty"`
+	Enabled       bool             `json:"enabled"`
+	ListenAddress string           `json:"listen_address"`
+	Certificates  client.TLSConfig `json:"certs,omitempty"`
 }
 
 var _ = handler.Config(&Config{})
@@ -28,7 +28,7 @@ func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *Config) Generate(w *os.File) error {
+func (c *Config) Generate(w io.Writer) error {
 	tmpl, err := template.New("METRICS").Parse(metricsTemplate)
 	if err != nil {
 		return err

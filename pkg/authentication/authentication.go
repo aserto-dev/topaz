@@ -1,7 +1,7 @@
 package authentication
 
 import (
-	"os"
+	"io"
 	"strings"
 	"text/template"
 
@@ -46,7 +46,7 @@ func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *Config) Generate(w *os.File) error {
+func (c *Config) Generate(w io.Writer) error {
 	tmpl, err := template.New("AUTHENTICATION").Parse(authenticationTemplate)
 	if err != nil {
 		return err

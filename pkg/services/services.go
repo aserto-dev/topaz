@@ -1,8 +1,8 @@
 package services
 
 import (
+	"io"
 	"net/http"
-	"os"
 	"strings"
 	"text/template"
 	"time"
@@ -44,7 +44,7 @@ func (s *Service) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *Config) Generate(w *os.File) error {
+func (c *Config) Generate(w io.Writer) error {
 	tmpl, err := template.New("SERVICES").Parse(servicesTemplate)
 	if err != nil {
 		return err
@@ -178,6 +178,7 @@ func DefaultAllowedOrigins(useHTTP bool) []string {
 			"http://0.0.0.0:*",
 		}
 	}
+
 	return []string{
 		"https://localhost",
 		"https://localhost:*",

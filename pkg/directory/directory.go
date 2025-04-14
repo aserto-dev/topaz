@@ -1,14 +1,14 @@
 package directory
 
 import (
-	"os"
+	"io"
 	"text/template"
 	"time"
 
-	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/pkg/errors"
-
 	"github.com/spf13/viper"
+
+	"github.com/aserto-dev/topaz/pkg/config/handler"
 )
 
 const (
@@ -35,7 +35,7 @@ func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *Config) Generate(w *os.File) error {
+func (c *Config) Generate(w io.Writer) error {
 	tmpl, err := template.New("DIRECTORY").Parse(directoryTemplate)
 	if err != nil {
 		return err
@@ -47,19 +47,15 @@ func (c *Config) Generate(w *os.File) error {
 
 	switch c.Store.Plugin {
 	case BoltDBStorePlugin:
-		cfg := BoltDBStoreFromMap(c.Store.Settings)
-		return cfg.Generate(w)
+		return c.Store.Bolt.Generate(w)
 	case RemoteDirectoryStorePlugin:
-		cfg := RemoteDirectoryStoreFromMap(c.Store.Settings)
-		return cfg.Generate(w)
+		return c.Store.Remote.Generate(w)
 	case PostgresStorePlugin:
-		cfg := PostgresStoreFromMap(c.Store.Settings)
-		return cfg.Generate(w)
+		return c.Store.Postgres.Generate(w)
 	case NATSKeyValueStorePlugin:
-		cfg := NATSKeyValueStoreFromMap(c.Store.Settings)
-		return cfg.Generate(w)
+		return c.Store.NatsKV.Generate(w)
 	default:
-		return errors.Errorf("unknown store plugin %q", c.Store.Plugin)
+		return errors.Errorf("unknown store plugin %q", c.Store.PluginConfig)
 	}
 }
 
@@ -68,9 +64,17 @@ const directoryTemplate = `
 directory:
   read_timeout: {{ .ReadTimeout }}
   write_timeout: {{ .WriteTimeout }}
+  # directory store configuration.
+  store:
+    plugin: {{ .Store.Plugin }}
+    settings:
 `
 
 type Store struct {
-	Plugin   string                 `json:"plugin"`
-	Settings map[string]interface{} `json:"settings"`
+	handler.PluginConfig `json:"plugin_config,squash"` //nolint:staticcheck  //squash accepted by mapstructure
+
+	Bolt     *BoltDBStore          `json:"boltdb,omitempty"`
+	Remote   *RemoteDirectoryStore `json:"remote_directory,omitempty"`
+	Postgres *PostgresStore        `json:"postgres,omitempty"`
+	NatsKV   *NATSKeyValueStore    `json:"nats_kv,omitempty"`
 }

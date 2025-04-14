@@ -2,7 +2,7 @@ package health
 
 import (
 	"html/template"
-	"os"
+	"io"
 	"strings"
 
 	"github.com/Masterminds/sprig/v3"
@@ -13,9 +13,9 @@ import (
 )
 
 type Config struct {
-	Enabled       bool              `json:"enabled"`
-	ListenAddress string            `json:"listen_address"`
-	Certificates  *client.TLSConfig `json:"certs,omitempty"`
+	Enabled       bool             `json:"enabled"`
+	ListenAddress string           `json:"listen_address"`
+	Certificates  client.TLSConfig `json:"certs,omitempty"`
 }
 
 var _ = handler.Config(&Config{})
@@ -29,7 +29,7 @@ func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *Config) Generate(w *os.File) error {
+func (c *Config) Generate(w io.Writer) error {
 	tmpl := template.New("HEALTH")
 
 	var funcMap template.FuncMap = map[string]interface{}{}

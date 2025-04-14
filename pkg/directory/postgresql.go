@@ -1,7 +1,7 @@
 package directory
 
 import (
-	"os"
+	"io"
 
 	"github.com/go-viper/mapstructure/v2"
 )
@@ -14,7 +14,7 @@ func (c *PostgresStore) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *PostgresStore) Generate(w *os.File) error {
+func (c *PostgresStore) Generate(w io.Writer) error {
 	return nil
 }
 
@@ -32,5 +32,6 @@ func PostgresStoreMap(cfg *PostgresStore) map[string]interface{} {
 	if err := mapstructure.Decode(cfg, &result); err != nil {
 		return nil
 	}
+
 	return result
 }

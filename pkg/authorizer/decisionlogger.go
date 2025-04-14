@@ -1,7 +1,7 @@
 package authorizer
 
 import (
-	"os"
+	"io"
 	"text/template"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
@@ -27,7 +27,7 @@ func (c *DecisionLoggerConfig) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *DecisionLoggerConfig) Generate(w *os.File) error {
+func (c *DecisionLoggerConfig) Generate(w io.Writer) error {
 	if !c.Enabled {
 		c.Plugin = DisabledDecisionLoggerPlugin
 	}
@@ -51,7 +51,7 @@ type DisabledDecisionLoggerConfig struct {
 	Enabled bool `json:"enabled"`
 }
 
-func (c *DisabledDecisionLoggerConfig) Generate(w *os.File) error {
+func (c *DisabledDecisionLoggerConfig) Generate(w io.Writer) error {
 	tmpl, err := template.New("DISABLED_DECISION_LOGGER").Parse(disabledDecisionLoggerTemplate)
 	if err != nil {
 		return err
@@ -76,7 +76,7 @@ type FileDecisionLoggerConfig struct {
 	file.Config
 }
 
-func (c *FileDecisionLoggerConfig) Generate(w *os.File) error {
+func (c *FileDecisionLoggerConfig) Generate(w io.Writer) error {
 	tmpl, err := template.New("FILE_DECISION_LOGGER").Parse(fileDecisionLoggerTemplate)
 	if err != nil {
 		return err
@@ -113,7 +113,7 @@ const FileDecisionLoggerPlugin string = `file`
 const fileDecisionLoggerTemplate string = `
   # decision logger configuration.
   decision_logger:
-		enabled: {{ .Enabled }}
+    enabled: {{ .Enabled }}
     plugin: file
     settings:
       log_file_path: '{{ .LogFilePath }}'
@@ -145,7 +145,7 @@ const selfDecisionLoggerTemplate string = `
         publish_timeout_seconds: 2
 `
 
-func (c *SelfDecisionLoggerConfig) Generate(w *os.File) error {
+func (c *SelfDecisionLoggerConfig) Generate(w io.Writer) error {
 	tmpl, err := template.New("SELF_DECISION_LOGGER").Parse(selfDecisionLoggerTemplate)
 	if err != nil {
 		return err

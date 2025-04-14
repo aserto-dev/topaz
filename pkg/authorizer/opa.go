@@ -1,7 +1,7 @@
 package authorizer
 
 import (
-	"os"
+	"io"
 	"text/template"
 
 	"github.com/aserto-dev/runtime"
@@ -19,7 +19,7 @@ func (c *OPAConfig) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *OPAConfig) Generate(w *os.File) error {
+func (c *OPAConfig) Generate(w io.Writer) error {
 	tmpl, err := template.New("OPA").Parse(opaConfigTemplate)
 	if err != nil {
 		return err

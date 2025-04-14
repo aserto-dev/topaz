@@ -3,9 +3,9 @@ package debug
 import (
 	"context"
 	"html/template"
+	"io"
 	"net/http"
 	"net/http/pprof"
-	"os"
 	"runtime"
 	"strings"
 	"time"
@@ -37,7 +37,7 @@ func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *Config) Generate(w *os.File) error {
+func (c *Config) Generate(w io.Writer) error {
 	tmpl, err := template.New("DEBUG").Parse(debugTemplate)
 	if err != nil {
 		return err

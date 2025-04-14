@@ -1,7 +1,7 @@
 package authorizer
 
 import (
-	"os"
+	"io"
 	"text/template"
 	"time"
 
@@ -22,7 +22,7 @@ func (c *JWTConfig) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *JWTConfig) Generate(w *os.File) error {
+func (c *JWTConfig) Generate(w io.Writer) error {
 	tmpl, err := template.New("JWT").Parse(jwtConfigTemplate)
 	if err != nil {
 		return err

@@ -1,7 +1,7 @@
 package authorizer
 
 import (
-	"os"
+	"io"
 	"text/template"
 
 	"github.com/aserto-dev/topaz/pkg/config/handler"
@@ -27,7 +27,7 @@ func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
-func (c *Config) Generate(w *os.File) error {
+func (c *Config) Generate(w io.Writer) error {
 	tmpl, err := template.New("AUTHORIZER").Parse(authorizerTemplate)
 	if err != nil {
 		return err
