@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"reflect"
+	"strings"
 
-	"github.com/go-viper/mapstructure/v2"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 )
 
 var ErrInvalidConfig = errors.New("invalid plugin configuration")
@@ -19,39 +19,17 @@ type PluginConfig struct {
 
 func (PluginConfig) IsPlugin() {}
 
-func PluginDecodeHook() mapstructure.DecodeHookFunc {
-	return mapstructure.ComposeDecodeHookFunc(
-		mapstructure.StringToTimeDurationHookFunc(),
-		decodePluginSettings,
-	)
+func Indent(s string, n int) string {
+	return strings.Join(
+		lo.Map(
+			strings.Split(strings.TrimSpace(s), "\n"),
+			func(line string, _ int) string { return strings.Repeat(" ", n) + line }),
+		"\n",
+	) + "\n"
 }
 
-func decodePluginSettings(from, to reflect.Type, input any) (any, error) {
-	if !to.Implements(reflect.TypeOf((*Plugin)(nil)).Elem()) {
-		return input, nil
-	}
-
-	// This is a plugin. Rename the "settings" field to the value of "plugin".
-	v, ok := input.(map[string]any)
-	if !ok {
-		return input, errors.Wrap(ErrInvalidConfig, "not a yaml mapping")
-	}
-
-	plugin, ok := v["plugin"]
-	if !ok {
-		return input, errors.Wrap(ErrInvalidConfig, "'plugin' field is required")
-	}
-
-	pluginName, ok := plugin.(string)
-	if !ok {
-		return input, errors.Wrap(ErrInvalidConfig, "'plugin' field must be a string")
-	}
-
-	settings := v["settings"]
-
-	delete(v, "settings")
-
-	v[pluginName] = settings
-
-	return v, nil
+func PrefixKeys(prefix string, m map[string]any) map[string]any {
+	return lo.MapKeys(m, func(_ any, k string) string {
+		return prefix + "." + k
+	})
 }

@@ -3,48 +3,33 @@ package services
 import (
 	"io"
 	"net/http"
-	"strings"
 	"text/template"
 	"time"
 
 	"github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/samber/lo"
 
 	"github.com/go-http-utils/headers"
-	"github.com/spf13/viper"
 )
 
 type Config map[string]*Service
 
-var _ = handler.Config(&Config{})
+var _ handler.Config = (*Config)(nil)
 
-func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
-	for name, service := range *c {
-		service.SetDefaults(v, strings.Join(append(p, name), "."))
-	}
+func (c Config) Defaults() map[string]any {
+	return lo.Assign(
+		lo.Map(lo.Keys(c), func(name string, _ int) map[string]any {
+			return handler.PrefixKeys(name, c[name].Defaults())
+		})...,
+	)
 }
 
-func (c *Config) Validate() (bool, error) {
+func (c Config) Validate() (bool, error) {
 	return true, nil
 }
 
-type Service struct {
-	DependsOn []string       `json:"depends_on"`
-	GRPC      GRPCService    `json:"grpc"`
-	Gateway   GatewayService `json:"gateway"`
-	Includes  []string       `json:"includes"`
-}
-
-func (s *Service) SetDefaults(v *viper.Viper, p ...string) {
-	s.GRPC.SetDefaults(v, strings.Join(append(p, "grpc"), "."))
-	s.Gateway.SetDefaults(v, strings.Join(append(p, "gateway"), "."))
-}
-
-func (s *Service) Validate() (bool, error) {
-	return true, nil
-}
-
-func (c *Config) Generate(w io.Writer) error {
+func (c Config) Generate(w io.Writer) error {
 	tmpl, err := template.New("SERVICES").Parse(servicesTemplate)
 	if err != nil {
 		return err
@@ -55,6 +40,24 @@ func (c *Config) Generate(w io.Writer) error {
 	}
 
 	return nil
+}
+
+type Service struct {
+	DependsOn []string       `json:"depends_on"`
+	GRPC      GRPCService    `json:"grpc"`
+	Gateway   GatewayService `json:"gateway"`
+	Includes  []string       `json:"includes"`
+}
+
+func (c *Service) Defaults() map[string]any {
+	return lo.Assign(
+		handler.PrefixKeys("grpc", c.GRPC.Defaults()),
+		handler.PrefixKeys("gateway", c.Gateway.Defaults()),
+	)
+}
+
+func (s *Service) Validate() (bool, error) {
+	return true, nil
 }
 
 const servicesTemplate string = `
@@ -115,12 +118,14 @@ type GRPCService struct {
 	DisableReflection bool             `json:"disable_reflection"`
 }
 
-func (s *GRPCService) SetDefaults(v *viper.Viper, p ...string) {
-	v.SetDefault(strings.Join(append(p, "listen_address"), "."), "0.0.0.0:9292")
-	v.SetDefault(strings.Join(append(p, "certs", "tls_cert_path"), "."), "${TOPAZ_CERTS_DIR}/grpc.crt")
-	v.SetDefault(strings.Join(append(p, "certs", "tls_key_path"), "."), "${TOPAZ_CERTS_DIR}/grpc.key")
-	v.SetDefault(strings.Join(append(p, "certs", "tls_ca_cert_path"), "."), "${TOPAZ_CERTS_DIR}/grpc-ca.crt")
-	v.SetDefault(strings.Join(append(p, "disable_reflection"), "."), false)
+func (s *GRPCService) Defaults() map[string]any {
+	return map[string]any{
+		"listen_address":         "0.0.0:9292",
+		"certs.tls_cert_path":    "${TOPAZ_CERTS_DIR}/grpc.crt",
+		"certs.tls_key_path":     "${TOPAZ_CERTS_DIR}/grpc.key",
+		"certs.tls_ca_cert_path": "${TOPAZ_CERTS_DIR}/grpc-ca.crt",
+		"disable_reflection":     false,
+	}
 }
 
 func (s *GRPCService) Validate() (bool, error) {
@@ -141,19 +146,21 @@ type GatewayService struct {
 	IdleTimeout       time.Duration    `json:"idle_timeout"`
 }
 
-func (s *GatewayService) SetDefaults(v *viper.Viper, p ...string) {
-	v.SetDefault(strings.Join(append(p, "listen_address"), "."), "0.0.0.0:9393")
-	v.SetDefault(strings.Join(append(p, "certs", "tls_cert_path"), "."), "${TOPAZ_CERTS_DIR}/gateway.crt")
-	v.SetDefault(strings.Join(append(p, "certs", "tls_key_path"), "."), "${TOPAZ_CERTS_DIR}/gateway.key")
-	v.SetDefault(strings.Join(append(p, "certs", "tls_ca_cert_path"), "."), "${TOPAZ_CERTS_DIR}/gateway-ca.crt")
-	v.SetDefault(strings.Join(append(p, "allowed_origins"), "."), DefaultAllowedOrigins(s.HTTP))
-	v.SetDefault(strings.Join(append(p, "allowed_headers"), "."), DefaultAllowedHeaders())
-	v.SetDefault(strings.Join(append(p, "allowed_methods"), "."), DefaultAllowedMethods())
-	v.SetDefault(strings.Join(append(p, "http"), "."), false)
-	v.SetDefault(strings.Join(append(p, "read_timeout"), "."), DefaultReadTimeout.String())
-	v.SetDefault(strings.Join(append(p, "read_header_timeout"), "."), DefaultReadHeaderTimeout.String())
-	v.SetDefault(strings.Join(append(p, "write_timeout"), "."), DefaultWriteTimeout.String())
-	v.SetDefault(strings.Join(append(p, "idle_timeout"), "."), DefaultIdleTimeout.String())
+func (s *GatewayService) Defaults() map[string]any {
+	return map[string]any{
+		"listen_address":         "0.0.0:9393",
+		"certs.tls_cert_path":    "${TOPAZ_CERTS_DIR}/gateway.crt",
+		"certs.tls_key_path":     "${TOPAZ_CERTS_DIR}/gateway.key",
+		"certs.tls_ca_cert_path": "${TOPAZ_CERTS_DIR}/gateway-ca.crt",
+		"allowed_origins":        DefaultAllowedOrigins(s.HTTP),
+		"allowed_headers":        DefaultAllowedHeaders(),
+		"allowed_methods":        DefaultAllowedMethods(),
+		"http":                   false,
+		"read_timeout":           DefaultReadTimeout.String(),
+		"read_header_timeout":    DefaultReadHeaderTimeout.String(),
+		"write_timeout":          DefaultWriteTimeout.String(),
+		"idle_timeout":           DefaultIdleTimeout.String(),
+	}
 }
 
 func (s *GatewayService) Validate() (bool, error) {

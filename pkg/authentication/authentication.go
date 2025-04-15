@@ -6,8 +6,6 @@ import (
 	"text/template"
 
 	"github.com/aserto-dev/topaz/pkg/config/handler"
-
-	"github.com/spf13/viper"
 )
 
 // authentication:
@@ -36,10 +34,12 @@ type Config struct {
 	Settings LocalSettings `json:"settings,omitempty"`
 }
 
-var _ = handler.Config(&Config{})
+var _ handler.Config = (*Config)(nil)
 
-func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
-	v.SetDefault(strings.Join(append(p, "enabled"), "."), false)
+func (c *Config) Defaults() map[string]any {
+	return map[string]any{
+		"enabled": false,
+	}
 }
 
 func (c *Config) Validate() (bool, error) {

@@ -7,14 +7,12 @@ import (
 	"net/http"
 	"net/http/pprof"
 	"runtime"
-	"strings"
 	"time"
 
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/x"
 
 	"github.com/rs/zerolog"
-	"github.com/spf13/viper"
 )
 
 const DefaultShutdownTimeout = time.Second * 0
@@ -25,12 +23,14 @@ type Config struct {
 	ShutdownTimeout time.Duration `json:"shutdown_timeout"`
 }
 
-var _ = handler.Config(&Config{})
+var _ handler.Config = (*Config)(nil)
 
-func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
-	v.SetDefault(strings.Join(append(p, "enabled"), "."), false)
-	v.SetDefault(strings.Join(append(p, "listen_address"), "."), "0.0.0.0:6060")
-	v.SetDefault(strings.Join(append(p, "shutdown_timeout"), "."), DefaultShutdownTimeout.String())
+func (c *Config) Defaults() map[string]any {
+	return map[string]any{
+		"enabled":         false,
+		"listen_address":  "0.0.0.0:6060",
+		"sutdown_timeout": DefaultShutdownTimeout.String(),
+	}
 }
 
 func (c *Config) Validate() (bool, error) {

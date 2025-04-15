@@ -10,6 +10,10 @@ const NATSKeyValueStorePlugin string = "nats_kv"
 
 type NATSKeyValueStore struct{}
 
+func (c *NATSKeyValueStore) Defaults() map[string]any {
+	return map[string]any{}
+}
+
 func (c *NATSKeyValueStore) Validate() (bool, error) {
 	return true, nil
 }

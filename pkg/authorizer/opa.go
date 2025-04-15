@@ -5,14 +5,14 @@ import (
 	"text/template"
 
 	"github.com/aserto-dev/runtime"
-	"github.com/spf13/viper"
 )
 
 type OPAConfig struct {
 	runtime.Config
 }
 
-func (c *OPAConfig) SetDefaults(v *viper.Viper, p ...string) {
+func (c *OPAConfig) Defaults() map[string]any {
+	return map[string]any{}
 }
 
 func (c *OPAConfig) Validate() (bool, error) {

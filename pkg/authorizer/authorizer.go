@@ -5,8 +5,6 @@ import (
 	"text/template"
 
 	"github.com/aserto-dev/topaz/pkg/config/handler"
-
-	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -17,10 +15,10 @@ type Config struct {
 	JWT            JWTConfig              `json:"jwt"`
 }
 
-var _ = handler.Config(&Config{})
+var _ handler.Config = (*Config)(nil)
 
-func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
-	c.JWT.SetDefaults(v)
+func (c *Config) Defaults() map[string]any {
+	return handler.PrefixKeys("jwt", c.JWT.Defaults())
 }
 
 func (c *Config) Validate() (bool, error) {

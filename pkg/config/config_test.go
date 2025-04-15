@@ -14,7 +14,6 @@ import (
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -74,8 +73,7 @@ func TestLoadConfigV3(t *testing.T) {
 func loadConfigV3(r io.Reader) (*cfg3.Config, error) {
 	init := &cfg3.ConfigV3{}
 
-	v := viper.NewWithOptions(viper.EnvKeyReplacer(newReplacer()), viper.WithDecodeHook(handler.PluginDecodeHook()))
-	v.SetConfigType("yaml")
+	v := handler.NewViper()
 	v.SetEnvPrefix("TOPAZ")
 	v.AutomaticEnv()
 

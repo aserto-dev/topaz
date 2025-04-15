@@ -3,13 +3,10 @@ package health
 import (
 	"html/template"
 	"io"
-	"strings"
 
 	"github.com/Masterminds/sprig/v3"
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
-
-	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -18,11 +15,13 @@ type Config struct {
 	Certificates  client.TLSConfig `json:"certs,omitempty"`
 }
 
-var _ = handler.Config(&Config{})
+var _ handler.Config = (*Config)(nil)
 
-func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
-	v.SetDefault(strings.Join(append(p, "enabled"), "."), false)
-	v.SetDefault(strings.Join(append(p, "listen_address"), "."), "0.0.0.0:9494")
+func (c *Config) Defaults() map[string]any {
+	return map[string]any{
+		"enabled":        false,
+		"listen_address": "0.0.0.0:9494",
+	}
 }
 
 func (c *Config) Validate() (bool, error) {

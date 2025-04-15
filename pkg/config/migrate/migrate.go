@@ -11,9 +11,9 @@ import (
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	config2 "github.com/aserto-dev/topaz/pkg/cc/config"
 	config3 "github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/config/directory"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/debug"
-	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
@@ -186,7 +186,7 @@ func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
 			WriteTimeout: cfg2.Edge.RequestTimeout,
 			Store: directory.Store{
 				PluginConfig: handler.PluginConfig{Plugin: directory.BoltDBStorePlugin},
-				Bolt:         &directory.BoltDBStore{Config: cfg2.Edge},
+				Bolt:         directory.BoltDBStore(cfg2.Edge),
 			},
 		}
 	} else {
@@ -195,7 +195,7 @@ func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
 			WriteTimeout: cfg2.Edge.RequestTimeout,
 			Store: directory.Store{
 				PluginConfig: handler.PluginConfig{Plugin: directory.RemoteDirectoryStorePlugin},
-				Remote:       &directory.RemoteDirectoryStore{Config: cfg2.DirectoryResolver},
+				Remote:       directory.RemoteDirectoryStore(cfg2.DirectoryResolver),
 			},
 		}
 	}

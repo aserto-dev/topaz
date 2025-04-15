@@ -4,8 +4,6 @@ import (
 	"io"
 	"text/template"
 	"time"
-
-	"github.com/spf13/viper"
 )
 
 const DefaultAcceptableTimeSkew = time.Second * 5
@@ -14,8 +12,10 @@ type JWTConfig struct {
 	AcceptableTimeSkew time.Duration `json:"acceptable_time_skew"`
 }
 
-func (c *JWTConfig) SetDefaults(v *viper.Viper, p ...string) {
-	v.SetDefault("acceptable_time_skew", DefaultAcceptableTimeSkew.String())
+func (c *JWTConfig) Defaults() map[string]any {
+	return map[string]any{
+		"acceptable_time_skew": DefaultAcceptableTimeSkew.String(),
+	}
 }
 
 func (c *JWTConfig) Validate() (bool, error) {

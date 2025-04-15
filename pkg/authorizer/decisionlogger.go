@@ -9,7 +9,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/pkg/errors"
-	"github.com/spf13/viper"
 )
 
 type DecisionLoggerConfig struct {
@@ -18,9 +17,10 @@ type DecisionLoggerConfig struct {
 	Settings map[string]interface{} `json:"settings"`
 }
 
-var _ = handler.Config(&DecisionLoggerConfig{})
+var _ handler.Config = (*DecisionLoggerConfig)(nil)
 
-func (c *DecisionLoggerConfig) SetDefaults(v *viper.Viper, p ...string) {
+func (c *DecisionLoggerConfig) Defaults() map[string]any {
+	return map[string]any{}
 }
 
 func (c *DecisionLoggerConfig) Validate() (bool, error) {

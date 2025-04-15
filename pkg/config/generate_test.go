@@ -15,9 +15,9 @@ import (
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/config/directory"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/debug"
-	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/services"
@@ -155,14 +155,12 @@ var cfg = &config.Config{
 		// },
 		Store: directory.Store{
 			PluginConfig: handler.PluginConfig{Plugin: directory.RemoteDirectoryStorePlugin},
-			Remote: &directory.RemoteDirectoryStore{
-				Config: aserto.Config{
-					Address:  "directory.prod.aserto.com:8443",
-					TenantID: "00000000-1111-2222-3333-444455556666",
-					APIKey:   "101520",
-					Headers: map[string]string{
-						"Aserto-Account-ID": "11111111-9999-8888-7777-666655554444",
-					},
+			Remote: directory.RemoteDirectoryStore{
+				Address:  "directory.prod.aserto.com:8443",
+				TenantID: "00000000-1111-2222-3333-444455556666",
+				APIKey:   "101520",
+				Headers: map[string]string{
+					"Aserto-Account-ID": "11111111-9999-8888-7777-666655554444",
 				},
 			},
 		},

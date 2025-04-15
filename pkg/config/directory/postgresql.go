@@ -10,6 +10,10 @@ const PostgresStorePlugin string = "postgres"
 
 type PostgresStore struct{}
 
+func (c *PostgresStore) Defaults() map[string]any {
+	return map[string]any{}
+}
+
 func (c *PostgresStore) Validate() (bool, error) {
 	return true, nil
 }

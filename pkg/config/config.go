@@ -8,15 +8,16 @@ import (
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
+	"github.com/aserto-dev/topaz/pkg/config/directory"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/debug"
-	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/services"
+	"github.com/samber/lo"
+	"github.com/spf13/viper"
 
 	"github.com/Masterminds/sprig/v3"
-	"github.com/spf13/viper"
 )
 
 const Version int = 3
@@ -33,26 +34,26 @@ type Config struct {
 	Authorizer     authorizer.Config     `json:"authorizer"`
 }
 
-var _ = handler.Config(&Config{})
+var _ handler.Config = (*Config)(nil)
 
 //nolint:mnd  // this is where default values are defined.
-func (c *Config) SetDefaults(v *viper.Viper, p ...string) {
-	v.SetDefault("version", 3)
-	v.SetDefault("logging.prod", false)
-	v.SetDefault("logging.log_level", "info")
-	v.SetDefault("logging.grpc_log_level", "info")
+func (c *Config) Defaults() map[string]any {
+	services := services.Config{"topaz": {}}
 
-	c.Authentication.SetDefaults(v, []string{"authentication"}...)
-
-	c.Debug.SetDefaults(v, []string{"debug"}...)
-	c.Health.SetDefaults(v, []string{"health"}...)
-	c.Metrics.SetDefaults(v, []string{"metrics"}...)
-
-	c.Services = map[string]*services.Service{"topaz": {}}
-	c.Services.SetDefaults(v, []string{"services"}...)
-
-	// c.Authorizer.SetDefaults(v, []string{"authorizer"}...)
-	c.Directory.SetDefaults(v, []string{"directory"}...)
+	return lo.Assign(
+		map[string]any{
+			"version":                3,
+			"logging.prod":           false,
+			"logging.log_level":      "info",
+			"logging.grpc_log_level": "info",
+		},
+		handler.PrefixKeys("authentication", c.Authentication.Defaults()),
+		handler.PrefixKeys("debug", c.Debug.Defaults()),
+		handler.PrefixKeys("health", c.Health.Defaults()),
+		handler.PrefixKeys("metrics", c.Metrics.Defaults()),
+		handler.PrefixKeys("services", services.Defaults()),
+		handler.PrefixKeys("directory", c.Directory.Defaults()),
+	)
 }
 
 func (c *Config) Validate() (bool, error) {
@@ -99,14 +100,23 @@ func (c *Config) Generate(w io.Writer) error {
 	return nil
 }
 
+func SetDefaults(v *viper.Viper) {
+	c := Config{}
+
+	for key, value := range c.Defaults() {
+		v.SetDefault(key, value)
+	}
+}
+
 type ConfigV3 struct {
 	Version int           `json:"version" yaml:"version"`
 	Logging logger.Config `json:"logging" yaml:"logging"`
 }
 
-var _ = handler.Config(&ConfigV3{})
+var _ handler.Config = (*ConfigV3)(nil)
 
-func (c *ConfigV3) SetDefaults(v *viper.Viper, p ...string) {
+func (c *ConfigV3) Defaults() map[string]any {
+	return map[string]any{}
 }
 
 func (c *ConfigV3) Validate() (bool, error) {
@@ -160,17 +170,3 @@ logging:
   log_level: {{ .LogLevel }}
   grpc_log_level: {{ .GrpcLogLevel }}
 `
-
-// func (c *ConfigV3) data() map[string]any {
-// 	b, err := json.Marshal(c)
-// 	if err != nil {
-// 		return nil
-// 	}
-//
-// 	v := map[string]any{}
-// 	if err := json.Unmarshal(b, &v); err != nil {
-// 		return nil
-// 	}
-//
-// 	return v
-// }
