@@ -1,17 +1,14 @@
-package config_test
+package topaz_test
 
 import (
 	"encoding/json"
 	"io"
 	"os"
-	"regexp"
-	"strings"
 	"testing"
 
-	cfg3 "github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
+	cfg3 "github.com/aserto-dev/topaz/pkg/topaz"
 
-	"github.com/go-viper/mapstructure/v2"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
@@ -27,6 +24,7 @@ func TestMigrateV2toV3(t *testing.T) {
 // 	return nil, nil
 // }
 
+//nolint:wsl
 func TestLoadConfigV3(t *testing.T) {
 	r, err := os.Open("./schema/config.yaml")
 	require.NoError(t, err)
@@ -41,6 +39,7 @@ func TestLoadConfigV3(t *testing.T) {
 	jEnc := json.NewEncoder(os.Stdout)
 	jEnc.SetEscapeHTML(false)
 	jEnc.SetIndent("", "  ")
+
 	if err := jEnc.Encode(cfg3); err != nil {
 		require.NoError(t, err)
 	}
@@ -79,7 +78,7 @@ func loadConfigV3(r io.Reader) (*cfg3.Config, error) {
 
 	v.ReadConfig(r)
 
-	if err := v.Unmarshal(init, func(dc *mapstructure.DecoderConfig) { dc.TagName = "json" }); err != nil {
+	if err := v.Unmarshal(init); err != nil {
 		return nil, err
 	}
 
@@ -95,48 +94,9 @@ func loadConfigV3(r io.Reader) (*cfg3.Config, error) {
 
 	cfg := &cfg3.Config{}
 
-	if err := v.Unmarshal(cfg, func(dc *mapstructure.DecoderConfig) { dc.TagName = "json" }); err != nil {
+	if err := v.Unmarshal(cfg); err != nil {
 		return nil, err
 	}
 
 	return cfg, nil
-}
-
-type replacer struct {
-	r *strings.Replacer
-}
-
-func newReplacer() *replacer {
-	return &replacer{r: strings.NewReplacer(".", "_")}
-}
-
-func (r replacer) Replace(s string) string {
-	if s == "TOPAZ_VERSION" {
-		// Prevent the `version` field from be overridden by env vars.
-		return ""
-	}
-
-	return r.r.Replace(s)
-}
-
-var envRegex = regexp.MustCompile(`(?U:\${.*})`)
-
-// subEnvVars will look for any environment variables in the passed in string
-// with the syntax of ${VAR_NAME} and replace that string with ENV[VAR_NAME].
-func subEnvVars(s string) string {
-	updatedConfig := envRegex.ReplaceAllStringFunc(strings.ReplaceAll(s, `"`, `'`), func(s string) string {
-		// Trim off the '${' and '}'
-		if len(s) <= 3 {
-			// This should never happen..
-			return ""
-		}
-		varName := s[2 : len(s)-1]
-
-		// Lookup the variable in the environment. We play by
-		// bash rules.. if its undefined we'll treat it as an
-		// empty string instead of raising an error.
-		return os.Getenv(varName)
-	})
-
-	return updatedConfig
 }

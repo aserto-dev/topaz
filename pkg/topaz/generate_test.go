@@ -1,4 +1,4 @@
-package config_test
+package topaz_test
 
 import (
 	"bytes"
@@ -14,13 +14,13 @@ import (
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
-	"github.com/aserto-dev/topaz/pkg/config"
-	"github.com/aserto-dev/topaz/pkg/config/directory"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/debug"
+	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/services"
+	"github.com/aserto-dev/topaz/pkg/topaz"
 
 	"github.com/open-policy-agent/opa/v1/download"
 	"github.com/open-policy-agent/opa/v1/keys"
@@ -33,7 +33,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var cfg = &config.Config{
+var cfg = &topaz.Config{
 	Version: 3,
 	Logging: logger.Config{
 		Prod:         false,

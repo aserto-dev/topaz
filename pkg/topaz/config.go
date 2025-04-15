@@ -1,4 +1,4 @@
-package config
+package topaz
 
 import (
 	"fmt"
@@ -8,14 +8,13 @@ import (
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
-	"github.com/aserto-dev/topaz/pkg/config/directory"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/debug"
+	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/services"
 	"github.com/samber/lo"
-	"github.com/spf13/viper"
 
 	"github.com/Masterminds/sprig/v3"
 )
@@ -98,14 +97,6 @@ func (c *Config) Generate(w io.Writer) error {
 	_, _ = fmt.Fprintln(w)
 
 	return nil
-}
-
-func SetDefaults(v *viper.Viper) {
-	c := Config{}
-
-	for key, value := range c.Defaults() {
-		v.SetDefault(key, value)
-	}
 }
 
 type ConfigV3 struct {

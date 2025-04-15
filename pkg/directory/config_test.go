@@ -5,13 +5,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-viper/mapstructure/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/aserto-dev/topaz/pkg/config"
-	"github.com/aserto-dev/topaz/pkg/config/directory"
 	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/directory"
 )
 
 func TestMarshaling(t *testing.T) {
@@ -49,7 +47,7 @@ func TestMarshaling(t *testing.T) {
 			)
 
 			var c directory.Config
-			err := v.Unmarshal(&c, func(dc *mapstructure.DecoderConfig) { dc.TagName = "json" })
+			err := v.Unmarshal(&c)
 			require.NoError(t, err)
 
 			tc.verify(t, &c.Store)
@@ -66,44 +64,45 @@ func TestMarshaling(t *testing.T) {
 }
 
 func TestDefaults(t *testing.T) {
+	var c directory.Config
+
 	v := handler.NewViper()
 
-	config.SetDefaults(v)
+	v.SetDefaults(&c, "directory")
 	v.ReadConfig(
 		strings.NewReader(preamble),
 	)
 
-	var c config.Config
-	err := v.Unmarshal(&c, func(dc *mapstructure.DecoderConfig) { dc.TagName = "json" })
+	err := v.Unmarshal(&c)
 	require.NoError(t, err)
 
-	assert.Equal(t, "5s", c.Directory.ReadTimeout.String())
-	assert.Equal(t, directory.BoltDBStorePlugin, c.Directory.Store.Plugin)
-	require.NotNil(t, c.Directory.Store.Bolt)
-	assert.Equal(t, "${TOPAZ_DB_DIR}/directory.db", c.Directory.Store.Bolt.DBPath)
+	assert.Equal(t, "5s", c.ReadTimeout.String())
+	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Plugin)
+	require.NotNil(t, c.Store.Bolt)
+	assert.Equal(t, "${TOPAZ_DB_DIR}/directory.db", c.Store.Bolt.DBPath)
 }
 
 func TestEnvVars(t *testing.T) {
 	t.Setenv("TOPAZ_TEST_DIRECTORY_READ_TIMEOUT", "2s")
 	t.Setenv("TOPAZ_TEST_DIRECTORY_STORE_BOLTDB_DB_PATH", "/bolt/db/path")
 
-	v := handler.NewViper()
+	var c directory.Config
 
+	v := handler.NewViper()
+	v.SetDefaults(&c, "directory")
 	v.SetEnvPrefix("TOPAZ_TEST")
-	config.SetDefaults(v)
 	v.AutomaticEnv()
 	v.ReadConfig(
 		strings.NewReader(boltConfig),
 	)
 
-	var c config.Config
-	err := v.Unmarshal(&c, func(dc *mapstructure.DecoderConfig) { dc.TagName = "json" })
+	err := v.Unmarshal(&c)
 	require.NoError(t, err)
 
-	assert.Equal(t, "2s", c.Directory.ReadTimeout.String())
-	assert.Equal(t, directory.BoltDBStorePlugin, c.Directory.Store.Plugin)
-	require.NotNil(t, c.Directory.Store.Bolt)
-	assert.Equal(t, "/bolt/db/path", c.Directory.Store.Bolt.DBPath)
+	assert.Equal(t, "2s", c.ReadTimeout.String())
+	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Plugin)
+	require.NotNil(t, c.Store.Bolt)
+	assert.Equal(t, "/bolt/db/path", c.Store.Bolt.DBPath)
 }
 
 const (

@@ -26,6 +26,15 @@ type Config struct {
 	Store        Store         `json:"store"`
 }
 
+type Store struct {
+	handler.PluginConfig `json:"plugin_config,squash"` //nolint:staticcheck  //squash accepted by mapstructure
+
+	Bolt     BoltDBStore          `json:"boltdb,omitempty"`
+	Remote   RemoteDirectoryStore `json:"remote_directory,omitempty"`
+	Postgres PostgresStore        `json:"postgres,omitempty"`
+	NatsKV   NATSKeyValueStore    `json:"nats_kv,omitempty"`
+}
+
 var _ handler.Config = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
@@ -116,12 +125,3 @@ directory:
   store:
     plugin: {{ .Store.Plugin }}
 `
-
-type Store struct {
-	handler.PluginConfig `json:"plugin_config,squash"` //nolint:staticcheck  //squash accepted by mapstructure
-
-	Bolt     BoltDBStore          `json:"boltdb,omitempty"`
-	Remote   RemoteDirectoryStore `json:"remote_directory,omitempty"`
-	Postgres PostgresStore        `json:"postgres,omitempty"`
-	NatsKV   NATSKeyValueStore    `json:"nats_kv,omitempty"`
-}

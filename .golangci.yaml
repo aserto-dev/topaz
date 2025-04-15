@@ -93,8 +93,6 @@ linters:
       - internal/pkg/xdg/
       - pkg/cc/signals/
       - pkg/cli/editor/
-      # TODO:
-      - pkg/config/config_test.go
 
     rules:
       - path: pkg/cli/cmd/
