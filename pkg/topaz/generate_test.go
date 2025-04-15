@@ -14,7 +14,6 @@ import (
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
-	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
@@ -42,8 +41,8 @@ var cfg = &topaz.Config{
 	},
 	Authentication: authentication.Config{
 		Enabled: false,
-		Plugin:  "local",
-		Settings: authentication.LocalSettings{
+		Use:     "local",
+		Local: authentication.LocalConfig{
 			Keys: []string{
 				"69ba614c64ed4be69485de73d062a00b",
 				"##Ve@rySecret123!!",
@@ -154,7 +153,7 @@ var cfg = &topaz.Config{
 		// 	}),
 		// },
 		Store: directory.Store{
-			PluginConfig: handler.PluginConfig{Plugin: directory.RemoteDirectoryStorePlugin},
+			Use: directory.RemoteDirectoryStorePlugin,
 			Remote: directory.RemoteDirectoryStore{
 				Address:  "directory.prod.aserto.com:8443",
 				TenantID: "00000000-1111-2222-3333-444455556666",
@@ -220,14 +219,12 @@ var cfg = &topaz.Config{
 			},
 		},
 		DecisionLogger: authorizer.DecisionLoggerConfig{
-			Plugin: authorizer.FileDecisionLoggerPlugin,
-			Settings: authorizer.FileDecisionLoggerConfig{
-				Config: file.Config{
-					LogFilePath:   "/tmp/topaz/decisions.log",
-					MaxFileSizeMB: 20,
-					MaxFileCount:  3,
-				},
-			}.Map(),
+			Use: authorizer.FileDecisionLoggerPlugin,
+			File: authorizer.FileDecisionLoggerConfig(file.Config{
+				LogFilePath:   "/tmp/topaz/decisions.log",
+				MaxFileSizeMB: 20,
+				MaxFileCount:  3,
+			}),
 			// Plugin: authorizer.SelfDecisionLoggerPlugin,
 			// Settings: authorizer.SelfDecisionLoggerConfig{
 			// 	Config: self.Config{

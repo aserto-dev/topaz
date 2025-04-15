@@ -6,7 +6,7 @@ import (
 
 	"github.com/Masterminds/sprig/v3"
 	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 type Config struct {
@@ -15,7 +15,7 @@ type Config struct {
 	Certificates  client.TLSConfig `json:"certs,omitempty"`
 }
 
-var _ handler.Config = (*Config)(nil)
+var _ config.Section = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
 	return map[string]any{

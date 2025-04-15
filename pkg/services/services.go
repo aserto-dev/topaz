@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/samber/lo"
 
 	"github.com/go-http-utils/headers"
@@ -15,12 +15,12 @@ import (
 
 type Config map[string]*Service
 
-var _ handler.Config = (*Config)(nil)
+var _ config.Section = (*Config)(nil)
 
 func (c Config) Defaults() map[string]any {
 	return lo.Assign(
 		lo.Map(lo.Keys(c), func(name string, _ int) map[string]any {
-			return handler.PrefixKeys(name, c[name].Defaults())
+			return config.PrefixKeys(name, c[name].Defaults())
 		})...,
 	)
 }
@@ -51,8 +51,8 @@ type Service struct {
 
 func (c *Service) Defaults() map[string]any {
 	return lo.Assign(
-		handler.PrefixKeys("grpc", c.GRPC.Defaults()),
-		handler.PrefixKeys("gateway", c.Gateway.Defaults()),
+		config.PrefixKeys("grpc", c.GRPC.Defaults()),
+		config.PrefixKeys("gateway", c.Gateway.Defaults()),
 	)
 }
 

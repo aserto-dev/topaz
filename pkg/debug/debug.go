@@ -9,7 +9,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/x"
 
 	"github.com/rs/zerolog"
@@ -23,7 +23,7 @@ type Config struct {
 	ShutdownTimeout time.Duration `json:"shutdown_timeout"`
 }
 
-var _ handler.Config = (*Config)(nil)
+var _ config.Section = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
 	return map[string]any{

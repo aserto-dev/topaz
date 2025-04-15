@@ -26,7 +26,7 @@ func (c *BoltDBStore) Validate() (bool, error) {
 }
 
 func (c *BoltDBStore) Generate(w io.Writer) error {
-	tmpl, err := template.New("STORE").Parse(boltDBStoreTemplate)
+	tmpl, err := template.New("STORE").Parse(boltDBStoreConfigTemplate)
 	if err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func (c *BoltDBStore) Generate(w io.Writer) error {
 	return nil
 }
 
-const boltDBStoreTemplate = `
+const boltDBStoreConfigTemplate = `
 {{ .Plugin_ }}:
   db_path: '{{ .DBPath }}'
   request_timeout: {{ .RequestTimeout }}

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/directory"
 )
 
@@ -19,12 +19,12 @@ func TestMarshaling(t *testing.T) {
 		verify func(*testing.T, *directory.Store)
 	}{
 		{"boltdb", boltConfig, func(t *testing.T, s *directory.Store) {
-			assert.Equal(t, directory.BoltDBStorePlugin, s.Plugin)
+			assert.Equal(t, directory.BoltDBStorePlugin, s.Use)
 			require.NotNil(t, s.Bolt)
 			assert.Equal(t, "/path/to/bolt.db", s.Bolt.DBPath)
 		}},
 		{"remote_directory", remoteConfig, func(t *testing.T, s *directory.Store) {
-			assert.Equal(t, directory.RemoteDirectoryStorePlugin, s.Plugin)
+			assert.Equal(t, directory.RemoteDirectoryStorePlugin, s.Use)
 			require.NotNil(t, s.Remote)
 			assert.Equal(t, "localhost:9292", s.Remote.Address)
 			assert.Equal(t, "tenant-id", s.Remote.TenantID)
@@ -41,7 +41,7 @@ func TestMarshaling(t *testing.T) {
 		}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			v := handler.NewViper()
+			v := config.NewViper()
 			v.ReadConfig(
 				strings.NewReader(tc.cfg),
 			)
@@ -58,7 +58,7 @@ func TestMarshaling(t *testing.T) {
 				c.Generate(&out),
 			)
 
-			assert.Equal(t, preamble+handler.Indent(tc.cfg, 2), out.String())
+			assert.Equal(t, preamble+config.Indent(tc.cfg, 2), out.String())
 		})
 	}
 }
@@ -66,7 +66,7 @@ func TestMarshaling(t *testing.T) {
 func TestDefaults(t *testing.T) {
 	var c directory.Config
 
-	v := handler.NewViper()
+	v := config.NewViper()
 
 	v.SetDefaults(&c, "directory")
 	v.ReadConfig(
@@ -77,7 +77,7 @@ func TestDefaults(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, "5s", c.ReadTimeout.String())
-	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Plugin)
+	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Use)
 	require.NotNil(t, c.Store.Bolt)
 	assert.Equal(t, "${TOPAZ_DB_DIR}/directory.db", c.Store.Bolt.DBPath)
 }
@@ -88,7 +88,7 @@ func TestEnvVars(t *testing.T) {
 
 	var c directory.Config
 
-	v := handler.NewViper()
+	v := config.NewViper()
 	v.SetDefaults(&c, "directory")
 	v.SetEnvPrefix("TOPAZ_TEST")
 	v.AutomaticEnv()
@@ -100,7 +100,7 @@ func TestEnvVars(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, "2s", c.ReadTimeout.String())
-	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Plugin)
+	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Use)
 	require.NotNil(t, c.Store.Bolt)
 	assert.Equal(t, "/bolt/db/path", c.Store.Bolt.DBPath)
 }

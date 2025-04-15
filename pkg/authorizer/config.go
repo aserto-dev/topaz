@@ -4,7 +4,7 @@ import (
 	"io"
 	"text/template"
 
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 type Config struct {
@@ -15,10 +15,10 @@ type Config struct {
 	JWT            JWTConfig              `json:"jwt"`
 }
 
-var _ handler.Config = (*Config)(nil)
+var _ config.Section = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
-	return handler.PrefixKeys("jwt", c.JWT.Defaults())
+	return config.PrefixKeys("jwt", c.JWT.Defaults())
 }
 
 func (c *Config) Validate() (bool, error) {

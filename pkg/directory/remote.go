@@ -6,14 +6,14 @@ import (
 	"text/template"
 
 	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 const RemoteDirectoryStorePlugin string = "remote_directory"
 
 type RemoteDirectoryStore client.Config
 
-var _ handler.Config = (*RemoteDirectoryStore)(nil)
+var _ config.Section = (*RemoteDirectoryStore)(nil)
 
 func (c *RemoteDirectoryStore) Defaults() map[string]any {
 	return map[string]any{}
@@ -24,7 +24,7 @@ func (c *RemoteDirectoryStore) Validate() (bool, error) {
 }
 
 func (c *RemoteDirectoryStore) Generate(w io.Writer) error {
-	tmpl, err := template.New("STORE").Parse(strings.TrimLeft(remoteDirectoryStoreTemplate, "\n"))
+	tmpl, err := template.New("STORE").Parse(strings.TrimLeft(remoteDirectoryStoreConfigTemplate, "\n"))
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func (c *RemoteDirectoryStore) Generate(w io.Writer) error {
 	return nil
 }
 
-var remoteDirectoryStoreTemplate = `
+const remoteDirectoryStoreConfigTemplate = `
 {{ .Plugin_ }}:
   address: '{{ .Address }}'
   tenant_id: '{{ .TenantID }}'

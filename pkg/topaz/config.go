@@ -8,7 +8,7 @@ import (
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
@@ -33,7 +33,7 @@ type Config struct {
 	Authorizer     authorizer.Config     `json:"authorizer"`
 }
 
-var _ handler.Config = (*Config)(nil)
+var _ config.Section = (*Config)(nil)
 
 //nolint:mnd  // this is where default values are defined.
 func (c *Config) Defaults() map[string]any {
@@ -46,12 +46,12 @@ func (c *Config) Defaults() map[string]any {
 			"logging.log_level":      "info",
 			"logging.grpc_log_level": "info",
 		},
-		handler.PrefixKeys("authentication", c.Authentication.Defaults()),
-		handler.PrefixKeys("debug", c.Debug.Defaults()),
-		handler.PrefixKeys("health", c.Health.Defaults()),
-		handler.PrefixKeys("metrics", c.Metrics.Defaults()),
-		handler.PrefixKeys("services", services.Defaults()),
-		handler.PrefixKeys("directory", c.Directory.Defaults()),
+		config.PrefixKeys("authentication", c.Authentication.Defaults()),
+		config.PrefixKeys("debug", c.Debug.Defaults()),
+		config.PrefixKeys("health", c.Health.Defaults()),
+		config.PrefixKeys("metrics", c.Metrics.Defaults()),
+		config.PrefixKeys("services", services.Defaults()),
+		config.PrefixKeys("directory", c.Directory.Defaults()),
 	)
 }
 
@@ -104,7 +104,7 @@ type ConfigV3 struct {
 	Logging logger.Config `json:"logging" yaml:"logging"`
 }
 
-var _ handler.Config = (*ConfigV3)(nil)
+var _ config.Section = (*ConfigV3)(nil)
 
 func (c *ConfigV3) Defaults() map[string]any {
 	return map[string]any{}

@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aserto-dev/topaz/pkg/config/handler"
-	cfg3 "github.com/aserto-dev/topaz/pkg/topaz"
+	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/topaz"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -69,10 +69,10 @@ func TestLoadConfigV3(t *testing.T) {
 	// }
 }
 
-func loadConfigV3(r io.Reader) (*cfg3.Config, error) {
-	init := &cfg3.ConfigV3{}
+func loadConfigV3(r io.Reader) (*topaz.Config, error) {
+	init := &topaz.ConfigV3{}
 
-	v := handler.NewViper()
+	v := config.NewViper()
 	v.SetEnvPrefix("TOPAZ")
 	v.AutomaticEnv()
 
@@ -83,8 +83,8 @@ func loadConfigV3(r io.Reader) (*cfg3.Config, error) {
 	}
 
 	// config version check.
-	if init.Version != cfg3.Version {
-		return nil, errors.Errorf("config version mismatch (got %d, expected %d)", init.Version, cfg3.Version)
+	if init.Version != topaz.Version {
+		return nil, errors.Errorf("config version mismatch (got %d, expected %d)", init.Version, topaz.Version)
 	}
 
 	// logging settings validation.
@@ -92,7 +92,7 @@ func loadConfigV3(r io.Reader) (*cfg3.Config, error) {
 		return nil, errors.Wrap(err, "config log level")
 	}
 
-	cfg := &cfg3.Config{}
+	cfg := &topaz.Config{}
 
 	if err := v.Unmarshal(cfg); err != nil {
 		return nil, err

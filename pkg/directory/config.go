@@ -3,13 +3,12 @@ package directory
 import (
 	"bytes"
 	"io"
-	"reflect"
 	"text/template"
 	"time"
 
 	"github.com/samber/lo"
 
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 const (
@@ -27,7 +26,7 @@ type Config struct {
 }
 
 type Store struct {
-	handler.PluginConfig `json:"plugin_config,squash"` //nolint:staticcheck  //squash accepted by mapstructure
+	Use string `json:"use"`
 
 	Bolt     BoltDBStore          `json:"boltdb,omitempty"`
 	Remote   RemoteDirectoryStore `json:"remote_directory,omitempty"`
@@ -35,7 +34,7 @@ type Store struct {
 	NatsKV   NATSKeyValueStore    `json:"nats_kv,omitempty"`
 }
 
-var _ handler.Config = (*Config)(nil)
+var _ config.Section = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
 	return lo.Assign(
@@ -44,8 +43,8 @@ func (c *Config) Defaults() map[string]any {
 			"write_timeout": defaultWriteTimeout,
 			"store.plugin":  defaultPlugin,
 		},
-		handler.PrefixKeys("store.boltdb", c.Store.Bolt.Defaults()),
-		handler.PrefixKeys("store.remote_directory", c.Store.Remote.Defaults()),
+		config.PrefixKeys("store.boltdb", c.Store.Bolt.Defaults()),
+		config.PrefixKeys("store.remote_directory", c.Store.Remote.Defaults()),
 	)
 }
 
@@ -54,7 +53,7 @@ func (c *Config) Validate() (bool, error) {
 }
 
 func (c *Config) Generate(w io.Writer) error {
-	tmpl, err := template.New("DIRECTORY").Parse(directoryTemplate)
+	tmpl, err := template.New("DIRECTORY").Parse(configTemplate)
 	if err != nil {
 		return err
 	}
@@ -68,60 +67,37 @@ func (c *Config) Generate(w io.Writer) error {
 		return err
 	}
 
-	_, err = w.Write([]byte(handler.Indent(buf.String(), pluginIndentLevel)))
+	_, err = w.Write([]byte(config.Indent(buf.String(), pluginIndentLevel)))
 
 	return err
 }
 
 func (c *Config) generatePlugins(w io.Writer) error {
-	if err := writeIfNotEmpty(w, &c.Store.Bolt); err != nil {
+	if err := config.WriteIfNotEmpty(w, &c.Store.Bolt); err != nil {
 		return err
 	}
 
-	if err := writeIfNotEmpty(w, &c.Store.Remote); err != nil {
+	if err := config.WriteIfNotEmpty(w, &c.Store.Remote); err != nil {
 		return err
 	}
 
-	if err := writeIfNotEmpty(w, &c.Store.Postgres); err != nil {
+	if err := config.WriteIfNotEmpty(w, &c.Store.Postgres); err != nil {
 		return err
 	}
 
-	if err := writeIfNotEmpty(w, &c.Store.NatsKV); err != nil {
+	if err := config.WriteIfNotEmpty(w, &c.Store.NatsKV); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-type config[T any] interface {
-	handler.Config
-	*T
-}
-
-func writeIfNotEmpty[T any, P config[T]](w io.Writer, t *T) error {
-	if nilOrEmpty(t) {
-		return nil
-	}
-
-	return P(t).Generate(w)
-}
-
-func nilOrEmpty[T any](t *T) bool {
-	if t == nil {
-		return true
-	}
-
-	var zero T
-
-	return reflect.DeepEqual(zero, *t)
-}
-
-const directoryTemplate = `
+const configTemplate = `
 # directory configuration.
 directory:
   read_timeout: {{ .ReadTimeout }}
   write_timeout: {{ .WriteTimeout }}
   # directory store configuration.
   store:
-    plugin: {{ .Store.Plugin }}
+    use: {{ .Store.Use }}
 `

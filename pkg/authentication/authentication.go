@@ -5,13 +5,13 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/aserto-dev/topaz/pkg/config/handler"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 // authentication:
 //   enabled: false
-//   plugin: local
-//   settings:
+//   use: local
+//   local:
 //     keys:
 //       - "69ba614c64ed4be69485de73d062a00b"
 //       - "##Ve@rySecret123!!"
@@ -29,12 +29,12 @@ import (
 //           enable_api_key: false
 
 type Config struct {
-	Enabled  bool          `json:"enabled"`
-	Plugin   string        `json:"plugin,omitempty"`
-	Settings LocalSettings `json:"settings,omitempty"`
+	Enabled bool        `json:"enabled"`
+	Use     string      `json:"use,omitempty"`
+	Local   LocalConfig `json:"local,omitempty"`
 }
 
-var _ handler.Config = (*Config)(nil)
+var _ config.Section = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
 	return map[string]any{
@@ -65,18 +65,18 @@ const authenticationTemplate = `
 # local authentication configuration.
 authentication:
   enabled: {{ .Enabled }}
-  plugin: {{ .Plugin }}
-  settings:
+  use: {{ .Use }}
+  local:
     keys:
-      {{- range .Settings.Keys }}
+      {{- range .Local.Keys }}
       - {{ . -}}
       {{ end }}
     options:
       default:
-        enable_api_key: {{ .Settings.Options.Default.EnableAPIKey }}
-        enable_anonymous: {{ .Settings.Options.Default.EnableAnonymous }}
+        enable_api_key: {{ .Local.Options.Default.EnableAPIKey }}
+        enable_anonymous: {{ .Local.Options.Default.EnableAnonymous }}
       overrides:
-        {{- range .Settings.Options.Overrides }}
+        {{- range .Local.Options.Overrides }}
         - override:
             enable_api_key: {{ .Override.EnableAPIKey }}
             enable_anonymous: {{ .Override.EnableAnonymous }}
@@ -88,14 +88,9 @@ authentication:
 `
 
 // plugin: local - local authentication implementation.
-type LocalSettings struct {
+type LocalConfig struct {
 	Keys    []string    `json:"keys"`
 	Options CallOptions `json:"options"`
-}
-
-type APIKey struct {
-	Key     string `json:"key"`
-	Account string `json:"account"`
 }
 
 type CallOptions struct {

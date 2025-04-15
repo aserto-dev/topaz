@@ -1,4 +1,4 @@
-package handler
+package config
 
 import (
 	"strings"
@@ -25,7 +25,7 @@ func (v Viper) Unmarshal(rawVal any) error {
 	return v.Viper.Unmarshal(rawVal, func(dc *mapstructure.DecoderConfig) { dc.TagName = "json" })
 }
 
-func (v Viper) SetDefaults(c Config, prefix ...string) {
+func (v Viper) SetDefaults(c Section, prefix ...string) {
 	var p string
 
 	if len(prefix) > 0 {

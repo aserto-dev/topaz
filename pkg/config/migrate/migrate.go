@@ -6,11 +6,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/aserto-dev/self-decision-logger/logger/self"
 	"github.com/aserto-dev/topaz/controller"
+	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	config2 "github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/pkg/config/handler"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
@@ -70,8 +71,8 @@ func Migrate(cfg2 *config2.Config) (*config3.Config, error) {
 func migAuthentication(cfg2 *config2.Config, cfg3 *config3.Config) {
 	cfg3.Authentication = authentication.Config{
 		Enabled: len(cfg2.Auth.Keys) != 0,
-		Plugin:  authentication.LocalAuthenticationPlugin,
-		Settings: authentication.LocalSettings{
+		Use:     authentication.LocalAuthenticationPlugin,
+		Local: authentication.LocalConfig{
 			Keys: cfg2.Auth.Keys,
 			Options: authentication.CallOptions{
 				Default: authentication.Options{
@@ -185,8 +186,8 @@ func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
 			ReadTimeout:  cfg2.Edge.RequestTimeout,
 			WriteTimeout: cfg2.Edge.RequestTimeout,
 			Store: directory.Store{
-				PluginConfig: handler.PluginConfig{Plugin: directory.BoltDBStorePlugin},
-				Bolt:         directory.BoltDBStore(cfg2.Edge),
+				Use:  directory.BoltDBStorePlugin,
+				Bolt: directory.BoltDBStore(cfg2.Edge),
 			},
 		}
 	} else {
@@ -194,8 +195,8 @@ func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
 			ReadTimeout:  cfg2.Edge.RequestTimeout,
 			WriteTimeout: cfg2.Edge.RequestTimeout,
 			Store: directory.Store{
-				PluginConfig: handler.PluginConfig{Plugin: directory.RemoteDirectoryStorePlugin},
-				Remote:       directory.RemoteDirectoryStore(cfg2.DirectoryResolver),
+				Use:    directory.RemoteDirectoryStorePlugin,
+				Remote: directory.RemoteDirectoryStore(cfg2.DirectoryResolver),
 			},
 		}
 	}
@@ -209,12 +210,8 @@ func migAuthorizer(cfg2 *config2.Config, cfg3 *config3.Config) {
 		JWT: authorizer.JWTConfig{AcceptableTimeSkew: time.Duration(int64(cfg2.JWT.AcceptableTimeSkewSeconds)) * time.Second},
 	}
 
-	if cfg2.DecisionLogger.Type != "" && cfg2.DecisionLogger.Config != nil {
-		cfg3.Authorizer.DecisionLogger = authorizer.DecisionLoggerConfig{
-			Enabled:  true,
-			Plugin:   cfg2.DecisionLogger.Type,
-			Settings: cfg2.DecisionLogger.Config,
-		}
+	if cfg2.DecisionLogger.Type != "" && len(cfg2.DecisionLogger.Config) > 0 {
+		cfg3.Authorizer.DecisionLogger = migDecisionLogger(&cfg2.DecisionLogger)
 	}
 
 	// *ControllerConfig
@@ -226,4 +223,59 @@ func migAuthorizer(cfg2 *config2.Config, cfg3 *config3.Config) {
 			},
 		}
 	}
+}
+
+func migDecisionLogger(cfg2 *config2.DecisionLogConfig) authorizer.DecisionLoggerConfig {
+	return authorizer.DecisionLoggerConfig{
+		Enabled: true,
+		Use:     cfg2.Type,
+		File:    migFileLogger(cfg2),
+		Self:    migSelfLogger(cfg2),
+	}
+}
+
+func migFileLogger(cfg2 *config2.DecisionLogConfig) authorizer.FileDecisionLoggerConfig {
+	cfg3 := authorizer.FileDecisionLoggerConfig{}
+
+	if cfg2.Type != authorizer.FileDecisionLoggerPlugin {
+		return cfg3
+	}
+
+	var fileConfig file.Config
+
+	cfgMap := lo.Assign(cfg3.Defaults(), cfg2.Config)
+	if err := decodeMap(cfgMap, &fileConfig); err != nil {
+		return cfg3
+	}
+
+	return authorizer.FileDecisionLoggerConfig(fileConfig)
+}
+
+func migSelfLogger(cfg2 *config2.DecisionLogConfig) authorizer.SelfDecisionLoggerConfig {
+	cfg3 := authorizer.SelfDecisionLoggerConfig{}
+
+	if cfg2.Type != authorizer.SelfDecisionLoggerPlugin {
+		return cfg3
+	}
+
+	var selfConfig self.Config
+
+	cfgMap := lo.Assign(cfg3.Defaults(), cfg2.Config)
+	if err := decodeMap(cfgMap, &selfConfig); err != nil {
+		return cfg3
+	}
+
+	return authorizer.SelfDecisionLoggerConfig(selfConfig)
+}
+
+func decodeMap[T any](m map[string]any, c *T) error {
+	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+		Result:  c,
+		TagName: "json",
+	})
+	if err != nil {
+		return err
+	}
+
+	return decoder.Decode(m)
 }
