@@ -62,3 +62,4 @@ __debug_bin*
 
 # latest container test-snapshot
 .container-tag.env
+.qodo

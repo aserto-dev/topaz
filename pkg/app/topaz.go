@@ -215,7 +215,7 @@ func (e *Topaz) ConfigServices() error {
 					server.Gateway.Mux.HandleFunc("/api/v1/authorizers", handlers.AuthorizersHandler(consoleConfig))
 					// console service. depends on config service.
 					server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))
-					server.Gateway.Mux.Handle("/public/", handlers.UIHandler(http.FS(console.FS)))
+					server.Gateway.Mux.Handle("/assets/", handlers.UIHandler(http.FS(console.FS)))
 				}
 			}
 		}

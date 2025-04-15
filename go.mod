@@ -7,6 +7,7 @@ toolchain go1.24.1
 // replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+// replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
@@ -20,7 +21,7 @@ require (
 	github.com/aserto-dev/go-directory v0.33.10
 	github.com/aserto-dev/go-edge-ds v0.33.15
 	github.com/aserto-dev/go-grpc v0.9.7
-	github.com/aserto-dev/go-topaz-ui v0.1.24
+	github.com/aserto-dev/go-topaz-ui v0.1.25-0.20250415111249-0eed338612eb
 	github.com/aserto-dev/header v0.0.11
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
