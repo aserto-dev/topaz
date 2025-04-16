@@ -2,6 +2,7 @@ package config
 
 type templateParams struct {
 	Version           int
+	PolicyRegistry    string
 	PolicyName        string
 	Resource          string
 	Authorization     string
@@ -49,13 +50,13 @@ opa:
     skip_verification: true
   config:
     services:
-      ghcr:
-        url: https://ghcr.io
+      policy-registry:
+        url: "{{ .PolicyRegistry }}"
         type: "oci"
         response_header_timeout_seconds: 5
     bundles:
       {{ .PolicyName }}:
-        service: ghcr
+        service: policy-registry
         resource: "{{ .Resource }}"
         persist: false
         config:
