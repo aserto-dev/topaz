@@ -33,17 +33,22 @@ const (
 )
 
 type Config struct {
-	Enabled           bool          `json:"enabled"`
-	Addr              string        `json:"addr"`
-	APIKey            string        `json:"apikey"`
-	TenantID          string        `json:"tenant_id,omitempty"`
-	Timeout           int           `json:"timeout"`
-	SyncInterval      int           `json:"sync_interval"`
-	Insecure          bool          `json:"insecure"`
-	SessionID         string        `json:"session_id,omitempty"`
-	ConnectionTimeout time.Duration `json:"-"`
-	// Deprecated: No longer used.
-	PageSize int `json:"page_size,omitempty"`
+	Enabled           bool              `json:"enabled"`              //
+	Addr              string            `json:"addr"`                 //
+	APIKey            string            `json:"apikey"`               //
+	TenantID          string            `json:"tenant_id,omitempty"`  //
+	Timeout           int               `json:"timeout"`              // timeout in seconds.
+	SyncInterval      int               `json:"sync_interval"`        // interval in minutes.
+	Insecure          bool              `json:"insecure"`             //
+	SessionID         string            `json:"session_id,omitempty"` // deprecated: no longer used.
+	ConnectionTimeout time.Duration     `json:"-"`                    // mapped at runtime to timeout * time.Second.
+	PageSize          int               `json:"page_size,omitempty"`  // deprecated: no longer used.
+	ClientCertPath    string            `json:"client_cert_path"`     //
+	ClientKeyPath     string            `json:"client_key_path"`      //
+	CACertPath        string            `json:"ca_cert_path"`         //
+	NoTLS             bool              `json:"no_tls"`               //
+	NoProxy           bool              `json:"no_proxy"`             //
+	Headers           map[string]string `json:"headers"`              //
 }
 
 type Plugin struct {
@@ -351,11 +356,16 @@ func (p *Plugin) exec(ctx context.Context, ds *directory.Directory, conn *grpc.C
 
 func (p *Plugin) remoteDirectoryClient() (*grpc.ClientConn, error) {
 	cfg := &client.Config{
-		Address:  p.config.Addr,
-		Insecure: p.config.Insecure,
-		APIKey:   p.config.APIKey,
-		TenantID: p.config.TenantID,
-		Headers:  p.topazConfig.DirectoryResolver.Headers,
+		Address:        p.config.Addr,           //
+		APIKey:         p.config.APIKey,         //
+		TenantID:       p.config.TenantID,       //
+		ClientCertPath: p.config.ClientCertPath, //
+		ClientKeyPath:  p.config.ClientKeyPath,  //
+		CACertPath:     p.config.CACertPath,     //
+		Insecure:       p.config.Insecure,       //
+		NoTLS:          p.config.NoTLS,          //
+		NoProxy:        p.config.NoProxy,        //
+		Headers:        p.config.Headers,        //
 	}
 
 	conn, err := cfg.Connect()
