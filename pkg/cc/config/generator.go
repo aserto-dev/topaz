@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
@@ -34,7 +35,15 @@ func (g *Generator) WithPolicyName(policyName string) *Generator {
 }
 
 func (g *Generator) WithResource(resource string) *Generator {
+	g.PolicyRegistry = "https://ghcr.io" // set to original default
+
+	policyRegistry, _, found := strings.Cut(resource, "/")
+	if found && policyRegistry != "" {
+		g.PolicyRegistry = "https://" + policyRegistry
+	}
+
 	g.Resource = resource
+
 	return g
 }
 
