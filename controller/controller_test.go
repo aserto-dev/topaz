@@ -19,7 +19,9 @@ func TestInitializeErrorController(t *testing.T) {
 
 	ctrl, err := controller.NewController(
 		&logger, "test", "test-host",
-		&controller.Config{},
+		&controller.Config{
+			Enabled: true,
+		},
 		func(ctx context.Context, c *api.Command) error {
 			return nil
 		},

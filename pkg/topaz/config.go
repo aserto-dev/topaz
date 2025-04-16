@@ -55,42 +55,42 @@ func (c *Config) Defaults() map[string]any {
 	)
 }
 
-func (c *Config) Validate() (bool, error) {
-	return true, nil
+func (c *Config) Validate() error {
+	return nil
 }
 
-func (c *Config) Generate(w io.Writer) error {
+func (c *Config) Serialize(w io.Writer) error {
 	cfgV3 := ConfigV3{Version: c.Version, Logging: c.Logging}
 
-	if err := cfgV3.Generate(w); err != nil {
+	if err := cfgV3.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.Authentication.Generate(w); err != nil {
+	if err := c.Authentication.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.Debug.Generate(w); err != nil {
+	if err := c.Debug.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.Health.Generate(w); err != nil {
+	if err := c.Health.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.Metrics.Generate(w); err != nil {
+	if err := c.Metrics.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.Services.Generate(w); err != nil {
+	if err := c.Services.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.Directory.Generate(w); err != nil {
+	if err := c.Directory.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.Authorizer.Generate(w); err != nil {
+	if err := c.Authorizer.Serialize(w); err != nil {
 		return err
 	}
 
@@ -110,11 +110,11 @@ func (c *ConfigV3) Defaults() map[string]any {
 	return map[string]any{}
 }
 
-func (c *ConfigV3) Validate() (bool, error) {
-	return true, nil
+func (c *ConfigV3) Validate() error {
+	return nil
 }
 
-func (c *ConfigV3) Generate(w io.Writer) error {
+func (c *ConfigV3) Serialize(w io.Writer) error {
 	{
 		tmpl := template.Must(template.New("base").Funcs(sprig.FuncMap()).Parse(templateConfigHeader))
 

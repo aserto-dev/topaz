@@ -42,7 +42,7 @@ func TestMigrateConfig(t *testing.T) {
 	cfg3, err := migrate.Migrate(cfg2)
 	require.NoError(t, err)
 
-	if err := cfg3.Generate(os.Stdout); err != nil {
+	if err := cfg3.Serialize(os.Stdout); err != nil {
 		require.NoError(t, err)
 	}
 }

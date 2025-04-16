@@ -46,7 +46,7 @@ func TestLoadConfigV3(t *testing.T) {
 
 	// print interpreted yaml config.
 	require.NoError(t,
-		cfg3.Generate(os.Stdout),
+		cfg3.Serialize(os.Stdout),
 	)
 
 	// opa, err := cfg3.Authorizer.OPA

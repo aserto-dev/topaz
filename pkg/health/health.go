@@ -24,11 +24,11 @@ func (c *Config) Defaults() map[string]any {
 	}
 }
 
-func (c *Config) Validate() (bool, error) {
-	return true, nil
+func (c *Config) Validate() error {
+	return nil
 }
 
-func (c *Config) Generate(w io.Writer) error {
+func (c *Config) Serialize(w io.Writer) error {
 	tmpl := template.New("HEALTH")
 
 	var funcMap template.FuncMap = map[string]interface{}{}

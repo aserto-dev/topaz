@@ -3,39 +3,23 @@ package directory
 import (
 	"io"
 
-	"github.com/go-viper/mapstructure/v2"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 const PostgresStorePlugin string = "postgres"
 
 type PostgresStore struct{}
 
+var _ config.Section = (*PostgresStore)(nil)
+
 func (c *PostgresStore) Defaults() map[string]any {
 	return map[string]any{}
 }
 
-func (c *PostgresStore) Validate() (bool, error) {
-	return true, nil
-}
-
-func (c *PostgresStore) Generate(w io.Writer) error {
+func (c *PostgresStore) Validate() error {
 	return nil
 }
 
-func PostgresStoreFromMap(m map[string]interface{}) *PostgresStore {
-	var cfg PostgresStore
-	if err := mapstructure.Decode(m, &cfg); err != nil {
-		return nil
-	}
-
-	return &cfg
-}
-
-func PostgresStoreMap(cfg *PostgresStore) map[string]interface{} {
-	var result map[string]interface{}
-	if err := mapstructure.Decode(cfg, &result); err != nil {
-		return nil
-	}
-
-	return result
+func (c *PostgresStore) Serialize(w io.Writer) error {
+	return nil
 }

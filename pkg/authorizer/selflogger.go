@@ -5,11 +5,14 @@ import (
 	"text/template"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 type SelfDecisionLoggerConfig self.Config
 
 const SelfDecisionLoggerPlugin string = `self`
+
+var _ config.Section = (*SelfDecisionLoggerConfig)(nil)
 
 //nolint:mnd  // default values
 func (c *SelfDecisionLoggerConfig) Defaults() map[string]any {
@@ -29,11 +32,11 @@ func (c *SelfDecisionLoggerConfig) Defaults() map[string]any {
 	}
 }
 
-func (c *SelfDecisionLoggerConfig) Validate() (bool, error) {
-	return true, nil
+func (c *SelfDecisionLoggerConfig) Validate() error {
+	return nil
 }
 
-func (c *SelfDecisionLoggerConfig) Generate(w io.Writer) error {
+func (c *SelfDecisionLoggerConfig) Serialize(w io.Writer) error {
 	tmpl, err := template.New("SELF_DECISION_LOGGER").Parse(selfDecisionLoggerTemplate)
 	if err != nil {
 		return err

@@ -1,7 +1,6 @@
 package authorizer
 
 import (
-	"bytes"
 	"io"
 	"text/template"
 
@@ -13,10 +12,10 @@ const (
 )
 
 type DecisionLoggerConfig struct {
-	Enabled bool                     `json:"enabled"`
-	Use     string                   `json:"use"`
-	File    FileDecisionLoggerConfig `json:"file"`
-	Self    SelfDecisionLoggerConfig `json:"self"`
+	Enabled  bool                     `json:"enabled"`
+	Provider string                   `json:"provider"`
+	File     FileDecisionLoggerConfig `json:"file"`
+	Self     SelfDecisionLoggerConfig `json:"self"`
 }
 
 var _ config.Section = (*DecisionLoggerConfig)(nil)
@@ -25,11 +24,11 @@ func (c *DecisionLoggerConfig) Defaults() map[string]any {
 	return map[string]any{}
 }
 
-func (c *DecisionLoggerConfig) Validate() (bool, error) {
-	return true, nil
+func (c *DecisionLoggerConfig) Validate() error {
+	return nil
 }
 
-func (c *DecisionLoggerConfig) Generate(w io.Writer) error {
+func (c *DecisionLoggerConfig) Serialize(w io.Writer) error {
 	tmpl, err := template.New("DECISION_LOGGER").Parse(decisionLoggerConfigTemplate)
 	if err != nil {
 		return err
@@ -39,22 +38,15 @@ func (c *DecisionLoggerConfig) Generate(w io.Writer) error {
 		return err
 	}
 
-	var buf bytes.Buffer
-	if err := c.generatePlugins(&buf); err != nil {
-		return err
-	}
-
-	_, err = w.Write([]byte(config.Indent(buf.String(), pluginIndentLevel)))
-
-	return err
+	return c.generatePlugins(config.IndentWriter(w, pluginIndentLevel))
 }
 
 func (c *DecisionLoggerConfig) generatePlugins(w io.Writer) error {
-	if err := config.WriteIfNotEmpty(w, &c.File); err != nil {
+	if err := config.WriteNonEmpty(w, &c.File); err != nil {
 		return err
 	}
 
-	if err := config.WriteIfNotEmpty(w, &c.Self); err != nil {
+	if err := config.WriteNonEmpty(w, &c.Self); err != nil {
 		return err
 	}
 
@@ -65,7 +57,7 @@ const decisionLoggerConfigTemplate = `
 # decision logger configuration.
 decision_logger:
   enabled: {{ .Enabled }}
-  {{- if .Use }}
-  use: {{ .Use }}
+  {{- if .Provider }}
+  provider: {{ .Provider }}
   {{- end }}
 `

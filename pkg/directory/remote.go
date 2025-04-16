@@ -2,7 +2,6 @@ package directory
 
 import (
 	"io"
-	"strings"
 	"text/template"
 
 	client "github.com/aserto-dev/go-aserto"
@@ -19,19 +18,19 @@ func (c *RemoteDirectoryStore) Defaults() map[string]any {
 	return map[string]any{}
 }
 
-func (c *RemoteDirectoryStore) Validate() (bool, error) {
-	return true, nil
+func (c *RemoteDirectoryStore) Validate() error {
+	return nil
 }
 
-func (c *RemoteDirectoryStore) Generate(w io.Writer) error {
-	tmpl, err := template.New("STORE").Parse(strings.TrimLeft(remoteDirectoryStoreConfigTemplate, "\n"))
+func (c *RemoteDirectoryStore) Serialize(w io.Writer) error {
+	tmpl, err := template.New("STORE").Parse(config.TrimN(remoteDirectoryStoreConfigTemplate))
 	if err != nil {
 		return err
 	}
 
 	type params struct {
 		*RemoteDirectoryStore
-		Plugin_ string
+		Provider_ string
 	}
 
 	p := params{c, RemoteDirectoryStorePlugin}
@@ -43,7 +42,7 @@ func (c *RemoteDirectoryStore) Generate(w io.Writer) error {
 }
 
 const remoteDirectoryStoreConfigTemplate = `
-{{ .Plugin_ }}:
+{{ .Provider_ }}:
   address: '{{ .Address }}'
   tenant_id: '{{ .TenantID }}'
   api_key: '{{ .APIKey }}'

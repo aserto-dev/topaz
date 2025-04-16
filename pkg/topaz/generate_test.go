@@ -40,8 +40,8 @@ var cfg = &topaz.Config{
 		GrpcLogLevel: "info",
 	},
 	Authentication: authentication.Config{
-		Enabled: false,
-		Use:     "local",
+		Enabled:  false,
+		Provider: "local",
 		Local: authentication.LocalConfig{
 			Keys: []string{
 				"69ba614c64ed4be69485de73d062a00b",
@@ -153,7 +153,7 @@ var cfg = &topaz.Config{
 		// 	}),
 		// },
 		Store: directory.Store{
-			Use: directory.RemoteDirectoryStorePlugin,
+			Provider: directory.RemoteDirectoryStorePlugin,
 			Remote: directory.RemoteDirectoryStore{
 				Address:  "directory.prod.aserto.com:8443",
 				TenantID: "00000000-1111-2222-3333-444455556666",
@@ -165,61 +165,59 @@ var cfg = &topaz.Config{
 		},
 	},
 	Authorizer: authorizer.Config{
-		OPA: authorizer.OPAConfig{
-			Config: runtime.Config{
-				InstanceID:                    "-",
-				GracefulShutdownPeriodSeconds: 2,
-				MaxPluginWaitTimeSeconds:      30,
-				LocalBundles:                  runtime.LocalBundlesConfig{
-					// LocalPolicyImage: "",
-					// FileStoreRoot:    "",
-					// Paths:            []string{},
-					// Ignore:           []string{},
-					// Watch:            false,
-					// SkipVerification: true,
-					// VerificationConfig: &bundle.VerificationConfig{
-					// 	PublicKeys: map[string]*bundle.KeyConfig{},
-					// 	KeyID:      "",
-					// 	Scope:      "",
-					// 	Exclude:    []string{},
-					// },
-				},
-				Config: runtime.OPAConfig{
-					Services: map[string]interface{}{
-						"registry": map[string]interface{}{
-							"url": "https://ghcr.io",
-						},
-						"type":                            "oci",
-						"response_header_timeout_seconds": 5,
+		OPA: authorizer.OPAConfig(runtime.Config{
+			InstanceID:                    "-",
+			GracefulShutdownPeriodSeconds: 2,
+			MaxPluginWaitTimeSeconds:      30,
+			LocalBundles:                  runtime.LocalBundlesConfig{
+				// LocalPolicyImage: "",
+				// FileStoreRoot:    "",
+				// Paths:            []string{},
+				// Ignore:           []string{},
+				// Watch:            false,
+				// SkipVerification: true,
+				// VerificationConfig: &bundle.VerificationConfig{
+				// 	PublicKeys: map[string]*bundle.KeyConfig{},
+				// 	KeyID:      "",
+				// 	Scope:      "",
+				// 	Exclude:    []string{},
+				// },
+			},
+			Config: runtime.OPAConfig{
+				Services: map[string]interface{}{
+					"registry": map[string]interface{}{
+						"url": "https://ghcr.io",
 					},
-					Labels:    map[string]string{},
-					Discovery: &discovery.Config{},
-					Bundles: map[string]*bundleplugin.Source{
-						"gdrive": {
-							Service:  "registry",
-							Resource: "ghcr.io/aserto-policies/policy-rebac:latest",
-							Persist:  false,
-							Config: download.Config{
-								Polling: download.PollingConfig{
-									MinDelaySeconds: Ptr[int64](60),
-									MaxDelaySeconds: Ptr[int64](120),
-								},
+					"type":                            "oci",
+					"response_header_timeout_seconds": 5,
+				},
+				Labels:    map[string]string{},
+				Discovery: &discovery.Config{},
+				Bundles: map[string]*bundleplugin.Source{
+					"gdrive": {
+						Service:  "registry",
+						Resource: "ghcr.io/aserto-policies/policy-rebac:latest",
+						Persist:  false,
+						Config: download.Config{
+							Polling: download.PollingConfig{
+								MinDelaySeconds: Ptr[int64](60),
+								MaxDelaySeconds: Ptr[int64](120),
 							},
 						},
 					},
-					DecisionLogs:                 &logs.Config{},
-					Status:                       &status.Config{},
-					Plugins:                      map[string]interface{}{},
-					Keys:                         map[string]*keys.Config{},
-					DefaultDecision:              Ptr[string](""),
-					DefaultAuthorizationDecision: Ptr[string](""),
-					Caching:                      &cache.Config{},
-					PersistenceDirectory:         nil,
 				},
+				DecisionLogs:                 &logs.Config{},
+				Status:                       &status.Config{},
+				Plugins:                      map[string]interface{}{},
+				Keys:                         map[string]*keys.Config{},
+				DefaultDecision:              Ptr[string](""),
+				DefaultAuthorizationDecision: Ptr[string](""),
+				Caching:                      &cache.Config{},
+				PersistenceDirectory:         nil,
 			},
-		},
+		}),
 		DecisionLogger: authorizer.DecisionLoggerConfig{
-			Use: authorizer.FileDecisionLoggerPlugin,
+			Provider: authorizer.FileDecisionLoggerPlugin,
 			File: authorizer.FileDecisionLoggerConfig(file.Config{
 				LogFilePath:   "/tmp/topaz/decisions.log",
 				MaxFileSizeMB: 20,
@@ -254,17 +252,15 @@ var cfg = &topaz.Config{
 			// 	},
 			// }.Map(),
 		},
-		Controller: authorizer.ControllerConfig{
-			Config: controller.Config{
-				Enabled: true,
-				Server: aserto.Config{
-					Address:        "relay.prod.aserto.com:8443",
-					APIKey:         "0xdeadbeef",
-					ClientCertPath: "${TOPAZ_DIR}/certs/grpc.crt",
-					ClientKeyPath:  "${TOPAZ_DIR}/certs/grpc.key",
-				},
+		Controller: authorizer.ControllerConfig(controller.Config{
+			Enabled: true,
+			Server: aserto.Config{
+				Address:        "relay.prod.aserto.com:8443",
+				APIKey:         "0xdeadbeef",
+				ClientCertPath: "${TOPAZ_DIR}/certs/grpc.crt",
+				ClientKeyPath:  "${TOPAZ_DIR}/certs/grpc.key",
 			},
-		},
+		}),
 		JWT: authorizer.JWTConfig{
 			AcceptableTimeSkew: time.Second * 2,
 		},
@@ -272,7 +268,7 @@ var cfg = &topaz.Config{
 }
 
 func TestGenerate(t *testing.T) {
-	if err := cfg.Generate(os.Stderr); err != nil {
+	if err := cfg.Serialize(os.Stderr); err != nil {
 		require.NoError(t, err)
 	}
 

@@ -8,11 +8,10 @@ import (
 )
 
 type Config struct {
-	RawOPA         map[string]interface{} `json:"opa"`
-	OPA            OPAConfig              `json:"-,"`
-	DecisionLogger DecisionLoggerConfig   `json:"decision_logger"`
-	Controller     ControllerConfig       `json:"controller"`
-	JWT            JWTConfig              `json:"jwt"`
+	OPA            OPAConfig            `json:"opa"`
+	DecisionLogger DecisionLoggerConfig `json:"decision_logger"`
+	Controller     ControllerConfig     `json:"controller"`
+	JWT            JWTConfig            `json:"jwt"`
 }
 
 var _ config.Section = (*Config)(nil)
@@ -21,12 +20,12 @@ func (c *Config) Defaults() map[string]any {
 	return config.PrefixKeys("jwt", c.JWT.Defaults())
 }
 
-func (c *Config) Validate() (bool, error) {
-	return true, nil
+func (c *Config) Validate() error {
+	return nil
 }
 
-func (c *Config) Generate(w io.Writer) error {
-	tmpl, err := template.New("AUTHORIZER").Parse(authorizerTemplate)
+func (c *Config) Serialize(w io.Writer) error {
+	tmpl, err := template.New("AUTHORIZER").Parse(config.TrimN(configTemplate))
 	if err != nil {
 		return err
 	}
@@ -35,26 +34,32 @@ func (c *Config) Generate(w io.Writer) error {
 		return err
 	}
 
-	if err := c.OPA.Generate(w); err != nil {
+	w = config.IndentWriter(w, indentLevel)
+
+	if err := c.OPA.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.DecisionLogger.Generate(w); err != nil {
+	if err := c.DecisionLogger.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.Controller.Generate(w); err != nil {
+	if err := c.Controller.Serialize(w); err != nil {
 		return err
 	}
 
-	if err := c.JWT.Generate(w); err != nil {
+	if err := c.JWT.Serialize(w); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-const authorizerTemplate = `
+const (
+	indentLevel = 2
+
+	configTemplate = `
 # authorizer configuration.
 authorizer:
 `
+)

@@ -29,9 +29,9 @@ import (
 //           enable_api_key: false
 
 type Config struct {
-	Enabled bool        `json:"enabled"`
-	Use     string      `json:"use,omitempty"`
-	Local   LocalConfig `json:"local,omitempty"`
+	Enabled  bool        `json:"enabled"`
+	Provider string      `json:"provider,omitempty"`
+	Local    LocalConfig `json:"local,omitempty"`
 }
 
 var _ config.Section = (*Config)(nil)
@@ -42,11 +42,11 @@ func (c *Config) Defaults() map[string]any {
 	}
 }
 
-func (c *Config) Validate() (bool, error) {
-	return true, nil
+func (c *Config) Validate() error {
+	return nil
 }
 
-func (c *Config) Generate(w io.Writer) error {
+func (c *Config) Serialize(w io.Writer) error {
 	tmpl, err := template.New("AUTHENTICATION").Parse(authenticationTemplate)
 	if err != nil {
 		return err
@@ -65,7 +65,7 @@ const authenticationTemplate = `
 # local authentication configuration.
 authentication:
   enabled: {{ .Enabled }}
-  use: {{ .Use }}
+  provider: {{ .Provider }}
   local:
     keys:
       {{- range .Local.Keys }}
@@ -87,7 +87,7 @@ authentication:
         {{ end }}
 `
 
-// plugin: local - local authentication implementation.
+// provider: local - local authentication implementation.
 type LocalConfig struct {
 	Keys    []string    `json:"keys"`
 	Options CallOptions `json:"options"`

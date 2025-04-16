@@ -25,11 +25,11 @@ func (c Config) Defaults() map[string]any {
 	)
 }
 
-func (c Config) Validate() (bool, error) {
-	return true, nil
+func (c Config) Validate() error {
+	return nil
 }
 
-func (c Config) Generate(w io.Writer) error {
+func (c Config) Serialize(w io.Writer) error {
 	tmpl, err := template.New("SERVICES").Parse(servicesTemplate)
 	if err != nil {
 		return err
@@ -56,8 +56,8 @@ func (c *Service) Defaults() map[string]any {
 	)
 }
 
-func (s *Service) Validate() (bool, error) {
-	return true, nil
+func (s *Service) Validate() error {
+	return nil
 }
 
 const servicesTemplate string = `
@@ -128,8 +128,8 @@ func (s *GRPCService) Defaults() map[string]any {
 	}
 }
 
-func (s *GRPCService) Validate() (bool, error) {
-	return true, nil
+func (s *GRPCService) Validate() error {
+	return nil
 }
 
 type GatewayService struct {
@@ -163,8 +163,8 @@ func (s *GatewayService) Defaults() map[string]any {
 	}
 }
 
-func (s *GatewayService) Validate() (bool, error) {
-	return true, nil
+func (s *GatewayService) Validate() error {
+	return nil
 }
 
 const (

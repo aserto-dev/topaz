@@ -70,8 +70,8 @@ func Migrate(cfg2 *config2.Config) (*config3.Config, error) {
 
 func migAuthentication(cfg2 *config2.Config, cfg3 *config3.Config) {
 	cfg3.Authentication = authentication.Config{
-		Enabled: len(cfg2.Auth.Keys) != 0,
-		Use:     authentication.LocalAuthenticationPlugin,
+		Enabled:  len(cfg2.Auth.Keys) != 0,
+		Provider: authentication.LocalAuthenticationPlugin,
 		Local: authentication.LocalConfig{
 			Keys: cfg2.Auth.Keys,
 			Options: authentication.CallOptions{
@@ -186,8 +186,8 @@ func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
 			ReadTimeout:  cfg2.Edge.RequestTimeout,
 			WriteTimeout: cfg2.Edge.RequestTimeout,
 			Store: directory.Store{
-				Use:  directory.BoltDBStorePlugin,
-				Bolt: directory.BoltDBStore(cfg2.Edge),
+				Provider: directory.BoltDBStorePlugin,
+				Bolt:     directory.BoltDBStore(cfg2.Edge),
 			},
 		}
 	} else {
@@ -195,8 +195,8 @@ func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
 			ReadTimeout:  cfg2.Edge.RequestTimeout,
 			WriteTimeout: cfg2.Edge.RequestTimeout,
 			Store: directory.Store{
-				Use:    directory.RemoteDirectoryStorePlugin,
-				Remote: directory.RemoteDirectoryStore(cfg2.DirectoryResolver),
+				Provider: directory.RemoteDirectoryStorePlugin,
+				Remote:   directory.RemoteDirectoryStore(cfg2.DirectoryResolver),
 			},
 		}
 	}
@@ -204,9 +204,7 @@ func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
 
 func migAuthorizer(cfg2 *config2.Config, cfg3 *config3.Config) {
 	cfg3.Authorizer = authorizer.Config{
-		OPA: authorizer.OPAConfig{
-			Config: cfg2.OPA,
-		},
+		OPA: authorizer.OPAConfig(cfg2.OPA),
 		JWT: authorizer.JWTConfig{AcceptableTimeSkew: time.Duration(int64(cfg2.JWT.AcceptableTimeSkewSeconds)) * time.Second},
 	}
 
@@ -216,21 +214,21 @@ func migAuthorizer(cfg2 *config2.Config, cfg3 *config3.Config) {
 
 	// *ControllerConfig
 	if cfg2.ControllerConfig.Enabled {
-		cfg3.Authorizer.Controller = authorizer.ControllerConfig{
-			Config: controller.Config{
+		cfg3.Authorizer.Controller = authorizer.ControllerConfig(
+			controller.Config{
 				Enabled: cfg2.ControllerConfig.Enabled,
 				Server:  cfg2.ControllerConfig.Server,
 			},
-		}
+		)
 	}
 }
 
 func migDecisionLogger(cfg2 *config2.DecisionLogConfig) authorizer.DecisionLoggerConfig {
 	return authorizer.DecisionLoggerConfig{
-		Enabled: true,
-		Use:     cfg2.Type,
-		File:    migFileLogger(cfg2),
-		Self:    migSelfLogger(cfg2),
+		Enabled:  true,
+		Provider: cfg2.Type,
+		File:     migFileLogger(cfg2),
+		Self:     migSelfLogger(cfg2),
 	}
 }
 

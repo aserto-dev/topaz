@@ -5,11 +5,14 @@ import (
 	"text/template"
 
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 type FileDecisionLoggerConfig file.Config
 
 const FileDecisionLoggerPlugin string = `file`
+
+var _ config.Section = (*FileDecisionLoggerConfig)(nil)
 
 //nolint:mnd  // default values
 func (c *FileDecisionLoggerConfig) Defaults() map[string]any {
@@ -20,11 +23,11 @@ func (c *FileDecisionLoggerConfig) Defaults() map[string]any {
 	}
 }
 
-func (c *FileDecisionLoggerConfig) Validate() (bool, error) {
-	return true, nil
+func (c *FileDecisionLoggerConfig) Validate() error {
+	return nil
 }
 
-func (c *FileDecisionLoggerConfig) Generate(w io.Writer) error {
+func (c *FileDecisionLoggerConfig) Serialize(w io.Writer) error {
 	tmpl, err := template.New("FILE_DECISION_LOGGER").Parse(fileDecisionLoggerTemplate)
 	if err != nil {
 		return err

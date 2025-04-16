@@ -19,12 +19,12 @@ func TestMarshaling(t *testing.T) {
 		verify func(*testing.T, *directory.Store)
 	}{
 		{"boltdb", boltConfig, func(t *testing.T, s *directory.Store) {
-			assert.Equal(t, directory.BoltDBStorePlugin, s.Use)
+			assert.Equal(t, directory.BoltDBStorePlugin, s.Provider)
 			require.NotNil(t, s.Bolt)
 			assert.Equal(t, "/path/to/bolt.db", s.Bolt.DBPath)
 		}},
 		{"remote_directory", remoteConfig, func(t *testing.T, s *directory.Store) {
-			assert.Equal(t, directory.RemoteDirectoryStorePlugin, s.Use)
+			assert.Equal(t, directory.RemoteDirectoryStorePlugin, s.Provider)
 			require.NotNil(t, s.Remote)
 			assert.Equal(t, "localhost:9292", s.Remote.Address)
 			assert.Equal(t, "tenant-id", s.Remote.TenantID)
@@ -41,9 +41,11 @@ func TestMarshaling(t *testing.T) {
 		}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
+			cfg := config.TrimN(tc.cfg)
+
 			v := config.NewViper()
 			v.ReadConfig(
-				strings.NewReader(tc.cfg),
+				strings.NewReader(cfg),
 			)
 
 			var c directory.Config
@@ -55,10 +57,10 @@ func TestMarshaling(t *testing.T) {
 			var out bytes.Buffer
 
 			require.NoError(t,
-				c.Generate(&out),
+				c.Serialize(&out),
 			)
 
-			assert.Equal(t, preamble+config.Indent(tc.cfg, 2), out.String())
+			assert.Equal(t, config.TrimN(preamble)+config.Indent(cfg, 2), out.String())
 		})
 	}
 }
@@ -68,28 +70,28 @@ func TestDefaults(t *testing.T) {
 
 	v := config.NewViper()
 
-	v.SetDefaults(&c, "directory")
+	v.SetDefaults(&c)
 	v.ReadConfig(
-		strings.NewReader(preamble),
+		strings.NewReader(""),
 	)
 
 	err := v.Unmarshal(&c)
 	require.NoError(t, err)
 
 	assert.Equal(t, "5s", c.ReadTimeout.String())
-	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Use)
+	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Provider)
 	require.NotNil(t, c.Store.Bolt)
 	assert.Equal(t, "${TOPAZ_DB_DIR}/directory.db", c.Store.Bolt.DBPath)
 }
 
 func TestEnvVars(t *testing.T) {
-	t.Setenv("TOPAZ_TEST_DIRECTORY_READ_TIMEOUT", "2s")
-	t.Setenv("TOPAZ_TEST_DIRECTORY_STORE_BOLTDB_DB_PATH", "/bolt/db/path")
+	t.Setenv("TOPAZ_TEST_READ_TIMEOUT", "2s")
+	t.Setenv("TOPAZ_TEST_STORE_BOLTDB_DB_PATH", "/bolt/db/path")
 
 	var c directory.Config
 
 	v := config.NewViper()
-	v.SetDefaults(&c, "directory")
+	v.SetDefaults(&c)
 	v.SetEnvPrefix("TOPAZ_TEST")
 	v.AutomaticEnv()
 	v.ReadConfig(
@@ -100,7 +102,7 @@ func TestEnvVars(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, "2s", c.ReadTimeout.String())
-	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Use)
+	assert.Equal(t, directory.BoltDBStorePlugin, c.Store.Provider)
 	require.NotNil(t, c.Store.Bolt)
 	assert.Equal(t, "/bolt/db/path", c.Store.Bolt.DBPath)
 }
@@ -116,7 +118,7 @@ read_timeout: 1s
 write_timeout: 1s
 # directory store configuration.
 store:
-  plugin: boltdb
+  provider: boltdb
   boltdb:
     db_path: '/path/to/bolt.db'
     request_timeout: 5s
@@ -127,7 +129,7 @@ read_timeout: 1s
 write_timeout: 1s
 # directory store configuration.
 store:
-  plugin: remote_directory
+  provider: remote_directory
   remote_directory:
     address: 'localhost:9292'
     tenant_id: 'tenant-id'

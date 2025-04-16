@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 type BoltDBStore directory.Config
@@ -14,6 +15,8 @@ const BoltDBDefaultRequestTimeout = time.Second * 5
 
 const BoltDBStorePlugin string = "boltdb"
 
+var _ config.Section = (*BoltDBStore)(nil)
+
 func (c *BoltDBStore) Defaults() map[string]any {
 	return map[string]any{
 		"db_path":         "${TOPAZ_DB_DIR}/directory.db",
@@ -21,19 +24,19 @@ func (c *BoltDBStore) Defaults() map[string]any {
 	}
 }
 
-func (c *BoltDBStore) Validate() (bool, error) {
-	return true, nil
+func (c *BoltDBStore) Validate() error {
+	return nil
 }
 
-func (c *BoltDBStore) Generate(w io.Writer) error {
-	tmpl, err := template.New("STORE").Parse(boltDBStoreConfigTemplate)
+func (c *BoltDBStore) Serialize(w io.Writer) error {
+	tmpl, err := template.New("STORE").Parse(config.TrimN(boltDBStoreConfigTemplate))
 	if err != nil {
 		return err
 	}
 
 	type params struct {
 		*BoltDBStore
-		Plugin_ string
+		Provider_ string
 	}
 
 	p := params{c, BoltDBStorePlugin}
@@ -45,7 +48,7 @@ func (c *BoltDBStore) Generate(w io.Writer) error {
 }
 
 const boltDBStoreConfigTemplate = `
-{{ .Plugin_ }}:
+{{ .Provider_ }}:
   db_path: '{{ .DBPath }}'
   request_timeout: {{ .RequestTimeout }}
 `

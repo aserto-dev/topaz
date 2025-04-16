@@ -1,7 +1,6 @@
 package directory
 
 import (
-	"bytes"
 	"io"
 	"text/template"
 	"time"
@@ -26,7 +25,7 @@ type Config struct {
 }
 
 type Store struct {
-	Use string `json:"use"`
+	Provider string `json:"provider"`
 
 	Bolt     BoltDBStore          `json:"boltdb,omitempty"`
 	Remote   RemoteDirectoryStore `json:"remote_directory,omitempty"`
@@ -39,21 +38,21 @@ var _ config.Section = (*Config)(nil)
 func (c *Config) Defaults() map[string]any {
 	return lo.Assign(
 		map[string]any{
-			"read_timeout":  defaultReadTimeout,
-			"write_timeout": defaultWriteTimeout,
-			"store.plugin":  defaultPlugin,
+			"read_timeout":   defaultReadTimeout,
+			"write_timeout":  defaultWriteTimeout,
+			"store.provider": defaultPlugin,
 		},
 		config.PrefixKeys("store.boltdb", c.Store.Bolt.Defaults()),
 		config.PrefixKeys("store.remote_directory", c.Store.Remote.Defaults()),
 	)
 }
 
-func (c *Config) Validate() (bool, error) {
-	return true, nil
+func (c *Config) Validate() error {
+	return nil
 }
 
-func (c *Config) Generate(w io.Writer) error {
-	tmpl, err := template.New("DIRECTORY").Parse(configTemplate)
+func (c *Config) Serialize(w io.Writer) error {
+	tmpl, err := template.New("DIRECTORY").Parse(config.TrimN(configTemplate))
 	if err != nil {
 		return err
 	}
@@ -62,30 +61,23 @@ func (c *Config) Generate(w io.Writer) error {
 		return err
 	}
 
-	var buf bytes.Buffer
-	if err := c.generatePlugins(&buf); err != nil {
-		return err
-	}
-
-	_, err = w.Write([]byte(config.Indent(buf.String(), pluginIndentLevel)))
-
-	return err
+	return c.generatePlugins(config.IndentWriter(w, pluginIndentLevel))
 }
 
 func (c *Config) generatePlugins(w io.Writer) error {
-	if err := config.WriteIfNotEmpty(w, &c.Store.Bolt); err != nil {
+	if err := config.WriteNonEmpty(w, &c.Store.Bolt); err != nil {
 		return err
 	}
 
-	if err := config.WriteIfNotEmpty(w, &c.Store.Remote); err != nil {
+	if err := config.WriteNonEmpty(w, &c.Store.Remote); err != nil {
 		return err
 	}
 
-	if err := config.WriteIfNotEmpty(w, &c.Store.Postgres); err != nil {
+	if err := config.WriteNonEmpty(w, &c.Store.Postgres); err != nil {
 		return err
 	}
 
-	if err := config.WriteIfNotEmpty(w, &c.Store.NatsKV); err != nil {
+	if err := config.WriteNonEmpty(w, &c.Store.NatsKV); err != nil {
 		return err
 	}
 
@@ -99,5 +91,5 @@ directory:
   write_timeout: {{ .WriteTimeout }}
   # directory store configuration.
   store:
-    use: {{ .Store.Use }}
+    provider: {{ .Store.Provider }}
 `

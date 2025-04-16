@@ -23,11 +23,11 @@ func (c *Config) Defaults() map[string]any {
 	}
 }
 
-func (c *Config) Validate() (bool, error) {
-	return true, nil
+func (c *Config) Validate() error {
+	return nil
 }
 
-func (c *Config) Generate(w io.Writer) error {
+func (c *Config) Serialize(w io.Writer) error {
 	tmpl, err := template.New("METRICS").Parse(metricsTemplate)
 	if err != nil {
 		return err
