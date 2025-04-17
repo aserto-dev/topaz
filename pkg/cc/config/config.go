@@ -4,7 +4,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/aserto-dev/certs"
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
@@ -85,7 +84,6 @@ func NewConfig(
 	configPath Path,
 	log *zerolog.Logger,
 	overrides Overrider,
-	certsGenerator *certs.Generator,
 ) (
 	*Config,
 	error,
@@ -158,12 +156,6 @@ func NewConfig(
 		return nil, errors.Wrap(err, "failed to validate config file")
 	}
 
-	if certsGenerator != nil {
-		if err := configLoader.Configuration.setupCerts(log, certsGenerator); err != nil {
-			return nil, errors.Wrap(err, "failed to setup certs")
-		}
-	}
-
 	return configLoader.Configuration, nil
 }
 
@@ -171,7 +163,7 @@ func NewConfig(
 func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, error) {
 	discardLogger := zerolog.New(io.Discard)
 
-	cfg, err := NewConfig(configPath, &discardLogger, overrides, nil)
+	cfg, err := NewConfig(configPath, &discardLogger, overrides)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create new config")
 	}
@@ -183,66 +175,6 @@ func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, erro
 	}
 
 	return &lCfg, nil
-}
-
-func (c *Config) setupCerts(log *zerolog.Logger, certsGenerator *certs.Generator) error {
-	commonName := "topaz"
-
-	existingFiles := []string{}
-
-	for serviceName, config := range c.APIConfig.Services {
-		for _, file := range []string{
-			config.GRPC.Certs.CA,
-			config.GRPC.Certs.Cert,
-			config.GRPC.Certs.Key,
-			config.Gateway.Certs.CA,
-			config.Gateway.Certs.Cert,
-			config.Gateway.Certs.Key,
-		} {
-			exists, err := FileExists(file)
-			if err != nil {
-				return errors.Wrapf(err, "failed to determine if file '%s' exists (%s)", file, serviceName)
-			}
-
-			if !exists {
-				continue
-			}
-
-			existingFiles = append(existingFiles, file)
-		}
-
-		noExistingFiles := len(existingFiles) == 0
-
-		if noExistingFiles && config.GRPC.Certs.HasCert() && config.GRPC.Certs.HasCA() {
-			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-				CommonName:  commonName + "-grpc",
-				CertKeyPath: config.GRPC.Certs.Key,
-				CertPath:    config.GRPC.Certs.Cert,
-				CertCAPath:  config.GRPC.Certs.CA,
-			})
-			if err != nil {
-				return errors.Wrapf(err, "failed to generate grpc certs (%s)", serviceName)
-			}
-
-			log.Info().Str("service", serviceName).Msg("gRPC certs configured")
-		}
-
-		if noExistingFiles && config.Gateway.Certs.HasCert() && config.Gateway.Certs.HasCA() {
-			err := certsGenerator.MakeDevCert(&certs.CertGenConfig{
-				CommonName:  commonName + "-gateway",
-				CertKeyPath: config.Gateway.Certs.Key,
-				CertPath:    config.Gateway.Certs.Cert,
-				CertCAPath:  config.Gateway.Certs.CA,
-			})
-			if err != nil {
-				return errors.Wrapf(err, "failed to generate gateway certs (%s)", serviceName)
-			}
-
-			log.Info().Str("service", serviceName).Msg("gateway certs configured")
-		}
-	}
-
-	return nil
 }
 
 func FileExists(path string) (bool, error) {
