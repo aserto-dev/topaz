@@ -1,21 +1,61 @@
 package services
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"text/template"
 	"time"
 
-	"github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/go-http-utils/headers"
+	"github.com/hashicorp/go-multierror"
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 
-	"github.com/go-http-utils/headers"
+	"github.com/aserto-dev/go-aserto"
+
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
-type Config map[string]*Service
+type (
+	Config map[string]*Service
 
-var _ config.Section = (*Config)(nil)
+	Service struct {
+		DependsOn []string       `json:"depends_on"`
+		GRPC      GRPCService    `json:"grpc"`
+		Gateway   GatewayService `json:"gateway"`
+		Includes  []string       `json:"includes"`
+	}
+
+	GRPCService struct {
+		ListenAddress     string           `json:"listen_address"`
+		FQDN              string           `json:"fqdn"`
+		Certs             aserto.TLSConfig `json:"certs"`
+		ConnectionTimeout time.Duration    `json:"connection_timeout"` // https://godoc.org/google.golang.org/grpc#ConnectionTimeout
+		DisableReflection bool             `json:"disable_reflection"`
+	}
+
+	GatewayService struct {
+		ListenAddress     string           `json:"listen_address"`
+		FQDN              string           `json:"fqdn"`
+		Certs             aserto.TLSConfig `json:"certs"`
+		AllowedOrigins    []string         `json:"allowed_origins"`
+		AllowedHeaders    []string         `json:"allowed_headers"`
+		AllowedMethods    []string         `json:"allowed_methods"`
+		HTTP              bool             `json:"http"`
+		ReadTimeout       time.Duration    `json:"read_timeout"`
+		ReadHeaderTimeout time.Duration    `json:"read_header_timeout"`
+		WriteTimeout      time.Duration    `json:"write_timeout"`
+		IdleTimeout       time.Duration    `json:"idle_timeout"`
+	}
+)
+
+var (
+	_ config.Section = (*Config)(nil)
+
+	ErrPortCollision = errors.Wrap(config.ErrConfig, "service ports must be unique")
+	ErrDependency    = errors.Wrap(config.ErrConfig, "undefined depdency")
+)
 
 func (c Config) Defaults() map[string]any {
 	return lo.Assign(
@@ -26,7 +66,71 @@ func (c Config) Defaults() map[string]any {
 }
 
 func (c Config) Validate() error {
-	return nil
+	if err := c.validateServices(); err != nil {
+		return err
+	}
+
+	if err := c.validateListenAddresses(); err != nil {
+		return err
+	}
+
+	return c.validateDepdencies()
+}
+
+func (c Config) validateServices() error {
+	var errs error
+
+	for name, svc := range c {
+		if err := svc.Validate(); err != nil {
+			errs = multierror.Append(errs, errors.Wrap(err, name))
+		}
+	}
+
+	return errs
+}
+
+func (c Config) validateListenAddresses() error {
+	addrs := make(map[string]string, len(c)*listenersPerService)
+
+	var errs error
+
+	for name, svc := range c {
+		grpcName := name + " (grpc)"
+
+		if existing, ok := addrs[svc.GRPC.ListenAddress]; ok {
+			errs = multierror.Append(errs,
+				errors.Wrapf(ErrPortCollision, collisionMsg(svc.GRPC.ListenAddress, existing, grpcName)),
+			)
+		}
+
+		addrs[svc.GRPC.ListenAddress] = grpcName
+
+		httpName := name + " (http)"
+
+		if existing, ok := addrs[svc.Gateway.ListenAddress]; ok {
+			errs = multierror.Append(errs,
+				errors.Wrapf(ErrPortCollision, collisionMsg(svc.Gateway.ListenAddress, existing, httpName)),
+			)
+		}
+
+		addrs[svc.Gateway.ListenAddress] = httpName
+	}
+
+	return errs
+}
+
+func (c Config) validateDepdencies() error {
+	var errs error
+
+	for name, svc := range c {
+		for _, dep := range svc.DependsOn {
+			if _, ok := c[dep]; !ok {
+				errs = multierror.Append(errs, errors.Wrapf(ErrDependency, "%s referenced in %s", dep, name))
+			}
+		}
+	}
+
+	return errs
 }
 
 func (c Config) Serialize(w io.Writer) error {
@@ -42,11 +146,14 @@ func (c Config) Serialize(w io.Writer) error {
 	return nil
 }
 
-type Service struct {
-	DependsOn []string       `json:"depends_on"`
-	GRPC      GRPCService    `json:"grpc"`
-	Gateway   GatewayService `json:"gateway"`
-	Includes  []string       `json:"includes"`
+// collisionMsg formats the message for a port collision error.
+// It prints the service names in deterministic order for easier testing.
+func collisionMsg(addr, svc1, svc2 string) string {
+	if svc1 > svc2 {
+		svc1, svc2 = svc2, svc1
+	}
+
+	return addr + fmt.Sprintf(" [%s, %s]", svc1, svc2)
 }
 
 func (c *Service) Defaults() map[string]any {
@@ -60,7 +167,8 @@ func (s *Service) Validate() error {
 	return nil
 }
 
-const servicesTemplate string = `
+const (
+	servicesTemplate string = `
 # services configuration
 services:
   {{- range $name, $service := . }}
@@ -109,14 +217,7 @@ services:
     {{ end }}
   {{ end }}
 `
-
-type GRPCService struct {
-	ListenAddress     string           `json:"listen_address"`
-	FQDN              string           `json:"fqdn"`
-	Certs             aserto.TLSConfig `json:"certs"`
-	ConnectionTimeout time.Duration    `json:"connection_timeout"` // https://godoc.org/google.golang.org/grpc#ConnectionTimeout
-	DisableReflection bool             `json:"disable_reflection"`
-}
+)
 
 func (s *GRPCService) Defaults() map[string]any {
 	return map[string]any{
@@ -130,20 +231,6 @@ func (s *GRPCService) Defaults() map[string]any {
 
 func (s *GRPCService) Validate() error {
 	return nil
-}
-
-type GatewayService struct {
-	ListenAddress     string           `json:"listen_address"`
-	FQDN              string           `json:"fqdn"`
-	Certs             aserto.TLSConfig `json:"certs"`
-	AllowedOrigins    []string         `json:"allowed_origins"`
-	AllowedHeaders    []string         `json:"allowed_headers"`
-	AllowedMethods    []string         `json:"allowed_methods"`
-	HTTP              bool             `json:"http"`
-	ReadTimeout       time.Duration    `json:"read_timeout"`
-	ReadHeaderTimeout time.Duration    `json:"read_header_timeout"`
-	WriteTimeout      time.Duration    `json:"write_timeout"`
-	IdleTimeout       time.Duration    `json:"idle_timeout"`
 }
 
 func (s *GatewayService) Defaults() map[string]any {
@@ -172,6 +259,8 @@ const (
 	DefaultReadHeaderTimeout = time.Second * 5
 	DefaultWriteTimeout      = time.Second * 5
 	DefaultIdleTimeout       = time.Second * 30
+
+	listenersPerService = 2 // gRPC and HTTP
 )
 
 func DefaultAllowedOrigins(useHTTP bool) []string {

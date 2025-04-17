@@ -2,7 +2,11 @@ package config
 
 import (
 	"io"
+
+	"github.com/pkg/errors"
 )
+
+var ErrConfig = errors.New("configuraion error")
 
 type Serializer interface {
 	// Serialize as YAML into w.
