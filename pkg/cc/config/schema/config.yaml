@@ -32,6 +32,7 @@ remote_directory:
   ca_cert_path: ""
   timeout_in_seconds: 5
   no_tls: false
+  no_proxy: false
   headers:
     aserto-account-id: "00000000-1111-2222-3333-444455556666"
 

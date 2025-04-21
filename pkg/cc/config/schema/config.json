@@ -178,6 +178,11 @@
                     "description": "disable TLS and use a plaintext connection",
                     "default": "false"
                 },
+                "no_proxy": {
+                    "type": "boolean",
+                    "description": "bypass any configured HTTP proxy",
+                    "default": "false"
+                },
                 "headers": {
                     "type": "object",
                     "description": "map of additional gRPC headers",
