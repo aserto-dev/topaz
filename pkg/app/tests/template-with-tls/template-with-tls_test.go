@@ -1,4 +1,4 @@
-package template_no_tls_test
+package template_test
 
 import (
 	"context"
@@ -7,17 +7,21 @@ import (
 
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	"github.com/aserto-dev/topaz/pkg/cli/cmd/certs"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/samber/lo"
 
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func TestTemplatesNoTLS(t *testing.T) {
+func TestTemplates(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
+	certsDir := generateCerts(ctx, t)
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
@@ -29,13 +33,13 @@ func TestTemplatesNoTLS(t *testing.T) {
 			x.EnvTopazDBDir:     x.DefDBDir,
 			x.EnvTopazDecisions: x.DefDecisionsDir,
 		},
-		Files: []testcontainers.ContainerFile{
-			{
-				Reader:            assets_test.ConfigNoTLSReader(),
+		Files: append(certFiles(certsDir),
+			testcontainers.ContainerFile{
+				Reader:            assets_test.ConfigWithTLSReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0x700,
+				FileMode:          0o700,
 			},
-		},
+		),
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
 			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
@@ -62,21 +66,50 @@ func TestTemplatesNoTLS(t *testing.T) {
 
 	dsConfig := &dsc.Config{
 		Host:      addr,
-		Insecure:  false,
-		Plaintext: true,
+		Insecure:  true,
+		Plaintext: false,
 		Timeout:   10 * time.Second,
 	}
 
 	azConfig := &azc.Config{
 		Host:      addr,
-		Insecure:  false,
-		Plaintext: true,
+		Insecure:  true,
+		Plaintext: false,
 		Timeout:   10 * time.Second,
 	}
 
 	for _, tmpl := range tcs {
-		t.Run("testTemplatesWithNoTLS", tc.InstallTemplate(dsConfig, azConfig, tmpl))
+		t.Run("testTemplate", tc.InstallTemplate(dsConfig, azConfig, tmpl))
 	}
+}
+
+func generateCerts(ctx context.Context, t *testing.T) string {
+	t.Helper()
+
+	certsDir := t.TempDir()
+
+	commonCtx, err := cc.NewCommonContext(ctx, true, "")
+	require.NoError(t, err)
+
+	generateCmd := &certs.GenerateCertsCmd{CertsDir: certsDir}
+	require.NoError(t,
+		generateCmd.Run(commonCtx),
+	)
+
+	return certsDir
+}
+
+func certFiles(certsDir string) []testcontainers.ContainerFile {
+	return lo.Map(
+		[]string{"/grpc.key", "/grpc.crt", "/grpc-ca.crt", "/gateway.key", "/gateway.crt", "/gateway-ca.crt"},
+		func(file string, _ int) testcontainers.ContainerFile {
+			return testcontainers.ContainerFile{
+				HostFilePath:      certsDir + file,
+				ContainerFilePath: x.DefCertsDir + file,
+				FileMode:          0o600,
+			}
+		},
+	)
 }
 
 var tcs = []string{

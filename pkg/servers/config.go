@@ -1,9 +1,12 @@
-package services
+package servers
 
 import (
 	"fmt"
 	"io"
+	"iter"
+	"maps"
 	"net/http"
+	"slices"
 	"text/template"
 	"time"
 
@@ -15,19 +18,24 @@ import (
 	"github.com/aserto-dev/go-aserto"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 )
 
 type (
-	Config map[string]*Service
+	ServerName string
 
-	Service struct {
-		DependsOn []string       `json:"depends_on"`
-		GRPC      GRPCService    `json:"grpc"`
-		Gateway   GatewayService `json:"gateway"`
-		Includes  []string       `json:"includes"`
+	ServiceName string
+
+	Config map[ServerName]*Server
+
+	Server struct {
+		DependsOn []ServerName  `json:"depends_on"`
+		GRPC      GRPCServer    `json:"grpc"`
+		HTTP      HTTPServer    `json:"http"`
+		Services  []ServiceName `json:"services"`
 	}
 
-	GRPCService struct {
+	GRPCServer struct {
 		ListenAddress     string           `json:"listen_address"`
 		FQDN              string           `json:"fqdn"`
 		Certs             aserto.TLSConfig `json:"certs"`
@@ -35,7 +43,7 @@ type (
 		DisableReflection bool             `json:"disable_reflection"`
 	}
 
-	GatewayService struct {
+	HTTPServer struct {
 		ListenAddress     string           `json:"listen_address"`
 		FQDN              string           `json:"fqdn"`
 		Certs             aserto.TLSConfig `json:"certs"`
@@ -48,6 +56,13 @@ type (
 		WriteTimeout      time.Duration    `json:"write_timeout"`
 		IdleTimeout       time.Duration    `json:"idle_timeout"`
 	}
+
+	ServerKind string
+
+	ListenAddress struct {
+		Address string
+		Kind    ServerKind
+	}
 )
 
 var (
@@ -55,18 +70,40 @@ var (
 
 	ErrPortCollision = errors.Wrap(config.ErrConfig, "service ports must be unique")
 	ErrDependency    = errors.Wrap(config.ErrConfig, "undefined depdency")
+
+	Service = struct {
+		Reader     ServiceName
+		Writer     ServiceName
+		Authorizer ServiceName
+		Access     ServiceName
+	}{
+		Reader:     "reader",
+		Writer:     "writer",
+		Authorizer: "authorizer",
+		Access:     "access",
+	}
+
+	KnownServices = []ServiceName{Service.Reader, Service.Writer, Service.Authorizer, Service.Access}
+
+	Kind = struct {
+		GRPC ServerKind
+		HTTP ServerKind
+	}{
+		GRPC: "grpc",
+		HTTP: "http",
+	}
 )
 
 func (c Config) Defaults() map[string]any {
 	return lo.Assign(
-		lo.Map(lo.Keys(c), func(name string, _ int) map[string]any {
-			return config.PrefixKeys(name, c[name].Defaults())
+		lo.Map(lo.Keys(c), func(name ServerName, _ int) map[string]any {
+			return config.PrefixKeys(string(name), c[name].Defaults())
 		})...,
 	)
 }
 
 func (c Config) Validate() error {
-	if err := c.validateServices(); err != nil {
+	if err := c.validateServers(); err != nil {
 		return err
 	}
 
@@ -77,12 +114,30 @@ func (c Config) Validate() error {
 	return c.validateDepdencies()
 }
 
-func (c Config) validateServices() error {
+func (c Config) EnabledServices() iter.Seq[ServiceName] {
+	return loiter.FlatMap(
+		maps.Values(c),
+		func(svr *Server) iter.Seq[ServiceName] {
+			return slices.Values(svr.Services)
+		},
+	)
+}
+
+func (c Config) ListenAddresses() iter.Seq2[ServerName, ListenAddress] {
+	return loiter.ExplodeValues(maps.All(c), func(name ServerName, server *Server) iter.Seq[ListenAddress] {
+		return slices.Values([]ListenAddress{
+			{server.GRPC.ListenAddress, Kind.GRPC},
+			{server.HTTP.ListenAddress, Kind.HTTP},
+		})
+	})
+}
+
+func (c Config) validateServers() error {
 	var errs error
 
-	for name, svc := range c {
-		if err := svc.Validate(); err != nil {
-			errs = multierror.Append(errs, errors.Wrap(err, name))
+	for name, server := range c {
+		if err := server.Validate(); err != nil {
+			errs = multierror.Append(errs, errors.Wrap(err, string(name)))
 		}
 	}
 
@@ -94,26 +149,16 @@ func (c Config) validateListenAddresses() error {
 
 	var errs error
 
-	for name, svc := range c {
-		grpcName := name + " (grpc)"
+	for name, listenAddress := range c.ListenAddresses() {
+		addressName := fmt.Sprintf("%s (%s)", name, listenAddress.Kind)
 
-		if existing, ok := addrs[svc.GRPC.ListenAddress]; ok {
+		if existing, ok := addrs[listenAddress.Address]; ok {
 			errs = multierror.Append(errs,
-				errors.Wrapf(ErrPortCollision, collisionMsg(svc.GRPC.ListenAddress, existing, grpcName)),
+				errors.Wrapf(ErrPortCollision, collisionMsg(listenAddress.Address, existing, addressName)),
 			)
 		}
 
-		addrs[svc.GRPC.ListenAddress] = grpcName
-
-		httpName := name + " (http)"
-
-		if existing, ok := addrs[svc.Gateway.ListenAddress]; ok {
-			errs = multierror.Append(errs,
-				errors.Wrapf(ErrPortCollision, collisionMsg(svc.Gateway.ListenAddress, existing, httpName)),
-			)
-		}
-
-		addrs[svc.Gateway.ListenAddress] = httpName
+		addrs[listenAddress.Address] = addressName
 	}
 
 	return errs
@@ -156,14 +201,22 @@ func collisionMsg(addr, svc1, svc2 string) string {
 	return addr + fmt.Sprintf(" [%s, %s]", svc1, svc2)
 }
 
-func (c *Service) Defaults() map[string]any {
+func (c *Server) Defaults() map[string]any {
 	return lo.Assign(
 		config.PrefixKeys("grpc", c.GRPC.Defaults()),
-		config.PrefixKeys("gateway", c.Gateway.Defaults()),
+		config.PrefixKeys("gateway", c.HTTP.Defaults()),
 	)
 }
 
-func (s *Service) Validate() error {
+func (s *Server) Validate() error {
+	var errs error
+
+	for _, service := range s.Services {
+		if !slices.Contains(KnownServices, service) {
+			errs = multierror.Append(errs, errors.Wrapf(config.ErrConfig, "unknown service %q", service))
+		}
+	}
+
 	return nil
 }
 
@@ -171,55 +224,59 @@ const (
 	servicesTemplate string = `
 # services configuration
 services:
-  {{- range $name, $service := . }}
+  {{- range $name, $server := . }}
   {{ $name }}:
+    {{- with $server.GRPC }}
     grpc:
-      listen_address: '{{ $service.GRPC.ListenAddress }}'
-      fqdn: '{{ $service.GRPC.FQDN }}'
-      {{- if $service.GRPC.Certs }}
+      listen_address: '{{ .ListenAddress }}'
+      fqdn: '{{ .FQDN }}'
+      {{- if .Certs }}
       certs:
-        tls_key_path: '{{ $service.GRPC.Certs.Key }}'
-        tls_cert_path: '{{ $service.GRPC.Certs.Cert }}'
-        tls_ca_cert_path: '{{ $service.GRPC.Certs.CA }}'
+        tls_key_path: '{{ .Certs.Key }}'
+        tls_cert_path: '{{ .Certs.Cert }}'
+        tls_ca_cert_path: '{{ .Certs.CA }}'
       {{ end -}}
-      connection_timeout: {{ $service.GRPC.ConnectionTimeout }}
-      disable_reflection: {{ $service.GRPC.DisableReflection }}
+      connection_timeout: {{ .ConnectionTimeout }}
+      disable_reflection: {{ .DisableReflection }}
+    {{- end }}
 
+    {{- with $server.HTTP }}
     gateway:
-      listen_address: '{{ $service.Gateway.ListenAddress }}'
-      fqdn: '{{ $service.Gateway.FQDN }}'
-      {{- if $service.Gateway.Certs }}
+      listen_address: '{{ .ListenAddress }}'
+      fqdn: '{{ .FQDN }}'
+      {{- if .Certs }}
       certs:
-        tls_key_path: '{{ $service.Gateway.Certs.Key }}'
-        tls_cert_path: '{{ $service.Gateway.Certs.Cert }}'
-        tls_ca_cert_path: '{{ $service.Gateway.Certs.CA }}'
+        tls_key_path: '{{ .Certs.Key }}'
+        tls_cert_path: '{{ .Certs.Cert }}'
+        tls_ca_cert_path: '{{ .Certs.CA }}'
       {{ end -}}
       allowed_origins:
-      {{- range $service.Gateway.AllowedOrigins }}
+      {{- range .AllowedOrigins }}
         - {{ . -}}
       {{ end }}
       allowed_headers:
-      {{- range $service.Gateway.AllowedHeaders }}
+      {{- range .AllowedHeaders }}
         - {{ . -}}
       {{ end }}
       allowed_methods:
-      {{- range $service.Gateway.AllowedMethods }}
+      {{- range .AllowedMethods }}
         - {{ . -}}
       {{ end }}
-      http: {{ $service.Gateway.HTTP }}
-      read_timeout: {{ $service.Gateway.ReadTimeout }}
-      read_header_timeout: {{ $service.Gateway.ReadHeaderTimeout }}
-      write_timeout: {{ $service.Gateway.WriteTimeout }}
-      idle_timeout: {{ $service.Gateway.IdleTimeout }}
+      http: {{ .HTTP }}
+      read_timeout: {{ .ReadTimeout }}
+      read_header_timeout: {{ .ReadHeaderTimeout }}
+      write_timeout: {{ .WriteTimeout }}
+      idle_timeout: {{ .IdleTimeout }}
+    {{- end }}
     includes:
-    {{- range $service.Includes }}
+    {{- range $server.Services }}
       - {{ . -}}
     {{ end }}
   {{ end }}
 `
 )
 
-func (s *GRPCService) Defaults() map[string]any {
+func (s *GRPCServer) Defaults() map[string]any {
 	return map[string]any{
 		"listen_address":         "0.0.0:9292",
 		"certs.tls_cert_path":    "${TOPAZ_CERTS_DIR}/grpc.crt",
@@ -229,11 +286,11 @@ func (s *GRPCService) Defaults() map[string]any {
 	}
 }
 
-func (s *GRPCService) Validate() error {
+func (s *GRPCServer) Validate() error {
 	return nil
 }
 
-func (s *GatewayService) Defaults() map[string]any {
+func (s *HTTPServer) Defaults() map[string]any {
 	return map[string]any{
 		"listen_address":         "0.0.0:9393",
 		"certs.tls_cert_path":    "${TOPAZ_CERTS_DIR}/gateway.crt",
@@ -250,7 +307,7 @@ func (s *GatewayService) Defaults() map[string]any {
 	}
 }
 
-func (s *GatewayService) Validate() error {
+func (s *HTTPServer) Validate() error {
 	return nil
 }
 

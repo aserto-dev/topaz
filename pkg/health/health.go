@@ -50,11 +50,11 @@ const healthTemplate = `
 # health service settings.
 health:
   enabled: {{ .Enabled }}
-  listen_address: '{{ .ListenAddress}}'
-  {{- if .Certificates }}
+  listen_address: '{{ .ListenAddress }}'
+{{- with .Certificates }}
   certs:
-    tls_key_path: '{{ .Certificates.Key }}'
-    tls_cert_path: '{{ .Certificates.Cert }}'
-    tls_ca_cert_path: '{{ .Certificates.CA }}'
-  {{ end }}
+    tls_key_path: '{{ .Key }}'
+    tls_cert_path: '{{ .Cert }}'
+    tls_ca_cert_path: '{{ .CA }}'
+{{- end }}
 `

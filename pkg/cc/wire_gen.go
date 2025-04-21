@@ -7,7 +7,6 @@
 package cc
 
 import (
-	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/logger"
 	logger2 "github.com/aserto-dev/runtime/logger"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
@@ -74,7 +73,7 @@ func buildTestCC(logOutput logger.Writer, errOutput logger.ErrWriter, configPath
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(config.NewConfig, config.NewLoggerConfig, logger2.NewLogger, certs.NewGenerator, wire.Struct(new(CC), "*"), wire.FieldsOf(new(*context.ErrGroupAndContext), "Ctx", "ErrGroup"))
+	commonSet = wire.NewSet(config.NewConfig, config.NewLoggerConfig, logger2.NewLogger, wire.Struct(new(CC), "*"), wire.FieldsOf(new(*context.ErrGroupAndContext), "Ctx", "ErrGroup"))
 
 	ccSet = wire.NewSet(
 		commonSet, context.NewContext,

@@ -16,8 +16,8 @@ import (
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
+	"github.com/aserto-dev/topaz/pkg/servers"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
-	"github.com/aserto-dev/topaz/pkg/services"
 	config3 "github.com/aserto-dev/topaz/pkg/topaz"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/samber/lo"
@@ -118,17 +118,17 @@ func migHealth(cfg2 *config2.Config, cfg3 *config3.Config) {
 }
 
 func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
-	cfg3.Services = services.Config{}
+	cfg3.Servers = servers.Config{}
 
 	// svcHosts := gRPC listen address -> builder.API
 	svcHosts := map[string]*builder.API{}
 
 	// port2names := gRPC listen address -> service name (includes list for v3 service definition)
-	port2names := map[string][]string{}
+	port2names := map[string][]servers.ServiceName{}
 
 	for name, service := range cfg2.APIConfig.Services {
 		svcHosts[service.GRPC.ListenAddress] = service
-		port2names[service.GRPC.ListenAddress] = append(port2names[service.GRPC.ListenAddress], name)
+		port2names[service.GRPC.ListenAddress] = append(port2names[service.GRPC.ListenAddress], servers.ServiceName(name))
 	}
 
 	svcCounter := 0
@@ -138,29 +138,29 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 
 		svcCounter++
 
-		var svc string
+		var svc servers.ServerName
 
 		switch {
 		case len(svcHosts) == 1:
 			svc = "topaz-svc"
 		case len(includes) == 1:
-			svc = includes[0] + "-svc"
+			svc = servers.ServerName(includes[0] + "-svc")
 		case lo.Contains(includes, "reader"):
 			svc = "directory-svc"
 		default:
-			svc = fmt.Sprintf("topaz-%d-svc", svcCounter)
+			svc = servers.ServerName(fmt.Sprintf("topaz-%d-svc", svcCounter))
 		}
 
-		cfg3.Services[svc] = &services.Service{
-			DependsOn: host.Needs,
-			GRPC: services.GRPCService{
+		cfg3.Servers[svc] = &servers.Server{
+			DependsOn: lo.Map(host.Needs, func(name string, _ int) servers.ServerName { return servers.ServerName(name) }),
+			GRPC: servers.GRPCServer{
 				ListenAddress:     host.GRPC.ListenAddress,
 				FQDN:              host.GRPC.FQDN,
 				Certs:             host.GRPC.Certs,
 				ConnectionTimeout: time.Duration(int64(host.GRPC.ConnectionTimeoutSeconds)) * time.Second,
 				DisableReflection: false,
 			},
-			Gateway: services.GatewayService{
+			HTTP: servers.HTTPServer{
 				ListenAddress:     host.Gateway.ListenAddress,
 				FQDN:              host.Gateway.FQDN,
 				Certs:             host.Gateway.Certs,
@@ -173,7 +173,7 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 				WriteTimeout:      host.Gateway.WriteTimeout,
 				IdleTimeout:       host.Gateway.IdleTimeout,
 			},
-			Includes: includes,
+			Services: includes,
 		}
 	}
 }

@@ -5,6 +5,12 @@ import (
 	"io"
 	"text/template"
 
+	"github.com/Masterminds/sprig/v3"
+	"github.com/hashicorp/go-multierror"
+	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
+	"github.com/samber/lo"
+
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
@@ -13,13 +19,12 @@ import (
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
-	"github.com/aserto-dev/topaz/pkg/services"
-	"github.com/samber/lo"
-
-	"github.com/Masterminds/sprig/v3"
+	"github.com/aserto-dev/topaz/pkg/servers"
 )
 
 const Version int = 3
+
+var ErrVersionMismatch = errors.Wrap(config.ErrConfig, "unsupported configuration version")
 
 type Config struct {
 	Version        int                   `json:"version"`
@@ -28,16 +33,42 @@ type Config struct {
 	Debug          debug.Config          `json:"debug,omitempty"`
 	Health         health.Config         `json:"health,omitempty"`
 	Metrics        metrics.Config        `json:"metrics,omitempty"`
-	Services       services.Config       `json:"services"`
+	Servers        servers.Config        `json:"servers"`
 	Directory      directory.Config      `json:"directory"`
 	Authorizer     authorizer.Config     `json:"authorizer"`
 }
 
 var _ config.Section = (*Config)(nil)
 
+type ConfigOverride func(*Config)
+
+func NewConfig(r io.Reader, overrides ...ConfigOverride) (*Config, error) {
+	var cfg Config
+
+	v := config.NewViper()
+	v.SetEnvPrefix("TOPAZ")
+	v.AutomaticEnv()
+
+	v.ReadConfig(r)
+
+	if err := checkVersion(v); err != nil {
+		return nil, err
+	}
+
+	if err := v.Unmarshal(&cfg); err != nil {
+		return nil, err
+	}
+
+	for _, override := range overrides {
+		override(&cfg)
+	}
+
+	return &cfg, nil
+}
+
 //nolint:mnd  // this is where default values are defined.
 func (c *Config) Defaults() map[string]any {
-	services := services.Config{"topaz": {}}
+	services := servers.Config{"topaz": {}}
 
 	return lo.Assign(
 		map[string]any{
@@ -55,8 +86,23 @@ func (c *Config) Defaults() map[string]any {
 	)
 }
 
+const logLevelError = "invalid value %q in logging.log_level. expected one of [trace, debug, info, warn, error, fatal, panic]"
+
 func (c *Config) Validate() error {
-	return nil
+	// logging settings validation.
+	if err := (&c.Logging).ParseLogLevel(zerolog.Disabled); err != nil {
+		return errors.Wrapf(config.ErrConfig, logLevelError, c.Logging.LogLevel)
+	}
+
+	var errs error
+
+	for _, validator := range c.sections() {
+		if err := validator.Validate(); err != nil {
+			errs = multierror.Append(errs, err)
+		}
+	}
+
+	return errs
 }
 
 func (c *Config) Serialize(w io.Writer) error {
@@ -66,37 +112,35 @@ func (c *Config) Serialize(w io.Writer) error {
 		return err
 	}
 
-	if err := c.Authentication.Serialize(w); err != nil {
-		return err
-	}
-
-	if err := c.Debug.Serialize(w); err != nil {
-		return err
-	}
-
-	if err := c.Health.Serialize(w); err != nil {
-		return err
-	}
-
-	if err := c.Metrics.Serialize(w); err != nil {
-		return err
-	}
-
-	if err := c.Services.Serialize(w); err != nil {
-		return err
-	}
-
-	if err := c.Directory.Serialize(w); err != nil {
-		return err
-	}
-
-	if err := c.Authorizer.Serialize(w); err != nil {
-		return err
+	for _, serializer := range c.sections() {
+		if err := serializer.Serialize(w); err != nil {
+			return err
+		}
 	}
 
 	_, _ = fmt.Fprintln(w)
 
 	return nil
+}
+
+func checkVersion(v config.Viper) error {
+	var cfg struct {
+		Version int `json:"version"`
+	}
+
+	if err := v.Unmarshal(&cfg); err != nil {
+		return err
+	}
+
+	if cfg.Version != Version {
+		return errors.Wrapf(ErrVersionMismatch, "expected %d, got %d", Version, cfg.Version)
+	}
+
+	return nil
+}
+
+func (c *Config) sections() []config.Section {
+	return []config.Section{&c.Authentication, &c.Debug, &c.Health, &c.Metrics, &c.Servers, &c.Directory, &c.Authorizer}
 }
 
 type ConfigV3 struct {

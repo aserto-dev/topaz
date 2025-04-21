@@ -8,7 +8,7 @@ RUN mkdir /config && \
     mkdir /certs && \
     mkdir /db && \
     mkdir /decisions
-VOLUME ["/config", "/certs", "/db", "/decisions"]
+VOLUME ["/config", "/db", "/decisions"]
 
 WORKDIR /app
 

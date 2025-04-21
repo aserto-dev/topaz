@@ -4,7 +4,6 @@
 package cc
 
 import (
-	"github.com/aserto-dev/certs"
 	"github.com/aserto-dev/logger"
 	"github.com/google/wire"
 
@@ -18,7 +17,6 @@ var (
 		config.NewConfig,
 		config.NewLoggerConfig,
 		runtimeLogger.NewLogger,
-		certs.NewGenerator,
 
 		wire.Struct(new(CC), "*"),
 		wire.FieldsOf(new(*cc_context.ErrGroupAndContext), "Ctx", "ErrGroup"),

@@ -41,7 +41,6 @@ const (
 type Topaz struct {
 	Context        context.Context
 	Logger         *zerolog.Logger
-	ServerOptions  []grpc.ServerOption
 	Configuration  *config.Config
 	ServiceBuilder *builder.ServiceFactory
 	Manager        *builder.ServiceManager
@@ -66,10 +65,6 @@ func SetServiceStatus(log *zerolog.Logger, service string, servingStatus grpc_he
 		log.Info().Str("service", service).Str("status", servingStatus.String()).Msg("health")
 		healthCheck.SetServingStatus(service, servingStatus)
 	}
-}
-
-func (e *Topaz) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
-	e.ServerOptions = append(e.ServerOptions, grpcOptions...)
 }
 
 // Start starts all services required by the engine.

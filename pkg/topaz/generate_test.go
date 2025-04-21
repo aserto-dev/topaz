@@ -18,7 +18,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
-	"github.com/aserto-dev/topaz/pkg/services"
+	"github.com/aserto-dev/topaz/pkg/servers"
 	"github.com/aserto-dev/topaz/pkg/topaz"
 
 	"github.com/open-policy-agent/opa/v1/download"
@@ -99,10 +99,10 @@ var cfg = &topaz.Config{
 			CA:   "${TOPAZ_CERTS_DIR}/gateway-ca.crt",
 		},
 	},
-	Services: services.Config{
-		"topaz": &services.Service{
-			DependsOn: []string{},
-			GRPC: services.GRPCService{
+	Servers: servers.Config{
+		"topaz": &servers.Server{
+			DependsOn: []servers.ServerName{},
+			GRPC: servers.GRPCServer{
 				ListenAddress: "0.0.0.0:9292",
 				FQDN:          "localhost:9292",
 				Certs: aserto.TLSConfig{
@@ -113,7 +113,7 @@ var cfg = &topaz.Config{
 				ConnectionTimeout: time.Second * 7,
 				DisableReflection: false,
 			},
-			Gateway: services.GatewayService{
+			HTTP: servers.HTTPServer{
 				ListenAddress: "0.0.0.0:9393",
 				FQDN:          "localhost:9393",
 				Certs: aserto.TLSConfig{
@@ -121,16 +121,16 @@ var cfg = &topaz.Config{
 					Cert: "${TOPAZ_CERTS_DIR}/gateway.crt",
 					CA:   "${TOPAZ_CERTS_DIR}/gateway-ca.crt",
 				},
-				AllowedOrigins:    services.DefaultAllowedOrigins(false),
-				AllowedHeaders:    services.DefaultAllowedHeaders(),
-				AllowedMethods:    services.DefaultAllowedMethods(),
+				AllowedOrigins:    servers.DefaultAllowedOrigins(false),
+				AllowedHeaders:    servers.DefaultAllowedHeaders(),
+				AllowedMethods:    servers.DefaultAllowedMethods(),
 				HTTP:              false,
-				ReadTimeout:       services.DefaultReadTimeout,
-				ReadHeaderTimeout: services.DefaultReadHeaderTimeout,
-				WriteTimeout:      services.DefaultWriteTimeout,
-				IdleTimeout:       services.DefaultIdleTimeout,
+				ReadTimeout:       servers.DefaultReadTimeout,
+				ReadHeaderTimeout: servers.DefaultReadHeaderTimeout,
+				WriteTimeout:      servers.DefaultWriteTimeout,
+				IdleTimeout:       servers.DefaultIdleTimeout,
 			},
-			Includes: []string{
+			Services: []servers.ServiceName{
 				"model",
 				"reader",
 				"writer",
