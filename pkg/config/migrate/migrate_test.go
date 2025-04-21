@@ -3,7 +3,6 @@ package migrate_test
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/aserto-dev/topaz/pkg/config/migrate"
@@ -12,10 +11,7 @@ import (
 )
 
 func TestLoadConfigV2(t *testing.T) {
-	home, err := os.UserHomeDir()
-	require.NoError(t, err)
-
-	r, err := os.Open(filepath.Join(home, ".config/topaz/cfg/gdrive.yaml"))
+	r, err := os.Open("gdrive-v2.yaml")
 	require.NoError(t, err)
 
 	cfg2, err := migrate.LoadConfigV2(r)
@@ -24,10 +20,7 @@ func TestLoadConfigV2(t *testing.T) {
 }
 
 func TestMigrateConfig(t *testing.T) {
-	home, err := os.UserHomeDir()
-	require.NoError(t, err)
-
-	r, err := os.Open(filepath.Join(home, ".config/topaz/cfg/gdrive.yaml"))
+	r, err := os.Open("gdrive-v2.yaml")
 	require.NoError(t, err)
 
 	defer func() {

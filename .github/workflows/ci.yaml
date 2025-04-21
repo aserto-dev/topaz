@@ -83,10 +83,15 @@ jobs:
           version: ${{ env.GO_LANGCI_LINT_VERSION }}
           args: --timeout=30m
       -
+        name: Test Setup
+        uses: gertd/action-gotestsum@v3.0.0
+        with:
+          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
+      -
         name: Unit Test
         run: |
-          gotestsum --format short-verbose -- \
-            -count=1 -timeout 120s -parallel=1 -v $(go list ./... | grep -v pkg/app/tests)
+          gotestsum --format short-verbose -- $(go list ./... | grep -v pkg/app/tests) \
+            -count=1 -timeout 120s -parallel=1 -v
       -
         name: Test Snapshot
         uses: goreleaser/goreleaser-action@v6
@@ -97,25 +102,20 @@ jobs:
           version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean --snapshot --config .goreleaser-test.yml
       -
-        name: Test Setup
-        uses: gertd/action-gotestsum@v3.0.0
-        with:
-          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
-      -
         name: Test
         run: |
-          gotestsum --format short-verbose -- \
-            -count=1 -timeout 120s -parallel=1 -v $(go list ./pkg/app/tests/... | grep -v tests/template)
+          gotestsum --format short-verbose -- $(go list ./pkg/app/tests/... | grep -v tests/template) \
+            -count=1 -timeout 120s -parallel=1 -v
       -
         name: Templates Test
         run: |
-          gotestsum --format short-verbose -- \
-            -count=1 -timeout 240s -parallel=1 -v github.com/aserto-dev/topaz/pkg/app/tests/template/...
+          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template/... \
+            -count=1 -timeout 240s -parallel=1 -v
       -
         name: Templates Test (With TLS)
         run: |
-          gotestsum --format short-verbose -- \
-            -count=1 -timeout 120s -parallel=1 -v github.com/aserto-dev/topaz/pkg/app/tests/template-with-tls/...
+          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-with-tls/... \
+            -count=1 -timeout 120s -parallel=1 -v
       -
         name: Upload code coverage
         uses: shogo82148/actions-goveralls@v1
