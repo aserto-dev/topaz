@@ -29,10 +29,9 @@ type (
 	Config map[ServerName]*Server
 
 	Server struct {
-		DependsOn []ServerName  `json:"depends_on"`
-		GRPC      GRPCServer    `json:"grpc"`
-		HTTP      HTTPServer    `json:"http"`
-		Services  []ServiceName `json:"services"`
+		GRPC     GRPCServer    `json:"grpc"`
+		HTTP     HTTPServer    `json:"http"`
+		Services []ServiceName `json:"services"`
 	}
 
 	GRPCServer struct {
@@ -72,18 +71,22 @@ var (
 	ErrDependency    = errors.Wrap(config.ErrConfig, "undefined depdency")
 
 	Service = struct {
+		Access     ServiceName
+		Authorizer ServiceName
+		Console    ServiceName
 		Reader     ServiceName
 		Writer     ServiceName
-		Authorizer ServiceName
-		Access     ServiceName
 	}{
+		Access:     "access",
+		Authorizer: "authorizer",
+		Console:    "console",
 		Reader:     "reader",
 		Writer:     "writer",
-		Authorizer: "authorizer",
-		Access:     "access",
 	}
 
-	KnownServices = []ServiceName{Service.Reader, Service.Writer, Service.Authorizer, Service.Access}
+	DirectoryServices = []ServiceName{Service.Reader, Service.Writer}
+
+	KnownServices = append(DirectoryServices, Service.Access, Service.Authorizer, Service.Console)
 
 	Kind = struct {
 		GRPC ServerKind
@@ -121,6 +124,10 @@ func (c Config) EnabledServices() iter.Seq[ServiceName] {
 			return slices.Values(svr.Services)
 		},
 	)
+}
+
+func (c Config) DirectoryEnabled() bool {
+	return loiter.ContainsAny(c.EnabledServices(), DirectoryServices...)
 }
 
 func (c Config) ListenAddresses() iter.Seq2[ServerName, ListenAddress] {
@@ -165,17 +172,8 @@ func (c Config) validateListenAddresses() error {
 }
 
 func (c Config) validateDepdencies() error {
-	var errs error
-
-	for name, svc := range c {
-		for _, dep := range svc.DependsOn {
-			if _, ok := c[dep]; !ok {
-				errs = multierror.Append(errs, errors.Wrapf(ErrDependency, "%s referenced in %s", dep, name))
-			}
-		}
-	}
-
-	return errs
+	// TODO: Find cycles
+	return nil
 }
 
 func (c Config) Serialize(w io.Writer) error {

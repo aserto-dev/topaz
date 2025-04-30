@@ -60,6 +60,7 @@ linters:
         - stdlib
         - generic
         - proto.Message
+        - http.Handler
         - mapstructure.v2.DecodeHookFunc
         - plugins.Plugin
         - decisionlog.DecisionLogger

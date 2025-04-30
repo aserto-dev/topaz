@@ -24,6 +24,21 @@ func Chain[T any](s ...iter.Seq[T]) iter.Seq[T] {
 	}
 }
 
+func ContainsAny[T comparable](s iter.Seq[T], vals ...T) bool {
+	lookup := make(map[T]struct{}, len(vals))
+	for _, v := range vals {
+		lookup[v] = struct{}{}
+	}
+
+	for t := range s {
+		if _, ok := lookup[t]; ok {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Filter returns a sequence that only yields the items that satisfy the predicate.
 func Filter[T any](s iter.Seq[T], predicate func(item T) bool) iter.Seq[T] {
 	return func(yield func(T) bool) {
@@ -65,6 +80,26 @@ func FlatMap[T any, R any](src iter.Seq[T], transform func(T) iter.Seq[R]) iter.
 				if !yield(r) {
 					return
 				}
+			}
+		}
+	}
+}
+
+func Pairs1[T any, R any](s iter.Seq[T], transform func(T) R) iter.Seq2[T, R] {
+	return func(yield func(T, R) bool) {
+		for t := range s {
+			if !yield(t, transform(t)) {
+				return
+			}
+		}
+	}
+}
+
+func Pairs2[T any, R any](s iter.Seq[T], transform func(T) R) iter.Seq2[R, T] {
+	return func(yield func(R, T) bool) {
+		for t := range s {
+			if !yield(transform(t), t) {
+				return
 			}
 		}
 	}

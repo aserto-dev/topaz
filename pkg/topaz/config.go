@@ -12,6 +12,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/aserto-dev/logger"
+
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	"github.com/aserto-dev/topaz/pkg/config"
@@ -96,10 +97,20 @@ func (c *Config) Validate() error {
 
 	var errs error
 
+	// Check that all config sections are valid before validating consistency across sections.
 	for _, validator := range c.sections() {
 		if err := validator.Validate(); err != nil {
 			errs = multierror.Append(errs, err)
 		}
+	}
+
+	if errs != nil {
+		return errs
+	}
+
+	// All sections are valid. Check that they are consistent with each other.
+	if c.Servers.DirectoryEnabled() && c.Directory.IsRemote() {
+		errs = multierror.Append(errs, errors.Wrap(config.ErrConfig, "remote directory cannot be exposed as a local service"))
 	}
 
 	return errs

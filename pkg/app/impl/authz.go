@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	goruntime "runtime"
 	"sync"
+	"time"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	runtime "github.com/aserto-dev/runtime"
 
-	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/version"
 	"github.com/aserto-dev/topaz/resolvers"
 
@@ -32,10 +32,10 @@ const (
 )
 
 type AuthorizerServer struct {
-	cfg      *config.Common
-	logger   *zerolog.Logger
-	issuers  sync.Map
-	jwkCache *jwk.Cache
+	logger      *zerolog.Logger
+	issuers     sync.Map
+	jwkCache    *jwk.Cache
+	jwtTimeSkew time.Duration
 
 	resolver *resolvers.Resolvers
 }
@@ -43,18 +43,18 @@ type AuthorizerServer struct {
 func NewAuthorizerServer(
 	ctx context.Context,
 	logger *zerolog.Logger,
-	cfg *config.Common,
 	rf *resolvers.Resolvers,
+	jwtTimeSkew time.Duration,
 ) *AuthorizerServer {
 	newLogger := logger.With().Str("component", "api.grpc").Logger()
 
 	jwkCache := jwk.NewCache(ctx)
 
 	return &AuthorizerServer{
-		cfg:      cfg,
-		logger:   &newLogger,
-		resolver: rf,
-		jwkCache: jwkCache,
+		logger:      &newLogger,
+		resolver:    rf,
+		jwkCache:    jwkCache,
+		jwtTimeSkew: jwtTimeSkew,
 	}
 }
 

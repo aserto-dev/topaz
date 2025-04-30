@@ -69,27 +69,34 @@ func Migrate(cfg2 *config2.Config) (*config3.Config, error) {
 }
 
 func migAuthentication(cfg2 *config2.Config, cfg3 *config3.Config) {
-	cfg3.Authentication = authentication.Config{
-		Enabled:  len(cfg2.Auth.Keys) != 0,
+	cfg3.Authentication = migAuthnConfig(&cfg2.Auth)
+}
+
+func migAuthnConfig(v2 *config2.AuthnConfig) authentication.Config {
+	return authentication.Config{
+		Enabled:  len(v2.Keys) != 0,
 		Provider: authentication.LocalAuthenticationPlugin,
 		Local: authentication.LocalConfig{
-			Keys: cfg2.Auth.Keys,
+			Keys: v2.Keys,
 			Options: authentication.CallOptions{
-				Default: authentication.Options{
-					EnableAPIKey:    cfg2.Auth.Options.Default.EnableAPIKey,
-					EnableAnonymous: cfg2.Auth.Options.Default.EnableAnonymous,
-				},
+				Default: migAuthnOptions(&v2.Options.Default),
 				Overrides: lo.Map(
-					cfg2.Auth.Options.Overrides,
+					v2.Options.Overrides,
 					func(override2 config2.OptionOverrides, _ int) authentication.OptionOverrides {
 						return authentication.OptionOverrides{
 							Paths:    override2.Paths,
-							Override: authentication.Options(override2.Override),
+							Override: migAuthnOptions(&override2.Override),
 						}
 					},
 				),
 			},
 		},
+	}
+}
+
+func migAuthnOptions(v2 *config2.Options) authentication.Options {
+	return authentication.Options{
+		AllowAnonymous: v2.EnableAnonymous || !v2.EnableAPIKey,
 	}
 }
 
@@ -152,7 +159,6 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 		}
 
 		cfg3.Servers[svc] = &servers.Server{
-			DependsOn: lo.Map(host.Needs, func(name string, _ int) servers.ServerName { return servers.ServerName(name) }),
 			GRPC: servers.GRPCServer{
 				ListenAddress:     host.GRPC.ListenAddress,
 				FQDN:              host.GRPC.FQDN,

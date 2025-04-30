@@ -84,7 +84,7 @@ func (s *AuthorizerServer) getIdentityFromJWT(ctx context.Context, bearerJWT str
 func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken jwt.Token) ([]jwt.ParseOption, error) {
 	options := []jwt.ParseOption{
 		jwt.WithValidate(true),
-		jwt.WithAcceptableSkew(time.Duration(s.cfg.JWT.AcceptableTimeSkewSeconds) * time.Second),
+		jwt.WithAcceptableSkew(s.jwtTimeSkew),
 	}
 
 	jwtKeysURL, err := s.jwksURLFromCache(ctx, jwtToken.Issuer())

@@ -15,20 +15,16 @@ authentication:
   provider: local
   local:
     keys:
-      - "69ba614c64ed4be69485de73d062a00b"
+      - 69ba614c64ed4be69485de73d062a00b
       - "##Ve@rySecret123!!"
     options:
-      default:
-        enable_api_key: true
-        enable_anonymous: false
       overrides:
         paths:
           - /aserto.authorizer.v2.Authorizer/Info
           - /grpc.reflection.v1.ServerReflection/ServerReflectionInfo
           - /grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo
         override:
-          enable_anonymous: true
-          enable_api_key: false
+          allow_anonymous: true
 
 # debug service settings.
 debug:
@@ -50,8 +46,8 @@ metrics:
 services:
   console:
     depends_on:
-    - directory
-    - authorizer
+      - directory
+      - authorizer
     grpc:
       listen_address: "0.0.0.0:8081"
       fqdn: ""
@@ -68,30 +64,30 @@ services:
         tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
         tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
       allowed_origins:
-      - http://localhost
-      - http://localhost:*
-      - https://localhost
-      - https://localhost:*
-      - https://0.0.0.0:*
-      - https://*.aserto.com
-      - https://*aserto-console.netlify.app
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://0.0.0.0:*
+        - https://*.aserto.com
+        - https://*aserto-console.netlify.app
       allowed_headers:
-      - "Authorization"
-      - "Content-Type"
-      - "If-Match"
-      - "If-None-Match"
-      - "Depth"
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
       allowed_methods:
-      - "GET"
-      - "POST"
-      - "HEAD"
-      - "DELETE"
-      - "PUT"
-      - "PATCH"
-      - "PROFIND"
-      - "MKCOL"
-      - "COPY"
-      - "MOVE"
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
       http: false
       read_timeout: 2s
       read_header_timeout: 2s
@@ -118,30 +114,30 @@ services:
         tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
         tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
       allowed_origins:
-      - http://localhost
-      - http://localhost:*
-      - https://localhost
-      - https://localhost:*
-      - https://0.0.0.0:*
-      - https://*.aserto.com
-      - https://*aserto-console.netlify.app
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://0.0.0.0:*
+        - https://*.aserto.com
+        - https://*aserto-console.netlify.app
       allowed_headers:
-      - "Authorization"
-      - "Content-Type"
-      - "If-Match"
-      - "If-None-Match"
-      - "Depth"
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
       allowed_methods:
-      - "GET"
-      - "POST"
-      - "HEAD"
-      - "DELETE"
-      - "PUT"
-      - "PATCH"
-      - "PROFIND"
-      - "MKCOL"
-      - "COPY"
-      - "MOVE"
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
       http: false
       read_timeout: 2s
       read_header_timeout: 2s
@@ -157,7 +153,7 @@ services:
 
   authorizer:
     depends_on:
-    - directory
+      - directory
     grpc:
       listen_address: "0.0.0.0:8282"
       fqdn: ""
@@ -174,30 +170,30 @@ services:
         tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
         tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
       allowed_origins:
-      - http://localhost
-      - http://localhost:*
-      - https://localhost
-      - https://localhost:*
-      - https://0.0.0.0:*
-      - https://*.aserto.com
-      - https://*aserto-console.netlify.app
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://0.0.0.0:*
+        - https://*.aserto.com
+        - https://*aserto-console.netlify.app
       allowed_headers:
-      - "Authorization"
-      - "Content-Type"
-      - "If-Match"
-      - "If-None-Match"
-      - "Depth"
+        - "Authorization"
+        - "Content-Type"
+        - "If-Match"
+        - "If-None-Match"
+        - "Depth"
       allowed_methods:
-      - "GET"
-      - "POST"
-      - "HEAD"
-      - "DELETE"
-      - "PUT"
-      - "PATCH"
-      - "PROFIND"
-      - "MKCOL"
-      - "COPY"
-      - "MOVE"
+        - "GET"
+        - "POST"
+        - "HEAD"
+        - "DELETE"
+        - "PUT"
+        - "PATCH"
+        - "PROFIND"
+        - "MKCOL"
+        - "COPY"
+        - "MOVE"
       http: false
       read_timeout: 2s
       read_header_timeout: 2s
@@ -256,7 +252,7 @@ authorizer:
 
   # default jwt validation configuration
   jwt:
-    acceptable_time_skew_seconds: 5 # set as default, 5 secs
+    acceptable_time_skew_seconds: 5  # set as default, 5 secs
 
 # directory configuration.
 directory:

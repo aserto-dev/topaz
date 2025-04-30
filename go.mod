@@ -51,6 +51,7 @@ require (
 	github.com/mennanov/fmutils v0.3.0
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/moby/term v0.5.2
+	github.com/oko/toposort v0.0.0-20200217213521-a50413543049
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/open-policy-agent/opa v1.3.0
 	github.com/opencontainers/image-spec v1.1.1
@@ -72,7 +73,6 @@ require (
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v3 v3.0.1
-	sigs.k8s.io/controller-runtime v0.20.4
 )
 
 require (
@@ -100,6 +100,7 @@ require (
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/ebitengine/purego v0.8.2 // indirect
+	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/gdamore/encoding v1.0.1 // indirect

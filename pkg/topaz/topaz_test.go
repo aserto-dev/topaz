@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/topaz"
 	"github.com/stretchr/testify/require"
 )
@@ -11,7 +12,9 @@ import (
 func TestTopazRun(t *testing.T) {
 	ctx := context.Background()
 
-	topazApp, err := topaz.NewTopaz("./schema/config.yaml")
+	t.Setenv(x.EnvTopazDBDir, t.TempDir())
+
+	topazApp, err := topaz.NewTopaz(ctx, "./schema/config.yaml")
 	require.NoError(t, err)
 
 	require.NoError(t,

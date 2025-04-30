@@ -13,9 +13,9 @@ import (
 	"github.com/aserto-dev/topaz/decisionlog"
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/decisionlog/logger/nop"
-	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
+	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
 
@@ -192,10 +192,9 @@ func (e *Topaz) ConfigServices() error {
 		if con, ok := e.Services[consoleService]; ok {
 			if lo.Contains(serviceConfig.registeredServices, consoleService) {
 				if server.Gateway != nil && server.Gateway.Mux != nil {
-					apiKeyAuthMiddleware, err := auth.NewAPIKeyAuthMiddleware(e.Context, &e.Configuration.Auth, e.Logger)
-					if err != nil {
-						return err
-					}
+					authnCfg := middlewares.MigAuthnConfig(&e.Configuration.Auth)
+
+					apiKeyAuthMiddleware := authentication.NewMiddleware(&authnCfg)
 
 					consoleSvc, ok := con.(*ConsoleService)
 					if !ok {
@@ -206,7 +205,7 @@ func (e *Topaz) ConfigServices() error {
 
 					// config service.
 					server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
-					server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
+					server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigHandler(handlers.ConfigHandlerV2(consoleConfig)))
 					server.Gateway.Mux.HandleFunc("/api/v1/authorizers", handlers.AuthorizersHandler(consoleConfig))
 					// console service. depends on config service.
 					server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))

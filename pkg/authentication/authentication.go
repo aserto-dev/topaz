@@ -73,13 +73,11 @@ authentication:
       {{ end }}
     options:
       default:
-        enable_api_key: {{ .Local.Options.Default.EnableAPIKey }}
-        enable_anonymous: {{ .Local.Options.Default.EnableAnonymous }}
+        allow_anonymous: {{ .Local.Options.Default.AllowAnonymous }}
       overrides:
         {{- range .Local.Options.Overrides }}
         - override:
-            enable_api_key: {{ .Override.EnableAPIKey }}
-            enable_anonymous: {{ .Override.EnableAnonymous }}
+            allow_anonymous: {{ .Override.AllowAnonymous }}
           paths:
           {{- range .Paths }}
           - {{ . -}}
@@ -99,10 +97,8 @@ type CallOptions struct {
 }
 
 type Options struct {
-	// API Key for machine-to-machine communication, internal to Aserto
-	EnableAPIKey bool `json:"enable_api_key"`
 	// Allows calls without any form of authentication
-	EnableAnonymous bool `json:"enable_anonymous"`
+	AllowAnonymous bool `json:"allow_anonymous"`
 }
 
 type OptionOverrides struct {

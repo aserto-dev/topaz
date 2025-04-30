@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"net/http"
+	"time"
 
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
@@ -52,7 +53,7 @@ func NewAuthorizer(
 
 	authResolvers := resolvers.New()
 
-	authServer := impl.NewAuthorizerServer(ctx, logger, commonConfig, authResolvers)
+	authServer := impl.NewAuthorizerServer(ctx, logger, authResolvers, time.Duration(commonConfig.JWT.AcceptableTimeSkewSeconds)*time.Second)
 
 	return &Authorizer{
 		cfg:              cfg,

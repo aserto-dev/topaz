@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/aserto-dev/logger"
@@ -20,13 +19,10 @@ type Server interface {
 }
 
 type Topaz struct {
-	Logger *zerolog.Logger
-	Config *Config
-
 	servers []Server
 }
 
-func NewTopaz(configPath string, configOverrides ...ConfigOverride) (*Topaz, error) {
+func NewTopaz(ctx context.Context, configPath string, configOverrides ...ConfigOverride) (*Topaz, error) {
 	cfgBytes, err := os.ReadFile(configPath)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot read config file %q", configPath)
@@ -51,9 +47,13 @@ func NewTopaz(configPath string, configOverrides ...ConfigOverride) (*Topaz, err
 		log.Warn().Msg("Please update to use the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}
 
+	servers, err := newServers(log.WithContext(ctx), cfg)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Topaz{
-		Logger: log,
-		Config: cfg,
+		servers: servers,
 	}, nil
 }
 

@@ -49,8 +49,7 @@ var cfg = &topaz.Config{
 			},
 			Options: authentication.CallOptions{
 				Default: authentication.Options{
-					EnableAPIKey:    true,
-					EnableAnonymous: false,
+					AllowAnonymous: false,
 				},
 				Overrides: []authentication.OptionOverrides{
 					{
@@ -59,8 +58,7 @@ var cfg = &topaz.Config{
 							"/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo",
 						},
 						Override: authentication.Options{
-							EnableAPIKey:    false,
-							EnableAnonymous: true,
+							AllowAnonymous: true,
 						},
 					},
 					{
@@ -68,8 +66,7 @@ var cfg = &topaz.Config{
 							"/aserto.authorizer.v2.Authorizer/Info",
 						},
 						Override: authentication.Options{
-							EnableAPIKey:    true,
-							EnableAnonymous: true,
+							AllowAnonymous: true,
 						},
 					},
 				},
@@ -101,7 +98,6 @@ var cfg = &topaz.Config{
 	},
 	Servers: servers.Config{
 		"topaz": &servers.Server{
-			DependsOn: []servers.ServerName{},
 			GRPC: servers.GRPCServer{
 				ListenAddress: "0.0.0.0:9292",
 				FQDN:          "localhost:9292",
