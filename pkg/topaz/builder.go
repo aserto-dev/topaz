@@ -23,7 +23,17 @@ import (
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/middleware"
 	"github.com/aserto-dev/topaz/pkg/servers"
+	"github.com/aserto-dev/topaz/pkg/topaz/config"
 )
+
+type Runner interface {
+	Go(f func() error)
+}
+
+type Server interface {
+	Start(ctx context.Context, runner Runner) error
+	Stop(ctx context.Context) error
+}
 
 type server struct {
 	grpc *grpc.Server
@@ -32,7 +42,7 @@ type server struct {
 
 var _ Server = (*server)(nil)
 
-func (s *server) Run(ctx context.Context) error {
+func (s *server) Start(ctx context.Context, runner Runner) error {
 	if len(s.grpc.GetServiceInfo()) > 0 {
 		// TODO: start grpc server
 	}
@@ -40,29 +50,12 @@ func (s *server) Run(ctx context.Context) error {
 	return nil
 }
 
-func newServers(ctx context.Context, cfg *Config) ([]Server, error) {
-	services, err := newTopazServices(ctx, cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	builder := newServerBuilder(zerolog.Ctx(ctx), cfg, services)
-	servers := make([]Server, 0, len(cfg.Servers)+countTrue(cfg.Health.Enabled, cfg.Metrics.Enabled))
-
-	for name, serverCfg := range cfg.Servers {
-		srvr, err := builder.Build(ctx, serverCfg)
-		if err != nil {
-			return nil, errors.Wrapf(err, "failed to build server %q", name)
-		}
-
-		servers = append(servers, srvr)
-	}
-
-	return servers, nil
+func (s *server) Stop(ctx context.Context) error {
+	return nil
 }
 
 type serverBuilder struct {
-	cfg      *Config
+	cfg      *config.Config
 	services *topazServices
 
 	middleware *middlewares
@@ -81,7 +74,7 @@ func (m *middlewares) stream() grpc.ServerOption {
 	return grpc.ChainStreamInterceptor(m.logging.Stream(), m.auth.Stream())
 }
 
-func newServerBuilder(logger *zerolog.Logger, cfg *Config, services *topazServices) *serverBuilder {
+func newServerBuilder(logger *zerolog.Logger, cfg *config.Config, services *topazServices) *serverBuilder {
 	return &serverBuilder{
 		cfg:      cfg,
 		services: services,
@@ -294,7 +287,7 @@ type topazServices struct {
 	console    *app.ConsoleService
 }
 
-func newTopazServices(ctx context.Context, cfg *Config) (*topazServices, error) {
+func newTopazServices(ctx context.Context, cfg *config.Config) (*topazServices, error) {
 	dir, err := directory.New(ctx, &cfg.Directory)
 	if err != nil {
 		return nil, err

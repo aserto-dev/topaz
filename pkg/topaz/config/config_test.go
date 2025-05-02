@@ -1,4 +1,4 @@
-package topaz_test
+package config_test
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/aserto-dev/topaz/pkg/config"
-	"github.com/aserto-dev/topaz/pkg/topaz"
+	topaz "github.com/aserto-dev/topaz/pkg/topaz/config"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"

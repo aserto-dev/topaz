@@ -19,7 +19,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/servers"
-	"github.com/aserto-dev/topaz/pkg/topaz"
+	"github.com/aserto-dev/topaz/pkg/topaz/config"
 
 	"github.com/open-policy-agent/opa/v1/download"
 	"github.com/open-policy-agent/opa/v1/keys"
@@ -32,7 +32,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var cfg = &topaz.Config{
+var cfg = &config.Config{
 	Version: 3,
 	Logging: logger.Config{
 		Prod:         false,

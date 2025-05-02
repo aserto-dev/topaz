@@ -1,4 +1,4 @@
-package topaz
+package config
 
 import (
 	"fmt"
