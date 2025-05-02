@@ -36,6 +36,6 @@ func (r *Resolver) Close() {
 }
 
 // GetDS - returns a directory reader service client.
-func (r *Resolver) GetDS() reader.ReaderClient {
+func (r *Resolver) GetDS() reader.ReaderClient { //nolint:ireturn
 	return reader.NewReaderClient(r.dirConn)
 }

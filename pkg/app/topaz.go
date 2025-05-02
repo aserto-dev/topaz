@@ -312,7 +312,7 @@ func KeepAliveDialOption() []grpc.DialOption {
 	return []grpc.DialOption{grpc.WithKeepaliveParams(kacp)}
 }
 
-func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
+func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) { //nolint:ireturn
 	switch cfg.Type {
 	case "self":
 		return self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)

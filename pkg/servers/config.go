@@ -13,7 +13,10 @@ import (
 	"github.com/go-http-utils/headers"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
+	"github.com/rs/cors"
 	"github.com/samber/lo"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/aserto-dev/go-aserto"
 
@@ -215,7 +218,9 @@ func (s *Server) Validate() error {
 		}
 	}
 
-	return nil
+	// TODO: validate that a grpc listen address is set if a non-console service is assigned to the server.
+
+	return errs
 }
 
 const (
@@ -288,6 +293,23 @@ func (s *GRPCServer) Validate() error {
 	return nil
 }
 
+func (s *GRPCServer) HasListener() bool {
+	return s != nil && s.ListenAddress != ""
+}
+
+func (s *GRPCServer) ClientCredentials() (grpc.DialOption, error) {
+	if !s.Certs.HasCert() {
+		return grpc.WithTransportCredentials(insecure.NewCredentials()), nil
+	}
+
+	creds, err := s.Certs.ClientCredentials(true)
+	if err != nil {
+		return nil, err
+	}
+
+	return grpc.WithTransportCredentials(creds), nil
+}
+
 func (s *HTTPServer) Defaults() map[string]any {
 	return map[string]any{
 		"listen_address":         "0.0.0:9393",
@@ -307,6 +329,19 @@ func (s *HTTPServer) Defaults() map[string]any {
 
 func (s *HTTPServer) Validate() error {
 	return nil
+}
+
+func (s *HTTPServer) HasListener() bool {
+	return s != nil && s.ListenAddress != ""
+}
+
+func (s *HTTPServer) Cors() *cors.Cors {
+	return cors.New(cors.Options{
+		AllowedHeaders: s.AllowedHeaders,
+		AllowedOrigins: s.AllowedOrigins,
+		AllowedMethods: s.AllowedMethods,
+		Debug:          false,
+	})
 }
 
 const (

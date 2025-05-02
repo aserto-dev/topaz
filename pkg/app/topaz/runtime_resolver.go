@@ -35,7 +35,7 @@ func NewRuntimeResolver(
 	cfg *config.Config,
 	decisionLogger decisionlog.DecisionLogger,
 	directoryResolver resolvers.DirectoryResolver,
-) (resolvers.RuntimeResolver, func(), error) {
+) (*RuntimeResolver, func(), error) {
 	sidecarRuntime, cleanupRuntime, err := runtime.NewRuntime(ctx, logger, &cfg.OPA,
 		// directory get functions
 		runtime.WithBuiltin1(ds.RegisterIdentity(logger, "ds.identity", directoryResolver)),

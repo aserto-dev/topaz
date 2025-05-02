@@ -23,6 +23,7 @@ func GetMiddlewaresForService(ctx context.Context, cfg *config.Config, logger *z
 	}
 
 	// only attach policy instance information if discovery resource is configured.
+	// TODO: move this to the Is function.
 	if cfg.OPA.Config.Discovery != nil && cfg.OPA.Config.Discovery.Resource != nil {
 		middlewareList = append(middlewareList, NewInstanceMiddleware(cfg, logger))
 	}

@@ -61,12 +61,9 @@ linters:
         - generic
         - proto.Message
         - http.Handler
-        - mapstructure.v2.DecodeHookFunc
+        - grpc.DialOption
+        - grpc.ServerOption
         - plugins.Plugin
-        - decisionlog.DecisionLogger
-        - resolvers.DirectoryResolver
-        - resolvers.RuntimeResolver
-        - v3.ReaderClient
 
     lll:
       line-length: 150
