@@ -7,6 +7,7 @@ toolchain go1.24.2
 // replace github.com/aserto-dev/azm => ../azm
 // replace github.com/aserto-dev/go-directory => ../go-directory
 // replace github.com/aserto-dev/go-edge-ds => ../go-edge-ds
+// replace github.com/aserto-dev/go-topaz-ui => ../go-topaz-ui
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
