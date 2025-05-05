@@ -13,7 +13,7 @@ type GRPCServer struct {
 	FQDN              string           `json:"fqdn"`
 	Certs             aserto.TLSConfig `json:"certs"`
 	ConnectionTimeout time.Duration    `json:"connection_timeout"` // https://godoc.org/google.golang.org/grpc#ConnectionTimeout
-	DisableReflection bool             `json:"disable_reflection"`
+	NoReflection      bool             `json:"no_reflection"`
 }
 
 func (s *GRPCServer) Defaults() map[string]any {
@@ -22,6 +22,7 @@ func (s *GRPCServer) Defaults() map[string]any {
 		"certs.tls_cert_path":    "${TOPAZ_CERTS_DIR}/grpc.crt",
 		"certs.tls_key_path":     "${TOPAZ_CERTS_DIR}/grpc.key",
 		"certs.tls_ca_cert_path": "${TOPAZ_CERTS_DIR}/grpc-ca.crt",
+		"connection_timeout":     120 * time.Second,
 		"disable_reflection":     false,
 	}
 }

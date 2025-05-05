@@ -107,7 +107,7 @@ var cfg = &config.Config{
 					CA:   "${TOPAZ_CERTS_DIR}/grpc-ca.crt",
 				},
 				ConnectionTimeout: time.Second * 7,
-				DisableReflection: false,
+				NoReflection:      false,
 			},
 			HTTP: servers.HTTPServer{
 				ListenAddress: "0.0.0.0:9393",

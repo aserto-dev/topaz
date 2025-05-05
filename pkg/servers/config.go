@@ -208,7 +208,9 @@ services:
         tls_ca_cert_path: '{{ .Certs.CA }}'
       {{ end -}}
       connection_timeout: {{ .ConnectionTimeout }}
-      disable_reflection: {{ .DisableReflection }}
+      {{- if .NoReflection }}
+      no_reflection: {{ .NoReflection }}
+      {{- end }}
     {{- end }}
 
     {{- with $server.HTTP }}
@@ -220,7 +222,7 @@ services:
         tls_key_path: '{{ .Certs.Key }}'
         tls_cert_path: '{{ .Certs.Cert }}'
         tls_ca_cert_path: '{{ .Certs.CA }}'
-      {{ end -}}
+      {{- end }}
       allowed_origins:
       {{- range .AllowedOrigins }}
         - {{ . -}}

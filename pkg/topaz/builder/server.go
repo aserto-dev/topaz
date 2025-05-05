@@ -20,7 +20,7 @@ func (s *Server) Start(ctx context.Context, runner Runner) error {
 		return errors.Wrapf(err, "failed to start grpc server on %q", s.grpc.listenAddr)
 	}
 
-	return nil
+	return s.http.Start(ctx, runner)
 }
 
 func (s *Server) Stop(ctx context.Context) error {

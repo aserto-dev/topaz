@@ -59,6 +59,16 @@ func (c *Config) Serialize(w io.Writer) error {
 	return nil
 }
 
+func (c *Config) ReaderKey() string {
+	key := ""
+
+	if c.Enabled && len(c.Local.Keys) > 0 {
+		key = c.Local.Keys[0]
+	}
+
+	return key
+}
+
 const LocalAuthenticationPlugin string = "local"
 
 const authenticationTemplate = `

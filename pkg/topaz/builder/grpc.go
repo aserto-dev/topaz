@@ -23,7 +23,12 @@ func newGRPCServer(cfg *servers.GRPCServer, mw *middlewares) (*grpcServer, error
 	}
 
 	return &grpcServer{
-		Server:     grpc.NewServer(grpc.Creds(creds), mw.unary(), mw.stream()),
+		Server: grpc.NewServer(
+			grpc.Creds(creds),
+			grpc.ConnectionTimeout(cfg.ConnectionTimeout),
+			mw.unary(),
+			mw.stream(),
+		),
 		listenAddr: cfg.ListenAddress,
 	}, nil
 }

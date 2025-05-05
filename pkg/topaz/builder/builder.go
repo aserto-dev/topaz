@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/authentication"
@@ -78,10 +79,12 @@ func (b *serverBuilder) buildGRPC(cfg *servers.Server) (*grpcServer, error) {
 		return nil, err
 	}
 
-	// TODO: register reflection service. Need to add a config option.
-
 	for _, service := range cfg.Services {
 		b.registerService(server.Server, service)
+	}
+
+	if !cfg.GRPC.NoReflection {
+		reflection.Register(server)
 	}
 
 	return server, nil

@@ -164,7 +164,7 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 				FQDN:              host.GRPC.FQDN,
 				Certs:             host.GRPC.Certs,
 				ConnectionTimeout: time.Duration(int64(host.GRPC.ConnectionTimeoutSeconds)) * time.Second,
-				DisableReflection: false,
+				NoReflection:      false,
 			},
 			HTTP: servers.HTTPServer{
 				ListenAddress:     host.Gateway.ListenAddress,
