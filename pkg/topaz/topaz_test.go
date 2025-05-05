@@ -17,7 +17,6 @@ func TestTopazRun(t *testing.T) {
 	topazApp, err := topaz.NewTopaz(ctx, "./schema/config.yaml")
 	require.NoError(t, err)
 
-	require.NoError(t,
-		topazApp.Run(ctx),
-	)
+	_, err = topazApp.Start(ctx)
+	require.NoError(t, err)
 }

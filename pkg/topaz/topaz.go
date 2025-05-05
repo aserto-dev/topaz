@@ -8,16 +8,18 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"github.com/samber/lo"
 	"golang.org/x/sync/errgroup"
 
 	"github.com/aserto-dev/logger"
 
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	sbuilder "github.com/aserto-dev/topaz/pkg/topaz/builder"
 	"github.com/aserto-dev/topaz/pkg/topaz/config"
 )
 
 type Topaz struct {
-	servers  []Server
+	servers  []*sbuilder.Server
 	errGroup *errgroup.Group
 }
 
@@ -68,14 +70,14 @@ func (t *Topaz) Start(ctx context.Context) (context.Context, error) {
 	return ctx, nil
 }
 
-func newServers(ctx context.Context, cfg *config.Config) ([]Server, error) {
-	services, err := newTopazServices(ctx, cfg)
+func newServers(ctx context.Context, cfg *config.Config) ([]*sbuilder.Server, error) {
+	services, err := sbuilder.NewTopazServices(ctx, cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	builder := newServerBuilder(zerolog.Ctx(ctx), cfg, services)
-	servers := make([]Server, 0, len(cfg.Servers)+countTrue(cfg.Health.Enabled, cfg.Metrics.Enabled))
+	builder := sbuilder.NewServerBuilder(zerolog.Ctx(ctx), cfg, services)
+	servers := make([]*sbuilder.Server, 0, len(cfg.Servers)+countTrue(cfg.Health.Enabled, cfg.Metrics.Enabled))
 
 	for name, serverCfg := range cfg.Servers {
 		srvr, err := builder.Build(ctx, serverCfg)
@@ -87,4 +89,13 @@ func newServers(ctx context.Context, cfg *config.Config) ([]Server, error) {
 	}
 
 	return servers, nil
+}
+
+func countTrue(vals ...bool) int {
+	return lo.Reduce(vals,
+		func(count int, val bool, _ int) int {
+			return count + lo.Ternary(val, 1, 0)
+		},
+		0,
+	)
 }
