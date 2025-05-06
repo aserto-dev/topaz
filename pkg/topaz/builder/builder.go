@@ -9,7 +9,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	"github.com/aserto-dev/topaz/pkg/directory"
@@ -18,14 +17,19 @@ import (
 	"github.com/aserto-dev/topaz/pkg/topaz/config"
 )
 
+type TopazServices interface {
+	Directory() *directory.Service
+	Authorizer() *authorizer.Service
+}
+
 type serverBuilder struct {
 	cfg      *config.Config
-	services *topazServices
+	services TopazServices
 
 	middleware *middlewares
 }
 
-func NewServerBuilder(logger *zerolog.Logger, cfg *config.Config, services *topazServices) *serverBuilder {
+func NewServerBuilder(logger *zerolog.Logger, cfg *config.Config, services TopazServices) *serverBuilder {
 	return &serverBuilder{
 		cfg:      cfg,
 		services: services,
@@ -101,13 +105,13 @@ func (b *serverBuilder) buildHTTP(cfg *servers.HTTPServer) (*httpServer, error) 
 func (b *serverBuilder) registerService(server *grpc.Server, service servers.ServiceName) {
 	switch service {
 	case servers.Service.Access:
-		b.services.directory.RegisterAccessServer(server)
+		b.services.Directory().RegisterAccessServer(server)
 	case servers.Service.Reader:
-		b.services.directory.RegisterReaderServer(server)
+		b.services.Directory().RegisterReaderServer(server)
 	case servers.Service.Writer:
-		b.services.directory.RegisterWriterServer(server)
+		b.services.Directory().RegisterWriterServer(server)
 	case servers.Service.Authorizer:
-		b.services.authorizer.RegisterAuthorizerServer(server)
+		b.services.Authorizer().RegisterAuthorizerServer(server)
 	default:
 		panic(errors.Errorf("unknown service %q", service))
 	}
@@ -122,33 +126,14 @@ func (b *serverBuilder) registerGateway(
 ) error {
 	switch service {
 	case servers.Service.Access:
-		return b.services.directory.RegisterAccessGateway(ctx, mux, addr, opts...)
+		return b.services.Directory().RegisterAccessGateway(ctx, mux, addr, opts...)
 	case servers.Service.Reader:
-		return b.services.directory.RegisterReaderGateway(ctx, mux, addr, opts...)
+		return b.services.Directory().RegisterReaderGateway(ctx, mux, addr, opts...)
 	case servers.Service.Writer:
-		return b.services.directory.RegisterWriterGateway(ctx, mux, addr, opts...)
+		return b.services.Directory().RegisterWriterGateway(ctx, mux, addr, opts...)
 	case servers.Service.Authorizer:
-		return b.services.authorizer.RegisterAuthorizerGateway(ctx, mux, addr, opts...)
+		return b.services.Authorizer().RegisterAuthorizerGateway(ctx, mux, addr, opts...)
 	default:
 		panic(errors.Errorf("unknown service %q", service))
 	}
-}
-
-type topazServices struct {
-	directory  *directory.Service
-	authorizer *authorizer.Service
-	console    *app.ConsoleService
-}
-
-func NewTopazServices(ctx context.Context, cfg *config.Config) (*topazServices, error) {
-	dir, err := directory.New(ctx, &cfg.Directory)
-	if err != nil {
-		return nil, err
-	}
-
-	return &topazServices{
-		directory:  dir,
-		authorizer: authorizer.New(ctx, &cfg.Authorizer),
-		console:    app.NewConsole(),
-	}, nil
 }

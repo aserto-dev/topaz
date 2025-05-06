@@ -1,6 +1,6 @@
 module github.com/aserto-dev/topaz
 
-go 1.23.7
+go 1.23.8
 
 toolchain go1.24.2
 
@@ -27,7 +27,7 @@ require (
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
 	github.com/aserto-dev/openapi-directory v0.33.5
-	github.com/aserto-dev/runtime v1.3.1
+	github.com/aserto-dev/runtime v1.4.3-0.20250507133211-660f7d75f9c3
 	github.com/aserto-dev/self-decision-logger v0.0.12
 	github.com/authzen/access.go v0.0.0-20250226232048-71248046cf0a
 	github.com/cli/browser v1.3.0
@@ -53,7 +53,7 @@ require (
 	github.com/moby/term v0.5.2
 	github.com/oko/toposort v0.0.0-20200217213521-a50413543049
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/open-policy-agent/opa v1.3.0
+	github.com/open-policy-agent/opa v1.4.2
 	github.com/opencontainers/image-spec v1.1.1
 	github.com/pborman/indent v1.2.1
 	github.com/pkg/errors v0.9.1
@@ -69,7 +69,7 @@ require (
 	github.com/testcontainers/testcontainers-go v0.36.0
 	golang.org/x/sync v0.13.0
 	golang.org/x/sys v0.32.0
-	google.golang.org/grpc v1.71.1
+	google.golang.org/grpc v1.72.0
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v3 v3.0.1
@@ -201,7 +201,7 @@ require (
 	golang.org/x/time v0.11.0 // indirect
 	golang.org/x/tools v0.32.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250407143221-ac9807e6c755 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250407143221-ac9807e6c755 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250428153025-10db94c68c34 // indirect
 	oras.land/oras-go/v2 v2.5.0 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )

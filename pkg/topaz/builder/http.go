@@ -8,6 +8,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/servers"
 	gorilla "github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/zerolog"
 )
 
 var noHTTP = new(httpServer)
@@ -63,6 +64,16 @@ func (s *httpServer) Start(ctx context.Context, runner Runner) error {
 
 		return err
 	})
+
+	return nil
+}
+
+func (s *httpServer) Stop(ctx context.Context) error {
+	if err := s.Shutdown(ctx); err != nil {
+		zerolog.Ctx(ctx).Err(err).Msg("failed to shutdown http server")
+
+		return s.Close()
+	}
 
 	return nil
 }

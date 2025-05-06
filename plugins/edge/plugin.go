@@ -11,7 +11,6 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	"github.com/aserto-dev/topaz/pkg/app"
-	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -52,16 +51,16 @@ type Config struct {
 }
 
 type Plugin struct {
-	ctx         context.Context
-	cancel      context.CancelFunc
-	manager     *plugins.Manager
-	logger      *zerolog.Logger
-	config      *Config
-	topazConfig *topaz.Config
-	syncNow     chan api.SyncMode
+	ctx     context.Context
+	cancel  context.CancelFunc
+	manager *plugins.Manager
+	logger  *zerolog.Logger
+	config  *Config
+	dsCfg   *client.Config
+	syncNow chan api.SyncMode
 }
 
-func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Config, manager *plugins.Manager) *Plugin {
+func newEdgePlugin(logger *zerolog.Logger, cfg *Config, dsCfg *client.Config, manager *plugins.Manager) *Plugin {
 	newLogger := logger.With().Str("component", "edge.plugin").Logger()
 
 	cfg.SessionID = uuid.NewString()
@@ -70,18 +69,18 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 	// sync context, lifetime management for scheduler.
 	syncContext, cancel := context.WithCancel(context.Background())
 
-	if topazConfig == nil {
+	if dsCfg == nil {
 		logger.Error().Msg("no topaz directory config was provided")
 	}
 
 	return &Plugin{
-		ctx:         syncContext,
-		cancel:      cancel,
-		logger:      &newLogger,
-		manager:     manager,
-		config:      cfg,
-		topazConfig: topazConfig,
-		syncNow:     make(chan api.SyncMode),
+		ctx:     syncContext,
+		cancel:  cancel,
+		logger:  &newLogger,
+		manager: manager,
+		config:  cfg,
+		dsCfg:   dsCfg,
+		syncNow: make(chan api.SyncMode),
 	}
 }
 
@@ -97,7 +96,7 @@ func (p *Plugin) Start(ctx context.Context) error {
 	if p.hasLoopBack() {
 		p.logger.Warn().
 			Str("edge-directory", p.config.Addr).
-			Str("remote-directory", p.topazConfig.DirectoryResolver.Address).
+			Str("remote-directory", p.dsCfg.Address).
 			Bool("has-loopback", p.hasLoopBack()).
 			Msg("EdgePlugin.Start")
 
@@ -156,8 +155,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, config any) {
 // When a loopback is detected, the remote directory configuration takes precedence,
 // and the edge sync will be disabled.
 func (p *Plugin) hasLoopBack() bool {
-	return (p.config.Addr == p.topazConfig.DirectoryResolver.Address &&
-		p.config.TenantID == p.topazConfig.DirectoryResolver.TenantID)
+	return (p.config.Addr == p.dsCfg.Address && p.config.TenantID == p.dsCfg.TenantID)
 }
 
 func (p *Plugin) SyncNow(mode api.SyncMode) {

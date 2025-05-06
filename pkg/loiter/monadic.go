@@ -24,6 +24,10 @@ func Chain[T any](s ...iter.Seq[T]) iter.Seq[T] {
 	}
 }
 
+func Contains[T comparable](s iter.Seq[T], val T) bool {
+	return ContainsAny(s, val)
+}
+
 func ContainsAny[T comparable](s iter.Seq[T], vals ...T) bool {
 	lookup := make(map[T]struct{}, len(vals))
 	for _, v := range vals {
@@ -48,6 +52,18 @@ func Filter[T any](s iter.Seq[T], predicate func(item T) bool) iter.Seq[T] {
 			}
 		}
 	}
+}
+
+func Find[T any](s iter.Seq[T], predicate func(item T) bool) (T, bool) {
+	for t := range s {
+		if predicate(t) {
+			return t, true
+		}
+	}
+
+	var zero T
+
+	return zero, false
 }
 
 // Map transforms a sequence of one type to another.

@@ -161,7 +161,6 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 		cfg3.Servers[svc] = &servers.Server{
 			GRPC: servers.GRPCServer{
 				ListenAddress:     host.GRPC.ListenAddress,
-				FQDN:              host.GRPC.FQDN,
 				Certs:             host.GRPC.Certs,
 				ConnectionTimeout: time.Duration(int64(host.GRPC.ConnectionTimeoutSeconds)) * time.Second,
 				NoReflection:      false,
@@ -173,7 +172,6 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 				AllowedOrigins:    host.Gateway.AllowedOrigins,
 				AllowedHeaders:    host.Gateway.AllowedHeaders,
 				AllowedMethods:    host.Gateway.AllowedMethods,
-				HTTP:              host.Gateway.HTTP,
 				ReadTimeout:       host.Gateway.ReadTimeout,
 				ReadHeaderTimeout: host.Gateway.ReadHeaderTimeout,
 				WriteTimeout:      host.Gateway.WriteTimeout,

@@ -34,7 +34,7 @@ func (c *Config) Serialize(w io.Writer) error {
 		return err
 	}
 
-	w = config.IndentWriter(w, indentLevel)
+	w = config.IndentWriter(w, sectionIndentLevel)
 
 	if err := c.OPA.Serialize(w); err != nil {
 		return err
@@ -56,7 +56,7 @@ func (c *Config) Serialize(w io.Writer) error {
 }
 
 const (
-	indentLevel = 2
+	sectionIndentLevel = 2
 
 	configTemplate = `
 # authorizer configuration.

@@ -16,7 +16,6 @@ type HTTPServer struct {
 	AllowedOrigins    []string         `json:"allowed_origins"`
 	AllowedHeaders    []string         `json:"allowed_headers"`
 	AllowedMethods    []string         `json:"allowed_methods"`
-	HTTP              bool             `json:"http"`
 	ReadTimeout       time.Duration    `json:"read_timeout"`
 	ReadHeaderTimeout time.Duration    `json:"read_header_timeout"`
 	WriteTimeout      time.Duration    `json:"write_timeout"`
@@ -29,7 +28,7 @@ func (s *HTTPServer) Defaults() map[string]any {
 		"certs.tls_cert_path":    "${TOPAZ_CERTS_DIR}/gateway.crt",
 		"certs.tls_key_path":     "${TOPAZ_CERTS_DIR}/gateway.key",
 		"certs.tls_ca_cert_path": "${TOPAZ_CERTS_DIR}/gateway-ca.crt",
-		"allowed_origins":        DefaultAllowedOrigins(s.HTTP),
+		"allowed_origins":        DefaultAllowedOrigins(s.Certs.HasCert()),
 		"allowed_headers":        DefaultAllowedHeaders(),
 		"allowed_methods":        DefaultAllowedMethods(),
 		"http":                   false,
@@ -55,6 +54,24 @@ func (s *HTTPServer) Cors() *cors.Cors {
 		AllowedMethods: s.AllowedMethods,
 		Debug:          false,
 	})
+}
+
+func (s *HTTPServer) IsEmpty() bool {
+	var (
+		zeroCerts    aserto.TLSConfig
+		zeroDuration time.Duration
+	)
+
+	return s.ListenAddress == "" &&
+		s.FQDN == "" &&
+		s.Certs == zeroCerts &&
+		s.ReadHeaderTimeout == zeroDuration &&
+		s.ReadHeaderTimeout == zeroDuration &&
+		s.WriteTimeout == zeroDuration &&
+		s.IdleTimeout == zeroDuration &&
+		len(s.AllowedOrigins) == 0 &&
+		len(s.AllowedHeaders) == 0 &&
+		len(s.AllowedMethods) == 0
 }
 
 const (

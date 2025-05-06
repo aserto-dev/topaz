@@ -55,38 +55,38 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 	modelURL := ""
 	consoleURL := ""
 
-	if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
-		authorizerURL = getGatewayAddress(serviceConfig)
-	}
-
-	if serviceConfig, ok := cfg.APIConfig.Services[readerService]; ok {
-		readerURL = getGatewayAddress(serviceConfig)
-		if cfg.DirectoryResolver.Address == serviceConfig.GRPC.ListenAddress {
-			directoryServiceURL = readerURL
-		}
-	}
-
-	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
-		writerURL = getGatewayAddress(serviceConfig)
-	}
-
-	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
-		modelURL = getGatewayAddress(serviceConfig)
-	}
-
-	if serviceConfig, ok := cfg.APIConfig.Services[consoleService]; ok {
-		consoleURL = getGatewayAddress(serviceConfig)
-	}
-
+	// if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
+	// 	authorizerURL = getGatewayAddress(serviceConfig)
+	// }
+	//
+	// if serviceConfig, ok := cfg.APIConfig.Services[readerService]; ok {
+	// 	readerURL = getGatewayAddress(serviceConfig)
+	// 	if cfg.DirectoryResolver.Address == serviceConfig.GRPC.ListenAddress {
+	// 		directoryServiceURL = readerURL
+	// 	}
+	// }
+	//
+	// if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
+	// 	writerURL = getGatewayAddress(serviceConfig)
+	// }
+	//
+	// if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
+	// 	modelURL = getGatewayAddress(serviceConfig)
+	// }
+	//
+	// if serviceConfig, ok := cfg.APIConfig.Services[consoleService]; ok {
+	// 	consoleURL = getGatewayAddress(serviceConfig)
+	// }
+	//
 	authorizerAPIKey := ""
-
-	if _, ok := cfg.APIConfig.Services[authorizerService]; ok {
-		for key := range cfg.Auth.APIKeys {
-			// we only need a key
-			authorizerAPIKey = key
-			break
-		}
-	}
+	//
+	// if _, ok := cfg.APIConfig.Services[authorizerService]; ok {
+	// 	for key := range cfg.Auth.APIKeys {
+	// 		// we only need a key
+	// 		authorizerAPIKey = key
+	// 		break
+	// 	}
+	// }
 
 	directoryAPIKey := cfg.DirectoryResolver.APIKey
 

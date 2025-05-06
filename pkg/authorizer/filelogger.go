@@ -33,7 +33,13 @@ func (c *FileDecisionLoggerConfig) Serialize(w io.Writer) error {
 		return err
 	}
 
-	if err := tmpl.Execute(w, c); err != nil {
+	type params struct {
+		*FileDecisionLoggerConfig
+		Provider_ string
+	}
+
+	p := &params{c, FileDecisionLoggerPlugin}
+	if err := tmpl.Execute(w, p); err != nil {
 		return err
 	}
 
@@ -41,7 +47,7 @@ func (c *FileDecisionLoggerConfig) Serialize(w io.Writer) error {
 }
 
 const fileDecisionLoggerTemplate string = `
-file:
+{{ .Provider_ }}:
   log_file_path: '{{ .LogFilePath }}'
   max_file_size_mb: {{ .MaxFileSizeMB }}
   max_file_count: {{ .MaxFileCount }}

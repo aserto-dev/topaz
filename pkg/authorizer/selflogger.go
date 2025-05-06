@@ -42,7 +42,13 @@ func (c *SelfDecisionLoggerConfig) Serialize(w io.Writer) error {
 		return err
 	}
 
-	if err := tmpl.Execute(w, c); err != nil {
+	type params struct {
+		*SelfDecisionLoggerConfig
+		Provider_ string
+	}
+
+	p := params{c, SelfDecisionLoggerPlugin}
+	if err := tmpl.Execute(w, p); err != nil {
 		return err
 	}
 
@@ -50,14 +56,15 @@ func (c *SelfDecisionLoggerConfig) Serialize(w io.Writer) error {
 }
 
 const selfDecisionLoggerTemplate string = `
-port: {{ .Port }}
-store_directory: '{{ .StoreDirectory }}'
-scribe:
-  address: '{{ .Scribe.Address }}'
-  client_cert_path: '{{ .Scribe.ClientCertPath }}'
-  client_key_path: '{{ .Scribe.ClientKeyPath }}'
-  ack_wait_seconds: {{ .Scribe.AckWaitSeconds }}
-  tenant_id: {{ .Scribe.TenantID }}
-shipper:
-  publish_timeout_seconds: 2
+{{ .Provider_ }}:
+  port: {{ .Port }}
+  store_directory: '{{ .StoreDirectory }}'
+  scribe:
+    address: '{{ .Scribe.Address }}'
+    client_cert_path: '{{ .Scribe.ClientCertPath }}'
+    client_key_path: '{{ .Scribe.ClientKeyPath }}'
+    ack_wait_seconds: {{ .Scribe.AckWaitSeconds }}
+    tenant_id: {{ .Scribe.TenantID }}
+  shipper:
+    publish_timeout_seconds: 2
 `

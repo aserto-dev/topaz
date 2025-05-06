@@ -47,7 +47,9 @@ func (c *Config) Validate() error {
 }
 
 func (c *Config) Serialize(w io.Writer) error {
-	tmpl, err := template.New("AUTHENTICATION").Parse(authenticationTemplate)
+	tmpl, err := template.New("AUTHENTICATION").
+		Funcs(config.TemplateFuncs()).
+		Parse(authenticationTemplate)
 	if err != nil {
 		return err
 	}
@@ -77,22 +79,24 @@ authentication:
   enabled: {{ .Enabled }}
   provider: {{ .Provider }}
   local:
+  {{- with .Local }}
     keys:
-      {{- range .Local.Keys }}
-      - {{ . -}}
-      {{ end }}
+      {{- .Keys | toYaml | nindent 6 }}
     options:
       default:
-        allow_anonymous: {{ .Local.Options.Default.AllowAnonymous }}
+        allow_anonymous: {{ .Options.Default.AllowAnonymous }}
+
+    {{- with .Options.Overrides }}
+
       overrides:
-        {{- range .Local.Options.Overrides }}
+      {{- range . }}
         - override:
             allow_anonymous: {{ .Override.AllowAnonymous }}
           paths:
-          {{- range .Paths }}
-          - {{ . -}}
-          {{ end -}}
-        {{ end }}
+            {{- .Paths | toYaml | nindent 12 }}
+      {{- end }}
+    {{- end }}
+  {{ end }}
 `
 
 // provider: local - local authentication implementation.

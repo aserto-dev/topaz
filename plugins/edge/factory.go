@@ -2,10 +2,9 @@ package edge
 
 import (
 	"bytes"
-	"context"
 	"strings"
 
-	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
+	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/plugins/noop"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/open-policy-agent/opa/v1/plugins"
@@ -16,17 +15,15 @@ import (
 )
 
 type PluginFactory struct {
-	ctx    context.Context
-	cfg    *topaz.Config
+	dsCfg  *client.Config
 	logger *zerolog.Logger
 }
 
 var _ plugins.Factory = (*PluginFactory)(nil)
 
-func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Logger) PluginFactory {
-	return PluginFactory{
-		ctx:    ctx,
-		cfg:    cfg,
+func NewPluginFactory(cfg *client.Config, logger *zerolog.Logger) *PluginFactory {
+	return &PluginFactory{
+		dsCfg:  cfg,
 		logger: logger,
 	}
 }
@@ -44,7 +41,7 @@ func (f PluginFactory) New(m *plugins.Manager, config any) plugins.Plugin {
 		}
 	}
 
-	return newEdgePlugin(f.logger, cfg, f.cfg, m)
+	return newEdgePlugin(f.logger, cfg, f.dsCfg, m)
 }
 
 func (PluginFactory) Validate(m *plugins.Manager, config []byte) (any, error) {

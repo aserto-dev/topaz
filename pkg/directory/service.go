@@ -34,25 +34,43 @@ func New(ctx context.Context, cfg *Config) (*Service, error) {
 }
 
 func (s *Service) RegisterAccessServer(server *grpc.Server) {
-	dsa1.RegisterAccessServer(server, s.Access1())
+	if s.Directory != nil {
+		dsa1.RegisterAccessServer(server, s.Access1())
+	}
 }
 
 func (s *Service) RegisterAccessGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
-	return dsa1.RegisterAccessHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	if s.Directory != nil {
+		return dsa1.RegisterAccessHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	}
+
+	return nil
 }
 
 func (s *Service) RegisterReaderServer(server *grpc.Server) {
-	dsr3.RegisterReaderServer(server, s.Reader3())
+	if s.Directory != nil {
+		dsr3.RegisterReaderServer(server, s.Reader3())
+	}
 }
 
 func (s *Service) RegisterReaderGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
-	return dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	if s.Directory != nil {
+		return dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	}
+
+	return nil
 }
 
 func (s *Service) RegisterWriterServer(server *grpc.Server) {
-	dsw3.RegisterWriterServer(server, s.Writer3())
+	if s.Directory != nil {
+		dsw3.RegisterWriterServer(server, s.Writer3())
+	}
 }
 
 func (s *Service) RegisterWriterGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
-	return dsw3.RegisterWriterHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	if s.Directory != nil {
+		return dsw3.RegisterWriterHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	}
+
+	return nil
 }

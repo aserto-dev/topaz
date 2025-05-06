@@ -55,9 +55,9 @@ var (
 		Writer:     "writer",
 	}
 
-	DirectoryServices = []ServiceName{Service.Reader, Service.Writer}
+	DirectoryServices = []ServiceName{Service.Reader, Service.Writer, Service.Access}
 
-	KnownServices = append(DirectoryServices, Service.Access, Service.Authorizer, Service.Console)
+	KnownServices = append(DirectoryServices, Service.Authorizer, Service.Console)
 
 	Kind = struct {
 		GRPC ServerKind
@@ -99,6 +99,17 @@ func (c Config) EnabledServices() iter.Seq[ServiceName] {
 
 func (c Config) DirectoryEnabled() bool {
 	return loiter.ContainsAny(c.EnabledServices(), DirectoryServices...)
+}
+
+func (c Config) FindService(name ServiceName) (*Server, bool) {
+	return loiter.Find(maps.Values(c), func(s *Server) bool {
+		return slices.Contains(s.Services, name)
+	})
+}
+
+func (c Config) ServiceEnabled(name ServiceName) bool {
+	_, found := c.FindService(name)
+	return found
 }
 
 func (c Config) ListenAddresses() iter.Seq2[ServerName, ListenAddress] {
@@ -148,7 +159,9 @@ func (c Config) validateDepdencies() error {
 }
 
 func (c Config) Serialize(w io.Writer) error {
-	tmpl, err := template.New("SERVICES").Parse(servicesTemplate)
+	tmpl, err := template.New("SERVERS").
+		Funcs(config.TemplateFuncs()).
+		Parse(servicesTemplate)
 	if err != nil {
 		return err
 	}
@@ -191,60 +204,89 @@ func (s *Server) Validate() error {
 	return errs
 }
 
+// TryGRPC returns the server's gRPC configuration if it isn't empty or nil otherwise.
+// It is used by the serialization template.
+func (s *Server) TryGRPC() *GRPCServer {
+	zero := GRPCServer{}
+	if s.GRPC == zero {
+		return nil
+	}
+
+	return &s.GRPC
+}
+
+// TryHTTP returns the server's http configuration if it isn't empty or nil otherwise.
+// It is used by the serialization template.
+func (s *Server) TryHTTP() *HTTPServer {
+	if s.HTTP.IsEmpty() {
+		return nil
+	}
+
+	return &s.HTTP
+}
+
 const (
 	servicesTemplate string = `
-# services configuration
-services:
+#  grpc and http server configuration
+servers:
   {{- range $name, $server := . }}
   {{ $name }}:
-    {{- with $server.GRPC }}
-    grpc:
-      listen_address: '{{ .ListenAddress }}'
-      fqdn: '{{ .FQDN }}'
-      {{- if .Certs }}
-      certs:
-        tls_key_path: '{{ .Certs.Key }}'
-        tls_cert_path: '{{ .Certs.Cert }}'
-        tls_ca_cert_path: '{{ .Certs.CA }}'
-      {{ end -}}
-      connection_timeout: {{ .ConnectionTimeout }}
-      {{- if .NoReflection }}
-      no_reflection: {{ .NoReflection }}
-      {{- end }}
+
+    {{- with $server.Services }}
+    services:
+      {{- . | toYaml | nindent 6 }}
     {{- end }}
 
-    {{- with $server.HTTP }}
-    gateway:
+  {{- with $server.TryGRPC }}
+    grpc:
+      listen_address: '{{ .ListenAddress }}'
+
+      {{- with .Certs }}
+      certs:
+        tls_key_path: '{{ .Key }}'
+        tls_cert_path: '{{ .Cert }}'
+        tls_ca_cert_path: '{{ .CA }}'
+      {{ end -}}
+
+      connection_timeout: {{ .ConnectionTimeout }}
+
+    {{- with .NoReflection }}
+      no_reflection: {{ . }}
+    {{- end }}
+  {{- end }}
+
+  {{- with $server.TryHTTP }}
+    http:
       listen_address: '{{ .ListenAddress }}'
       fqdn: '{{ .FQDN }}'
-      {{- if .Certs }}
+
+      {{- with .Certs }}
       certs:
-        tls_key_path: '{{ .Certs.Key }}'
-        tls_cert_path: '{{ .Certs.Cert }}'
-        tls_ca_cert_path: '{{ .Certs.CA }}'
+        tls_key_path: '{{ .Key }}'
+        tls_cert_path: '{{ .Cert }}'
+        tls_ca_cert_path: '{{ .CA }}'
       {{- end }}
+
+      {{- with .AllowedOrigins }}
       allowed_origins:
-      {{- range .AllowedOrigins }}
-        - {{ . -}}
-      {{ end }}
+        {{- . | toYaml | nindent 8 }}
+      {{- end }}
+
+      {{- with .AllowedHeaders }}
       allowed_headers:
-      {{- range .AllowedHeaders }}
-        - {{ . -}}
-      {{ end }}
+        {{- . | toYaml | nindent 8 }}
+      {{- end }}
+
+      {{- with .AllowedMethods }}
       allowed_methods:
-      {{- range .AllowedMethods }}
-        - {{ . -}}
-      {{ end }}
-      http: {{ .HTTP }}
+        {{- . | toYaml | nindent 8 }}
+      {{ end -}}
+
       read_timeout: {{ .ReadTimeout }}
       read_header_timeout: {{ .ReadHeaderTimeout }}
       write_timeout: {{ .WriteTimeout }}
       idle_timeout: {{ .IdleTimeout }}
     {{- end }}
-    includes:
-    {{- range $server.Services }}
-      - {{ . -}}
-    {{ end }}
   {{ end }}
 `
 )

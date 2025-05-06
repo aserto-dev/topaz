@@ -4,7 +4,6 @@ import (
 	"bytes"
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -21,7 +20,7 @@ import (
 //	ds.user({
 //		"id": ""
 //	})
-func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterUser(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -44,7 +43,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				return help(fnName, argsV3{})
 			}
 
-			resp, err := dr.GetDS().GetObject(bctx.Context, &dsr3.GetObjectRequest{
+			resp, err := dr.GetObject(bctx.Context, &dsr3.GetObjectRequest{
 				ObjectType:    "user",
 				ObjectId:      args.ID,
 				WithRelations: false,

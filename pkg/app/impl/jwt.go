@@ -233,9 +233,7 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 }
 
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
-	client := s.resolver.GetDirectoryResolver().GetDS()
-
-	user, err := directory.ResolveIdentity(ctx, client, identity)
+	user, err := directory.ResolveIdentity(ctx, s.dsClient, identity)
 
 	switch {
 	case status.Code(err) == codes.NotFound:
@@ -249,9 +247,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 
 // getUserObject, retrieves an user object, using the identity as the object_id (legacy).
 func (s *AuthorizerServer) getUserObject(ctx context.Context, objID string) (proto.Message, error) {
-	client := s.resolver.GetDirectoryResolver().GetDS()
-
-	objResp, err := client.GetObject(ctx, &dsr3.GetObjectRequest{
+	objResp, err := s.dsClient.GetObject(ctx, &dsr3.GetObjectRequest{
 		ObjectType: directory.User,
 		ObjectId:   objID,
 	})

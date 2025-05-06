@@ -19,6 +19,7 @@ import (
 )
 
 type Topaz struct {
+	Logger   *zerolog.Logger
 	servers  []*sbuilder.Server
 	errGroup *errgroup.Group
 }
@@ -54,12 +55,13 @@ func NewTopaz(ctx context.Context, configPath string, configOverrides ...config.
 	}
 
 	return &Topaz{
+		Logger:  log,
 		servers: servers,
 	}, nil
 }
 
 func (t *Topaz) Start(ctx context.Context) (context.Context, error) {
-	t.errGroup, ctx = errgroup.WithContext(ctx)
+	t.errGroup, ctx = errgroup.WithContext(t.Logger.WithContext(ctx))
 
 	for _, server := range t.servers {
 		if err := server.Start(ctx, t.errGroup); err != nil {
@@ -70,8 +72,20 @@ func (t *Topaz) Start(ctx context.Context) (context.Context, error) {
 	return ctx, nil
 }
 
+func (t *Topaz) Stop(ctx context.Context) error {
+	ctx = t.Logger.WithContext(ctx)
+
+	for _, server := range t.servers {
+		if err := server.Stop(ctx); err != nil {
+			zerolog.Ctx(ctx).Err(err).Msg("error while stopping server")
+		}
+	}
+
+	return t.errGroup.Wait()
+}
+
 func newServers(ctx context.Context, cfg *config.Config) ([]*sbuilder.Server, error) {
-	services, err := sbuilder.NewTopazServices(ctx, cfg)
+	services, err := newTopazServices(ctx, cfg)
 	if err != nil {
 		return nil, err
 	}

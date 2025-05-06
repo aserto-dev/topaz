@@ -10,12 +10,12 @@ import (
 
 type GRPCServer struct {
 	ListenAddress     string           `json:"listen_address"`
-	FQDN              string           `json:"fqdn"`
 	Certs             aserto.TLSConfig `json:"certs"`
 	ConnectionTimeout time.Duration    `json:"connection_timeout"` // https://godoc.org/google.golang.org/grpc#ConnectionTimeout
 	NoReflection      bool             `json:"no_reflection"`
 }
 
+//nolint:mnd  // this is where default values are defined.
 func (s *GRPCServer) Defaults() map[string]any {
 	return map[string]any{
 		"listen_address":         "0.0.0:9292",

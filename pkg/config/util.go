@@ -76,14 +76,9 @@ func TemplateFuncs() template.FuncMap {
 
 			return m, nil
 		},
-		"indent": func(n int, value string) string {
-			indent := strings.Repeat(" ", n)
-			lines := lo.Map(
-				strings.Split(value, "\n"),
-				func(line string, _ int) string { return indent + line },
-			)
-
-			return strings.Join(lines, "\n")
+		"nindent": func(n int, value string) string {
+			indent := "\n" + strings.Repeat(" ", n)
+			return indent + strings.ReplaceAll(value, "\n", indent)
 		},
 	}
 }

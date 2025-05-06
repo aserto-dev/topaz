@@ -53,6 +53,27 @@ func (s *grpcServer) Start(ctx context.Context, runner Runner) error {
 	return nil
 }
 
+func (s *grpcServer) Stop(ctx context.Context) error {
+	if !s.Enabled() {
+		return nil
+	}
+
+	shutdown := make(chan struct{}, 1)
+
+	go func() {
+		s.GracefulStop()
+		close(shutdown)
+	}()
+
+	select {
+	case <-ctx.Done():
+		s.Server.Stop()
+	case <-shutdown:
+	}
+
+	return nil
+}
+
 func (s *grpcServer) Enabled() bool {
 	return len(s.GetServiceInfo()) > 0
 }

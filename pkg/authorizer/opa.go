@@ -41,13 +41,29 @@ func (c *OPAConfig) Validate() error {
 func (c *OPAConfig) Serialize(w io.Writer) error {
 	tmpl, err := template.New("OPA").
 		Funcs(config.TemplateFuncs()).
-		Parse(opaConfigTemplate)
+		Parse(config.TrimN(opaConfigTemplate))
 	if err != nil {
 		return err
 	}
 
 	if err := tmpl.Execute(w, c); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (c *OPAConfig) TryLocalBundles() *runtime.LocalBundlesConfig {
+	if c.HasLocalBundles() {
+		return &c.LocalBundles
+	}
+
+	return nil
+}
+
+func (c *OPAConfig) TryConfig() *runtime.OPAConfig {
+	if c.HasConfig() {
+		return &c.Config
 	}
 
 	return nil
@@ -75,28 +91,30 @@ opa:
   instance_id: '{{ .InstanceID }}'
   graceful_shutdown_period_seconds: {{ .GracefulShutdownPeriodSeconds }}
   max_plugin_wait_time_seconds: {{ .MaxPluginWaitTimeSeconds }}
-{{- if .HasLocalBundles }}
-  {{- with .LocalBundles }}
+{{- with .TryLocalBundles }}
   local_bundles:
     paths: {{ .Paths }}
-    {{- if .Ignore }}
-    ignore: {{ .Ignore }}
+
+    {{- with .Ignore }}
+    ignore: {{ . }}
     {{- end }}
-    {{- if .LocalPolicyImage }}
-    local_policy_image: {{ .LocalPolicyImage}}
+
+    {{- with .LocalPolicyImage }}
+    local_policy_image: {{ . }}
     {{- end }}
-    {{- if .FileStoreRoot }}
-    file_store_root: {{ .FileStoreRoot}}
+
+    {{- with .FileStoreRoot }}
+    file_store_root: {{ .}}
     {{- end }}
-    {{- if .Watch }}
-    watch: {{ .Watch }}
+
+    {{- with .Watch }}
+    watch: {{ . }}
     {{- end }}
     skip_verification: {{ .SkipVerification }}
-  {{- end }}
 {{- end }}
 
-{{- if .HasConfig }}
+{{- with .TryConfig }}
   config:
-    {{ .Config | toMap | toYaml | indent 4 }}
+    {{- . | toMap | toYaml | nindent 4 }}
 {{- end }}
 `

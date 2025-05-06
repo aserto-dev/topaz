@@ -100,7 +100,6 @@ var cfg = &config.Config{
 		"topaz": &servers.Server{
 			GRPC: servers.GRPCServer{
 				ListenAddress: "0.0.0.0:9292",
-				FQDN:          "localhost:9292",
 				Certs: aserto.TLSConfig{
 					Key:  "${TOPAZ_CERTS_DIR}/grpc.key",
 					Cert: "${TOPAZ_CERTS_DIR}/grpc.crt",
@@ -120,7 +119,6 @@ var cfg = &config.Config{
 				AllowedOrigins:    servers.DefaultAllowedOrigins(false),
 				AllowedHeaders:    servers.DefaultAllowedHeaders(),
 				AllowedMethods:    servers.DefaultAllowedMethods(),
-				HTTP:              false,
 				ReadTimeout:       servers.DefaultReadTimeout,
 				ReadHeaderTimeout: servers.DefaultReadHeaderTimeout,
 				WriteTimeout:      servers.DefaultWriteTimeout,

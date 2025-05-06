@@ -42,21 +42,12 @@ metrics:
   enabled: true
   listen_address: "0.0.0.0:9696"
 
-# topaz services configuration
-services:
+# grpc and http servers.
+servers:
   console:
-    depends_on:
-      - directory
-      - authorizer
-    grpc:
-      listen_address: "0.0.0.0:8081"
-      fqdn: ""
-      certs:
-        tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
-        tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
-        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
-      connection_timeout: 5s
-    gateway:
+    services:
+      - console
+    http:
       listen_address: "0.0.0.0:8080"
       fqdn: ""
       certs:
@@ -88,25 +79,23 @@ services:
         - "MKCOL"
         - "COPY"
         - "MOVE"
-      http: false
       read_timeout: 2s
       read_header_timeout: 2s
       write_timeout: 2s
       idle_timeout: 30s
-    includes:
-      - console
 
   directory:
-    depends_on:
+    services:
+      - reader
+      - writer
     grpc:
       listen_address: "0.0.0.0:9292"
-      fqdn: ""
       certs:
         tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
         tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
         tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       connection_timeout: 5s
-    gateway:
+    http:
       listen_address: "0.0.0.0:9393"
       fqdn: ""
       certs:
@@ -138,31 +127,22 @@ services:
         - "MKCOL"
         - "COPY"
         - "MOVE"
-      http: false
       read_timeout: 2s
       read_header_timeout: 2s
       write_timeout: 2s
       idle_timeout: 30s
-    includes:
-      - model
-      - reader
-      - writer
-      - importer
-      - exporter
-      - reflection
 
   authorizer:
-    depends_on:
-      - directory
+    services:
+      - authorizer
     grpc:
       listen_address: "0.0.0.0:8282"
-      fqdn: ""
       certs:
         tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
         tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
         tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       connection_timeout: 5s
-    gateway:
+    http:
       listen_address: "0.0.0.0:8383"
       fqdn: ""
       certs:
@@ -194,14 +174,10 @@ services:
         - "MKCOL"
         - "COPY"
         - "MOVE"
-      http: false
       read_timeout: 2s
       read_header_timeout: 2s
       write_timeout: 2s
       idle_timeout: 30s
-    includes:
-      - authorizer
-      - reflection
 
 # authorizer configuration.
 authorizer:
@@ -252,7 +228,7 @@ authorizer:
 
   # default jwt validation configuration
   jwt:
-    acceptable_time_skew_seconds: 5  # set as default, 5 secs
+    acceptable_time_skew: 5s
 
 # directory configuration.
 directory:
@@ -275,6 +251,5 @@ directory:
       insecure: true
       no_tls: false
       no_proxy: false
-      timeout: 5s
       headers:
         aserto-account-id: "00000000-1111-2222-3333-444455556666"

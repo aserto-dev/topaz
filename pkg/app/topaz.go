@@ -260,14 +260,14 @@ func (e *Topaz) prepareServices() error {
 		e.Services["edge"] = edgeDir
 	}
 
-	if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
-		authorizer, err := NewAuthorizer(e.Context, serviceConfig, &e.Configuration.Common, nil, e.Logger)
-		if err != nil {
-			return err
-		}
-
-		e.Services["authorizer"] = authorizer
-	}
+	// if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
+	// 	authorizer, err := NewAuthorizer(e.Context, serviceConfig, &e.Configuration.Common, nil, e.Logger)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	//
+	// 	e.Services["authorizer"] = authorizer
+	// }
 
 	if _, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
 		e.Services["console"] = NewConsole()

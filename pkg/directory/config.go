@@ -93,6 +93,7 @@ const configTemplate = `
 directory:
   read_timeout: {{ .ReadTimeout }}
   write_timeout: {{ .WriteTimeout }}
+
   # directory store configuration.
   store:
     provider: {{ .Store.Provider }}

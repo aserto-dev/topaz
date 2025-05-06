@@ -29,7 +29,7 @@ func (c *BoltDBStore) Validate() error {
 }
 
 func (c *BoltDBStore) Serialize(w io.Writer) error {
-	tmpl, err := template.New("STORE").Parse(config.TrimN(boltDBStoreConfigTemplate))
+	tmpl, err := template.New("STORE").Parse(boltDBStoreConfigTemplate)
 	if err != nil {
 		return err
 	}

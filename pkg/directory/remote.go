@@ -6,6 +6,7 @@ import (
 
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"google.golang.org/grpc"
 )
 
 const RemoteDirectoryStorePlugin string = "remote_directory"
@@ -23,7 +24,9 @@ func (c *RemoteDirectoryStore) Validate() error {
 }
 
 func (c *RemoteDirectoryStore) Serialize(w io.Writer) error {
-	tmpl, err := template.New("STORE").Parse(config.TrimN(remoteDirectoryStoreConfigTemplate))
+	tmpl, err := template.New("STORE").
+		Funcs(config.TemplateFuncs()).
+		Parse(remoteDirectoryStoreConfigTemplate)
 	if err != nil {
 		return err
 	}
@@ -41,20 +44,44 @@ func (c *RemoteDirectoryStore) Serialize(w io.Writer) error {
 	return nil
 }
 
+func (c *RemoteDirectoryStore) Connect() (*grpc.ClientConn, error) {
+	return (*client.Config)(c).Connect()
+}
+
 const remoteDirectoryStoreConfigTemplate = `
 {{ .Provider_ }}:
   address: '{{ .Address }}'
-  tenant_id: '{{ .TenantID }}'
-  api_key: '{{ .APIKey }}'
-  token: '{{ .Token }}'
-  ca_cert_path: '{{ .CACertPath }}'
-  insecure: {{ .Insecure }}
-  no_tls: {{ .NoTLS }}
-  no_proxy: {{ .NoProxy }}
-  {{- if .Headers }}
-  headers:
-    {{- range $name, $value := .Headers }}
-    {{ $name }}: {{ $value }}
-    {{- end }}
+
+  {{- with .TenantID }}
+  tenant_id: '{{ . }}'
   {{- end }}
+
+  {{- with .APIKey }}
+  api_key: '{{ . }}'
+  {{- end }}
+
+  {{- with .Token }}
+  token: '{{ . }}'
+  {{- end }}
+
+  {{- with .CACertPath }}
+  ca_cert_path: '{{ . }}'
+  {{- end }}
+
+  {{- with .Insecure }}
+  insecure: {{ . }}
+  {{- end }}
+
+  {{- with .NoTLS }}
+  no_tls: {{ . }}
+  {{- end }}
+
+  {{- with .NoProxy }}
+  no_proxy: {{ . }}
+  {{- end }}
+
+  {{- with .Headers }}
+  headers:
+    {{- . | toYaml | nindent 4 }}
+  {{ end }}
 `

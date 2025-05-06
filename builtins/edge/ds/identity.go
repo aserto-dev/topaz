@@ -1,8 +1,7 @@
 package ds
 
 import (
-	"github.com/aserto-dev/topaz/directory"
-	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -10,7 +9,8 @@ import (
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
 
-	"github.com/rs/zerolog"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/directory"
 )
 
 // RegisterIdentity - ds.identity - get user id (key) for identity
@@ -18,7 +18,7 @@ import (
 //	ds.identity({
 //		"id": ""
 //	})
-func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterIdentity(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -42,7 +42,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return help(fnName, argsV3{})
 			}
 
-			user, err := directory.ResolveIdentity(bctx.Context, dr.GetDS(), args.ID)
+			user, err := directory.ResolveIdentity(bctx.Context, dr, args.ID)
 
 			switch {
 			case status.Code(err) == codes.NotFound:

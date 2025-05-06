@@ -26,10 +26,10 @@ func TestMigrateV2toV3(t *testing.T) {
 
 //nolint:wsl
 func TestLoadConfigV3(t *testing.T) {
-	r, err := os.Open("./schema/config.yaml")
+	r, err := os.Open("../schema/config.yaml")
 	require.NoError(t, err)
 
-	cfg3, err := loadConfigV3(r)
+	cfg3, err := topaz.NewConfig(r)
 	require.NoError(t, err)
 
 	assert.Equal(t, 3, cfg3.Version)

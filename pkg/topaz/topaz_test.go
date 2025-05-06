@@ -19,4 +19,8 @@ func TestTopazRun(t *testing.T) {
 
 	_, err = topazApp.Start(ctx)
 	require.NoError(t, err)
+
+	require.NoError(t,
+		topazApp.Stop(ctx),
+	)
 }
