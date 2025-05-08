@@ -1,3 +1,4 @@
+---
 name: ci
 
 on:
@@ -7,9 +8,6 @@ on:
     # Publish `main` as Docker `latest` image.
     branches:
       - main
-      - dev
-      - dev-*
-      - release-*
     # Publish `v1.2.3` tags as releases.
     tags:
       - v*
@@ -85,6 +83,16 @@ jobs:
           version: ${{ env.GO_LANGCI_LINT_VERSION }}
           args: --timeout=30m
       -
+        name: Test Setup
+        uses: gertd/action-gotestsum@v3.0.0
+        with:
+          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
+      -
+        name: Unit Test
+        run: |
+          gotestsum --format short-verbose -- $(go list ./... | grep -v pkg/app/tests) \
+            -count=1 -timeout 120s -parallel=1 -v
+      -
         name: Test Snapshot
         uses: goreleaser/goreleaser-action@v6
         env:
@@ -94,27 +102,20 @@ jobs:
           version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean --snapshot --config .goreleaser-test.yml
       -
-        name: Test Setup
-        uses: gertd/action-gotestsum@v3.0.0
-        with:
-          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
-      -
         name: Test
         run: |
-          gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/authz/... github.com/aserto-dev/topaz/pkg/app/tests/authz/...
-          gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/builtin/... github.com/aserto-dev/topaz/pkg/app/tests/builtin/...
-          gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/ds/... github.com/aserto-dev/topaz/pkg/app/tests/ds/...
-          gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/manifest/... github.com/aserto-dev/topaz/pkg/app/tests/manifest/...
-          gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/policy/... github.com/aserto-dev/topaz/pkg/app/tests/policy/...
-          gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/query/... github.com/aserto-dev/topaz/pkg/app/tests/query/...
+          gotestsum --format short-verbose -- $(go list ./pkg/app/tests/... | grep -v tests/template) \
+            -count=1 -timeout 120s -parallel=1 -v
       -
         name: Templates Test
         run: |
-          gotestsum --format short-verbose -- -count=1 -timeout 240s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/template/... github.com/aserto-dev/topaz/pkg/app/tests/template/...
+          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template/... \
+            -count=1 -timeout 240s -parallel=1 -v
       -
-        name: Templates Test (NoTLS)
+        name: Templates Test (With TLS)
         run: |
-          gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/template-no-tls/... github.com/aserto-dev/topaz/pkg/app/tests/template-no-tls/...
+          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-with-tls/... \
+            -count=1 -timeout 120s -parallel=1 -v
       -
         name: Upload code coverage
         uses: shogo82148/actions-goveralls@v1
@@ -126,7 +127,7 @@ jobs:
     runs-on: ubuntu-latest
     # when on a branch only push if the branch is main
     # always push when ref is a tag
-    if: github.event_name == 'push' && ( github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release-') || startsWith(github.ref, 'refs/heads/dev-') || startsWith(github.ref, 'refs/tags/v') )
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     steps:
       -
         name: Read Configuration
@@ -261,11 +262,11 @@ jobs:
           distribution: goreleaser
           version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean
-      - 
+      -
         name: Archive deployment examples
         run: |
           cd docs/deployments/sidecar-deployment && zip topaz_deployment_examples.zip *.yaml
-      - 
+      -
         name: Upload deployment examples
         uses: svenstaro/upload-release-action@v2
         with:
@@ -279,12 +280,12 @@ jobs:
     needs: release
     runs-on: windows-latest
     steps:
-      - 
+      -
         name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - 
+      -
         name: Read Configuration
         uses: hashicorp/vault-action@v3
         id: vault
@@ -293,7 +294,7 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/github  "ROOT_TOKEN"        | ROOT_TOKEN;
-      - 
+      -
         name: Download exe
         id: download_exe
         shell: bash
@@ -303,16 +304,16 @@ jobs:
           unzip -o *.zip && rm -v *.zip
         env:
           GITHUB_TOKEN: ${{ steps.vault.outputs.ROOT_TOKEN }}
-      - 
+      -
         name: Install go-msi
         run: choco install -y "go-msi"
-      - 
+      -
         name: Prepare PATH
         shell: bash
         run: |
           echo "$WIX\\bin" >> $GITHUB_PATH
           echo "C:\\Program Files\\go-msi" >> $GITHUB_PATH
-      - 
+      -
         name: Build MSI
         id: buildmsi
         shell: bash
@@ -323,7 +324,7 @@ jobs:
           msi="$(basename "$ZIP_FILE" ".zip").msi"
           printf "msi=${msi}" >> $GITHUB_OUTPUT
           go-msi make --arch amd64 --msi "$PWD/$msi" --out "$PWD/build" --version "${GITHUB_REF#refs/tags/}"
-      - 
+      -
         name: Upload MSI
         shell: bash
         run: |

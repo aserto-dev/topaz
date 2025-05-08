@@ -36,7 +36,7 @@ func TestDirectory(t *testing.T) {
 			{
 				Reader:            assets_test.ConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0x700,
+				FileMode:          0o700,
 			},
 		},
 		WaitingFor: wait.ForAll(
@@ -65,15 +65,15 @@ func TestDirectory(t *testing.T) {
 
 	dsConfig := &dsc.Config{
 		Host:      addr,
-		Insecure:  true,
-		Plaintext: false,
+		Insecure:  false,
+		Plaintext: true,
 		Timeout:   10 * time.Second,
 	}
 
 	azConfig := &azc.Config{
 		Host:      addr,
-		Insecure:  true,
-		Plaintext: false,
+		Insecure:  false,
+		Plaintext: true,
 		Timeout:   10 * time.Second,
 	}
 
@@ -84,7 +84,7 @@ func testDirectory(dsConfig *dsc.Config, azConfig *azc.Config) func(*testing.T) 
 	return func(t *testing.T) {
 		opts := []client.ConnectionOption{
 			client.WithAddr(dsConfig.Host),
-			client.WithInsecure(true),
+			client.WithNoTLS(true),
 		}
 
 		conn, err := client.NewConnection(opts...)

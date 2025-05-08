@@ -5,15 +5,7 @@ import (
 	"encoding/json"
 	goruntime "runtime"
 	"sync"
-
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	runtime "github.com/aserto-dev/runtime"
-
-	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/pkg/version"
-	"github.com/aserto-dev/topaz/resolvers"
+	"time"
 
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/open-policy-agent/opa/v1/server/types"
@@ -22,6 +14,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	runtime "github.com/aserto-dev/runtime"
+
+	"github.com/aserto-dev/topaz/pkg/version"
+	"github.com/aserto-dev/topaz/resolvers"
 )
 
 const (
@@ -32,29 +33,30 @@ const (
 )
 
 type AuthorizerServer struct {
-	cfg      *config.Common
-	logger   *zerolog.Logger
-	issuers  sync.Map
-	jwkCache *jwk.Cache
-
-	resolver *resolvers.Resolvers
+	logger      *zerolog.Logger
+	issuers     sync.Map
+	jwkCache    *jwk.Cache
+	jwtTimeSkew time.Duration
+	dsClient    dsr3.ReaderClient
+	rtResolver  resolvers.RuntimeResolver
 }
 
 func NewAuthorizerServer(
 	ctx context.Context,
-	logger *zerolog.Logger,
-	cfg *config.Common,
-	rf *resolvers.Resolvers,
+	dsClient dsr3.ReaderClient,
+	rtResolver resolvers.RuntimeResolver,
+	jwtTimeSkew time.Duration,
 ) *AuthorizerServer {
-	newLogger := logger.With().Str("component", "api.grpc").Logger()
+	newLogger := zerolog.Ctx(ctx).With().Str("component", "authorizer").Logger()
 
 	jwkCache := jwk.NewCache(ctx)
 
 	return &AuthorizerServer{
-		cfg:      cfg,
-		logger:   &newLogger,
-		resolver: rf,
-		jwkCache: jwkCache,
+		logger:      &newLogger,
+		jwkCache:    jwkCache,
+		jwtTimeSkew: jwtTimeSkew,
+		dsClient:    dsClient,
+		rtResolver:  rtResolver,
 	}
 }
 
@@ -74,7 +76,7 @@ func (s *AuthorizerServer) Info(ctx context.Context, req *authorizer.InfoRequest
 
 func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.PolicyInstance) (*runtime.Runtime, error) {
 	if policyInstance != nil {
-		rt, err := s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyInstance.GetName())
+		rt, err := s.rtResolver.RuntimeFromContext(ctx, policyInstance.GetName())
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to procure tenant runtime")
 		}
@@ -82,7 +84,7 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.P
 		return rt, err
 	}
 
-	rt, err := s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, "")
+	rt, err := s.rtResolver.RuntimeFromContext(ctx, "")
 	if err != nil {
 		return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
 	}

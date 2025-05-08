@@ -2,20 +2,61 @@ package debug
 
 import (
 	"context"
+	"html/template"
+	"io"
 	"net/http"
 	"net/http/pprof"
 	"runtime"
 	"time"
 
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/x"
+
 	"github.com/rs/zerolog"
 )
 
+const DefaultShutdownTimeout = time.Second * 0
+
 type Config struct {
-	Enabled         bool   `json:"enabled"`
-	ListenAddress   string `json:"listen_address"`
-	ShutdownTimeout int    `json:"shutdown_timeout"`
+	Enabled         bool          `json:"enabled"`
+	ListenAddress   string        `json:"listen_address"`
+	ShutdownTimeout time.Duration `json:"shutdown_timeout"`
 }
+
+var _ config.Section = (*Config)(nil)
+
+func (c *Config) Defaults() map[string]any {
+	return map[string]any{
+		"enabled":         false,
+		"listen_address":  "0.0.0.0:6060",
+		"sutdown_timeout": DefaultShutdownTimeout.String(),
+	}
+}
+
+func (c *Config) Validate() error {
+	return nil
+}
+
+func (c *Config) Serialize(w io.Writer) error {
+	tmpl, err := template.New("DEBUG").Parse(config.TrimN(debugTemplate))
+	if err != nil {
+		return err
+	}
+
+	if err := tmpl.Execute(w, c); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+const debugTemplate = `
+# debug service settings.
+debug:
+  enabled: {{ .Enabled }}
+  listen_address: '{{ .ListenAddress}}'
+  shutdown_timeout: {{ .ShutdownTimeout }}
+`
 
 type Server struct {
 	server *http.Server
@@ -92,9 +133,7 @@ func (srv *Server) Stop() {
 	ctx := context.Background()
 
 	if srv.cfg.ShutdownTimeout > 0 {
-		shutdownTimeout := time.Duration(srv.cfg.ShutdownTimeout) * time.Second
-		ctx, shutdown = context.WithTimeout(ctx, shutdownTimeout)
-
+		ctx, shutdown = context.WithTimeout(ctx, srv.cfg.ShutdownTimeout)
 		defer shutdown()
 	}
 

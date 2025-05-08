@@ -14,7 +14,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/google/wire"
-	"google.golang.org/grpc"
 )
 
 // Injectors from wire.go:
@@ -26,19 +25,17 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 	}
 	context := ccCC.Context
 	zerologLogger := ccCC.Log
-	v := DefaultGRPCOptions()
 	configConfig := ccCC.Config
 	serviceFactory := builder.NewServiceFactory()
 	serviceManager := builder.NewServiceManager(zerologLogger)
-	v2 := DefaultServices()
+	v := DefaultServices()
 	topaz := &app.Topaz{
 		Context:        context,
 		Logger:         zerologLogger,
-		ServerOptions:  v,
 		Configuration:  configConfig,
 		ServiceBuilder: serviceFactory,
 		Manager:        serviceManager,
-		Services:       v2,
+		Services:       v,
 	}
 	return topaz, func() {
 		cleanup()
@@ -52,19 +49,17 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 	}
 	context := ccCC.Context
 	zerologLogger := ccCC.Log
-	v := DefaultGRPCOptions()
 	configConfig := ccCC.Config
 	serviceFactory := builder.NewServiceFactory()
 	serviceManager := builder.NewServiceManager(zerologLogger)
-	v2 := DefaultServices()
+	v := DefaultServices()
 	topaz := &app.Topaz{
 		Context:        context,
 		Logger:         zerologLogger,
-		ServerOptions:  v,
 		Configuration:  configConfig,
 		ServiceBuilder: serviceFactory,
 		Manager:        serviceManager,
-		Services:       v2,
+		Services:       v,
 	}
 	return topaz, func() {
 		cleanup()
@@ -74,9 +69,7 @@ func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPat
 // wire.go:
 
 var (
-	commonSet = wire.NewSet(resolvers.New, builder.NewServiceFactory, builder.NewServiceManager, DefaultGRPCOptions,
-		DefaultServices, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Topaz), "*"),
-	)
+	commonSet = wire.NewSet(resolvers.New, builder.NewServiceFactory, builder.NewServiceManager, DefaultServices, wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"), wire.FieldsOf(new(*config.Config), "Common", "DecisionLogger"), wire.Struct(new(app.Topaz), "*"))
 
 	appTestSet = wire.NewSet(
 		commonSet, cc.NewTestCC,
@@ -86,10 +79,6 @@ var (
 		commonSet, cc.NewCC,
 	)
 )
-
-func DefaultGRPCOptions() []grpc.ServerOption {
-	return nil
-}
 
 func DefaultServices() map[string]builder.ServiceTypes {
 	return make(map[string]builder.ServiceTypes)

@@ -60,11 +60,10 @@ linters:
         - stdlib
         - generic
         - proto.Message
+        - http.Handler
+        - grpc.DialOption
+        - grpc.ServerOption
         - plugins.Plugin
-        - decisionlog.DecisionLogger
-        - resolvers.DirectoryResolver
-        - resolvers.RuntimeResolver
-        - v3.ReaderClient
 
     lll:
       line-length: 150
