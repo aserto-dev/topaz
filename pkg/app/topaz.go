@@ -189,6 +189,12 @@ func (e *Topaz) ConfigServices() error {
 			return err
 		}
 
+		if readerSvc, ok := e.Configuration.APIConfig.Services["reader"]; ok {
+			if err := handlers.SetWellKnownConfigHandler(readerSvc, server.Gateway.Mux); err != nil {
+				return err
+			}
+		}
+
 		if con, ok := e.Services[consoleService]; ok {
 			if lo.Contains(serviceConfig.registeredServices, consoleService) {
 				if server.Gateway != nil && server.Gateway.Mux != nil {
