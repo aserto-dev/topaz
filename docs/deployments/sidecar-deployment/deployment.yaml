@@ -16,9 +16,9 @@ spec:
     spec:
       # using an init container to download the topaz edge directory db file that contains our required user informations
       initContainers:
-      - name: get-eds-citadel
+      - name: get-citadel
         image: busybox:1.36
-        command: ["/bin/sh","-c","cd /db/;wget --no-check-certificate https://github.com/aserto-dev/topaz/raw/main/pkg/testing/assets/eds-citadel.db;"]
+        command: ["/bin/sh","-c","cd /db/;wget --no-check-certificate https://www.topaz.sh/assets/templates/v32/citadel/db/citadel.db;"]
         volumeMounts:
         - name: topaz-db
           mountPath: "/db/"
