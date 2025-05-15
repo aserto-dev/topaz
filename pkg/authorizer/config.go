@@ -5,6 +5,7 @@ import (
 	"text/template"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/samber/lo"
 )
 
 type Config struct {
@@ -17,7 +18,12 @@ type Config struct {
 var _ config.Section = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
-	return config.PrefixKeys("jwt", c.JWT.Defaults())
+	return lo.Assign(
+		config.PrefixKeys("opa", c.OPA.Defaults()),
+		config.PrefixKeys("decision_logger", c.DecisionLogger.Defaults()),
+		config.PrefixKeys("controller", c.Controller.Defaults()),
+		config.PrefixKeys("jwt", c.JWT.Defaults()),
+	)
 }
 
 func (c *Config) Validate() error {

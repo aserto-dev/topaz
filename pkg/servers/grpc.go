@@ -18,9 +18,9 @@ type GRPCServer struct {
 //nolint:mnd  // this is where default values are defined.
 func (s *GRPCServer) Defaults() map[string]any {
 	return map[string]any{
-		"listen_address":         "0.0.0:9292",
-		"connection_timeout":     120 * time.Second,
-		"no_reflection":          false,
+		"listen_address":     "0.0.0:9292",
+		"connection_timeout": 120 * time.Second,
+		"no_reflection":      false,
 	}
 }
 

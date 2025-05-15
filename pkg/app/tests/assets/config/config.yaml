@@ -7,7 +7,6 @@ version: 3
 logging:
   prod: true
   log_level: info
-  grpc_log_level: trace
 
 # authentication configuration
 authentication:
@@ -71,6 +70,9 @@ servers:
       - writer
       - authorizer
       - access
+      - model
+      - importer
+      - exporter
     grpc:
       listen_address: "0.0.0.0:9292"
     http:

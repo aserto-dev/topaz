@@ -197,34 +197,6 @@ var BuiltinHelpTests = []struct {
 		},
 	},
 	{
-		name:  "ds.check_relation",
-		query: "x = ds.check_relation({})",
-		expected: map[string]any{
-			"ds.check_relation": map[string]any{
-				"object_type":  "",
-				"object_id":    "",
-				"relation":     "",
-				"subject_type": "",
-				"subject_id":   "",
-				"trace":        false,
-			},
-		},
-	},
-	{
-		name:  "ds.check_permission",
-		query: "x = ds.check_permission({})",
-		expected: map[string]any{
-			"ds.check_permission": map[string]any{
-				"object_type":  "",
-				"object_id":    "",
-				"permission":   "",
-				"subject_type": "",
-				"subject_id":   "",
-				"trace":        false,
-			},
-		},
-	},
-	{
 		name:  "ds.graph",
 		query: "x = ds.graph({})",
 		expected: map[string]any{

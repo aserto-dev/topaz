@@ -129,6 +129,12 @@ func (b *serverBuilder) registerService(server *grpc.Server, service servers.Ser
 		b.services.Directory().RegisterWriterServer(server)
 	case servers.Service.Authorizer:
 		b.services.Authorizer().RegisterAuthorizerServer(server)
+	case servers.Service.Model:
+		b.services.Directory().RegisterModelServer(server)
+	case servers.Service.Importer:
+		b.services.Directory().RegisterImporterServer(server)
+	case servers.Service.Exporter:
+		b.services.Directory().RegisterExporterServer(server)
 	default:
 		panic(errors.Errorf("unknown service %q", service))
 	}
@@ -150,6 +156,10 @@ func (b *serverBuilder) registerGateway(
 		return b.services.Directory().RegisterWriterGateway(ctx, mux, addr, opts...)
 	case servers.Service.Authorizer:
 		return b.services.Authorizer().RegisterAuthorizerGateway(ctx, mux, addr, opts...)
+	case servers.Service.Model:
+		return b.services.Directory().RegisterModelGateway(ctx, mux, addr, opts...)
+	case servers.Service.Importer, servers.Service.Exporter:
+		return nil
 	default:
 		panic(errors.Errorf("unknown service %q", service))
 	}

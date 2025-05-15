@@ -61,14 +61,14 @@ func (c *Config) Serialize(w io.Writer) error {
 		return err
 	}
 
-	return c.generatePlugins(config.IndentWriter(w, pluginIndentLevel))
+	return c.serializePlugins(config.IndentWriter(w, pluginIndentLevel))
 }
 
 func (c *Config) IsRemote() bool {
 	return c.Store.Provider == RemoteDirectoryStorePlugin
 }
 
-func (c *Config) generatePlugins(w io.Writer) error {
+func (c *Config) serializePlugins(w io.Writer) error {
 	if err := config.WriteNonEmpty(w, &c.Store.Bolt); err != nil {
 		return err
 	}

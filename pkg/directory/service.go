@@ -8,6 +8,9 @@ import (
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 
+	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	ds "github.com/aserto-dev/go-edge-ds/pkg/directory"
@@ -73,4 +76,30 @@ func (s *Service) RegisterWriterGateway(ctx context.Context, mux *runtime.ServeM
 	}
 
 	return nil
+}
+
+func (s *Service) RegisterModelServer(server *grpc.Server) {
+	if s.Directory != nil {
+		dsm3.RegisterModelServer(server, s.Model3())
+	}
+}
+
+func (s *Service) RegisterModelGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
+	if s.Directory != nil {
+		return dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	}
+
+	return nil
+}
+
+func (s *Service) RegisterImporterServer(server *grpc.Server) {
+	if s.Directory != nil {
+		dsi3.RegisterImporterServer(server, s.Importer3())
+	}
+}
+
+func (s *Service) RegisterExporterServer(server *grpc.Server) {
+	if s.Directory != nil {
+		dse3.RegisterExporterServer(server, s.Exporter3())
+	}
 }

@@ -80,7 +80,7 @@ func (c *Config) Defaults() map[string]any {
 			"version":                3,
 			"logging.prod":           false,
 			"logging.log_level":      "info",
-			"logging.grpc_log_level": "info",
+			"logging.grpc_log_level": "warn",
 		},
 		config.PrefixKeys("authentication", c.Authentication.Defaults()),
 		config.PrefixKeys("debug", c.Debug.Defaults()),
@@ -88,6 +88,7 @@ func (c *Config) Defaults() map[string]any {
 		config.PrefixKeys("metrics", c.Metrics.Defaults()),
 		config.PrefixKeys("servers", srvrs.Defaults()),
 		config.PrefixKeys("directory", c.Directory.Defaults()),
+		config.PrefixKeys("authorizer", c.Authorizer.Defaults()),
 	)
 }
 

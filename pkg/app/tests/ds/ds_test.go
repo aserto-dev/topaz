@@ -82,6 +82,10 @@ func TestDirectory(t *testing.T) {
 	}
 
 	t.Run("testDirectory", testDirectory(dsConfig, azConfig))
+
+	if logs, e := tc.ContainerLogs(ctx, topaz); e == nil {
+		t.Log(logs)
+	}
 }
 
 func testDirectory(dsConfig *dsc.Config, azConfig *azc.Config) func(*testing.T) {

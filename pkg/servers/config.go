@@ -47,15 +47,21 @@ var (
 		Console    ServiceName
 		Reader     ServiceName
 		Writer     ServiceName
+		Model      ServiceName
+		Importer   ServiceName
+		Exporter   ServiceName
 	}{
 		Access:     "access",
 		Authorizer: "authorizer",
 		Console:    "console",
 		Reader:     "reader",
 		Writer:     "writer",
+		Model:      "model",
+		Importer:   "importer",
+		Exporter:   "exporter",
 	}
 
-	DirectoryServices = []ServiceName{Service.Reader, Service.Writer, Service.Access}
+	DirectoryServices = []ServiceName{Service.Reader, Service.Writer, Service.Access, Service.Model, Service.Importer, Service.Exporter}
 
 	KnownServices = append(DirectoryServices, Service.Authorizer, Service.Console)
 

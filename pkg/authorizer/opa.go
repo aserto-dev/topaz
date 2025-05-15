@@ -19,18 +19,6 @@ func (c *OPAConfig) Defaults() map[string]any {
 		"graceful_shutdown_period_seconds": 2,
 		"max_plugin_wait_time_seconds":     30,
 		"local_bundles.skip_verification":  true,
-
-		"config.services.policy-registry.url":  "https://ghcr.io",
-		"config.services.policy-registry.type": "oci",
-
-		"config.services.policy-registry.response_header_timeout_seconds": 5,
-
-		"config.bundles.default.service":  "policy-registry",
-		"config.bundles.default.resource": "ghcr.io/aserto-policies/policy-rebac:latest",
-		"config.bundles.default.persist":  false,
-
-		"config.bundles.default.config.polling.min_delay_seconds": 60,
-		"config.bundles.default.config.polling.ma`_delay_seconds": 120,
 	}
 }
 

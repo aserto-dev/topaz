@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/samber/lo"
@@ -17,6 +18,7 @@ import (
 
 type Topaz struct {
 	Logger   *zerolog.Logger
+	services *topazServices
 	servers  []sbuilder.Server
 	errGroup *errgroup.Group
 }
@@ -43,14 +45,20 @@ func NewTopaz(ctx context.Context, configPath string, configOverrides ...config.
 		return nil, err
 	}
 
-	servers, err := newServers(log.WithContext(ctx), cfg)
+	services, err := newTopazServices(ctx, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	servers, err := newServers(log.WithContext(ctx), cfg, services)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Topaz{
-		Logger:  log,
-		servers: servers,
+		Logger:   log,
+		services: services,
+		servers:  servers,
 	}, nil
 }
 
@@ -75,15 +83,10 @@ func (t *Topaz) Stop(ctx context.Context) error {
 		}
 	}
 
-	return t.errGroup.Wait()
+	return multierror.Append(t.errGroup.Wait(), t.services.Close(ctx))
 }
 
-func newServers(ctx context.Context, cfg *config.Config) ([]sbuilder.Server, error) {
-	services, err := newTopazServices(ctx, cfg)
-	if err != nil {
-		return nil, err
-	}
-
+func newServers(ctx context.Context, cfg *config.Config, services *topazServices) ([]sbuilder.Server, error) {
 	builder := sbuilder.NewServerBuilder(zerolog.Ctx(ctx), cfg, services)
 	servers := make([]sbuilder.Server, 0, len(cfg.Servers)+countTrue(cfg.Health.Enabled, cfg.Metrics.Enabled))
 

@@ -16,7 +16,7 @@ import (
 )
 
 func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.DecisionTreeRequest) (*authorizer.DecisionTreeResponse, error) {
-	log := s.logger.With().Str("api", "decision_tree").Logger()
+	log := s.logger.With().Interface("req", req).Str("api", "decision_tree").Logger()
 
 	if err := s.decisionTreeVerifyRequest(req); err != nil {
 		return &authorizer.DecisionTreeResponse{}, err
@@ -163,10 +163,7 @@ func (*AuthorizerServer) decisionTreeBuildQuery(
 	ctx context.Context,
 	runtime *runtime.Runtime,
 	req *authorizer.DecisionTreeRequest,
-) (
-	strings.Builder,
-	error,
-) {
+) (strings.Builder, error) {
 	listPolicies, err := runtime.ListPolicies(ctx)
 	if err != nil {
 		return strings.Builder{}, errors.Wrap(err, "get policy list")

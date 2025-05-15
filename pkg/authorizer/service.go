@@ -57,6 +57,11 @@ func New(ctx context.Context, cfg *Config, dsCfg *client.Config) (*Service, erro
 		return nil, errors.Wrap(err, "failed to create runtime resolver")
 	}
 
+	if err := rtResolver.Start(ctx); err != nil {
+		_ = closer.Close(ctx)
+		return nil, errors.Wrap(err, "failed to start runtime resolver")
+	}
+
 	closer = append(closer, rtResolver.Stop)
 
 	return &Service{
