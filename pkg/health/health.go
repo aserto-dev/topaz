@@ -11,7 +11,8 @@ import (
 
 type Config struct {
 	servers.GRPCServer `json:",squash"` //nolint:staticcheck,tagliatelle  // squash is part of mapstructure
-	Enabled            bool             `json:"enabled"`
+
+	Enabled bool `json:"enabled"`
 }
 
 var _ config.Section = (*Config)(nil)

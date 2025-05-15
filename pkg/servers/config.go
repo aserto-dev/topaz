@@ -160,7 +160,6 @@ func (c Config) validateListenAddresses() error {
 }
 
 func (c Config) validateDepdencies() error {
-	// TODO: Find cycles
 	return nil
 }
 
@@ -197,15 +196,26 @@ func (c *Server) Defaults() map[string]any {
 }
 
 func (s *Server) Validate() error {
-	var errs error
+	var (
+		errs      error
+		needsGRPC bool
+	)
 
 	for _, service := range s.Services {
 		if !slices.Contains(KnownServices, service) {
 			errs = multierror.Append(errs, errors.Wrapf(config.ErrConfig, "unknown service %q", service))
+			continue
+		}
+
+		if service != Service.Console {
+			// All services except the console require grpc configuration.
+			needsGRPC = true
 		}
 	}
 
-	// TODO: validate that a grpc listen address is set if a non-console service is assigned to the server.
+	if needsGRPC && !s.GRPC.HasListener() {
+		errs = multierror.Append(errs, errors.Wrap(config.ErrConfig, "grpc listen_address is required"))
+	}
 
 	return errs
 }

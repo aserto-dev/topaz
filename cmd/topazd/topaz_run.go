@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/aserto-dev/topaz/pkg/cc/signals"
-	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/topaz"
 	"github.com/aserto-dev/topaz/pkg/topaz/config"
 	"github.com/spf13/cobra"
@@ -17,7 +16,6 @@ var (
 	flagRunWatchLocalBundles bool
 	flagRunIgnorePaths       []string
 	flagRunDebug             bool
-	debugService             *debug.Server
 
 	gracefulShutdownPeriod = 5 * time.Second
 )
@@ -36,15 +34,6 @@ func run(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-
-	// TODO: enable debug service in topaz builder.
-
-	// if topazApp.Configuration.DebugService.Enabled {
-	// 	debugService = debug.NewServer(&topazApp.Configuration.DebugService, topazApp.Logger)
-	// 	debugService.Start()
-	//
-	// 	defer debugService.Stop()
-	// }
 
 	// Start topaz.
 	ctx, err = app.Start(ctx)
@@ -78,5 +67,7 @@ func configOverrides(cfg *config.Config) {
 		cfg.Authorizer.OPA.LocalBundles.Watch = true
 	}
 
-	cfg.Debug.Enabled = flagRunDebug
+	if flagRunDebug {
+		cfg.Debug.Enabled = true
+	}
 }

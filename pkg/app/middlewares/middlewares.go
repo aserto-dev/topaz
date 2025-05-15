@@ -22,12 +22,6 @@ func GetMiddlewaresForService(ctx context.Context, cfg *config.Config, logger *z
 		middlewareList = append(middlewareList, authentication.NewMiddleware(&v3Cfg))
 	}
 
-	// only attach policy instance information if discovery resource is configured.
-	// TODO: move this to the Is function.
-	if cfg.OPA.Config.Discovery != nil && cfg.OPA.Config.Discovery.Resource != nil {
-		middlewareList = append(middlewareList, NewInstanceMiddleware(cfg, logger))
-	}
-
 	// get tenant id from opa instance id.
 	middlewareList = append(middlewareList,
 		request.NewRequestIDMiddleware(),

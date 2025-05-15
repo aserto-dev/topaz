@@ -11,6 +11,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
+	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/middleware"
@@ -86,6 +87,22 @@ func (b *serverBuilder) BuildHealth(cfg *health.Config) (*grpcServer, error) {
 
 	svc := health.New(cfg)
 	svc.RegisterHealthServer(server.Server)
+
+	return server, nil
+}
+
+func (b *serverBuilder) BuildDebug(ctx context.Context, cfg *debug.Config) (*httpServer, error) {
+	if !cfg.Enabled {
+		return noHTTP, nil
+	}
+
+	server, err := newHTTPServer(&cfg.HTTPServer)
+	if err != nil {
+		return nil, err
+	}
+
+	router := server.router.PathPrefix("/debug").Subrouter()
+	debug.RegisterHandlers(ctx, router)
 
 	return server, nil
 }

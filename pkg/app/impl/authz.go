@@ -9,7 +9,6 @@ import (
 
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/open-policy-agent/opa/v1/server/types"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -39,6 +38,7 @@ type AuthorizerServer struct {
 	jwtTimeSkew time.Duration
 	dsClient    dsr3.ReaderClient
 	rtResolver  resolvers.RuntimeResolver
+	policyName  string
 }
 
 func NewAuthorizerServer(
@@ -46,6 +46,7 @@ func NewAuthorizerServer(
 	dsClient dsr3.ReaderClient,
 	rtResolver resolvers.RuntimeResolver,
 	jwtTimeSkew time.Duration,
+	policyName string,
 ) *AuthorizerServer {
 	newLogger := zerolog.Ctx(ctx).With().Str("component", "authorizer").Logger()
 
@@ -57,6 +58,7 @@ func NewAuthorizerServer(
 		jwtTimeSkew: jwtTimeSkew,
 		dsClient:    dsClient,
 		rtResolver:  rtResolver,
+		policyName:  policyName,
 	}
 }
 
@@ -74,22 +76,23 @@ func (s *AuthorizerServer) Info(ctx context.Context, req *authorizer.InfoRequest
 	return res, nil
 }
 
-func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.PolicyInstance) (*runtime.Runtime, error) {
-	if policyInstance != nil {
-		rt, err := s.rtResolver.RuntimeFromContext(ctx, policyInstance.GetName())
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to procure tenant runtime")
-		}
+type instance interface {
+	GetPolicyInstance() *api.PolicyInstance
+}
 
-		return rt, err
+func (s *AuthorizerServer) instanceName(req instance) string {
+	name := s.policyName
+	pi := req.GetPolicyInstance()
+
+	if pi != nil && pi.GetName() != "" {
+		name = pi.GetName()
 	}
 
-	rt, err := s.rtResolver.RuntimeFromContext(ctx, "")
-	if err != nil {
-		return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
-	}
+	return name
+}
 
-	return rt, err
+func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance string) (*runtime.Runtime, error) {
+	return s.rtResolver.RuntimeFromContext(ctx, policyInstance)
 }
 
 func (s *AuthorizerServer) resolveIdentityContext(ctx context.Context, idCtx *api.IdentityContext, input map[string]any) error {

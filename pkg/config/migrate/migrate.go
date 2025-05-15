@@ -102,9 +102,10 @@ func migAuthnOptions(v2 *config2.Options) authentication.Options {
 
 func migDebug(cfg2 *config2.Config, cfg3 *config3.Config) {
 	cfg3.Debug = debug.Config{
-		Enabled:         cfg2.DebugService.Enabled,
-		ListenAddress:   cfg2.DebugService.ListenAddress,
-		ShutdownTimeout: cfg2.DebugService.ShutdownTimeout,
+		Enabled: cfg2.DebugService.Enabled,
+		HTTPServer: servers.HTTPServer{
+			ListenAddress: cfg2.DebugService.ListenAddress,
+		},
 	}
 }
 

@@ -2,6 +2,7 @@ package authorizer
 
 import (
 	"io"
+	"strings"
 	"text/template"
 
 	"github.com/aserto-dev/runtime"
@@ -39,6 +40,16 @@ func (c *OPAConfig) Serialize(w io.Writer) error {
 	}
 
 	return nil
+}
+
+func (c *OPAConfig) PolicyInstance() string {
+	name := ""
+
+	if c.Config.Discovery != nil && c.Config.Discovery.Resource != nil {
+		name, _, _ = strings.Cut(*c.Config.Discovery.Resource, "/")
+	}
+
+	return name
 }
 
 func (c *OPAConfig) TryLocalBundles() *runtime.LocalBundlesConfig {

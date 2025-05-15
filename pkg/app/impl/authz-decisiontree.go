@@ -29,7 +29,7 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 	log.Debug().Interface("input", input).Msg("decision_tree")
 
-	policyRuntime, err := s.getRuntime(ctx, req.GetPolicyInstance())
+	policyRuntime, err := s.getRuntime(ctx, s.instanceName(req))
 	if err != nil {
 		return &authorizer.DecisionTreeResponse{}, err
 	}

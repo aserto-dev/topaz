@@ -19,7 +19,7 @@ import (
 func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.ListPoliciesRequest) (*authorizer.ListPoliciesResponse, error) {
 	response := &authorizer.ListPoliciesResponse{}
 
-	rt, err := s.getRuntime(ctx, req.GetPolicyInstance())
+	rt, err := s.getRuntime(ctx, s.instanceName(req))
 	if err != nil {
 		return response, errors.Wrap(err, "failed to get runtime")
 	}
@@ -50,7 +50,7 @@ func (s *AuthorizerServer) ListPolicies(ctx context.Context, req *authorizer.Lis
 func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPolicyRequest) (*authorizer.GetPolicyResponse, error) {
 	response := &authorizer.GetPolicyResponse{}
 
-	rt, err := s.getRuntime(ctx, req.GetPolicyInstance())
+	rt, err := s.getRuntime(ctx, s.instanceName(req))
 	if err != nil {
 		return response, errors.Wrap(err, "failed to get runtime")
 	}

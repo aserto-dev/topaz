@@ -74,9 +74,10 @@ var cfg = &config.Config{
 		},
 	},
 	Debug: debug.Config{
-		Enabled:         false,
-		ListenAddress:   "localhost:6060",
-		ShutdownTimeout: time.Second * 5,
+		Enabled: false,
+		HTTPServer: servers.HTTPServer{
+			ListenAddress: "localhost:6060",
+		},
 	},
 	Health: health.Config{
 		Enabled: true,

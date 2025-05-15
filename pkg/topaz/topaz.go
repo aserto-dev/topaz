@@ -88,7 +88,7 @@ func (t *Topaz) Stop(ctx context.Context) error {
 
 func newServers(ctx context.Context, cfg *config.Config, services *topazServices) ([]sbuilder.Server, error) {
 	builder := sbuilder.NewServerBuilder(zerolog.Ctx(ctx), cfg, services)
-	servers := make([]sbuilder.Server, 0, len(cfg.Servers)+countTrue(cfg.Health.Enabled, cfg.Metrics.Enabled))
+	servers := make([]sbuilder.Server, 0, len(cfg.Servers)+countTrue(cfg.Debug.Enabled, cfg.Health.Enabled, cfg.Metrics.Enabled))
 
 	for name, serverCfg := range cfg.Servers {
 		srvr, err := builder.Build(ctx, serverCfg)
@@ -106,6 +106,15 @@ func newServers(ctx context.Context, cfg *config.Config, services *topazServices
 		}
 
 		servers = append(servers, healthSrvr)
+	}
+
+	if cfg.Debug.Enabled {
+		debugSrvr, err := builder.BuildDebug(ctx, &cfg.Debug)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to build debug server")
+		}
+
+		servers = append(servers, debugSrvr)
 	}
 
 	return servers, nil

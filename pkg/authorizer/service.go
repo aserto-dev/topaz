@@ -65,7 +65,7 @@ func New(ctx context.Context, cfg *Config, dsCfg *client.Config) (*Service, erro
 	closer = append(closer, rtResolver.Stop)
 
 	return &Service{
-		impl.NewAuthorizerServer(ctx, dsReader, rtResolver, cfg.JWT.AcceptableTimeSkew),
+		impl.NewAuthorizerServer(ctx, dsReader, rtResolver, cfg.JWT.AcceptableTimeSkew, cfg.OPA.PolicyInstance()),
 		closer.Close,
 	}, nil
 }
