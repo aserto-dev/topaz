@@ -12,7 +12,7 @@ data:
       log_level: info
     
     directory:
-      db_path: /db/eds-citadel.db
+      db_path: /db/citadel.db
     
     # remote directory is used to resolve the identity for the authorizer.
     remote_directory:
