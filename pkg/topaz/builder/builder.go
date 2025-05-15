@@ -12,6 +12,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	"github.com/aserto-dev/topaz/pkg/directory"
+	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/middleware"
 	"github.com/aserto-dev/topaz/pkg/servers"
 	"github.com/aserto-dev/topaz/pkg/topaz/config"
@@ -40,7 +41,7 @@ func NewServerBuilder(logger *zerolog.Logger, cfg *config.Config, services Topaz
 	}
 }
 
-func (b *serverBuilder) Build(ctx context.Context, cfg *servers.Server) (*Server, error) {
+func (b *serverBuilder) Build(ctx context.Context, cfg *servers.Server) (*server, error) {
 	grpcServer, err := b.buildGRPC(cfg)
 	if err != nil {
 		return nil, err
@@ -70,7 +71,23 @@ func (b *serverBuilder) Build(ctx context.Context, cfg *servers.Server) (*Server
 		httpServer.AttachGateway("/api", gwMux)
 	}
 
-	return &Server{grpc: grpcServer, http: httpServer}, nil
+	return &server{grpc: grpcServer, http: httpServer}, nil
+}
+
+func (b *serverBuilder) BuildHealth(cfg *health.Config) (*grpcServer, error) {
+	if !cfg.Enabled {
+		return noGRPC, nil
+	}
+
+	server, err := newGRPCServer(&cfg.GRPCServer)
+	if err != nil {
+		return nil, err
+	}
+
+	svc := health.New(cfg)
+	svc.RegisterHealthServer(server.Server)
+
+	return server, nil
 }
 
 func (b *serverBuilder) buildGRPC(cfg *servers.Server) (*grpcServer, error) {
@@ -78,7 +95,7 @@ func (b *serverBuilder) buildGRPC(cfg *servers.Server) (*grpcServer, error) {
 		return noGRPC, nil
 	}
 
-	server, err := newGRPCServer(&cfg.GRPC, b.middleware)
+	server, err := newGRPCServer(&cfg.GRPC, b.middleware.unary(), b.middleware.stream())
 	if err != nil {
 		return nil, err
 	}

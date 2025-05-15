@@ -1,10 +1,8 @@
 package topaz
 
 import (
-	"bytes"
 	"context"
 	"os"
-	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -13,24 +11,25 @@ import (
 
 	"github.com/aserto-dev/logger"
 
-	"github.com/aserto-dev/topaz/pkg/cli/x"
 	sbuilder "github.com/aserto-dev/topaz/pkg/topaz/builder"
 	"github.com/aserto-dev/topaz/pkg/topaz/config"
 )
 
 type Topaz struct {
 	Logger   *zerolog.Logger
-	servers  []*sbuilder.Server
+	servers  []sbuilder.Server
 	errGroup *errgroup.Group
 }
 
 func NewTopaz(ctx context.Context, configPath string, configOverrides ...config.ConfigOverride) (*Topaz, error) {
-	cfgBytes, err := os.ReadFile(configPath)
+	f, err := os.Open(configPath)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot read config file %q", configPath)
 	}
 
-	cfg, err := config.NewConfig(bytes.NewReader(cfgBytes), configOverrides...)
+	defer f.Close()
+
+	cfg, err := config.NewConfig(f, configOverrides...)
 	if err != nil {
 		return nil, err
 	}
@@ -42,11 +41,6 @@ func NewTopaz(ctx context.Context, configPath string, configOverrides ...config.
 	log, err := logger.NewLogger(os.Stdout, os.Stderr, &cfg.Logging)
 	if err != nil {
 		return nil, err
-	}
-
-	if strings.Contains(string(cfgBytes), x.EnvTopazDir) {
-		log.Warn().Msg("This configuration file uses the obsolete TOPAZ_DIR environment variable.")
-		log.Warn().Msg("Please update to use the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}
 
 	servers, err := newServers(log.WithContext(ctx), cfg)
@@ -84,14 +78,14 @@ func (t *Topaz) Stop(ctx context.Context) error {
 	return t.errGroup.Wait()
 }
 
-func newServers(ctx context.Context, cfg *config.Config) ([]*sbuilder.Server, error) {
+func newServers(ctx context.Context, cfg *config.Config) ([]sbuilder.Server, error) {
 	services, err := newTopazServices(ctx, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	builder := sbuilder.NewServerBuilder(zerolog.Ctx(ctx), cfg, services)
-	servers := make([]*sbuilder.Server, 0, len(cfg.Servers)+countTrue(cfg.Health.Enabled, cfg.Metrics.Enabled))
+	servers := make([]sbuilder.Server, 0, len(cfg.Servers)+countTrue(cfg.Health.Enabled, cfg.Metrics.Enabled))
 
 	for name, serverCfg := range cfg.Servers {
 		srvr, err := builder.Build(ctx, serverCfg)
@@ -100,6 +94,15 @@ func newServers(ctx context.Context, cfg *config.Config) ([]*sbuilder.Server, er
 		}
 
 		servers = append(servers, srvr)
+	}
+
+	if cfg.Health.Enabled {
+		healthSrvr, err := builder.BuildHealth(&cfg.Health)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to build health server")
+		}
+
+		servers = append(servers, healthSrvr)
 	}
 
 	return servers, nil

@@ -5,14 +5,13 @@ import (
 	"io"
 
 	"github.com/Masterminds/sprig/v3"
-	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/servers"
 )
 
 type Config struct {
-	Enabled       bool             `json:"enabled"`
-	ListenAddress string           `json:"listen_address"`
-	Certificates  client.TLSConfig `json:"certs,omitempty"`
+	servers.GRPCServer `json:",squash"` //nolint:staticcheck,tagliatelle  // squash is part of mapstructure
+	Enabled            bool             `json:"enabled"`
 }
 
 var _ config.Section = (*Config)(nil)
@@ -51,7 +50,7 @@ const healthTemplate = `
 health:
   enabled: {{ .Enabled }}
   listen_address: '{{ .ListenAddress }}'
-{{- with .Certificates }}
+{{- with .Certs }}
   certs:
     tls_key_path: '{{ .Key }}'
     tls_cert_path: '{{ .Cert }}'

@@ -27,9 +27,9 @@ var _ config.Section = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
 	return map[string]any{
-		"enabled":         false,
-		"listen_address":  "0.0.0.0:6060",
-		"sutdown_timeout": DefaultShutdownTimeout.String(),
+		"enabled":          false,
+		"listen_address":   "0.0.0.0:6060",
+		"shutdown_timeout": DefaultShutdownTimeout.String(),
 	}
 }
 

@@ -52,6 +52,10 @@ func TestDirectory(t *testing.T) {
 	require.NoError(t, err)
 
 	if err := topaz.Start(ctx); err != nil {
+		if logs, e := tc.ContainerLogs(ctx, topaz); e == nil {
+			t.Log(logs)
+		}
+
 		require.NoError(t, err)
 	}
 

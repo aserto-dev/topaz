@@ -19,11 +19,8 @@ type GRPCServer struct {
 func (s *GRPCServer) Defaults() map[string]any {
 	return map[string]any{
 		"listen_address":         "0.0.0:9292",
-		"certs.tls_cert_path":    "${TOPAZ_CERTS_DIR}/grpc.crt",
-		"certs.tls_key_path":     "${TOPAZ_CERTS_DIR}/grpc.key",
-		"certs.tls_ca_cert_path": "${TOPAZ_CERTS_DIR}/grpc-ca.crt",
 		"connection_timeout":     120 * time.Second,
-		"disable_reflection":     false,
+		"no_reflection":          false,
 	}
 }
 

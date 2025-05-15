@@ -118,9 +118,11 @@ func migMetrics(cfg2 *config2.Config, cfg3 *config3.Config) {
 
 func migHealth(cfg2 *config2.Config, cfg3 *config3.Config) {
 	cfg3.Health = health.Config{
-		Enabled:       cfg2.APIConfig.Health.ListenAddress != "",
-		ListenAddress: cfg2.APIConfig.Health.ListenAddress,
-		Certificates:  cfg2.APIConfig.Health.Certificates,
+		Enabled: cfg2.APIConfig.Health.ListenAddress != "",
+		GRPCServer: servers.GRPCServer{
+			ListenAddress: cfg2.APIConfig.Health.ListenAddress,
+			Certs:         cfg2.APIConfig.Health.Certificates,
+		},
 	}
 }
 

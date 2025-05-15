@@ -79,12 +79,14 @@ var cfg = &config.Config{
 		ShutdownTimeout: time.Second * 5,
 	},
 	Health: health.Config{
-		Enabled:       true,
-		ListenAddress: "localhost:8484",
-		Certificates: aserto.TLSConfig{
-			Key:  "${TOPAZ_CERTS_DIR}/grpc.key",
-			Cert: "${TOPAZ_CERTS_DIR}/grpc.crt",
-			CA:   "${TOPAZ_CERTS_DIR}/grpc-ca.crt",
+		Enabled: true,
+		GRPCServer: servers.GRPCServer{
+			ListenAddress: "localhost:8484",
+			Certs: aserto.TLSConfig{
+				Key:  "${TOPAZ_CERTS_DIR}/grpc.key",
+				Cert: "${TOPAZ_CERTS_DIR}/grpc.crt",
+				CA:   "${TOPAZ_CERTS_DIR}/grpc-ca.crt",
+			},
 		},
 	},
 	Metrics: metrics.Config{

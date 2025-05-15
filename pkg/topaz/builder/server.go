@@ -11,12 +11,17 @@ type Runner interface {
 	Go(f func() error)
 }
 
-type Server struct {
+type Server interface {
+	Start(ctx context.Context, runner Runner) error
+	Stop(ctx context.Context) error
+}
+
+type server struct {
 	grpc *grpcServer
 	http *httpServer
 }
 
-func (s *Server) Start(ctx context.Context, runner Runner) error {
+func (s *server) Start(ctx context.Context, runner Runner) error {
 	if err := s.grpc.Start(ctx, runner); err != nil {
 		return errors.Wrapf(err, "failed to start grpc server on %q", s.grpc.listenAddr)
 	}
@@ -29,7 +34,7 @@ func (s *Server) Start(ctx context.Context, runner Runner) error {
 	return nil
 }
 
-func (s *Server) Stop(ctx context.Context) error {
+func (s *server) Stop(ctx context.Context) error {
 	var errs error
 
 	if err := s.http.Stop(ctx); err != nil {

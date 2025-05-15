@@ -50,6 +50,7 @@ func NewConfig(r io.Reader, overrides ...ConfigOverride) (*Config, error) {
 	v := config.NewViper()
 	v.SetEnvPrefix("TOPAZ")
 	v.AutomaticEnv()
+	v.SetDefaults(&cfg)
 
 	v.ReadConfig(r)
 
@@ -72,7 +73,7 @@ func useJSONTags(dc *mapstructure.DecoderConfig) { dc.TagName = "json" }
 
 //nolint:mnd  // this is where default values are defined.
 func (c *Config) Defaults() map[string]any {
-	services := servers.Config{"topaz": {}}
+	srvrs := servers.Config{"topaz": {}}
 
 	return lo.Assign(
 		map[string]any{
@@ -85,7 +86,7 @@ func (c *Config) Defaults() map[string]any {
 		config.PrefixKeys("debug", c.Debug.Defaults()),
 		config.PrefixKeys("health", c.Health.Defaults()),
 		config.PrefixKeys("metrics", c.Metrics.Defaults()),
-		config.PrefixKeys("services", services.Defaults()),
+		config.PrefixKeys("servers", srvrs.Defaults()),
 		config.PrefixKeys("directory", c.Directory.Defaults()),
 	)
 }

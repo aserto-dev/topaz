@@ -186,7 +186,7 @@ func collisionMsg(addr, svc1, svc2 string) string {
 func (c *Server) Defaults() map[string]any {
 	return lo.Assign(
 		config.PrefixKeys("grpc", c.GRPC.Defaults()),
-		config.PrefixKeys("gateway", c.HTTP.Defaults()),
+		config.PrefixKeys("http", c.HTTP.Defaults()),
 	)
 }
 

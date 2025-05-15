@@ -24,18 +24,14 @@ type HTTPServer struct {
 
 func (s *HTTPServer) Defaults() map[string]any {
 	return map[string]any{
-		"listen_address":         "0.0.0:9393",
-		"certs.tls_cert_path":    "${TOPAZ_CERTS_DIR}/gateway.crt",
-		"certs.tls_key_path":     "${TOPAZ_CERTS_DIR}/gateway.key",
-		"certs.tls_ca_cert_path": "${TOPAZ_CERTS_DIR}/gateway-ca.crt",
-		"allowed_origins":        DefaultAllowedOrigins(s.Certs.HasCert()),
-		"allowed_headers":        DefaultAllowedHeaders(),
-		"allowed_methods":        DefaultAllowedMethods(),
-		"http":                   false,
-		"read_timeout":           DefaultReadTimeout.String(),
-		"read_header_timeout":    DefaultReadHeaderTimeout.String(),
-		"write_timeout":          DefaultWriteTimeout.String(),
-		"idle_timeout":           DefaultIdleTimeout.String(),
+		"listen_address":      "0.0.0:9393",
+		"allowed_origins":     DefaultAllowedOrigins(s.Certs.HasCert()),
+		"allowed_headers":     DefaultAllowedHeaders(),
+		"allowed_methods":     DefaultAllowedMethods(),
+		"read_timeout":        DefaultReadTimeout.String(),
+		"read_header_timeout": DefaultReadHeaderTimeout.String(),
+		"write_timeout":       DefaultWriteTimeout.String(),
+		"idle_timeout":        DefaultIdleTimeout.String(),
 	}
 }
 
@@ -66,7 +62,7 @@ func (s *HTTPServer) IsEmpty() bool {
 		s.FQDN == "" &&
 		s.Certs == zeroCerts &&
 		s.ReadHeaderTimeout == zeroDuration &&
-		s.ReadHeaderTimeout == zeroDuration &&
+		s.ReadTimeout == zeroDuration &&
 		s.WriteTimeout == zeroDuration &&
 		s.IdleTimeout == zeroDuration &&
 		len(s.AllowedOrigins) == 0 &&

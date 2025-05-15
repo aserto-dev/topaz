@@ -5,6 +5,7 @@ import (
 	"net"
 
 	"github.com/aserto-dev/topaz/pkg/servers"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 )
 
@@ -16,19 +17,19 @@ type grpcServer struct {
 	listenAddr string
 }
 
-func newGRPCServer(cfg *servers.GRPCServer, mw *middlewares) (*grpcServer, error) {
+func newGRPCServer(cfg *servers.GRPCServer, opts ...grpc.ServerOption) (*grpcServer, error) {
 	creds, err := cfg.Certs.ServerCredentials()
 	if err != nil {
 		return nil, err
 	}
 
+	opts = append(opts,
+		grpc.Creds(creds),
+		grpc.ConnectionTimeout(cfg.ConnectionTimeout),
+	)
+
 	return &grpcServer{
-		Server: grpc.NewServer(
-			grpc.Creds(creds),
-			grpc.ConnectionTimeout(cfg.ConnectionTimeout),
-			mw.unary(),
-			mw.stream(),
-		),
+		Server:     grpc.NewServer(opts...),
 		listenAddr: cfg.ListenAddress,
 	}, nil
 }
@@ -46,8 +47,11 @@ func (s *grpcServer) Start(ctx context.Context, runner Runner) error {
 		return err
 	}
 
+	zerolog.Ctx(ctx).Info().Msgf("Starting %s gRPC server", s.listenAddr)
+
 	runner.Go(func() error {
-		return s.Serve(listener)
+		e := s.Serve(listener)
+		return e
 	})
 
 	return nil

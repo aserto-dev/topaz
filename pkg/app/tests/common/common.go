@@ -3,6 +3,7 @@ package common_test
 import (
 	"context"
 	"fmt"
+	"io"
 	"runtime"
 
 	"github.com/docker/go-connections/nat"
@@ -45,4 +46,20 @@ func MappedAddr(ctx context.Context, container testcontainers.Container, port st
 	}
 
 	return fmt.Sprintf("%s:%s", host, mappedPort.Port()), nil
+}
+
+func ContainerLogs(ctx context.Context, container testcontainers.Container) (string, error) {
+	logs, err := container.Logs(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	defer func() { _ = logs.Close() }()
+
+	logData, err := io.ReadAll(logs)
+	if err != nil {
+		return "", err
+	}
+
+	return string(logData), nil
 }

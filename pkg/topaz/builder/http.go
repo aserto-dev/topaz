@@ -50,7 +50,7 @@ func (s *httpServer) Start(ctx context.Context, runner Runner) error {
 	runner.Go(func() error {
 		var err error
 
-		if s.TLSConfig == nil {
+		if len(s.TLSConfig.Certificates) == 0 {
 			err = s.ListenAndServe()
 		} else {
 			// Certs are already provided in the server's TLSConfig.
