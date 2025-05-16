@@ -13,6 +13,7 @@ import (
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	ds "github.com/aserto-dev/go-edge-ds/pkg/directory"
 	dsa1 "github.com/authzen/access.go/api/access/v1"
 
@@ -85,11 +86,15 @@ func (s *Service) RegisterModelServer(server *grpc.Server) {
 }
 
 func (s *Service) RegisterModelGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
-	if s.Directory != nil {
-		return dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	if s.Directory == nil {
+		return nil
 	}
 
-	return nil
+	if err := dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, endpoint, opts); err != nil {
+		return err
+	}
+
+	return dsm3stream.RegisterModelStreamHandlersFromEndpoint(ctx, mux, endpoint, opts)
 }
 
 func (s *Service) RegisterImporterServer(server *grpc.Server) {

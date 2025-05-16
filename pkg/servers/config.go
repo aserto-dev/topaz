@@ -87,11 +87,7 @@ func (c Config) Validate() error {
 		return err
 	}
 
-	if err := c.validateListenAddresses(); err != nil {
-		return err
-	}
-
-	return c.validateDepdencies()
+	return c.validateListenAddresses()
 }
 
 func (c Config) EnabledServices() iter.Seq[ServiceName] {
@@ -159,10 +155,6 @@ func (c Config) validateListenAddresses() error {
 	return errs
 }
 
-func (c Config) validateDepdencies() error {
-	return nil
-}
-
 func (c Config) Serialize(w io.Writer) error {
 	tmpl, err := template.New("SERVERS").
 		Funcs(config.TemplateFuncs()).
@@ -210,6 +202,8 @@ func (s *Server) Validate() error {
 		if service != Service.Console {
 			// All services except the console require grpc configuration.
 			needsGRPC = true
+		} else if !s.HTTP.HasListener() {
+			errs = multierror.Append(errs, errors.Wrap(config.ErrConfig, "http listen_address is required for console service"))
 		}
 	}
 

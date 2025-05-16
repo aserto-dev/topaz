@@ -2,7 +2,9 @@ package builder
 
 import (
 	"context"
+	"slices"
 
+	gorilla "github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -11,6 +13,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
+	"github.com/aserto-dev/topaz/pkg/console"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
@@ -53,6 +56,13 @@ func (b *serverBuilder) Build(ctx context.Context, cfg *servers.Server) (*server
 		return nil, err
 	}
 
+	// The console http routes need to be attached before the gateway because routes are matched
+	// in the order they are registered and the gateway attaches to the '/api' prefix which would
+	// match against the console's config endpoint ('/api/v2/config').
+	if slices.Contains(cfg.Services, servers.Service.Console) {
+		b.registerConsole(httpServer.router)
+	}
+
 	if grpcServer.Enabled() && httpServer.Enabled() {
 		// wire up grpc-gateway.
 		addr := "dns:///" + cfg.GRPC.ListenAddress
@@ -69,7 +79,7 @@ func (b *serverBuilder) Build(ctx context.Context, cfg *servers.Server) (*server
 			}
 		}
 
-		httpServer.AttachGateway("/api", gwMux)
+		httpServer.AttachGateway("/api/", gwMux)
 	}
 
 	return &server{grpc: grpcServer, http: httpServer}, nil
@@ -101,7 +111,7 @@ func (b *serverBuilder) BuildDebug(ctx context.Context, cfg *debug.Config) (*htt
 		return nil, err
 	}
 
-	router := server.router.PathPrefix("/debug").Subrouter()
+	router := server.router.PathPrefix("/debug/").Subrouter()
 	debug.RegisterHandlers(ctx, router)
 
 	return server, nil
@@ -152,6 +162,8 @@ func (b *serverBuilder) registerService(server *grpc.Server, service servers.Ser
 		b.services.Directory().RegisterImporterServer(server)
 	case servers.Service.Exporter:
 		b.services.Directory().RegisterExporterServer(server)
+	case servers.Service.Console:
+		// No gateway for the console.
 	default:
 		panic(errors.Errorf("unknown service %q", service))
 	}
@@ -175,9 +187,18 @@ func (b *serverBuilder) registerGateway(
 		return b.services.Authorizer().RegisterAuthorizerGateway(ctx, mux, addr, opts...)
 	case servers.Service.Model:
 		return b.services.Directory().RegisterModelGateway(ctx, mux, addr, opts...)
-	case servers.Service.Importer, servers.Service.Exporter:
+	case servers.Service.Importer, servers.Service.Exporter, servers.Service.Console:
 		return nil
 	default:
 		panic(errors.Errorf("unknown service %q", service))
 	}
+}
+
+func (b *serverBuilder) registerConsole(router *gorilla.Router) {
+	// The config endpoint can be called without authentication but we attach the auth middleware because
+	// if an api key is included in the request, we do want to validate it.
+	// This is all part of somewhat odd behavior in the console that really needs to be rethought.
+	router.Handle("/api/v2/config", b.middleware.auth.Handler(console.ConfigHandler(b.cfg)))
+
+	console.RegisterAppHandlers(router)
 }

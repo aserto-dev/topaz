@@ -73,6 +73,7 @@ servers:
       - model
       - importer
       - exporter
+      - console
     grpc:
       listen_address: "0.0.0.0:9292"
     http:

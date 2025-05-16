@@ -105,21 +105,21 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 	}
 }
 
-func getGatewayAddress(serviceConfig *builder.API) string {
-	if serviceConfig.Gateway.FQDN != "" {
-		return serviceConfig.Gateway.FQDN
-	}
-
-	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
-
-	serviceConfig.Gateway.HTTP = !serviceConfig.Gateway.Certs.HasCert()
-
-	if serviceConfig.Gateway.HTTP {
-		return "http://" + addr
-	}
-
-	return "https://" + addr
-}
+// func getGatewayAddress(serviceConfig *builder.API) string {
+// 	if serviceConfig.Gateway.FQDN != "" {
+// 		return serviceConfig.Gateway.FQDN
+// 	}
+//
+// 	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
+//
+// 	serviceConfig.Gateway.HTTP = !serviceConfig.Gateway.Certs.HasCert()
+//
+// 	if serviceConfig.Gateway.HTTP {
+// 		return "http://" + addr
+// 	}
+//
+// 	return "https://" + addr
+// }
 
 func serviceAddress(listenAddress string) string {
 	return strings.Replace(listenAddress, "0.0.0.0", "localhost", 1)

@@ -47,6 +47,8 @@ func (s *httpServer) Start(ctx context.Context, runner Runner) error {
 		return nil
 	}
 
+	zerolog.Ctx(ctx).Info().Msgf("Starting %s http server", s.Addr)
+
 	runner.Go(func() error {
 		var err error
 
