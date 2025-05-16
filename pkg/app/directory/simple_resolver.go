@@ -14,7 +14,7 @@ type Resolver struct {
 	logger  *zerolog.Logger
 }
 
-var _ resolvers.DirectoryResolver = &Resolver{}
+var _ resolvers.DirectoryResolver = (*Resolver)(nil)
 
 // The simple directory resolver returns a simple directory reader client.
 func NewResolver(logger *zerolog.Logger, cfg *client.Config) (*Resolver, error) {
@@ -36,6 +36,6 @@ func (r *Resolver) Close() {
 }
 
 // GetDS - returns a directory reader service client.
-func (r *Resolver) GetDS() reader.ReaderClient {
+func (r *Resolver) GetDS() reader.ReaderClient { //nolint:ireturn
 	return reader.NewReaderClient(r.dirConn)
 }

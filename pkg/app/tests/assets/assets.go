@@ -5,18 +5,18 @@ import (
 	_ "embed"
 )
 
+//go:embed config/config-tls.yaml
+var configWithTLS []byte
+
+func ConfigWithTLSReader() *bytes.Reader {
+	return bytes.NewReader(configWithTLS)
+}
+
 //go:embed config/config.yaml
 var config []byte
 
 func ConfigReader() *bytes.Reader {
 	return bytes.NewReader(config)
-}
-
-//go:embed config/config-no-tls.yaml
-var configNoTLS []byte
-
-func ConfigNoTLSReader() *bytes.Reader {
-	return bytes.NewReader(configNoTLS)
 }
 
 //go:embed config/peoplefinder.yaml

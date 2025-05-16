@@ -5,7 +5,6 @@ package topaz
 
 import (
 	"github.com/google/wire"
-	"google.golang.org/grpc"
 
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/pkg/app"
@@ -22,7 +21,6 @@ var (
 		builder.NewServiceFactory,
 		builder.NewServiceManager,
 
-		DefaultGRPCOptions,
 		DefaultServices,
 
 		wire.FieldsOf(new(*cc.CC), "Config", "Log", "Context", "ErrGroup"),
@@ -49,10 +47,6 @@ func BuildApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath co
 func BuildTestApp(logOutput logger.Writer, errOutput logger.ErrWriter, configPath config.Path, overrides config.Overrider) (*app.Topaz, func(), error) {
 	wire.Build(appTestSet)
 	return &app.Topaz{}, func() {}, nil
-}
-
-func DefaultGRPCOptions() []grpc.ServerOption {
-	return nil
 }
 
 func DefaultServices() map[string]builder.ServiceTypes {
