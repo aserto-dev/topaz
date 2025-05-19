@@ -1,15 +1,13 @@
 package config
 
 type templateParams struct {
-	Version           int
-	PolicyRegistry    string
-	PolicyName        string
-	Resource          string
-	Authorization     string
-	LocalPolicy       bool
-	EdgeDirectory     bool
-	SeedMetadata      bool
-	EnableDirectoryV2 bool
+	Version        int
+	PolicyRegistry string
+	PolicyName     string
+	Resource       string
+	Authorization  string
+	LocalPolicy    bool
+	EdgeDirectory  bool
 
 	TenantID     string
 	DiscoveryURL string

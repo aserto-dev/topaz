@@ -60,11 +60,10 @@ linters:
         - stdlib
         - generic
         - proto.Message
+        - http.Handler
+        - grpc.DialOption
+        - grpc.ServerOption
         - plugins.Plugin
-        - decisionlog.DecisionLogger
-        - resolvers.DirectoryResolver
-        - resolvers.RuntimeResolver
-        - v3.ReaderClient
 
     lll:
       line-length: 150
@@ -80,6 +79,9 @@ linters:
           yaml: snake
 
         overrides:
+          - pkg: pkg/console
+            rules:
+              json: camel
           - pkg: pkg/app/handlers
             rules:
               json: camel
