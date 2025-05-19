@@ -4,27 +4,36 @@ import (
 	"bytes"
 	"strings"
 
-	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/plugins/noop"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/util"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+
+	client "github.com/aserto-dev/go-aserto"
+
+	"github.com/aserto-dev/topaz/plugins/noop"
 )
+
+type HealthReporter interface {
+	SetServingStatus(service string, servingStatus healthpb.HealthCheckResponse_ServingStatus)
+}
 
 type PluginFactory struct {
 	dsCfg  *client.Config
 	logger *zerolog.Logger
+	health HealthReporter
 }
 
 var _ plugins.Factory = (*PluginFactory)(nil)
 
-func NewPluginFactory(cfg *client.Config, logger *zerolog.Logger) *PluginFactory {
+func NewPluginFactory(cfg *client.Config, logger *zerolog.Logger, health HealthReporter) *PluginFactory {
 	return &PluginFactory{
 		dsCfg:  cfg,
 		logger: logger,
+		health: health,
 	}
 }
 
@@ -41,7 +50,7 @@ func (f PluginFactory) New(m *plugins.Manager, config any) plugins.Plugin {
 		}
 	}
 
-	return newEdgePlugin(f.logger, cfg, f.dsCfg, m)
+	return newEdgePlugin(f.logger, cfg, f.dsCfg, m, f.health)
 }
 
 func (PluginFactory) Validate(m *plugins.Manager, config []byte) (any, error) {

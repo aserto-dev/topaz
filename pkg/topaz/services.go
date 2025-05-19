@@ -5,19 +5,23 @@ import (
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
 	"github.com/samber/lo"
 
 	client "github.com/aserto-dev/go-aserto"
 
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	"github.com/aserto-dev/topaz/pkg/directory"
+	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/servers"
 	"github.com/aserto-dev/topaz/pkg/topaz/config"
+	"github.com/aserto-dev/topaz/plugins/edge"
 )
 
 type topazServices struct {
 	directory  *directory.Service
 	authorizer *authorizer.Service
+	health     *health.Service
 }
 
 func (s *topazServices) Directory() *directory.Service {
@@ -26,6 +30,10 @@ func (s *topazServices) Directory() *directory.Service {
 
 func (s *topazServices) Authorizer() *authorizer.Service {
 	return s.authorizer
+}
+
+func (s *topazServices) Health() *health.Service {
+	return s.health
 }
 
 func (s *topazServices) Close(ctx context.Context) error {
@@ -39,12 +47,14 @@ func (s *topazServices) Close(ctx context.Context) error {
 }
 
 func newTopazServices(ctx context.Context, cfg *config.Config) (*topazServices, error) {
+	healthSvc := health.New(&cfg.Health)
+
 	dir, err := newDirectory(ctx, cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	authz, err := newAuthorizer(ctx, cfg)
+	authz, err := newAuthorizer(ctx, cfg, healthSvc)
 	if err != nil {
 		return nil, err
 	}
@@ -52,6 +62,7 @@ func newTopazServices(ctx context.Context, cfg *config.Config) (*topazServices, 
 	return &topazServices{
 		directory:  dir,
 		authorizer: authz,
+		health:     healthSvc,
 	}, nil
 }
 
@@ -63,14 +74,15 @@ func newDirectory(ctx context.Context, cfg *config.Config) (*directory.Service, 
 	return directory.New(ctx, &cfg.Directory)
 }
 
-func newAuthorizer(ctx context.Context, cfg *config.Config) (*authorizer.Service, error) {
+func newAuthorizer(ctx context.Context, cfg *config.Config, healthSvc *health.Service) (*authorizer.Service, error) {
 	if !cfg.Servers.ServiceEnabled(servers.Service.Authorizer) {
 		return &authorizer.Service{}, nil
 	}
 
 	dsCfg := dsConfig(cfg)
+	edgeFactory := edge.NewPluginFactory(dsCfg, zerolog.Ctx(ctx), healthSvc)
 
-	az, err := authorizer.New(ctx, &cfg.Authorizer, dsCfg)
+	az, err := authorizer.New(ctx, &cfg.Authorizer, edgeFactory, dsCfg)
 	if err != nil {
 		return nil, err
 	}

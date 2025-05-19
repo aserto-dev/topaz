@@ -3,6 +3,7 @@ package health
 import (
 	"html/template"
 	"io"
+	"time"
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/aserto-dev/topaz/pkg/config"
@@ -19,8 +20,9 @@ var _ config.Section = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
 	return map[string]any{
-		"enabled":        false,
-		"listen_address": "0.0.0.0:9494",
+		"enabled":            false,
+		"listen_address":     "0.0.0.0:9494",
+		"connection_timeout": 5 * time.Second,
 	}
 }
 

@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 
 	"github.com/aserto-dev/topaz/pkg/authentication"
@@ -25,6 +26,7 @@ import (
 type TopazServices interface {
 	Directory() *directory.Service
 	Authorizer() *authorizer.Service
+	Health() *health.Service
 }
 
 type serverBuilder struct {
@@ -82,6 +84,10 @@ func (b *serverBuilder) Build(ctx context.Context, cfg *servers.Server) (*server
 		httpServer.AttachGateway("/api/", gwMux)
 	}
 
+	for _, service := range cfg.Services {
+		b.services.Health().SetServingStatus(string(service), healthpb.HealthCheckResponse_SERVING)
+	}
+
 	return &server{grpc: grpcServer, http: httpServer}, nil
 }
 
@@ -95,8 +101,8 @@ func (b *serverBuilder) BuildHealth(cfg *health.Config) (*grpcServer, error) {
 		return nil, err
 	}
 
-	svc := health.New(cfg)
-	svc.RegisterHealthServer(server.Server)
+	b.services.Health().RegisterHealthServer(server.Server)
+	reflection.Register(server)
 
 	return server, nil
 }

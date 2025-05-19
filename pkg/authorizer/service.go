@@ -29,7 +29,7 @@ type Service struct {
 	close func(context.Context) error
 }
 
-func New(ctx context.Context, cfg *Config, dsCfg *client.Config) (*Service, error) {
+func New(ctx context.Context, cfg *Config, edgeFactory *edge.PluginFactory, dsCfg *client.Config) (*Service, error) {
 	var closer x.Closer
 
 	dirConn, err := dsCfg.Connect()
@@ -46,8 +46,6 @@ func New(ctx context.Context, cfg *Config, dsCfg *client.Config) (*Service, erro
 	}
 
 	closer = append(closer, x.CloserFunc(decisionLogger.Shutdown))
-
-	edgeFactory := edge.NewPluginFactory(dsCfg, zerolog.Ctx(ctx))
 
 	dsReader := dsr3.NewReaderClient(dirConn)
 
