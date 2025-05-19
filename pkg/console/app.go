@@ -2,7 +2,6 @@ package console
 
 import (
 	"net/http"
-	"strings"
 
 	gorilla "github.com/gorilla/mux"
 
@@ -24,12 +23,12 @@ type publicFS struct {
 }
 
 func (fs publicFS) Open(name string) (http.File, error) {
-	return fs.FileSystem.Open("console" + strings.TrimPrefix(name, "/public"))
+	return fs.FileSystem.Open("console" + name)
 }
 
 func RegisterAppHandlers(router *gorilla.Router) {
 	// All paths that start with '/ui/' serve the same content ('console/index.html').
 	router.PathPrefix("/ui/").Handler(http.FileServer(uiFS{http.FS(console.FS)}))
 
-	router.PathPrefix("/public/").Handler(http.FileServer(publicFS{http.FS(console.FS)}))
+	router.PathPrefix("/assets/").Handler(http.FileServer(publicFS{http.FS(console.FS)}))
 }
