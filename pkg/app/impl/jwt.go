@@ -14,7 +14,7 @@ import (
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/pb"
-	"github.com/aserto-dev/topaz/directory"
+	"github.com/aserto-dev/topaz/pkg/directory"
 
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jwt"

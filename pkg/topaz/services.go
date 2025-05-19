@@ -9,7 +9,6 @@ import (
 
 	client "github.com/aserto-dev/go-aserto"
 
-	"github.com/aserto-dev/topaz/pkg/app"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/servers"
@@ -19,7 +18,6 @@ import (
 type topazServices struct {
 	directory  *directory.Service
 	authorizer *authorizer.Service
-	console    *app.ConsoleService
 }
 
 func (s *topazServices) Directory() *directory.Service {
@@ -54,7 +52,6 @@ func newTopazServices(ctx context.Context, cfg *config.Config) (*topazServices, 
 	return &topazServices{
 		directory:  dir,
 		authorizer: authz,
-		console:    app.NewConsole(),
 	}, nil
 }
 

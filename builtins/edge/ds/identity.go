@@ -10,7 +10,8 @@ import (
 	"github.com/open-policy-agent/opa/v1/types"
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/topaz/directory"
+
+	"github.com/aserto-dev/topaz/pkg/directory"
 )
 
 // RegisterIdentity - ds.identity - get user id (key) for identity

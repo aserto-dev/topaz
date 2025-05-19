@@ -21,7 +21,6 @@ SVU_VER 	         := 3.1.0
 GOTESTSUM_VER      := 1.12.1
 GOLANGCI-LINT_VER  := 2.0.2
 GORELEASER_VER     := 2.8.2
-WIRE_VER	         := 0.6.0
 CHECK2DECISION_VER := 0.1.0
 SYFT_VER           := 1.13.0
 
@@ -30,7 +29,7 @@ RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 .DEFAULT_GOAL      := build
 
 .PHONY: deps
-deps: info install-vault install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire install-check2decision install-syft
+deps: info install-vault install-svu install-goreleaser install-golangci-lint install-gotestsum install-check2decision install-syft
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
@@ -179,11 +178,6 @@ install-goreleaser: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@tar -xvf ${EXT_TMP_DIR}/goreleaser.tar.gz --directory ${EXT_BIN_DIR} goreleaser &> /dev/null
 	@chmod +x ${EXT_BIN_DIR}/goreleaser
 	@${EXT_BIN_DIR}/goreleaser --version
-
-.PHONY: install-wire
-install-wire: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@GOBIN=${EXT_BIN_DIR} go install github.com/google/wire/cmd/wire@v${WIRE_VER}
 
 .PHONY: install-check2decision
 install-check2decision: ${EXT_TMP_DIR} ${EXT_BIN_DIR}

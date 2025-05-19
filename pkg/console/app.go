@@ -30,5 +30,10 @@ func RegisterAppHandlers(router *gorilla.Router) {
 	// All paths that start with '/ui/' serve the same content ('console/index.html').
 	router.PathPrefix("/ui/").Handler(http.FileServer(uiFS{http.FS(console.FS)}))
 
+	// Redirect 'GET /' to the directory model page.
+	router.Path("/").Methods(http.MethodGet).HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/ui/directory/model", http.StatusSeeOther)
+	})
+
 	router.PathPrefix("/assets/").Handler(http.FileServer(publicFS{http.FS(console.FS)}))
 }
