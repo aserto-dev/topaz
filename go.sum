@@ -62,6 +62,8 @@ github.com/aserto-dev/self-decision-logger v0.0.12 h1:oMU43OCjgEMcsAx5EraWTncqyZ
 github.com/aserto-dev/self-decision-logger v0.0.12/go.mod h1:nF3SyHJoMS5KbGm+EHF2BlDyNpzjPgodfp6H4MWS6QU=
 github.com/authzen/access.go v0.0.5 h1:JXrfAS5uUyI0nJlvG0wfoP7DJX9mw+3fVaKFMqCsaKk=
 github.com/authzen/access.go v0.0.5/go.mod h1:h9qMN1urfdCBFKEcLxgSTE9uK3KiyKCG8LZqOwftVYA=
+github.com/authzen/access.go v0.0.6 h1:yrsv1PSkXV+8flncvRjnL223Pbfks1xX63IGu+D4BDg=
+github.com/authzen/access.go v0.0.6/go.mod h1:h9qMN1urfdCBFKEcLxgSTE9uK3KiyKCG8LZqOwftVYA=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
@@ -283,6 +285,7 @@ github.com/mitchellh/copystructure v1.2.0 h1:vpKXTN4ewci03Vljg/q9QvCGUDttBOGBIa1
 github.com/mitchellh/copystructure v1.2.0/go.mod h1:qLl+cE2AmVv+CoeAwDPye/v+N2HKCj9FbZEVFJRxO9s=
 github.com/mitchellh/go-wordwrap v1.0.1 h1:TLuKupo69TCn6TQSyGxwI1EblZZEsQ0vMlAFQflz0v0=
 github.com/mitchellh/go-wordwrap v1.0.1/go.mod h1:R62XHJLzvMFRBbcrT7m7WgmE1eOyTSsCt+hzestvNj0=
+github.com/mitchellh/hashstructure v1.1.0 h1:P6P1hdjqAAknpY/M1CGipelZgp+4y9ja9kmUZPXP+H0=
 github.com/mitchellh/hashstructure/v2 v2.0.2 h1:vGKWl0YJqUNxE8d+h8f6NJLcCJrgbhC4NcD46KavDd4=
 github.com/mitchellh/hashstructure/v2 v2.0.2/go.mod h1:MG3aRVU/N29oo/V/IhBX8GR/zz4kQkprJgF2EVszyDE=
 github.com/mitchellh/reflectwalk v1.0.2 h1:G2LzWKi524PWgd3mLHV8Y5k7s6XUvT0Gef6zxSIeXaQ=
