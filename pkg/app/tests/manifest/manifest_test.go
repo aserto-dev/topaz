@@ -41,7 +41,7 @@ func TestManifest(t *testing.T) {
 			{
 				Reader:            assets_test.ConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0x700,
+				FileMode:          0o700,
 			},
 		},
 		WaitingFor: wait.ForAll(
@@ -75,7 +75,7 @@ func testManifest(addr string) func(*testing.T) {
 	return func(t *testing.T) {
 		opts := []client.ConnectionOption{
 			client.WithAddr(addr),
-			client.WithInsecure(true),
+			client.WithNoTLS(true),
 		}
 
 		dsClient, err := dsc.New(opts...)

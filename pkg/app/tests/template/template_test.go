@@ -1,4 +1,4 @@
-package template_test
+package template_no_tls_test
 
 import (
 	"context"
@@ -16,7 +16,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func TestTemplates(t *testing.T) {
+func TestTemplatesNoTLS(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
@@ -33,7 +33,7 @@ func TestTemplates(t *testing.T) {
 			{
 				Reader:            assets_test.ConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0x700,
+				FileMode:          0o700,
 			},
 		},
 		WaitingFor: wait.ForAll(
@@ -62,20 +62,20 @@ func TestTemplates(t *testing.T) {
 
 	dsConfig := &dsc.Config{
 		Host:      addr,
-		Insecure:  true,
-		Plaintext: false,
+		Insecure:  false,
+		Plaintext: true,
 		Timeout:   10 * time.Second,
 	}
 
 	azConfig := &azc.Config{
 		Host:      addr,
-		Insecure:  true,
-		Plaintext: false,
+		Insecure:  false,
+		Plaintext: true,
 		Timeout:   10 * time.Second,
 	}
 
 	for _, tmpl := range tcs {
-		t.Run("testTemplate", tc.InstallTemplate(dsConfig, azConfig, tmpl))
+		t.Run("testTemplatesWithNoTLS", tc.InstallTemplate(dsConfig, azConfig, tmpl))
 	}
 }
 

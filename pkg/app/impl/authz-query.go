@@ -28,7 +28,7 @@ func (s *AuthorizerServer) Query(ctx context.Context, req *authorizer.QueryReque
 
 	log.Debug().Str("query", req.GetQuery()).Interface("input", input).Msg("query")
 
-	rt, err := s.getRuntime(ctx, req.GetPolicyInstance())
+	rt, err := s.getRuntime(ctx, s.instanceName(req))
 	if err != nil {
 		return &authorizer.QueryResponse{}, err
 	}

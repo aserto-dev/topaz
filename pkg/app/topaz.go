@@ -13,9 +13,9 @@ import (
 	"github.com/aserto-dev/topaz/decisionlog"
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/decisionlog/logger/nop"
-	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
+	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
 
@@ -41,7 +41,6 @@ const (
 type Topaz struct {
 	Context        context.Context
 	Logger         *zerolog.Logger
-	ServerOptions  []grpc.ServerOption
 	Configuration  *config.Config
 	ServiceBuilder *builder.ServiceFactory
 	Manager        *builder.ServiceManager
@@ -66,10 +65,6 @@ func SetServiceStatus(log *zerolog.Logger, service string, servingStatus grpc_he
 		log.Info().Str("service", service).Str("status", servingStatus.String()).Msg("health")
 		healthCheck.SetServingStatus(service, servingStatus)
 	}
-}
-
-func (e *Topaz) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
-	e.ServerOptions = append(e.ServerOptions, grpcOptions...)
 }
 
 // Start starts all services required by the engine.
@@ -203,10 +198,9 @@ func (e *Topaz) ConfigServices() error {
 		if con, ok := e.Services[consoleService]; ok {
 			if lo.Contains(serviceConfig.registeredServices, consoleService) {
 				if server.Gateway != nil && server.Gateway.Mux != nil {
-					apiKeyAuthMiddleware, err := auth.NewAPIKeyAuthMiddleware(e.Context, &e.Configuration.Auth, e.Logger)
-					if err != nil {
-						return err
-					}
+					authnCfg := middlewares.MigAuthnConfig(&e.Configuration.Auth)
+
+					apiKeyAuthMiddleware := authentication.NewMiddleware(&authnCfg)
 
 					consoleSvc, ok := con.(*ConsoleService)
 					if !ok {
@@ -217,7 +211,7 @@ func (e *Topaz) ConfigServices() error {
 
 					// config service.
 					server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
-					server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
+					server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigHandler(handlers.ConfigHandlerV2(consoleConfig)))
 					server.Gateway.Mux.HandleFunc("/api/v1/authorizers", handlers.AuthorizersHandler(consoleConfig))
 					// console service. depends on config service.
 					server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))
@@ -272,14 +266,14 @@ func (e *Topaz) prepareServices() error {
 		e.Services["edge"] = edgeDir
 	}
 
-	if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
-		authorizer, err := NewAuthorizer(e.Context, serviceConfig, &e.Configuration.Common, nil, e.Logger)
-		if err != nil {
-			return err
-		}
-
-		e.Services["authorizer"] = authorizer
-	}
+	// if serviceConfig, ok := e.Configuration.APIConfig.Services[authorizerService]; ok {
+	// 	authorizer, err := NewAuthorizer(e.Context, serviceConfig, &e.Configuration.Common, nil, e.Logger)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	//
+	// 	e.Services["authorizer"] = authorizer
+	// }
 
 	if _, ok := e.Configuration.APIConfig.Services[consoleService]; ok {
 		e.Services["console"] = NewConsole()
@@ -324,7 +318,7 @@ func KeepAliveDialOption() []grpc.DialOption {
 	return []grpc.DialOption{grpc.WithKeepaliveParams(kacp)}
 }
 
-func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
+func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) { //nolint:ireturn
 	switch cfg.Type {
 	case "self":
 		return self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
