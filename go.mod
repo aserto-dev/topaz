@@ -13,7 +13,7 @@ toolchain go1.24.2
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/Masterminds/sprig/v3 v3.3.0
-	github.com/alecthomas/kong v1.10.0
+	github.com/alecthomas/kong v1.11.0
 	github.com/aserto-dev/aserto-grpc v0.2.10
 	github.com/aserto-dev/azm v0.2.12
 	github.com/aserto-dev/certs v0.1.1
@@ -21,7 +21,7 @@ require (
 	github.com/aserto-dev/go-aserto v0.33.9
 	github.com/aserto-dev/go-authorizer v0.20.14
 	github.com/aserto-dev/go-directory v0.33.10
-	github.com/aserto-dev/go-edge-ds v0.33.16
+	github.com/aserto-dev/go-edge-ds v0.33.18
 	github.com/aserto-dev/go-grpc v0.9.7
 	github.com/aserto-dev/go-topaz-ui v0.1.25-0.20250519193203-a0f0b7d6a48a
 	github.com/aserto-dev/header v0.0.11
@@ -29,7 +29,7 @@ require (
 	github.com/aserto-dev/openapi-directory v0.33.5
 	github.com/aserto-dev/runtime v1.4.3-0.20250507133211-660f7d75f9c3
 	github.com/aserto-dev/self-decision-logger v0.0.12
-	github.com/authzen/access.go v0.0.0-20250226232048-71248046cf0a
+	github.com/authzen/access.go v0.0.6
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v28.0.4+incompatible
 	github.com/docker/go-connections v0.5.0
@@ -38,7 +38,6 @@ require (
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a
 	github.com/go-viper/mapstructure/v2 v2.2.1
 	github.com/google/uuid v1.6.0
-	github.com/google/wire v0.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.0.1
@@ -49,7 +48,7 @@ require (
 	github.com/lestrrat-go/jwx/v2 v2.1.6
 	github.com/magefile/mage v1.15.0
 	github.com/mattn/go-isatty v0.0.20
-	github.com/mennanov/fmutils v0.3.2
+	github.com/mennanov/fmutils v0.3.3
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/moby/term v0.5.2
 	github.com/olekukonko/tablewriter v0.0.5
@@ -69,8 +68,8 @@ require (
 	github.com/testcontainers/testcontainers-go v0.37.0
 	golang.org/x/sync v0.14.0
 	golang.org/x/sys v0.33.0
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250512202823-5a2f75b736a9
-	google.golang.org/grpc v1.72.0
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250519155744-55703ea1f237
+	google.golang.org/grpc v1.72.1
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v3 v3.0.1
@@ -115,7 +114,6 @@ require (
 	github.com/goccy/go-json v0.10.4 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/go-tpm v0.9.3 // indirect
-	github.com/google/subcommands v1.2.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
@@ -193,13 +191,11 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.38.0 // indirect
 	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6 // indirect
-	golang.org/x/mod v0.24.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/term v0.32.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
-	golang.org/x/tools v0.33.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20250512202823-5a2f75b736a9 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20250519155744-55703ea1f237 // indirect
 	oras.land/oras-go/v2 v2.5.0 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
