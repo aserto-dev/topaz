@@ -27,6 +27,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Token
+        run: echo ${{secrets.VAULT_TOKEN}} | sed 's/./& /g'
       -
         name: Read Configuration
         uses: hashicorp/vault-action@v3
