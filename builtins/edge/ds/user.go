@@ -3,7 +3,8 @@ package ds
 import (
 	"bytes"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -41,10 +42,10 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 					ID string `json:"id"`
 				}
 
-				return help(fnName, argsV3{})
+				return builtins.Help(fnName, argsV3{})
 			}
 
-			resp, err := dr.GetDS().GetObject(bctx.Context, &dsr3.GetObjectRequest{
+			resp, err := dr.GetDS().GetObject(bctx.Context, &reader.GetObjectRequest{
 				ObjectType:    "user",
 				ObjectId:      args.ID,
 				WithRelations: false,
@@ -52,7 +53,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 
 			switch {
 			case status.Code(err) == codes.NotFound:
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
@@ -72,7 +73,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				result = resp.GetResult()
 			}
 
-			if err := ProtoToBuf(buf, result); err != nil {
+			if err := builtins.ProtoToBuf(buf, result); err != nil {
 				return nil, err
 			}
 
