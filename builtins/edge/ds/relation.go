@@ -3,8 +3,9 @@ package ds
 import (
 	"bytes"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/samber/lo"
@@ -37,30 +38,22 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args dsr3.GetRelationRequest
+			var args reader.GetRelationRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
-			if proto.Equal(&args, &dsr3.GetRelationRequest{}) {
-				return helpMsg(fnName, &dsr3.GetRelationRequest{
-					ObjectType:      "",
-					ObjectId:        "",
-					Relation:        "",
-					SubjectType:     "",
-					SubjectId:       "",
-					SubjectRelation: "",
-					WithObjects:     false,
-				})
+			if proto.Equal(&args, &reader.GetRelationRequest{}) {
+				return builtins.HelpMsg(fnName, getRelationHelp())
 			}
 
 			resp, err := dr.GetDS().GetRelation(bctx.Context, &args)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
@@ -80,7 +73,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				result = resp
 			}
 
-			if err := ProtoToBuf(buf, result); err != nil {
+			if err := builtins.ProtoToBuf(buf, result); err != nil {
 				return nil, err
 			}
 
@@ -91,6 +84,18 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+func getRelationHelp() *reader.GetRelationRequest {
+	return &reader.GetRelationRequest{
+		ObjectType:      "",
+		ObjectId:        "",
+		Relation:        "",
+		SubjectType:     "",
+		SubjectId:       "",
+		SubjectRelation: "",
+		WithObjects:     false,
+	}
 }
 
 // RegisterRelations - ds.relations
@@ -112,25 +117,25 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args dsr3.GetRelationsRequest
+			var args reader.GetRelationsRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
-			if proto.Equal(&args, &dsr3.GetRelationsRequest{}) {
-				return helpMsg(fnName, &dsr3.GetRelationsRequest{})
+			if proto.Equal(&args, &reader.GetRelationsRequest{}) {
+				return builtins.HelpMsg(fnName, getRelationsHelp())
 			}
 
-			args.Page = &dsc3.PaginationRequest{Size: x.MaxPaginationSize, Token: ""}
+			args.Page = &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""}
 
-			resp := &dsr3.GetRelationsResponse{}
+			resp := &reader.GetRelationsResponse{}
 
 			for {
 				r, err := dr.GetDS().GetRelations(bctx.Context, &args)
 				if err != nil {
-					traceError(&bctx, fnName, err)
+					builtins.TraceError(&bctx, fnName, err)
 					return nil, err
 				}
 
@@ -151,7 +156,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 				result = resp
 			}
 
-			if err := ProtoToBuf(buf, result); err != nil {
+			if err := builtins.ProtoToBuf(buf, result); err != nil {
 				return nil, err
 			}
 
@@ -162,4 +167,17 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+func getRelationsHelp() *reader.GetRelationsRequest {
+	return &reader.GetRelationsRequest{
+		ObjectType:               "",
+		ObjectId:                 "",
+		Relation:                 "",
+		SubjectType:              "",
+		SubjectId:                "",
+		SubjectRelation:          "",
+		WithObjects:              false,
+		WithEmptySubjectRelation: false,
+	}
 }

@@ -65,6 +65,7 @@ linters:
         - resolvers.DirectoryResolver
         - resolvers.RuntimeResolver
         - v3.ReaderClient
+        - v1.AccessClient
 
     lll:
       line-length: 150

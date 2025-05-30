@@ -3,7 +3,8 @@ package ds
 import (
 	"bytes"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 	"google.golang.org/protobuf/encoding/protojson"
 
@@ -39,32 +40,28 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 					ObjectID      string `json:"object_id,omitempty"`   // v3 object_id
 					WithRelations bool   `json:"with_relations"`        // v3 with_relations (false in case of v2)
 				}
-				req *dsr3.GetObjectRequest
+				req *reader.GetObjectRequest
 			)
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, errors.Wrapf(err, "failed to parse ds.object input message")
 			}
 
-			req = &dsr3.GetObjectRequest{
+			req = &reader.GetObjectRequest{
 				ObjectType:    args.ObjectType,
 				ObjectId:      args.ObjectID,
 				WithRelations: args.WithRelations,
 			}
 
-			if proto.Equal(req, &dsr3.GetObjectRequest{}) {
-				return helpMsg(fnName, &dsr3.GetObjectRequest{
-					ObjectType:    "",
-					ObjectId:      "",
-					WithRelations: false,
-				})
+			if proto.Equal(req, &reader.GetObjectRequest{}) {
+				return builtins.HelpMsg(fnName, getObjectHelp())
 			}
 
 			resp, err := dr.GetDS().GetObject(bctx.Context, req)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
@@ -77,7 +74,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			buf := new(bytes.Buffer)
-			if err := ProtoToBuf(buf, resp); err != nil {
+			if err := builtins.ProtoToBuf(buf, resp); err != nil {
 				return nil, err
 			}
 
@@ -102,4 +99,12 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+func getObjectHelp() *reader.GetObjectRequest {
+	return &reader.GetObjectRequest{
+		ObjectType:    "",
+		ObjectId:      "",
+		WithRelations: false,
+	}
 }
