@@ -28,7 +28,7 @@ jobs:
         uses: hashicorp/vault-action@v3
         id: vault
         with:
-          url: https://vault.eng.aserto.com/
+          url: https://vault.aserto.com/
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
               kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
