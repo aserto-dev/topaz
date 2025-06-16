@@ -68,5 +68,4 @@ const debugTemplate = `
 debug:
   enabled: {{ .Enabled }}
   listen_address: '{{ .ListenAddress}}'
-  shutdown_timeout: {{ .ShutdownTimeout }}
 `

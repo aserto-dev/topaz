@@ -30,7 +30,6 @@ authentication:
 debug:
   enabled: false
   listen_address: "0.0.0.0:6666"
-  shutdown_timeout: 0
 
 # health service settings.
 health:
