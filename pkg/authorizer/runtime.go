@@ -36,7 +36,7 @@ func NewRuntimeResolver(
 ) (*RuntimeResolver, error) {
 	logger := zerolog.Ctx(ctx)
 
-	runtime, err := rt.NewRuntime(ctx, logger, (*rt.Config)(&cfg.OPA),
+	runtime, err := rt.New(ctx, (*rt.Config)(&cfg.OPA),
 		// directory get functions
 		rt.WithBuiltin1(ds.RegisterIdentity(logger, "ds.identity", dsReader)),
 		rt.WithBuiltin1(ds.RegisterUser(logger, "ds.user", dsReader)),

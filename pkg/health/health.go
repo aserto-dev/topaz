@@ -18,6 +18,7 @@ type Config struct {
 
 var _ config.Section = (*Config)(nil)
 
+//nolint:mnd  // this is where default values are defined.
 func (c *Config) Defaults() map[string]any {
 	return map[string]any{
 		"enabled":            false,

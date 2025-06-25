@@ -23,23 +23,7 @@ type Topaz struct {
 	errGroup *errgroup.Group
 }
 
-func NewTopaz(ctx context.Context, configPath string, configOverrides ...config.ConfigOverride) (*Topaz, error) {
-	f, err := os.Open(configPath)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot read config file %q", configPath)
-	}
-
-	defer f.Close()
-
-	cfg, err := config.NewConfig(f, configOverrides...)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := cfg.Validate(); err != nil {
-		return nil, err
-	}
-
+func NewTopaz(ctx context.Context, cfg *config.Config) (*Topaz, error) {
 	log, err := logger.NewLogger(os.Stdout, os.Stderr, &cfg.Logging)
 	if err != nil {
 		return nil, err

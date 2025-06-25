@@ -2,12 +2,15 @@ package main
 
 import (
 	"context"
+	"os"
 	"time"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
 	"github.com/aserto-dev/topaz/pkg/cc/signals"
 	"github.com/aserto-dev/topaz/pkg/topaz"
 	"github.com/aserto-dev/topaz/pkg/topaz/config"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -27,10 +30,15 @@ var cmdRun = &cobra.Command{
 	RunE:  run,
 }
 
-func run(cmd *cobra.Command, args []string) error {
+func run(_ *cobra.Command, _ []string) error {
 	ctx := signals.SetupSignalHandler()
 
-	app, err := topaz.NewTopaz(ctx, flagRunConfigFile, configOverrides)
+	cfg, err := newConfig(flagRunConfigFile, configOverrides)
+	if err != nil {
+		return err
+	}
+
+	app, err := topaz.NewTopaz(ctx, cfg)
 	if err != nil {
 		return err
 	}
@@ -45,6 +53,30 @@ func run(cmd *cobra.Command, args []string) error {
 	<-ctx.Done()
 
 	return stopAndWait(app)
+}
+
+func newConfig(configPath string, configOverrides ...func(*config.Config)) (*config.Config, error) {
+	f, err := os.Open(configPath)
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot read config file %q", configPath)
+	}
+
+	defer f.Close()
+
+	cfg, err := config.NewConfig(f)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, override := range configOverrides {
+		override(cfg)
+	}
+
+	if err := cfg.Validate(); err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
 }
 
 func stopAndWait(app *topaz.Topaz) error {

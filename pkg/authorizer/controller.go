@@ -12,18 +12,16 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
-	"github.com/aserto-dev/runtime"
 	rt "github.com/aserto-dev/runtime"
 	"github.com/open-policy-agent/opa/v1/plugins/discovery"
 
-	"github.com/aserto-dev/topaz/controller"
 	ctrl "github.com/aserto-dev/topaz/controller"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/plugins/edge"
 )
 
-type ControllerConfig controller.Config
+type ControllerConfig ctrl.Config
 
 var _ config.Section = (*ControllerConfig)(nil)
 
@@ -94,7 +92,7 @@ func newController(cfg *Config, logger *zerolog.Logger, runtime *rt.Runtime) (*c
 	)
 }
 
-func commandHandler(r *runtime.Runtime) controller.CommandFunc {
+func commandHandler(r *rt.Runtime) ctrl.CommandFunc {
 	return func(ctx context.Context, cmd *api.Command) error {
 		switch msg := cmd.GetData().(type) {
 		case *api.Command_Discovery:

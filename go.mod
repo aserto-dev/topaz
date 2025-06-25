@@ -21,7 +21,7 @@ require (
 	github.com/aserto-dev/header v0.0.11
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-directory v0.33.5
-	github.com/aserto-dev/runtime v1.5.2-0.20250616202755-d9163a30cd7f
+	github.com/aserto-dev/runtime v1.5.2
 	github.com/aserto-dev/self-decision-logger v0.0.12
 	github.com/authzen/access.go v0.0.6
 	github.com/cli/browser v1.3.0

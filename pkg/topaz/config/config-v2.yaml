@@ -12,11 +12,11 @@ logging:
 # edge directory configuration.
 directory:
   db_path: '${TOPAZ_DB_DIR}/gdrive.db'
-  request_timeout: 5s # set as default, 5 secs.
+  request_timeout: 5s
 
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:
-  address: "0.0.0.0:9292" # set as default, it should be the same as the reader as we resolve the identity from the local directory service.
+  address: "0.0.0.0:9292"
   tenant_id: ""
   api_key: ""
   token: ""
@@ -25,17 +25,16 @@ remote_directory:
   ca_cert_path: ""
   insecure: true
   no_tls: false
-  headers:
+  headers: {}
 
 # default jwt validation configuration
 jwt:
-  acceptable_time_skew_seconds: 5 # set as default, 5 secs
+  acceptable_time_skew_seconds: 5
 
 # authentication configuration
 auth:
   keys:
-    # - "<API key>"
-    # - "<Password>"
+    - api_key_1
   options:
     default:
       enable_api_key: false
@@ -70,30 +69,30 @@ api:
         listen_address: "0.0.0.0:8080"
         fqdn: ""
         allowed_headers:
-        - "Authorization"
-        - "Content-Type"
-        - "If-Match"
-        - "If-None-Match"
-        - "Depth"
+          - "Authorization"
+          - "Content-Type"
+          - "If-Match"
+          - "If-None-Match"
+          - "Depth"
         allowed_methods:
-        - "GET"
-        - "POST"
-        - "HEAD"
-        - "DELETE"
-        - "PUT"
-        - "PATCH"
-        - "PROFIND"
-        - "MKCOL"
-        - "COPY"
-        - "MOVE"
+          - "GET"
+          - "POST"
+          - "HEAD"
+          - "DELETE"
+          - "PUT"
+          - "PATCH"
+          - "PROFIND"
+          - "MKCOL"
+          - "COPY"
+          - "MOVE"
         allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+          - http://localhost
+          - http://localhost:*
+          - https://localhost
+          - https://localhost:*
+          - https://0.0.0.0:*
+          - https://*.aserto.com
+          - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -116,29 +115,29 @@ api:
         listen_address: "0.0.0.0:9393"
         fqdn: ""
         allowed_headers:
-        - "Authorization"
-        - "Content-Type"
-        - "If-Match"
-        - "If-None-Match"
-        - "Depth"
+          - "Authorization"
+          - "Content-Type"
+          - "If-Match"
+          - "If-None-Match"
+          - "Depth"
         allowed_methods:
-        - "GET"
-        - "POST"
-        - "HEAD"
-        - "DELETE"
-        - "PUT"
-        - "PATCH"
-        - "PROFIND"
-        - "MKCOL"
-        - "COPY"
-        - "MOVE"
+          - "GET"
+          - "POST"
+          - "HEAD"
+          - "DELETE"
+          - "PUT"
+          - "PATCH"
+          - "PROFIND"
+          - "MKCOL"
+          - "COPY"
+          - "MOVE"
         allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+          - http://localhost
+          - http://localhost:*
+          - https://localhost
+          - https://localhost:*
+          - https://*.aserto.com
+          - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -163,30 +162,30 @@ api:
         listen_address: "0.0.0.0:9393"
         fqdn: ""
         allowed_headers:
-        - "Authorization"
-        - "Content-Type"
-        - "If-Match"
-        - "If-None-Match"
-        - "Depth"
+          - "Authorization"
+          - "Content-Type"
+          - "If-Match"
+          - "If-None-Match"
+          - "Depth"
         allowed_methods:
-        - "GET"
-        - "POST"
-        - "HEAD"
-        - "DELETE"
-        - "PUT"
-        - "PATCH"
-        - "PROFIND"
-        - "MKCOL"
-        - "COPY"
-        - "MOVE"
+          - "GET"
+          - "POST"
+          - "HEAD"
+          - "DELETE"
+          - "PUT"
+          - "PATCH"
+          - "PROFIND"
+          - "MKCOL"
+          - "COPY"
+          - "MOVE"
         allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+          - http://localhost
+          - http://localhost:*
+          - https://localhost
+          - https://localhost:*
+          - https://0.0.0.0:*
+          - https://*.aserto.com
+          - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -211,29 +210,29 @@ api:
         listen_address: "0.0.0.0:9393"
         fqdn: ""
         allowed_headers:
-        - "Authorization"
-        - "Content-Type"
-        - "If-Match"
-        - "If-None-Match"
-        - "Depth"
+          - "Authorization"
+          - "Content-Type"
+          - "If-Match"
+          - "If-None-Match"
+          - "Depth"
         allowed_methods:
-        - "GET"
-        - "POST"
-        - "HEAD"
-        - "DELETE"
-        - "PUT"
-        - "PATCH"
-        - "PROFIND"
-        - "MKCOL"
-        - "COPY"
-        - "MOVE"
+          - "GET"
+          - "POST"
+          - "HEAD"
+          - "DELETE"
+          - "PUT"
+          - "PATCH"
+          - "PROFIND"
+          - "MKCOL"
+          - "COPY"
+          - "MOVE"
         allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+          - http://localhost
+          - http://localhost:*
+          - https://localhost
+          - https://localhost:*
+          - https://*.aserto.com
+          - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -279,30 +278,30 @@ api:
         listen_address: "0.0.0.0:8383"
         fqdn: ""
         allowed_headers:
-        - "Authorization"
-        - "Content-Type"
-        - "If-Match"
-        - "If-None-Match"
-        - "Depth"
+          - "Authorization"
+          - "Content-Type"
+          - "If-Match"
+          - "If-None-Match"
+          - "Depth"
         allowed_methods:
-        - "GET"
-        - "POST"
-        - "HEAD"
-        - "DELETE"
-        - "PUT"
-        - "PATCH"
-        - "PROFIND"
-        - "MKCOL"
-        - "COPY"
-        - "MOVE"
+          - "GET"
+          - "POST"
+          - "HEAD"
+          - "DELETE"
+          - "PUT"
+          - "PATCH"
+          - "PROFIND"
+          - "MKCOL"
+          - "COPY"
+          - "MOVE"
         allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
+          - http://localhost
+          - http://localhost:*
+          - https://localhost
+          - https://localhost:*
+          - https://0.0.0.0:*
+          - https://*.aserto.com
+          - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'

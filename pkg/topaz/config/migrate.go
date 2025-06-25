@@ -1,9 +1,8 @@
-package migrate
+package config
 
 import (
 	"fmt"
 	"io"
-	"os"
 	"time"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
@@ -18,38 +17,35 @@ import (
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/servers"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
-	config3 "github.com/aserto-dev/topaz/pkg/topaz/config"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
 )
 
-// Load version 2 config file, without substituting environment variables.
+// LoadConfigV2 loads version 2 config file, without substituting environment variables.
 func LoadConfigV2(r io.Reader) (*config2.Config, error) {
 	cfg2 := &config2.Config{}
 
 	v := viper.NewWithOptions()
 	v.SetConfigType("yaml")
-
 	v.ReadConfig(r)
 
-	if err := v.Unmarshal(cfg2, func(dc *mapstructure.DecoderConfig) { dc.TagName = "json" }); err != nil {
+	if err := v.Unmarshal(cfg2, useJSONTags); err != nil {
 		return nil, err
 	}
 
 	return cfg2, nil
 }
 
-func Migrate(cfg2 *config2.Config) (*config3.Config, error) {
-	cfg3 := &config3.Config{Version: config3.Version}
-
+func Migrate(cfg2 *config2.Config, cfg3 *Config) error {
+	cfg3.Version = Version
 	cfg3.Logging = cfg2.Logging
 
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Fprintln(os.Stderr, "recovered in ", r)
-		}
-	}()
+	// defer func() {
+	// 	if r := recover(); r != nil {
+	// 		fmt.Fprintln(os.Stderr, "recovered in ", r)
+	// 	}
+	// }()
 
 	migAuthentication(cfg2, cfg3)
 
@@ -65,10 +61,10 @@ func Migrate(cfg2 *config2.Config) (*config3.Config, error) {
 
 	migAuthorizer(cfg2, cfg3)
 
-	return cfg3, nil
+	return nil
 }
 
-func migAuthentication(cfg2 *config2.Config, cfg3 *config3.Config) {
+func migAuthentication(cfg2 *config2.Config, cfg3 *Config) {
 	cfg3.Authentication = migAuthnConfig(&cfg2.Auth)
 }
 
@@ -100,7 +96,7 @@ func migAuthnOptions(v2 *config2.Options) authentication.Options {
 	}
 }
 
-func migDebug(cfg2 *config2.Config, cfg3 *config3.Config) {
+func migDebug(cfg2 *config2.Config, cfg3 *Config) {
 	cfg3.Debug = debug.Config{
 		Enabled: cfg2.DebugService.Enabled,
 		HTTPServer: servers.HTTPServer{
@@ -109,7 +105,7 @@ func migDebug(cfg2 *config2.Config, cfg3 *config3.Config) {
 	}
 }
 
-func migMetrics(cfg2 *config2.Config, cfg3 *config3.Config) {
+func migMetrics(cfg2 *config2.Config, cfg3 *Config) {
 	cfg3.Metrics = metrics.Config{
 		Enabled:       cfg2.APIConfig.Metrics.ListenAddress != "",
 		ListenAddress: cfg2.APIConfig.Metrics.ListenAddress,
@@ -117,7 +113,7 @@ func migMetrics(cfg2 *config2.Config, cfg3 *config3.Config) {
 	}
 }
 
-func migHealth(cfg2 *config2.Config, cfg3 *config3.Config) {
+func migHealth(cfg2 *config2.Config, cfg3 *Config) {
 	cfg3.Health = health.Config{
 		Enabled: cfg2.APIConfig.Health.ListenAddress != "",
 		GRPCServer: servers.GRPCServer{
@@ -127,7 +123,7 @@ func migHealth(cfg2 *config2.Config, cfg3 *config3.Config) {
 	}
 }
 
-func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
+func migServices(cfg2 *config2.Config, cfg3 *Config) {
 	cfg3.Servers = servers.Config{}
 
 	// svcHosts := gRPC listen address -> builder.API
@@ -185,7 +181,7 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 	}
 }
 
-func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
+func migDirectory(cfg2 *config2.Config, cfg3 *Config) {
 	// when directory resolver address == directory gRPC reader address
 	// use BoltDB plugin (DEFAULT)
 	if cfg2.DirectoryResolver.Address == cfg2.APIConfig.Services["reader"].GRPC.ListenAddress {
@@ -209,7 +205,7 @@ func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
 	}
 }
 
-func migAuthorizer(cfg2 *config2.Config, cfg3 *config3.Config) {
+func migAuthorizer(cfg2 *config2.Config, cfg3 *Config) {
 	cfg3.Authorizer = authorizer.Config{
 		OPA: authorizer.OPAConfig(cfg2.OPA),
 		JWT: authorizer.JWTConfig{AcceptableTimeSkew: time.Duration(int64(cfg2.JWT.AcceptableTimeSkewSeconds)) * time.Second},
