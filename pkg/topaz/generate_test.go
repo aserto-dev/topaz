@@ -14,12 +14,12 @@ import (
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
+	"github.com/aserto-dev/topaz/pkg/config/v3"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/servers"
-	"github.com/aserto-dev/topaz/pkg/topaz/config"
 
 	"github.com/open-policy-agent/opa/v1/download"
 	"github.com/open-policy-agent/opa/v1/keys"

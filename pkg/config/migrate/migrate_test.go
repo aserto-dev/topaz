@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/aserto-dev/topaz/pkg/config/migrate"
-	"github.com/aserto-dev/topaz/pkg/topaz/config"
+	"github.com/aserto-dev/topaz/pkg/config/v3"
 
 	req "github.com/stretchr/testify/require"
 )

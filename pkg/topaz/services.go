@@ -11,10 +11,10 @@ import (
 	client "github.com/aserto-dev/go-aserto"
 
 	"github.com/aserto-dev/topaz/pkg/authorizer"
+	"github.com/aserto-dev/topaz/pkg/config/v3"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/servers"
-	"github.com/aserto-dev/topaz/pkg/topaz/config"
 	"github.com/aserto-dev/topaz/plugins/edge"
 )
 

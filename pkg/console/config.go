@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/authentication"
+	"github.com/aserto-dev/topaz/pkg/config/v3"
 	"github.com/aserto-dev/topaz/pkg/servers"
-	"github.com/aserto-dev/topaz/pkg/topaz/config"
 	"github.com/samber/lo"
 )
 

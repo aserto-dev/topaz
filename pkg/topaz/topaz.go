@@ -12,8 +12,8 @@ import (
 
 	"github.com/aserto-dev/logger"
 
+	"github.com/aserto-dev/topaz/pkg/config/v3"
 	sbuilder "github.com/aserto-dev/topaz/pkg/topaz/builder"
-	"github.com/aserto-dev/topaz/pkg/topaz/config"
 )
 
 type Topaz struct {

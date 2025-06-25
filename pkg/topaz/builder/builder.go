@@ -14,13 +14,13 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
+	"github.com/aserto-dev/topaz/pkg/config/v3"
 	"github.com/aserto-dev/topaz/pkg/console"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/middleware"
 	"github.com/aserto-dev/topaz/pkg/servers"
-	"github.com/aserto-dev/topaz/pkg/topaz/config"
 )
 
 type TopazServices interface {
