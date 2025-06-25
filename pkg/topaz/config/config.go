@@ -6,7 +6,6 @@ import (
 	"text/template"
 
 	"github.com/Masterminds/sprig/v3"
-	"github.com/go-viper/mapstructure/v2"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -58,7 +57,7 @@ func NewConfig(r io.Reader, overrides ...ConfigOverride) (*Config, error) {
 		return nil, err
 	}
 
-	if err := v.UnmarshalExact(&cfg, useJSONTags); err != nil {
+	if err := v.UnmarshalExact(&cfg, config.UseJSONTags); err != nil {
 		return nil, err
 	}
 
@@ -68,8 +67,6 @@ func NewConfig(r io.Reader, overrides ...ConfigOverride) (*Config, error) {
 
 	return &cfg, nil
 }
-
-func useJSONTags(dc *mapstructure.DecoderConfig) { dc.TagName = "json" }
 
 //nolint:mnd  // this is where default values are defined.
 func (c *Config) Defaults() map[string]any {

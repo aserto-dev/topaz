@@ -10,6 +10,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+func UseJSONTags(dc *mapstructure.DecoderConfig) { dc.TagName = "json" }
+
 type Viper struct {
 	*viper.Viper
 }
