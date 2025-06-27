@@ -180,10 +180,10 @@ func collisionMsg(addr, svc1, svc2 string) string {
 	return addr + fmt.Sprintf(" [%s, %s]", svc1, svc2)
 }
 
-func (c *Server) Defaults() map[string]any {
+func (s *Server) Defaults() map[string]any {
 	return lo.Assign(
-		config.PrefixKeys("grpc", c.GRPC.Defaults()),
-		config.PrefixKeys("http", c.HTTP.Defaults()),
+		config.PrefixKeys("grpc", s.GRPC.Defaults()),
+		config.PrefixKeys("http", s.HTTP.Defaults()),
 	)
 }
 
@@ -239,7 +239,7 @@ const (
 	servicesTemplate string = `
 #  grpc and http server configuration
 servers:
-  {{- range $name, $server := . }}
+{{- range $name, $server := . }}
   {{ $name }}:
 
     {{- with $server.Services }}
@@ -297,6 +297,6 @@ servers:
       write_timeout: {{ .WriteTimeout }}
       idle_timeout: {{ .IdleTimeout }}
     {{- end }}
-  {{ end }}
+{{ end }}
 `
 )

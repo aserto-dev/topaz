@@ -53,8 +53,7 @@ func (c *DecisionLoggerConfig) generatePlugins(w io.Writer) error {
 	return nil
 }
 
-const decisionLoggerConfigTemplate = `
-# decision logger configuration.
+const decisionLoggerConfigTemplate = `# decision logger configuration.
 decision_logger:
   enabled: {{ .Enabled }}
   {{- if .Provider }}

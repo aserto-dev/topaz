@@ -40,15 +40,24 @@ func (c *Config) Serialize(w io.Writer) error {
 	return nil
 }
 
+func (c *Config) TryCerts() *client.TLSConfig {
+	zero := client.TLSConfig{}
+	if c.Certificates == zero {
+		return nil
+	}
+
+	return &c.Certificates
+}
+
 const metricsTemplate = `
 # metric service settings.
 metrics:
   enabled: {{ .Enabled }}
   listen_address: '{{ .ListenAddress}}'
-  {{- if .Certificates }}
+  {{- with .TryCerts }}
   certs:
-    tls_key_path: '{{ .Certificates.Key }}'
-    tls_cert_path: '{{ .Certificates.Cert }}'
-    tls_ca_cert_path: '{{ .Certificates.CA }}'
+    tls_key_path: '{{ .Key }}'
+    tls_cert_path: '{{ .Cert }}'
+    tls_ca_cert_path: '{{ .CA }}'
   {{ end }}
 `

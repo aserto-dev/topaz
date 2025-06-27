@@ -67,5 +67,7 @@ const debugTemplate = `
 # debug service settings.
 debug:
   enabled: {{ .Enabled }}
-  listen_address: '{{ .ListenAddress}}'
+{{- with .ListenAddress }}
+  listen_address: '{{ . }}'
+{{- end }}
 `

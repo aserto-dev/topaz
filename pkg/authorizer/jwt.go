@@ -39,8 +39,7 @@ func (c *JWTConfig) Serialize(w io.Writer) error {
 	return nil
 }
 
-const jwtConfigTemplate = `
-# jwt validation configuration
+const jwtConfigTemplate = `# jwt validation configuration
 jwt:
-  acceptable_time_skew: {{ .AcceptableTimeSkew }}
+  acceptable_time_skew: {{ .AcceptableTimeSkew -}}
 `

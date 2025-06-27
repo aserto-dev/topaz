@@ -1,6 +1,7 @@
 package authorizer
 
 import (
+	"fmt"
 	"io"
 	"text/template"
 
@@ -26,7 +27,7 @@ func (c *Config) Defaults() map[string]any {
 	)
 }
 
-func (c *Config) Validate() error {
+func (*Config) Validate() error {
 	return nil
 }
 
@@ -40,25 +41,30 @@ func (c *Config) Serialize(w io.Writer) error {
 		return err
 	}
 
-	w = config.IndentWriter(w, sectionIndentLevel)
+	wi := config.IndentWriter(w, sectionIndentLevel)
 
-	if err := c.OPA.Serialize(w); err != nil {
+	if err := c.OPA.Serialize(wi); err != nil {
 		return err
 	}
 
-	if err := c.DecisionLogger.Serialize(w); err != nil {
+	// Write newlines between sections.
+	// If the newline would be part of the section template it would be indented and result in an
+	// all-spaces line (i.e. "  \n").
+	_, _ = fmt.Fprint(w, "\n")
+
+	if err := c.DecisionLogger.Serialize(wi); err != nil {
 		return err
 	}
 
-	if err := c.Controller.Serialize(w); err != nil {
+	_, _ = fmt.Fprint(w, "\n")
+
+	if err := c.Controller.Serialize(wi); err != nil {
 		return err
 	}
 
-	if err := c.JWT.Serialize(w); err != nil {
-		return err
-	}
+	_, _ = fmt.Fprint(w, "\n")
 
-	return nil
+	return c.JWT.Serialize(wi)
 }
 
 const (

@@ -204,8 +204,7 @@ func (c *ConfigV3) Serialize(w io.Writer) error {
 	return nil
 }
 
-const templateConfigHeader = `
-# yaml-language-server: $schema=https://topaz.sh/schema/config.json
+const templateConfigHeader = `# yaml-language-server: $schema=https://topaz.sh/schema/config.json
 ---
 # config schema version.
 version: {{ .Version }}

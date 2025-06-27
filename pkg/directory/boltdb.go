@@ -17,14 +17,14 @@ const BoltDBStorePlugin string = "boltdb"
 
 var _ config.Section = (*BoltDBStore)(nil)
 
-func (c *BoltDBStore) Defaults() map[string]any {
+func (*BoltDBStore) Defaults() map[string]any {
 	return map[string]any{
 		"db_path":         "${TOPAZ_DB_DIR}/directory.db",
 		"request_timeout": BoltDBDefaultRequestTimeout.String(),
 	}
 }
 
-func (c *BoltDBStore) Validate() error {
+func (*BoltDBStore) Validate() error {
 	return nil
 }
 
@@ -40,15 +40,12 @@ func (c *BoltDBStore) Serialize(w io.Writer) error {
 	}
 
 	p := params{c, BoltDBStorePlugin}
-	if err := tmpl.Execute(w, p); err != nil {
-		return err
-	}
 
-	return nil
+	return tmpl.Execute(w, p)
 }
 
 const boltDBStoreConfigTemplate = `
-{{ .Provider_ }}:
+{{- .Provider_ }}:
   db_path: '{{ .DBPath }}'
   request_timeout: {{ .RequestTimeout }}
 `

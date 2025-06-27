@@ -44,3 +44,12 @@ func (s *GRPCServer) ClientCredentials() (grpc.DialOption, error) {
 
 	return grpc.WithTransportCredentials(creds), nil
 }
+
+func (s *GRPCServer) TryCerts() *aserto.TLSConfig {
+	zero := aserto.TLSConfig{}
+	if s.Certs == zero {
+		return nil
+	}
+
+	return &s.Certs
+}

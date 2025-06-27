@@ -96,7 +96,8 @@ authentication:
             {{- .Paths | toYaml | nindent 12 }}
       {{- end }}
     {{- end }}
-  {{ end }}
+  {{- end }}
+
 `
 
 // provider: local - local authentication implementation.

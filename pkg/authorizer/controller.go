@@ -46,8 +46,7 @@ func (c *ControllerConfig) Serialize(w io.Writer) error {
 	return nil
 }
 
-const controllerTemplate = `
-# control plane configuration
+const controllerTemplate = `# control plane configuration
 controller:
   enabled: {{ .Enabled }}
   {{- if .Enabled }}

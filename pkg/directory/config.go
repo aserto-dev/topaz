@@ -1,6 +1,7 @@
 package directory
 
 import (
+	"fmt"
 	"io"
 	"text/template"
 	"time"
@@ -61,7 +62,13 @@ func (c *Config) Serialize(w io.Writer) error {
 		return err
 	}
 
-	return c.serializePlugins(config.IndentWriter(w, pluginIndentLevel))
+	if err := c.serializePlugins(config.IndentWriter(w, pluginIndentLevel)); err != nil {
+		return err
+	}
+
+	_, err = fmt.Fprint(w, "\n")
+
+	return err
 }
 
 func (c *Config) IsRemote() bool {

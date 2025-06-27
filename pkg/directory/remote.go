@@ -15,11 +15,11 @@ type RemoteDirectoryStore client.Config
 
 var _ config.Section = (*RemoteDirectoryStore)(nil)
 
-func (c *RemoteDirectoryStore) Defaults() map[string]any {
+func (*RemoteDirectoryStore) Defaults() map[string]any {
 	return map[string]any{}
 }
 
-func (c *RemoteDirectoryStore) Validate() error {
+func (*RemoteDirectoryStore) Validate() error {
 	return nil
 }
 
@@ -37,11 +37,8 @@ func (c *RemoteDirectoryStore) Serialize(w io.Writer) error {
 	}
 
 	p := params{c, RemoteDirectoryStorePlugin}
-	if err := tmpl.Execute(w, p); err != nil {
-		return err
-	}
 
-	return nil
+	return tmpl.Execute(w, p)
 }
 
 func (c *RemoteDirectoryStore) Connect() (*grpc.ClientConn, error) {
@@ -49,7 +46,7 @@ func (c *RemoteDirectoryStore) Connect() (*grpc.ClientConn, error) {
 }
 
 const remoteDirectoryStoreConfigTemplate = `
-{{ .Provider_ }}:
+{{- .Provider_ }}:
   address: '{{ .Address }}'
 
   {{- with .TenantID }}
@@ -83,5 +80,5 @@ const remoteDirectoryStoreConfigTemplate = `
   {{- with .Headers }}
   headers:
     {{- . | toYaml | nindent 4 }}
-  {{ end }}
+  {{- end }}
 `
