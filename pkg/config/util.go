@@ -2,16 +2,16 @@ package config
 
 import (
 	"bytes"
-	"encoding/json"
 	"html/template"
 	"io"
 	"reflect"
 	"strings"
 
+	"github.com/go-sprout/sprout"
+	"github.com/go-sprout/sprout/registry/encoding"
+	spstr "github.com/go-sprout/sprout/registry/strings"
 	"github.com/pborman/indent"
-	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"gopkg.in/yaml.v3"
 )
 
 const yamlIndent = 2
@@ -47,40 +47,42 @@ func PrefixKeys(prefix string, m map[string]any) map[string]any {
 	})
 }
 
+var funcs = sprout.New(
+	sprout.WithRegistries(encoding.NewRegistry(), spstr.NewRegistry()),
+).Build()
+
 // TemplateFuncs returns a set of commonly used template pipeline
 // functions.
 func TemplateFuncs() template.FuncMap {
-	return template.FuncMap{
-		"toYaml": func(value any) (string, error) {
-			var buf bytes.Buffer
+	return funcs
 
-			enc := yaml.NewEncoder(&buf)
-			enc.SetIndent(yamlIndent)
-
-			if err := enc.Encode(&value); err != nil {
-				return "", errors.Wrap(err, "yaml encoding error")
-			}
-
-			return strings.TrimSuffix(buf.String(), "\n"), nil
-		},
-		"toMap": func(value any) (map[string]any, error) {
-			jBytes, err := json.Marshal(value)
-			if err != nil {
-				return nil, errors.Wrap(err, "json encoding error")
-			}
-
-			var m map[string]any
-			if err := json.Unmarshal(jBytes, &m); err != nil {
-				return nil, errors.Wrap(err, "json encoding error")
-			}
-
-			return m, nil
-		},
-		"nindent": func(n int, value string) string {
-			indent := "\n" + strings.Repeat(" ", n)
-			return indent + strings.ReplaceAll(value, "\n", indent)
-		},
-	}
+	// template.FuncMap{
+	// 	"toYAML": func(value any) (string, error) {
+	// 		var buf bytes.Buffer
+	//
+	// 		enc := yaml.NewEncoder(&buf)
+	// 		enc.SetIndent(yamlIndent)
+	//
+	// 		if err := enc.Encode(&value); err != nil {
+	// 			return "", errors.Wrap(err, "yaml encoding error")
+	// 		}
+	//
+	// 		return strings.TrimSuffix(buf.String(), "\n"), nil
+	// 	},
+	// 	"toMap": func(value any) (map[string]any, error) {
+	// 		jBytes, err := json.Marshal(value)
+	// 		if err != nil {
+	// 			return nil, errors.Wrap(err, "json encoding error")
+	// 		}
+	//
+	// 		var m map[string]any
+	// 		if err := json.Unmarshal(jBytes, &m); err != nil {
+	// 			return nil, errors.Wrap(err, "json encoding error")
+	// 		}
+	//
+	// 		return m, nil
+	// 	},
+	// )
 }
 
 // Trimn removes a leading newline from the given string.

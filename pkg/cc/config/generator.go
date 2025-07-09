@@ -8,10 +8,12 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/pkg/config/v3"
 )
 
 type Generator struct {
 	templateParams
+	config.Config
 	ConfigName string
 }
 
@@ -20,7 +22,9 @@ func NewGenerator(configName string) *Generator {
 }
 
 func (g *Generator) WithVersion(version int) *Generator {
-	g.Version = version
+	g.templateParams.Version = version
+	g.Config.Version = version
+
 	return g
 }
 

@@ -15,7 +15,7 @@ import (
 )
 
 type Config struct {
-	servers.HTTPServer `json:",squash"` //nolint:staticcheck,tagliatelle  // squash is part of mapstructure
+	servers.HTTPServer
 
 	Enabled bool `json:"enabled"`
 }

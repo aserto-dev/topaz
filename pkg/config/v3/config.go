@@ -5,7 +5,6 @@ import (
 	"io"
 	"text/template"
 
-	"github.com/Masterminds/sprig/v3"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -57,7 +56,7 @@ func NewConfig(r io.Reader, overrides ...ConfigOverride) (*Config, error) {
 		return nil, err
 	}
 
-	if err := v.UnmarshalExact(&cfg, config.UseJSONTags); err != nil {
+	if err := v.UnmarshalExact(&cfg, config.UseJSONTags, config.WithSquash); err != nil {
 		return nil, err
 	}
 
@@ -70,8 +69,6 @@ func NewConfig(r io.Reader, overrides ...ConfigOverride) (*Config, error) {
 
 //nolint:mnd  // this is where default values are defined.
 func (c *Config) Defaults() map[string]any {
-	srvrs := servers.Config{"topaz": {}}
-
 	return lo.Assign(
 		map[string]any{
 			"version":                3,
@@ -83,7 +80,6 @@ func (c *Config) Defaults() map[string]any {
 		config.PrefixKeys("debug", c.Debug.Defaults()),
 		config.PrefixKeys("health", c.Health.Defaults()),
 		config.PrefixKeys("metrics", c.Metrics.Defaults()),
-		config.PrefixKeys("servers", srvrs.Defaults()),
 		config.PrefixKeys("directory", c.Directory.Defaults()),
 		config.PrefixKeys("authorizer", c.Authorizer.Defaults()),
 	)
@@ -173,29 +169,13 @@ func (c *ConfigV3) Validate() error {
 
 func (c *ConfigV3) Serialize(w io.Writer) error {
 	{
-		tmpl := template.Must(template.New("base").Funcs(sprig.FuncMap()).Parse(templateConfigHeader))
-
-		// tmpl, err := template.
-		// 	New("CONFIG_HEADER").
-		// 	Funcs(sprig.TxtFuncMap()).
-		// 	Parse(templateConfigHeader)
-		// if err != nil {
-		// 	return err
-		// }
-
+		tmpl := template.Must(template.New("base").Parse(templateConfigHeader))
 		if err := tmpl.Execute(w, c); err != nil {
 			return err
 		}
 	}
 	{
-		tmpl, err := template.New("LOGGER").Parse(templateLogger)
-		if err != nil {
-			return err
-		}
-
-		var funcMap template.FuncMap = map[string]interface{}{}
-		tmpl = tmpl.Funcs(sprig.TxtFuncMap()).Funcs(funcMap)
-
+		tmpl := template.Must(template.New("LOGGER").Parse(templateLogger))
 		if err := tmpl.Execute(w, c.Logging); err != nil {
 			return err
 		}

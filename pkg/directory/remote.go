@@ -79,6 +79,6 @@ const remoteDirectoryStoreConfigTemplate = `
 
   {{- with .Headers }}
   headers:
-    {{- . | toYaml | nindent 4 }}
+    {{- . | toYAML | nindent 4 }}
   {{- end }}
 `

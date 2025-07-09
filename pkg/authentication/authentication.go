@@ -36,13 +36,13 @@ type Config struct {
 
 var _ config.Section = (*Config)(nil)
 
-func (c *Config) Defaults() map[string]any {
+func (*Config) Defaults() map[string]any {
 	return map[string]any{
 		"enabled": false,
 	}
 }
 
-func (c *Config) Validate() error {
+func (*Config) Validate() error {
 	return nil
 }
 
@@ -54,11 +54,7 @@ func (c *Config) Serialize(w io.Writer) error {
 		return err
 	}
 
-	if err := tmpl.Execute(w, c); err != nil {
-		return err
-	}
-
-	return nil
+	return tmpl.Execute(w, c)
 }
 
 func (c *Config) ReaderKey() string {
@@ -81,7 +77,7 @@ authentication:
   local:
   {{- with .Local }}
     keys:
-      {{- .Keys | toYaml | nindent 6 }}
+      {{- .Keys | toYAML | nindent 6 }}
     options:
       default:
         allow_anonymous: {{ .Options.Default.AllowAnonymous }}
@@ -93,14 +89,14 @@ authentication:
         - override:
             allow_anonymous: {{ .Override.AllowAnonymous }}
           paths:
-            {{- .Paths | toYaml | nindent 12 }}
+            {{- .Paths | toYAML | nindent 12 }}
       {{- end }}
     {{- end }}
   {{- end }}
 
 `
 
-// provider: local - local authentication implementation.
+// LocalConfig holds configuration options for local authentication implementation.
 type LocalConfig struct {
 	Keys    []string    `json:"keys"`
 	Options CallOptions `json:"options"`

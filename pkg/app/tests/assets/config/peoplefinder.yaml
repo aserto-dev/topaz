@@ -55,10 +55,9 @@ authorizer:
           service: ghcr
           resource: "ghcr.io/aserto-policies/policy-peoplefinder-rbac:latest"
           persist: false
-          config:
-            polling:
-              min_delay_seconds: 60
-              max_delay_seconds: 120
+          polling:
+            min_delay_seconds: 60
+            max_delay_seconds: 120
 
   jwt:
     acceptable_time_skew: 5s

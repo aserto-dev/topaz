@@ -1,57 +1,83 @@
 package config_test
 
 import (
-	"encoding/json"
+	"bytes"
 	"os"
 	"testing"
 
-	topaz "github.com/aserto-dev/topaz/pkg/config/v3"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/pkg/config/v3"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	assrt "github.com/stretchr/testify/assert"
+	rqur "github.com/stretchr/testify/require"
 )
 
-//nolint:wsl
+const (
+	dbDir    = "/db"
+	certsDir = "/certs"
+	topazDor = "/topaz"
+)
+
 func TestLoadConfigV3(t *testing.T) {
-	r, err := os.Open("../schema/config.yaml")
-	require.NoError(t, err)
+	setTopazEnv(t)
 
-	cfg3, err := topaz.NewConfig(r)
-	require.NoError(t, err)
+	require := rqur.New(t)
+	assert := assrt.New(t)
 
-	assert.Equal(t, 3, cfg3.Version)
-	assert.NotEmpty(t, cfg3.Logging)
+	r, err := os.Open("schema/config.yaml")
+	require.NoError(err)
+	t.Cleanup(func() { _ = r.Close() })
 
-	// print interpreted json config.
-	jEnc := json.NewEncoder(os.Stdout)
-	jEnc.SetEscapeHTML(false)
-	jEnc.SetIndent("", "  ")
+	cfg3, err := config.NewConfig(r)
+	require.NoError(err)
 
-	if err := jEnc.Encode(cfg3); err != nil {
-		require.NoError(t, err)
-	}
+	// Log config if test fails
+	logConfig(t, cfg3)
 
-	// print interpreted yaml config.
-	require.NoError(t,
-		cfg3.Serialize(os.Stdout),
+	assert.Equal(config.Version, cfg3.Version)
+	assert.NotEmpty(cfg3.Logging)
+
+	// Authentication
+	assert.False(cfg3.Authentication.Enabled)
+	assert.Equal("local", cfg3.Authentication.Provider)
+	assert.Len(cfg3.Authentication.Local.Keys, 2)
+	assert.False(cfg3.Authentication.Local.Options.Default.AllowAnonymous)
+	assert.Len(cfg3.Authentication.Local.Options.Overrides, 1)
+	assert.Len(cfg3.Authentication.Local.Options.Overrides[0].Paths, 3)
+	assert.True(cfg3.Authentication.Local.Options.Overrides[0].Override.AllowAnonymous)
+
+	// Debug
+	assert.False(cfg3.Debug.Enabled)
+	assert.Equal("0.0.0.0:6666", cfg3.Debug.ListenAddress)
+
+	// Health
+	assert.True(cfg3.Health.Enabled)
+	assert.Equal("0.0.0.0:9494", cfg3.Health.ListenAddress)
+
+	// Metrics
+	assert.True(cfg3.Metrics.Enabled)
+	assert.Equal("0.0.0.0:9696", cfg3.Metrics.ListenAddress)
+
+	// Servers
+	assert.Len(cfg3.Servers, 3)
+}
+
+func setTopazEnv(t *testing.T) {
+	t.Helper()
+
+	t.Setenv(x.EnvTopazDBDir, dbDir)
+	t.Setenv(x.EnvTopazCertsDir, certsDir)
+	t.Setenv(x.EnvTopazDir, topazDor)
+}
+
+func logConfig(t *testing.T, cfg3 *config.Config) {
+	t.Helper()
+
+	b := bytes.Buffer{}
+
+	rqur.NoError(t,
+		cfg3.Serialize(&b),
 	)
 
-	// opa, err := cfg3.Authorizer.OPA
-	// require.NoError(t, err)
-
-	// if err := yEnc.Encode(opa); err != nil {
-	// 	require.NoError(t, err)
-	// }
-
-	// cfg3.Authorizer.OPA()
-
-	// cfg3.Authorizer.OPA()
-	// rCfg := &runtime.Config{}
-
-	// b, err := json.Marshal(cfg3.Authorizer.OPA)
-	// require.NoError(t, err)
-
-	// if err := json.Unmarshal(b, rCfg); err != nil {
-	// 	require.NoError(t, err)
-	// }
+	t.Logf("Config:\n%s", b.String())
 }

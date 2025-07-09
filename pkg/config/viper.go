@@ -12,6 +12,10 @@ import (
 
 func UseJSONTags(dc *mapstructure.DecoderConfig) { dc.TagName = "json" }
 
+func WithSquash(dc *mapstructure.DecoderConfig) {
+	dc.Squash = true
+}
+
 type Viper struct {
 	*viper.Viper
 }

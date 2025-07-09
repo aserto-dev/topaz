@@ -3,6 +3,7 @@ package migrate
 import (
 	"fmt"
 	"io"
+	"slices"
 	"time"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
@@ -135,13 +136,17 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 	port2names := map[string][]servers.ServiceName{}
 
 	for name, service := range cfg2.APIConfig.Services {
-		svcHosts[service.GRPC.ListenAddress] = service
+		if svcHosts[service.GRPC.ListenAddress] == nil || service.Gateway.ListenAddress != "" {
+			svcHosts[service.GRPC.ListenAddress] = service
+		}
+
 		port2names[service.GRPC.ListenAddress] = append(port2names[service.GRPC.ListenAddress], servers.ServiceName(name))
 	}
 
 	svcCounter := 0
 
 	for addr, host := range svcHosts {
+		slices.Sort(port2names[addr])
 		includes := port2names[addr]
 
 		svcCounter++
@@ -152,11 +157,11 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 		case len(svcHosts) == 1:
 			svc = "topaz-svc"
 		case len(includes) == 1:
-			svc = servers.ServerName(includes[0] + "-svc")
+			svc = servers.ServerName(includes[0])
 		case lo.Contains(includes, "reader"):
-			svc = "directory-svc"
+			svc = "directory"
 		default:
-			svc = servers.ServerName(fmt.Sprintf("topaz-%d-svc", svcCounter))
+			svc = servers.ServerName(fmt.Sprintf("topaz-%d", svcCounter))
 		}
 
 		cfg3.Servers[svc] = &servers.Server{

@@ -19,12 +19,13 @@ authentication:
       - "##Ve@rySecret123!!"
     options:
       overrides:
-        paths:
-          - /aserto.authorizer.v2.Authorizer/Info
-          - /grpc.reflection.v1.ServerReflection/ServerReflectionInfo
-          - /grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo
-        override:
-          allow_anonymous: true
+        -
+          paths:
+            - /aserto.authorizer.v2.Authorizer/Info
+            - /grpc.reflection.v1.ServerReflection/ServerReflectionInfo
+            - /grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo
+          override:
+            allow_anonymous: true
 
 # debug service settings.
 debug:
@@ -198,10 +199,9 @@ authorizer:
           service: ghcr
           resource: "ghcr.io/aserto-policies/policy-rebac:latest"
           persist: false
-          config:
-            polling:
-              min_delay_seconds: 60
-              max_delay_seconds: 120
+          polling:
+            min_delay_seconds: 60
+            max_delay_seconds: 120
 
   decision_logger:
     provider: self

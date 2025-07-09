@@ -114,6 +114,7 @@ opa:
 
 {{- with .TryConfig }}
   config:
-    {{- . | toMap | toYaml | nindent 4 }}
+	{{- /* Internal OPA structs don't have yaml tags.  */}}
+    {{- . | toJSON | fromJSON | toIndentYAML 2 | nindent 4 }}
 {{- end }}
 `

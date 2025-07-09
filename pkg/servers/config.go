@@ -115,7 +115,7 @@ func (c Config) ServiceEnabled(name ServiceName) bool {
 }
 
 func (c Config) ListenAddresses() iter.Seq2[ServerName, ListenAddress] {
-	return loiter.ExplodeValues(maps.All(c), func(name ServerName, server *Server) iter.Seq[ListenAddress] {
+	return loiter.ExplodeValues(maps.All(c), func(_ ServerName, server *Server) iter.Seq[ListenAddress] {
 		return slices.Values([]ListenAddress{
 			{server.GRPC.ListenAddress, Kind.GRPC},
 			{server.HTTP.ListenAddress, Kind.HTTP},
@@ -163,11 +163,7 @@ func (c Config) Serialize(w io.Writer) error {
 		return err
 	}
 
-	if err := tmpl.Execute(w, c); err != nil {
-		return err
-	}
-
-	return nil
+	return tmpl.Execute(w, c)
 }
 
 // collisionMsg formats the message for a port collision error.
@@ -244,7 +240,7 @@ servers:
 
     {{- with $server.Services }}
     services:
-      {{- . | toYaml | nindent 6 }}
+      {{- . | toYAML | nindent 6 }}
     {{- end }}
 
   {{- with $server.TryGRPC }}
@@ -279,17 +275,17 @@ servers:
 
       {{- with .AllowedOrigins }}
       allowed_origins:
-        {{- . | toYaml | nindent 8 }}
+        {{- . | toYAML | nindent 8 }}
       {{- end }}
 
       {{- with .AllowedHeaders }}
       allowed_headers:
-        {{- . | toYaml | nindent 8 }}
+        {{- . | toYAML | nindent 8 }}
       {{- end }}
 
       {{- with .AllowedMethods }}
       allowed_methods:
-        {{- . | toYaml | nindent 8 }}
+        {{- . | toYAML | nindent 8 }}
       {{ end -}}
 
       read_timeout: {{ .ReadTimeout }}

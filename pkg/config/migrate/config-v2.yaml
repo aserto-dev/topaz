@@ -90,7 +90,6 @@ api:
           - http://localhost:*
           - https://localhost
           - https://localhost:*
-          - https://0.0.0.0:*
           - https://*.aserto.com
           - https://*aserto-console.netlify.app
         certs:
@@ -183,7 +182,6 @@ api:
           - http://localhost:*
           - https://localhost
           - https://localhost:*
-          - https://0.0.0.0:*
           - https://*.aserto.com
           - https://*aserto-console.netlify.app
         certs:
@@ -299,7 +297,6 @@ api:
           - http://localhost:*
           - https://localhost
           - https://localhost:*
-          - https://0.0.0.0:*
           - https://*.aserto.com
           - https://*aserto-console.netlify.app
         certs:

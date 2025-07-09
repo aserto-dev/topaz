@@ -5,13 +5,12 @@ import (
 	"io"
 	"time"
 
-	"github.com/Masterminds/sprig/v3"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/servers"
 )
 
 type Config struct {
-	servers.GRPCServer `json:",squash"` //nolint:staticcheck,tagliatelle  // squash is part of mapstructure
+	servers.GRPCServer
 
 	Enabled bool `json:"enabled"`
 }
@@ -32,16 +31,7 @@ func (c *Config) Validate() error {
 }
 
 func (c *Config) Serialize(w io.Writer) error {
-	tmpl := template.New("HEALTH")
-
-	var funcMap template.FuncMap = map[string]interface{}{}
-	tmpl = tmpl.Funcs(sprig.TxtFuncMap()).Funcs(funcMap)
-
-	tmpl, err := tmpl.Parse(healthTemplate)
-	if err != nil {
-		return err
-	}
-
+	tmpl := template.Must(template.New("HEALTH").Parse(healthTemplate))
 	if err := tmpl.Execute(w, c); err != nil {
 		return err
 	}
