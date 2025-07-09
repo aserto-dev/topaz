@@ -7,7 +7,6 @@ type templateParams struct {
 	Resource       string
 	Authorization  string
 	LocalPolicy    bool
-	EdgeDirectory  bool
 
 	TenantID     string
 	DiscoveryURL string

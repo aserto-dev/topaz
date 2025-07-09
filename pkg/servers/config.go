@@ -183,6 +183,10 @@ func (s *Server) Defaults() map[string]any {
 	)
 }
 
+func (*Server) Serialize(_ io.Writer) error {
+	return errors.Wrap(config.ErrConfig, "server does not support serialization")
+}
+
 func (s *Server) Validate() error {
 	var (
 		errs      error
@@ -246,15 +250,14 @@ servers:
   {{- with $server.TryGRPC }}
     grpc:
       listen_address: '{{ .ListenAddress }}'
+      connection_timeout: {{ .ConnectionTimeout }}
 
-      {{- with .Certs }}
+      {{- with .TryCerts }}
       certs:
         tls_key_path: '{{ .Key }}'
         tls_cert_path: '{{ .Cert }}'
         tls_ca_cert_path: '{{ .CA }}'
-      {{ end -}}
-
-      connection_timeout: {{ .ConnectionTimeout }}
+      {{- end }}
 
     {{- with .NoReflection }}
       no_reflection: {{ . }}
@@ -266,7 +269,7 @@ servers:
       listen_address: '{{ .ListenAddress }}'
       fqdn: '{{ .FQDN }}'
 
-      {{- with .Certs }}
+      {{- with .TryCerts }}
       certs:
         tls_key_path: '{{ .Key }}'
         tls_cert_path: '{{ .Cert }}'

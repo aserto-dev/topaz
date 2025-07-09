@@ -24,7 +24,7 @@ type HTTPServer struct {
 
 func (s *HTTPServer) Defaults() map[string]any {
 	return map[string]any{
-		"listen_address":      "0.0.0:9393",
+		"listen_address":      "0.0.0:8383",
 		"allowed_origins":     DefaultAllowedOrigins(s.Certs.HasCert()),
 		"allowed_headers":     DefaultAllowedHeaders(),
 		"allowed_methods":     DefaultAllowedMethods(),
@@ -41,6 +41,15 @@ func (s *HTTPServer) Validate() error {
 
 func (s *HTTPServer) HasListener() bool {
 	return s != nil && s.ListenAddress != ""
+}
+
+func (s *HTTPServer) TryCerts() *aserto.TLSConfig {
+	zero := aserto.TLSConfig{}
+	if s.Certs == zero {
+		return nil
+	}
+
+	return &s.Certs
 }
 
 func (s *HTTPServer) Cors() *cors.Cors {
@@ -86,8 +95,6 @@ func DefaultAllowedOrigins(useHTTP bool) []string {
 			"http://localhost:*",
 			"http://127.0.0.1",
 			"http://127.0.0.1:*",
-			"http://0.0.0.0",
-			"http://0.0.0.0:*",
 		}
 	}
 
@@ -96,8 +103,6 @@ func DefaultAllowedOrigins(useHTTP bool) []string {
 		"https://localhost:*",
 		"https://127.0.0.1",
 		"https://127.0.0.1:*",
-		"https://0.0.0.0",
-		"https://0.0.0.0:*",
 	}
 }
 
