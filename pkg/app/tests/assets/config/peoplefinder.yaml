@@ -76,7 +76,7 @@ servers:
       listen_address: "0.0.0.0:9292"
     http:
       listen_address: "0.0.0.0:9393"
-      fqdn: ""
+      hosted_domain: ""
       allowed_headers:
         - "Authorization"
         - "Content-Type"

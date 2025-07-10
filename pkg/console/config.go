@@ -62,8 +62,8 @@ func gatewayURL(cfg servers.Config, svc servers.ServiceName) string {
 		return ""
 	}
 
-	if server.HTTP.FQDN != "" {
-		return server.HTTP.FQDN
+	if server.HTTP.HostedDomain != "" {
+		return server.HTTP.HostedDomain
 	}
 
 	scheme := lo.Ternary(server.HTTP.Certs.HasCert(), "https", "http")

@@ -38,7 +38,27 @@ var _ config.Section = (*Config)(nil)
 
 func (*Config) Defaults() map[string]any {
 	return map[string]any{
-		"enabled": false,
+		"enabled":  false,
+		"provider": "local",
+		"local": map[string]any{
+			"keys": []string{},
+			"options": map[string]any{
+				"default": map[string]any{
+					"allow_anonymous": false,
+				},
+				"overrides": []map[string]any{
+					{
+						"paths": []string{
+							"/grpc.reflection.v1.ServerReflection/ServerReflectionInfo",
+							"/grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo",
+						},
+						"override": map[string]any{
+							"allow_anonymous": true,
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -76,21 +96,13 @@ authentication:
   provider: {{ .Provider }}
   local:
   {{- with .Local }}
-    keys:
+    keys: {{- if not .Keys }} [] {{- else }}
       {{- .Keys | toYAML | nindent 6 }}
+	{{- end }}
+
+	{{- with .TryOptions }}
     options:
-      default:
-        allow_anonymous: {{ .Options.Default.AllowAnonymous }}
-
-    {{- with .Options.Overrides }}
-
-      overrides:
-      {{- range . }}
-        - override:
-            allow_anonymous: {{ .Override.AllowAnonymous }}
-          paths:
-            {{- .Paths | toYAML | nindent 12 }}
-      {{- end }}
+      {{- . | toIndentYAML 2 | nindent 6 }}
     {{- end }}
   {{- end }}
 
@@ -102,6 +114,15 @@ type LocalConfig struct {
 	Options CallOptions `json:"options"`
 }
 
+func (c *LocalConfig) TryOptions() *CallOptions {
+	zeroOptions := Options{}
+	if c.Options.Default == zeroOptions && len(c.Options.Overrides) == 0 {
+		return nil
+	}
+
+	return &c.Options
+}
+
 type CallOptions struct {
 	Default   Options           `json:"default"`
 	Overrides []OptionOverrides `json:"overrides"`
@@ -109,7 +130,7 @@ type CallOptions struct {
 
 type Options struct {
 	// Allows calls without any form of authentication
-	AllowAnonymous bool `json:"allow_anonymous"`
+	AllowAnonymous bool `json:"allow_anonymous" yaml:"allow_anonymous"`
 }
 
 type OptionOverrides struct {

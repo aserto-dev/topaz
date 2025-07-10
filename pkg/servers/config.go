@@ -267,7 +267,7 @@ servers:
   {{- with $server.TryHTTP }}
     http:
       listen_address: '{{ .ListenAddress }}'
-      fqdn: '{{ .FQDN }}'
+      hosted_domain: '{{ .HostedDomain }}'
 
       {{- with .TryCerts }}
       certs:

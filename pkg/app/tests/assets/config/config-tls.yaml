@@ -84,7 +84,7 @@ servers:
         tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
         tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
         tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
-      fqdn: ""
+      hosted_domain: ""
       allowed_headers:
         - "Authorization"
         - "Content-Type"

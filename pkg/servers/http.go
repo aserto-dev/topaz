@@ -11,7 +11,7 @@ import (
 
 type HTTPServer struct {
 	ListenAddress     string           `json:"listen_address"`
-	FQDN              string           `json:"fqdn"`
+	HostedDomain      string           `json:"hosted_domain"`
 	Certs             aserto.TLSConfig `json:"certs"`
 	AllowedOrigins    []string         `json:"allowed_origins"`
 	AllowedHeaders    []string         `json:"allowed_headers"`
@@ -68,7 +68,7 @@ func (s *HTTPServer) IsEmpty() bool {
 	)
 
 	return s.ListenAddress == "" &&
-		s.FQDN == "" &&
+		s.HostedDomain == "" &&
 		s.Certs == zeroCerts &&
 		s.ReadHeaderTimeout == zeroDuration &&
 		s.ReadTimeout == zeroDuration &&

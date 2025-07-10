@@ -3,12 +3,14 @@ package config
 import (
 	"bytes"
 	"io"
+	"path"
 	"strings"
 
 	"github.com/open-policy-agent/opa/v1/download"
 	"github.com/open-policy-agent/opa/v1/plugins/bundle"
 	"github.com/samber/lo"
 
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	cfgutil "github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/config/v3"
 	"github.com/aserto-dev/topaz/pkg/servers"
@@ -30,7 +32,7 @@ type Generator struct {
 }
 
 func NewGenerator(configName string) (*Generator, error) {
-	cfg, err := config.NewConfig(&bytes.Buffer{}, defaultServer)
+	cfg, err := config.NewConfig(&bytes.Buffer{}, defaultServer, boltdbFile(configName))
 	if err != nil {
 		return nil, err
 	}
@@ -111,6 +113,12 @@ func defaultServer(cfg *config.Config) {
 
 	cfg.Servers = map[servers.ServerName]*servers.Server{
 		"topaz": &s,
+	}
+}
+
+func boltdbFile(name string) config.ConfigOverride {
+	return func(cfg *config.Config) {
+		cfg.Directory.Store.Bolt.DBPath = path.Join("${"+x.EnvTopazDBDir+"}", name+".db")
 	}
 }
 

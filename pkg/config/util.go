@@ -6,6 +6,7 @@ import (
 	"io"
 	"reflect"
 	"strings"
+	"sync"
 
 	"github.com/go-sprout/sprout"
 	"github.com/go-sprout/sprout/registry/encoding"
@@ -13,8 +14,6 @@ import (
 	"github.com/pborman/indent"
 	"github.com/samber/lo"
 )
-
-const yamlIndent = 2
 
 // IndentWriter returns a writer that indents all lines by n spaces.
 func IndentWriter(w io.Writer, n int) io.Writer {
@@ -47,45 +46,16 @@ func PrefixKeys(prefix string, m map[string]any) map[string]any {
 	})
 }
 
-var funcs = sprout.New(
-	sprout.WithRegistries(encoding.NewRegistry(), spstr.NewRegistry()),
-).Build()
+// TemplateFuncs returns a set of commonly used template pipeline functions from
+// the github.com/go-sprout/sprout pacakage.
+var TemplateFuncs = sync.OnceValue(func() template.FuncMap {
+	return sprout.New(sprout.WithRegistries(
+		encoding.NewRegistry(),
+		spstr.NewRegistry(),
+	)).Build()
+})
 
-// TemplateFuncs returns a set of commonly used template pipeline
-// functions.
-func TemplateFuncs() template.FuncMap {
-	return funcs
-
-	// template.FuncMap{
-	// 	"toYAML": func(value any) (string, error) {
-	// 		var buf bytes.Buffer
-	//
-	// 		enc := yaml.NewEncoder(&buf)
-	// 		enc.SetIndent(yamlIndent)
-	//
-	// 		if err := enc.Encode(&value); err != nil {
-	// 			return "", errors.Wrap(err, "yaml encoding error")
-	// 		}
-	//
-	// 		return strings.TrimSuffix(buf.String(), "\n"), nil
-	// 	},
-	// 	"toMap": func(value any) (map[string]any, error) {
-	// 		jBytes, err := json.Marshal(value)
-	// 		if err != nil {
-	// 			return nil, errors.Wrap(err, "json encoding error")
-	// 		}
-	//
-	// 		var m map[string]any
-	// 		if err := json.Unmarshal(jBytes, &m); err != nil {
-	// 			return nil, errors.Wrap(err, "json encoding error")
-	// 		}
-	//
-	// 		return m, nil
-	// 	},
-	// )
-}
-
-// Trimn removes a leading newline from the given string.
+// TrimN removes a leading newline from the given string.
 func TrimN(s string) string {
 	return strings.TrimPrefix(s, "\n")
 }

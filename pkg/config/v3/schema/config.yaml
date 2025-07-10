@@ -49,7 +49,7 @@ servers:
       - console
     http:
       listen_address: "0.0.0.0:8080"
-      fqdn: ""
+      hosted_domain: ""
       certs:
         tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
         tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -97,7 +97,7 @@ servers:
       connection_timeout: 5s
     http:
       listen_address: "0.0.0.0:9393"
-      fqdn: ""
+      hosted_domain: ""
       certs:
         tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
         tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -144,7 +144,7 @@ servers:
       connection_timeout: 5s
     http:
       listen_address: "0.0.0.0:8383"
-      fqdn: ""
+      hosted_domain: ""
       certs:
         tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
         tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'

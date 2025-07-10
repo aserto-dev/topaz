@@ -173,7 +173,7 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 			},
 			HTTP: servers.HTTPServer{
 				ListenAddress:     host.Gateway.ListenAddress,
-				FQDN:              host.Gateway.FQDN,
+				HostedDomain:      host.Gateway.FQDN,
 				Certs:             host.Gateway.Certs,
 				AllowedOrigins:    host.Gateway.AllowedOrigins,
 				AllowedHeaders:    host.Gateway.AllowedHeaders,

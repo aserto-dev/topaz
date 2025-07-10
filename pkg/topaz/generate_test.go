@@ -113,7 +113,7 @@ var cfg = &config.Config{
 			},
 			HTTP: servers.HTTPServer{
 				ListenAddress: "0.0.0.0:9393",
-				FQDN:          "localhost:9393",
+				HostedDomain:  "localhost:9393",
 				Certs: aserto.TLSConfig{
 					Key:  "${TOPAZ_CERTS_DIR}/gateway.key",
 					Cert: "${TOPAZ_CERTS_DIR}/gateway.crt",
