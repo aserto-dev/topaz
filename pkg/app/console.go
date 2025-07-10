@@ -12,10 +12,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	consoleService = "console"
-)
-
 type ConsoleService struct{}
 
 var _ builder.ServiceTypes = (*ConsoleService)(nil)

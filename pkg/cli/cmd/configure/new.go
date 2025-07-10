@@ -48,17 +48,18 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 
 	c.Con().Info().Msg("policy name: %s", cmd.Name)
 
-	gen, err := config.NewGenerator(cmd.Name.String())
-	if err != nil {
-		return err
+	var bundleOpt config.GeneratorOption
+
+	if cmd.From == FromLocal {
+		c.Con().Info().Msg("using local policy: %s", cmd.Resource)
+		bundleOpt = config.WithLocalBundle(cmd.Resource)
+	} else {
+		bundleOpt = config.WithBundle(cmd.Resource)
 	}
 
-	local := cmd.From == FromLocal
-	if local {
-		gen.WithLocalBundle(cmd.Resource)
-		c.Con().Info().Msg("using local policy: %s", cmd.Resource)
-	} else {
-		gen.WithBundle(cmd.Name.String(), cmd.Resource)
+	gen, err := config.NewGenerator(cmd.Name.String(), bundleOpt)
+	if err != nil {
+		return err
 	}
 
 	return gen.Generate(w)

@@ -26,57 +26,62 @@ const (
 )
 
 type Generator struct {
-	ConfigName string
-
-	cfg *config.Config
+	name string
+	cfg  *config.Config
 }
 
-func NewGenerator(configName string) (*Generator, error) {
-	cfg, err := config.NewConfig(&bytes.Buffer{}, defaultServer, boltdbFile(configName))
+type GeneratorOption func(name string, cfg *config.Config)
+
+func NewGenerator(name string, opts ...GeneratorOption) (*Generator, error) {
+	cfg, err := config.NewConfig(&bytes.Buffer{}, defaultServer, boltdbFile(name))
 	if err != nil {
 		return nil, err
 	}
 
+	for _, opt := range opts {
+		opt(name, cfg)
+	}
+
 	return &Generator{
-		ConfigName: configName,
-		cfg:        cfg,
+		name: name,
+		cfg:  cfg,
 	}, nil
 }
 
-func (g *Generator) WithBundle(name, resource string) *Generator {
-	g.setPolicyRegistry(resource)
+func WithBundle(resource string) GeneratorOption {
+	return func(name string, cfg *config.Config) {
+		setPolicyRegistry(resource, cfg)
 
-	bundles := g.cfg.Authorizer.OPA.Config.Bundles
-	g.cfg.Authorizer.OPA.Config.Bundles = lo.Assign(bundles, map[string]*bundle.Source{
-		name: {
-			Config: download.Config{
-				Polling: download.PollingConfig{
-					MinDelaySeconds: Ptr(BundlePollingMinDelay),
-					MaxDelaySeconds: Ptr(BundlePollingMaxDelay),
+		bundles := cfg.Authorizer.OPA.Config.Bundles
+		cfg.Authorizer.OPA.Config.Bundles = lo.Assign(bundles, map[string]*bundle.Source{
+			name: {
+				Config: download.Config{
+					Polling: download.PollingConfig{
+						MinDelaySeconds: Ptr(BundlePollingMinDelay),
+						MaxDelaySeconds: Ptr(BundlePollingMaxDelay),
+					},
 				},
+				Service:  PolicyRegistryServiceName,
+				Resource: resource,
+				Persist:  false,
 			},
-			Service:  PolicyRegistryServiceName,
-			Resource: resource,
-			Persist:  false,
-		},
-	})
-
-	return g
+		})
+	}
 }
 
-func (g *Generator) WithLocalBundle(path string) *Generator {
-	g.cfg.Authorizer.OPA.LocalBundles.LocalPolicyImage = path
-	g.cfg.Authorizer.OPA.LocalBundles.Watch = true
-	g.cfg.Authorizer.OPA.LocalBundles.SkipVerification = true
-
-	return g
+func WithLocalBundle(path string) GeneratorOption {
+	return func(name string, cfg *config.Config) {
+		cfg.Authorizer.OPA.LocalBundles.LocalPolicyImage = path
+		cfg.Authorizer.OPA.LocalBundles.Watch = true
+		cfg.Authorizer.OPA.LocalBundles.SkipVerification = true
+	}
 }
 
 func (g *Generator) Generate(w io.Writer) error {
 	return g.cfg.Serialize(w)
 }
 
-func (g *Generator) setPolicyRegistry(resource string) {
+func setPolicyRegistry(resource string, cfg *config.Config) {
 	var registry string
 
 	if policyRegistry, _, found := strings.Cut(resource, "/"); found && policyRegistry != "" {
@@ -86,8 +91,8 @@ func (g *Generator) setPolicyRegistry(resource string) {
 	}
 
 	// add policy registry to any existing services that may have been set.
-	services := g.cfg.Authorizer.OPA.Config.Services
-	g.cfg.Authorizer.OPA.Config.Services = lo.Assign(services, map[string]any{
+	services := cfg.Authorizer.OPA.Config.Services
+	cfg.Authorizer.OPA.Config.Services = lo.Assign(services, map[string]any{
 		PolicyRegistryServiceName: map[string]any{
 			"url":                             registry,
 			"type":                            "oci",

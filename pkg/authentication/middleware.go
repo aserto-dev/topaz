@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/middleware"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
@@ -134,54 +133,4 @@ func parseAuthHeader(val, expectedScheme string) (string, error) {
 	}
 
 	return header, nil
-}
-
-// TODO: Fold this code path into the normal 'authenticate' function.
-func (a *Middleware) ConfigHandler(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		options := a.options.ForPath(r.URL.Path)
-		if options.AllowAnonymous {
-			ctx := context.WithValue(r.Context(), handlers.AuthenticatedUser, true)
-			h.ServeHTTP(w, r.WithContext(ctx))
-
-			return
-		}
-
-		// if we reached this point, an API key is required
-		ctx := context.WithValue(r.Context(), handlers.AuthEnabled, true)
-
-		authHeader := httpAuthHeader(r)
-		if authHeader == "" {
-			// auth header is not present =>  the user is unauthenticated and did not provide a token
-			ctx = context.WithValue(ctx, handlers.AuthenticatedUser, false)
-			h.ServeHTTP(w, r.WithContext(ctx))
-
-			return
-		}
-
-		basicAPIKey, err := parseAuthHeader(authHeader, "basic")
-		if err != nil {
-			returnStatusUnauthorized(w, "Invalid authorization header. expected 'basic' scheme.", zerolog.Ctx(r.Context()))
-
-			return
-		}
-
-		if _, ok := a.keys[basicAPIKey]; ok {
-			ctx = context.WithValue(ctx, handlers.AuthenticatedUser, true)
-			h.ServeHTTP(w, r.WithContext(ctx))
-
-			return
-		}
-
-		// the user is not authenticated because the key they provided is incorrect
-		returnStatusUnauthorized(w, "The API key is invalid.", zerolog.Ctx(r.Context()))
-	})
-}
-
-func returnStatusUnauthorized(w http.ResponseWriter, errMsg string, log *zerolog.Logger) {
-	w.WriteHeader(http.StatusUnauthorized)
-
-	if _, err := w.Write([]byte(errMsg)); err != nil {
-		log.Error().Err(err).Msg("could not write response message")
-	}
 }
