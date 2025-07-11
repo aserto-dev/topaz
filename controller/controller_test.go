@@ -9,6 +9,7 @@ import (
 	client "github.com/aserto-dev/go-aserto"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v2"
 	"github.com/aserto-dev/topaz/controller"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -20,7 +21,9 @@ func TestInitializeErrorController(t *testing.T) {
 	ctrl, err := controller.NewController(
 		&logger, "test", "test-host",
 		&controller.Config{
-			Enabled: true,
+			Optional: config.Optional{
+				Enabled: true,
+			},
 		},
 		func(ctx context.Context, c *api.Command) error {
 			return nil
@@ -36,7 +39,9 @@ func TestNotEnabledController(t *testing.T) {
 	ctrl, err := controller.NewController(
 		&logger, "test", "test-host",
 		&controller.Config{
-			Enabled: false,
+			Optional: config.Optional{
+				Enabled: false,
+			},
 		},
 		func(ctx context.Context, c *api.Command) error {
 			return nil
@@ -52,7 +57,9 @@ func TestEnabledController(t *testing.T) {
 	ctrl, err := controller.NewController(
 		&logger, "test", "test-host",
 		&controller.Config{
-			Enabled: true,
+			Optional: config.Optional{
+				Enabled: true,
+			},
 			Server: client.Config{
 				Address: "localhost:1234",
 			},
@@ -72,7 +79,9 @@ func TestControllerLogMessages(t *testing.T) {
 	ctrl, err := controller.NewController(
 		&logger, "test", "test-host",
 		&controller.Config{
-			Enabled: true,
+			Optional: config.Optional{
+				Enabled: true,
+			},
 			Server: client.Config{
 				Address: "localhost:1234",
 			},

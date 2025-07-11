@@ -4,6 +4,7 @@ import (
 	"slices"
 	"testing"
 
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/servers"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
@@ -96,12 +97,12 @@ func TestEnabledServices(t *testing.T) {
 func TestListenAddresses(t *testing.T) {
 	cfg := servers.Config{
 		servers.ServerName("directory"): &servers.Server{
-			GRPC: servers.GRPCServer{ListenAddress: "0.0.0.0:9292"},
-			HTTP: servers.HTTPServer{ListenAddress: "0.0.0.0:9393"},
+			GRPC: servers.GRPCServer{Listener: config.Listener{ListenAddress: "0.0.0.0:9292"}},
+			HTTP: servers.HTTPServer{Listener: config.Listener{ListenAddress: "0.0.0.0:9393"}},
 		},
 		servers.ServerName("authorizer"): &servers.Server{
-			GRPC: servers.GRPCServer{ListenAddress: "0.0.0.0:8282"},
-			HTTP: servers.HTTPServer{ListenAddress: "0.0.0.0:8383"},
+			GRPC: servers.GRPCServer{Listener: config.Listener{ListenAddress: "0.0.0.0:8282"}},
+			HTTP: servers.HTTPServer{Listener: config.Listener{ListenAddress: "0.0.0.0:8383"}},
 		},
 	}
 
@@ -124,10 +125,14 @@ func TestListenAddresses(t *testing.T) {
 func withPorts(grpc, http string) *servers.Server {
 	return &servers.Server{
 		GRPC: servers.GRPCServer{
-			ListenAddress: listenAddr(grpc),
+			Listener: config.Listener{
+				ListenAddress: listenAddr(grpc),
+			},
 		},
 		HTTP: servers.HTTPServer{
-			ListenAddress: listenAddr(http),
+			Listener: config.Listener{
+				ListenAddress: listenAddr(http),
+			},
 		},
 	}
 }

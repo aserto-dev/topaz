@@ -1,3 +1,4 @@
+// Package debug implements an HTTP server that exposes pprof endpoints for debugging and profiling Go applications.
 package debug
 
 import (
@@ -15,9 +16,8 @@ import (
 )
 
 type Config struct {
+	config.Optional
 	servers.HTTPServer
-
-	Enabled bool `json:"enabled"`
 }
 
 var _ config.Section = (*Config)(nil)

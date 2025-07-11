@@ -10,6 +10,7 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/datasync"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
@@ -31,7 +32,8 @@ const (
 )
 
 type Config struct {
-	Enabled           bool              `json:"enabled"`              //
+	config.Optional
+
 	Addr              string            `json:"addr"`                 //
 	APIKey            string            `json:"apikey"`               //
 	TenantID          string            `json:"tenant_id,omitempty"`  //

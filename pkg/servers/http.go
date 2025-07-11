@@ -5,21 +5,22 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-aserto"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/go-http-utils/headers"
 	"github.com/rs/cors"
 )
 
 type HTTPServer struct {
-	ListenAddress     string           `json:"listen_address"`
-	HostedDomain      string           `json:"hosted_domain"`
-	Certs             aserto.TLSConfig `json:"certs"`
-	AllowedOrigins    []string         `json:"allowed_origins"`
-	AllowedHeaders    []string         `json:"allowed_headers"`
-	AllowedMethods    []string         `json:"allowed_methods"`
-	ReadTimeout       time.Duration    `json:"read_timeout"`
-	ReadHeaderTimeout time.Duration    `json:"read_header_timeout"`
-	WriteTimeout      time.Duration    `json:"write_timeout"`
-	IdleTimeout       time.Duration    `json:"idle_timeout"`
+	config.Listener
+
+	HostedDomain      string        `json:"hosted_domain"`
+	AllowedOrigins    []string      `json:"allowed_origins"`
+	AllowedHeaders    []string      `json:"allowed_headers"`
+	AllowedMethods    []string      `json:"allowed_methods"`
+	ReadTimeout       time.Duration `json:"read_timeout"`
+	ReadHeaderTimeout time.Duration `json:"read_header_timeout"`
+	WriteTimeout      time.Duration `json:"write_timeout"`
+	IdleTimeout       time.Duration `json:"idle_timeout"`
 }
 
 func (s *HTTPServer) Defaults() map[string]any {
@@ -37,19 +38,6 @@ func (s *HTTPServer) Defaults() map[string]any {
 
 func (s *HTTPServer) Validate() error {
 	return nil
-}
-
-func (s *HTTPServer) HasListener() bool {
-	return s != nil && s.ListenAddress != ""
-}
-
-func (s *HTTPServer) TryCerts() *aserto.TLSConfig {
-	zero := aserto.TLSConfig{}
-	if s.Certs == zero {
-		return nil
-	}
-
-	return &s.Certs
 }
 
 func (s *HTTPServer) Cors() *cors.Cors {

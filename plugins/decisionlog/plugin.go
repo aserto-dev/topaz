@@ -3,10 +3,12 @@ package decisionlog
 import (
 	"context"
 
-	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	"github.com/aserto-dev/topaz/decisionlog"
-
 	"github.com/open-policy-agent/opa/v1/plugins"
+
+	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+
+	"github.com/aserto-dev/topaz/decisionlog"
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 const PluginName = "aserto_decision_log"
@@ -21,7 +23,8 @@ type PolicyInfo struct {
 	Digest          string `json:"digest"`
 }
 type Config struct {
-	Enabled    bool       `json:"enabled"`
+	config.Optional
+
 	PolicyInfo PolicyInfo `json:"policy_info"`
 }
 type DecisionLogsPlugin struct {

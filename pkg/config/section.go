@@ -1,3 +1,4 @@
+// Package config contains common types and functions used in defining configuration sections.
 package config
 
 import (
@@ -8,6 +9,7 @@ import (
 
 var ErrConfig = errors.New("configuraion error")
 
+// Serializer can emit a YAML representation of itself into an io.Writer.
 type Serializer interface {
 	// Serialize as YAML into w.
 	Serialize(w io.Writer) error

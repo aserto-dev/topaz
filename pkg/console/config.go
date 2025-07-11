@@ -58,7 +58,7 @@ func ConfigHandler(topazCfg *config.Config) http.Handler {
 
 func gatewayURL(cfg servers.Config, svc servers.ServiceName) string {
 	server, found := cfg.FindService(svc)
-	if !found || !server.HTTP.HasListener() {
+	if !found || server.HTTP.IsEmptyAddress() {
 		return ""
 	}
 

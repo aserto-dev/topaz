@@ -202,12 +202,12 @@ func (s *Server) Validate() error {
 		if service != Service.Console {
 			// All services except the console require grpc configuration.
 			needsGRPC = true
-		} else if !s.HTTP.HasListener() {
+		} else if s.HTTP.IsEmptyAddress() {
 			errs = multierror.Append(errs, errors.Wrap(config.ErrConfig, "http listen_address is required for console service"))
 		}
 	}
 
-	if needsGRPC && !s.GRPC.HasListener() {
+	if needsGRPC && s.GRPC.IsEmptyAddress() {
 		errs = multierror.Append(errs, errors.Wrap(config.ErrConfig, "grpc listen_address is required"))
 	}
 

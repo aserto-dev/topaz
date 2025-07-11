@@ -14,6 +14,7 @@ import (
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
+	cfgutil "github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/config/v3"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
@@ -40,7 +41,9 @@ var cfg = &config.Config{
 		GrpcLogLevel: "info",
 	},
 	Authentication: authentication.Config{
-		Enabled:  false,
+		Optional: cfgutil.Optional{
+			Enabled: false,
+		},
 		Provider: "local",
 		Local: authentication.LocalConfig{
 			Keys: []string{
@@ -74,51 +77,67 @@ var cfg = &config.Config{
 		},
 	},
 	Debug: debug.Config{
-		Enabled: false,
-		HTTPServer: servers.HTTPServer{
-			ListenAddress: "localhost:6060",
+		Optional: cfgutil.Optional{
+			Enabled: false,
 		},
-	},
-	Health: health.Config{
-		Enabled: true,
-		GRPCServer: servers.GRPCServer{
-			ListenAddress: "localhost:8484",
-			Certs: aserto.TLSConfig{
-				Key:  "${TOPAZ_CERTS_DIR}/grpc.key",
-				Cert: "${TOPAZ_CERTS_DIR}/grpc.crt",
-				CA:   "${TOPAZ_CERTS_DIR}/grpc-ca.crt",
+		HTTPServer: servers.HTTPServer{
+			Listener: cfgutil.Listener{
+				ListenAddress: "localhost:6060",
 			},
 		},
 	},
-	Metrics: metrics.Config{
-		Enabled:       true,
-		ListenAddress: "localhost:8686",
-		Certificates: aserto.TLSConfig{
-			Key:  "${TOPAZ_CERTS_DIR}/gateway.key",
-			Cert: "${TOPAZ_CERTS_DIR}/gateway.crt",
-			CA:   "${TOPAZ_CERTS_DIR}/gateway-ca.crt",
+	Health: health.Config{
+		Optional: cfgutil.Optional{
+			Enabled: true,
 		},
-	},
-	Servers: servers.Config{
-		"topaz": &servers.Server{
-			GRPC: servers.GRPCServer{
-				ListenAddress: "0.0.0.0:9292",
+		GRPCServer: servers.GRPCServer{
+			Listener: cfgutil.Listener{
+				ListenAddress: "localhost:8484",
 				Certs: aserto.TLSConfig{
 					Key:  "${TOPAZ_CERTS_DIR}/grpc.key",
 					Cert: "${TOPAZ_CERTS_DIR}/grpc.crt",
 					CA:   "${TOPAZ_CERTS_DIR}/grpc-ca.crt",
 				},
+			},
+		},
+	},
+	Metrics: metrics.Config{
+		Optional: cfgutil.Optional{
+			Enabled: true,
+		},
+		Listener: cfgutil.Listener{
+			ListenAddress: "localhost:8686",
+			Certs: aserto.TLSConfig{
+				Key:  "${TOPAZ_CERTS_DIR}/gateway.key",
+				Cert: "${TOPAZ_CERTS_DIR}/gateway.crt",
+				CA:   "${TOPAZ_CERTS_DIR}/gateway-ca.crt",
+			},
+		},
+	},
+	Servers: servers.Config{
+		"topaz": &servers.Server{
+			GRPC: servers.GRPCServer{
+				Listener: cfgutil.Listener{
+					ListenAddress: "0.0.0.0:9292",
+					Certs: aserto.TLSConfig{
+						Key:  "${TOPAZ_CERTS_DIR}/grpc.key",
+						Cert: "${TOPAZ_CERTS_DIR}/grpc.crt",
+						CA:   "${TOPAZ_CERTS_DIR}/grpc-ca.crt",
+					},
+				},
 				ConnectionTimeout: time.Second * 7,
 				NoReflection:      false,
 			},
 			HTTP: servers.HTTPServer{
-				ListenAddress: "0.0.0.0:9393",
-				HostedDomain:  "localhost:9393",
-				Certs: aserto.TLSConfig{
-					Key:  "${TOPAZ_CERTS_DIR}/gateway.key",
-					Cert: "${TOPAZ_CERTS_DIR}/gateway.crt",
-					CA:   "${TOPAZ_CERTS_DIR}/gateway-ca.crt",
+				Listener: cfgutil.Listener{
+					ListenAddress: "0.0.0.0:9393",
+					Certs: aserto.TLSConfig{
+						Key:  "${TOPAZ_CERTS_DIR}/gateway.key",
+						Cert: "${TOPAZ_CERTS_DIR}/gateway.crt",
+						CA:   "${TOPAZ_CERTS_DIR}/gateway-ca.crt",
+					},
 				},
+				HostedDomain:      "localhost:9393",
 				AllowedOrigins:    servers.DefaultAllowedOrigins(false),
 				AllowedHeaders:    servers.DefaultAllowedHeaders(),
 				AllowedMethods:    servers.DefaultAllowedMethods(),
@@ -181,8 +200,8 @@ var cfg = &config.Config{
 				// },
 			},
 			Config: runtime.OPAConfig{
-				Services: map[string]interface{}{
-					"registry": map[string]interface{}{
+				Services: map[string]any{
+					"registry": map[string]any{
 						"url": "https://ghcr.io",
 					},
 					"type":                            "oci",
@@ -250,7 +269,9 @@ var cfg = &config.Config{
 			// }.Map(),
 		},
 		Controller: authorizer.ControllerConfig(controller.Config{
-			Enabled: true,
+			Optional: cfgutil.Optional{
+				Enabled: true,
+			},
 			Server: aserto.Config{
 				Address:        "relay.prod.aserto.com:8443",
 				APIKey:         "0xdeadbeef",
@@ -275,7 +296,7 @@ func TestGenerate(t *testing.T) {
 			require.NoError(t, err)
 		}
 
-		var v map[string]interface{}
+		var v map[string]any
 
 		dec := yaml.NewDecoder(bytes.NewReader(buf))
 		if err := dec.Decode(&v); err != nil {

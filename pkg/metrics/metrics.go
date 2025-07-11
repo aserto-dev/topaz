@@ -4,14 +4,12 @@ import (
 	"io"
 	"text/template"
 
-	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 type Config struct {
-	Enabled       bool             `json:"enabled"`
-	ListenAddress string           `json:"listen_address"`
-	Certificates  client.TLSConfig `json:"certs,omitempty"`
+	config.Optional
+	config.Listener
 }
 
 var _ config.Section = (*Config)(nil)
@@ -38,15 +36,6 @@ func (c *Config) Serialize(w io.Writer) error {
 	}
 
 	return nil
-}
-
-func (c *Config) TryCerts() *client.TLSConfig {
-	zero := client.TLSConfig{}
-	if c.Certificates == zero {
-		return nil
-	}
-
-	return &c.Certificates
 }
 
 const metricsTemplate = `

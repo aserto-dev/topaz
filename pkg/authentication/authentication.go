@@ -29,7 +29,8 @@ import (
 //           enable_api_key: false
 
 type Config struct {
-	Enabled  bool        `json:"enabled"`
+	config.Optional
+
 	Provider string      `json:"provider,omitempty"`
 	Local    LocalConfig `json:"local,omitempty"`
 }

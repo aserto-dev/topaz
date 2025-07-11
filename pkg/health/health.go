@@ -10,9 +10,8 @@ import (
 )
 
 type Config struct {
+	config.Optional
 	servers.GRPCServer
-
-	Enabled bool `json:"enabled"`
 }
 
 var _ config.Section = (*Config)(nil)
@@ -20,7 +19,7 @@ var _ config.Section = (*Config)(nil)
 //nolint:mnd  // this is where default values are defined.
 func (c *Config) Defaults() map[string]any {
 	return map[string]any{
-		"enabled":            false,
+		"enabled":            true,
 		"listen_address":     "0.0.0.0:9494",
 		"connection_timeout": 5 * time.Second,
 	}

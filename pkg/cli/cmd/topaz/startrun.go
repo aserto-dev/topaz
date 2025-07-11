@@ -2,18 +2,20 @@ package topaz
 
 import (
 	"fmt"
+	"iter"
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"strings"
 
-	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	"github.com/aserto-dev/topaz/pkg/cli/config"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
 )
 
 type StartRunCmd struct {
@@ -44,7 +46,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(c.Config.Active.ConfigFile))
 	}
 
-	cfg, err := config.LoadConfiguration(c.Config.Active.ConfigFile)
+	cfg, err := config.Load(c.Config.Active.ConfigFile)
 	if err != nil {
 		return err
 	}
@@ -52,30 +54,6 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	c.Config.Running.Config = c.Config.Active.Config
 	c.Config.Running.ConfigFile = c.Config.Active.ConfigFile
 	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
-
-	if cfg.HasTopazDir {
-		c.Con().Warn().Msg("This configuration file still uses TOPAZ_DIR environment variable.")
-		c.Con().Msg("Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
-	}
-
-	generator := config.NewGenerator(filepath.Base(c.Config.Active.ConfigFile))
-	if _, err := generator.CreateCertsDir(); err != nil {
-		return err
-	}
-
-	if _, err := generator.CreateDataDir(); err != nil {
-		return err
-	}
-
-	ports, err := getPorts(cfg)
-	if err != nil {
-		return err
-	}
-
-	volumes, err := getVolumes(cfg)
-	if err != nil {
-		return err
-	}
 
 	c.Con().Info().Msg(">>> starting topaz %q...", c.Config.Running.Config)
 
@@ -96,6 +74,8 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		}
 	}
 
+	volumes := cfg.Volumes()
+
 	opts := []dockerx.RunOption{
 		dockerx.WithContainerImage(image),
 		dockerx.WithContainerPlatform(cmd.ContainerPlatform),
@@ -107,7 +87,7 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithAutoRemove(),
 		dockerx.WithEnvs(getEnvFromVolumes(volumes)),
 		dockerx.WithEnvs(cmd.Env),
-		dockerx.WithPorts(ports),
+		dockerx.WithPorts(containerPorts(cfg.Ports())),
 		dockerx.WithVolumes(volumes),
 		dockerx.WithOutput(c.StdOut()),
 		dockerx.WithError(c.StdErr()),
@@ -135,49 +115,39 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	return nil
 }
 
-func getPorts(cfg *config.Loader) ([]string, error) {
-	portArray, err := cfg.GetPorts()
-	if err != nil {
-		return nil, err
-	}
-
-	// ensure unique assignment for each port
-	portMap := lo.Associate(portArray, func(port string) (string, string) {
-		return port, fmt.Sprintf("%s:%s/tcp", port, port)
-	})
-
-	ports := lo.MapToSlice(portMap, func(_, v string) string {
-		return v
-	})
-
-	return ports, nil
+func containerPorts(ports iter.Seq[string]) []string {
+	return slices.Collect(
+		loiter.Map(ports, func(port string) string {
+			return fmt.Sprintf("%s:%s/tcp", port, port)
+		}),
+	)
 }
 
-func getVolumes(cfg *config.Loader) ([]string, error) {
-	paths, err := cfg.GetPaths()
-	if err != nil {
-		return nil, err
-	}
-
-	volumeMap := lo.Associate(paths, func(path string) (string, string) {
-		dir := filepath.Dir(path)
-		return dir, dir + ":/" + filepath.Base(dir)
-	})
-
-	volumes := []string{
-		cc.GetTopazCfgDir() + ":/config:ro", // manually attach the configuration folder
-	}
-
-	if cfg.Configuration.OPA.LocalBundles.LocalPolicyImage != "" && dockerx.PolicyRoot() != "" {
-		volumes = append(volumes, dockerx.PolicyRoot()+":/root/.policy:ro") // manually attach policy store
-	}
-
-	for _, v := range volumeMap {
-		volumes = append(volumes, v)
-	}
-
-	return volumes, nil
-}
+// func getVolumes(cfg *config.Loader) ([]string, error) {
+// 	paths, err := cfg.GetPaths()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+//
+// 	volumeMap := lo.Associate(paths, func(path string) (string, string) {
+// 		dir := filepath.Dir(path)
+// 		return dir, dir + ":/" + filepath.Base(dir)
+// 	})
+//
+// 	volumes := []string{
+// 		cc.GetTopazCfgDir() + ":/config:ro", // manually attach the configuration folder
+// 	}
+//
+// 	if cfg.Configuration.OPA.LocalBundles.LocalPolicyImage != "" && dockerx.PolicyRoot() != "" {
+// 		volumes = append(volumes, dockerx.PolicyRoot()+":/root/.policy:ro") // manually attach policy store
+// 	}
+//
+// 	for _, v := range volumeMap {
+// 		volumes = append(volumes, v)
+// 	}
+//
+// 	return volumes, nil
+// }
 
 func getEnvFromVolumes(volumes []string) []string {
 	envs := []string{}

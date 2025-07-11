@@ -73,7 +73,9 @@ func migAuthentication(cfg2 *config2.Config, cfg3 *config3.Config) {
 
 func migAuthnConfig(v2 *config2.AuthnConfig) authentication.Config {
 	return authentication.Config{
-		Enabled:  len(v2.Keys) != 0,
+		Optional: config.Optional{
+			Enabled: len(v2.Keys) != 0,
+		},
 		Provider: authentication.LocalAuthenticationPlugin,
 		Local: authentication.LocalConfig{
 			Keys: v2.Keys,
@@ -101,27 +103,39 @@ func migAuthnOptions(v2 *config2.Options) authentication.Options {
 
 func migDebug(cfg2 *config2.Config, cfg3 *config3.Config) {
 	cfg3.Debug = debug.Config{
-		Enabled: cfg2.DebugService.Enabled,
+		Optional: config.Optional{
+			Enabled: cfg2.DebugService.Enabled,
+		},
 		HTTPServer: servers.HTTPServer{
-			ListenAddress: cfg2.DebugService.ListenAddress,
+			Listener: config.Listener{
+				ListenAddress: cfg2.DebugService.ListenAddress,
+			},
 		},
 	}
 }
 
 func migMetrics(cfg2 *config2.Config, cfg3 *config3.Config) {
 	cfg3.Metrics = metrics.Config{
-		Enabled:       cfg2.APIConfig.Metrics.ListenAddress != "",
-		ListenAddress: cfg2.APIConfig.Metrics.ListenAddress,
-		Certificates:  cfg2.APIConfig.Metrics.Certificates,
+		Optional: config.Optional{
+			Enabled: cfg2.APIConfig.Metrics.ListenAddress != "",
+		},
+		Listener: config.Listener{
+			ListenAddress: cfg2.APIConfig.Metrics.ListenAddress,
+			Certs:         cfg2.APIConfig.Metrics.Certificates,
+		},
 	}
 }
 
 func migHealth(cfg2 *config2.Config, cfg3 *config3.Config) {
 	cfg3.Health = health.Config{
-		Enabled: cfg2.APIConfig.Health.ListenAddress != "",
+		Optional: config.Optional{
+			Enabled: cfg2.APIConfig.Health.ListenAddress != "",
+		},
 		GRPCServer: servers.GRPCServer{
-			ListenAddress: cfg2.APIConfig.Health.ListenAddress,
-			Certs:         cfg2.APIConfig.Health.Certificates,
+			Listener: config.Listener{
+				ListenAddress: cfg2.APIConfig.Health.ListenAddress,
+				Certs:         cfg2.APIConfig.Health.Certificates,
+			},
 		},
 	}
 }
@@ -166,15 +180,19 @@ func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 
 		cfg3.Servers[svc] = &servers.Server{
 			GRPC: servers.GRPCServer{
-				ListenAddress:     host.GRPC.ListenAddress,
-				Certs:             host.GRPC.Certs,
+				Listener: config.Listener{
+					ListenAddress: host.GRPC.ListenAddress,
+					Certs:         host.GRPC.Certs,
+				},
 				ConnectionTimeout: time.Duration(int64(host.GRPC.ConnectionTimeoutSeconds)) * time.Second,
 				NoReflection:      false,
 			},
 			HTTP: servers.HTTPServer{
-				ListenAddress:     host.Gateway.ListenAddress,
+				Listener: config.Listener{
+					ListenAddress: host.Gateway.ListenAddress,
+					Certs:         host.Gateway.Certs,
+				},
 				HostedDomain:      host.Gateway.FQDN,
-				Certs:             host.Gateway.Certs,
 				AllowedOrigins:    host.Gateway.AllowedOrigins,
 				AllowedHeaders:    host.Gateway.AllowedHeaders,
 				AllowedMethods:    host.Gateway.AllowedMethods,
@@ -226,8 +244,10 @@ func migAuthorizer(cfg2 *config2.Config, cfg3 *config3.Config) {
 	if cfg2.ControllerConfig.Enabled {
 		cfg3.Authorizer.Controller = authorizer.ControllerConfig(
 			controller.Config{
-				Enabled: cfg2.ControllerConfig.Enabled,
-				Server:  cfg2.ControllerConfig.Server,
+				Optional: config.Optional{
+					Enabled: cfg2.ControllerConfig.Enabled,
+				},
+				Server: cfg2.ControllerConfig.Server,
 			},
 		)
 	}
@@ -235,7 +255,9 @@ func migAuthorizer(cfg2 *config2.Config, cfg3 *config3.Config) {
 
 func migDecisionLogger(cfg2 *config2.DecisionLogConfig) authorizer.DecisionLoggerConfig {
 	return authorizer.DecisionLoggerConfig{
-		Enabled:  true,
+		Optional: config.Optional{
+			Enabled: true,
+		},
 		Provider: cfg2.Type,
 		File:     migFileLogger(cfg2),
 		Self:     migSelfLogger(cfg2),

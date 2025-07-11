@@ -12,7 +12,8 @@ const (
 )
 
 type DecisionLoggerConfig struct {
-	Enabled  bool                     `json:"enabled"`
+	config.Optional
+
 	Provider string                   `json:"provider"`
 	File     FileDecisionLoggerConfig `json:"file"`
 	Self     SelfDecisionLoggerConfig `json:"self"`

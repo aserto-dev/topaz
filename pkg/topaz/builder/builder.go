@@ -124,7 +124,7 @@ func (b *serverBuilder) BuildDebug(ctx context.Context, cfg *debug.Config) (*htt
 }
 
 func (b *serverBuilder) buildGRPC(cfg *servers.Server) (*grpcServer, error) {
-	if !cfg.GRPC.HasListener() {
+	if cfg.GRPC.IsEmptyAddress() {
 		return noGRPC, nil
 	}
 
@@ -145,7 +145,7 @@ func (b *serverBuilder) buildGRPC(cfg *servers.Server) (*grpcServer, error) {
 }
 
 func (b *serverBuilder) buildHTTP(cfg *servers.HTTPServer) (*httpServer, error) {
-	if !cfg.HasListener() {
+	if cfg.IsEmptyAddress() {
 		return noHTTP, nil
 	}
 
