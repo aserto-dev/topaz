@@ -2,9 +2,12 @@ package controller
 
 import (
 	client "github.com/aserto-dev/go-aserto"
+
+	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 type Config struct {
-	Enabled bool          `json:"enabled"`
-	Server  client.Config `json:"server"`
+	config.Optional
+
+	Server client.Config `json:"server"`
 }

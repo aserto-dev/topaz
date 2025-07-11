@@ -12,10 +12,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	consoleService = "console"
-)
-
 type ConsoleService struct{}
 
 var _ builder.ServiceTypes = (*ConsoleService)(nil)
@@ -55,38 +51,38 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 	modelURL := ""
 	consoleURL := ""
 
-	if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
-		authorizerURL = getGatewayAddress(serviceConfig)
-	}
-
-	if serviceConfig, ok := cfg.APIConfig.Services[readerService]; ok {
-		readerURL = getGatewayAddress(serviceConfig)
-		if cfg.DirectoryResolver.Address == serviceConfig.GRPC.ListenAddress {
-			directoryServiceURL = readerURL
-		}
-	}
-
-	if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
-		writerURL = getGatewayAddress(serviceConfig)
-	}
-
-	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
-		modelURL = getGatewayAddress(serviceConfig)
-	}
-
-	if serviceConfig, ok := cfg.APIConfig.Services[consoleService]; ok {
-		consoleURL = getGatewayAddress(serviceConfig)
-	}
-
+	// if serviceConfig, ok := cfg.APIConfig.Services[authorizerService]; ok {
+	// 	authorizerURL = getGatewayAddress(serviceConfig)
+	// }
+	//
+	// if serviceConfig, ok := cfg.APIConfig.Services[readerService]; ok {
+	// 	readerURL = getGatewayAddress(serviceConfig)
+	// 	if cfg.DirectoryResolver.Address == serviceConfig.GRPC.ListenAddress {
+	// 		directoryServiceURL = readerURL
+	// 	}
+	// }
+	//
+	// if serviceConfig, ok := cfg.APIConfig.Services[writerService]; ok {
+	// 	writerURL = getGatewayAddress(serviceConfig)
+	// }
+	//
+	// if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
+	// 	modelURL = getGatewayAddress(serviceConfig)
+	// }
+	//
+	// if serviceConfig, ok := cfg.APIConfig.Services[consoleService]; ok {
+	// 	consoleURL = getGatewayAddress(serviceConfig)
+	// }
+	//
 	authorizerAPIKey := ""
-
-	if _, ok := cfg.APIConfig.Services[authorizerService]; ok {
-		for key := range cfg.Auth.APIKeys {
-			// we only need a key
-			authorizerAPIKey = key
-			break
-		}
-	}
+	//
+	// if _, ok := cfg.APIConfig.Services[authorizerService]; ok {
+	// 	for key := range cfg.Auth.APIKeys {
+	// 		// we only need a key
+	// 		authorizerAPIKey = key
+	// 		break
+	// 	}
+	// }
 
 	directoryAPIKey := cfg.DirectoryResolver.APIKey
 
@@ -105,21 +101,21 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 	}
 }
 
-func getGatewayAddress(serviceConfig *builder.API) string {
-	if serviceConfig.Gateway.FQDN != "" {
-		return serviceConfig.Gateway.FQDN
-	}
-
-	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
-
-	serviceConfig.Gateway.HTTP = !serviceConfig.Gateway.Certs.HasCert()
-
-	if serviceConfig.Gateway.HTTP {
-		return "http://" + addr
-	}
-
-	return "https://" + addr
-}
+// func getGatewayAddress(serviceConfig *builder.API) string {
+// 	if serviceConfig.Gateway.FQDN != "" {
+// 		return serviceConfig.Gateway.FQDN
+// 	}
+//
+// 	addr := serviceAddress(serviceConfig.Gateway.ListenAddress)
+//
+// 	serviceConfig.Gateway.HTTP = !serviceConfig.Gateway.Certs.HasCert()
+//
+// 	if serviceConfig.Gateway.HTTP {
+// 		return "http://" + addr
+// 	}
+//
+// 	return "https://" + addr
+// }
 
 func serviceAddress(listenAddress string) string {
 	return strings.Replace(listenAddress, "0.0.0.0", "localhost", 1)

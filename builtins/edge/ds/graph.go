@@ -4,7 +4,6 @@ import (
 	"bytes"
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -26,7 +25,7 @@ import (
 //	    "explain": false,
 //	    "trace": false
 //	}
-func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterGraph(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -53,7 +52,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				})
 			}
 
-			resp, err := dr.GetDS().GetGraph(bctx.Context, &args)
+			resp, err := dr.GetGraph(bctx.Context, &args)
 			if err != nil {
 				traceError(&bctx, fnName, err)
 				return nil, err
