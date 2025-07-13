@@ -56,8 +56,8 @@ github.com/aserto-dev/openapi-authorizer v0.20.6 h1:IW6sAj17kDYW4iHRvS5pSzWYLoym
 github.com/aserto-dev/openapi-authorizer v0.20.6/go.mod h1:SPwUWm12v9ProAdssQ/ommYftQ0KXJUbtQQFOWYsbHY=
 github.com/aserto-dev/openapi-directory v0.33.5 h1:uiNoLTkYE4qEiVBvjbq7A2AqsI+fA/iM5m5Gpaic3NY=
 github.com/aserto-dev/openapi-directory v0.33.5/go.mod h1:t8jFi3PfdC5k3f/fvYT6DIU+OHzn+Ptidlw83W7h7lo=
-github.com/aserto-dev/runtime v1.5.3-0.20250713125309-65f2db900675 h1:HbUtA7b6CbqST5x7SM6bZyXiLf7XfmIteUgeCbnIDa8=
-github.com/aserto-dev/runtime v1.5.3-0.20250713125309-65f2db900675/go.mod h1:FK+Sdbrgpv0xu9yK0IDucNTzC6UmaheNK5nuJTqSyHk=
+github.com/aserto-dev/runtime v1.6.0 h1:DrDgrJ8L3uF9owpLKOC1PcGlxIbIKSU8Cc76bVqTaSc=
+github.com/aserto-dev/runtime v1.6.0/go.mod h1:FK+Sdbrgpv0xu9yK0IDucNTzC6UmaheNK5nuJTqSyHk=
 github.com/aserto-dev/self-decision-logger v0.0.12 h1:oMU43OCjgEMcsAx5EraWTncqyZHBea1H1+Dyyd8I3hI=
 github.com/aserto-dev/self-decision-logger v0.0.12/go.mod h1:nF3SyHJoMS5KbGm+EHF2BlDyNpzjPgodfp6H4MWS6QU=
 github.com/authzen/access.go v0.0.6 h1:yrsv1PSkXV+8flncvRjnL223Pbfks1xX63IGu+D4BDg=
