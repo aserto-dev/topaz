@@ -16,24 +16,23 @@ import (
 )
 
 /*
-RegisterCheck - az.evaluation
-az.evaluation({
-	"subject": {
-		"type": "",
-		"id": "",
-		"properties": {}
-	},
-	"action": {
-		"name": "",
-		"properties": {}
-	},
-	"resource": {
-		"type": "",
-		"id": "",
-		"properties": {}
-	},
-	"context": {}
-})
+	az.evaluation({
+		"subject": {
+			"type": "",
+			"id": "",
+			"properties": {}
+		},
+		"action": {
+			"name": "",
+			"properties": {}
+		},
+		"resource": {
+			"type": "",
+			"id": "",
+			"properties": {}
+		},
+		"context": {}
+	})
 */
 
 func RegisterEvaluation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
@@ -50,7 +49,7 @@ func RegisterEvaluation(logger *zerolog.Logger, fnName string, dr resolvers.Dire
 			}
 
 			if proto.Equal(&args, &access.EvaluationRequest{}) {
-				return builtins.HelpMsg(fnName, evaluationHelp())
+				return builtins.HelpMsg(fnName, evaluationReq())
 			}
 
 			resp, err := dr.GetAuthZen().Evaluation(bctx.Context, &args)
@@ -63,7 +62,7 @@ func RegisterEvaluation(logger *zerolog.Logger, fnName string, dr resolvers.Dire
 		}
 }
 
-func evaluationHelp() *access.EvaluationRequest {
+func evaluationReq() *access.EvaluationRequest {
 	return &access.EvaluationRequest{
 		Subject: &access.Subject{
 			Type:       "",

@@ -16,44 +16,42 @@ import (
 )
 
 /*
-RegisterCheck - az.evaluations
-
 	az.evaluations({
-		"subject": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"action": {
-			"name": "",
-			"properties": {}
-		},
-		"resource": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"context": {},
-		"evaluations": [
-			{
-				"subject": {
-					"type": "",
-					"id": "",
-					"properties": {}
-				},
-				"action": {
-					"name": "",
-					"properties": {}
-				},
-				"resource": {
-					"type": "",
-					"id": "",
-					"properties": {}
-				},
-				"context": {}
-			}
-		],
-		"options": {}
+			"subject": {
+				"type": "",
+				"id": "",
+				"properties": {}
+			},
+			"action": {
+				"name": "",
+				"properties": {}
+			},
+			"resource": {
+				"type": "",
+				"id": "",
+				"properties": {}
+			},
+			"context": {},
+			"evaluations": [
+				{
+					"subject": {
+						"type": "",
+						"id": "",
+						"properties": {}
+					},
+					"action": {
+						"name": "",
+						"properties": {}
+					},
+					"resource": {
+						"type": "",
+						"id": "",
+						"properties": {}
+					},
+					"context": {}
+				}
+			],
+			"options": {}
 	})
 */
 func RegisterEvaluations(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
@@ -70,7 +68,7 @@ func RegisterEvaluations(logger *zerolog.Logger, fnName string, dr resolvers.Dir
 			}
 
 			if proto.Equal(&args, &access.EvaluationsRequest{}) {
-				return builtins.HelpMsg(fnName, evaluationsHelp())
+				return builtins.HelpMsg(fnName, evaluationsReq())
 			}
 
 			resp, err := dr.GetAuthZen().Evaluations(bctx.Context, &args)
@@ -83,7 +81,7 @@ func RegisterEvaluations(logger *zerolog.Logger, fnName string, dr resolvers.Dir
 		}
 }
 
-func evaluationsHelp() *access.EvaluationsRequest {
+func evaluationsReq() *access.EvaluationsRequest {
 	return &access.EvaluationsRequest{
 		Subject: &access.Subject{
 			Type:       "",
@@ -99,8 +97,26 @@ func evaluationsHelp() *access.EvaluationsRequest {
 			Id:         "",
 			Properties: pb.NewStruct(),
 		},
-		Context:     pb.NewStruct(),
-		Evaluations: []*access.EvaluationRequest{},
-		Options:     pb.NewStruct(),
+		Context: pb.NewStruct(),
+		Evaluations: []*access.EvaluationRequest{
+			{
+				Subject: &access.Subject{
+					Type:       "",
+					Id:         "",
+					Properties: pb.NewStruct(),
+				},
+				Action: &access.Action{
+					Name:       "",
+					Properties: pb.NewStruct(),
+				},
+				Resource: &access.Resource{
+					Type:       "",
+					Id:         "",
+					Properties: pb.NewStruct(),
+				},
+				Context: pb.NewStruct(),
+			},
+		},
+		Options: pb.NewStruct(),
 	}
 }

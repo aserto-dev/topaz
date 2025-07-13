@@ -43,7 +43,7 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			if proto.Equal(&args, &reader.ChecksRequest{}) {
-				return builtins.HelpMsg(fnName, checksHelp())
+				return builtins.HelpMsg(fnName, checksReq())
 			}
 
 			if args.GetDefault() == nil {
@@ -84,7 +84,7 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 		}
 }
 
-func checksHelp() *reader.ChecksRequest {
+func checksReq() *reader.ChecksRequest {
 	return &reader.ChecksRequest{
 		Default: &reader.CheckRequest{
 			ObjectType:  "",

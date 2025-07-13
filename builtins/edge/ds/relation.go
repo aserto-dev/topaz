@@ -46,7 +46,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			}
 
 			if proto.Equal(&args, &reader.GetRelationRequest{}) {
-				return builtins.HelpMsg(fnName, getRelationHelp())
+				return builtins.HelpMsg(fnName, getRelationReq())
 			}
 
 			resp, err := dr.GetDS().GetRelation(bctx.Context, &args)
@@ -86,7 +86,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 		}
 }
 
-func getRelationHelp() *reader.GetRelationRequest {
+func getRelationReq() *reader.GetRelationRequest {
 	return &reader.GetRelationRequest{
 		ObjectType:      "",
 		ObjectId:        "",
@@ -125,7 +125,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 			}
 
 			if proto.Equal(&args, &reader.GetRelationsRequest{}) {
-				return builtins.HelpMsg(fnName, getRelationsHelp())
+				return builtins.HelpMsg(fnName, getRelationsReq())
 			}
 
 			args.Page = &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""}
@@ -169,7 +169,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 		}
 }
 
-func getRelationsHelp() *reader.GetRelationsRequest {
+func getRelationsReq() *reader.GetRelationsRequest {
 	return &reader.GetRelationsRequest{
 		ObjectType:               "",
 		ObjectId:                 "",

@@ -16,23 +16,25 @@ import (
 )
 
 /*
-RegisterCheck - az.evaluation
-az.evaluation({
-	"subject": {
-		"type": "",
-		"id": "",
-		"properties": {}
-	},
-	"action": {
-		"name": "",
-		"properties": {}
-	},
-	"resource": {
-		"type": "",
-		"id": "",
-		"properties": {}
-	},
-	"context": {}
+az.subject_search({
+		"subject": {
+			"type": "",
+			"id": "",
+			"properties": {}
+		},
+		"action": {
+			"name": "",
+			"properties": {}
+		},
+		"resource": {
+			"type": "",
+			"id": "",
+			"properties": {}
+		},
+		"context": {},
+		"page": {
+			"next_token": ""
+		}
 })
 */
 
@@ -50,7 +52,7 @@ func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.
 			}
 
 			if proto.Equal(&args, &access.ResourceSearchRequest{}) {
-				return builtins.HelpMsg(fnName, resourceSearchHelp())
+				return builtins.HelpMsg(fnName, resourceSearchReq())
 			}
 
 			resp, err := dr.GetAuthZen().ResourceSearch(bctx.Context, &args)
@@ -63,7 +65,7 @@ func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.
 		}
 }
 
-func resourceSearchHelp() *access.ResourceSearchRequest {
+func resourceSearchReq() *access.ResourceSearchRequest {
 	return &access.ResourceSearchRequest{
 		Subject: &access.Subject{
 			Type:       "",

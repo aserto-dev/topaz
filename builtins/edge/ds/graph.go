@@ -42,7 +42,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			}
 
 			if proto.Equal(&args, &reader.GetGraphRequest{}) {
-				return builtins.HelpMsg(fnName, graphHelp())
+				return builtins.HelpMsg(fnName, graphReq())
 			}
 
 			resp, err := dr.GetDS().GetGraph(bctx.Context, &args)
@@ -67,7 +67,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 		}
 }
 
-func graphHelp() *reader.GetGraphRequest {
+func graphReq() *reader.GetGraphRequest {
 	return &reader.GetGraphRequest{
 		ObjectType:      "",
 		ObjectId:        "",

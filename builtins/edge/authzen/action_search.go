@@ -15,24 +15,26 @@ import (
 )
 
 /*
-RegisterCheck - az.evaluation
-az.evaluation({
-	"subject": {
-		"type": "",
-		"id": "",
-		"properties": {}
-	},
-	"action": {
-		"name": "",
-		"properties": {}
-	},
-	"resource": {
-		"type": "",
-		"id": "",
-		"properties": {}
-	},
-	"context": {}
-})
+	az.action_search({
+		"subject": {
+			"type": "",
+			"id": "",
+			"properties": {}
+		},
+		"action": {
+			"name": "",
+			"properties": {}
+		},
+		"resource": {
+			"type": "",
+			"id": "",
+			"properties": {}
+		},
+		"context": {},
+		"page": {
+			"next_token": ""
+		}
+	})
 */
 
 func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
@@ -49,7 +51,7 @@ func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.Di
 			}
 
 			if proto.Equal(&args, &access.ActionSearchRequest{}) {
-				return builtins.HelpMsg(fnName, actionSearchHelp())
+				return builtins.HelpMsg(fnName, actionSearchReq())
 			}
 
 			resp, err := dr.GetAuthZen().ActionSearch(bctx.Context, &args)
@@ -62,7 +64,7 @@ func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.Di
 		}
 }
 
-func actionSearchHelp() *access.ActionSearchRequest {
+func actionSearchReq() *access.ActionSearchRequest {
 	return &access.ActionSearchRequest{
 		Subject: &access.Subject{
 			Type:       "",

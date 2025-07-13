@@ -13,16 +13,16 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// RegisterCheck - ds.check
-//
-//	ds.check({
-//	  "object_type": "",
-//	  "object_id": "",
-//	  "relation": "",
-//	  "subject_type": ""
-//	  "subject_id": "",
-//	  "trace": false
-//	})
+/*
+	ds.check({
+	  "object_type": "",
+	  "object_id": "",
+	  "relation": "",
+	  "subject_type": ""
+	  "subject_id": "",
+	  "trace": false
+	})
+*/
 func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -37,7 +37,7 @@ func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			}
 
 			if proto.Equal(&args, &reader.CheckRequest{}) {
-				return builtins.HelpMsg(fnName, checkHelp())
+				return builtins.HelpMsg(fnName, checkReq())
 			}
 
 			resp, err := dr.GetDS().Check(bctx.Context, &args)
@@ -50,7 +50,7 @@ func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 		}
 }
 
-func checkHelp() *reader.CheckRequest {
+func checkReq() *reader.CheckRequest {
 	return &reader.CheckRequest{
 		ObjectType:  "",
 		ObjectId:    "",
@@ -60,18 +60,17 @@ func checkHelp() *reader.CheckRequest {
 	}
 }
 
-// RegisterCheckRelation - ds.check_relation
-//
-//	ds.check_relation: {
-//		"object_id": "",
-//		"object_type": "",
-//		"relation": "",
-//		"subject_id": "",
-//		"subject_type": "",
-//		"trace": false
-//	  }
-//
-//nolint:dupl // RegisterCheck[Relation|Permission] are not identical, obsolete and will be removed in v33.
+/*
+	ds.check_relation: {
+		"object_id": "",
+		"object_type": "",
+		"relation": "",
+		"subject_id": "",
+		"subject_type": "",
+		"trace": false
+	}
+*/
+
 func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -87,7 +86,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 			}
 
 			if proto.Equal(&args, &reader.CheckRelationRequest{}) {
-				return builtins.HelpMsg(fnName, checkRelationHelp())
+				return builtins.HelpMsg(fnName, checkRelationReq())
 			}
 
 			//nolint: staticcheck // SA1019: client.CheckRelation is deprecated
@@ -101,7 +100,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 		}
 }
 
-func checkRelationHelp() *reader.CheckRelationRequest {
+func checkRelationReq() *reader.CheckRelationRequest {
 	return &reader.CheckRelationRequest{
 		ObjectType:  "",
 		ObjectId:    "",
@@ -112,18 +111,17 @@ func checkRelationHelp() *reader.CheckRelationRequest {
 	}
 }
 
-// RegisterCheckPermission - ds.check_permission
-//
-//	ds.check_permission: {
-//		"object_id": "",
-//		"object_type": "",
-//		"permission": "",
-//		"subject_id": "",
-//		"subject_type": "",
-//		"trace": false
-//	  }
-//
-//nolint:dupl // RegisterCheck[Relation|Permission] are not identical, obsolete and will be removed in v33.
+/*
+	ds.check_permission: {
+		"object_id": "",
+		"object_type": "",
+		"permission": "",
+		"subject_id": "",
+		"subject_type": "",
+		"trace": false
+	}
+*/
+
 func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -139,7 +137,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 			}
 
 			if proto.Equal(&args, &reader.CheckPermissionRequest{}) {
-				return builtins.HelpMsg(fnName, checkPermissionHelp())
+				return builtins.HelpMsg(fnName, checkPermissionReq())
 			}
 
 			//nolint: staticcheck // SA1019: client.CheckPermission is deprecated
@@ -153,7 +151,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 		}
 }
 
-func checkPermissionHelp() *reader.CheckPermissionRequest {
+func checkPermissionReq() *reader.CheckPermissionRequest {
 	return &reader.CheckPermissionRequest{
 		ObjectType:  "",
 		ObjectId:    "",

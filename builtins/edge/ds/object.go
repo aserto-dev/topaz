@@ -54,7 +54,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			if proto.Equal(req, &reader.GetObjectRequest{}) {
-				return builtins.HelpMsg(fnName, getObjectHelp())
+				return builtins.HelpMsg(fnName, getObjectReq())
 			}
 
 			resp, err := dr.GetDS().GetObject(bctx.Context, req)
@@ -101,7 +101,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 		}
 }
 
-func getObjectHelp() *reader.GetObjectRequest {
+func getObjectReq() *reader.GetObjectRequest {
 	return &reader.GetObjectRequest{
 		ObjectType:    "",
 		ObjectId:      "",

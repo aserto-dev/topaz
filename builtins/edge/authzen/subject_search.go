@@ -15,25 +15,27 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+// Note: subject_search omits subject.id
 /*
-RegisterCheck - az.evaluation
-az.evaluation({
-	"subject": {
-		"type": "",
-		"id": "",
-		"properties": {}
-	},
-	"action": {
-		"name": "",
-		"properties": {}
-	},
-	"resource": {
-		"type": "",
-		"id": "",
-		"properties": {}
-	},
-	"context": {}
-})
+		"subject": {
+			"type": "",
+			"id": "",
+			"properties": {}
+		},
+		"action": {
+			"name": "",
+			"properties": {}
+		},
+		"resource": {
+			"type": "",
+			"id": "",
+			"properties": {}
+		},
+		"context": {},
+		"page": {
+			"next_token": ""
+		}
+	})
 */
 
 func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
@@ -50,7 +52,7 @@ func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.D
 			}
 
 			if proto.Equal(&args, &access.SubjectSearchRequest{}) {
-				return builtins.HelpMsg(fnName, subjectSearchHelp())
+				return builtins.HelpMsg(fnName, subjectSearchReq())
 			}
 
 			resp, err := dr.GetAuthZen().SubjectSearch(bctx.Context, &args)
@@ -63,7 +65,7 @@ func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.D
 		}
 }
 
-func subjectSearchHelp() *access.SubjectSearchRequest {
+func subjectSearchReq() *access.SubjectSearchRequest {
 	return &access.SubjectSearchRequest{
 		Subject: &access.Subject{
 			Type:       "",
