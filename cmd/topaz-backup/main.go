@@ -14,7 +14,7 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	cli := cmd.CLI{}
+	cli := cmd.Backup{}
 
 	kongCtx := kong.Parse(&cli,
 		kong.Name("topaz-backup"),
