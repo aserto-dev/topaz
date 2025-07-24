@@ -74,6 +74,7 @@ func backupDB(ctx context.Context, db *bolt.DB, backup *os.File) error {
 			if err != nil {
 				return errors.Errorf("backup failed: %v", err)
 			}
+
 			return nil
 		})
 		errCh <- err
