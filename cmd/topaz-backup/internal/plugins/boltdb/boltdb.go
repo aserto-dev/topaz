@@ -22,8 +22,8 @@ const (
 var _ plugin.StorePlugin = &Plugin{}
 
 type Plugin struct {
-	DBFile    string `flag:"" help:"database file path" type:"existingfile"`
-	BackupDir string `flag:"" help:"backup directory path" type:"existingdir"`
+	DBFile    string `flag:"" help:"database file path" type:"existingfile" required:""`
+	BackupDir string `flag:"" help:"backup directory path" type:"existingdir" required:""`
 }
 
 func (cmd *Plugin) Run(ctx context.Context) error {
@@ -53,7 +53,7 @@ func (cmd *Plugin) Run(ctx context.Context) error {
 		return errors.Errorf("failed to sync backup file: %v", err)
 	}
 
-	fmt.Println(backupFileName)
+	fmt.Printf("\n%s\n", backupFileName)
 
 	return nil
 }
