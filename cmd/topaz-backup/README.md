@@ -29,9 +29,9 @@ NOTES:
 ## List input argument of a plugin
 
 ```
-topaz-backup boltdb --help
+topaz-backup boltdb
 
-Usage: topaz-backup boltdb [flags]
+Usage: topaz-backup boltdb --db-file=STRING --backup-dir=STRING
 
 boltdb plugin
 
@@ -40,6 +40,8 @@ Flags:
 
       --db-file=STRING       database file path
       --backup-dir=STRING    backup directory path
+
+topaz-backup: error: missing flags: --backup-dir=STRING, --db-file=STRING
 ```
 
 NOTES:
