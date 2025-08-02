@@ -17,7 +17,7 @@ on:
   pull_request:
 
 env:
-  VAULT_ADDR: https://vault.eng.aserto.com/
+  VAULT_ADDR: https://vault.aserto.com/
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
   GO_VERSION: "1.24"
   GO_RELEASER_VERSION: "v2.8.2"
@@ -34,7 +34,7 @@ jobs:
         uses: hashicorp/vault-action@v3
         id: vault
         with:
-          url: https://vault.eng.aserto.com/
+          url: ${{ env.VAULT_ADDR }}
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/github  "SSH_PRIVATE_KEY"     | SSH_PRIVATE_KEY;
@@ -133,7 +133,7 @@ jobs:
         uses: hashicorp/vault-action@v3
         id: vault
         with:
-          url: https://vault.eng.aserto.com/
+          url: ${{ env.VAULT_ADDR }}
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/github  "SSH_PRIVATE_KEY"     | SSH_PRIVATE_KEY;
@@ -208,7 +208,7 @@ jobs:
         uses: hashicorp/vault-action@v3
         id: vault
         with:
-          url: https://vault.eng.aserto.com/
+          url: ${{ env.VAULT_ADDR }}
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             kv/data/github  "SSH_PRIVATE_KEY"                         | SSH_PRIVATE_KEY;

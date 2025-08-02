@@ -38,6 +38,7 @@ builds:
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
+
   - id: topaz
     main: ./cmd/topaz
     binary: topaz
@@ -60,9 +61,33 @@ builds:
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
+
   - id: topaz-db
     main: ./cmd/topaz-db
     binary: topaz-db
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: topaz-backup
+    main: ./cmd/topaz-backup
+    binary: topaz-backup
     goos:
       - darwin
       - linux
@@ -90,6 +115,7 @@ archives:
     ids:
     - topaz
     - topazd
+    - topaz-backup
     files:
       - LICENSE
       - README.md
@@ -223,4 +249,5 @@ sboms:
     ids:
       - topaz
       - topazd
+      - topaz-backup
       # - topaz-db
