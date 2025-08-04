@@ -29,12 +29,14 @@ func NewTopaz(ctx context.Context, cfg *config.Config) (*Topaz, error) {
 		return nil, err
 	}
 
+	ctx = log.WithContext(ctx)
+
 	services, err := newTopazServices(ctx, cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	servers, err := newServers(log.WithContext(ctx), cfg, services)
+	servers, err := newServers(ctx, cfg, services)
 	if err != nil {
 		return nil, err
 	}
