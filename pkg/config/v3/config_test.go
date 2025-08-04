@@ -12,11 +12,7 @@ import (
 	rqur "github.com/stretchr/testify/require"
 )
 
-const (
-	dbDir    = "/db"
-	certsDir = "/certs"
-	topazDor = "/topaz"
-)
+const topazDir = "/topaz"
 
 func TestLoadConfigV3(t *testing.T) {
 	setTopazEnv(t)
@@ -65,9 +61,9 @@ func TestLoadConfigV3(t *testing.T) {
 func setTopazEnv(t *testing.T) {
 	t.Helper()
 
-	t.Setenv(x.EnvTopazDBDir, dbDir)
-	t.Setenv(x.EnvTopazCertsDir, certsDir)
-	t.Setenv(x.EnvTopazDir, topazDor)
+	t.Setenv(x.EnvTopazDBDir, x.DefDBDir)
+	t.Setenv(x.EnvTopazCertsDir, x.DefCertsDir)
+	t.Setenv(x.EnvTopazDir, topazDir)
 }
 
 func logConfig(t *testing.T, cfg3 *config.Config) {
