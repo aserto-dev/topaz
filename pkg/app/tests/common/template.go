@@ -1,7 +1,6 @@
 package common_test
 
 import (
-	"context"
 	"path/filepath"
 	"testing"
 
@@ -23,7 +22,7 @@ func InstallTemplate(dsConfig *dsc.Config, azConfig *azc.Config, tmpl string) fu
 
 		t.Setenv("TOPAZ_NO_COLOR", "true")
 
-		c, err := cc.NewCommonContext(context.Background(), true, filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile))
+		c, err := cc.NewCommonContext(t.Context(), true, filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile))
 		require.NoError(t, err)
 
 		absPath, err := filepath.Abs(tmpl)

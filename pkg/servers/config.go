@@ -6,6 +6,7 @@ import (
 	"iter"
 	"maps"
 	"slices"
+	"sort"
 	"text/template"
 
 	"github.com/hashicorp/go-multierror"
@@ -163,8 +164,12 @@ func (c Config) validateListenAddresses() error {
 		addressName := fmt.Sprintf("%s (%s)", name, listenAddress.Kind)
 
 		if existing, ok := addrs[listenAddress.Address]; ok {
+			// Print the service names in deterministic order for easier testing.
+			svcs := sort.StringSlice{existing, addressName}
+			svcs.Sort()
+
 			errs = multierror.Append(errs,
-				errors.Wrapf(ErrPortCollision, collisionMsg(listenAddress.Address, existing, addressName)),
+				errors.Wrapf(ErrPortCollision, "%s [%s, %s]", listenAddress.Address, svcs[0], svcs[1]),
 			)
 		}
 
@@ -172,16 +177,6 @@ func (c Config) validateListenAddresses() error {
 	}
 
 	return errs
-}
-
-// collisionMsg formats the message for a port collision error.
-// It prints the service names in deterministic order for easier testing.
-func collisionMsg(addr, svc1, svc2 string) string {
-	if svc1 > svc2 {
-		svc1, svc2 = svc2, svc1
-	}
-
-	return addr + fmt.Sprintf(" [%s, %s]", svc1, svc2)
 }
 
 func (s *Server) Defaults() map[string]any {

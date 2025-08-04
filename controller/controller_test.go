@@ -94,7 +94,7 @@ func TestControllerLogMessages(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotNil(t, ctrl)
 
-	ctrl.Start(context.Background())
+	ctrl.Start(t.Context())
 
 	time.Sleep(1 * time.Second)
 

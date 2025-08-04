@@ -114,7 +114,9 @@ func (c *Controller) Start(ctx context.Context) {
 }
 
 func (c *Controller) Stop() error {
-	c.cancel()
+	if c.cancel != nil {
+		c.cancel()
+	}
 
 	return c.errGroup.Wait()
 }
