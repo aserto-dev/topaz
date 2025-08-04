@@ -32,10 +32,10 @@ var ErrVersionMismatch = errors.Wrap(config.ErrConfig, "unsupported configuratio
 type Config struct {
 	Version        int                   `json:"version"`
 	Logging        logger.Config         `json:"logging"`
-	Authentication authentication.Config `json:"authentication,omitempty"`
-	Debug          debug.Config          `json:"debug,omitempty"`
-	Health         health.Config         `json:"health,omitempty"`
-	Metrics        metrics.Config        `json:"metrics,omitempty"`
+	Authentication authentication.Config `json:"authentication"`
+	Debug          debug.Config          `json:"debug"`
+	Health         health.Config         `json:"health"`
+	Metrics        metrics.Config        `json:"metrics"`
 	Servers        servers.Config        `json:"servers"`
 	Directory      directory.Config      `json:"directory"`
 	Authorizer     authorizer.Config     `json:"authorizer"`

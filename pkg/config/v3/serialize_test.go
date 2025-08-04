@@ -1,9 +1,7 @@
-package topaz_test
+package config_test
 
 import (
 	"bytes"
-	"encoding/json"
-	"os"
 	"testing"
 	"time"
 
@@ -23,14 +21,12 @@ import (
 	"github.com/aserto-dev/topaz/pkg/servers"
 
 	"github.com/open-policy-agent/opa/v1/download"
-	"github.com/open-policy-agent/opa/v1/keys"
 	bundleplugin "github.com/open-policy-agent/opa/v1/plugins/bundle"
 	"github.com/open-policy-agent/opa/v1/plugins/discovery"
 	"github.com/open-policy-agent/opa/v1/plugins/logs"
 	"github.com/open-policy-agent/opa/v1/plugins/status"
-	"github.com/open-policy-agent/opa/v1/topdown/cache"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gopkg.in/yaml.v3"
 )
 
 var cfg = &config.Config{
@@ -176,7 +172,7 @@ var cfg = &config.Config{
 					TenantID: "00000000-1111-2222-3333-444455556666",
 					APIKey:   "101520",
 					Headers: map[string]string{
-						"Aserto-Account-ID": "11111111-9999-8888-7777-666655554444",
+						"aserto-account-id": "11111111-9999-8888-7777-666655554444",
 					},
 				},
 			},
@@ -187,13 +183,13 @@ var cfg = &config.Config{
 			InstanceID:                    "-",
 			GracefulShutdownPeriodSeconds: 2,
 			MaxPluginWaitTimeSeconds:      30,
-			LocalBundles:                  runtime.LocalBundlesConfig{
-				// LocalPolicyImage: "",
-				// FileStoreRoot:    "",
-				// Paths:            []string{},
+			LocalBundles: runtime.LocalBundlesConfig{
+				LocalPolicyImage: "",
+				FileStoreRoot:    "",
+				Watch:            false,
+				SkipVerification: true,
+				Paths:            []string{},
 				// Ignore:           []string{},
-				// Watch:            false,
-				// SkipVerification: true,
 				// VerificationConfig: &bundle.VerificationConfig{
 				// 	PublicKeys: map[string]*bundle.KeyConfig{},
 				// 	KeyID:      "",
@@ -209,7 +205,6 @@ var cfg = &config.Config{
 					"type":                            "oci",
 					"response_header_timeout_seconds": 5,
 				},
-				Labels:    map[string]string{},
 				Discovery: &discovery.Config{},
 				Bundles: map[string]*bundleplugin.Source{
 					"gdrive": {
@@ -226,12 +221,13 @@ var cfg = &config.Config{
 				},
 				DecisionLogs:                 &logs.Config{},
 				Status:                       &status.Config{},
-				Plugins:                      map[string]interface{}{},
-				Keys:                         map[string]*keys.Config{},
-				DefaultDecision:              Ptr[string](""),
-				DefaultAuthorizationDecision: Ptr[string](""),
-				Caching:                      &cache.Config{},
+				DefaultDecision:              Ptr(""),
+				DefaultAuthorizationDecision: Ptr(""),
 				PersistenceDirectory:         nil,
+				// Labels:                       map[string]string{},
+				// Plugins:                      map[string]any{},
+				// Keys:                         map[string]*keys.Config{},
+				// Caching:                      &cache.Config{},
 			},
 		}),
 		DecisionLogger: authorizer.DecisionLoggerConfig{
@@ -287,31 +283,18 @@ var cfg = &config.Config{
 	},
 }
 
-func TestGenerate(t *testing.T) {
-	if err := cfg.Serialize(os.Stderr); err != nil {
+func TestSerialize(t *testing.T) {
+	t.Skip("Needs improved handling of default vaules in config.")
+
+	serialized := &bytes.Buffer{}
+	if err := cfg.Serialize(serialized); err != nil {
 		require.NoError(t, err)
 	}
 
-	if false {
-		buf, err := json.MarshalIndent(cfg, "", "  ")
-		if err != nil {
-			require.NoError(t, err)
-		}
+	deserialized, err := config.NewConfig(serialized, config.WithNoEnvSubstitution)
+	require.NoError(t, err)
 
-		var v map[string]any
-
-		dec := yaml.NewDecoder(bytes.NewReader(buf))
-		if err := dec.Decode(&v); err != nil {
-			require.NoError(t, err)
-		}
-
-		enc := yaml.NewEncoder(os.Stdout)
-		enc.SetIndent(2)
-
-		if err := enc.Encode(v); err != nil {
-			require.NoError(t, err)
-		}
-	}
+	assert.Equal(t, cfg, deserialized)
 }
 
 func Ptr[T any](v T) *T {

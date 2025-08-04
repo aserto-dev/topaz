@@ -32,6 +32,7 @@ const (
 )
 
 type Config struct {
+	// Optional provides enable/disable functionality for the plugin configuration.
 	config.Optional
 
 	Addr              string            `json:"addr"`                 //
