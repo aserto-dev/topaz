@@ -3,6 +3,7 @@ package authorizer
 import (
 	"context"
 	"io"
+	"iter"
 	"os"
 	"strings"
 	"text/template"
@@ -18,6 +19,7 @@ import (
 	ctrl "github.com/aserto-dev/topaz/controller"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 	"github.com/aserto-dev/topaz/plugins/edge"
 )
 
@@ -31,6 +33,14 @@ func (c *ControllerConfig) Defaults() map[string]any {
 
 func (c *ControllerConfig) Validate() error {
 	return nil
+}
+
+func (c *ControllerConfig) Paths() iter.Seq2[string, config.AccessMode] {
+	if c.Enabled {
+		return config.ClientCertPaths(&c.Server)
+	}
+
+	return loiter.Seq2[string, config.AccessMode]()
 }
 
 func (c *ControllerConfig) Serialize(w io.Writer) error {

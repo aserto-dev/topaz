@@ -74,6 +74,7 @@ servers:
       - exporter
     grpc:
       listen_address: "0.0.0.0:9292"
+      connection_timeout: 2m0s
       certs:
         tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
         tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'

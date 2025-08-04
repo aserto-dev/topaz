@@ -2,9 +2,11 @@ package authorizer
 
 import (
 	"io"
+	"iter"
 	"text/template"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 )
 
 const (
@@ -27,6 +29,19 @@ func (c *DecisionLoggerConfig) Defaults() map[string]any {
 
 func (c *DecisionLoggerConfig) Validate() error {
 	return nil
+}
+
+func (c *DecisionLoggerConfig) Paths() iter.Seq2[string, config.AccessMode] {
+	if c.Enabled {
+		switch c.Provider {
+		case FileDecisionLoggerPlugin:
+			return c.File.Paths()
+		case SelfDecisionLoggerPlugin:
+			return c.Self.Paths()
+		}
+	}
+
+	return loiter.Seq2[string, config.AccessMode]()
 }
 
 func (c *DecisionLoggerConfig) Serialize(w io.Writer) error {

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	clicfg "github.com/aserto-dev/topaz/pkg/cli/config"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 )
 
@@ -33,12 +33,12 @@ func (cmd *StopCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.Wait {
-		ports, err := config.GetConfig(c.Config.Running.ConfigFile).Ports()
+		cfg, err := clicfg.Load(c.Config.Running.ConfigFile)
 		if err != nil {
 			return err
 		}
 
-		if err := cc.WaitForPorts(ports, cc.PortClosed); err != nil {
+		if err := cc.WaitForPorts(cfg.Ports(), cc.PortClosed); err != nil {
 			return err
 		}
 	}

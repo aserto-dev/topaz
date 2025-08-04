@@ -2,10 +2,13 @@ package authorizer
 
 import (
 	"io"
+	"iter"
 	"text/template"
 
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
+	"github.com/samber/lo"
 )
 
 type FileDecisionLoggerConfig file.Config
@@ -25,6 +28,10 @@ func (c *FileDecisionLoggerConfig) Defaults() map[string]any {
 
 func (c *FileDecisionLoggerConfig) Validate() error {
 	return nil
+}
+
+func (c *FileDecisionLoggerConfig) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Seq2(lo.T2(c.LogFilePath, config.ReadWrite))
 }
 
 func (c *FileDecisionLoggerConfig) Serialize(w io.Writer) error {

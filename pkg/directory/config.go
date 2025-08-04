@@ -3,6 +3,7 @@ package directory
 import (
 	"fmt"
 	"io"
+	"iter"
 	"text/template"
 	"time"
 
@@ -25,15 +26,6 @@ type Config struct {
 	Store        Store         `json:"store"`
 }
 
-type Store struct {
-	Provider string `json:"provider"`
-
-	Bolt     BoltDBStore          `json:"boltdb,omitempty"`
-	Remote   RemoteDirectoryStore `json:"remote_directory,omitempty"`
-	Postgres PostgresStore        `json:"postgres,omitempty"`
-	NatsKV   NATSKeyValueStore    `json:"nats_kv,omitempty"`
-}
-
 var _ config.Section = (*Config)(nil)
 
 func (c *Config) Defaults() map[string]any {
@@ -50,6 +42,10 @@ func (c *Config) Defaults() map[string]any {
 
 func (c *Config) Validate() error {
 	return nil
+}
+
+func (c *Config) Paths() iter.Seq2[string, config.AccessMode] {
+	return c.Store.Paths()
 }
 
 func (c *Config) Serialize(w io.Writer) error {

@@ -6,7 +6,7 @@ version: 3
 # logger settings.
 logging:
   prod: true
-  log_level: info
+  log_level: trace
 
 # authentication configuration
 authentication:
@@ -75,6 +75,7 @@ servers:
       - console
     grpc:
       listen_address: "0.0.0.0:9292"
+      connection_timeout: 2m0s
     http:
       listen_address: "0.0.0.0:9393"
       hosted_domain: ""

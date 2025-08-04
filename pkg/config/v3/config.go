@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"io"
+	"iter"
+	"os"
 	"text/template"
 
 	"github.com/hashicorp/go-multierror"
@@ -18,6 +20,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/servers"
 )
@@ -42,13 +45,45 @@ var _ config.Section = (*Config)(nil)
 
 type ConfigOverride func(*Config)
 
-func NewConfig(r io.Reader, overrides ...ConfigOverride) (*Config, error) {
-	var cfg Config
+type configOptions struct {
+	overrides  []ConfigOverride
+	noEnvSubst bool
+}
+
+type configOption func(*configOptions)
+
+func WithOverrides(overrides ...ConfigOverride) configOption {
+	return func(opts *configOptions) {
+		opts.overrides = append(opts.overrides, overrides...)
+	}
+}
+
+func WithNoEnvSubstitution(opts *configOptions) {
+	opts.noEnvSubst = true
+}
+
+func NewConfig(r io.Reader, opts ...configOption) (*Config, error) {
+	var (
+		cfg     Config
+		err     error
+		options configOptions
+	)
+
+	for _, opt := range opts {
+		opt(&options)
+	}
 
 	v := config.NewViper()
 	v.SetEnvPrefix("TOPAZ")
 	v.AutomaticEnv()
 	v.SetDefaults(&cfg)
+
+	if !options.noEnvSubst {
+		r, err = withEnvSubst(r)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	v.ReadConfig(r)
 
@@ -60,11 +95,31 @@ func NewConfig(r io.Reader, overrides ...ConfigOverride) (*Config, error) {
 		return nil, err
 	}
 
-	for _, override := range overrides {
+	for _, override := range options.overrides {
 		override(&cfg)
 	}
 
 	return &cfg, nil
+}
+
+func Load(path string, opts ...configOption) (*Config, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot read config file %q", path)
+	}
+
+	defer f.Close()
+
+	cfg, err := NewConfig(f, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := cfg.Validate(); err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
 }
 
 //nolint:mnd  // this is where default values are defined.
@@ -112,6 +167,18 @@ func (c *Config) Validate() error {
 	}
 
 	return errs
+}
+
+func (c *Config) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Chain2(
+		c.Authentication.Paths(),
+		c.Debug.Paths(),
+		c.Health.Paths(),
+		c.Metrics.Paths(),
+		c.Servers.Paths(),
+		c.Directory.Paths(),
+		c.Authorizer.Paths(),
+	)
 }
 
 func (c *Config) Serialize(w io.Writer) error {
@@ -165,6 +232,10 @@ func (c *ConfigV3) Defaults() map[string]any {
 
 func (c *ConfigV3) Validate() error {
 	return nil
+}
+
+func (c *ConfigV3) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Seq2[string, config.AccessMode]()
 }
 
 func (c *ConfigV3) Serialize(w io.Writer) error {

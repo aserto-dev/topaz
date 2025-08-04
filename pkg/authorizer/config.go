@@ -3,9 +3,11 @@ package authorizer
 import (
 	"fmt"
 	"io"
+	"iter"
 	"text/template"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 	"github.com/samber/lo"
 )
 
@@ -29,6 +31,15 @@ func (c *Config) Defaults() map[string]any {
 
 func (*Config) Validate() error {
 	return nil
+}
+
+func (c *Config) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Chain2(
+		c.OPA.Paths(),
+		c.DecisionLogger.Paths(),
+		c.Controller.Paths(),
+		c.JWT.Paths(),
+	)
 }
 
 func (c *Config) Serialize(w io.Writer) error {

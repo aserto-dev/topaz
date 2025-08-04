@@ -33,7 +33,10 @@ type Generator struct {
 type GeneratorOption func(name string, cfg *config.Config)
 
 func NewGenerator(name string, opts ...GeneratorOption) (*Generator, error) {
-	cfg, err := config.NewConfig(&bytes.Buffer{}, defaultServer, boltdbFile(name))
+	cfg, err := config.NewConfig(
+		&bytes.Buffer{},
+		config.WithOverrides(defaultServer, boltdbFile(name)),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -74,6 +77,24 @@ func WithLocalBundle(path string) GeneratorOption {
 		cfg.Authorizer.OPA.LocalBundles.LocalPolicyImage = path
 		cfg.Authorizer.OPA.LocalBundles.Watch = true
 		cfg.Authorizer.OPA.LocalBundles.SkipVerification = true
+	}
+}
+
+func WithPlaintext(plaintext bool) GeneratorOption {
+	return func(name string, cfg *config.Config) {
+		if plaintext {
+			return
+		}
+
+		for _, server := range cfg.Servers {
+			server.GRPC.Certs.Key = "${TOPAZ_CERTS_DIR}/grpc.key"
+			server.GRPC.Certs.Cert = "${TOPAZ_CERTS_DIR}/grpc.crt"
+			server.GRPC.Certs.CA = "${TOPAZ_CERTS_DIR}/grpc-ca.crt"
+
+			server.HTTP.Certs.Key = "${TOPAZ_CERTS_DIR}/gateway.key"
+			server.HTTP.Certs.Cert = "${TOPAZ_CERTS_DIR}/gateway.crt"
+			server.HTTP.Certs.CA = "${TOPAZ_CERTS_DIR}/gateway-ca.crt"
+		}
 	}
 }
 

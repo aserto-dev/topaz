@@ -2,10 +2,12 @@ package authorizer
 
 import (
 	"io"
+	"iter"
 	"text/template"
 	"time"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 )
 
 const DefaultAcceptableTimeSkew = time.Second * 5
@@ -24,6 +26,10 @@ func (c *JWTConfig) Defaults() map[string]any {
 
 func (c *JWTConfig) Validate() error {
 	return nil
+}
+
+func (c *JWTConfig) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Seq2[string, config.AccessMode]()
 }
 
 func (c *JWTConfig) Serialize(w io.Writer) error {

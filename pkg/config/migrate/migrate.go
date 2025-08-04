@@ -224,7 +224,7 @@ func migDirectory(cfg2 *config2.Config, cfg3 *config3.Config) {
 			WriteTimeout: cfg2.Edge.RequestTimeout,
 			Store: directory.Store{
 				Provider: directory.RemoteDirectoryStorePlugin,
-				Remote:   directory.RemoteDirectoryStore(cfg2.DirectoryResolver),
+				Remote:   directory.RemoteDirectoryStore{Config: cfg2.DirectoryResolver},
 			},
 		}
 	}

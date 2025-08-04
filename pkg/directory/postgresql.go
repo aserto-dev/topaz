@@ -2,8 +2,10 @@ package directory
 
 import (
 	"io"
+	"iter"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 )
 
 const PostgresStorePlugin string = "postgres"
@@ -18,6 +20,10 @@ func (c *PostgresStore) Defaults() map[string]any {
 
 func (c *PostgresStore) Validate() error {
 	return nil
+}
+
+func (c *PostgresStore) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Seq2[string, config.AccessMode]()
 }
 
 func (c *PostgresStore) Serialize(w io.Writer) error {

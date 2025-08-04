@@ -2,10 +2,13 @@ package authorizer
 
 import (
 	"io"
+	"iter"
 	"text/template"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
+	"github.com/samber/lo"
 )
 
 type SelfDecisionLoggerConfig self.Config
@@ -34,6 +37,13 @@ func (c *SelfDecisionLoggerConfig) Defaults() map[string]any {
 
 func (c *SelfDecisionLoggerConfig) Validate() error {
 	return nil
+}
+
+func (c *SelfDecisionLoggerConfig) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Chain2(
+		config.ClientCertPaths(&c.Scribe.Config),
+		loiter.Seq2(lo.T2(c.StoreDirectory, config.ReadWrite)),
+	)
 }
 
 func (c *SelfDecisionLoggerConfig) Serialize(w io.Writer) error {

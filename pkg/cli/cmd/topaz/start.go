@@ -1,7 +1,6 @@
 package topaz
 
 import (
-	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 )
 
@@ -16,12 +15,7 @@ func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.Wait {
-		ports, err := config.GetConfig(c.Config.Active.ConfigFile).Ports()
-		if err != nil {
-			return err
-		}
-
-		if err := cc.WaitForPorts(ports, cc.PortOpened); err != nil {
+		if err := cc.WaitForPorts(cmd.cfg.Ports(), cc.PortOpened); err != nil {
 			return err
 		}
 	}

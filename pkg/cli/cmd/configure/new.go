@@ -23,6 +23,7 @@ type NewConfigCmd struct {
 	Stdout        bool       `short:"p" help:"print to stdout" default:"false"`
 	EdgeDirectory bool       `short:"d" help:"enable edge directory" default:"false"`
 	Force         bool       `short:"f" flag:"" default:"false" required:"false" help:"skip confirmation prompt"`
+	Plaintext     bool       `flag:"plaintext" short:"P" default:"${plaintext}" env:"TOPAZ_PLAINTEXT" help:"use plain-text HTTP/2 (no TLS)"`
 }
 
 func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
@@ -57,7 +58,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 		bundleOpt = config.WithBundle(cmd.Resource)
 	}
 
-	gen, err := config.NewGenerator(cmd.Name.String(), bundleOpt)
+	gen, err := config.NewGenerator(cmd.Name.String(), bundleOpt, config.WithPlaintext(cmd.Plaintext))
 	if err != nil {
 		return err
 	}

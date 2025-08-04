@@ -2,16 +2,19 @@ package directory
 
 import (
 	"io"
+	"iter"
 	"text/template"
 
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/config"
-	"google.golang.org/grpc"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 )
 
 const RemoteDirectoryStorePlugin string = "remote_directory"
 
-type RemoteDirectoryStore client.Config
+type RemoteDirectoryStore struct {
+	client.Config
+}
 
 var _ config.Section = (*RemoteDirectoryStore)(nil)
 
@@ -21,6 +24,10 @@ func (*RemoteDirectoryStore) Defaults() map[string]any {
 
 func (*RemoteDirectoryStore) Validate() error {
 	return nil
+}
+
+func (c *RemoteDirectoryStore) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Seq2[string, config.AccessMode]()
 }
 
 func (c *RemoteDirectoryStore) Serialize(w io.Writer) error {
@@ -39,10 +46,6 @@ func (c *RemoteDirectoryStore) Serialize(w io.Writer) error {
 	p := params{c, RemoteDirectoryStorePlugin}
 
 	return tmpl.Execute(w, p)
-}
-
-func (c *RemoteDirectoryStore) Connect() (*grpc.ClientConn, error) {
-	return (*client.Config)(c).Connect()
 }
 
 const remoteDirectoryStoreConfigTemplate = `

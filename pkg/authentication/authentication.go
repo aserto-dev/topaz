@@ -2,10 +2,12 @@ package authentication
 
 import (
 	"io"
+	"iter"
 	"strings"
 	"text/template"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 )
 
 // authentication:
@@ -65,6 +67,10 @@ func (*Config) Defaults() map[string]any {
 
 func (*Config) Validate() error {
 	return nil
+}
+
+func (*Config) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Seq2[string, config.AccessMode]()
 }
 
 func (c *Config) Serialize(w io.Writer) error {

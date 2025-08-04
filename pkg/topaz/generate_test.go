@@ -171,11 +171,13 @@ var cfg = &config.Config{
 		Store: directory.Store{
 			Provider: directory.RemoteDirectoryStorePlugin,
 			Remote: directory.RemoteDirectoryStore{
-				Address:  "directory.prod.aserto.com:8443",
-				TenantID: "00000000-1111-2222-3333-444455556666",
-				APIKey:   "101520",
-				Headers: map[string]string{
-					"Aserto-Account-ID": "11111111-9999-8888-7777-666655554444",
+				Config: aserto.Config{
+					Address:  "directory.prod.aserto.com:8443",
+					TenantID: "00000000-1111-2222-3333-444455556666",
+					APIKey:   "101520",
+					Headers: map[string]string{
+						"Aserto-Account-ID": "11111111-9999-8888-7777-666655554444",
+					},
 				},
 			},
 		},

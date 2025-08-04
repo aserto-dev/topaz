@@ -14,6 +14,10 @@ type (
 	Yields2[T, R any] = func(T, R) bool
 )
 
+func Seq[T any](vals ...T) iter.Seq[T] {
+	return slices.Values(vals)
+}
+
 // Append takes a sequence and returns a new sequence with additional values at the end.
 func Append[T any](s iter.Seq[T], vals ...T) iter.Seq[T] {
 	return Chain(s, slices.Values(vals))
@@ -136,6 +140,19 @@ func Reduce[T any, R any](s iter.Seq[T], accumulator func(R, T) R, initial R) R 
 	}
 
 	return initial
+}
+
+// RejectZero returns a sequence that only yields items that are not zero values for their type.
+func RejectZero[T comparable](s iter.Seq[T]) iter.Seq[T] {
+	return func(yield Yields[T]) {
+		var zero T
+
+		for t := range s {
+			if t != zero && !yield(t) {
+				return
+			}
+		}
+	}
 }
 
 // Times returns a sequence of count elements produced by repeated calls to generator.

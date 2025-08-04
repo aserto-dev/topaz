@@ -90,6 +90,25 @@ func (c Config) Validate() error {
 	return c.validateListenAddresses()
 }
 
+func (c Config) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Chain2(
+		lo.Map(lo.Values(c), func(s *Server, _ int) iter.Seq2[string, config.AccessMode] {
+			return s.Paths()
+		})...,
+	)
+}
+
+func (c Config) Serialize(w io.Writer) error {
+	tmpl, err := template.New("SERVERS").
+		Funcs(config.TemplateFuncs()).
+		Parse(servicesTemplate)
+	if err != nil {
+		return err
+	}
+
+	return tmpl.Execute(w, c)
+}
+
 func (c Config) EnabledServices() iter.Seq[ServiceName] {
 	return loiter.FlatMap(
 		maps.Values(c),
@@ -155,17 +174,6 @@ func (c Config) validateListenAddresses() error {
 	return errs
 }
 
-func (c Config) Serialize(w io.Writer) error {
-	tmpl, err := template.New("SERVERS").
-		Funcs(config.TemplateFuncs()).
-		Parse(servicesTemplate)
-	if err != nil {
-		return err
-	}
-
-	return tmpl.Execute(w, c)
-}
-
 // collisionMsg formats the message for a port collision error.
 // It prints the service names in deterministic order for easier testing.
 func collisionMsg(addr, svc1, svc2 string) string {
@@ -212,6 +220,13 @@ func (s *Server) Validate() error {
 	}
 
 	return errs
+}
+
+func (s *Server) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Chain2(
+		s.GRPC.Paths(),
+		s.HTTP.Paths(),
+	)
 }
 
 // TryGRPC returns the server's gRPC configuration if it isn't empty or nil otherwise.

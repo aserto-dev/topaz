@@ -2,11 +2,14 @@ package authorizer
 
 import (
 	"io"
+	"iter"
+	"slices"
 	"strings"
 	"text/template"
 
 	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
 )
 
 type OPAConfig runtime.Config
@@ -25,6 +28,13 @@ func (c *OPAConfig) Defaults() map[string]any {
 
 func (c *OPAConfig) Validate() error {
 	return nil
+}
+
+func (c *OPAConfig) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.WithValue(
+		slices.Values(c.LocalBundles.Paths),
+		config.ReadOnly,
+	)
 }
 
 func (c *OPAConfig) Serialize(w io.Writer) error {

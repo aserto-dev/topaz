@@ -92,7 +92,7 @@ func newAuthorizer(ctx context.Context, cfg *config.Config, healthSvc *health.Se
 
 func dsConfig(cfg *config.Config) *client.Config {
 	if cfg.Directory.IsRemote() {
-		return (*client.Config)(&cfg.Directory.Store.Remote)
+		return &cfg.Directory.Store.Remote.Config
 	}
 
 	readerServer, _ := cfg.Servers.FindService(servers.Service.Reader)

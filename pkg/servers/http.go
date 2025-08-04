@@ -25,7 +25,7 @@ type HTTPServer struct {
 
 func (s *HTTPServer) Defaults() map[string]any {
 	return map[string]any{
-		"listen_address":      "0.0.0:8383",
+		"listen_address":      "0.0.0.0:8383",
 		"allowed_origins":     DefaultAllowedOrigins(s.Certs.HasCert()),
 		"allowed_headers":     DefaultAllowedHeaders(),
 		"allowed_methods":     DefaultAllowedMethods(),

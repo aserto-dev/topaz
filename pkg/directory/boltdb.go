@@ -2,11 +2,14 @@ package directory
 
 import (
 	"io"
+	"iter"
 	"text/template"
 	"time"
 
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/loiter"
+	"github.com/samber/lo"
 )
 
 type BoltDBStore directory.Config
@@ -26,6 +29,10 @@ func (*BoltDBStore) Defaults() map[string]any {
 
 func (*BoltDBStore) Validate() error {
 	return nil
+}
+
+func (c *BoltDBStore) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Seq2(lo.T2(c.DBPath, config.ReadWrite))
 }
 
 func (c *BoltDBStore) Serialize(w io.Writer) error {
