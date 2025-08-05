@@ -10,6 +10,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	runtime "github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/builtins/edge/authzen"
 	"github.com/aserto-dev/topaz/builtins/edge/ds"
 	"github.com/aserto-dev/topaz/controller"
 	"github.com/aserto-dev/topaz/decisionlog"
@@ -50,6 +51,13 @@ func NewRuntimeResolver(
 		runtime.WithBuiltin1(ds.RegisterChecks(logger, "ds.checks", directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, "ds.check_relation", directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, "ds.check_permission", directoryResolver)),
+
+		// authZen built-ins
+		runtime.WithBuiltin1(authzen.RegisterEvaluation(logger, "az.evaluation", directoryResolver)),
+		runtime.WithBuiltin1(authzen.RegisterEvaluations(logger, "az.evaluations", directoryResolver)),
+		runtime.WithBuiltin1(authzen.RegisterSubjectSearch(logger, "az.subject_search", directoryResolver)),
+		runtime.WithBuiltin1(authzen.RegisterResourceSearch(logger, "az.resource_search", directoryResolver)),
+		runtime.WithBuiltin1(authzen.RegisterActionSearch(logger, "az.action_search", directoryResolver)),
 
 		// plugins
 		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),

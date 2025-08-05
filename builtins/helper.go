@@ -1,4 +1,4 @@
-package ds
+package builtins
 
 import (
 	"bytes"
@@ -12,7 +12,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func help(fnName string, args any) (*ast.Term, error) {
+func Help(fnName string, args any) (*ast.Term, error) {
 	m := map[string]any{fnName: args}
 
 	val, err := ast.InterfaceToValue(m)
@@ -23,20 +23,22 @@ func help(fnName string, args any) (*ast.Term, error) {
 	return ast.NewTerm(val), nil
 }
 
-func helpMsg(fnName string, msg proto.Message) (*ast.Term, error) {
-	v, err := ProtoToInterface(msg)
-	if err != nil {
+func HelpMsg(fnName string, msg proto.Message) (*ast.Term, error) {
+	b := bytes.Buffer{}
+	if err := ProtoToBuf(&b, msg); err != nil {
 		return nil, err
 	}
 
-	m := map[string]any{fnName: v}
-
-	val, err := ast.InterfaceToValue(m)
+	val, err := ast.ValueFromReader(&b)
 	if err != nil {
 		return nil, err
 	}
 
 	return ast.NewTerm(val), nil
+}
+
+func HelpMsgString(fnName string, msg string) (*ast.Term, error) {
+	return ast.StringTerm(msg), nil
 }
 
 // ProtoToBuf, marshal proto message to buffer.
@@ -74,7 +76,7 @@ func BufToProto(r io.Reader, msg proto.Message) error {
 	}.Unmarshal(buf.Bytes(), msg)
 }
 
-func traceError(bctx *topdown.BuiltinContext, fnName string, err error) {
+func TraceError(bctx *topdown.BuiltinContext, fnName string, err error) {
 	if bctx.TraceEnabled {
 		if len(bctx.QueryTracers) > 0 {
 			bctx.QueryTracers[0].TraceEvent(topdown.Event{
@@ -98,10 +100,35 @@ func ProtoToInterface(msg proto.Message) (any, error) {
 		return nil, err
 	}
 
-	var v any
+	var v map[string]any
 	if err := json.Unmarshal(b, &v); err != nil {
 		return nil, err
 	}
 
 	return v, nil
+}
+
+type Message[T any] interface {
+	proto.Message
+	*T
+}
+
+func ResponseToTerm[T any, M Message[T]](resp M) (*ast.Term, error) {
+	buf := new(bytes.Buffer)
+	if err := ProtoToBuf(buf, resp); err != nil {
+		return nil, err
+	}
+
+	result := map[string]any{}
+
+	if err := json.Unmarshal(buf.Bytes(), &result); err != nil {
+		return nil, err
+	}
+
+	v, err := ast.InterfaceToValue(result)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.NewTerm(v), nil
 }
