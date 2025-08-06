@@ -21,8 +21,7 @@ type Middleware struct {
 	options CallOptions
 }
 
-//nolint:ireturn  // Factory function.
-func New(cfg *Config) middleware.Server {
+func New(cfg *Config) middleware.Server { //nolint:ireturn  // Factory function.
 	if !cfg.Enabled {
 		return middleware.Noop{}
 	}

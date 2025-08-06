@@ -10,10 +10,10 @@ import (
 type Store struct {
 	Provider string `json:"provider"`
 
-	Bolt     BoltDBStore          `json:"boltdb,omitempty"`
-	Remote   RemoteDirectoryStore `json:"remote_directory,omitempty"`
-	Postgres PostgresStore        `json:"postgres,omitempty"`
-	NatsKV   NATSKeyValueStore    `json:"nats_kv,omitempty"`
+	Bolt     BoltDBStore          `json:"boltdb"`
+	Remote   RemoteDirectoryStore `json:"remote_directory"`
+	Postgres PostgresStore        `json:"postgres"`
+	NatsKV   NATSKeyValueStore    `json:"nats_kv"`
 }
 
 func (s *Store) Paths() iter.Seq2[string, config.AccessMode] {

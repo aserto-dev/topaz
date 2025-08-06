@@ -1,0 +1,668 @@
+---
+$schema: 'http://json-schema.org/draft-2019-09/schem#'
+$ref: '#/definitions/Topaz'
+definitions:
+  Topaz:
+    type: object
+    additionalProperties: false
+    properties:
+      version:
+        const: 3
+      logging:
+        $ref: '#/definitions/Logging'
+      authentication:
+        $ref: '#/definitions/Authentication'
+      debug:
+        $ref: '#/definitions/Debug'
+      health:
+        $ref: '#/definitions/Health'
+      metrics:
+        $ref: '#/definitions/Metrics'
+      servers:
+        $ref: '#/definitions/Servers'
+      authorizer:
+        $ref: '#/definitions/Authorizer'
+      directory:
+        $ref: '#/definitions/Directory'
+    required:
+      - directory
+      - health
+      - servers
+      - version
+    title: Topaz Configuration
+
+
+  Logging:
+    type: object
+    additionalProperties: false
+    properties:
+      prod:
+        type: boolean
+      log_level:
+        $ref: '#/definitions/LogLevel'
+      grpc_log_level:
+        $ref: '#/definitions/LogLevel'
+
+  LogLevel:
+    enum: ["trace", "debug", "info", "warn", "error", "fatal", "panic"]
+
+
+  Authentication:
+    type: object
+    additionalProperties: false
+    properties:
+      enabled:
+        type: boolean
+        enum: ["true", "false"]
+      provider:
+        const: local
+      local:
+        $ref: '#/definitions/LocalAuthenticationConfig'
+    required:
+      - enabled
+    if:
+      properties:
+        enabled:
+          const: "true"
+    then:
+      required:
+        - provider
+        - local
+
+  LocalAuthenticationConfig:
+    type: object
+    additionalProperties: false
+    properties:
+      keys:
+        type: array
+        items:
+          type: string
+      options:
+        $ref: '#/definitions/LocalAuthenticationOptions'
+    required:
+      - keys
+
+  LocalAuthenticationOptions:
+    type: object
+    additionalProperties: false
+    properties:
+      default:
+        $ref: '#/definitions/LocalAuthenticationSettings'
+      overrides:
+        type: array
+        items:
+          $ref: '#/definitions/LocalAuthenticationOverrideElement'
+
+  LocalAuthenticationOverrideElement:
+    type: object
+    additionalProperties: false
+    properties:
+      paths:
+        type: array
+        items:
+          type: string
+        minItems: 1
+      override:
+        $ref: '#/definitions/LocalAuthenticationSettings'
+    required:
+      - override
+      - paths
+
+  LocalAuthenticationSettings:
+    type: object
+    additionalProperties: false
+    properties:
+      allow_anonymous:
+        type: boolean
+    required:
+      - allow_anonymous
+
+
+  Debug:
+    type: object
+    additionalProperties: false
+    properties:
+      enabled:
+        type: boolean
+        enum: ["true", "false"]
+      listen_address:
+        type: string
+      certs:
+        $ref: '#/definitions/Certs'
+      hosted_domain:
+        type: string
+      allowed_origins:
+        type: array
+        items:
+          type: string
+          format: uri
+          qt-uri-protocols:
+            - http
+            - https
+      allowed_headers:
+        type: array
+        items:
+          type: string
+      allowed_methods:
+        type: array
+        items:
+          type: string
+      read_timeout:
+        type: string
+      read_header_timeout:
+        type: string
+      write_timeout:
+        type: string
+      idle_timeout:
+        type: string
+    required:
+      - enabled
+    if:
+      properties:
+        enabled:
+          const: "true"
+    then:
+      required:
+        - listen_address
+
+
+  Health:
+    type: object
+    additionalProperties: false
+    properties:
+      enabled:
+        type: boolean
+        enum: ["true", "false"]
+      listen_address:
+        type: string
+      certs:
+        $ref: '#/definitions/Certs'
+      connection_timeout:
+        type: string
+      no_reflection:
+        type: boolean
+    required:
+      - enabled
+    if:
+      properties:
+        enabled:
+          const: "true"
+    then:
+      required:
+        - listen_address
+
+
+  Metrics:
+    type: object
+    additionalProperties: false
+    properties:
+      enabled:
+        type: boolean
+        enum: ["true", "false"]
+      listen_address:
+        type: string
+      certs:
+        $ref: '#/definitions/Certs'
+    required:
+      - enabled
+    if:
+      properties:
+        enabled:
+          const: "true"
+    then:
+      required:
+        - listen_address
+
+
+  Servers:
+    type: object
+    minProperties: 1
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      properties:
+        services:
+          type: array
+          items:
+            enum:
+              - access
+              - authorizer
+              - console
+              - exporter
+              - importer
+              - model
+              - reader
+              - writer
+        grpc:
+          $ref: '#/definitions/GRPCServer'
+        http:
+          $ref: '#/definitions/HTTPServer'
+      required:
+        - grpc
+        - http
+        - services
+
+  GRPCServer:
+    type: object
+    additionalProperties: false
+    properties:
+      listen_address:
+        type: string
+      certs:
+        $ref: '#/definitions/Certs'
+      connection_timeout:
+        type: string
+      no_reflection:
+        type: boolean
+    required:
+      - listen_address
+
+  HTTPServer:
+    type: object
+    additionalProperties: false
+    properties:
+      listen_address:
+        type: string
+      certs:
+        $ref: '#/definitions/Certs'
+      hosted_domain:
+        type: string
+      allowed_origins:
+        type: array
+        items:
+          type: string
+          format: uri
+          qt-uri-protocols:
+            - http
+            - https
+      allowed_headers:
+        type: array
+        items:
+          type: string
+      allowed_methods:
+        type: array
+        items:
+          type: string
+      read_timeout:
+        type: string
+      read_header_timeout:
+        type: string
+      write_timeout:
+        type: string
+      idle_timeout:
+        type: string
+    required:
+      - listen_address
+
+
+  Authorizer:
+    type: object
+    additionalProperties: false
+    properties:
+      opa:
+        $ref: '#/definitions/OpenPolicyAgent'
+      decision_logger:
+        $ref: '#/definitions/DecisionLogger'
+      controller:
+        $ref: '#/definitions/Controller'
+      jwt:
+        $ref: '#/definitions/Jwt'
+    required:
+      - opa
+
+  OpenPolicyAgent:
+    type: object
+    additionalProperties: false
+    properties:
+      instance_id:
+        type: string
+        default: '-'
+      graceful_shutdown_period_seconds:
+        type: integer
+      local_bundles:
+        $ref: '#/definitions/LocalBundles'
+      config:
+        $ref: '#/definitions/OpenPolicyAgentConfig'
+    anyOf:
+      - required:
+          - local_bundles
+      - required:
+          - config
+
+  OpenPolicyAgentConfig:
+    type: object
+    description: OPA config block
+    $comment: https://www.openpolicyagent.org/docs/configuration
+
+  LocalBundles:
+    type: object
+    additionalProperties: false
+    properties:
+      watch:
+        type: boolean
+        description: If true, watch for local bundle changes and reload automatically
+      local_policy_image:
+        type: string
+        description: URI of policy image to load from the local store
+      file_store_root:
+        type: string
+        description: Directory containing the root of a local policy image store (typically $HOME/.policy)
+      paths:
+        type: array
+        descriptions: Directories containing local bundles to load
+        items:
+          type: string
+      skip_verification:
+        type: boolean
+        description: Skip bundle verification
+      verification_config:
+        type: object
+        description: Bundle signature verification configuration
+        $comment: https://www.openpolicyagent.org/docs/configuration#bundles
+    required:
+      - paths
+
+  DecisionLogger:
+    description: Decision logger configuration
+    type: object
+    additionalProperties: false
+    properties:
+      enabled:
+        type: boolean
+        enum: ["true", "false"]
+      provider:
+        enum: ["self", "file"]
+      self:
+        $ref: '#/definitions/SelfDecisionLogger'
+      file:
+        $ref: '#/definitions/FileDecisionLogger'
+    required:
+      - enabled
+    if:
+      properties:
+        enabled:
+          const: "true"
+    then:
+      required:
+        - provider
+      if:
+        properties:
+          provider:
+            const: self
+      then:
+        required:
+          - self
+      else:
+        required:
+          - file
+
+  FileDecisionLogger:
+    description: File logger writes decision files to a local directory
+    type: object
+    additionalProperties: false
+    properties:
+      log_file_path:
+        type: string
+        description: Directory where log files are written
+      max_file_size_mb:
+        type: integer
+        description: Max size of each log file in MB
+        default: 50
+      max_file_count:
+        type: integer
+        description: Max number of log files on disk
+        default: 2
+    required:
+      - log_file_path
+
+  SelfDecisionLogger:
+    description: Self logger sends decision to a Scribe server
+    type: object
+    additionalProperties: false
+    properties:
+      port:
+        description: Scribe server port
+        type: integer
+        default: 4222
+      store_directory:
+        description: Directory for temporary spool space
+        type: string
+        default: ./nats_store
+      scribe:
+        $ref: '#/definitions/ScribeClient'
+      shipper:
+        $ref: '#/definitions/LogShipper'
+    required:
+      - scribe
+
+  ScribeClient:
+    description: Scribe client configuration
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/GRPCClient'
+    properties:
+      ack_wait_seconds:
+        description: Number of seconds to wait for batch acks
+        type: integer
+        default: 10
+      max_inflight_batches:
+        type: integer
+
+      # Properties of GRPCClient need to be redeclared in this scope for 'additionalProperties: false' to work as expected.
+      address: true
+      tenant_id: true
+      api_key: true
+      client_cert_path: true
+      client_key_path: true
+      token: true
+      ca_cert_path: true
+      insecure: true
+      no_tls: true
+      no_proxy: true
+      headers: true
+    required:
+      - client_cert_path
+      - client_key_path
+      - tenant_id
+
+  LogShipper:
+    type: object
+    additionalProperties: false
+    properties:
+      max_bytes:
+        description: Max size of temporary spool space in bytes
+        type: integer
+        default: 104857600
+      max_batch_size:
+        description: Max size of a single batch in bytes
+        type: integer
+        default: 512
+      publish_timeout_seconds:
+        description: Max duration to wait before publishing a batch
+        type: integer
+        default: 10
+      max_inflight_batches:
+        description: Max number of concurrent unacked batches
+        type: integer
+        default: 10
+      ack_wait_seconds:
+        description: Number of seconds to wait for ack before resending batch
+        type: integer
+        default: 60
+      delete_stream_on_done:
+        description: If true, delete local spool space on exit
+        type: boolean
+        default: false
+      backoff_seconds:
+        description: Sequence of backoff intervals in seconds
+        default: [5, 10, 30, 60, 120, 300]
+        type: array
+        items:
+          type: integer
+
+  Controller:
+    type: object
+    additionalProperties: false
+    properties:
+      enabled:
+        type: boolean
+        enum: ["true", "false"]
+      server:
+        $ref: '#/definitions/ControllerClient'
+    required:
+      - enabled
+    if:
+      properties:
+        enabled:
+          const: "true"
+    then:
+      required:
+        - server
+
+  ControllerClient:
+    description: Controller client configuration
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/GRPCClient'
+    properties:
+      # Properties of GRPCClient need to be redeclared in this scope for 'additionalProperties: false' to work as expected.
+      address: true
+      tenant_id: true
+      api_key: true
+      client_cert_path: true
+      client_key_path: true
+      token: true
+      ca_cert_path: true
+      insecure: true
+      no_tls: true
+      no_proxy: true
+      headers: true
+    required:
+      - client_cert_path
+      - client_key_path
+      - tenant_id
+
+  Jwt:
+    type: object
+    additionalProperties: false
+    properties:
+      acceptable_time_skew:
+        description: Max allowed time-skew duration
+        type: string
+        default: 5s
+
+
+  Directory:
+    description: Directory configuration
+    type: object
+    additionalProperties: false
+    properties:
+      read_timeout:
+        description: Max duration for read operations
+        type: string
+        default: 5s
+      write_timeout:
+        description: Max duration for write operations
+        type: string
+        default: 5s
+      store:
+        $ref: '#/definitions/DirectoryStore'
+    required:
+      - store
+
+  DirectoryStore:
+    type: object
+    additionalProperties: false
+    properties:
+      provider:
+        type: string
+        enum: ["boltdb", "remote_directory"]
+      boltdb:
+        $ref: '#/definitions/Boltdb'
+      remote_directory:
+        description: Remote directory configuration
+        $ref: '#/definitions/GRPCClient'
+    required:
+      - provider
+    if:
+      properties:
+        provider:
+          const: boltdb
+    then:
+      required:
+        - boltdb
+    else:
+      required:
+        - remote_directory
+
+  Boltdb:
+    description: Bolt DB confgiuration
+    type: object
+    additionalProperties: false
+    properties:
+      db_path:
+        type: string
+      request_timeout:
+        type: string
+    required:
+      - db_path
+      - request_timeout
+
+
+  Certs:
+    type: object
+    additionalProperties: false
+    properties:
+      tls_key_path:
+        type: string
+      tls_cert_path:
+        type: string
+      tls_ca_cert_path:
+        type: string
+    required:
+      - tls_cert_path
+      - tls_key_path
+
+
+  GRPCClient:
+    type: object
+    description: gRPC client configuration
+    properties:
+      address:
+        description: Server address (hostname:port)
+        type: string
+      tenant_id:
+        description: Tenant ID
+        type: string
+        format: uuid
+      api_key:
+        description: API key
+        type: string
+      client_cert_path:
+        description: mTLS client cert path
+        type: string
+      client_key_path:
+        description: mTLS client key path
+        type: string
+      token:
+        description: OAuth2.0 access token
+        type: string
+      ca_cert_path:
+        description: Server CA cert path
+        type: string
+      insecure:
+        description: Skip server certificate verfification in TLS connections
+        type: boolean
+      no_tls:
+        description: Disable TLS and use a plaintext connection
+        type: boolean
+      no_proxy:
+        description: Bypass any configured HTTP proxy
+        type: boolean
+      headers:
+        description: Additional HTTP headers to send
+        type: object
+    required:
+      - address

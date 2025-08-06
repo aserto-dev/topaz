@@ -55,7 +55,7 @@ func TestLoadConfigV3(t *testing.T) {
 	assert.Equal("0.0.0.0:9696", cfg3.Metrics.ListenAddress)
 
 	// Servers
-	assert.Len(cfg3.Servers, 3)
+	assert.Len(cfg3.Servers, 2)
 }
 
 func setTopazEnv(t *testing.T) {

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=./config.json
+# yaml-language-server: $schema=./schema.yaml
 ---
 # config schema version.
 version: 3
@@ -6,7 +6,7 @@ version: 3
 # logger settings.
 logging:
   prod: true
-  log_level: info
+  log_level: fatal
   grpc_log_level: info
 
 # local authentication configuration.
@@ -19,8 +19,7 @@ authentication:
       - "##Ve@rySecret123!!"
     options:
       overrides:
-        -
-          paths:
+        - paths:
             - /aserto.authorizer.v2.Authorizer/Info
             - /grpc.reflection.v1.ServerReflection/ServerReflectionInfo
             - /grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo
@@ -31,59 +30,63 @@ authentication:
 debug:
   enabled: false
   listen_address: "0.0.0.0:6666"
+  certs:
+    tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+    tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+    tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
+  hosted_domain: ""
+  allowed_origins:
+    - http://localhost
+    - http://localhost:*
+    - https://localhost
+    - https://localhost:*
+    - https://0.0.0.0:*
+    - https://*.aserto.com
+    - https://*aserto-console.netlify.app
+  allowed_headers:
+    - "Authorization"
+    - "Content-Type"
+    - "If-Match"
+    - "If-None-Match"
+    - "Depth"
+  allowed_methods:
+    - "GET"
+    - "POST"
+    - "HEAD"
+    - "DELETE"
+    - "PUT"
+    - "PATCH"
+    - "PROFIND"
+    - "MKCOL"
+    - "COPY"
+    - "MOVE"
+  read_timeout: 2s
+  read_header_timeout: 2s
+  write_timeout: 2s
+  idle_timeout: 30s
 
 # health service settings.
 health:
   enabled: true
   listen_address: "0.0.0.0:9494"
+  certs:
+    tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+    tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+    tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
+  connection_timeout: 5s
+  no_reflection: false
 
 # metric service settings.
 metrics:
   enabled: true
   listen_address: "0.0.0.0:9696"
+  certs:
+    tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+    tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+    tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
 
 # grpc and http servers.
 servers:
-  console:
-    services:
-      - console
-    http:
-      listen_address: "0.0.0.0:8080"
-      hosted_domain: ""
-      certs:
-        tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
-        tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
-        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
-      allowed_origins:
-        - http://localhost
-        - http://localhost:*
-        - https://localhost
-        - https://localhost:*
-        - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-      allowed_headers:
-        - "Authorization"
-        - "Content-Type"
-        - "If-Match"
-        - "If-None-Match"
-        - "Depth"
-      allowed_methods:
-        - "GET"
-        - "POST"
-        - "HEAD"
-        - "DELETE"
-        - "PUT"
-        - "PATCH"
-        - "PROFIND"
-        - "MKCOL"
-        - "COPY"
-        - "MOVE"
-      read_timeout: 2s
-      read_header_timeout: 2s
-      write_timeout: 2s
-      idle_timeout: 30s
-
   directory:
     services:
       - reader
@@ -95,6 +98,7 @@ servers:
         tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
         tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       connection_timeout: 5s
+      no_reflection: false
     http:
       listen_address: "0.0.0.0:9393"
       hosted_domain: ""
@@ -142,6 +146,7 @@ servers:
         tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
         tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
       connection_timeout: 5s
+      no_reflection: false
     http:
       listen_address: "0.0.0.0:8383"
       hosted_domain: ""
@@ -204,26 +209,51 @@ authorizer:
             max_delay_seconds: 120
 
   decision_logger:
-    provider: self
+    enabled: true
+    provider: file
     self:
+      port: 4222
       store_directory: "${TOPAZ_DIR}/decisions"
       scribe:
         address: ems.prod.aserto.com:8443
+        tenant_id: 55cf8ea9-30b2-4f9a-b0bb-021ca12170f3
         client_cert_path: "${TOPAZ_DIR}/certs/sidecar-prod.crt"
         client_key_path: "${TOPAZ_DIR}/certs/sidecar-prod.key"
-        ack_wait_seconds: 30
+        ca_cert_path: "${TOPAZ_DIR}/certs/scribe-ca.crt"
+        insecure: false
+        no_tls: false
+        no_proxy: false
         headers:
-          Aserto-Tenant-Id: 55cf8ea9-30b2-4f9a-b0bb-021ca12170f3
+          additional-header: value
+        max_inflight_batches: 5
+        ack_wait_seconds: 30
       shipper:
+        max_bytes: 104857600
+        max_batch_size: 512
         publish_timeout_seconds: 2
+        max_inflight_batches: 10
+        ack_wait_seconds: 60
+        delete_stream_on_done: false
+        backoff_seconds: [5, 10, 30, 60, 120, 300]
+    file:
+      log_file_path: "/decisions"
+      max_file_size_mb: 50
+      max_file_count: 2
 
   controller:
     enabled: true
     server:
       address: relay.prod.aserto.com:8443
-      api_key: "0xdeadbeef"
-      client_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-      client_key_path: "${TOPAZ_DIR}/certs/grpc.key"
+      tenant_id: 55cf8ea9-30b2-4f9a-b0bb-021ca12170f3
+      client_cert_path: "${TOPAZ_DIR}/certs/sidecar-prod.crt"
+      client_key_path: "${TOPAZ_DIR}/certs/sidecar-prod.key"
+      api_key: "deadbeef"
+      ca_cert_path: "${TOPAZ_DIR}/certs/controller-ca.crt"
+      insecure: false
+      no_tls: false
+      no_proxy: false
+      headers:
+        additional-header: value
 
   # default jwt validation configuration
   jwt:
@@ -231,24 +261,23 @@ authorizer:
 
 # directory configuration.
 directory:
+  read_timeout: 5s
+  write_timeout: 5s
   # directory store configuration.
   store:
-    provider: boltdb
-
+    provider: remote_directory
     boltdb:
       db_path: '${TOPAZ_DB_DIR}/test.db'
       request_timeout: 5s  # set as default, 5 secs.
-
     remote_directory:
       address: "directory.prod.aserto.com:8443"
-      tenant_id: ""
-      api_key: ""
-      token: ""
-      client_cert_path: ""
-      client_key_path: ""
-      ca_cert_path: ""
-      insecure: true
+      tenant_id: 55cf8ea9-30b2-4f9a-b0bb-021ca12170f3
+      client_cert_path: "${TOPAZ_DIR}/certs/sidecar-prod.crt"
+      client_key_path: "${TOPAZ_DIR}/certs/sidecar-prod.key"
+      api_key: "deadbeef"
+      ca_cert_path: "${TOPAZ_DIR}/certs/scribe-ca.crt"
+      insecure: false
       no_tls: false
       no_proxy: false
       headers:
-        aserto-account-id: "00000000-1111-2222-3333-444455556666"
+        additional-header: value
