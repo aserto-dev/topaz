@@ -65,7 +65,7 @@ linters:
         - grpc.ServerOption
         - middleware.Server
         - plugins.Plugin
-        - service.Service
+        - service.Registrar
 
     lll:
       line-length: 150

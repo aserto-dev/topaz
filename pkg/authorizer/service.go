@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	gorilla "github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -21,6 +22,7 @@ import (
 	"github.com/aserto-dev/topaz/decisionlog"
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/app/impl"
+	"github.com/aserto-dev/topaz/pkg/servers"
 	"github.com/aserto-dev/topaz/pkg/x"
 	"github.com/aserto-dev/topaz/plugins/edge"
 )
@@ -91,6 +93,8 @@ func (s *Service) RegisterGateway(ctx context.Context, mux *runtime.ServeMux, en
 
 	return nil
 }
+
+func (s *Service) RegisterHTTP(_ context.Context, _ *servers.HTTPServer, _ *gorilla.Router) {}
 
 func (s *Service) OpenAPIHandler() http.HandlerFunc {
 	return azOpenAPI.OpenApiHandler

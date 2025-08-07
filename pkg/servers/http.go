@@ -1,13 +1,17 @@
 package servers
 
 import (
+	"net"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/go-http-utils/headers"
+	"github.com/pkg/errors"
 	"github.com/rs/cors"
+	"github.com/samber/lo"
 )
 
 type HTTPServer struct {
@@ -38,6 +42,32 @@ func (s *HTTPServer) Defaults() map[string]any {
 
 func (s *HTTPServer) Validate() error {
 	return nil
+}
+
+func (s *HTTPServer) BaseURL() (*url.URL, error) {
+	if s.IsEmptyAddress() {
+		return nil, errors.Wrap(config.ErrConfig, "no listen address")
+	}
+
+	if s.HostedDomain != "" {
+		return url.Parse(s.HostedDomain)
+	}
+
+	addr, port, err := net.SplitHostPort(s.ListenAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	if addr == "0.0.0.0" {
+		addr = "localhost"
+	}
+
+	u := url.URL{
+		Scheme: lo.Ternary(s.Certs.HasCert(), "https", "http"),
+		Host:   addr + ":" + port,
+	}
+
+	return url.Parse(u.String())
 }
 
 func (s *HTTPServer) Cors() *cors.Cors {

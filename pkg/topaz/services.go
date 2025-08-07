@@ -25,7 +25,7 @@ type topazServices struct {
 	health     *health.Service
 }
 
-func (s *topazServices) Get(ctx context.Context, name servers.ServiceName) service.Service {
+func (s *topazServices) Registrar(ctx context.Context, name servers.ServiceName) service.Registrar {
 	switch name {
 	case servers.Service.Access:
 		return s.directory.Access()

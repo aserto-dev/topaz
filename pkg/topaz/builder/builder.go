@@ -25,7 +25,7 @@ import (
 )
 
 type TopazServices interface {
-	Get(ctx context.Context, name servers.ServiceName) service.Service
+	Registrar(ctx context.Context, name servers.ServiceName) service.Registrar
 	Authorizer() *authorizer.Service
 	Directory() *directory.Service
 	Health() *health.Service
@@ -78,11 +78,13 @@ func (b *serverBuilder) Build(ctx context.Context, cfg *servers.Server) (*server
 		}
 
 		for _, service := range cfg.Services {
-			b.services.Get(ctx, service).RegisterGateway(ctx, gwMux, addr, []grpc.DialOption{creds})
+			registrar := b.services.Registrar(ctx, service)
+			registrar.RegisterGateway(ctx, gwMux, addr, []grpc.DialOption{creds})
+			registrar.RegisterHTTP(ctx, &cfg.HTTP, httpServer.router)
 		}
 
 		b.registerOpenAPI(httpServer, cfg)
-		httpServer.AttachGateway("/api/", gwMux)
+		httpServer.AttachGateway(routes.GatewayPrefix, gwMux)
 	}
 
 	for _, service := range cfg.Services {
@@ -118,7 +120,7 @@ func (b *serverBuilder) BuildDebug(ctx context.Context, cfg *debug.Config) (*htt
 		return nil, err
 	}
 
-	router := server.router.PathPrefix("/debug/").Subrouter()
+	router := server.router.PathPrefix(routes.DebugPrefix).Subrouter()
 	debug.RegisterHandlers(ctx, router)
 
 	return server, nil
@@ -135,7 +137,7 @@ func (b *serverBuilder) buildGRPC(ctx context.Context, cfg *servers.Server) (*gr
 	}
 
 	for _, service := range cfg.Services {
-		b.services.Get(ctx, service).RegisterGRPC(server.Server)
+		b.services.Registrar(ctx, service).RegisterGRPC(server.Server)
 	}
 
 	if !cfg.GRPC.NoReflection {
@@ -157,7 +159,8 @@ func (b *serverBuilder) registerConsole(router *gorilla.Router) {
 	// The config endpoint can be called without authentication but we attach the auth middleware because
 	// if an api key is included in the request, we do want to validate it.
 	// This is all part of somewhat odd behavior in the console that really needs to be rethought.
-	router.Handle("/api/v2/config", b.middleware.auth.Handler(console.ConfigHandler(b.cfg)))
+	router.Handle(routes.Config, b.middleware.auth.Handler(console.ConfigHandler(b.cfg))).
+		Methods(http.MethodGet)
 
 	console.RegisterAppHandlers(router)
 }
@@ -165,7 +168,7 @@ func (b *serverBuilder) registerConsole(router *gorilla.Router) {
 func (b *serverBuilder) registerOpenAPI(httpServer *httpServer, cfg *servers.Server) {
 	if slices.Contains(cfg.Services, servers.Service.Authorizer) {
 		httpServer.router.
-			HandleFunc("/authorizer/openapi.json", b.services.Authorizer().OpenAPIHandler()).
+			HandleFunc(routes.OpenAPIAuthorizer, b.services.Authorizer().OpenAPIHandler()).
 			Methods(http.MethodGet)
 	}
 
@@ -175,7 +178,7 @@ func (b *serverBuilder) registerOpenAPI(httpServer *httpServer, cfg *servers.Ser
 
 	if len(dsServices) > 0 {
 		httpServer.router.
-			HandleFunc("/directory/openapi.json", b.services.Directory().OpenAPIHandler(cfg.HTTP.Port(), dsServices...)).
+			HandleFunc(routes.OpenAPIDirectory, b.services.Directory().OpenAPIHandler(cfg.HTTP.Port(), dsServices...)).
 			Methods(http.MethodGet)
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	gorilla "github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -20,6 +21,7 @@ import (
 	dsa1 "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/servers"
 	"github.com/aserto-dev/topaz/pkg/service"
 )
 
@@ -40,69 +42,51 @@ func New(ctx context.Context, cfg *Config) (*Service, error) {
 	return &Service{dir}, nil
 }
 
-func (s *Service) Access() service.Service {
-	if s.server == nil {
-		return service.Noop
-	}
-
-	return service.NewImpl(
+func (s *Service) Access() service.Registrar {
+	return s.registrar(
 		s.registerAccessServer,
 		dsa1.RegisterAccessHandlerFromEndpoint,
+		s.registerAccessWellKnownHandler,
 	)
 }
 
-func (s *Service) Reader() service.Service {
-	if s.server == nil {
-		return service.Noop
-	}
-
-	return service.NewImpl(
+func (s *Service) Reader() service.Registrar {
+	return s.registrar(
 		s.registerReaderServer,
 		dsr3.RegisterReaderHandlerFromEndpoint,
+		service.NoHTTP,
 	)
 }
 
-func (s *Service) Writer() service.Service {
-	if s.server == nil {
-		return service.Noop
-	}
-
-	return service.NewImpl(
+func (s *Service) Writer() service.Registrar {
+	return s.registrar(
 		s.registerWriterServer,
 		dsw3.RegisterWriterHandlerFromEndpoint,
+		service.NoHTTP,
 	)
 }
 
-func (s *Service) Model() service.Service {
-	if s.server == nil {
-		return service.Noop
-	}
-
-	return service.NewImpl(
+func (s *Service) Model() service.Registrar {
+	return s.registrar(
 		s.registerModelServer,
 		s.registerModelGateway,
+		service.NoHTTP,
 	)
 }
 
-func (s *Service) Importer() service.Service {
-	if s.server == nil {
-		return service.Noop
-	}
-
-	return service.NewImpl(
+func (s *Service) Importer() service.Registrar {
+	return s.registrar(
 		s.registerImporterServer,
 		service.NoGateway,
+		service.NoHTTP,
 	)
 }
 
-func (s *Service) Exporter() service.Service {
-	if s.server == nil {
-		return service.Noop
-	}
-
-	return service.NewImpl(
+func (s *Service) Exporter() service.Registrar {
+	return s.registrar(
 		s.registerExporterServer,
 		service.NoGateway,
+		service.NoHTTP,
 	)
 }
 
@@ -110,8 +94,26 @@ func (s *Service) OpenAPIHandler(port string, services ...string) http.HandlerFu
 	return dsOpenAPI.OpenAPIHandler(port, services...)
 }
 
+func (s *Service) registrar(g service.GRPCRegistrar, gw service.GatewayRegistrar, h service.HTTPRegistrar) service.Registrar {
+	if s.server == nil {
+		return service.Noop
+	}
+
+	return service.NewImpl(g, gw, h)
+}
+
 func (s *Service) registerAccessServer(server *grpc.Server) {
 	dsa1.RegisterAccessServer(server, s.server.Access1())
+}
+
+func (s *Service) registerAccessWellKnownHandler(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router) {
+	baseURL, err := cfg.BaseURL()
+	if err != nil {
+		zerolog.Ctx(ctx).Fatal().Err(err).Msg("unable to register access service well-known handler.")
+		return
+	}
+
+	router.HandleFunc(AuthZENConfiguration, WellKnownConfigHandler(baseURL)).Methods(http.MethodGet)
 }
 
 func (s *Service) registerReaderServer(server *grpc.Server) {
