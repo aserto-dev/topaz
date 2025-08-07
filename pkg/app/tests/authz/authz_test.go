@@ -39,12 +39,12 @@ func TestAuthZ(t *testing.T) {
 			{
 				Reader:            assets_test.PeoplefinderConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0x700,
+				FileMode:          0o700,
 			},
 			{
 				Reader:            assets_test.AcmecorpReader(),
 				ContainerFilePath: "/data/test.db",
-				FileMode:          0x700,
+				FileMode:          0o700,
 			},
 		},
 		WaitingFor: wait.ForAll(
@@ -60,6 +60,10 @@ func TestAuthZ(t *testing.T) {
 	require.NoError(t, err)
 
 	if err := topaz.Start(ctx); err != nil {
+		if logs, e := tc.ContainerLogs(ctx, topaz); e == nil {
+			t.Log(logs)
+		}
+
 		require.NoError(t, err)
 	}
 
@@ -72,13 +76,17 @@ func TestAuthZ(t *testing.T) {
 	require.NoError(t, err)
 
 	t.Run("testAuthZ", testAuthZ(grpcAddr))
+
+	if logs, e := tc.ContainerLogs(ctx, topaz); e == nil {
+		t.Log(logs)
+	}
 }
 
 func testAuthZ(addr string) func(*testing.T) {
 	return func(t *testing.T) {
 		opts := []client.ConnectionOption{
 			client.WithAddr(addr),
-			client.WithInsecure(true),
+			client.WithNoTLS(true),
 		}
 
 		azClient, err := azc.New(opts...)
@@ -92,6 +100,7 @@ func testAuthZ(addr string) func(*testing.T) {
 			name string
 			test func(*testing.T)
 		}{
+			{"TestListPolicies", ListPolicies(ctx, azClient)},
 			{"TestDecisionTreeWithMissingPath", DecisionTreeWithMissingPath(ctx, azClient)},
 			{"TestDecisionTreeWithMissingIdentity", DecisionTreeWithMissingIdentity(ctx, azClient)},
 			{"TestDecisionTreeWithUserID", DecisionTreeWithUserID(ctx, azClient)},
@@ -102,6 +111,14 @@ func testAuthZ(addr string) func(*testing.T) {
 		for _, testCase := range tests {
 			t.Run(testCase.name, testCase.test)
 		}
+	}
+}
+
+func ListPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+	return func(t *testing.T) {
+		respX, errX := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{})
+		require.NoError(t, errX)
+		assert.NotEmpty(t, respX.GetResult())
 	}
 }
 

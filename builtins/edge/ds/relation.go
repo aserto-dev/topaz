@@ -6,7 +6,6 @@ import (
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
-	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/samber/lo"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -30,7 +29,7 @@ import (
 //		"subject_type": "",
 //		"with_objects": false
 //	  }
-func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterRelation(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -56,7 +55,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				})
 			}
 
-			resp, err := dr.GetDS().GetRelation(bctx.Context, &args)
+			resp, err := dr.GetRelation(bctx.Context, &args)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
@@ -105,7 +104,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 //		with_objects: false,
 //		with_empty_subject_relation: false
 //	}
-func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterRelations(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -128,7 +127,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 			resp := &dsr3.GetRelationsResponse{}
 
 			for {
-				r, err := dr.GetDS().GetRelations(bctx.Context, &args)
+				r, err := dr.GetRelations(bctx.Context, &args)
 				if err != nil {
 					traceError(&bctx, fnName, err)
 					return nil, err

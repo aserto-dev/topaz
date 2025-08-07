@@ -1,0 +1,270 @@
+package config
+
+import (
+	"fmt"
+	"io"
+	"iter"
+	"os"
+	"text/template"
+
+	"github.com/hashicorp/go-multierror"
+	"github.com/pkg/errors"
+	"github.com/rs/zerolog"
+	"github.com/samber/lo"
+
+	"github.com/aserto-dev/logger"
+
+	"github.com/aserto-dev/topaz/pkg/authentication"
+	"github.com/aserto-dev/topaz/pkg/authorizer"
+	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/debug"
+	"github.com/aserto-dev/topaz/pkg/directory"
+	"github.com/aserto-dev/topaz/pkg/health"
+	"github.com/aserto-dev/topaz/pkg/loiter"
+	"github.com/aserto-dev/topaz/pkg/metrics"
+	"github.com/aserto-dev/topaz/pkg/servers"
+)
+
+const Version int = 3
+
+var ErrVersionMismatch = errors.Wrap(config.ErrConfig, "unsupported configuration version")
+
+type Config struct {
+	Version        int                   `json:"version"`
+	Logging        logger.Config         `json:"logging"`
+	Authentication authentication.Config `json:"authentication"`
+	Debug          debug.Config          `json:"debug"`
+	Health         health.Config         `json:"health"`
+	Metrics        metrics.Config        `json:"metrics"`
+	Servers        servers.Config        `json:"servers"`
+	Directory      directory.Config      `json:"directory"`
+	Authorizer     authorizer.Config     `json:"authorizer"`
+}
+
+var _ config.Section = (*Config)(nil)
+
+type ConfigOverride func(*Config)
+
+type configOptions struct {
+	overrides  []ConfigOverride
+	noEnvSubst bool
+}
+
+type configOption func(*configOptions)
+
+func WithOverrides(overrides ...ConfigOverride) configOption {
+	return func(opts *configOptions) {
+		opts.overrides = append(opts.overrides, overrides...)
+	}
+}
+
+func WithNoEnvSubstitution(opts *configOptions) {
+	opts.noEnvSubst = true
+}
+
+func NewConfig(r io.Reader, opts ...configOption) (*Config, error) {
+	var (
+		cfg     Config
+		err     error
+		options configOptions
+	)
+
+	for _, opt := range opts {
+		opt(&options)
+	}
+
+	v := config.NewViper()
+	v.SetEnvPrefix("TOPAZ")
+	v.AutomaticEnv()
+	v.SetDefaults(&cfg)
+
+	if !options.noEnvSubst {
+		r, err = withEnvSubst(r)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	v.ReadConfig(r)
+
+	if err := checkVersion(v); err != nil {
+		return nil, err
+	}
+
+	if err := v.UnmarshalExact(&cfg, config.UseJSONTags, config.WithSquash); err != nil {
+		return nil, err
+	}
+
+	for _, override := range options.overrides {
+		override(&cfg)
+	}
+
+	return &cfg, nil
+}
+
+func Load(path string, opts ...configOption) (*Config, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot read config file %q", path)
+	}
+
+	defer f.Close()
+
+	cfg, err := NewConfig(f, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := cfg.Validate(); err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
+}
+
+//nolint:mnd  // this is where default values are defined.
+func (c *Config) Defaults() map[string]any {
+	return lo.Assign(
+		map[string]any{
+			"version":                3,
+			"logging.prod":           false,
+			"logging.log_level":      "info",
+			"logging.grpc_log_level": "warn",
+		},
+		config.PrefixKeys("authentication", c.Authentication.Defaults()),
+		config.PrefixKeys("debug", c.Debug.Defaults()),
+		config.PrefixKeys("health", c.Health.Defaults()),
+		config.PrefixKeys("metrics", c.Metrics.Defaults()),
+		config.PrefixKeys("directory", c.Directory.Defaults()),
+		config.PrefixKeys("authorizer", c.Authorizer.Defaults()),
+	)
+}
+
+const logLevelError = "invalid value %q in logging.log_level. expected one of [trace, debug, info, warn, error, fatal, panic]"
+
+func (c *Config) Validate() error {
+	// logging settings validation.
+	if err := (&c.Logging).ParseLogLevel(zerolog.Disabled); err != nil {
+		return errors.Wrapf(config.ErrConfig, logLevelError, c.Logging.LogLevel)
+	}
+
+	var errs error
+
+	// Check that all config sections are valid before validating consistency across sections.
+	for _, validator := range c.sections() {
+		if err := validator.Validate(); err != nil {
+			errs = multierror.Append(errs, err)
+		}
+	}
+
+	if errs != nil {
+		return errs
+	}
+
+	// All sections are valid. Check that they are consistent with each other.
+	if c.Servers.DirectoryEnabled() == c.Directory.IsRemote() {
+		errs = multierror.Append(errs, errors.Wrap(config.ErrConfig, "directory must be either remote or exposed locally"))
+	}
+
+	return errs
+}
+
+func (c *Config) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Chain2(
+		c.Authentication.Paths(),
+		c.Debug.Paths(),
+		c.Health.Paths(),
+		c.Metrics.Paths(),
+		c.Servers.Paths(),
+		c.Directory.Paths(),
+		c.Authorizer.Paths(),
+	)
+}
+
+func (c *Config) Serialize(w io.Writer) error {
+	cfgV3 := ConfigV3{Version: c.Version, Logging: c.Logging}
+
+	if err := cfgV3.Serialize(w); err != nil {
+		return err
+	}
+
+	for _, serializer := range c.sections() {
+		if err := serializer.Serialize(w); err != nil {
+			return err
+		}
+	}
+
+	_, _ = fmt.Fprintln(w)
+
+	return nil
+}
+
+func checkVersion(v config.Viper) error {
+	var cfg struct {
+		Version int `json:"version"`
+	}
+
+	if err := v.Unmarshal(&cfg); err != nil {
+		return err
+	}
+
+	if cfg.Version != Version {
+		return errors.Wrapf(ErrVersionMismatch, "expected %d, got %d", Version, cfg.Version)
+	}
+
+	return nil
+}
+
+func (c *Config) sections() []config.Section {
+	return []config.Section{&c.Authentication, &c.Debug, &c.Health, &c.Metrics, &c.Servers, &c.Directory, &c.Authorizer}
+}
+
+type ConfigV3 struct {
+	Version int           `json:"version" yaml:"version"`
+	Logging logger.Config `json:"logging" yaml:"logging"`
+}
+
+var _ config.Section = (*ConfigV3)(nil)
+
+func (c *ConfigV3) Defaults() map[string]any {
+	return map[string]any{}
+}
+
+func (c *ConfigV3) Validate() error {
+	return nil
+}
+
+func (c *ConfigV3) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Seq2[string, config.AccessMode]()
+}
+
+func (c *ConfigV3) Serialize(w io.Writer) error {
+	{
+		tmpl := template.Must(template.New("base").Parse(templateConfigHeader))
+		if err := tmpl.Execute(w, c); err != nil {
+			return err
+		}
+	}
+	{
+		tmpl := template.Must(template.New("LOGGER").Parse(templateLogger))
+		if err := tmpl.Execute(w, c.Logging); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+const templateConfigHeader = `# yaml-language-server: $schema=https://topaz.sh/schema/config.json
+---
+# config schema version.
+version: {{ .Version }}
+`
+
+const templateLogger = `
+# logger settings.
+logging:
+  prod: {{ .Prod }}
+  log_level: {{ .LogLevel }}
+  grpc_log_level: {{ .GrpcLogLevel }}
+`

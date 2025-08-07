@@ -10,11 +10,10 @@ import (
 	"github.com/aserto-dev/go-edge-ds/pkg/datasync"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
-	"github.com/aserto-dev/topaz/pkg/app"
-	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
-	"google.golang.org/grpc/health/grpc_health_v1"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/google/uuid"
 	"github.com/open-policy-agent/opa/v1/plugins"
@@ -33,7 +32,9 @@ const (
 )
 
 type Config struct {
-	Enabled           bool              `json:"enabled"`              //
+	// Optional provides enable/disable functionality for the plugin configuration.
+	config.Optional
+
 	Addr              string            `json:"addr"`                 //
 	APIKey            string            `json:"apikey"`               //
 	TenantID          string            `json:"tenant_id,omitempty"`  //
@@ -52,16 +53,17 @@ type Config struct {
 }
 
 type Plugin struct {
-	ctx         context.Context
-	cancel      context.CancelFunc
-	manager     *plugins.Manager
-	logger      *zerolog.Logger
-	config      *Config
-	topazConfig *topaz.Config
-	syncNow     chan api.SyncMode
+	ctx     context.Context
+	cancel  context.CancelFunc
+	manager *plugins.Manager
+	logger  *zerolog.Logger
+	config  *Config
+	dsCfg   *client.Config
+	syncNow chan api.SyncMode
+	health  HealthReporter
 }
 
-func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Config, manager *plugins.Manager) *Plugin {
+func newEdgePlugin(logger *zerolog.Logger, cfg *Config, dsCfg *client.Config, manager *plugins.Manager, health HealthReporter) *Plugin {
 	newLogger := logger.With().Str("component", "edge.plugin").Logger()
 
 	cfg.SessionID = uuid.NewString()
@@ -70,18 +72,19 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 	// sync context, lifetime management for scheduler.
 	syncContext, cancel := context.WithCancel(context.Background())
 
-	if topazConfig == nil {
+	if dsCfg == nil {
 		logger.Error().Msg("no topaz directory config was provided")
 	}
 
 	return &Plugin{
-		ctx:         syncContext,
-		cancel:      cancel,
-		logger:      &newLogger,
-		manager:     manager,
-		config:      cfg,
-		topazConfig: topazConfig,
-		syncNow:     make(chan api.SyncMode),
+		ctx:     syncContext,
+		cancel:  cancel,
+		logger:  &newLogger,
+		manager: manager,
+		config:  cfg,
+		dsCfg:   dsCfg,
+		syncNow: make(chan api.SyncMode),
+		health:  health,
 	}
 }
 
@@ -97,7 +100,7 @@ func (p *Plugin) Start(ctx context.Context) error {
 	if p.hasLoopBack() {
 		p.logger.Warn().
 			Str("edge-directory", p.config.Addr).
-			Str("remote-directory", p.topazConfig.DirectoryResolver.Address).
+			Str("remote-directory", p.dsCfg.Address).
 			Bool("has-loopback", p.hasLoopBack()).
 			Msg("EdgePlugin.Start")
 
@@ -134,7 +137,8 @@ func (p *Plugin) Reconfigure(ctx context.Context, config any) {
 			go p.scheduler()
 		} else {
 			// set health status to NOT_SERVING when plugin switches to disabled.
-			app.SetServiceStatus(p.logger, "sync", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
+			p.logger.Info().Str("service", "sync").Str("status", healthpb.HealthCheckResponse_NOT_SERVING.String()).Msg("health")
+			p.health.SetServingStatus("sync", healthpb.HealthCheckResponse_NOT_SERVING)
 			p.cancel()
 		}
 	}
@@ -156,8 +160,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, config any) {
 // When a loopback is detected, the remote directory configuration takes precedence,
 // and the edge sync will be disabled.
 func (p *Plugin) hasLoopBack() bool {
-	return (p.config.Addr == p.topazConfig.DirectoryResolver.Address &&
-		p.config.TenantID == p.topazConfig.DirectoryResolver.TenantID)
+	return (p.config.Addr == p.dsCfg.Address && p.config.TenantID == p.dsCfg.TenantID)
 }
 
 func (p *Plugin) SyncNow(mode api.SyncMode) {
@@ -348,7 +351,8 @@ func (p *Plugin) exec(ctx context.Context, ds *directory.Directory, conn *grpc.C
 	}
 
 	if p.config.Enabled {
-		app.SetServiceStatus(p.logger, "sync", grpc_health_v1.HealthCheckResponse_SERVING)
+		p.logger.Info().Str("service", "sync").Str("status", healthpb.HealthCheckResponse_SERVING.String()).Msg("health")
+		p.health.SetServingStatus("sync", healthpb.HealthCheckResponse_SERVING)
 	}
 
 	p.logger.Info().Str(status, finished).Msg(syncTask)

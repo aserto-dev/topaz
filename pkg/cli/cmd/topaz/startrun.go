@@ -2,19 +2,27 @@ package topaz
 
 import (
 	"fmt"
+	"iter"
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"strings"
 
-	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	clicfg "github.com/aserto-dev/topaz/pkg/cli/config"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	cfgutil "github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/config/v3"
+	"github.com/aserto-dev/topaz/pkg/loiter"
+	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
+
+var ErrUndefinedEnvVar = errors.New("environment variable is referenced but not defined")
 
 type StartRunCmd struct {
 	ContainerRegistry string   `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
@@ -25,6 +33,9 @@ type StartRunCmd struct {
 	ContainerHostname string   `optional:"" name:"hostname" default:"" env:"CONTAINER_HOSTNAME" help:"hostname for docker to set"`
 	Env               []string `optional:"" short:"e" help:"additional environment variable names to be passed to container"`
 	ContainerVersion  string   `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
+
+	cfg        *clicfg.Container `kong:"-"`
+	envMapping map[string]string `kong:"-"`
 }
 
 type runMode int
@@ -34,7 +45,6 @@ const (
 	modeInteractive
 )
 
-//nolint:funlen
 func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
 		return cc.ErrIsRunning
@@ -44,38 +54,19 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(c.Config.Active.ConfigFile))
 	}
 
-	cfg, err := config.LoadConfiguration(c.Config.Active.ConfigFile)
+	cfg, err := cmd.loadConfig(c.Config.Active.ConfigFile)
 	if err != nil {
+		return err
+	}
+
+	if err := cmd.resolveEnv(); err != nil {
+		// Should this be a warning instead of an error?
 		return err
 	}
 
 	c.Config.Running.Config = c.Config.Active.Config
 	c.Config.Running.ConfigFile = c.Config.Active.ConfigFile
 	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
-
-	if cfg.HasTopazDir {
-		c.Con().Warn().Msg("This configuration file still uses TOPAZ_DIR environment variable.")
-		c.Con().Msg("Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
-	}
-
-	generator := config.NewGenerator(filepath.Base(c.Config.Active.ConfigFile))
-	if _, err := generator.CreateCertsDir(); err != nil {
-		return err
-	}
-
-	if _, err := generator.CreateDataDir(); err != nil {
-		return err
-	}
-
-	ports, err := getPorts(cfg)
-	if err != nil {
-		return err
-	}
-
-	volumes, err := getVolumes(cfg)
-	if err != nil {
-		return err
-	}
 
 	c.Con().Info().Msg(">>> starting topaz %q...", c.Config.Running.Config)
 
@@ -96,6 +87,9 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		}
 	}
 
+	volumes := cmd.volumeMounts(cfg.Config, c.Config.Active.ConfigFile)
+	env := cmd.containerEnv()
+
 	opts := []dockerx.RunOption{
 		dockerx.WithContainerImage(image),
 		dockerx.WithContainerPlatform(cmd.ContainerPlatform),
@@ -105,9 +99,8 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithEntrypoint([]string{"./topazd"}),
 		dockerx.WithCmd([]string{"run", "--config-file", "/config/" + filepath.Base(c.Config.Active.ConfigFile)}),
 		dockerx.WithAutoRemove(),
-		dockerx.WithEnvs(getEnvFromVolumes(volumes)),
-		dockerx.WithEnvs(cmd.Env),
-		dockerx.WithPorts(ports),
+		dockerx.WithEnvs(env),
+		dockerx.WithPorts(containerPorts(cfg.Ports())),
 		dockerx.WithVolumes(volumes),
 		dockerx.WithOutput(c.StdOut()),
 		dockerx.WithError(c.StdErr()),
@@ -135,66 +128,125 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	return nil
 }
 
-func getPorts(cfg *config.Loader) ([]string, error) {
-	portArray, err := cfg.GetPorts()
-	if err != nil {
-		return nil, err
-	}
+func (cmd *StartRunCmd) loadConfig(path string) (*clicfg.Container, error) {
+	cfg, err := clicfg.Load(path)
 
-	// ensure unique assignment for each port
-	portMap := lo.Associate(portArray, func(port string) (string, string) {
-		return port, fmt.Sprintf("%s:%s/tcp", port, port)
-	})
+	cmd.cfg = cfg
 
-	ports := lo.MapToSlice(portMap, func(_, v string) string {
-		return v
-	})
-
-	return ports, nil
+	return cfg, err
 }
 
-func getVolumes(cfg *config.Loader) ([]string, error) {
-	paths, err := cfg.GetPaths()
-	if err != nil {
-		return nil, err
-	}
+// resolveEnv populates cmd.envMapping with the environment variables defined in cmd.Env.
+// Variables that don't provide a value are looked up in the environment and an error is returned if they are not
+// definded.
+func (cmd *StartRunCmd) resolveEnv() error {
+	var errs error
 
-	volumeMap := lo.Associate(paths, func(path string) (string, string) {
-		dir := filepath.Dir(path)
-		return dir, dir + ":/" + filepath.Base(dir)
-	})
-
-	volumes := []string{
-		cc.GetTopazCfgDir() + ":/config:ro", // manually attach the configuration folder
-	}
-
-	if cfg.Configuration.OPA.LocalBundles.LocalPolicyImage != "" && dockerx.PolicyRoot() != "" {
-		volumes = append(volumes, dockerx.PolicyRoot()+":/root/.policy:ro") // manually attach policy store
-	}
-
-	for _, v := range volumeMap {
-		volumes = append(volumes, v)
-	}
-
-	return volumes, nil
-}
-
-func getEnvFromVolumes(volumes []string) []string {
-	envs := []string{}
-
-	for i := range volumes {
-		destination := strings.Split(volumes[i], ":")
-		mountedPath := "/" + filepath.Base(destination[1]) // last value from split.
-
-		switch {
-		case strings.Contains(volumes[i], "certs"):
-			envs = append(envs, x.EnvTopazCertsDir+"="+mountedPath)
-		case strings.Contains(volumes[i], "db"):
-			envs = append(envs, x.EnvTopazDBDir+"="+mountedPath)
-		case strings.Contains(volumes[i], "cfg"):
-			envs = append(envs, x.EnvTopazCfgDir+"="+mountedPath)
+	cmd.envMapping = lo.Associate(cmd.Env, func(env string) (string, string) {
+		name, value, _ := strings.Cut(env, "=")
+		if value == "" {
+			// Value is not provided. Look it up in the environment.
+			if v, ok := os.LookupEnv(name); ok {
+				value = v
+			} else {
+				errs = multierror.Append(errs, errors.Wrap(ErrUndefinedEnvVar, name))
+			}
 		}
+
+		return name, value
+	})
+
+	if _, ok := cmd.envMapping[x.EnvTopazCertsDir]; !ok {
+		cmd.envMapping[x.EnvTopazCertsDir] = x.DefCertsDir
 	}
 
-	return envs
+	if _, ok := cmd.envMapping[x.EnvTopazCfgDir]; !ok {
+		cmd.envMapping[x.EnvTopazCfgDir] = x.DefCfgDir
+	}
+
+	if _, ok := cmd.envMapping[x.EnvTopazDBDir]; !ok {
+		cmd.envMapping[x.EnvTopazDBDir] = x.DefDBDir
+	}
+
+	return errs
+}
+
+func (cmd *StartRunCmd) containerEnv() []string {
+	return lo.MapToSlice(cmd.envMapping, func(name, value string) string {
+		if value == "" {
+			return name
+		}
+
+		return fmt.Sprintf("%s=%s", name, value)
+	})
+}
+
+func containerPorts(ports iter.Seq[string]) []string {
+	return slices.Collect(
+		loiter.Map(ports, func(port string) string {
+			return fmt.Sprintf("%s:%s/tcp", port, port)
+		}),
+	)
+}
+
+type mount struct {
+	src  string
+	dest string
+	mode cfgutil.AccessMode
+}
+
+func (m mount) String() string {
+	return fmt.Sprintf("%s:%s:%s", m.src, m.dest, m.mode)
+}
+
+func (cmd *StartRunCmd) volumeMounts(cfg *config.Config, cfgFile string) []string {
+	paths := loiter.Collect(
+		loiter.RejectKey(cfg.Paths(), ""),
+		func(_ string, _, mode cfgutil.AccessMode) bool { return mode == cfgutil.ReadWrite },
+	)
+
+	return append(
+		lo.MapToSlice(paths, func(path string, mode cfgutil.AccessMode) string {
+			return mount{
+				src:  cmd.ExpandHostPath(path),
+				dest: cmd.ExpandContainerPath(path),
+				mode: mode,
+			}.String()
+		}),
+		fmt.Sprintf("%s:%s:ro", cfgFile, path.Join(x.DefCfgDir, filepath.Base(cfgFile))), // always mount the config file as read-only.
+	)
+}
+
+func (cmd *StartRunCmd) ExpandHostPath(path string) string {
+	return os.Expand(path, func(name string) string {
+		switch name {
+		case x.EnvTopazCertsDir:
+			return cc.GetTopazCertsDir()
+		case x.EnvTopazCfgDir:
+			return cc.GetTopazCfgDir()
+		case x.EnvTopazDBDir:
+			return cc.GetTopazDataDir()
+		default:
+			return os.Getenv(name)
+		}
+	})
+}
+
+func (cmd *StartRunCmd) ExpandContainerPath(path string) string {
+	return os.Expand(path, func(name string) string {
+		if value, ok := cmd.envMapping[name]; ok {
+			return value
+		}
+
+		switch name {
+		case x.EnvTopazCertsDir:
+			return x.DefCertsDir
+		case x.EnvTopazCfgDir:
+			return x.DefCfgDir
+		case x.EnvTopazDBDir:
+			return x.DefDBDir
+		default:
+			return ""
+		}
+	})
 }

@@ -36,7 +36,7 @@ func TestDirectory(t *testing.T) {
 			{
 				Reader:            assets_test.ConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0x700,
+				FileMode:          0o700,
 			},
 		},
 		WaitingFor: wait.ForAll(
@@ -52,6 +52,10 @@ func TestDirectory(t *testing.T) {
 	require.NoError(t, err)
 
 	if err := topaz.Start(ctx); err != nil {
+		if logs, e := tc.ContainerLogs(ctx, topaz); e == nil {
+			t.Log(logs)
+		}
+
 		require.NoError(t, err)
 	}
 
@@ -65,26 +69,30 @@ func TestDirectory(t *testing.T) {
 
 	dsConfig := &dsc.Config{
 		Host:      addr,
-		Insecure:  true,
-		Plaintext: false,
+		Insecure:  false,
+		Plaintext: true,
 		Timeout:   10 * time.Second,
 	}
 
 	azConfig := &azc.Config{
 		Host:      addr,
-		Insecure:  true,
-		Plaintext: false,
+		Insecure:  false,
+		Plaintext: true,
 		Timeout:   10 * time.Second,
 	}
 
 	t.Run("testDirectory", testDirectory(dsConfig, azConfig))
+
+	if logs, e := tc.ContainerLogs(ctx, topaz); e == nil {
+		t.Log(logs)
+	}
 }
 
 func testDirectory(dsConfig *dsc.Config, azConfig *azc.Config) func(*testing.T) {
 	return func(t *testing.T) {
 		opts := []client.ConnectionOption{
 			client.WithAddr(dsConfig.Host),
-			client.WithInsecure(true),
+			client.WithNoTLS(true),
 		}
 
 		conn, err := client.NewConnection(opts...)

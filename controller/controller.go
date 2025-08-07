@@ -22,6 +22,8 @@ type Controller struct {
 	instanceInfo *api.InstanceInfo
 	logger       *zerolog.Logger
 	handler      CommandFunc
+	errGroup     errgroup.Group
+	cancel       func()
 }
 
 type sleepResult bool
@@ -70,17 +72,21 @@ func NewController(logger *zerolog.Logger, policyName, host string, cfg *Config,
 		},
 		logger:  &newLogger,
 		handler: handler,
+		cancel:  func() {},
 	}, nil
 }
 
 const expBackoff = 2
 
 // run context dependant controller.
-func (c *Controller) Start(ctx context.Context) func() {
-	ctx, cancel := context.WithCancel(ctx)
-	errGroup := errgroup.Group{}
+func (c *Controller) Start(ctx context.Context) {
+	if c.client == nil {
+		return
+	}
 
-	errGroup.Go(func() error {
+	ctx, cancel := context.WithCancel(ctx)
+
+	c.errGroup.Go(func() error {
 		c.logger.Trace().Msg("command loop running")
 
 		for retry := 0; ; retry++ {
@@ -104,13 +110,15 @@ func (c *Controller) Start(ctx context.Context) func() {
 		return nil
 	})
 
-	return func() {
-		cancel()
+	c.cancel = cancel
+}
 
-		if err := errGroup.Wait(); err != nil {
-			c.logger.Error().Err(err).Msg("cleanup error")
-		}
+func (c *Controller) Stop() error {
+	if c.cancel != nil {
+		c.cancel()
 	}
+
+	return c.errGroup.Wait()
 }
 
 func (c *Controller) runCommandLoop(ctx context.Context) error {
@@ -121,12 +129,14 @@ func (c *Controller) runCommandLoop(ctx context.Context) error {
 		return errors.Wrap(err, "failed to establish command stream with control plane")
 	}
 
-	errGroup := errgroup.Group{}
-	errGroup.Go(func() error {
+	errs := make(chan error, 1)
+
+	go func() {
 		for {
 			cmd, errRcv := stream.Recv()
 			if errRcv != nil {
-				return errRcv
+				errs <- errRcv
+				return
 			}
 
 			c.logger.Debug().Msgf("processing remote command %v", cmd.GetCommand())
@@ -137,9 +147,9 @@ func (c *Controller) runCommandLoop(ctx context.Context) error {
 
 			c.logger.Trace().Msg("successfully processed remote command")
 		}
-	})
+	}()
 
-	return errGroup.Wait()
+	return <-errs
 }
 
 func sleepWithContext(ctx context.Context, duration time.Duration) sleepResult {

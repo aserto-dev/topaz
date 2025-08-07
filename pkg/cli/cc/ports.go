@@ -2,6 +2,7 @@ package cc
 
 import (
 	"fmt"
+	"iter"
 	"net"
 	"time"
 
@@ -35,7 +36,7 @@ const (
 	address  = "0.0.0.0"
 )
 
-func WaitForPorts(ports []string, expectedStatus PortStatus) error {
+func WaitForPorts(ports iter.Seq[string], expectedStatus PortStatus) error {
 	t0 := time.Now().UTC()
 	log.Debug().Time("started", t0).Msg("WaitForPorts")
 
@@ -47,7 +48,7 @@ func WaitForPorts(ports []string, expectedStatus PortStatus) error {
 		log.Debug().Str("elapsed", diff.String()).Msg("WaitForPorts")
 	}()
 
-	for _, port := range ports {
+	for port := range ports {
 		listenAddress := fmt.Sprintf("%s:%s", address, port)
 
 		if err := Retry(timeout, interval, func() error {

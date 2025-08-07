@@ -35,7 +35,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 	log.Debug().Interface("input", input).Msg("is")
 
-	policyRuntime, err := s.getRuntime(ctx, req.GetPolicyInstance())
+	policyRuntime, err := s.getRuntime(ctx, s.instanceName(req))
 	if err != nil {
 		return &authorizer.IsResponse{}, err
 	}

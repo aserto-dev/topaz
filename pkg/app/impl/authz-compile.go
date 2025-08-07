@@ -28,7 +28,7 @@ func (s *AuthorizerServer) Compile(ctx context.Context, req *authorizer.CompileR
 
 	log.Debug().Str("compile", req.GetQuery()).Interface("input", input).Msg("compile")
 
-	rt, err := s.getRuntime(ctx, req.GetPolicyInstance())
+	rt, err := s.getRuntime(ctx, s.instanceName(req))
 	if err != nil {
 		return &authorizer.CompileResponse{}, err
 	}

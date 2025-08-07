@@ -16,7 +16,9 @@ import (
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/configure"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/topaz"
+	clicfg "github.com/aserto-dev/topaz/pkg/cli/config"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/pkg/servers"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -118,14 +120,13 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 	}
 
 	// 4 - wait for health endpoint to be in serving state
-	cfg := config.GetConfig(c.Config.Active.ConfigFile)
-	if cfg.HasTopazDir {
-		fmt.Fprintln(c.StdErr(), "This configuration file still uses TOPAZ_DIR environment variable.")
-		fmt.Fprintln(c.StdErr(), "Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+	cfg, err := clicfg.Load(c.Config.Active.ConfigFile)
+	if err != nil {
+		return err
 	}
 
 	healthCfg := &client.Config{
-		Address:        cfg.Configuration.APIConfig.Health.ListenAddress,
+		Address:        cfg.Health.ListenAddress,
 		ClientCertPath: "",
 		ClientKeyPath:  "",
 		CACertPath:     "",
@@ -140,7 +141,7 @@ func (cmd *InstallTemplateCmd) installTemplate(c *cc.CommonCtx, tmpl *template) 
 		return err
 	}
 
-	if model, ok := cfg.Configuration.APIConfig.Services["model"]; !ok {
+	if model, ok := cfg.Servers.FindService(servers.Service.Model); !ok {
 		return errors.Errorf("model service not configured")
 	} else {
 		cmd.Host = model.GRPC.ListenAddress
@@ -199,10 +200,11 @@ func (cmd *InstallTemplateCmd) prepareTopaz(c *cc.CommonCtx, tmpl *template, cus
 	// 2 - topaz config new - generate a new configuration based on the requirements of the template
 	if !cmd.NoConfigure {
 		command := configure.NewConfigCmd{
-			Name:     configure.ConfigName(name),
-			Resource: tmpl.Assets.Policy.Resource,
-			From:     lo.Ternary(tmpl.Assets.Policy.Local, configure.FromLocal, configure.FromRemote),
-			Force:    true,
+			Name:      configure.ConfigName(name),
+			Resource:  tmpl.Assets.Policy.Resource,
+			From:      lo.Ternary(tmpl.Assets.Policy.Local, configure.FromLocal, configure.FromRemote),
+			Force:     true,
+			Plaintext: cmd.Plaintext,
 		}
 		if err := command.Run(c); err != nil {
 			return err

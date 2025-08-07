@@ -1,14 +1,14 @@
 package main
 
 import (
-	"os"
+	"context"
+	"time"
 
-	"github.com/aserto-dev/topaz/pkg/app"
-	"github.com/aserto-dev/topaz/pkg/app/directory"
-	"github.com/aserto-dev/topaz/pkg/app/topaz"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/spf13/cobra"
+
+	"github.com/aserto-dev/topaz/pkg/cc/signals"
+	"github.com/aserto-dev/topaz/pkg/config/v3"
+	"github.com/aserto-dev/topaz/pkg/topaz"
 )
 
 var (
@@ -17,7 +17,8 @@ var (
 	flagRunWatchLocalBundles bool
 	flagRunIgnorePaths       []string
 	flagRunDebug             bool
-	debugService             *debug.Server
+
+	gracefulShutdownPeriod = 5 * time.Second
 )
 
 var cmdRun = &cobra.Command{
@@ -27,87 +28,52 @@ var cmdRun = &cobra.Command{
 	RunE:  run,
 }
 
-func run(cmd *cobra.Command, args []string) error {
-	configPath := config.Path(flagRunConfigFile)
+func run(_ *cobra.Command, _ []string) error {
+	ctx := signals.SetupSignalHandler()
 
-	topazApp, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, configOverrides)
+	cfg, err := config.Load(flagRunConfigFile, config.WithOverrides(configOverrides))
 	if err != nil {
 		return err
 	}
 
-	defer topazApp.Manager.StopServers(topazApp.Context)
-
-	defer cleanup()
-
-	if err := topazApp.ConfigServices(); err != nil {
-		return err
-	}
-
-	if topazApp.Configuration.DebugService.Enabled {
-		debugService = debug.NewServer(&topazApp.Configuration.DebugService, topazApp.Logger)
-		debugService.Start()
-
-		defer debugService.Stop()
-	}
-
-	if _, ok := topazApp.Services["authorizer"]; ok {
-		dirResolver, err := directory.NewResolver(topazApp.Logger, &topazApp.Configuration.DirectoryResolver)
-		if err != nil {
-			return err
-		}
-
-		defer dirResolver.Close()
-
-		decisionlog, err := topazApp.GetDecisionLogger(topazApp.Configuration.DecisionLogger)
-		if err != nil {
-			return err
-		}
-
-		defer decisionlog.Shutdown()
-
-		runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(
-			topazApp.Context,
-			topazApp.Logger,
-			topazApp.Configuration,
-			decisionlog,
-			dirResolver,
-		)
-		if err != nil {
-			return err
-		}
-
-		defer runtimeCleanup()
-
-		if authorizer, ok := topazApp.Services["authorizer"].(*app.Authorizer); ok {
-			authorizer.Resolver.SetRuntimeResolver(runtime)
-			authorizer.Resolver.SetDirectoryResolver(dirResolver)
-		}
-	}
-
-	err = topazApp.Start()
+	app, err := topaz.NewTopaz(ctx, cfg)
 	if err != nil {
 		return err
 	}
 
-	<-topazApp.Context.Done()
+	// Start topaz.
+	ctx, err = app.Start(ctx)
+	if err != nil {
+		return err
+	}
 
-	return nil
+	// Wait for shutdown signal or for any of the servers to stop unexpectedly.
+	<-ctx.Done()
+
+	return stopAndWait(app)
+}
+
+func stopAndWait(app *topaz.Topaz) error {
+	ctx, cancel := context.WithTimeout(context.Background(), gracefulShutdownPeriod)
+	defer cancel()
+
+	return app.Stop(ctx)
 }
 
 func configOverrides(cfg *config.Config) {
-	cfg.Command.Mode = config.CommandModeRun
-
 	if len(flagRunBundleFiles) > 0 {
-		cfg.OPA.LocalBundles.Paths = append(cfg.OPA.LocalBundles.Paths, flagRunBundleFiles...)
+		cfg.Authorizer.OPA.LocalBundles.Paths = append(cfg.Authorizer.OPA.LocalBundles.Paths, flagRunBundleFiles...)
 	}
 
 	if len(flagRunIgnorePaths) > 0 {
-		cfg.OPA.LocalBundles.Ignore = append(cfg.OPA.LocalBundles.Ignore, flagRunIgnorePaths...)
+		cfg.Authorizer.OPA.LocalBundles.Ignore = append(cfg.Authorizer.OPA.LocalBundles.Ignore, flagRunIgnorePaths...)
 	}
 
 	if flagRunWatchLocalBundles {
-		cfg.OPA.LocalBundles.Watch = true
+		cfg.Authorizer.OPA.LocalBundles.Watch = true
 	}
 
-	cfg.DebugService.Enabled = flagRunDebug
+	if flagRunDebug {
+		cfg.Debug.Enabled = true
+	}
 }

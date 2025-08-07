@@ -36,12 +36,12 @@ func TestBuiltins(t *testing.T) {
 			{
 				Reader:            assets_test.PeoplefinderConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0x700,
+				FileMode:          0o700,
 			},
 			{
 				Reader:            assets_test.AcmecorpReader(),
 				ContainerFilePath: "/data/test.db",
-				FileMode:          0x700,
+				FileMode:          0o700,
 			},
 		},
 		WaitingFor: wait.ForAll(
@@ -75,7 +75,7 @@ func testBuiltins(addr string) func(*testing.T) {
 	return func(t *testing.T) {
 		opts := []client.ConnectionOption{
 			client.WithAddr(addr),
-			client.WithInsecure(true),
+			client.WithNoTLS(true),
 		}
 
 		azClient, err := azc.New(opts...)
@@ -193,34 +193,6 @@ var BuiltinHelpTests = []struct {
 						"trace":        false,
 					}),
 				},
-			},
-		},
-	},
-	{
-		name:  "ds.check_relation",
-		query: "x = ds.check_relation({})",
-		expected: map[string]any{
-			"ds.check_relation": map[string]any{
-				"object_type":  "",
-				"object_id":    "",
-				"relation":     "",
-				"subject_type": "",
-				"subject_id":   "",
-				"trace":        false,
-			},
-		},
-	},
-	{
-		name:  "ds.check_permission",
-		query: "x = ds.check_permission({})",
-		expected: map[string]any{
-			"ds.check_permission": map[string]any{
-				"object_type":  "",
-				"object_id":    "",
-				"permission":   "",
-				"subject_type": "",
-				"subject_id":   "",
-				"trace":        false,
 			},
 		},
 	},

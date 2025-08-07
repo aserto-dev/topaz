@@ -16,10 +16,9 @@ require (
 	github.com/aserto-dev/go-directory v0.33.10
 	github.com/aserto-dev/go-edge-ds v0.33.20
 	github.com/aserto-dev/go-grpc v0.9.7
-	github.com/aserto-dev/go-topaz-ui v0.1.25
+	github.com/aserto-dev/go-topaz-ui v0.1.25-0.20250519193203-a0f0b7d6a48a
 	github.com/aserto-dev/header v0.0.11
 	github.com/aserto-dev/logger v0.0.9
-	github.com/aserto-dev/openapi-authorizer v0.20.6
 	github.com/aserto-dev/openapi-directory v0.33.5
 	github.com/aserto-dev/runtime v1.6.0
 	github.com/aserto-dev/self-decision-logger v0.0.12
@@ -30,13 +29,15 @@ require (
 	github.com/fatih/color v1.18.0
 	github.com/gdamore/tcell/v2 v2.8.1
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a
+	github.com/go-sprout/sprout v1.0.1
 	github.com/go-viper/mapstructure/v2 v2.4.0
 	github.com/google/uuid v1.6.0
-	github.com/google/wire v0.6.0
+	github.com/gorilla/mux v1.8.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.1
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/itchyny/gojq v0.12.17
 	github.com/lestrrat-go/jwx/v2 v2.1.6
 	github.com/magefile/mage v1.15.0
@@ -47,6 +48,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/open-policy-agent/opa v1.6.0
 	github.com/opencontainers/image-spec v1.1.1
+	github.com/pborman/indent v1.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.22.0
 	github.com/rivo/tview v0.0.0-20250625164341-a4a78f1e05cb
@@ -61,13 +63,15 @@ require (
 	go.etcd.io/bbolt v1.4.2
 	golang.org/x/sync v0.16.0
 	golang.org/x/sys v0.34.0
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250728155136-f173205681a0
 	google.golang.org/grpc v1.74.2
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	dario.cat/mergo v1.0.1 // indirect
+	dario.cat/mergo v1.0.2 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20250102033503-faa5f7b0171c // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/agnivade/levenshtein v1.2.1 // indirect
@@ -104,10 +108,8 @@ require (
 	github.com/goccy/go-json v0.10.4 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/go-tpm v0.9.3 // indirect
-	github.com/google/subcommands v1.2.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
-	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/itchyny/timefmt-go v0.1.6 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -163,7 +165,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.12.0 // indirect
-	github.com/spf13/cast v1.7.1 // indirect
+	github.com/spf13/cast v1.9.2 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/tchap/go-patricia/v2 v2.3.2 // indirect
@@ -183,15 +185,11 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.40.0 // indirect
 	golang.org/x/exp v0.0.0-20250718183923-645b1fa84792 // indirect
-	golang.org/x/mod v0.26.0 // indirect
 	golang.org/x/net v0.42.0 // indirect
 	golang.org/x/term v0.33.0 // indirect
 	golang.org/x/text v0.27.0 // indirect
 	golang.org/x/time v0.12.0 // indirect
-	golang.org/x/tools v0.35.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250728155136-f173205681a0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250728155136-f173205681a0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.6.0 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )

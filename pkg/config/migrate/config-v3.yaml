@@ -1,0 +1,238 @@
+# yaml-language-server: $schema=https://topaz.sh/schema/config.json
+---
+# config schema version.
+version: 3
+
+# logger settings.
+logging:
+  prod: true
+  log_level: info
+  grpc_log_level: info
+
+# local authentication configuration.
+authentication:
+  enabled: true
+  provider: local
+  local:
+    keys:
+      - topaz_api_key
+    options:
+      default:
+        allow_anonymous: false
+
+      overrides:
+        - override:
+            allow_anonymous: true
+          paths:
+            - /aserto.authorizer.v2.Authorizer/Info
+            - /grpc.reflection.v1.ServerReflection/ServerReflectionInfo
+            - /grpc.reflection.v1alpha.ServerReflection/ServerReflectionInfo
+
+# debug service settings.
+debug:
+  enabled: false
+
+# health service settings.
+health:
+  enabled: true
+  listen_address: '0.0.0.0:9494'
+
+# metric service settings.
+metrics:
+  enabled: true
+  listen_address: '0.0.0.0:9696'
+
+#  grpc and http server configuration
+servers:
+  authorizer:
+    services:
+      - authorizer
+    grpc:
+      listen_address: '0.0.0.0:8282'
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
+      connection_timeout: 2s
+    http:
+      listen_address: '0.0.0.0:8383'
+      hosted_domain: ''
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
+      allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://*.aserto.com
+        - https://*aserto-console.netlify.app
+      allowed_headers:
+        - Authorization
+        - Content-Type
+        - If-Match
+        - If-None-Match
+        - Depth
+      allowed_methods:
+        - GET
+        - POST
+        - HEAD
+        - DELETE
+        - PUT
+        - PATCH
+        - PROFIND
+        - MKCOL
+        - COPY
+        - MOVE
+      read_timeout: 2s
+      read_header_timeout: 2s
+      write_timeout: 2s
+      idle_timeout: 30s
+
+  console:
+    services:
+      - console
+    grpc:
+      listen_address: '0.0.0.0:8081'
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
+      connection_timeout: 0s
+    http:
+      listen_address: '0.0.0.0:8080'
+      hosted_domain: ''
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
+      allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://*.aserto.com
+        - https://*aserto-console.netlify.app
+      allowed_headers:
+        - Authorization
+        - Content-Type
+        - If-Match
+        - If-None-Match
+        - Depth
+      allowed_methods:
+        - GET
+        - POST
+        - HEAD
+        - DELETE
+        - PUT
+        - PATCH
+        - PROFIND
+        - MKCOL
+        - COPY
+        - MOVE
+      read_timeout: 2s
+      read_header_timeout: 2s
+      write_timeout: 2s
+      idle_timeout: 30s
+
+  directory:
+    services:
+      - exporter
+      - importer
+      - model
+      - reader
+      - writer
+    grpc:
+      listen_address: '0.0.0.0:9292'
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/grpc.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/grpc.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/grpc-ca.crt'
+      connection_timeout: 0s
+    http:
+      listen_address: '0.0.0.0:9393'
+      hosted_domain: ''
+      certs:
+        tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
+        tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
+        tls_ca_cert_path: '${TOPAZ_CERTS_DIR}/gateway-ca.crt'
+      allowed_origins:
+        - http://localhost
+        - http://localhost:*
+        - https://localhost
+        - https://localhost:*
+        - https://*.aserto.com
+        - https://*aserto-console.netlify.app
+      allowed_headers:
+        - Authorization
+        - Content-Type
+        - If-Match
+        - If-None-Match
+        - Depth
+      allowed_methods:
+        - GET
+        - POST
+        - HEAD
+        - DELETE
+        - PUT
+        - PATCH
+        - PROFIND
+        - MKCOL
+        - COPY
+        - MOVE
+      read_timeout: 2s
+      read_header_timeout: 2s
+      write_timeout: 2s
+      idle_timeout: 30s
+
+# directory configuration.
+directory:
+  read_timeout: 5s
+  write_timeout: 5s
+
+  # directory store configuration.
+  store:
+    provider: boltdb
+    boltdb:
+      db_path: '${TOPAZ_DB_DIR}/gdrive.db'
+      request_timeout: 5s
+
+# authorizer configuration.
+authorizer:
+  # Open Policy Agent configuration.
+  opa:
+    instance_id: '-'
+    graceful_shutdown_period_seconds: 2
+    max_plugin_wait_time_seconds: 0
+    local_bundles:
+      paths: []
+      skip_verification: true
+    config:
+      bundles:
+        gdrive:
+          persist: false
+          polling:
+            max_delay_seconds: 120
+            min_delay_seconds: 60
+          resource: ghcr.io/aserto-policies/policy-rebac:latest
+          service: ghcr
+          signing: null
+          size_limit_bytes: 0
+      services:
+        ghcr:
+          response_header_timeout_seconds: 5
+          type: oci
+          url: https://ghcr.io
+
+  # decision logger configuration.
+  decision_logger:
+    enabled: false
+
+  # control plane configuration
+  controller:
+    enabled: false
+
+  # jwt validation configuration
+  jwt:
+    acceptable_time_skew: 5s
