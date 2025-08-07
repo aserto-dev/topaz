@@ -94,7 +94,9 @@ func (s *Service) RegisterGateway(ctx context.Context, mux *runtime.ServeMux, en
 	return nil
 }
 
-func (s *Service) RegisterHTTP(_ context.Context, _ *servers.HTTPServer, _ *gorilla.Router) {}
+func (s *Service) RegisterHTTP(_ context.Context, _ *servers.HTTPServer, _ *gorilla.Router) error {
+	return nil
+}
 
 func (s *Service) OpenAPIHandler() http.HandlerFunc {
 	return azOpenAPI.OpenApiHandler

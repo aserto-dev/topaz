@@ -13,20 +13,20 @@ import (
 type Registrar interface {
 	RegisterGRPC(server *grpc.Server)
 	RegisterGateway(ctx context.Context, mux *runtime.ServeMux, addr string, opts []grpc.DialOption) error
-	RegisterHTTP(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router)
+	RegisterHTTP(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router) error
 }
 
 type (
 	GRPCRegistrar    func(server *grpc.Server)
 	GatewayRegistrar func(ctx context.Context, mux *runtime.ServeMux, addr string, opts []grpc.DialOption) error
-	HTTPRegistrar    func(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router)
+	HTTPRegistrar    func(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router) error
 )
 
 func NoGateway(_ context.Context, _ *runtime.ServeMux, _ string, _ []grpc.DialOption) error {
 	return nil
 }
 
-func NoHTTP(_ context.Context, _ *servers.HTTPServer, _ *gorilla.Router) {}
+func NoHTTP(_ context.Context, _ *servers.HTTPServer, _ *gorilla.Router) error { return nil }
 
 type Impl struct {
 	regGRPC    GRPCRegistrar
@@ -48,6 +48,6 @@ func (s *Impl) RegisterGateway(ctx context.Context, mux *runtime.ServeMux, addr 
 	return s.regGateway(ctx, mux, addr, opts)
 }
 
-func (s *Impl) RegisterHTTP(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router) {
-	s.regHTTP(ctx, cfg, router)
+func (s *Impl) RegisterHTTP(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router) error {
+	return s.regHTTP(ctx, cfg, router)
 }

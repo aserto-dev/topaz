@@ -6,6 +6,7 @@ import (
 	"slices"
 
 	gorilla "github.com/gorilla/mux"
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/samber/lo"
 	"google.golang.org/grpc"
@@ -79,8 +80,14 @@ func (b *serverBuilder) Build(ctx context.Context, cfg *servers.Server) (*server
 
 		for _, service := range cfg.Services {
 			registrar := b.services.Registrar(ctx, service)
-			registrar.RegisterGateway(ctx, gwMux, addr, []grpc.DialOption{creds})
-			registrar.RegisterHTTP(ctx, &cfg.HTTP, httpServer.router)
+
+			if err := registrar.RegisterGateway(ctx, gwMux, addr, []grpc.DialOption{creds}); err != nil {
+				return nil, errors.Wrapf(err, "failed to register gateway for service %q", service)
+			}
+
+			if err := registrar.RegisterHTTP(ctx, &cfg.HTTP, httpServer.router); err != nil {
+				return nil, errors.Wrapf(err, "failed to register HTTP handlers for service %q", service)
+			}
 		}
 
 		b.registerOpenAPI(httpServer, cfg)

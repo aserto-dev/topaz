@@ -106,14 +106,15 @@ func (s *Service) registerAccessServer(server *grpc.Server) {
 	dsa1.RegisterAccessServer(server, s.server.Access1())
 }
 
-func (s *Service) registerAccessWellKnownHandler(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router) {
+func (s *Service) registerAccessWellKnownHandler(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router) error {
 	baseURL, err := cfg.BaseURL()
 	if err != nil {
-		zerolog.Ctx(ctx).Error().Err(err).Msg("unable to register access service well-known handler.")
-		return
+		return errors.Wrap(err, "failed to get base URL for access service well-known handler")
 	}
 
 	router.HandleFunc(AuthZENConfiguration, WellKnownConfigHandler(baseURL)).Methods(http.MethodGet)
+
+	return nil
 }
 
 func (s *Service) registerReaderServer(server *grpc.Server) {
