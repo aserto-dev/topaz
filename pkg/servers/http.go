@@ -62,12 +62,10 @@ func (s *HTTPServer) BaseURL() (*url.URL, error) {
 		addr = "localhost"
 	}
 
-	u := url.URL{
+	return &url.URL{
 		Scheme: lo.Ternary(s.Certs.HasCert(), "https", "http"),
 		Host:   addr + ":" + port,
-	}
-
-	return url.Parse(u.String())
+	}, nil
 }
 
 func (s *HTTPServer) Cors() *cors.Cors {
