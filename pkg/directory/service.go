@@ -109,7 +109,7 @@ func (s *Service) registerAccessServer(server *grpc.Server) {
 func (s *Service) registerAccessWellKnownHandler(ctx context.Context, cfg *servers.HTTPServer, router *gorilla.Router) {
 	baseURL, err := cfg.BaseURL()
 	if err != nil {
-		zerolog.Ctx(ctx).Fatal().Err(err).Msg("unable to register access service well-known handler.")
+		zerolog.Ctx(ctx).Error().Err(err).Msg("unable to register access service well-known handler.")
 		return
 	}
 

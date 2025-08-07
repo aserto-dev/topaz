@@ -44,7 +44,7 @@ func (s *topazServices) Registrar(ctx context.Context, name servers.ServiceName)
 	case servers.Service.Console:
 		return service.Noop
 	default:
-		zerolog.Ctx(ctx).Fatal().Msgf("unknown service %s", name)
+		zerolog.Ctx(ctx).Error().Msgf("unknown service %s", name)
 		return service.Noop
 	}
 }
