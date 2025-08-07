@@ -15,6 +15,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/servers"
+	"github.com/aserto-dev/topaz/pkg/service"
 	"github.com/aserto-dev/topaz/plugins/edge"
 )
 
@@ -22,6 +23,30 @@ type topazServices struct {
 	directory  *directory.Service
 	authorizer *authorizer.Service
 	health     *health.Service
+}
+
+func (s *topazServices) Get(ctx context.Context, name servers.ServiceName) service.Service {
+	switch name {
+	case servers.Service.Access:
+		return s.directory.Access()
+	case servers.Service.Reader:
+		return s.directory.Reader()
+	case servers.Service.Writer:
+		return s.directory.Writer()
+	case servers.Service.Model:
+		return s.directory.Model()
+	case servers.Service.Importer:
+		return s.directory.Importer()
+	case servers.Service.Exporter:
+		return s.directory.Exporter()
+	case servers.Service.Authorizer:
+		return s.authorizer
+	case servers.Service.Console:
+		return service.Noop
+	default:
+		zerolog.Ctx(ctx).Fatal().Msgf("unknown service %s", name)
+		return service.Noop
+	}
 }
 
 func (s *topazServices) Directory() *directory.Service {

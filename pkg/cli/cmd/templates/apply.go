@@ -11,6 +11,7 @@ import (
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/directory"
+	"github.com/aserto-dev/topaz/pkg/x"
 	"github.com/pkg/errors"
 )
 
@@ -70,7 +71,9 @@ func (cmd *ApplyTemplateCmd) setManifest(c *cc.CommonCtx) error {
 	}
 
 	manifest := filepath.Join(manifestDir, "manifest.yaml")
-	if !fs.FileExists(manifest) {
+	if exists, err := x.FileExists(manifest); err != nil {
+		return err
+	} else if !exists {
 		return errors.Errorf("file %q does not exist", manifest)
 	}
 

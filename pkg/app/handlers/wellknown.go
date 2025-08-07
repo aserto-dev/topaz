@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"sync"
 
-	"github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/pkg/config/v2"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -41,7 +41,7 @@ func WellKnownConfigHandler(endpoint *url.URL) func(w http.ResponseWriter, r *ht
 	}
 }
 
-func SetWellKnownConfigHandler(cfg *builder.API, mux *http.ServeMux) error {
+func SetWellKnownConfigHandler(cfg *config.API, mux *http.ServeMux) error {
 	ep, err := endpoint(cfg)
 	if err != nil {
 		return err
@@ -54,7 +54,7 @@ func SetWellKnownConfigHandler(cfg *builder.API, mux *http.ServeMux) error {
 	return nil
 }
 
-func endpoint(cfg *builder.API) (*url.URL, error) {
+func endpoint(cfg *config.API) (*url.URL, error) {
 	if cfg.Gateway.FQDN != "" {
 		return url.Parse(cfg.Gateway.FQDN)
 	}

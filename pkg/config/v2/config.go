@@ -1,45 +1,18 @@
 package config
 
 import (
-	"io"
-	"os"
+	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/pkg/debug"
-	"github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/pkg/x"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
-// CommandMode -- enum type.
-type CommandMode int
-
-var CertificateSets = []string{"grpc", "gateway"}
-
-// CommandMode -- enum constants.
-const (
-	CommandModeUnknown CommandMode = 0 + iota
-	CommandModeRun
-	CommandModeBuild
-)
-
-type ServicesConfig struct {
-	Health struct {
-		ListenAddress string           `json:"listen_address"`
-		Certificates  client.TLSConfig `json:"certs"`
-	} `json:"health"`
-	Metrics struct {
-		ListenAddress string           `json:"listen_address"`
-		Certificates  client.TLSConfig `json:"certs"`
-		ZPages        bool             `json:"zpages"`
-	} `json:"metrics"`
-	Services map[string]*builder.API `json:"services"`
-}
-
-// Config holds the configuration for the app.
 type Common struct {
 	Version      int           `json:"version"`
 	Logging      logger.Config `json:"logging"`
@@ -67,9 +40,53 @@ type Common struct {
 	OPA runtime.Config `json:"opa"`
 }
 
-// LoggerConfig is a basic Config copy that gets loaded before everything else,
-// so we can log during resolving configuration.
-type LoggerConfig Config
+// CommandMode -- enum type.
+type CommandMode int
+
+// CommandMode -- enum constants.
+const (
+	CommandModeUnknown CommandMode = 0 + iota
+	CommandModeRun
+	CommandModeBuild
+)
+
+type ServicesConfig struct {
+	Health struct {
+		ListenAddress string           `json:"listen_address"`
+		Certificates  client.TLSConfig `json:"certs"`
+	} `json:"health"`
+	Metrics struct {
+		ListenAddress string           `json:"listen_address"`
+		Certificates  client.TLSConfig `json:"certs"`
+		ZPages        bool             `json:"zpages"`
+	} `json:"metrics"`
+	Services map[string]*API `json:"services"`
+}
+
+type API struct {
+	Needs []string `json:"needs"`
+	GRPC  struct {
+		FQDN          string `json:"fqdn"`
+		ListenAddress string `json:"listen_address"`
+		// Default connection timeout is 120 seconds
+		// https://godoc.org/google.golang.org/grpc#ConnectionTimeout
+		ConnectionTimeoutSeconds uint32           `json:"connection_timeout_seconds"`
+		Certs                    client.TLSConfig `json:"certs"`
+	} `json:"grpc"`
+	Gateway struct {
+		FQDN              string           `json:"fqdn"`
+		ListenAddress     string           `json:"listen_address"`
+		AllowedOrigins    []string         `json:"allowed_origins"`
+		AllowedHeaders    []string         `json:"allowed_headers"`
+		AllowedMethods    []string         `json:"allowed_methods"`
+		Certs             client.TLSConfig `json:"certs"`
+		HTTP              bool             `json:"http"`
+		ReadTimeout       time.Duration    `json:"read_timeout"`
+		ReadHeaderTimeout time.Duration    `json:"read_header_timeout"`
+		WriteTimeout      time.Duration    `json:"write_timeout"`
+		IdleTimeout       time.Duration    `json:"idle_timeout"`
+	} `json:"gateway"`
+}
 
 // Path represents the path to a configuration file.
 type Path string
@@ -92,7 +109,7 @@ func NewConfig(
 	file := "config.yaml"
 
 	if configPath != "" {
-		exists, err := FileExists(string(configPath))
+		exists, err := x.FileExists(string(configPath))
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to determine if config file '%s' exists", configPath)
 		}
@@ -104,7 +121,7 @@ func NewConfig(
 		file = string(configPath)
 	}
 
-	configExists, err := FileExists(file)
+	configExists, err := x.FileExists(file)
 	if err != nil {
 		return nil, errors.Wrapf(err, "filesystem error")
 	}
@@ -155,32 +172,4 @@ func NewConfig(
 	}
 
 	return configLoader.Configuration, nil
-}
-
-// NewLoggerConfig creates a new LoggerConfig.
-func NewLoggerConfig(configPath Path, overrides Overrider) (*logger.Config, error) {
-	discardLogger := zerolog.New(io.Discard)
-
-	cfg, err := NewConfig(configPath, &discardLogger, overrides)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to create new config")
-	}
-
-	lCfg := logger.Config{
-		Prod:           cfg.Logging.Prod,
-		LogLevel:       cfg.Logging.LogLevel,
-		LogLevelParsed: cfg.Logging.LogLevelParsed,
-	}
-
-	return &lCfg, nil
-}
-
-func FileExists(path string) (bool, error) {
-	if fi, err := os.Stat(path); err == nil && !fi.IsDir() {
-		return true, nil
-	} else if os.IsNotExist(err) {
-		return false, nil
-	} else {
-		return false, errors.Wrapf(err, "failed to stat file '%s'", path)
-	}
 }

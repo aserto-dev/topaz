@@ -6,8 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/aserto-dev/topaz/pkg/cc/signals"
 	"github.com/aserto-dev/topaz/pkg/config/v3"
+	"github.com/aserto-dev/topaz/pkg/signals"
 	"github.com/aserto-dev/topaz/pkg/topaz"
 )
 

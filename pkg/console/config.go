@@ -22,6 +22,7 @@ type URLs struct {
 
 type urlsWithKeys struct {
 	*URLs
+
 	AuthorizerAPIKey string `json:"authorizerApiKey"`
 	DirectoryAPIKey  string `json:"directoryApiKey"`
 }

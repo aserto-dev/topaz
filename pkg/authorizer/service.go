@@ -2,6 +2,7 @@ package authorizer
 
 import (
 	"context"
+	"net/http"
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -14,6 +15,7 @@ import (
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 
 	"github.com/aserto-dev/topaz/decisionlog"
@@ -76,18 +78,22 @@ func (s *Service) Close(ctx context.Context) error {
 	return s.close(ctx)
 }
 
-func (s *Service) RegisterAuthorizerServer(server *grpc.Server) {
+func (s *Service) RegisterGRPC(server *grpc.Server) {
 	if s.AuthorizerServer != nil {
 		authz.RegisterAuthorizerServer(server, s)
 	}
 }
 
-func (s *Service) RegisterAuthorizerGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
+func (s *Service) RegisterGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
 	if s.AuthorizerServer != nil {
 		return authz.RegisterAuthorizerHandlerFromEndpoint(ctx, mux, endpoint, opts)
 	}
 
 	return nil
+}
+
+func (s *Service) OpenAPIHandler() http.HandlerFunc {
+	return azOpenAPI.OpenApiHandler
 }
 
 const (

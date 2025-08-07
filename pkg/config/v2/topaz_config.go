@@ -11,6 +11,7 @@ import (
 
 const ConfigFileVersion = 2
 
+// Config holds the configuration for the app.
 type Config struct {
 	Common           `json:"common,squash"` //nolint:staticcheck // squash is used by mapstructure
 	Auth             AuthnConfig            `json:"auth"`

@@ -2,6 +2,7 @@ package directory
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
@@ -15,13 +16,15 @@ import (
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	ds "github.com/aserto-dev/go-edge-ds/pkg/directory"
+	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
 	dsa1 "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/service"
 )
 
 type Service struct {
-	*ds.Directory
+	server *ds.Directory
 }
 
 func New(ctx context.Context, cfg *Config) (*Service, error) {
@@ -37,59 +40,93 @@ func New(ctx context.Context, cfg *Config) (*Service, error) {
 	return &Service{dir}, nil
 }
 
-func (s *Service) RegisterAccessServer(server *grpc.Server) {
-	if s.Directory != nil {
-		dsa1.RegisterAccessServer(server, s.Access1())
+func (s *Service) Access() service.Service {
+	if s.server == nil {
+		return service.Noop
 	}
+
+	return service.NewImpl(
+		s.registerAccessServer,
+		dsa1.RegisterAccessHandlerFromEndpoint,
+	)
 }
 
-func (s *Service) RegisterAccessGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
-	if s.Directory != nil {
-		return dsa1.RegisterAccessHandlerFromEndpoint(ctx, mux, endpoint, opts)
+func (s *Service) Reader() service.Service {
+	if s.server == nil {
+		return service.Noop
 	}
 
-	return nil
+	return service.NewImpl(
+		s.registerReaderServer,
+		dsr3.RegisterReaderHandlerFromEndpoint,
+	)
 }
 
-func (s *Service) RegisterReaderServer(server *grpc.Server) {
-	if s.Directory != nil {
-		dsr3.RegisterReaderServer(server, s.Reader3())
+func (s *Service) Writer() service.Service {
+	if s.server == nil {
+		return service.Noop
 	}
+
+	return service.NewImpl(
+		s.registerWriterServer,
+		dsw3.RegisterWriterHandlerFromEndpoint,
+	)
 }
 
-func (s *Service) RegisterReaderGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
-	if s.Directory != nil {
-		return dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, endpoint, opts)
+func (s *Service) Model() service.Service {
+	if s.server == nil {
+		return service.Noop
 	}
 
-	return nil
+	return service.NewImpl(
+		s.registerModelServer,
+		s.registerModelGateway,
+	)
 }
 
-func (s *Service) RegisterWriterServer(server *grpc.Server) {
-	if s.Directory != nil {
-		dsw3.RegisterWriterServer(server, s.Writer3())
+func (s *Service) Importer() service.Service {
+	if s.server == nil {
+		return service.Noop
 	}
+
+	return service.NewImpl(
+		s.registerImporterServer,
+		service.NoGateway,
+	)
 }
 
-func (s *Service) RegisterWriterGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
-	if s.Directory != nil {
-		return dsw3.RegisterWriterHandlerFromEndpoint(ctx, mux, endpoint, opts)
+func (s *Service) Exporter() service.Service {
+	if s.server == nil {
+		return service.Noop
 	}
 
-	return nil
+	return service.NewImpl(
+		s.registerExporterServer,
+		service.NoGateway,
+	)
 }
 
-func (s *Service) RegisterModelServer(server *grpc.Server) {
-	if s.Directory != nil {
-		dsm3.RegisterModelServer(server, s.Model3())
-	}
+func (s *Service) OpenAPIHandler(port string, services ...string) http.HandlerFunc {
+	return dsOpenAPI.OpenAPIHandler(port, services...)
 }
 
-func (s *Service) RegisterModelGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts ...grpc.DialOption) error {
-	if s.Directory == nil {
-		return nil
-	}
+func (s *Service) registerAccessServer(server *grpc.Server) {
+	dsa1.RegisterAccessServer(server, s.server.Access1())
+}
 
+func (s *Service) registerReaderServer(server *grpc.Server) {
+	dsr3.RegisterReaderServer(server, s.server.Reader3())
+}
+
+func (s *Service) registerWriterServer(server *grpc.Server) {
+	dsw3.RegisterWriterServer(server, s.server.Writer3())
+}
+
+func (s *Service) registerModelServer(server *grpc.Server) {
+	dsm3.RegisterModelServer(server, s.server.Model3())
+}
+
+func (s *Service) registerModelGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
 	if err := dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, endpoint, opts); err != nil {
 		return err
 	}
@@ -97,14 +134,10 @@ func (s *Service) RegisterModelGateway(ctx context.Context, mux *runtime.ServeMu
 	return dsm3stream.RegisterModelStreamHandlersFromEndpoint(ctx, mux, endpoint, opts)
 }
 
-func (s *Service) RegisterImporterServer(server *grpc.Server) {
-	if s.Directory != nil {
-		dsi3.RegisterImporterServer(server, s.Importer3())
-	}
+func (s *Service) registerImporterServer(server *grpc.Server) {
+	dsi3.RegisterImporterServer(server, s.server.Importer3())
 }
 
-func (s *Service) RegisterExporterServer(server *grpc.Server) {
-	if s.Directory != nil {
-		dse3.RegisterExporterServer(server, s.Exporter3())
-	}
+func (s *Service) registerExporterServer(server *grpc.Server) {
+	dse3.RegisterExporterServer(server, s.server.Exporter3())
 }
