@@ -5,9 +5,9 @@ import (
 	"path"
 	"testing"
 
-	config2 "github.com/aserto-dev/topaz/pkg/cc/config"
 	cnfg "github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/config/migrate"
+	config2 "github.com/aserto-dev/topaz/pkg/config/v2"
 	"github.com/aserto-dev/topaz/pkg/config/v3"
 
 	req "github.com/stretchr/testify/require"

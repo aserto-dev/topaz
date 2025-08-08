@@ -63,7 +63,9 @@ linters:
         - http.Handler
         - grpc.DialOption
         - grpc.ServerOption
+        - middleware.Server
         - plugins.Plugin
+        - service.Registrar
 
     lll:
       line-length: 150
@@ -92,7 +94,7 @@ linters:
     # Paths to exclude
     paths:
       - internal/pkg/xdg/
-      - pkg/cc/signals/
+      - pkg/signals/
       - pkg/cli/editor/
 
     rules:

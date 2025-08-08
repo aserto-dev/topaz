@@ -11,15 +11,14 @@ import (
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/pkg/authentication"
 	"github.com/aserto-dev/topaz/pkg/authorizer"
-	config2 "github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/config"
+	config2 "github.com/aserto-dev/topaz/pkg/config/v2"
 	config3 "github.com/aserto-dev/topaz/pkg/config/v3"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/health"
 	"github.com/aserto-dev/topaz/pkg/metrics"
 	"github.com/aserto-dev/topaz/pkg/servers"
-	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
@@ -143,8 +142,8 @@ func migHealth(cfg2 *config2.Config, cfg3 *config3.Config) {
 func migServices(cfg2 *config2.Config, cfg3 *config3.Config) {
 	cfg3.Servers = servers.Config{}
 
-	// svcHosts := gRPC listen address -> builder.API
-	svcHosts := map[string]*builder.API{}
+	// svcHosts := gRPC listen address -> config2.API
+	svcHosts := map[string]*config2.API{}
 
 	// port2names := gRPC listen address -> service name (includes list for v3 service definition)
 	port2names := map[string][]servers.ServiceName{}

@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
+	xx "github.com/aserto-dev/topaz/pkg/x"
 )
 
 type TemplateCmd struct {
@@ -50,7 +50,7 @@ type template struct {
 			Name     string `json:"name"`
 			Resource string `json:"resource"`
 			Local    bool   `json:"local"`
-		} `json:"policy,omitempty"`
+		} `json:"policy"`
 		IdentityData []string `json:"idp_data,omitempty"`
 		DomainData   []string `json:"domain_data,omitempty"`
 		Assertions   []string `json:"assertions,omitempty"`
@@ -90,7 +90,7 @@ func download(src, dir string) (string, error) {
 }
 
 func getBytes(fileURL string) ([]byte, error) {
-	if exists, _ := config.FileExists(fileURL); exists {
+	if exists, _ := xx.FileExists(fileURL); exists {
 		return os.ReadFile(fileURL)
 	}
 
@@ -109,7 +109,7 @@ func getBytes(fileURL string) ([]byte, error) {
 }
 
 func getTemplate(name, templatesURL string) (*template, error) {
-	if exists, _ := config.FileExists(name); exists {
+	if exists, _ := xx.FileExists(name); exists {
 		return getTemplateFromFile(name)
 	}
 

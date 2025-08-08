@@ -11,7 +11,6 @@ import (
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
-	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
@@ -255,7 +254,7 @@ func PortFromAddress(address string) (string, error) {
 	return port, nil
 }
 
-func getUniqueServiceCertPaths(services map[string]*builder.API) []string {
+func getUniqueServiceCertPaths(services map[string]*API) []string {
 	paths := make(map[string]bool)
 
 	for _, service := range services {

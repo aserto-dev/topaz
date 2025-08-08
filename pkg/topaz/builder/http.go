@@ -11,6 +11,20 @@ import (
 	"github.com/rs/zerolog"
 )
 
+var routes = struct {
+	Config            string
+	DebugPrefix       string
+	GatewayPrefix     string
+	OpenAPIAuthorizer string
+	OpenAPIDirectory  string
+}{
+	Config:            "/api/v2/config",
+	DebugPrefix:       "/debug/",
+	GatewayPrefix:     "/api/",
+	OpenAPIAuthorizer: "/authorizer/openapi.json",
+	OpenAPIDirectory:  "/directory/openapi.json",
+}
+
 var noHTTP = new(httpServer)
 
 type httpServer struct {

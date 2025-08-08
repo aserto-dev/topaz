@@ -5,6 +5,7 @@ import (
 	"context"
 	"html/template"
 	"io"
+	"net/http"
 	"net/http/pprof"
 	"runtime"
 
@@ -47,18 +48,18 @@ func (c *Config) Serialize(w io.Writer) error {
 }
 
 func RegisterHandlers(ctx context.Context, router *gorilla.Router) {
-	router.HandleFunc("/pprof/", pprof.Index)
-	router.HandleFunc("/pprof/cmdline", pprof.Cmdline)
-	router.HandleFunc("/pprof/profile", pprof.Profile)
-	router.HandleFunc("/pprof/symbol", pprof.Symbol)
-	router.HandleFunc("/pprof/trace", pprof.Trace)
+	router.HandleFunc("/pprof/", pprof.Index).Methods(http.MethodGet)
+	router.HandleFunc("/pprof/cmdline", pprof.Cmdline).Methods(http.MethodGet)
+	router.HandleFunc("/pprof/profile", pprof.Profile).Methods(http.MethodGet)
+	router.HandleFunc("/pprof/symbol", pprof.Symbol).Methods(http.MethodGet)
+	router.HandleFunc("/pprof/trace", pprof.Trace).Methods(http.MethodGet)
 
-	router.Handle("/pprof/allocs", pprof.Handler("allocs"))
-	router.Handle("/pprof/block", pprof.Handler("block"))
-	router.Handle("/pprof/goroutine", pprof.Handler("goroutine"))
-	router.Handle("/pprof/heap", pprof.Handler("heap"))
-	router.Handle("/pprof/mutex", pprof.Handler("mutex"))
-	router.Handle("/pprof/threadcreate", pprof.Handler("threadcreate"))
+	router.Handle("/pprof/allocs", pprof.Handler("allocs")).Methods(http.MethodGet)
+	router.Handle("/pprof/block", pprof.Handler("block")).Methods(http.MethodGet)
+	router.Handle("/pprof/goroutine", pprof.Handler("goroutine")).Methods(http.MethodGet)
+	router.Handle("/pprof/heap", pprof.Handler("heap")).Methods(http.MethodGet)
+	router.Handle("/pprof/mutex", pprof.Handler("mutex")).Methods(http.MethodGet)
+	router.Handle("/pprof/threadcreate", pprof.Handler("threadcreate")).Methods(http.MethodGet)
 
 	zerolog.Ctx(ctx).Info().Int("fraction", runtime.SetMutexProfileFraction(-1)).Msg("mutex profiler")
 }

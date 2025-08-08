@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 
 	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
@@ -19,6 +18,7 @@ import (
 	clicfg "github.com/aserto-dev/topaz/pkg/cli/config"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/servers"
+	xx "github.com/aserto-dev/topaz/pkg/x"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -302,7 +302,7 @@ func (i *tmplInstaller) setManifest() error {
 		name = i.customName
 	}
 
-	if exists, _ := config.FileExists(manifest); !exists {
+	if exists, _ := xx.FileExists(manifest); !exists {
 		manifestDir := path.Join(i.topazTemplateDir, name, "model")
 
 		switch m, err := download(manifest, manifestDir); {
@@ -333,7 +333,7 @@ func (i *tmplInstaller) importData() error {
 
 	for _, v := range append(i.tmpl.Assets.IdentityData, i.tmpl.Assets.DomainData...) {
 		dataURL := i.tmpl.AbsURL(v)
-		if exists, _ := config.FileExists(dataURL); exists {
+		if exists, _ := xx.FileExists(dataURL); exists {
 			dataDirs[path.Dir(dataURL)] = struct{}{}
 			continue
 		}
@@ -371,7 +371,7 @@ func (i *tmplInstaller) runTemplateTests() error {
 
 	for _, v := range i.tmpl.Assets.Assertions {
 		assertionURL := i.tmpl.AbsURL(v)
-		if exists, _ := config.FileExists(assertionURL); exists {
+		if exists, _ := xx.FileExists(assertionURL); exists {
 			tests = append(tests, assertionURL)
 
 			continue
