@@ -66,7 +66,7 @@ func (f *ServiceFactory) CreateService(
 	grpcOpts.Registrations(grpcServer)
 	reflection.Register(grpcServer)
 
-	listener, err := net.Listen("tcp", config.GRPC.ListenAddress)
+	listener, err := net.Listen("tcp", config.GRPC.ListenAddress) //nolint:noctx
 	if err != nil {
 		return nil, err
 	}
@@ -169,6 +169,7 @@ func (f *ServiceFactory) gatewayMux(allowedHeaders []string, errorHandler runtim
 			if lo.Contains(allowedHeaders, key) {
 				return key, true
 			}
+
 			return runtime.DefaultHeaderMatcher(key)
 		}),
 		runtime.WithMetadata(captureGatewayRoute),

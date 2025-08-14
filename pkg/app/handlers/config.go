@@ -40,10 +40,11 @@ type TopazCfgV1 struct {
 }
 
 type TopazCfgV2 struct {
+	*TopazCfg
+
 	Type    string `json:"configType"`
 	Name    string `json:"name"`
 	Address string `json:"address"`
-	*TopazCfg
 }
 
 type CfgV2Response struct {

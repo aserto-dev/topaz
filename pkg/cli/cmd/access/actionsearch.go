@@ -14,6 +14,7 @@ import (
 type ActionSearchCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  dsa1.ActionSearchRequest
 	resp dsa1.ActionSearchResponse
 }

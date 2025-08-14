@@ -18,8 +18,9 @@ import (
 )
 
 type StatsCmd struct {
-	Output string `flag:"" short:"o" enum:"table,json" default:"table" help:"output format"`
 	dsc.Config
+
+	Output string `flag:"" short:"o" enum:"table,json" default:"table" help:"output format"`
 }
 
 func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {

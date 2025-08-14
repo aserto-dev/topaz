@@ -40,6 +40,7 @@ type ActiveConfig struct {
 }
 type RunningConfig struct {
 	ActiveConfig
+
 	ContainerName string `json:"container_name"`
 }
 

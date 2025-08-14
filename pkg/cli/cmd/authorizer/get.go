@@ -13,8 +13,9 @@ import (
 
 type GetPolicyCmd struct {
 	clients.RequestArgs
-	Raw bool `name:"raw" help:"return raw request output"`
 	azc.Config
+
+	Raw  bool `name:"raw" help:"return raw request output"`
 	req  authorizer.GetPolicyRequest
 	resp authorizer.GetPolicyResponse
 }

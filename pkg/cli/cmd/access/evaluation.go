@@ -14,6 +14,7 @@ import (
 type EvaluationCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  dsa1.EvaluationRequest
 	resp dsa1.EvaluationResponse
 }
