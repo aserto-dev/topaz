@@ -4,6 +4,7 @@ import "github.com/aserto-dev/topaz/pkg/cli/cc"
 
 type RestartCmd struct {
 	StartRunCmd
+
 	Wait bool `optional:"" default:"false" help:"wait for ports to be opened"`
 }
 

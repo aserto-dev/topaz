@@ -15,6 +15,7 @@ import (
 type DecisionTreeCmd struct {
 	clients.RequestArgs
 	azc.Config
+
 	req  authorizer.DecisionTreeRequest
 	resp authorizer.DecisionTreeResponse
 }

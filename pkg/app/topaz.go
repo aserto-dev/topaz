@@ -234,6 +234,27 @@ func (e *Topaz) ConfigServices() error {
 	return nil
 }
 
+func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
+	switch cfg.Type {
+	case "self":
+		return self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
+
+	case "file":
+		logPath := cfg.Config["log_file_path"]
+		maxSize, _ := cfg.Config["max_file_size_mb"].(int)
+		maxFiles, _ := cfg.Config["max_file_count"].(int)
+
+		return file.New(e.Context, &file.Config{
+			LogFilePath:   fmt.Sprintf("%v", logPath),
+			MaxFileSizeMB: maxSize,
+			MaxFileCount:  maxFiles,
+		}, e.Logger)
+
+	default:
+		return nop.New(e.Context, e.Logger)
+	}
+}
+
 func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 	if e.Configuration.APIConfig.Health.ListenAddress != "" {
 		err := e.Manager.SetupHealthServer(e.Configuration.APIConfig.Health.ListenAddress, &e.Configuration.APIConfig.Health.Certificates)
@@ -322,27 +343,6 @@ func KeepAliveDialOption() []grpc.DialOption {
 	}
 
 	return []grpc.DialOption{grpc.WithKeepaliveParams(kacp)}
-}
-
-func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
-	switch cfg.Type {
-	case "self":
-		return self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
-
-	case "file":
-		logPath := cfg.Config["log_file_path"]
-		maxSize, _ := cfg.Config["max_file_size_mb"].(int)
-		maxFiles, _ := cfg.Config["max_file_count"].(int)
-
-		return file.New(e.Context, &file.Config{
-			LogFilePath:   fmt.Sprintf("%v", logPath),
-			MaxFileSizeMB: maxSize,
-			MaxFileCount:  maxFiles,
-		}, e.Logger)
-
-	default:
-		return nop.New(e.Context, e.Logger)
-	}
 }
 
 func (e *Topaz) validateConfig() error {

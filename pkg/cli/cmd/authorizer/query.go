@@ -14,6 +14,7 @@ import (
 type QueryCmd struct {
 	clients.RequestArgs
 	azc.Config
+
 	req  authorizer.QueryRequest
 	resp authorizer.QueryResponse
 }

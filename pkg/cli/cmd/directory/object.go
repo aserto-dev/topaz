@@ -20,6 +20,7 @@ import (
 type GetObjectCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  reader.GetObjectRequest
 	resp reader.GetObjectResponse
 }
@@ -57,6 +58,7 @@ func (cmd *GetObjectCmd) template() proto.Message {
 type SetObjectCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  writer.SetObjectRequest
 	resp writer.SetObjectResponse
 }
@@ -99,6 +101,7 @@ func (cmd *SetObjectCmd) template() proto.Message {
 type DeleteObjectCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  writer.DeleteObjectRequest
 	resp writer.DeleteObjectResponse
 }
@@ -135,6 +138,7 @@ func (cmd *DeleteObjectCmd) template() proto.Message {
 type ListObjectsCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  reader.GetObjectsRequest
 	resp reader.GetObjectsResponse
 }

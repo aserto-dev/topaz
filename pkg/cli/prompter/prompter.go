@@ -68,6 +68,7 @@ func (f *prompt) init() error {
 	f.app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyESC || event.Key() == tcell.KeyCtrlC {
 			f.rc <- false
+
 			f.app.Stop()
 
 			return nil
@@ -83,11 +84,13 @@ func (f *prompt) init() error {
 
 	f.form.AddButton("Submit", func() {
 		f.rc <- true
+
 		f.app.Stop()
 	})
 
 	f.form.AddButton("Cancel", func() {
 		f.rc <- false
+
 		f.app.Stop()
 	})
 

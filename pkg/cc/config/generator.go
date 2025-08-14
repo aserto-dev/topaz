@@ -12,6 +12,7 @@ import (
 
 type Generator struct {
 	templateParams
+
 	ConfigName string
 }
 
