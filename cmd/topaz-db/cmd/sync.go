@@ -21,7 +21,7 @@ func (cmd *SyncCmd) Run(ctx context.Context) error {
 
 	// validate modes
 	for _, m := range cmd.Mode {
-		mode := datasync.StrToMode(strings.ToLower(m))
+		mode := datasync.StrToMode(strings.ToUpper(m))
 		if mode == datasync.Unknown {
 			return errors.Errorf("unknown mode: %s", m)
 		}
