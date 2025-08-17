@@ -4,24 +4,26 @@ import (
 	"context"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
 
 	"github.com/alecthomas/kong"
-	"github.com/aserto-dev/topaz/cmd/topaz-db/cmd"
-	"github.com/aserto-dev/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/cmd/topaz-backup/internal/plugins/boltdb"
+)
+
+const (
+	name string = "topaz-backup"
+	desc string = "topaz backup utility"
 )
 
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	cli := cmd.CLI{}
+	var cli struct{}
 
 	kongCtx := kong.Parse(&cli,
-		kong.Name("topaz-db"),
-		kong.Description("topaz database utility"),
+		kong.Name(name),
+		kong.Description(desc),
 		kong.UsageOnError(),
 		kong.ConfigureHelp(kong.HelpOptions{
 			NoAppSummary:        false,
@@ -32,16 +34,8 @@ func main() {
 			Indenter:            kong.SpaceIndenter,
 			NoExpandSubcommands: true,
 		}),
-		kong.Vars{
-			"directory_svc":   os.Getenv(x.EnvTopazDirectorySvc),
-			"directory_key":   os.Getenv(x.EnvTopazDirectoryKey),
-			"directory_token": "",
-			"tenant_id":       os.Getenv(x.EnvAsertoTenantID),
-			"insecure":        strconv.FormatBool(false),
-			"plaintext":       strconv.FormatBool(false),
-			"no_check":        strconv.FormatBool(false),
-			"timeout":         cc.Timeout().String(),
-		},
+		kong.Vars{},
+		kong.DynamicCommand(boltdb.PluginName, boltdb.PluginDesc, "", &boltdb.Plugin{}),
 	)
 
 	kongCtx.BindTo(ctx, (*context.Context)(nil))

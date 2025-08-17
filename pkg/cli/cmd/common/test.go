@@ -142,6 +142,14 @@ func PrintDesc(descFlag, description string, result *CheckResult, expected bool)
 	}
 }
 
+type TestResults struct {
+	total   int32
+	passed  int32
+	failed  int32
+	errored int32
+	skipped int32
+}
+
 func NewTestResults(assertions []json.RawMessage) *TestResults {
 	return &TestResults{
 		total:   int32(len(assertions)), //nolint: gosec // G115: integer overflow conversion int -> int32.
@@ -149,14 +157,6 @@ func NewTestResults(assertions []json.RawMessage) *TestResults {
 		failed:  0,
 		errored: 0,
 	}
-}
-
-type TestResults struct {
-	total   int32
-	passed  int32
-	failed  int32
-	errored int32
-	skipped int32
 }
 
 func (t *TestResults) IncrTotal() {

@@ -67,7 +67,7 @@ func (s *ServiceManager) SetupHealthServer(address string, certCfg *aserto.TLSCo
 	healthServer.Address = address
 
 	s.HealthServer = healthServer
-	healthListener, err := net.Listen("tcp", address)
+	healthListener, err := net.Listen("tcp", address) //nolint:noctx
 
 	s.logger.Info().Msgf("Starting %s health server", address)
 
@@ -183,39 +183,6 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 	return nil
 }
 
-func (s *ServiceManager) startGateway(serverDetails *Service) {
-	httpServer := serverDetails.Gateway
-	if httpServer.Server == nil {
-		return
-	}
-
-	s.errGroup.Go(func() error {
-		s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
-
-		if httpServer.Certs.HasCert() {
-			if err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key); err != nil {
-				return err
-			}
-		} else {
-			if err := httpServer.Server.ListenAndServe(); err != nil {
-				return err
-			}
-		}
-
-		return nil
-	})
-}
-
-func (s *ServiceManager) logDetails(address string, element any) {
-	ref := reflect.ValueOf(element).Elem()
-	typeOfT := ref.Type()
-
-	for i := range ref.NumField() {
-		f := ref.Field(i)
-		s.logger.Debug().Str("address", address).Msgf("%s = %v\n", typeOfT.Field(i).Name, f.Interface())
-	}
-}
-
 func (s *ServiceManager) StopServers(ctx context.Context) {
 	timeout := time.Duration(s.shutdownTimeout) * time.Second
 	timeoutContext, cancel := context.WithTimeout(ctx, timeout)
@@ -273,12 +240,48 @@ func (s *ServiceManager) StopServers(ctx context.Context) {
 	}
 }
 
+func (s *ServiceManager) startGateway(serverDetails *Service) {
+	httpServer := serverDetails.Gateway
+	if httpServer.Server == nil {
+		return
+	}
+
+	s.errGroup.Go(func() error {
+		s.logger.Info().Msgf("Starting %s gateway server", httpServer.Server.Addr)
+
+		if httpServer.Certs.HasCert() {
+			if err := httpServer.Server.ListenAndServeTLS(httpServer.Certs.Cert, httpServer.Certs.Key); err != nil {
+				return err
+			}
+		} else {
+			if err := httpServer.Server.ListenAndServe(); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+}
+
+func (s *ServiceManager) logDetails(address string, element any) {
+	ref := reflect.ValueOf(element).Elem()
+	typeOfT := ref.Type()
+
+	for i := range ref.NumField() {
+		f := ref.Field(i)
+		s.logger.Debug().Str("address", address).Msgf("%s = %v\n", typeOfT.Field(i).Name, f.Interface())
+	}
+}
+
 func shutDown(server *grpc.Server, timeout time.Duration) bool {
 	result := make(chan bool, 1)
+
 	go func() {
 		server.GracefulStop()
+
 		result <- true
 	}()
+
 	select {
 	case <-time.After(timeout):
 		server.Stop()

@@ -83,7 +83,7 @@ func TestControllerLogMessages(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotNil(t, ctrl)
 
-	cleanup := ctrl.Start(context.Background())
+	cleanup := ctrl.Start(t.Context())
 
 	time.Sleep(1 * time.Second)
 

@@ -2,6 +2,7 @@ package config
 
 type currentConfig struct {
 	*Loader
+
 	err error
 }
 

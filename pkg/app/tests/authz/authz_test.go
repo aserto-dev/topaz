@@ -23,7 +23,7 @@ import (
 )
 
 func TestAuthZ(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
@@ -85,7 +85,7 @@ func testAuthZ(addr string) func(*testing.T) {
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = azClient.Close() })
 
-		ctx, cancel := context.WithCancel(context.Background())
+		ctx, cancel := context.WithCancel(t.Context())
 		t.Cleanup(cancel)
 
 		tests := []struct {
@@ -119,7 +119,6 @@ func DecisionTreeWithMissingPath(ctx context.Context, azClient authorizer.Author
 			Options:         &authorizer.DecisionTreeOptions{},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}
@@ -148,7 +147,6 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, azClient authorizer.Au
 			Options:         &authorizer.DecisionTreeOptions{},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}
@@ -177,7 +175,6 @@ func DecisionTreeWithUserID(ctx context.Context, azClient authorizer.AuthorizerC
 			Options:         &authorizer.DecisionTreeOptions{},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}
@@ -204,7 +201,6 @@ func IsWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerCl
 			},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}
@@ -240,7 +236,6 @@ func QueryWithMissingIdentity(ctx context.Context, azClient authorizer.Authorize
 			},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}

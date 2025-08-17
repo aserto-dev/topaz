@@ -20,7 +20,7 @@ import (
 )
 
 func TestBuiltins(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
@@ -82,7 +82,7 @@ func testBuiltins(addr string) func(*testing.T) {
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = azClient.Close() })
 
-		ctx, cancel := context.WithCancel(context.Background())
+		ctx, cancel := context.WithCancel(t.Context())
 		t.Cleanup(cancel)
 
 		// BuiltinHelptests(ctx, client)

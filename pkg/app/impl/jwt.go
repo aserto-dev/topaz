@@ -88,7 +88,6 @@ func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken j
 	}
 
 	jwtKeysURL, err := s.jwksURLFromCache(ctx, jwtToken.Issuer())
-
 	if err != nil {
 		return nil, errors.Wrap(err, "token didn't have a JWKS endpoint we could use for verification")
 	} else {

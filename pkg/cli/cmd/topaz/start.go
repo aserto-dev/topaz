@@ -7,6 +7,7 @@ import (
 
 type StartCmd struct {
 	StartRunCmd
+
 	Wait bool `optional:"" default:"false" help:"wait for ports to be opened"`
 }
 

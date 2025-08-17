@@ -15,10 +15,10 @@ import (
 )
 
 type ApplyTemplateCmd struct {
+	dsc.Config
+
 	Name  string `arg:"" required:"" help:"template name"`
 	Force bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
-
-	dsc.Config
 }
 
 func (cmd *ApplyTemplateCmd) Run(c *cc.CommonCtx) error {
