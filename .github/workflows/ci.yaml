@@ -30,18 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        name: Read Configuration
-        uses: hashicorp/vault-action@v3
-        id: vault
-        with:
-          url: ${{ env.VAULT_ADDR }}
-          token: ${{ secrets.VAULT_TOKEN }}
-          secrets: |
-            kv/data/github  "SSH_PRIVATE_KEY"     | SSH_PRIVATE_KEY;
-            kv/data/github  "USERNAME"            | DOCKER_USERNAME;
-            kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
-            kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
-      -
         uses: actions/checkout@v4
       -
         name: Setup Go
@@ -56,13 +44,13 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: https://ghcr.io
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ env.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       -
         name: Docker SSH Setup
         run: |
           mkdir -p $HOME/.ssh
-          umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
+          umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
           ssh-keyscan github.com >> $HOME/.ssh/known_hosts
           git config --global url."git@github.com:".insteadOf https://github.com/
           git config --global user.email "github-bot@aserto.com"
@@ -129,18 +117,6 @@ jobs:
     if: github.event_name == 'push' && ( github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release-') || startsWith(github.ref, 'refs/heads/dev-') || startsWith(github.ref, 'refs/tags/v') )
     steps:
       -
-        name: Read Configuration
-        uses: hashicorp/vault-action@v3
-        id: vault
-        with:
-          url: ${{ env.VAULT_ADDR }}
-          token: ${{ secrets.VAULT_TOKEN }}
-          secrets: |
-            kv/data/github  "SSH_PRIVATE_KEY"     | SSH_PRIVATE_KEY;
-            kv/data/github  "USERNAME"            | DOCKER_USERNAME;
-            kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
-            kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
-      -
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -157,13 +133,13 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: https://ghcr.io
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ env.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       -
         name: Docker SSH Setup
         run: |
           mkdir -p $HOME/.ssh
-          umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
+          umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
           ssh-keyscan github.com >> $HOME/.ssh/known_hosts
           git config --global url."git@github.com:".insteadOf https://github.com/
           git config --global user.email "github-bot@aserto.com"
@@ -175,7 +151,7 @@ jobs:
         uses: fountainhead/action-wait-for-check@v1.2.0
         id: wait-for-tests
         with:
-          token: ${{ env.READ_WRITE_TOKEN }}
+          token: ${{ secrets.READ_WRITE_TOKEN }}
           checkName: test
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       -
@@ -204,19 +180,6 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     steps:
       -
-        name: Read Configuration
-        uses: hashicorp/vault-action@v3
-        id: vault
-        with:
-          url: ${{ env.VAULT_ADDR }}
-          token: ${{ secrets.VAULT_TOKEN }}
-          secrets: |
-            kv/data/github  "SSH_PRIVATE_KEY"                         | SSH_PRIVATE_KEY;
-            kv/data/github  "USERNAME"                                | DOCKER_USERNAME;
-            kv/data/github  "DOCKER_PUSH_TOKEN"                       | DOCKER_PASSWORD;
-            kv/data/github  "READ_WRITE_TOKEN"                        | READ_WRITE_TOKEN;
-            kv/data/github  "ASERTO_TAP"                              | ASERTO_TAP;
-      -
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -233,13 +196,13 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: https://ghcr.io
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ env.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       -
         name: Docker SSH Setup
         run: |
           mkdir -p $HOME/.ssh
-          umask 0077 && echo -e "${SSH_PRIVATE_KEY}" > $HOME/.ssh/id_rsa
+          umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
           ssh-keyscan github.com >> $HOME/.ssh/known_hosts
           git config --global url."git@github.com:".insteadOf https://github.com/
           git config --global user.email "github-bot@aserto.com"
@@ -285,15 +248,6 @@ jobs:
         with:
           fetch-depth: 0
       - 
-        name: Read Configuration
-        uses: hashicorp/vault-action@v3
-        id: vault
-        with:
-          url: ${{ env.VAULT_ADDR }}
-          token: ${{ secrets.VAULT_TOKEN }}
-          secrets: |
-            kv/data/github  "ROOT_TOKEN"        | ROOT_TOKEN;
-      - 
         name: Download exe
         id: download_exe
         shell: bash
@@ -302,7 +256,7 @@ jobs:
           printf "zip=%s\n" *.zip >> $GITHUB_OUTPUT
           unzip -o *.zip && rm -v *.zip
         env:
-          GITHUB_TOKEN: ${{ steps.vault.outputs.ROOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ROOT_TOKEN }}
       - 
         name: Install go-msi
         run: choco install -y "go-msi"
