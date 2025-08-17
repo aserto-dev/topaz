@@ -133,19 +133,19 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: https://ghcr.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      -
-        name: Docker SSH Setup
-        run: |
-          mkdir -p $HOME/.ssh
-          umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
-          ssh-keyscan github.com >> $HOME/.ssh/known_hosts
-          git config --global url."git@github.com:".insteadOf https://github.com/
-          git config --global user.email "github-bot@aserto.com"
-          git config --global user.name "Aserto Bot"
-          eval `ssh-agent`
-          ssh-add $HOME/.ssh/id_rsa
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}             
+      # -
+      #   name: Docker SSH Setup
+      #   run: |
+      #     mkdir -p $HOME/.ssh
+      #     umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
+      #     ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+      #     git config --global url."git@github.com:".insteadOf https://github.com/
+      #     git config --global user.email "github-bot@aserto.com"
+      #     git config --global user.name "Aserto Bot"
+      #     eval `ssh-agent`
+      #     ssh-add $HOME/.ssh/id_rsa
       -
         name: Wait for tests to succeed
         uses: fountainhead/action-wait-for-check@v1.2.0
@@ -196,19 +196,19 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: https://ghcr.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      -
-        name: Docker SSH Setup
-        run: |
-          mkdir -p $HOME/.ssh
-          umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
-          ssh-keyscan github.com >> $HOME/.ssh/known_hosts
-          git config --global url."git@github.com:".insteadOf https://github.com/
-          git config --global user.email "github-bot@aserto.com"
-          git config --global user.name "Aserto Bot"
-          eval `ssh-agent`
-          ssh-add $HOME/.ssh/id_rsa
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}             
+      # -
+      #   name: Docker SSH Setup
+      #   run: |
+      #     mkdir -p $HOME/.ssh
+      #     umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
+      #     ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+      #     git config --global url."git@github.com:".insteadOf https://github.com/
+      #     git config --global user.email "github-bot@aserto.com"
+      #     git config --global user.name "Aserto Bot"
+      #     eval `ssh-agent`
+      #     ssh-add $HOME/.ssh/id_rsa
       -
         name: Setup syft
         uses: anchore/sbom-action/download-syft@v0
