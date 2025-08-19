@@ -3,10 +3,11 @@ package directory
 import (
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"google.golang.org/grpc"
-
 	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/authzen/access.go/api/access/v1"
+
 	"github.com/rs/zerolog"
+	"google.golang.org/grpc"
 )
 
 type Resolver struct {
@@ -38,4 +39,9 @@ func (r *Resolver) Close() {
 // GetDS - returns a directory reader service client.
 func (r *Resolver) GetDS() reader.ReaderClient {
 	return reader.NewReaderClient(r.dirConn)
+}
+
+// GetAuthZen - returns an AuthZen access service client.
+func (r *Resolver) GetAuthZen() access.AccessClient {
+	return access.NewAccessClient(r.dirConn)
 }

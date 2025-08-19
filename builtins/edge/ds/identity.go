@@ -1,6 +1,7 @@
 package ds
 
 import (
+	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/directory"
 	"github.com/aserto-dev/topaz/resolvers"
 	"google.golang.org/grpc/codes"
@@ -30,7 +31,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			}
 
 			if err := ast.As(op1.Value, &args); err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
@@ -39,14 +40,14 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 					ID string `json:"id"`
 				}
 
-				return help(fnName, argsV3{})
+				return builtins.Help(fnName, argsV3{})
 			}
 
 			user, err := directory.ResolveIdentity(bctx.Context, dr.GetDS(), args.ID)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {

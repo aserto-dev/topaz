@@ -67,6 +67,7 @@ linters:
         - resolvers.DirectoryResolver
         - resolvers.RuntimeResolver
         - v3.ReaderClient
+        - v1.AccessClient
 
     lll:
       line-length: 150
@@ -104,6 +105,10 @@ linters:
       - path: pkg/cli/cmd/
         linters:
           - dupl
+      - path: builtins/
+        linters:
+          - dupl
+
 
 formatters:
   enable:
