@@ -14,7 +14,7 @@ require (
 	github.com/aserto-dev/go-aserto v0.33.9
 	github.com/aserto-dev/go-authorizer v0.20.14
 	github.com/aserto-dev/go-directory v0.33.10
-	github.com/aserto-dev/go-edge-ds v0.33.20
+	github.com/aserto-dev/go-edge-ds v0.33.21
 	github.com/aserto-dev/go-grpc v0.9.7
 	github.com/aserto-dev/go-topaz-ui v0.1.25
 	github.com/aserto-dev/header v0.0.11
@@ -58,7 +58,7 @@ require (
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.11.1
 	github.com/testcontainers/testcontainers-go v0.38.0
-	go.etcd.io/bbolt v1.4.2
+	go.etcd.io/bbolt v1.4.3
 	golang.org/x/sync v0.16.0
 	golang.org/x/sys v0.35.0
 	google.golang.org/grpc v1.75.0
