@@ -345,11 +345,12 @@ func (p *Plugin) task(mode api.SyncMode) {
 }
 
 func (p *Plugin) exec(ctx context.Context, ds *directory.Directory, conn *grpc.ClientConn, opts []datasync.Option) {
-	if err := ds.DataSyncClient().Sync(ctx, conn, opts...); err != nil {
+	err := ds.DataSyncClient().Sync(ctx, conn, opts...)
+	if err != nil {
 		p.logger.Error().Err(err).Msg(syncTask)
 	}
 
-	if p.config.Enabled {
+	if p.config.Enabled && err == nil {
 		app.SetServiceStatus(p.logger, "sync", grpc_health_v1.HealthCheckResponse_SERVING)
 	}
 
