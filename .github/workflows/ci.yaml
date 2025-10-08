@@ -19,10 +19,10 @@ on:
 env:
   VAULT_ADDR: https://vault.aserto.com/
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
-  GO_VERSION: "1.24"
+  GO_VERSION: "1.25"
   GO_RELEASER_VERSION: "v2.8.2"
   GO_LANGCI_LINT_VERSION: "v2.4.0"
-  GO_TESTSUM_VERSION: "1.12.1"
+  GO_TESTSUM_VERSION: "1.12.3"
   SYFT_VERSION: "v1.13.0"
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
             kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
             kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
       -
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       -
         name: Setup Go
         uses: actions/setup-go@v5
@@ -80,7 +80,7 @@ jobs:
           args: build --clean --snapshot --single-target
       -
         name: Lint
-        uses: golangci/golangci-lint-action@v7
+        uses: golangci/golangci-lint-action@v8
         with:
           version: ${{ env.GO_LANGCI_LINT_VERSION }}
           args: --timeout=30m
@@ -141,7 +141,7 @@ jobs:
             kv/data/github  "DOCKER_PUSH_TOKEN"   | DOCKER_PASSWORD;
             kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
       -
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       -
@@ -217,7 +217,7 @@ jobs:
             kv/data/github  "READ_WRITE_TOKEN"                        | READ_WRITE_TOKEN;
             kv/data/github  "ASERTO_TAP"                              | ASERTO_TAP;
       -
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       -
@@ -281,7 +281,7 @@ jobs:
     steps:
       - 
         name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - 
