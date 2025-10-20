@@ -10,7 +10,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	runtime "github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/builtins/edge/ds"
+	"github.com/aserto-dev/topaz/builtins/ds"
 	"github.com/aserto-dev/topaz/controller"
 	"github.com/aserto-dev/topaz/decisionlog"
 	"github.com/aserto-dev/topaz/pkg/app/management"
