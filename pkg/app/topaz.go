@@ -184,6 +184,7 @@ func (e *Topaz) ConfigServices() error {
 							return err
 						}
 					}
+
 					return nil
 				},
 				ErrorHandler: cerr.CustomErrorHandler,
