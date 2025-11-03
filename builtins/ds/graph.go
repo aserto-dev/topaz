@@ -15,18 +15,18 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// RegisterGraph - ds.graph
-//
-//	ds.graph({
-//	    "object_type": "",
-//	    "object_id": "",
-//	    "relation": "",
-//	    "subject_type": "",
-//	    "subject_id": "",
-//	    "subject_relation": "",
-//	    "explain": false,
-//	    "trace": false
-//	}
+const dsGraphHelp string = `ds.graph({
+	"object_type": "",
+	"object_id": "",
+	"relation": "",
+	"subject_type": "",
+	"subject_id": "",
+	"subject_relation": "",
+	"explain": false,
+	"trace": false
+})`
+
+// RegisterGraph - ds.graph.
 func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -42,7 +42,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			}
 
 			if proto.Equal(&args, &reader.GetGraphRequest{}) {
-				return builtins.HelpMsg(fnName, graphReq())
+				return ast.StringTerm(dsGraphHelp), nil
 			}
 
 			resp, err := dr.GetDS().GetGraph(bctx.Context, &args)
@@ -65,17 +65,4 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 
 			return ast.NewTerm(v), nil
 		}
-}
-
-func graphReq() *reader.GetGraphRequest {
-	return &reader.GetGraphRequest{
-		ObjectType:      "",
-		ObjectId:        "",
-		Relation:        "",
-		SubjectType:     "",
-		SubjectId:       "",
-		SubjectRelation: "",
-		Explain:         false,
-		Trace:           false,
-	}
 }

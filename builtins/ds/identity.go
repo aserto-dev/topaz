@@ -14,11 +14,11 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// RegisterIdentity - ds.identity - get user id (key) for identity
-//
-//	ds.identity({
-//		"id": ""
-//	})
+const dsIdentityHelp string = `ds.identity({
+	"id": ""
+})`
+
+// RegisterIdentity - ds.identity - get user id (key) for identity.
 func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -36,11 +36,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 			}
 
 			if args.ID == "" {
-				type argsV3 struct {
-					ID string `json:"id"`
-				}
-
-				return builtins.Help(fnName, argsV3{})
+				return ast.StringTerm(dsIdentityHelp), nil
 			}
 
 			user, err := directory.ResolveIdentity(bctx.Context, dr.GetDS(), args.ID)

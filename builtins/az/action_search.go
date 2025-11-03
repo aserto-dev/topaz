@@ -1,7 +1,6 @@
 package az
 
 import (
-	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/authzen/access.go/api/access/v1"
@@ -14,29 +13,16 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-/*
-	az.action_search({
-		"subject": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"action": {
-			"name": "",
-			"properties": {}
-		},
-		"resource": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"context": {},
-		"page": {
-			"next_token": ""
-		}
-	})
-*/
+const azActionSearchHelp string = `az.action_search({
+	"subject": {"type": "", "id": "", "properties": {}},
+	"action": {"name": "", "properties": {}},
+	"resource": {"type": "", "id": "", "properties": {}},
+	"context": {},
+	"page": {"next_token": ""}
+})`
 
+// RegisterActionSearch
+// https://openid.github.io/authzen/#name-action-search-api.
 func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -51,7 +37,7 @@ func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.Di
 			}
 
 			if proto.Equal(&args, &access.ActionSearchRequest{}) {
-				return builtins.HelpMsg(fnName, actionSearchReq())
+				return ast.StringTerm(azActionSearchHelp), nil
 			}
 
 			resp, err := dr.GetAuthZen().ActionSearch(bctx.Context, &args)
@@ -62,27 +48,4 @@ func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.Di
 
 			return builtins.ResponseToTerm(resp)
 		}
-}
-
-func actionSearchReq() *access.ActionSearchRequest {
-	return &access.ActionSearchRequest{
-		Subject: &access.Subject{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Action: &access.Action{
-			Name:       "",
-			Properties: pb.NewStruct(),
-		},
-		Resource: &access.Resource{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Context: pb.NewStruct(),
-		Page: &access.Page{
-			NextToken: "",
-		},
-	}
 }

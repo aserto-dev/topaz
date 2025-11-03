@@ -3,7 +3,6 @@ package az
 import (
 	"github.com/authzen/access.go/api/access/v1"
 
-	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
@@ -15,29 +14,16 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-/*
-az.subject_search({
-		"subject": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"action": {
-			"name": "",
-			"properties": {}
-		},
-		"resource": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"context": {},
-		"page": {
-			"next_token": ""
-		}
-})
-*/
+const azResourceSearchHelp string = `az.resource_search({
+	"subject": {"type": "", "id": "", "properties": {}},
+	"action": {"name": "", "properties": {}},
+	"resource": {"type": "", "id": "", "properties": {}},
+	"context": {},
+	"page": {"next_token": ""}
+})`
 
+// RegisterResourceSearch.
+// https://openid.github.io/authzen/#name-resource-search-api
 func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -52,7 +38,7 @@ func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.
 			}
 
 			if proto.Equal(&args, &access.ResourceSearchRequest{}) {
-				return builtins.HelpMsg(fnName, resourceSearchReq())
+				return ast.StringTerm(azResourceSearchHelp), nil
 			}
 
 			resp, err := dr.GetAuthZen().ResourceSearch(bctx.Context, &args)
@@ -63,27 +49,4 @@ func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.
 
 			return builtins.ResponseToTerm(resp)
 		}
-}
-
-func resourceSearchReq() *access.ResourceSearchRequest {
-	return &access.ResourceSearchRequest{
-		Subject: &access.Subject{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Action: &access.Action{
-			Name:       "",
-			Properties: pb.NewStruct(),
-		},
-		Resource: &access.Resource{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Context: pb.NewStruct(),
-		Page: &access.Page{
-			NextToken: "",
-		},
-	}
 }

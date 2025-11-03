@@ -17,11 +17,11 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// RegisterUser - ds.user
-//
-//	ds.user({
-//		"id": ""
-//	})
+const dsUserHelp string = `ds.user({
+	"id": ""
+})`
+
+// RegisterUser - ds.user.
 func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -38,11 +38,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 			}
 
 			if args.ID == "" {
-				type argsV3 struct {
-					ID string `json:"id"`
-				}
-
-				return builtins.Help(fnName, argsV3{})
+				return ast.StringTerm(dsUserHelp), nil
 			}
 
 			resp, err := dr.GetDS().GetObject(bctx.Context, &reader.GetObjectRequest{

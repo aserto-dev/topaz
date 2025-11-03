@@ -1,8 +1,8 @@
 module github.com/aserto-dev/topaz
 
-go 1.24.9
+go 1.24.10
 
-toolchain go1.25.3
+toolchain go1.25.4
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
@@ -77,7 +77,7 @@ require (
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/containerd/containerd/v2 v2.1.4 // indirect
+	github.com/containerd/containerd/v2 v2.1.5 // indirect
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect

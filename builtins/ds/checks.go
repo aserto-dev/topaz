@@ -19,16 +19,28 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-// RegisterChecks - ds.checks
-//
-//	ds.checks({
-//	  "object_type": "",
-//	  "object_id": "",
-//	  "relation": "",
-//	  "subject_type": ""
-//	  "subject_id": "",
-//	  "trace": false
-//	})
+const dsChecksHelp string = `ds.checks({
+	"default": {
+		"object_id": "",
+		"object_type": "",
+		"relation": "",
+		"subject_id": "",
+		"subject_type": "",
+		"trace": false
+	},
+	"checks": [
+		{
+			"object_id": "",
+			"object_type": "",
+			"relation": "",
+			"subject_id": "",
+			"subject_type": "",
+			"trace": false
+		}
+	]
+})`
+
+// RegisterChecks - ds.checks.
 func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -43,7 +55,7 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			if proto.Equal(&args, &reader.ChecksRequest{}) {
-				return builtins.HelpMsg(fnName, checksReq())
+				return ast.StringTerm(dsChecksHelp), nil
 			}
 
 			if args.GetDefault() == nil {
@@ -82,25 +94,4 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 
 			return ast.NewTerm(v), nil
 		}
-}
-
-func checksReq() *reader.ChecksRequest {
-	return &reader.ChecksRequest{
-		Default: &reader.CheckRequest{
-			ObjectType:  "",
-			ObjectId:    "",
-			Relation:    "",
-			SubjectType: "",
-			SubjectId:   "",
-		},
-		Checks: []*reader.CheckRequest{
-			{
-				ObjectType:  "",
-				ObjectId:    "",
-				Relation:    "",
-				SubjectType: "",
-				SubjectId:   "",
-			},
-		},
-	}
 }

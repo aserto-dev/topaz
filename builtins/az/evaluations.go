@@ -3,7 +3,6 @@ package az
 import (
 	"github.com/authzen/access.go/api/access/v1"
 
-	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
@@ -15,45 +14,30 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-/*
-	az.evaluations({
-			"subject": {
-				"type": "",
-				"id": "",
-				"properties": {}
-			},
-			"action": {
-				"name": "",
-				"properties": {}
-			},
-			"resource": {
-				"type": "",
-				"id": "",
-				"properties": {}
-			},
+const azEvaluationsHelp string = `az.evaluations({
+	"subject": {"type": "", "id": "", "properties": {}},
+	"action": {"name": "", "properties": {}},
+	"resource": {"type": "", "id": "", "properties": {}},
+  "context": {},
+	"options": {},
+	"evaluations": [
+		{
+			"subject": {"type": "", "id": "", "properties": {}},
+			"action": {"name": "", "properties": {}},
+			"resource": {"type": "", "id": "", "properties": {}},
+			"context": {}
+		},
+		{
+			"subject": {"type": "", "id": "", "properties": {}},
+			"action": {"name": "", "properties": {}},
+			"resource": {"type": "", "id": "", "properties": {}},
 			"context": {},
-			"evaluations": [
-				{
-					"subject": {
-						"type": "",
-						"id": "",
-						"properties": {}
-					},
-					"action": {
-						"name": "",
-						"properties": {}
-					},
-					"resource": {
-						"type": "",
-						"id": "",
-						"properties": {}
-					},
-					"context": {}
-				}
-			],
-			"options": {}
-	})
-*/
+		}
+	]
+})`
+
+// RegisterEvaluations
+// https://openid.github.io/authzen/#name-access-evaluations-api.
 func RegisterEvaluations(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -68,7 +52,7 @@ func RegisterEvaluations(logger *zerolog.Logger, fnName string, dr resolvers.Dir
 			}
 
 			if proto.Equal(&args, &access.EvaluationsRequest{}) {
-				return builtins.HelpMsg(fnName, evaluationsReq())
+				return ast.StringTerm(azEvaluationsHelp), nil
 			}
 
 			resp, err := dr.GetAuthZen().Evaluations(bctx.Context, &args)
@@ -79,44 +63,4 @@ func RegisterEvaluations(logger *zerolog.Logger, fnName string, dr resolvers.Dir
 
 			return builtins.ResponseToTerm(resp)
 		}
-}
-
-func evaluationsReq() *access.EvaluationsRequest {
-	return &access.EvaluationsRequest{
-		Subject: &access.Subject{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Action: &access.Action{
-			Name:       "",
-			Properties: pb.NewStruct(),
-		},
-		Resource: &access.Resource{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Context: pb.NewStruct(),
-		Evaluations: []*access.EvaluationRequest{
-			{
-				Subject: &access.Subject{
-					Type:       "",
-					Id:         "",
-					Properties: pb.NewStruct(),
-				},
-				Action: &access.Action{
-					Name:       "",
-					Properties: pb.NewStruct(),
-				},
-				Resource: &access.Resource{
-					Type:       "",
-					Id:         "",
-					Properties: pb.NewStruct(),
-				},
-				Context: pb.NewStruct(),
-			},
-		},
-		Options: pb.NewStruct(),
-	}
 }

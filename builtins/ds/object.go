@@ -20,13 +20,13 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-// RegisterObject - ds.object
-//
-//	ds.object({
-//		"object_type": "",
-//		"object_id": "",
-//		"with_relation": false
-//	})
+const dsObjectHelp string = `ds.object({
+	"object_type": "",
+	"object_id": "",
+	"with_relation": false
+})`
+
+// RegisterObject - ds.object.
 func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -54,7 +54,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			if proto.Equal(req, &reader.GetObjectRequest{}) {
-				return builtins.HelpMsg(fnName, getObjectReq())
+				return ast.StringTerm(dsObjectHelp), nil
 			}
 
 			resp, err := dr.GetDS().GetObject(bctx.Context, req)
@@ -99,12 +99,4 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 
 			return ast.NewTerm(v), nil
 		}
-}
-
-func getObjectReq() *reader.GetObjectRequest {
-	return &reader.GetObjectRequest{
-		ObjectType:    "",
-		ObjectId:      "",
-		WithRelations: false,
-	}
 }

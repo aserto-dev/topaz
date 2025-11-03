@@ -3,7 +3,6 @@ package az
 import (
 	"github.com/authzen/access.go/api/access/v1"
 
-	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
@@ -15,26 +14,15 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-/*
-	az.evaluation({
-		"subject": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"action": {
-			"name": "",
-			"properties": {}
-		},
-		"resource": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"context": {}
-	})
-*/
+const azEvaluationHelp string = `az.evaluation({
+  "subject": {"type": "", "id": "", "properties": {}}, 
+  "action": {"name": "", "properties": {}}, 
+  "resource": {"type": "", "id": "", "properties": {}}, 
+  "context": {}
+})`
 
+// RegisterEvaluation
+// https://openid.github.io/authzen/#name-access-evaluation-api.
 func RegisterEvaluation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -49,7 +37,7 @@ func RegisterEvaluation(logger *zerolog.Logger, fnName string, dr resolvers.Dire
 			}
 
 			if proto.Equal(&args, &access.EvaluationRequest{}) {
-				return builtins.HelpMsg(fnName, evaluationReq())
+				return ast.StringTerm(azEvaluationHelp), nil
 			}
 
 			resp, err := dr.GetAuthZen().Evaluation(bctx.Context, &args)
@@ -60,24 +48,4 @@ func RegisterEvaluation(logger *zerolog.Logger, fnName string, dr resolvers.Dire
 
 			return builtins.ResponseToTerm(resp)
 		}
-}
-
-func evaluationReq() *access.EvaluationRequest {
-	return &access.EvaluationRequest{
-		Subject: &access.Subject{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Action: &access.Action{
-			Name:       "",
-			Properties: pb.NewStruct(),
-		},
-		Resource: &access.Resource{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Context: pb.NewStruct(),
-	}
 }

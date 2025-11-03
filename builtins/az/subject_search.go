@@ -3,7 +3,6 @@ package az
 import (
 	"github.com/authzen/access.go/api/access/v1"
 
-	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
@@ -15,29 +14,17 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// Note: subject_search omits subject.id
-/*
-		"subject": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"action": {
-			"name": "",
-			"properties": {}
-		},
-		"resource": {
-			"type": "",
-			"id": "",
-			"properties": {}
-		},
-		"context": {},
-		"page": {
-			"next_token": ""
-		}
-	})
-*/
+const azSubjectSearchHelp string = `az.subject_search({
+	"subject": {"type": "", "properties": {}},
+	"action": {"name": "", "properties": {}},
+	"resource": {"type": "", "id": "", "properties": {}},
+	"context": {},
+	"page": {"next_token": ""}
+})
+`
 
+// RegisterSubjectSearch, note: subject_search omits `subject.id` fields when submitted.
+// https://openid.github.io/authzen/#name-subject-search-api.
 func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -52,7 +39,7 @@ func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.D
 			}
 
 			if proto.Equal(&args, &access.SubjectSearchRequest{}) {
-				return builtins.HelpMsg(fnName, subjectSearchReq())
+				return ast.StringTerm(azSubjectSearchHelp), nil
 			}
 
 			resp, err := dr.GetAuthZen().SubjectSearch(bctx.Context, &args)
@@ -63,27 +50,4 @@ func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.D
 
 			return builtins.ResponseToTerm(resp)
 		}
-}
-
-func subjectSearchReq() *access.SubjectSearchRequest {
-	return &access.SubjectSearchRequest{
-		Subject: &access.Subject{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Action: &access.Action{
-			Name:       "",
-			Properties: pb.NewStruct(),
-		},
-		Resource: &access.Resource{
-			Type:       "",
-			Id:         "",
-			Properties: pb.NewStruct(),
-		},
-		Context: pb.NewStruct(),
-		Page: &access.Page{
-			NextToken: "",
-		},
-	}
 }
