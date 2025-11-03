@@ -4,6 +4,7 @@ import (
 	"bytes"
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 	"google.golang.org/protobuf/encoding/protojson"
 
@@ -53,7 +54,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			if proto.Equal(req, &dsr3.GetObjectRequest{}) {
-				return helpMsg(fnName, &dsr3.GetObjectRequest{
+				return builtins.HelpMsg(fnName, &dsr3.GetObjectRequest{
 					ObjectType:    "",
 					ObjectId:      "",
 					WithRelations: false,
@@ -64,7 +65,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 
 			switch {
 			case status.Code(err) == codes.NotFound:
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
@@ -77,7 +78,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			buf := new(bytes.Buffer)
-			if err := ProtoToBuf(buf, resp); err != nil {
+			if err := builtins.ProtoToBuf(buf, resp); err != nil {
 				return nil, err
 			}
 

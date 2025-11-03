@@ -1,4 +1,4 @@
-package ds
+package builtins
 
 import (
 	"bytes"
@@ -12,7 +12,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func help(fnName string, args any) (*ast.Term, error) {
+func Help(fnName string, args any) (*ast.Term, error) {
 	m := map[string]any{fnName: args}
 
 	val, err := ast.InterfaceToValue(m)
@@ -23,7 +23,7 @@ func help(fnName string, args any) (*ast.Term, error) {
 	return ast.NewTerm(val), nil
 }
 
-func helpMsg(fnName string, msg proto.Message) (*ast.Term, error) {
+func HelpMsg(fnName string, msg proto.Message) (*ast.Term, error) {
 	v, err := ProtoToInterface(msg)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func BufToProto(r io.Reader, msg proto.Message) error {
 	}.Unmarshal(buf.Bytes(), msg)
 }
 
-func traceError(bctx *topdown.BuiltinContext, fnName string, err error) {
+func TraceError(bctx *topdown.BuiltinContext, fnName string, err error) {
 	if bctx.TraceEnabled {
 		if len(bctx.QueryTracers) > 0 {
 			bctx.QueryTracers[0].TraceEvent(topdown.Event{
