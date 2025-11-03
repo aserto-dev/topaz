@@ -4,6 +4,7 @@ import (
 	"bytes"
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -36,12 +37,12 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			var args dsr3.GetGraphRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			if proto.Equal(&args, &dsr3.GetGraphRequest{}) {
-				return helpMsg(fnName, &dsr3.GetGraphRequest{
+				return builtins.HelpMsg(fnName, &dsr3.GetGraphRequest{
 					ObjectType:      "",
 					ObjectId:        "",
 					Relation:        "",
@@ -55,13 +56,13 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 
 			resp, err := dr.GetDS().GetGraph(bctx.Context, &args)
 			if err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			buf := new(bytes.Buffer)
 			if len(resp.GetResults()) > 0 {
-				if err := ProtoToBuf(buf, resp); err != nil {
+				if err := builtins.ProtoToBuf(buf, resp); err != nil {
 					return nil, err
 				}
 			}

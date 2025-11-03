@@ -2,6 +2,7 @@ package ds
 
 import (
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -36,7 +37,7 @@ func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			}
 
 			if proto.Equal(&args, &dsr3.CheckRequest{}) {
-				return helpMsg(fnName, &dsr3.CheckRequest{
+				return builtins.HelpMsg(fnName, &dsr3.CheckRequest{
 					ObjectType:  "",
 					ObjectId:    "",
 					Relation:    "",
@@ -47,7 +48,7 @@ func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 
 			resp, err := dr.GetDS().Check(bctx.Context, &args)
 			if err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
@@ -77,12 +78,12 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 			var args dsr3.CheckRelationRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			if proto.Equal(&args, &dsr3.CheckRelationRequest{}) {
-				return helpMsg(fnName, &dsr3.CheckRelationRequest{
+				return builtins.HelpMsg(fnName, &dsr3.CheckRelationRequest{
 					ObjectType:  "",
 					ObjectId:    "",
 					Relation:    "",
@@ -95,7 +96,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 			//nolint: staticcheck // SA1019: client.CheckRelation is deprecated
 			resp, err := dr.GetDS().CheckRelation(bctx.Context, &args)
 			if err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
@@ -125,12 +126,12 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 			var args dsr3.CheckPermissionRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			if proto.Equal(&args, &dsr3.CheckPermissionRequest{}) {
-				return helpMsg(fnName, &dsr3.CheckPermissionRequest{
+				return builtins.HelpMsg(fnName, &dsr3.CheckPermissionRequest{
 					ObjectType:  "",
 					ObjectId:    "",
 					Permission:  "",
@@ -143,7 +144,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 			//nolint: staticcheck // SA1019: client.CheckPermission is deprecated
 			resp, err := dr.GetDS().CheckPermission(bctx.Context, &args)
 			if err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 

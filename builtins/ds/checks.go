@@ -4,6 +4,7 @@ import (
 	"bytes"
 
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -42,7 +43,7 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			}
 
 			if proto.Equal(&args, &dsr3.ChecksRequest{}) {
-				return helpMsg(fnName, &dsr3.ChecksRequest{
+				return builtins.HelpMsg(fnName, &dsr3.ChecksRequest{
 					Default: &dsr3.CheckRequest{
 						ObjectType:  "",
 						ObjectId:    "",
@@ -72,12 +73,12 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 
 			resp, err := dr.GetDS().Checks(bctx.Context, &args)
 			if err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			buf := new(bytes.Buffer)
-			if err := ProtoToBuf(buf, resp); err != nil {
+			if err := builtins.ProtoToBuf(buf, resp); err != nil {
 				return nil, err
 			}
 
