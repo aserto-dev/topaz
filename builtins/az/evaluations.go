@@ -1,4 +1,4 @@
-package authzen
+package az
 
 import (
 	"github.com/authzen/access.go/api/access/v1"

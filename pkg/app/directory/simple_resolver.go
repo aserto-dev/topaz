@@ -17,7 +17,7 @@ type Resolver struct {
 
 var _ resolvers.DirectoryResolver = &Resolver{}
 
-// The simple directory resolver returns a simple directory reader client.
+// NewResolver returns a simple directory reader client.
 func NewResolver(logger *zerolog.Logger, cfg *client.Config) (*Resolver, error) {
 	l := logger.With().Interface("client", cfg).Logger()
 	l.Debug().Msg("new directory resolver")

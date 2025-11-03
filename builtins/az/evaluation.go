@@ -1,4 +1,4 @@
-package authzen
+package az
 
 import (
 	"github.com/authzen/access.go/api/access/v1"
@@ -16,7 +16,7 @@ import (
 )
 
 /*
-az.subject_search({
+	az.evaluation({
 		"subject": {
 			"type": "",
 			"id": "",
@@ -31,31 +31,28 @@ az.subject_search({
 			"id": "",
 			"properties": {}
 		},
-		"context": {},
-		"page": {
-			"next_token": ""
-		}
-})
+		"context": {}
+	})
 */
 
-func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterEvaluation(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args access.ResourceSearchRequest
+			var args access.EvaluationRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
-			if proto.Equal(&args, &access.ResourceSearchRequest{}) {
-				return builtins.HelpMsg(fnName, resourceSearchReq())
+			if proto.Equal(&args, &access.EvaluationRequest{}) {
+				return builtins.HelpMsg(fnName, evaluationReq())
 			}
 
-			resp, err := dr.GetAuthZen().ResourceSearch(bctx.Context, &args)
+			resp, err := dr.GetAuthZen().Evaluation(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
@@ -65,8 +62,8 @@ func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.
 		}
 }
 
-func resourceSearchReq() *access.ResourceSearchRequest {
-	return &access.ResourceSearchRequest{
+func evaluationReq() *access.EvaluationRequest {
+	return &access.EvaluationRequest{
 		Subject: &access.Subject{
 			Type:       "",
 			Id:         "",
@@ -82,8 +79,5 @@ func resourceSearchReq() *access.ResourceSearchRequest {
 			Properties: pb.NewStruct(),
 		},
 		Context: pb.NewStruct(),
-		Page: &access.Page{
-			NextToken: "",
-		},
 	}
 }

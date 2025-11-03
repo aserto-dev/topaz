@@ -1,4 +1,4 @@
-package authzen
+package az
 
 import (
 	"github.com/authzen/access.go/api/access/v1"
@@ -15,8 +15,8 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// Note: subject_search omits subject.id
 /*
+az.subject_search({
 		"subject": {
 			"type": "",
 			"id": "",
@@ -35,27 +35,27 @@ import (
 		"page": {
 			"next_token": ""
 		}
-	})
+})
 */
 
-func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args access.SubjectSearchRequest
+			var args access.ResourceSearchRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
-			if proto.Equal(&args, &access.SubjectSearchRequest{}) {
-				return builtins.HelpMsg(fnName, subjectSearchReq())
+			if proto.Equal(&args, &access.ResourceSearchRequest{}) {
+				return builtins.HelpMsg(fnName, resourceSearchReq())
 			}
 
-			resp, err := dr.GetAuthZen().SubjectSearch(bctx.Context, &args)
+			resp, err := dr.GetAuthZen().ResourceSearch(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
@@ -65,8 +65,8 @@ func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.D
 		}
 }
 
-func subjectSearchReq() *access.SubjectSearchRequest {
-	return &access.SubjectSearchRequest{
+func resourceSearchReq() *access.ResourceSearchRequest {
+	return &access.ResourceSearchRequest{
 		Subject: &access.Subject{
 			Type:       "",
 			Id:         "",

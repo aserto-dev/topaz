@@ -1,10 +1,11 @@
-package authzen
+package az
 
 import (
+	"github.com/authzen/access.go/api/access/v1"
+
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
-	"github.com/authzen/access.go/api/access/v1"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -14,8 +15,8 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+// Note: subject_search omits subject.id
 /*
-	az.action_search({
 		"subject": {
 			"type": "",
 			"id": "",
@@ -37,24 +38,24 @@ import (
 	})
 */
 
-func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args access.ActionSearchRequest
+			var args access.SubjectSearchRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
-			if proto.Equal(&args, &access.ActionSearchRequest{}) {
-				return builtins.HelpMsg(fnName, actionSearchReq())
+			if proto.Equal(&args, &access.SubjectSearchRequest{}) {
+				return builtins.HelpMsg(fnName, subjectSearchReq())
 			}
 
-			resp, err := dr.GetAuthZen().ActionSearch(bctx.Context, &args)
+			resp, err := dr.GetAuthZen().SubjectSearch(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
@@ -64,8 +65,8 @@ func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.Di
 		}
 }
 
-func actionSearchReq() *access.ActionSearchRequest {
-	return &access.ActionSearchRequest{
+func subjectSearchReq() *access.SubjectSearchRequest {
+	return &access.SubjectSearchRequest{
 		Subject: &access.Subject{
 			Type:       "",
 			Id:         "",

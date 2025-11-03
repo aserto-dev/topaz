@@ -19,7 +19,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-// RegisterCheck - ds.checks
+// RegisterChecks - ds.checks
 //
 //	ds.checks({
 //	  "object_type": "",
