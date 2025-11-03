@@ -81,7 +81,7 @@ func (dc *DockerClient) PullImage(img, platform string) error {
 	return nil
 }
 
-// Remove container image as image-name:tag.
+// RemoveImage removes an image-name:tag from the docker host.
 func (dc *DockerClient) RemoveImage(img string) error {
 	images, err := dc.cli.ImageList(dc.ctx, image.ListOptions{
 		Filters: filters.NewArgs(
@@ -104,7 +104,7 @@ func (dc *DockerClient) RemoveImage(img string) error {
 	return nil
 }
 
-// Check if image exists in local container store.
+// ImageExists checks if image exists in local container store.
 func (dc *DockerClient) ImageExists(img string) bool {
 	images, err := dc.cli.ImageList(dc.ctx, image.ListOptions{
 		Filters: filters.NewArgs(
@@ -412,7 +412,7 @@ func (dc *DockerClient) Run(opts ...RunOption) error {
 	return nil
 }
 
-// Starts starts a container like `docker start` using the provided settings.
+// Start starts a container instance like `docker start` using the provided settings.
 func (dc *DockerClient) Start(opts ...RunOption) error {
 	r := &runner{
 		config:           &container.Config{},
