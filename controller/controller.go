@@ -75,7 +75,7 @@ func NewController(logger *zerolog.Logger, policyName, host string, cfg *Config,
 
 const expBackoff = 2
 
-// run context dependant controller.
+// Start context dependant controller.
 func (c *Controller) Start(ctx context.Context) func() {
 	ctx, cancel := context.WithCancel(ctx)
 	errGroup := errgroup.Group{}
