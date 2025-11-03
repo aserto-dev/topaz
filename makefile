@@ -22,7 +22,6 @@ GOTESTSUM_VER      := 1.13.0
 GOLANGCI-LINT_VER  := 2.6.0
 GORELEASER_VER     := 2.8.2
 WIRE_VER	         := 0.7.0
-CHECK2DECISION_VER := 0.1.0
 SYFT_VER           := 1.13.0
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
@@ -30,7 +29,7 @@ RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 .DEFAULT_GOAL      := build
 
 .PHONY: deps
-deps: info install-vault install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire install-check2decision install-syft
+deps: info install-vault install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire install-syft
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
@@ -119,14 +118,6 @@ write-version:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@git describe --tags > ./VERSION.txt
 
-ASSETS = "assets/v32/api-auth/test/api-auth_" "assets/v32/gdrive/test/gdrive_" "assets/v32/github/test/github_" "assets/v32/multi-tenant/test/multi-tenant_" "assets/v32/slack/test/slack_" \
-		 "assets/v33/api-auth/test/api-auth_" "assets/v33/gdrive/test/gdrive_" "assets/v33/github/test/github_" "assets/v33/multi-tenant/test/multi-tenant_" "assets/v33/slack/test/slack_"
-.PHONY: update-assets
-update-assets: $(ASSETS)
-$(ASSETS): install-check2decision
-	@echo -e "$(ATTN_COLOR)==> github.com/aserto-dev/topaz/$@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/check2decision -i "$@assertions.json" -o "$@decisions.json"
-
 TEMPLATES = "assets/v32/api-auth.json" "assets/v32/gdrive.json" "assets/v32/github.json" "assets/v32/multi-tenant.json" "assets/v32/peoplefinder.json" "assets/v32/simple-rbac.json" "assets/v32/slack.json" "assets/v32/todo.json" \
 			"assets/v33/api-auth.json" "assets/v33/gdrive.json" "assets/v33/github.json" "assets/v33/multi-tenant.json" "assets/v33/peoplefinder.json" "assets/v33/simple-rbac.json" "assets/v33/slack.json" "assets/v33/todo.json"
 .PHONY: test-templates
@@ -195,14 +186,6 @@ install-goreleaser: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 install-wire: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@GOBIN=${EXT_BIN_DIR} go install github.com/google/wire/cmd/wire@v${WIRE_VER}
-
-.PHONY: install-check2decision
-install-check2decision: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@gh release download v${CHECK2DECISION_VER} --repo https://github.com/aserto-dev/check2decision --pattern "check2decision-${GOOS}-${GOARCH}.zip" --output "${EXT_TMP_DIR}/check2decision.zip" --clobber
-	@unzip -o ${EXT_TMP_DIR}/check2decision.zip check2decision -d ${EXT_BIN_DIR}/  &> /dev/null
-	@chmod +x ${EXT_BIN_DIR}/check2decision
-	@${EXT_BIN_DIR}/check2decision --version
 
 .PHONY: install-syft
 install-syft: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
