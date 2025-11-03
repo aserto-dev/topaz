@@ -16,7 +16,7 @@ type GenerateCertsCmd struct {
 	DNSNames []string `flag:"" default:"localhost" help:"list of DNS names used to generate dev certs"`
 }
 
-// Run, generates a pair of gateway and grpc certificates.
+// Run generates a pair of gateway and grpc certificates.
 func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {

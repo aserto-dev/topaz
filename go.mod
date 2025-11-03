@@ -36,12 +36,12 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.3
 	github.com/itchyny/gojq v0.12.17
 	github.com/lestrrat-go/jwx/v2 v2.1.6
 	github.com/magefile/mage v1.15.0
 	github.com/mattn/go-isatty v0.0.20
-	github.com/mennanov/fmutils v0.3.3
+	github.com/mennanov/fmutils v0.3.4
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/moby/term v0.5.2
 	github.com/olekukonko/tablewriter v0.0.5
@@ -52,7 +52,7 @@ require (
 	github.com/rivo/tview v0.42.0
 	github.com/rs/cors v1.11.1
 	github.com/rs/zerolog v1.34.0
-	github.com/samber/lo v1.51.0
+	github.com/samber/lo v1.52.0
 	github.com/slok/go-http-metrics v0.13.0
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.21.0
@@ -60,9 +60,9 @@ require (
 	github.com/testcontainers/testcontainers-go v0.39.0
 	go.etcd.io/bbolt v1.4.3
 	golang.org/x/sync v0.17.0
-	golang.org/x/sys v0.36.0
-	google.golang.org/grpc v1.75.1
-	google.golang.org/protobuf v1.36.9
+	golang.org/x/sys v0.37.0
+	google.golang.org/grpc v1.76.0
+	google.golang.org/protobuf v1.36.10
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
@@ -192,16 +192,16 @@ require (
 	go.opentelemetry.io/otel/trace v1.38.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.42.0 // indirect
-	golang.org/x/exp v0.0.0-20251002181428-27f1f14c8bb9 // indirect
-	golang.org/x/mod v0.28.0 // indirect
-	golang.org/x/net v0.45.0 // indirect
-	golang.org/x/term v0.35.0 // indirect
-	golang.org/x/text v0.29.0 // indirect
-	golang.org/x/time v0.13.0 // indirect
-	golang.org/x/tools v0.37.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20250929231259-57b25ae835d4 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250929231259-57b25ae835d4 // indirect
+	golang.org/x/crypto v0.43.0 // indirect
+	golang.org/x/exp v0.0.0-20251023183803-a4bb9ffd2546 // indirect
+	golang.org/x/mod v0.29.0 // indirect
+	golang.org/x/net v0.46.0 // indirect
+	golang.org/x/term v0.36.0 // indirect
+	golang.org/x/text v0.30.0 // indirect
+	golang.org/x/time v0.14.0 // indirect
+	golang.org/x/tools v0.38.0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20251029180050-ab9386a59fda // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20251029180050-ab9386a59fda // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.6.0 // indirect
 	sigs.k8s.io/yaml v1.6.0 // indirect

@@ -17,9 +17,9 @@ EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
 GO_VER             := 1.25
 VAULT_VER	         := 1.8.12
-SVU_VER 	         := 3.1.0
-GOTESTSUM_VER      := 1.12.3
-GOLANGCI-LINT_VER  := 2.5.0
+SVU_VER 	         := 3.3.0
+GOTESTSUM_VER      := 1.13.0
+GOLANGCI-LINT_VER  := 2.6.0
 GORELEASER_VER     := 2.8.2
 WIRE_VER	         := 0.7.0
 SYFT_VER           := 1.13.0

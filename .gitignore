@@ -64,6 +64,6 @@ __debug_bin*
 .container-tag.env
 .qodo
 
-# code agents config files
+# LLM agent configs
 AGENTS.md
 CLAUDE.md

@@ -40,7 +40,7 @@ type ServicesConfig struct {
 	Services map[string]*builder.API `json:"services"`
 }
 
-// Common, holds the common configuration for the app.
+// Common holds the shared configuration elements.
 type Common struct {
 	Version      int           `json:"version"`
 	Logging      logger.Config `json:"logging"`

@@ -29,7 +29,7 @@ func NewInstanceMiddleware(cfg *config.Config, logger *zerolog.Logger) *PolicyIn
 
 var _ grpcutil.Middleware = &PolicyInstanceMiddleware{}
 
-// Unary, if the unary operation is an `Is` request, attach the configured instance information to request.
+// Unary, if the unary operation is an `Is` request, attach configured instance information to request.
 func (m *PolicyInstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 		request, ok := req.(*authorizer.IsRequest)
@@ -43,7 +43,7 @@ func (m *PolicyInstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
 	}
 }
 
-// Stream, passthrough as `Is` call is Unary type operation.
+// Stream, passthrough as Is call is Unary type operation.
 func (m *PolicyInstanceMiddleware) Stream() grpc.StreamServerInterceptor {
 	return func(srv any, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
