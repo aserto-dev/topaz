@@ -15,19 +15,16 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	maxWidth := 0
-	for n := range ctlg {
-		maxWidth = max(maxWidth, len(n)+1)
-	}
-
-	tab := table.New(c.StdOut()).WithColumns(colName, colDescription, colDocumentation)
-	tab.WithTableNoAutoWrapText()
-
+	data := [][]any{}
 	for n, t := range ctlg {
-		tab.WithRow(n, t.ShortDescription, t.DocumentationURL)
+		data = append(data, []any{n, t.ShortDescription, t.DocumentationURL})
 	}
 
-	tab.Do()
+	t := table.New(c.StdOut())
+
+	t.Header(colName, colDescription, colDocumentation)
+	t.Bulk(data)
+	t.Render()
 
 	return nil
 }
