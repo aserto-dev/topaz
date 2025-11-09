@@ -1,8 +1,8 @@
 module github.com/aserto-dev/topaz
 
-go 1.24.9
+go 1.24.10
 
-toolchain go1.25.3
+toolchain go1.25.4
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
@@ -21,11 +21,11 @@ require (
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
 	github.com/aserto-dev/openapi-directory v0.33.5
-	github.com/aserto-dev/runtime v1.9.0
+	github.com/aserto-dev/runtime v1.9.1-0.20251109102150-4e0414044199
 	github.com/aserto-dev/self-decision-logger v0.0.12
 	github.com/authzen/access.go v0.0.6
 	github.com/cli/browser v1.3.0
-	github.com/docker/docker v28.3.3+incompatible
+	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0
 	github.com/fatih/color v1.18.0
 	github.com/gdamore/tcell/v2 v2.9.0
@@ -44,8 +44,8 @@ require (
 	github.com/mennanov/fmutils v0.3.4
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/moby/term v0.5.2
-	github.com/olekukonko/tablewriter v1.1.0
-	github.com/open-policy-agent/opa v1.9.0
+	github.com/olekukonko/tablewriter v1.1.1
+	github.com/open-policy-agent/opa v1.10.1
 	github.com/opencontainers/image-spec v1.1.1
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.23.2
@@ -59,8 +59,8 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/testcontainers/testcontainers-go v0.39.0
 	go.etcd.io/bbolt v1.4.3
-	golang.org/x/sync v0.17.0
-	golang.org/x/sys v0.37.0
+	golang.org/x/sync v0.18.0
+	golang.org/x/sys v0.38.0
 	google.golang.org/grpc v1.76.0
 	google.golang.org/protobuf v1.36.10
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
@@ -74,12 +74,13 @@ require (
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/aserto-dev/go-decision-logs v0.1.5 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect
+	github.com/bytecodealliance/wasmtime-go/v37 v37.0.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/clipperhouse/displaywidth v0.3.1 // indirect
 	github.com/clipperhouse/stringish v0.1.1 // indirect
 	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
-	github.com/containerd/containerd/v2 v2.1.4 // indirect
+	github.com/containerd/containerd/v2 v2.1.5 // indirect
 	github.com/containerd/errdefs v1.0.0 // indirect
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect
@@ -126,7 +127,7 @@ require (
 	github.com/lestrrat-go/httprc v1.0.6 // indirect
 	github.com/lestrrat-go/httprc/v3 v3.0.1 // indirect
 	github.com/lestrrat-go/iter v1.0.2 // indirect
-	github.com/lestrrat-go/jwx/v3 v3.0.11 // indirect
+	github.com/lestrrat-go/jwx/v3 v3.0.12 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/lestrrat-go/option/v2 v2.0.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
@@ -205,8 +206,8 @@ require (
 	golang.org/x/text v0.30.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
 	golang.org/x/tools v0.38.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20251029180050-ab9386a59fda // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20251029180050-ab9386a59fda // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20251103181224-f26f9409b101 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20251103181224-f26f9409b101 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.6.0 // indirect
 	sigs.k8s.io/yaml v1.6.0 // indirect

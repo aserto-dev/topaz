@@ -36,7 +36,7 @@ func NewRuntimeResolver(
 	decisionLogger decisionlog.DecisionLogger,
 	directoryResolver resolvers.DirectoryResolver,
 ) (resolvers.RuntimeResolver, func(), error) {
-	sidecarRuntime, cleanupRuntime, err := runtime.NewRuntime(ctx, logger, &cfg.OPA,
+	sidecarRuntime, err := runtime.New(ctx, &cfg.OPA,
 		// directory get functions
 		runtime.WithBuiltin1(ds.RegisterIdentity(logger, "ds.identity", directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterUser(logger, "ds.user", directoryResolver)),
@@ -56,7 +56,11 @@ func NewRuntimeResolver(
 		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
 	)
 	if err != nil {
-		return nil, cleanupRuntime, err
+		return nil, func() {}, err
+	}
+
+	cleanupRuntime := func() {
+		sidecarRuntime.Stop(ctx)
 	}
 
 	cleanup := func() {
