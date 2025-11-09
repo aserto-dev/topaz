@@ -175,6 +175,7 @@
     "tablewriter",
     "tcell",
     "templ",
+    "testcontainers",
     "testdata",
     "testharness",
     "timestamppb",
