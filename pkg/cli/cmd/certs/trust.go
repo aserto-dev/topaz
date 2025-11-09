@@ -39,13 +39,22 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	tab := table.New(c.StdOut()).WithColumns("File", "Action")
+	data := [][]any{}
 
-	defer tab.Do()
+	tab := table.New(c.StdOut())
+
+	defer func() {
+		tab.Bulk(data)
+		tab.Render()
+		tab.Close()
+	}()
+
+	tab.Header("File", "Action")
 
 	list := getFileList(certsDir, withCACerts())
 	if len(list) == 0 {
-		tab.WithRow("no files found", "no actions performed")
+		data = append(data, []any{"no files found", "no actions performed"})
+
 		return nil
 	}
 
@@ -62,7 +71,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 				return err
 			}
 
-			tab.WithRow(fn, "removed from trust store")
+			data = append(data, []any{fn, "removed from trust store"})
 
 			continue
 		}
@@ -72,7 +81,7 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 				return err
 			}
 
-			tab.WithRow(filepath.Base(fqn), "added to trust store")
+			data = append(data, []any{filepath.Base(fqn), "added to trust store"})
 
 			continue
 		}

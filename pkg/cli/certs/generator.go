@@ -39,12 +39,18 @@ func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...
 		}
 
 		if len(existingFiles) != 0 {
-			tab := table.New(c.StdErr()).WithColumns("File", "Action")
+			tab := table.New(c.StdErr())
+			defer tab.Close()
+
+			tab.Header("File", "Action")
+
+			data := [][]any{}
 			for _, fqn := range existingFiles {
-				tab.WithRow(filepath.Base(fqn), "skipped, file already exists")
+				data = append(data, []any{filepath.Base(fqn), "skipped, file already exists"})
 			}
 
-			tab.Do()
+			tab.Bulk(data)
+			tab.Render()
 
 			return nil
 		}
@@ -57,7 +63,12 @@ func generate(c *cc.CommonCtx, dnsNames []string, certPaths ...*CertPaths) error
 	logger := zerolog.Nop()
 	generator := certs.NewGenerator(&logger)
 
-	tab := table.New(c.StdErr()).WithColumns("File", "Action")
+	tab := table.New(c.StdErr())
+	defer tab.Close()
+
+	tab.Header("File", "Action")
+
+	data := [][]any{}
 
 	for _, certPaths := range certPaths {
 		if err := generator.MakeDevCert(&certs.CertGenConfig{
@@ -70,12 +81,13 @@ func generate(c *cc.CommonCtx, dnsNames []string, certPaths ...*CertPaths) error
 			return errors.Wrap(err, "failed to create dev certs")
 		}
 
-		tab.WithRow(filepath.Base(certPaths.CA), "generated")
-		tab.WithRow(filepath.Base(certPaths.Cert), "generated")
-		tab.WithRow(filepath.Base(certPaths.Key), "generated")
+		data = append(data, []any{filepath.Base(certPaths.CA), "generated"})
+		data = append(data, []any{filepath.Base(certPaths.Cert), "generated"})
+		data = append(data, []any{filepath.Base(certPaths.Key), "generated"})
 	}
 
-	tab.Do()
+	tab.Bulk(data)
+	tab.Render()
 
 	return nil
 }
