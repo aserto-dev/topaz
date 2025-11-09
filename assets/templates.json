@@ -33,7 +33,7 @@
   },
   "api-auth": {
     "title": "API Authorization",
-    "short_description": "Template for authorization of servics and endpoints",
+    "short_description": "Template for authorization of services and endpoints",
     "description": "The API Authorization template defines services and endpoints. You can import an OpenAPI spec and automatically generate services, endpoints, and groups for entitling users to a whole service, specific endpoints, or certain HTTP methods. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/api-auth/overview",
     "topaz_url": "v32/api-auth.json",

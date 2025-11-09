@@ -1,0 +1,3716 @@
+{
+  "assertions": [
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_create_tenant"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_create_tenant"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_create_tenant"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_create_tenant"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_create_tenant"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "system",
+          "id": "system"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "admin"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "editor"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "viewer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_edit"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_view"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_manage_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_list_members"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_leave_tenant"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_create_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read_resources"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "citadel-adventures"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "owner"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "reader"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_delete"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "resource",
+          "id": "smiths-budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "system",
+          "id": "system"
+        },
+        "action": {
+          "name": "system"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "system",
+          "id": "system"
+        },
+        "action": {
+          "name": "system"
+        },
+        "resource": {
+          "type": "tenant",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    }
+  ]
+}
