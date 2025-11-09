@@ -140,79 +140,196 @@ var BuiltinHelpTests = []struct {
 	expected any
 }{
 	{
-		name:     "ds.identity",
-		query:    "x = ds.identity({})",
-		expected: "ds.identity({\n\t\"id\": \"\"\n})",
+		name:  "ds.identity",
+		query: "x = ds.identity({})",
+		expected: `ds.identity({
+	"id": ""
+})`,
 	},
 	{
-		name:     "ds.user",
-		query:    "x = ds.user({})",
-		expected: "ds.user({\n\t\"id\": \"\"\n})",
+		name:  "ds.user",
+		query: "x = ds.user({})",
+		expected: `ds.user({
+	"id": ""
+})`,
 	},
 	{
-		name:     "ds.check",
-		query:    "x = ds.check({})",
-		expected: "ds.check({\n\t\"object_type\": \"\",\n\t\"object_id\": \"\",\n\t\"relation\": \"\",\n\t\"subject_type\": \"\"\n\t\"subject_id\": \"\",\n\t\"trace\": false\n})",
+		name:  "ds.check",
+		query: "x = ds.check({})",
+		expected: `ds.check({
+	"object_type": "",
+	"object_id": "",
+	"relation": "",
+	"subject_type": "",
+	"subject_id": "",
+	"trace": false
+})`,
 	},
 	{
-		name:     "ds.checks",
-		query:    "x = ds.checks({})",
-		expected: "ds.checks({\n\t\"default\": {\n\t\t\"object_id\": \"\",\n\t\t\"object_type\": \"\",\n\t\t\"relation\": \"\",\n\t\t\"subject_id\": \"\",\n\t\t\"subject_type\": \"\",\n\t\t\"trace\": false\n\t},\n\t\"checks\": [\n\t\t{\n\t\t\t\"object_id\": \"\",\n\t\t\t\"object_type\": \"\",\n\t\t\t\"relation\": \"\",\n\t\t\t\"subject_id\": \"\",\n\t\t\t\"subject_type\": \"\",\n\t\t\t\"trace\": false\n\t\t}\n\t]\n})",
+		name:  "ds.checks",
+		query: "x = ds.checks({})",
+		expected: `ds.checks({
+	"default": {
+		"object_id": "",
+		"object_type": "",
+		"relation": "",
+		"subject_id": "",
+		"subject_type": "",
+		"trace": false
+	},
+	"checks": [
+		{
+			"object_id": "",
+			"object_type": "",
+			"relation": "",
+			"subject_id": "",
+			"subject_type": "",
+			"trace": false
+		}
+	]
+})`,
 	},
 	{
-		name:     "ds.check_relation",
-		query:    "x = ds.check_relation({})",
-		expected: "ds.check_relation({\n\t\"object_id\": \"\",\n\t\"object_type\": \"\",\n\t\"relation\": \"\",\n\t\"subject_id\": \"\",\n\t\"subject_type\": \"\",\n\t\"trace\": false\n})",
+		name:  "ds.check_relation",
+		query: "x = ds.check_relation({})",
+		expected: `ds.check_relation({
+	"object_id": "",
+	"object_type": "",
+	"relation": "",
+	"subject_id": "",
+	"subject_type": "",
+	"trace": false
+})`,
 	},
 	{
-		name:     "ds.check_permission",
-		query:    "x = ds.check_permission({})",
-		expected: "ds.check_permission({\n\t\"object_id\": \"\",\n\t\"object_type\": \"\",\n\t\"permission\": \"\",\n\t\"subject_id\": \"\",\n\t\"subject_type\": \"\",\n\t\"trace\": false\n})",
+		name:  "ds.check_permission",
+		query: "x = ds.check_permission({})",
+		expected: `ds.check_permission({
+	"object_id": "",
+	"object_type": "",
+	"permission": "",
+	"subject_id": "",
+	"subject_type": "",
+	"trace": false
+})`,
 	},
 	{
-		name:     "ds.graph",
-		query:    "x = ds.graph({})",
-		expected: "ds.graph({\n\t\"object_type\": \"\",\n\t\"object_id\": \"\",\n\t\"relation\": \"\",\n\t\"subject_type\": \"\",\n\t\"subject_id\": \"\",\n\t\"subject_relation\": \"\",\n\t\"explain\": false,\n\t\"trace\": false\n})",
+		name:  "ds.graph",
+		query: "x = ds.graph({})",
+		expected: `ds.graph({
+	"object_type": "",
+	"object_id": "",
+	"relation": "",
+	"subject_type": "",
+	"subject_id": "",
+	"subject_relation": "",
+	"explain": false,
+	"trace": false
+})`,
 	},
 	{
-		name:     "ds.object",
-		query:    "x = ds.object({})",
-		expected: "ds.object({\n\t\"object_type\": \"\",\n\t\"object_id\": \"\",\n\t\"with_relation\": false\n})",
+		name:  "ds.object",
+		query: "x = ds.object({})",
+		expected: `ds.object({
+	"object_type": "",
+	"object_id": "",
+	"with_relation": false
+})`,
 	},
 	{
-		name:     "ds.relation",
-		query:    "x = ds.relation({})",
-		expected: "ds.relation({\n\t\"object_id\": \"\",\n\t\"object_type\": \"\",\n\t\"relation\": \"\",\n\t\"subject_id\": \"\",\n\t\"subject_relation\": \"\",\n\t\"subject_type\": \"\",\n\t\"with_objects\": false\n\t})",
+		name:  "ds.relation",
+		query: "x = ds.relation({})",
+		expected: `ds.relation({
+	"object_id": "",
+	"object_type": "",
+	"relation": "",
+	"subject_id": "",
+	"subject_relation": "",
+	"subject_type": "",
+	"with_objects": false
+	})`,
 	},
 	{
-		name:     "ds.relations",
-		query:    "x = ds.relations({})",
-		expected: "ds.relations({\n\tobject_type: \"\",\n\tobject_id: \"\",\n\trelation: \"\",\n\tsubject_type: \"\",\n\tsubject_id: \"\",\n\tsubject_relation: \"\",\n\twith_objects: false,\n\twith_empty_subject_relation: false\n})",
+		name:  "ds.relations",
+		query: "x = ds.relations({})",
+		expected: `ds.relations({
+	object_type: "",
+	object_id: "",
+	relation: "",
+	subject_type: "",
+	subject_id: "",
+	subject_relation: "",
+	with_objects: false,
+	with_empty_subject_relation: false
+})`,
 	},
 	{
-		name:     "az.evaluation",
-		query:    "x = az.evaluation({})",
-		expected: "az.evaluation({\n  \"subject\": {\"type\": \"\", \"id\": \"\", \"properties\": {}}, \n  \"action\": {\"name\": \"\", \"properties\": {}}, \n  \"resource\": {\"type\": \"\", \"id\": \"\", \"properties\": {}}, \n  \"context\": {}\n})",
+		name:  "az.evaluation",
+		query: "x = az.evaluation({})",
+		expected: `az.evaluation({
+  "subject": {"type": "", "id": "", "properties": {}}, 
+  "action": {"name": "", "properties": {}}, 
+  "resource": {"type": "", "id": "", "properties": {}}, 
+  "context": {}
+})`,
 	},
 	{
-		name:     "az.evaluations",
-		query:    "x = az.evaluations({})",
-		expected: "az.evaluations({\n\t\"subject\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\"action\": {\"name\": \"\", \"properties\": {}},\n\t\"resource\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n  \"context\": {},\n\t\"options\": {},\n\t\"evaluations\": [\n\t\t{\n\t\t\t\"subject\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\t\t\"action\": {\"name\": \"\", \"properties\": {}},\n\t\t\t\"resource\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\t\t\"context\": {}\n\t\t},\n\t\t{\n\t\t\t\"subject\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\t\t\"action\": {\"name\": \"\", \"properties\": {}},\n\t\t\t\"resource\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\t\t\"context\": {},\n\t\t}\n\t]\n})",
+		name:  "az.evaluations",
+		query: "x = az.evaluations({})",
+		expected: `az.evaluations({
+	"subject": {"type": "", "id": "", "properties": {}},
+	"action": {"name": "", "properties": {}},
+	"resource": {"type": "", "id": "", "properties": {}},
+  "context": {},
+	"options": {},
+	"evaluations": [
+		{
+			"subject": {"type": "", "id": "", "properties": {}},
+			"action": {"name": "", "properties": {}},
+			"resource": {"type": "", "id": "", "properties": {}},
+			"context": {}
+		},
+		{
+			"subject": {"type": "", "id": "", "properties": {}},
+			"action": {"name": "", "properties": {}},
+			"resource": {"type": "", "id": "", "properties": {}},
+			"context": {},
+		}
+	]
+})`,
 	},
 	{
-		name:     "az.action_search",
-		query:    "x = az.action_search({})",
-		expected: "az.action_search({\n\t\"subject\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\"action\": {\"name\": \"\", \"properties\": {}},\n\t\"resource\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\"context\": {},\n\t\"page\": {\"next_token\": \"\"}\n})",
+		name:  "az.action_search",
+		query: "x = az.action_search({})",
+		expected: `az.action_search({
+	"subject": {"type": "", "id": "", "properties": {}},
+	"action": {"name": "", "properties": {}},
+	"resource": {"type": "", "id": "", "properties": {}},
+	"context": {},
+	"page": {"next_token": ""}
+})`,
 	},
 	{
-		name:     "az.resource_search",
-		query:    "x = az.resource_search({})",
-		expected: "az.resource_search({\n\t\"subject\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\"action\": {\"name\": \"\", \"properties\": {}},\n\t\"resource\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\"context\": {},\n\t\"page\": {\"next_token\": \"\"}\n})",
+		name:  "az.resource_search",
+		query: "x = az.resource_search({})",
+		expected: `az.resource_search({
+	"subject": {"type": "", "id": "", "properties": {}},
+	"action": {"name": "", "properties": {}},
+	"resource": {"type": "", "id": "", "properties": {}},
+	"context": {},
+	"page": {"next_token": ""}
+})`,
 	},
 	{
-		name:     "az.subject_search",
-		query:    "x = az.subject_search({})",
-		expected: "az.subject_search({\n\t\"subject\": {\"type\": \"\", \"properties\": {}},\n\t\"action\": {\"name\": \"\", \"properties\": {}},\n\t\"resource\": {\"type\": \"\", \"id\": \"\", \"properties\": {}},\n\t\"context\": {},\n\t\"page\": {\"next_token\": \"\"}\n})\n",
+		name:  "az.subject_search",
+		query: "x = az.subject_search({})",
+		expected: `az.subject_search({
+	"subject": {"type": "", "properties": {}},
+	"action": {"name": "", "properties": {}},
+	"resource": {"type": "", "id": "", "properties": {}},
+	"context": {},
+	"page": {"next_token": ""}
+})`,
 	},
 }
 

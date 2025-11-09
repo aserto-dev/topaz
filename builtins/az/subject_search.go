@@ -20,8 +20,7 @@ const azSubjectSearchHelp string = `az.subject_search({
 	"resource": {"type": "", "id": "", "properties": {}},
 	"context": {},
 	"page": {"next_token": ""}
-})
-`
+})`
 
 // RegisterSubjectSearch, note: subject_search omits `subject.id` fields when submitted.
 // https://openid.github.io/authzen/#name-subject-search-api.

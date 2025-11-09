@@ -17,7 +17,7 @@ const dsCheckHelp string = `ds.check({
 	"object_type": "",
 	"object_id": "",
 	"relation": "",
-	"subject_type": ""
+	"subject_type": "",
 	"subject_id": "",
 	"trace": false
 })`
