@@ -133,7 +133,6 @@ func testBuiltins(addr string) func(*testing.T) {
 	}
 }
 
-//nolint:lll
 var BuiltinHelpTests = []struct {
 	name     string
 	query    string
