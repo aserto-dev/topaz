@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/aserto-dev/azm/model"
 	"github.com/aserto-dev/azm/stats"
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -79,39 +78,37 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 }
 
 func statsTable(w io.Writer, s *stats.Stats) {
-	tab := table.New(w).WithColumns("obj-type", "obj-type-count", "rel", "rel-count", "sub-type", "sub-type-count", "sub-rel", "sub-rel-count")
-	tab.WithTableNoAutoWrapText()
+	tab := table.New(w)
+	defer tab.Close()
+
+	tab.Header("ObjType", "Count", "Rel", "Count", "SubType", "Count", "SubRel", "Count")
+
+	data := [][]any{}
 
 	for ot, objType := range s.ObjectTypes {
 		for or, objRel := range objType.Relations {
 			for st, subType := range objRel.SubjectTypes {
-				tabRow(tab, ot, objType.ObjCount, or, objRel.Count, st, subType.Count, "", 0)
+				data = append(data, []any{
+					ot.String(), countStr(objType.ObjCount),
+					or.String(), countStr(objRel.Count),
+					st.String(), countStr(subType.Count),
+					"", countStr(0),
+				})
 
 				for sr, subRel := range subType.SubjectRelations {
-					tabRow(tab, ot, objType.ObjCount, or, objRel.Count, st, subType.Count, sr, subRel.Count)
+					data = append(data, []any{
+						ot.String(), countStr(objType.ObjCount),
+						or.String(), countStr(objRel.Count),
+						st.String(), countStr(subType.Count),
+						sr.String(), countStr(subRel.Count),
+					})
 				}
 			}
 		}
 	}
 
-	tab.Do()
+	tab.Bulk(data)
+	tab.Render()
 }
 
 func countStr(c int32) string { return fmt.Sprintf("%8d", c) }
-
-func tabRow(
-	tab *table.TableWriter,
-	objType model.ObjectName, objTypeCount int32, objRel model.RelationName, objRelCount int32,
-	subType model.ObjectName, subTypeCount int32, subRel model.RelationName, subRelCount int32,
-) {
-	tab.WithRow(
-		objType.String(),
-		countStr(objTypeCount),
-		objRel.String(),
-		countStr(objRelCount),
-		subType.String(),
-		countStr(subTypeCount),
-		subRel.String(),
-		countStr(subRelCount),
-	)
-}

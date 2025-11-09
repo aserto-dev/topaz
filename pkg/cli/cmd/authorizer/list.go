@@ -40,12 +40,19 @@ func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
 		return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
 	}
 
-	tab := table.New(c.StdOut()).WithColumns("package path", "id")
+	tab := table.New(c.StdOut())
+	defer tab.Close()
+
+	tab.Header("package path", "id")
+
+	data := [][]any{}
+
 	for _, module := range cmd.resp.GetResult() {
-		tab.WithRow(strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId())
+		data = append(data, []any{strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId()})
 	}
 
-	tab.Do()
+	tab.Bulk(data)
+	tab.Render()
 
 	return nil
 }

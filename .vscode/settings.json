@@ -172,6 +172,7 @@
     "stylecheck",
     "sver",
     "syft",
+    "tablewriter",
     "tcell",
     "templ",
     "testdata",
