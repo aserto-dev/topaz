@@ -1,0 +1,564 @@
+{
+  "assertions": [
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:DELETE:/v1/todos/{todoId}"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:DELETE:/v1/todos/{todoId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:DELETE:/v1/todos/{todoId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:DELETE:/v1/todos/{todoId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:DELETE:/v1/todos/{todoId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:GET:/v1/todos"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:GET:/v1/todos"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:GET:/v1/todos"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:GET:/v1/todos"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:GET:/v1/todos"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:POST:/v1/todos"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:POST:/v1/todos"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:POST:/v1/todos"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:POST:/v1/todos"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "todo:POST:/v1/todos"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "rick-and-morty:GET:/v1/characters"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "rick-and-morty:GET:/v1/characters"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "rick-and-morty:GET:/v1/characters"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "rick-and-morty:GET:/v1/characters"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "rick-and-morty:GET:/v1/characters"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:GET:/pet/{petId}"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:GET:/pet/{petId}"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:GET:/pet/{petId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:GET:/pet/{petId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:GET:/pet/{petId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:POST:/pet/{petId}"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:POST:/pet/{petId}"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:POST:/pet/{petId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:POST:/pet/{petId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:POST:/pet/{petId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:DELETE:/pet/{petId}"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:DELETE:/pet/{petId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:DELETE:/pet/{petId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:DELETE:/pet/{petId}"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_invoke"
+        },
+        "resource": {
+          "type": "endpoint",
+          "id": "petstore:DELETE:/pet/{petId}"
+        }
+      },
+      "expected": false
+    }
+  ]
+}
