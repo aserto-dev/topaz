@@ -17,7 +17,8 @@
         ],
         "assertions": [
             "multi-tenant/test/multi-tenant_assertions.json",
-            "multi-tenant/test/multi-tenant_decisions.json"
+            "multi-tenant/test/multi-tenant_decisions.json",
+            "multi-tenant/test/multi-tenant_evaluations.json"
         ]
     }
 }
