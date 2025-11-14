@@ -5,7 +5,7 @@ package x
 const (
 	TopazTmplV32URL string = "https://topaz.sh/assets/templates/templates-v32.json"
 	TopazTmplV33URL string = "https://topaz.sh/assets/templates/templates-v33.json"
-	DefTopazTmplURL string = TopazTmplV33URL // "https://topaz.sh/assets/templates/templates.json"
+	DefTopazTmplURL string = TopazTmplV33URL
 )
 
 const (
