@@ -1,9 +1,9 @@
 package resolvers
 
 import (
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"google.golang.org/grpc"
 )
 
 type DirectoryResolver interface {
-	GetDS() dsr3.ReaderClient
+	GetConn() *grpc.ClientConn
 }

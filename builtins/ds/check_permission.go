@@ -13,34 +13,36 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-const dsCheckHelp string = `ds.check({
-	"object_type": "",
+const dsCheckPermissionHelp string = `ds.check_permission({
 	"object_id": "",
-	"relation": "",
-	"subject_type": "",
+	"object_type": "",
+	"permission": "",
 	"subject_id": "",
+	"subject_type": "",
 	"trace": false
 })`
 
-// RegisterCheck - ds.check.
-func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+// RegisterCheckPermission - ds.check_permission (OBSOLETE).
+func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.B),
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args reader.CheckRequest
+			var args reader.CheckPermissionRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
-			if proto.Equal(&args, &reader.CheckRequest{}) {
-				return ast.StringTerm(dsCheckHelp), nil
+			if proto.Equal(&args, &reader.CheckPermissionRequest{}) {
+				return ast.StringTerm(dsCheckPermissionHelp), nil
 			}
 
-			resp, err := reader.NewReaderClient(dr.GetConn()).Check(bctx.Context, &args)
+			//nolint: staticcheck // SA1019: client.CheckPermission is deprecated
+			resp, err := reader.NewReaderClient(dr.GetConn()).CheckPermission(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

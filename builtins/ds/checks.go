@@ -3,7 +3,7 @@ package ds
 import (
 	"bytes"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
@@ -19,16 +19,28 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-// RegisterChecks - ds.checks
-//
-//	ds.checks({
-//	  "object_type": "",
-//	  "object_id": "",
-//	  "relation": "",
-//	  "subject_type": ""
-//	  "subject_id": "",
-//	  "trace": false
-//	})
+const dsChecksHelp string = `ds.checks({
+	"default": {
+		"object_id": "",
+		"object_type": "",
+		"relation": "",
+		"subject_id": "",
+		"subject_type": "",
+		"trace": false
+	},
+	"checks": [
+		{
+			"object_id": "",
+			"object_type": "",
+			"relation": "",
+			"subject_id": "",
+			"subject_type": "",
+			"trace": false
+		}
+	]
+})`
+
+// RegisterChecks - ds.checks.
 func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -36,42 +48,25 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args dsr3.ChecksRequest
+			var args reader.ChecksRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
-			if proto.Equal(&args, &dsr3.ChecksRequest{}) {
-				return builtins.HelpMsg(fnName, &dsr3.ChecksRequest{
-					Default: &dsr3.CheckRequest{
-						ObjectType:  "",
-						ObjectId:    "",
-						Relation:    "",
-						SubjectType: "",
-						SubjectId:   "",
-					},
-					Checks: []*dsr3.CheckRequest{
-						{
-							ObjectType:  "",
-							ObjectId:    "",
-							Relation:    "",
-							SubjectType: "",
-							SubjectId:   "",
-						},
-					},
-				})
+			if proto.Equal(&args, &reader.ChecksRequest{}) {
+				return ast.StringTerm(dsChecksHelp), nil
 			}
 
 			if args.GetDefault() == nil {
-				args.Default = &dsr3.CheckRequest{}
+				args.Default = &reader.CheckRequest{}
 			}
 
 			if args.GetChecks() == nil {
-				args.Checks = []*dsr3.CheckRequest{}
+				args.Checks = []*reader.CheckRequest{}
 			}
 
-			resp, err := dr.GetDS().Checks(bctx.Context, &args)
+			resp, err := reader.NewReaderClient(dr.GetConn()).Checks(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

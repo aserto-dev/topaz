@@ -3,7 +3,7 @@ package ds
 import (
 	"bytes"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
@@ -15,18 +15,18 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// RegisterGraph - ds.graph
-//
-//	ds.graph({
-//	    "object_type": "",
-//	    "object_id": "",
-//	    "relation": "",
-//	    "subject_type": "",
-//	    "subject_id": "",
-//	    "subject_relation": "",
-//	    "explain": false,
-//	    "trace": false
-//	}
+const dsGraphHelp string = `ds.graph({
+	"object_type": "",
+	"object_id": "",
+	"relation": "",
+	"subject_type": "",
+	"subject_id": "",
+	"subject_relation": "",
+	"explain": false,
+	"trace": false
+})`
+
+// RegisterGraph - ds.graph.
 func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -34,27 +34,18 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args dsr3.GetGraphRequest
+			var args reader.GetGraphRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
-			if proto.Equal(&args, &dsr3.GetGraphRequest{}) {
-				return builtins.HelpMsg(fnName, &dsr3.GetGraphRequest{
-					ObjectType:      "",
-					ObjectId:        "",
-					Relation:        "",
-					SubjectType:     "",
-					SubjectId:       "",
-					SubjectRelation: "",
-					Explain:         false,
-					Trace:           false,
-				})
+			if proto.Equal(&args, &reader.GetGraphRequest{}) {
+				return ast.StringTerm(dsGraphHelp), nil
 			}
 
-			resp, err := dr.GetDS().GetGraph(bctx.Context, &args)
+			resp, err := reader.NewReaderClient(dr.GetConn()).GetGraph(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

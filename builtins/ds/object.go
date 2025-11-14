@@ -3,7 +3,7 @@ package ds
 import (
 	"bytes"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -20,13 +20,13 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-// RegisterObject - ds.object
-//
-//	ds.object({
-//		"object_type": "",
-//		"object_id": "",
-//		"with_relation": false
-//	})
+const dsObjectHelp string = `ds.object({
+	"object_type": "",
+	"object_id": "",
+	"with_relation": false
+})`
+
+// RegisterObject - ds.object.
 func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -40,28 +40,24 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 					ObjectID      string `json:"object_id,omitempty"`   // v3 object_id
 					WithRelations bool   `json:"with_relations"`        // v3 with_relations (false in case of v2)
 				}
-				req *dsr3.GetObjectRequest
+				req *reader.GetObjectRequest
 			)
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, errors.Wrapf(err, "failed to parse ds.object input message")
 			}
 
-			req = &dsr3.GetObjectRequest{
+			req = &reader.GetObjectRequest{
 				ObjectType:    args.ObjectType,
 				ObjectId:      args.ObjectID,
 				WithRelations: args.WithRelations,
 			}
 
-			if proto.Equal(req, &dsr3.GetObjectRequest{}) {
-				return builtins.HelpMsg(fnName, &dsr3.GetObjectRequest{
-					ObjectType:    "",
-					ObjectId:      "",
-					WithRelations: false,
-				})
+			if proto.Equal(req, &reader.GetObjectRequest{}) {
+				return ast.StringTerm(dsObjectHelp), nil
 			}
 
-			resp, err := dr.GetDS().GetObject(bctx.Context, req)
+			resp, err := reader.NewReaderClient(dr.GetConn()).GetObject(bctx.Context, req)
 
 			switch {
 			case status.Code(err) == codes.NotFound:

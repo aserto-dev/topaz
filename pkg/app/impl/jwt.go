@@ -232,7 +232,7 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 }
 
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
-	client := s.resolver.GetDirectoryResolver().GetDS()
+	client := dsr3.NewReaderClient(s.resolver.GetDirectoryResolver().GetConn())
 
 	user, err := directory.ResolveIdentity(ctx, client, identity)
 
@@ -248,7 +248,7 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 
 // getUserObject, retrieves an user object, using the identity as the object_id (legacy).
 func (s *AuthorizerServer) getUserObject(ctx context.Context, objID string) (proto.Message, error) {
-	client := s.resolver.GetDirectoryResolver().GetDS()
+	client := dsr3.NewReaderClient(s.resolver.GetDirectoryResolver().GetConn())
 
 	objResp, err := client.GetObject(ctx, &dsr3.GetObjectRequest{
 		ObjectType: directory.User,

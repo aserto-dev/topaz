@@ -3,7 +3,7 @@ package ds
 import (
 	"bytes"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/resolvers"
 
@@ -17,11 +17,11 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// RegisterUser - ds.user
-//
-//	ds.user({
-//		"id": ""
-//	})
+const dsUserHelp string = `ds.user({
+	"id": ""
+})`
+
+// RegisterUser - ds.user.
 func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
@@ -38,14 +38,10 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 			}
 
 			if args.ID == "" {
-				type argsV3 struct {
-					ID string `json:"id"`
-				}
-
-				return builtins.Help(fnName, argsV3{})
+				return ast.StringTerm(dsUserHelp), nil
 			}
 
-			resp, err := dr.GetDS().GetObject(bctx.Context, &dsr3.GetObjectRequest{
+			resp, err := reader.NewReaderClient(dr.GetConn()).GetObject(bctx.Context, &reader.GetObjectRequest{
 				ObjectType:    "user",
 				ObjectId:      args.ID,
 				WithRelations: false,
