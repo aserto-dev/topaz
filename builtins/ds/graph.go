@@ -45,7 +45,7 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				return ast.StringTerm(dsGraphHelp), nil
 			}
 
-			resp, err := dr.GetDS().GetGraph(bctx.Context, &args)
+			resp, err := reader.NewReaderClient(dr.GetConn()).GetGraph(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

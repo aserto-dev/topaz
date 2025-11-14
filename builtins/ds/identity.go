@@ -1,6 +1,7 @@
 package ds
 
 import (
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/directory"
 	"github.com/aserto-dev/topaz/resolvers"
@@ -39,7 +40,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return ast.StringTerm(dsIdentityHelp), nil
 			}
 
-			user, err := directory.ResolveIdentity(bctx.Context, dr.GetDS(), args.ID)
+			user, err := directory.ResolveIdentity(bctx.Context, reader.NewReaderClient(dr.GetConn()), args.ID)
 
 			switch {
 			case status.Code(err) == codes.NotFound:

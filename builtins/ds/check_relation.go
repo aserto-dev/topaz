@@ -42,7 +42,7 @@ func RegisterCheckRelation(logger *zerolog.Logger, fnName string, dr resolvers.D
 			}
 
 			//nolint: staticcheck // SA1019: client.CheckRelation is deprecated
-			resp, err := dr.GetDS().CheckRelation(bctx.Context, &args)
+			resp, err := reader.NewReaderClient(dr.GetConn()).CheckRelation(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

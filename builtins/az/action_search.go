@@ -40,7 +40,7 @@ func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.Di
 				return ast.StringTerm(azActionSearchHelp), nil
 			}
 
-			resp, err := dr.GetAuthZen().ActionSearch(bctx.Context, &args)
+			resp, err := access.NewAccessClient(dr.GetConn()).ActionSearch(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

@@ -40,7 +40,7 @@ func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				return ast.StringTerm(dsCheckHelp), nil
 			}
 
-			resp, err := dr.GetDS().Check(bctx.Context, &args)
+			resp, err := reader.NewReaderClient(dr.GetConn()).Check(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

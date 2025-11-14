@@ -57,7 +57,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return ast.StringTerm(dsObjectHelp), nil
 			}
 
-			resp, err := dr.GetDS().GetObject(bctx.Context, req)
+			resp, err := reader.NewReaderClient(dr.GetConn()).GetObject(bctx.Context, req)
 
 			switch {
 			case status.Code(err) == codes.NotFound:

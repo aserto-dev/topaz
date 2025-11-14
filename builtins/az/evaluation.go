@@ -40,7 +40,7 @@ func RegisterEvaluation(logger *zerolog.Logger, fnName string, dr resolvers.Dire
 				return ast.StringTerm(azEvaluationHelp), nil
 			}
 
-			resp, err := dr.GetAuthZen().Evaluation(bctx.Context, &args)
+			resp, err := access.NewAccessClient(dr.GetConn()).Evaluation(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

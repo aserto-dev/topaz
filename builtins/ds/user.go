@@ -41,7 +41,7 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryR
 				return ast.StringTerm(dsUserHelp), nil
 			}
 
-			resp, err := dr.GetDS().GetObject(bctx.Context, &reader.GetObjectRequest{
+			resp, err := reader.NewReaderClient(dr.GetConn()).GetObject(bctx.Context, &reader.GetObjectRequest{
 				ObjectType:    "user",
 				ObjectId:      args.ID,
 				WithRelations: false,

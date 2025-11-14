@@ -41,7 +41,7 @@ func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.D
 				return ast.StringTerm(azSubjectSearchHelp), nil
 			}
 
-			resp, err := dr.GetAuthZen().SubjectSearch(bctx.Context, &args)
+			resp, err := access.NewAccessClient(dr.GetConn()).SubjectSearch(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

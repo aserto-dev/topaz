@@ -46,7 +46,7 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return ast.StringTerm(dsRelationHelp), nil
 			}
 
-			resp, err := dr.GetDS().GetRelation(bctx.Context, &args)
+			resp, err := reader.NewReaderClient(dr.GetConn()).GetRelation(bctx.Context, &args)
 
 			switch {
 			case status.Code(err) == codes.NotFound:

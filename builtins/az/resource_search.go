@@ -41,7 +41,7 @@ func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.
 				return ast.StringTerm(azResourceSearchHelp), nil
 			}
 
-			resp, err := dr.GetAuthZen().ResourceSearch(bctx.Context, &args)
+			resp, err := access.NewAccessClient(dr.GetConn()).ResourceSearch(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

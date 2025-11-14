@@ -53,7 +53,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 			resp := &reader.GetRelationsResponse{}
 
 			for {
-				r, err := dr.GetDS().GetRelations(bctx.Context, &args)
+				r, err := reader.NewReaderClient(dr.GetConn()).GetRelations(bctx.Context, &args)
 				if err != nil {
 					builtins.TraceError(&bctx, fnName, err)
 					return nil, err

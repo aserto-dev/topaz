@@ -66,7 +66,7 @@ func RegisterChecks(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				args.Checks = []*reader.CheckRequest{}
 			}
 
-			resp, err := dr.GetDS().Checks(bctx.Context, &args)
+			resp, err := reader.NewReaderClient(dr.GetConn()).Checks(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
