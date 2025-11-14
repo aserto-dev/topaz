@@ -2,7 +2,7 @@
   "peoplefinder": {
     "title": "PeopleFinder",
     "short_description": "Corporate directory end-to-end sample",
-    "description": "A corporate directory application that includes a React front-end and a node.js back-end.  It demonstrates three styles of policies - RBAC, ABAC, and ReBAC.",
+    "description": "A corporate directory application that includes a React front-end and a node.js back-end. It demonstrates three styles of policies - RBAC, ABAC, and ReBAC.",
     "docs_url": "https://docs.aserto.com/docs/getting-started/peoplefinder/peoplefinder-overview",
     "topaz_url": "v32/peoplefinder.json",
     "hosted_url": "v32/hosted/peoplefinder.json"
@@ -10,7 +10,7 @@
   "todo": {
     "title": "Todo",
     "short_description": "Todo application end-to-end sample",
-    "description": "A simple Todo application with a back-end implementation in every language, and an interactive tutorial for the policy language. Provides a head start for learning how to integrate Aserto into your own app.",
+    "description": "The Simple Todo template comes with a back-end implementation in every language and an interactive tutorial for the policy language. It provides a head start for learning how to integrate Aserto into your own app.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/todo/overview",
     "topaz_url": "v32/todo.json",
     "hosted_url": "v32/hosted/todo.json"
@@ -26,7 +26,7 @@
   "gdrive": {
     "title": "Google Drive",
     "short_description": "Authorization template for nested folders and documents",
-    "description": "The Google Drive template defines folder and document types, with read, write, share, and delete permissions. Folders can contain documents or other folders and access to a parent folder grants access to its children. You can evolve it to fit your needs.",
+    "description": "The Google Drive template defines folder and document types with read, write, share, and delete permissions. Folders can contain documents or other folders, and access to a parent folder grants access to its children. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/gdrive/overview",
     "topaz_url": "v32/gdrive.json",
     "hosted_url": "v32/hosted/gdrive.json"
@@ -34,7 +34,7 @@
   "api-auth": {
     "title": "API Authorization",
     "short_description": "Template for authorization of services and endpoints",
-    "description": "The API Authorization template defines services and endpoints. You can import an OpenAPI spec and automatically generate services, endpoints, and groups for entitling users to a whole service, specific endpoints, or certain HTTP methods. You can evolve it to fit your needs.",
+    "description": "The API Authorization template defines services and endpoints. You can import an OpenAPI spec and automatically generate services, endpoints, and groups to entitle users to a whole service, specific endpoints, or certain HTTP methods. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/api-auth/overview",
     "topaz_url": "v32/api-auth.json",
     "hosted_url": "v32/hosted/api-auth.json"
@@ -42,7 +42,7 @@
   "slack": {
     "title": "Slack",
     "short_description": "Authorization template for workspaces and channels",
-    "description": "The Slack template defines workspaces with channel admin permissions, and channels inside of a workspace, with read, write, comment, and delete permissions. Channel commenters/writers can be members of an workspace. You can evolve it to fit your needs.",
+    "description": "The Slack template defines workspaces with channel admin permissions and channels inside a workspace with read, write, comment, and delete permissions. Channel commenters/writers can be members of a workspace. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/slack/overview",
     "topaz_url": "v32/slack.json",
     "hosted_url": "v32/hosted/slack.json"
@@ -50,7 +50,7 @@
   "github": {
     "title": "GitHub",
     "short_description": "Authorization template for repositories, organizations and teams",
-    "description": "The GitHub template defines repositories, organization and teams. Repos are owned by organizations, and their permissions are either assigned directly through relations, or inherited from the organization. You can evolve it to fit your needs.",
+    "description": "The GitHub template defines repositories, organizations, and teams. Organizations own repos, and their permissions are either assigned directly through relations or inherited from the organization. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/github/overview",
     "topaz_url": "v32/github.json",
     "hosted_url": "v32/hosted/github.json"
@@ -58,7 +58,7 @@
   "multi-tenant": {
     "title": "Multi-Tenant RBAC",
     "short_description": "Multi-tenant RBAC authorization template",
-    "description": "A multi-tenant authorization template in which resources belong to tenants and users can have different roles in different tenants, as well as system-wide roles. Tenant roles grant access to tenant resources, while system roles grant access to resources across all tenants. You can evolve it to fit your needs.",
+    "description": "A multi-tenant authorization template in which resources belong to tenants and users can have different roles in different tenants and system-wide roles. Tenant roles grant access to tenant resources, while system roles grant access to resources across all tenants. You can evolve it to fit your needs.",
     "docs_url": "https://docs.aserto.com/docs/quickstarts/multi-tenant/overview",
     "topaz_url": "v32/multi-tenant.json",
     "hosted_url": "v32/hosted/multi-tenant.json"
