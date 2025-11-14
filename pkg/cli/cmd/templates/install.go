@@ -29,6 +29,7 @@ type InstallTemplateCmd struct {
 	NoConfigure       bool   `optional:"" default:"false" help:"do not run configure step, to prevent changes to the config .yaml file"`
 	NoTests           bool   `optional:"" default:"false" help:"do not execute assertions as part of template installation"`
 	NoConsole         bool   `optional:"" default:"false" help:"do not open console when template installation is finished"`
+	Legacy            bool   `optional:"" default:"false" help:"use legacy templates (v32)"`
 	ContainerRegistry string `optional:"" default:"${container_registry}" env:"CONTAINER_REGISTRY" help:"container registry (host[:port]/repo)"`
 	ContainerImage    string `optional:"" default:"${container_image}" env:"CONTAINER_IMAGE" help:"container image name"`
 	ContainerTag      string `optional:"" default:"${container_tag}" env:"CONTAINER_TAG" help:"container tag"`
@@ -42,6 +43,10 @@ type InstallTemplateCmd struct {
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
+
+	if cmd.Legacy {
+		cmd.TemplatesURL = x.TopazTmplV32URL
+	}
 
 	tmpl, err := getTemplate(cmd.Name, cmd.TemplatesURL)
 	if err != nil {

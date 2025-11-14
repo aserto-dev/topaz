@@ -3,11 +3,13 @@ package x
 // Default constants
 
 const (
-	DefTopazTmplURL string = "https://topaz.sh/assets/templates/templates.json"
+	TopazTmplV32URL string = "https://topaz.sh/assets/templates/templates-v32.json"
+	TopazTmplV33URL string = "https://topaz.sh/assets/templates/templates-v33.json"
+	DefTopazTmplURL string = TopazTmplV33URL
 )
 
 const (
-	MinPaginationSize int32 = 1
-	MaxPaginationSize int32 = 100
+	MinPaginationSize int32 = 0
+	MaxPaginationSize int32 = 1000
 	DefPaginationSize int32 = MaxPaginationSize
 )

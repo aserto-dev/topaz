@@ -5,12 +5,14 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/pkg/errors"
 )
 
 type DownloadTemplateCmd struct {
 	Name         string `arg:"" required:"" help:"template name"`
 	Force        bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
+	Legacy       bool   `optional:"" default:"false" help:"use legacy templates"`
 	TemplatesURL string `optional:"" default:"${topaz_tmpl_url}" env:"TOPAZ_TMPL_URL" help:"URL of template catalog"`
 	ConfigName   string `optional:"" help:"set config name"`
 }
@@ -25,6 +27,10 @@ func (cmd *DownloadTemplateCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	topazTemplateDir := cc.GetTopazTemplateDir()
+
+	if cmd.Legacy {
+		cmd.TemplatesURL = x.TopazTmplV32URL
+	}
 
 	catalog, err := getCatalog(cmd.TemplatesURL)
 	if err != nil {
