@@ -74,7 +74,7 @@ func WaitForPorts(ports iter.Seq[string], expectedStatus PortStatus) error {
 func portStatus(listenAddress string) PortStatus {
 	timeout := 1 * time.Second
 
-	conn, err := net.DialTimeout("tcp", listenAddress, timeout)
+	conn, err := net.DialTimeout("tcp", listenAddress, timeout) //nolint:noctx
 	if err != nil {
 		return PortClosed
 	}

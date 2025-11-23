@@ -43,6 +43,7 @@ func (c *BoltDBStore) Serialize(w io.Writer) error {
 
 	type params struct {
 		*BoltDBStore
+
 		Provider_ string
 	}
 

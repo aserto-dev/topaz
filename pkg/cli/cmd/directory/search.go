@@ -12,6 +12,7 @@ import (
 type SearchCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  reader.GetGraphRequest
 	resp reader.GetGraphResponse
 }

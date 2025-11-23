@@ -14,6 +14,7 @@ import (
 type EvalCmd struct {
 	clients.RequestArgs
 	azc.Config
+
 	req  authorizer.IsRequest
 	resp authorizer.IsResponse
 }

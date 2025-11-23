@@ -16,6 +16,7 @@ import (
 type GetRelationCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  reader.GetRelationRequest
 	resp reader.GetRelationResponse
 }
@@ -51,6 +52,7 @@ func (cmd *GetRelationCmd) template() proto.Message {
 type SetRelationCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  writer.SetRelationRequest
 	resp writer.SetRelationResponse
 }
@@ -90,6 +92,7 @@ func (cmd *SetRelationCmd) template() proto.Message {
 type DeleteRelationCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  writer.DeleteRelationRequest
 	resp writer.DeleteRelationResponse
 }
@@ -124,6 +127,7 @@ func (cmd *DeleteRelationCmd) template() proto.Message {
 type ListRelationsCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  reader.GetRelationsRequest
 	resp reader.GetRelationsResponse
 }

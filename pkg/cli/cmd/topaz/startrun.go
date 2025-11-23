@@ -45,6 +45,58 @@ const (
 	modeInteractive
 )
 
+func containerPorts(ports iter.Seq[string]) []string {
+	return slices.Collect(
+		loiter.Map(ports, func(port string) string {
+			return fmt.Sprintf("%s:%s/tcp", port, port)
+		}),
+	)
+}
+
+type mount struct {
+	src  string
+	dest string
+	mode cfgutil.AccessMode
+}
+
+func (m mount) String() string {
+	return fmt.Sprintf("%s:%s:%s", m.src, m.dest, m.mode)
+}
+
+func (cmd *StartRunCmd) ExpandHostPath(path string) string {
+	return os.Expand(path, func(name string) string {
+		switch name {
+		case x.EnvTopazCertsDir:
+			return cc.GetTopazCertsDir()
+		case x.EnvTopazCfgDir:
+			return cc.GetTopazCfgDir()
+		case x.EnvTopazDBDir:
+			return cc.GetTopazDataDir()
+		default:
+			return os.Getenv(name)
+		}
+	})
+}
+
+func (cmd *StartRunCmd) ExpandContainerPath(path string) string {
+	return os.Expand(path, func(name string) string {
+		if value, ok := cmd.envMapping[name]; ok {
+			return value
+		}
+
+		switch name {
+		case x.EnvTopazCertsDir:
+			return x.DefCertsDir
+		case x.EnvTopazCfgDir:
+			return x.DefCfgDir
+		case x.EnvTopazDBDir:
+			return x.DefDBDir
+		default:
+			return ""
+		}
+	})
+}
+
 func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
 		return cc.ErrIsRunning
@@ -138,7 +190,7 @@ func (cmd *StartRunCmd) loadConfig(path string) (*clicfg.Container, error) {
 
 // resolveEnv populates cmd.envMapping with the environment variables defined in cmd.Env.
 // Variables that don't provide a value are looked up in the environment and an error is returned if they are not
-// definded.
+// defined.
 func (cmd *StartRunCmd) resolveEnv() error {
 	var errs error
 
@@ -181,24 +233,6 @@ func (cmd *StartRunCmd) containerEnv() []string {
 	})
 }
 
-func containerPorts(ports iter.Seq[string]) []string {
-	return slices.Collect(
-		loiter.Map(ports, func(port string) string {
-			return fmt.Sprintf("%s:%s/tcp", port, port)
-		}),
-	)
-}
-
-type mount struct {
-	src  string
-	dest string
-	mode cfgutil.AccessMode
-}
-
-func (m mount) String() string {
-	return fmt.Sprintf("%s:%s:%s", m.src, m.dest, m.mode)
-}
-
 func (cmd *StartRunCmd) volumeMounts(cfg *config.Config, cfgFile string) []string {
 	paths := loiter.Collect(
 		loiter.RejectKey(cfg.Paths(), ""),
@@ -215,38 +249,4 @@ func (cmd *StartRunCmd) volumeMounts(cfg *config.Config, cfgFile string) []strin
 		}),
 		fmt.Sprintf("%s:%s:ro", cfgFile, path.Join(x.DefCfgDir, filepath.Base(cfgFile))), // always mount the config file as read-only.
 	)
-}
-
-func (cmd *StartRunCmd) ExpandHostPath(path string) string {
-	return os.Expand(path, func(name string) string {
-		switch name {
-		case x.EnvTopazCertsDir:
-			return cc.GetTopazCertsDir()
-		case x.EnvTopazCfgDir:
-			return cc.GetTopazCfgDir()
-		case x.EnvTopazDBDir:
-			return cc.GetTopazDataDir()
-		default:
-			return os.Getenv(name)
-		}
-	})
-}
-
-func (cmd *StartRunCmd) ExpandContainerPath(path string) string {
-	return os.Expand(path, func(name string) string {
-		if value, ok := cmd.envMapping[name]; ok {
-			return value
-		}
-
-		switch name {
-		case x.EnvTopazCertsDir:
-			return x.DefCertsDir
-		case x.EnvTopazCfgDir:
-			return x.DefCfgDir
-		case x.EnvTopazDBDir:
-			return x.DefDBDir
-		default:
-			return ""
-		}
-	})
 }

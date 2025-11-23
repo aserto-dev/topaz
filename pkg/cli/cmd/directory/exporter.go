@@ -9,8 +9,9 @@ import (
 )
 
 type ExportCmd struct {
-	Directory string `short:"d" required:"" help:"directory to write .json data" default:"${cwd}"`
 	dsc.Config
+
+	Directory string `short:"d" required:"" help:"directory to write .json data" default:"${cwd}"`
 }
 
 func (cmd *ExportCmd) Run(c *cc.CommonCtx) error {

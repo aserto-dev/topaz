@@ -14,6 +14,7 @@ import (
 type ResourceSearchCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  dsa1.ResourceSearchRequest
 	resp dsa1.ResourceSearchResponse
 }

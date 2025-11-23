@@ -52,6 +52,7 @@ func TestMarshaling(t *testing.T) {
 			)
 
 			var c directory.Config
+
 			err := v.Unmarshal(&c)
 			require.NoError(t, err)
 

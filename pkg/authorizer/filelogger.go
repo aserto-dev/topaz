@@ -42,6 +42,7 @@ func (c *FileDecisionLoggerConfig) Serialize(w io.Writer) error {
 
 	type params struct {
 		*FileDecisionLoggerConfig
+
 		Provider_ string
 	}
 
