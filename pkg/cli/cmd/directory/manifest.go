@@ -11,20 +11,23 @@ import (
 )
 
 type GetManifestCmd struct {
+	dsc.Config
+
 	Path   string `arg:"path" help:"filepath to manifest file" type:"path" optional:""`
 	Stdout bool   `flag:"" help:"output manifest to --stdout"`
-	dsc.Config
 }
 
 type SetManifestCmd struct {
+	dsc.Config
+
 	Path  string `arg:"" help:"filepath to manifest file" type:"path" optional:""`
 	Stdin bool   `flag:"" help:"set manifest from --stdin"`
-	dsc.Config
 }
 
 type DeleteManifestCmd struct {
-	Force bool `flag:"" help:"do not ask for conformation to delete manifest"`
 	dsc.Config
+
+	Force bool `flag:"" help:"do not ask for conformation to delete manifest"`
 }
 
 func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {

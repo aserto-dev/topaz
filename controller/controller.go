@@ -78,7 +78,7 @@ func NewController(logger *zerolog.Logger, policyName, host string, cfg *Config,
 
 const expBackoff = 2
 
-// run context dependant controller.
+// Start runs context dependant controller.
 func (c *Controller) Start(ctx context.Context) {
 	if c.client == nil {
 		return

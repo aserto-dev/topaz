@@ -12,6 +12,7 @@ import (
 type CheckCmd struct {
 	clients.RequestArgs
 	dsc.Config
+
 	req  reader.CheckRequest
 	resp reader.CheckResponse
 }

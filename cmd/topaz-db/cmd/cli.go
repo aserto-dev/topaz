@@ -24,7 +24,8 @@ type LoadCmd struct {
 }
 
 type SyncCmd struct {
+	dsc.Config
+
 	DBFile string   `arg:"" help:"db file name" type:"existingfile"`
 	Mode   []string `flag:"" short:"m" enum:"manifest,full,diff,watermark" required:"" help:"sync mode"`
-	dsc.Config
 }

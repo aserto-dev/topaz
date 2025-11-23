@@ -31,6 +31,7 @@ func TestMarshaling(t *testing.T) {
 			)
 
 			var c authorizer.Config
+
 			err := v.Unmarshal(&c)
 			require.NoError(t, err)
 

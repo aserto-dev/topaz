@@ -54,6 +54,7 @@ func (c *SelfDecisionLoggerConfig) Serialize(w io.Writer) error {
 
 	type params struct {
 		*SelfDecisionLoggerConfig
+
 		Provider_ string
 	}
 

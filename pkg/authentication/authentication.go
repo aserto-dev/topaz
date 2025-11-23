@@ -34,7 +34,7 @@ type Config struct {
 	config.Optional
 
 	Provider string      `json:"provider,omitempty"`
-	Local    LocalConfig `json:"local,omitempty"`
+	Local    LocalConfig `json:"local"`
 }
 
 var _ config.Section = (*Config)(nil)

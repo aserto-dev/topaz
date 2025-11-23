@@ -24,6 +24,8 @@ import (
 )
 
 type InstallTemplateCmd struct {
+	dsc.Config
+
 	Name              string `arg:"" required:"" help:"template name"`
 	Force             bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
 	NoConfigure       bool   `optional:"" default:"false" help:"do not run configure step, to prevent changes to the config .yaml file"`
@@ -38,7 +40,6 @@ type InstallTemplateCmd struct {
 	TemplatesURL      string `optional:"" default:"${topaz_tmpl_url}" env:"TOPAZ_TMPL_URL" help:"URL of template catalog"`
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 	ConfigName        string `optional:"" help:"set config name"`
-	dsc.Config
 }
 
 func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {

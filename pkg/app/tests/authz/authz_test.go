@@ -136,7 +136,6 @@ func DecisionTreeWithMissingPath(ctx context.Context, azClient authorizer.Author
 			Options:         &authorizer.DecisionTreeOptions{},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}
@@ -165,7 +164,6 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, azClient authorizer.Au
 			Options:         &authorizer.DecisionTreeOptions{},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}
@@ -194,7 +192,6 @@ func DecisionTreeWithUserID(ctx context.Context, azClient authorizer.AuthorizerC
 			Options:         &authorizer.DecisionTreeOptions{},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}
@@ -221,7 +218,6 @@ func IsWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerCl
 			},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}
@@ -257,7 +253,6 @@ func QueryWithMissingIdentity(ctx context.Context, azClient authorizer.Authorize
 			},
 			ResourceContext: &structpb.Struct{},
 		})
-
 		if errX != nil {
 			t.Logf("ERR >>> %s\n", errX)
 		}

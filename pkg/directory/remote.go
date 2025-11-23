@@ -40,6 +40,7 @@ func (c *RemoteDirectoryStore) Serialize(w io.Writer) error {
 
 	type params struct {
 		*RemoteDirectoryStore
+
 		Provider_ string
 	}
 

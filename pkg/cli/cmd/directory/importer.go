@@ -11,8 +11,9 @@ import (
 )
 
 type ImportCmd struct {
-	Directory string `short:"d" required:"" help:"directory containing .json data"  default:"${cwd}"`
 	dsc.Config
+
+	Directory string `short:"d" required:"" help:"directory containing .json data"  default:"${cwd}"`
 }
 
 func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {

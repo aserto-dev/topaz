@@ -88,10 +88,6 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, dsCfg *client.Config, ma
 	}
 }
 
-func (p *Plugin) resetContext() {
-	p.ctx, p.cancel = context.WithCancel(context.Background())
-}
-
 func (p *Plugin) Start(ctx context.Context) error {
 	p.logger.Info().Str("id", p.manager.ID).Bool("enabled", p.config.Enabled).Int("interval", p.config.SyncInterval).Msg("EdgePlugin.Start")
 
@@ -134,6 +130,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, config any) {
 
 		if newConfig.Enabled {
 			p.resetContext()
+
 			go p.scheduler()
 		} else {
 			// set health status to NOT_SERVING when plugin switches to disabled.
@@ -153,6 +150,15 @@ func (p *Plugin) Reconfigure(ctx context.Context, config any) {
 	p.config.SessionID = uuid.NewString()
 }
 
+func (p *Plugin) SyncNow(mode api.SyncMode) {
+	if p.hasLoopBack() {
+		p.logger.Trace().Str("mode", mode.String()).Msg("sync now event ignored, operating with remote directory mode")
+		return
+	}
+
+	p.syncNow <- mode
+}
+
 // A loopback configuration exists when Topaz is configured with a remote directory AND
 // an edge sync that points to the same directory instance and tenant as the edge-sync configuration.
 // The edge sync can be either explicitly configured in the Topaz configuration file or
@@ -163,13 +169,8 @@ func (p *Plugin) hasLoopBack() bool {
 	return (p.config.Addr == p.dsCfg.Address && p.config.TenantID == p.dsCfg.TenantID)
 }
 
-func (p *Plugin) SyncNow(mode api.SyncMode) {
-	if p.hasLoopBack() {
-		p.logger.Trace().Str("mode", mode.String()).Msg("sync now event ignored, operating with remote directory mode")
-		return
-	}
-
-	p.syncNow <- mode
+func (p *Plugin) resetContext() {
+	p.ctx, p.cancel = context.WithCancel(context.Background())
 }
 
 const cycles int64 = 4
@@ -282,6 +283,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
+
 	defer func() {
 		p.logger.Trace().Msg("task cleanup")
 		cancel()
