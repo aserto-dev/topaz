@@ -40,8 +40,8 @@ func NewRuntimeResolver(
 ) (resolvers.RuntimeResolver, func(), error) {
 	sidecarRuntime, err := runtime.New(ctx, &cfg.OPA,
 		// directory get functions
-		runtime.WithBuiltin1(ds.RegisterIdentity(logger, builtins.DSIdentity, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterUser(logger, builtins.DSUser, directoryResolver)),
+		// runtime.WithBuiltin1(ds.RegisterIdentity(logger, builtins.DSIdentity, directoryResolver)),
+		// runtime.WithBuiltin1(ds.RegisterUser(logger, builtins.DSUser, directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterObject(logger, builtins.DSObject, directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterRelation(logger, builtins.DSRelation, directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterRelations(logger, builtins.DSRelations, directoryResolver)),
@@ -50,8 +50,8 @@ func NewRuntimeResolver(
 		// authorization check functions
 		runtime.WithBuiltin1(ds.RegisterCheck(logger, builtins.DSCheck, directoryResolver)),
 		runtime.WithBuiltin1(ds.RegisterChecks(logger, builtins.DSChecks, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, builtins.DSCheckRelation, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, builtins.DSCheckPermission, directoryResolver)),
+		// runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, builtins.DSCheckRelation, directoryResolver)),
+		// runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, builtins.DSCheckPermission, directoryResolver)),
 
 		// authZen built-ins
 		runtime.WithBuiltin1(az.RegisterEvaluation(logger, builtins.AZEvaluation, directoryResolver)),
@@ -160,24 +160,4 @@ func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName str
 
 func (r *RuntimeResolver) GetRuntime(ctx context.Context, opaInstanceID, policyName string) (*runtime.Runtime, error) {
 	return r.runtime, nil
-}
-
-func (r *RuntimeResolver) PeekRuntime(ctx context.Context, opaInstanceID, policyName string) (*runtime.Runtime, error) {
-	return r.runtime, nil
-}
-
-func (r *RuntimeResolver) ReloadRuntime(ctx context.Context, opaInstanceID, policyName string) error {
-	return nil
-}
-
-func (r *RuntimeResolver) ListRuntimes(ctx context.Context) (map[string]*runtime.Runtime, error) {
-	if r.runtime == nil {
-		return nil, nil
-	}
-
-	return map[string]*runtime.Runtime{r.runtime.Config.InstanceID: r.runtime}, nil
-}
-
-func (r *RuntimeResolver) UnloadRuntime(ctx context.Context, opaInstanceID, policyName string) error {
-	return nil
 }

@@ -122,30 +122,30 @@ var queryTests = []struct {
 			contains("rebac"),
 		),
 	},
-	{
-		name: "ds.user",
-		query: &authorizer.QueryRequest{
-			Query:           `x = ds.user({"id": "euang@acmecorp.com"})`,
-			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
-		},
-		validate: validateResult(
-			contains("id"),
-			func(t *testing.T, result *rt.Result) {
-				binding, _ := result.Result[0].Bindings["x"].(map[string]any)
-				require.Equal(t, "euang@acmecorp.com", binding["id"])
-			},
-		),
-	},
-	{
-		name: "ds.identity",
-		query: &authorizer.QueryRequest{
-			Query:           `x = ds.identity({"id": "euang@acmecorp.com"})`,
-			IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
-		},
-		validate: validateResult(
-			contains("euang@acmecorp.com"),
-		),
-	},
+	// {
+	// 	name: "ds.user",
+	// 	query: &authorizer.QueryRequest{
+	// 		Query:           `x = ds.user({"id": "euang@acmecorp.com"})`,
+	// 		IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
+	// 	},
+	// 	validate: validateResult(
+	// 		contains("id"),
+	// 		func(t *testing.T, result *rt.Result) {
+	// 			binding, _ := result.Result[0].Bindings["x"].(map[string]any)
+	// 			require.Equal(t, "euang@acmecorp.com", binding["id"])
+	// 		},
+	// 	),
+	// },
+	// {
+	// 	name: "ds.identity",
+	// 	query: &authorizer.QueryRequest{
+	// 		Query:           `x = ds.identity({"id": "euang@acmecorp.com"})`,
+	// 		IdentityContext: &api.IdentityContext{Type: api.IdentityType_IDENTITY_TYPE_NONE},
+	// 	},
+	// 	validate: validateResult(
+	// 		contains("euang@acmecorp.com"),
+	// 	),
+	// },
 	{
 		name: "identity_context_sub",
 		query: &authorizer.QueryRequest{

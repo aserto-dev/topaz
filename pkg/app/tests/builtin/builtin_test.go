@@ -85,7 +85,7 @@ func testBuiltins(addr string) func(*testing.T) {
 		ctx, cancel := context.WithCancel(t.Context())
 		t.Cleanup(cancel)
 
-		// BuiltinHelptests(ctx, client)
+		// BuiltinHelpTests(ctx, client)
 		for _, tc := range BuiltinHelpTests {
 			f := func(t *testing.T) {
 				resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
@@ -138,20 +138,20 @@ var BuiltinHelpTests = []struct {
 	query    string
 	expected any
 }{
-	{
-		name:  "ds.identity",
-		query: "x = ds.identity({})",
-		expected: `ds.identity({
-	"id": ""
-})`,
-	},
-	{
-		name:  "ds.user",
-		query: "x = ds.user({})",
-		expected: `ds.user({
-	"id": ""
-})`,
-	},
+	// 	{
+	// 		name:  "ds.identity",
+	// 		query: "x = ds.identity({})",
+	// 		expected: `ds.identity({
+	// 	"id": ""
+	// })`,
+	// 	},
+	// 	{
+	// 		name:  "ds.user",
+	// 		query: "x = ds.user({})",
+	// 		expected: `ds.user({
+	// 	"id": ""
+	// })`,
+	// 	},
 	{
 		name:  "ds.check",
 		query: "x = ds.check({})",
@@ -188,30 +188,30 @@ var BuiltinHelpTests = []struct {
 	]
 })`,
 	},
-	{
-		name:  "ds.check_relation",
-		query: "x = ds.check_relation({})",
-		expected: `ds.check_relation({
-	"object_id": "",
-	"object_type": "",
-	"relation": "",
-	"subject_id": "",
-	"subject_type": "",
-	"trace": false
-})`,
-	},
-	{
-		name:  "ds.check_permission",
-		query: "x = ds.check_permission({})",
-		expected: `ds.check_permission({
-	"object_id": "",
-	"object_type": "",
-	"permission": "",
-	"subject_id": "",
-	"subject_type": "",
-	"trace": false
-})`,
-	},
+	// 	{
+	// 		name:  "ds.check_relation",
+	// 		query: "x = ds.check_relation({})",
+	// 		expected: `ds.check_relation({
+	// 	"object_id": "",
+	// 	"object_type": "",
+	// 	"relation": "",
+	// 	"subject_id": "",
+	// 	"subject_type": "",
+	// 	"trace": false
+	// })`,
+	// 	},
+	// 	{
+	// 		name:  "ds.check_permission",
+	// 		query: "x = ds.check_permission({})",
+	// 		expected: `ds.check_permission({
+	// 	"object_id": "",
+	// 	"object_type": "",
+	// 	"permission": "",
+	// 	"subject_id": "",
+	// 	"subject_type": "",
+	// 	"trace": false
+	// })`,
+	// 	},
 	{
 		name:  "ds.graph",
 		query: "x = ds.graph({})",
@@ -337,14 +337,14 @@ var BuiltinNotFoundErrTests = []struct {
 	query    string
 	expected map[string]any
 }{
-	{
-		name:  "ds.identity",
-		query: `x = ds.identity({"id": "no_existing_identifier"})`,
-	},
-	{
-		name:  "ds.user",
-		query: `x = ds.user({"id": "none_existing_user_object_id"})`,
-	},
+	// {
+	// 	name:  "ds.identity",
+	// 	query: `x = ds.identity({"id": "no_existing_identifier"})`,
+	// },
+	// {
+	// 	name:  "ds.user",
+	// 	query: `x = ds.user({"id": "none_existing_user_object_id"})`,
+	// },
 	{
 		name:  "ds.object",
 		query: `x = ds.object({"object_type": "none_existing_type", "object_id": "none_existing_id"})`,
