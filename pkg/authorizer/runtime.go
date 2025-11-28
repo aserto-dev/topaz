@@ -5,18 +5,20 @@ import (
 	"errors"
 	"time"
 
-	"github.com/rs/zerolog"
-
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	rt "github.com/aserto-dev/runtime"
-
-	"github.com/aserto-dev/topaz/builtins/edge/ds"
+	"github.com/aserto-dev/topaz/builtins"
+	"github.com/aserto-dev/topaz/builtins/az"
+	"github.com/aserto-dev/topaz/builtins/ds"
 	ctrl "github.com/aserto-dev/topaz/controller"
 	"github.com/aserto-dev/topaz/decisionlog"
 	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decisionlog"
 	"github.com/aserto-dev/topaz/plugins/edge"
 	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/authzen/access.go/api/access/v1"
+	"github.com/rs/zerolog"
+	"google.golang.org/grpc"
 )
 
 var _ resolvers.RuntimeResolver = (*RuntimeResolver)(nil)
@@ -31,23 +33,35 @@ func NewRuntimeResolver(
 	ctx context.Context,
 	cfg *Config,
 	decisionLogger decisionlog.DecisionLogger,
-	dsReader dsr3.ReaderClient,
+	dsConn *grpc.ClientConn,
 	edgeFactory *edge.PluginFactory,
 ) (*RuntimeResolver, error) {
 	logger := zerolog.Ctx(ctx)
 
+	dsReader := dsr3.NewReaderClient(dsConn)
+	acClient := access.NewAccessClient(dsConn)
+
 	runtime, err := rt.New(ctx, (*rt.Config)(&cfg.OPA),
 		// directory get functions
-		rt.WithBuiltin1(ds.RegisterIdentity(logger, "ds.identity", dsReader)),
-		rt.WithBuiltin1(ds.RegisterUser(logger, "ds.user", dsReader)),
-		rt.WithBuiltin1(ds.RegisterObject(logger, "ds.object", dsReader)),
-		rt.WithBuiltin1(ds.RegisterRelation(logger, "ds.relation", dsReader)),
-		rt.WithBuiltin1(ds.RegisterRelations(logger, "ds.relations", dsReader)),
-		rt.WithBuiltin1(ds.RegisterGraph(logger, "ds.graph", dsReader)),
+		rt.WithBuiltin1(ds.RegisterIdentity(logger, builtins.DSIdentity, dsReader)),
+		rt.WithBuiltin1(ds.RegisterUser(logger, builtins.DSUser, dsReader)),
+		rt.WithBuiltin1(ds.RegisterObject(logger, builtins.DSObject, dsReader)),
+		rt.WithBuiltin1(ds.RegisterRelation(logger, builtins.DSRelation, dsReader)),
+		rt.WithBuiltin1(ds.RegisterRelations(logger, builtins.DSRelations, dsReader)),
+		rt.WithBuiltin1(ds.RegisterGraph(logger, builtins.DSGraph, dsReader)),
 
 		// authorization check functions
-		rt.WithBuiltin1(ds.RegisterCheck(logger, "ds.check", dsReader)),
-		rt.WithBuiltin1(ds.RegisterChecks(logger, "ds.checks", dsReader)),
+		rt.WithBuiltin1(ds.RegisterCheck(logger, builtins.DSCheck, dsReader)),
+		rt.WithBuiltin1(ds.RegisterChecks(logger, builtins.DSChecks, dsReader)),
+		rt.WithBuiltin1(ds.RegisterCheckPermission(logger, builtins.DSCheckPermission, dsReader)),
+		rt.WithBuiltin1(ds.RegisterCheckRelation(logger, builtins.DSCheckRelation, dsReader)),
+
+		// authZen built-ins
+		rt.WithBuiltin1(az.RegisterEvaluation(logger, builtins.AZEvaluation, acClient)),
+		rt.WithBuiltin1(az.RegisterEvaluations(logger, builtins.AZEvaluations, acClient)),
+		rt.WithBuiltin1(az.RegisterSubjectSearch(logger, builtins.AZSubjectSearch, acClient)),
+		rt.WithBuiltin1(az.RegisterResourceSearch(logger, builtins.AZResourceSearch, acClient)),
+		rt.WithBuiltin1(az.RegisterActionSearch(logger, builtins.AZActionSearch, acClient)),
 
 		// plugins
 		rt.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),

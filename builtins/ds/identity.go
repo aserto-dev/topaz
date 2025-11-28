@@ -1,7 +1,9 @@
 package ds
 
 import (
-	"github.com/rs/zerolog"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
+	"github.com/aserto-dev/topaz/pkg/directory"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -9,17 +11,15 @@ import (
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-
-	"github.com/aserto-dev/topaz/pkg/directory"
+	"github.com/rs/zerolog"
 )
 
-// RegisterIdentity - ds.identity - get user id (key) for identity
-//
-//	ds.identity({
-//		"id": ""
-//	})
-func RegisterIdentity(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient) (*rego.Function, rego.Builtin1) {
+const dsIdentityHelp string = `ds.identity({
+	"id": ""
+})`
+
+// RegisterIdentity - ds.identity - get user id (key) for identity.
+func RegisterIdentity(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -31,23 +31,19 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClien
 			}
 
 			if err := ast.As(op1.Value, &args); err != nil {
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			if args.ID == "" {
-				type argsV3 struct {
-					ID string `json:"id"`
-				}
-
-				return help(fnName, argsV3{})
+				return ast.StringTerm(dsIdentityHelp), nil
 			}
 
 			user, err := directory.ResolveIdentity(bctx.Context, dr, args.ID)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {

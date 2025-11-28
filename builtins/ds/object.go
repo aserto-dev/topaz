@@ -3,7 +3,8 @@ package ds
 import (
 	"bytes"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
 	"google.golang.org/protobuf/encoding/protojson"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -18,14 +19,14 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-// RegisterObject - ds.object
-//
-//	ds.object({
-//		"object_type": "",
-//		"object_id": "",
-//		"with_relation": false
-//	})
-func RegisterObject(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient) (*rego.Function, rego.Builtin1) {
+const dsObjectHelp string = `ds.object({
+	"object_type": "",
+	"object_id": "",
+	"with_relation": false
+})`
+
+// RegisterObject - ds.object.
+func RegisterObject(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -38,32 +39,28 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient)
 					ObjectID      string `json:"object_id,omitempty"`   // v3 object_id
 					WithRelations bool   `json:"with_relations"`        // v3 with_relations (false in case of v2)
 				}
-				req *dsr3.GetObjectRequest
+				req *reader.GetObjectRequest
 			)
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, errors.Wrapf(err, "failed to parse ds.object input message")
 			}
 
-			req = &dsr3.GetObjectRequest{
+			req = &reader.GetObjectRequest{
 				ObjectType:    args.ObjectType,
 				ObjectId:      args.ObjectID,
 				WithRelations: args.WithRelations,
 			}
 
-			if proto.Equal(req, &dsr3.GetObjectRequest{}) {
-				return helpMsg(fnName, &dsr3.GetObjectRequest{
-					ObjectType:    "",
-					ObjectId:      "",
-					WithRelations: false,
-				})
+			if proto.Equal(req, &reader.GetObjectRequest{}) {
+				return ast.StringTerm(dsObjectHelp), nil
 			}
 
 			resp, err := dr.GetObject(bctx.Context, req)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
@@ -76,7 +73,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient)
 			}
 
 			buf := new(bytes.Buffer)
-			if err := ProtoToBuf(buf, resp); err != nil {
+			if err := builtins.ProtoToBuf(buf, resp); err != nil {
 				return nil, err
 			}
 

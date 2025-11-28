@@ -3,7 +3,8 @@ package ds
 import (
 	"bytes"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -15,43 +16,40 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-// RegisterUser - ds.user
-//
-//	ds.user({
-//		"id": ""
-//	})
-func RegisterUser(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient) (*rego.Function, rego.Builtin1) {
+const dsRelationHelp string = `ds.relation({
+	"object_id": "",
+	"object_type": "",
+	"relation": "",
+	"subject_id": "",
+	"subject_relation": "",
+	"subject_type": "",
+	"with_objects": false
+	})`
+
+// RegisterRelation - ds.relation.
+func RegisterRelation(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args struct {
-				ID string `json:"id"`
-			}
+			var args reader.GetRelationRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
-			if args.ID == "" {
-				type argsV3 struct {
-					ID string `json:"id"`
-				}
-
-				return help(fnName, argsV3{})
+			if proto.Equal(&args, &reader.GetRelationRequest{}) {
+				return ast.StringTerm(dsRelationHelp), nil
 			}
 
-			resp, err := dr.GetObject(bctx.Context, &dsr3.GetObjectRequest{
-				ObjectType:    "user",
-				ObjectId:      args.ID,
-				WithRelations: false,
-			})
+			resp, err := dr.GetRelation(bctx.Context, &args)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
-				traceError(&bctx, fnName, err)
+				builtins.TraceError(&bctx, fnName, err)
 
 				astVal, err := ast.InterfaceToValue(map[string]any{})
 				if err != nil {
@@ -67,11 +65,11 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr dsr3.ReaderClient) (
 
 			var result proto.Message
 
-			if resp.GetResult() != nil {
-				result = resp.GetResult()
+			if resp != nil {
+				result = resp
 			}
 
-			if err := ProtoToBuf(buf, result); err != nil {
+			if err := builtins.ProtoToBuf(buf, result); err != nil {
 				return nil, err
 			}
 

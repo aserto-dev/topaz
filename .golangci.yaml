@@ -108,6 +108,10 @@ linters:
       - path: pkg/cli/cmd/
         linters:
           - dupl
+      - path: builtins/
+        linters:
+          - dupl
+
 
 formatters:
   enable:

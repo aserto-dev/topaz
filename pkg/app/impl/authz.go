@@ -10,6 +10,7 @@ import (
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/open-policy-agent/opa/v1/server/types"
 	"github.com/rs/zerolog"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -43,7 +44,7 @@ type AuthorizerServer struct {
 
 func NewAuthorizerServer(
 	ctx context.Context,
-	dsClient dsr3.ReaderClient,
+	dsConn *grpc.ClientConn,
 	rtResolver resolvers.RuntimeResolver,
 	jwtTimeSkew time.Duration,
 	policyName string,
@@ -56,7 +57,7 @@ func NewAuthorizerServer(
 		logger:      &newLogger,
 		jwkCache:    jwkCache,
 		jwtTimeSkew: jwtTimeSkew,
-		dsClient:    dsClient,
+		dsClient:    dsr3.NewReaderClient(dsConn),
 		rtResolver:  rtResolver,
 		policyName:  policyName,
 	}

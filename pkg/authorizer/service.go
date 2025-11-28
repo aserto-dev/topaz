@@ -15,7 +15,6 @@ import (
 	client "github.com/aserto-dev/go-aserto"
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 
@@ -36,12 +35,12 @@ type Service struct {
 func New(ctx context.Context, cfg *Config, edgeFactory *edge.PluginFactory, dsCfg *client.Config) (*Service, error) {
 	var closer x.Closer
 
-	dirConn, err := dsCfg.Connect()
+	dsConn, err := dsCfg.Connect()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create directory client")
 	}
 
-	closer = append(closer, x.CloserErr(dirConn.Close))
+	closer = append(closer, x.CloserErr(dsConn.Close))
 
 	decisionLogger, err := newDecisionLogger(ctx, &cfg.DecisionLogger)
 	if err != nil {
@@ -51,9 +50,7 @@ func New(ctx context.Context, cfg *Config, edgeFactory *edge.PluginFactory, dsCf
 
 	closer = append(closer, x.CloserFunc(decisionLogger.Shutdown))
 
-	dsReader := dsr3.NewReaderClient(dirConn)
-
-	rtResolver, err := NewRuntimeResolver(ctx, cfg, decisionLogger, dsReader, edgeFactory)
+	rtResolver, err := NewRuntimeResolver(ctx, cfg, decisionLogger, dsConn, edgeFactory)
 	if err != nil {
 		_ = closer.Close(ctx)
 		return nil, errors.Wrap(err, "failed to create runtime resolver")
@@ -67,7 +64,7 @@ func New(ctx context.Context, cfg *Config, edgeFactory *edge.PluginFactory, dsCf
 	closer = append(closer, rtResolver.Stop)
 
 	return &Service{
-		impl.NewAuthorizerServer(ctx, dsReader, rtResolver, cfg.JWT.AcceptableTimeSkew, cfg.OPA.PolicyInstance()),
+		impl.NewAuthorizerServer(ctx, dsConn, rtResolver, cfg.JWT.AcceptableTimeSkew, cfg.OPA.PolicyInstance()),
 		closer.Close,
 	}, nil
 }
