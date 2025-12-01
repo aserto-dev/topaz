@@ -16,11 +16,10 @@ EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
 GO_VER             := 1.25
-VAULT_VER	         := 1.8.12
 SVU_VER 	         := 3.3.0
 GOTESTSUM_VER      := 1.13.0
-GOLANGCI-LINT_VER  := 2.6.1
-GORELEASER_VER     := 2.8.2
+GOLANGCI-LINT_VER  := 2.6.2
+GORELEASER_VER     := 2.9.0
 WIRE_VER	         := 0.7.0
 SYFT_VER           := 1.13.0
 
@@ -29,7 +28,7 @@ RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 .DEFAULT_GOAL      := build
 
 .PHONY: deps
-deps: info install-vault install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire install-syft
+deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire install-syft
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
@@ -128,11 +127,6 @@ $(TEMPLATES): test-snapshot
 	@./dist/topaz_${GOOS}_${GOARCH}/topaz templates install $@ --force --no-console --container-tag=test-$$(git rev-parse --short HEAD)-${GOARCH}
 	@./dist/topaz_${GOOS}_${GOARCH}/topaz stop --wait
 
-.PHONY: vault-login
-vault-login:
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@vault login -method=github token=$$(gh auth token)
-
 .PHONY: info
 info:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
@@ -142,14 +136,6 @@ info:
 	@echo "EXT_BIN_DIR: ${EXT_BIN_DIR}"
 	@echo "EXT_TMP_DIR: ${EXT_TMP_DIR}"
 	@echo "RELEASE_TAG: ${RELEASE_TAG}"
-
-.PHONY: install-vault
-install-vault: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@curl -s -o ${EXT_TMP_DIR}/vault.zip https://releases.hashicorp.com/vault/${VAULT_VER}/vault_${VAULT_VER}_${GOOS}_${GOARCH}.zip
-	@unzip -o ${EXT_TMP_DIR}/vault.zip vault -d ${EXT_BIN_DIR}/  &> /dev/null
-	@chmod +x ${EXT_BIN_DIR}/vault
-	@${EXT_BIN_DIR}/vault --version
 
 .PHONY: install-svu
 install-svu: ${EXT_BIN_DIR} ${EXT_TMP_DIR}

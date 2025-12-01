@@ -24,15 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        name: Read Configuration
-        uses: hashicorp/vault-action@v3
-        id: vault
-        with:
-          url: https://vault.aserto.com/
-          token: ${{ secrets.VAULT_TOKEN }}
-          secrets: |
-              kv/data/github  "READ_WRITE_TOKEN"    | READ_WRITE_TOKEN;
-      -
         name: Dispatch to Topaz Website
         uses: lasith-kg/dispatch-workflow@v2
         with:
@@ -41,7 +32,7 @@ jobs:
           repo: topaz-website
           ref: main
           workflow: update_templates.yaml
-          token: ${{ env.READ_WRITE_TOKEN }}
+          token: ${{ secrets.READ_WRITE_TOKEN }}
           workflow-inputs: |
             {
               "branch": "${{ env.SOURCE_BRANCH }}"
