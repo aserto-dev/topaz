@@ -17,7 +17,8 @@
         ],
         "assertions": [
             "simple-rbac/assertions.json",
-            "simple-rbac/decisions.json"
+            "simple-rbac/decisions.json",
+            "simple-rbac/evaluations.json"
         ]
     }
 }
