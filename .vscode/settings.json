@@ -172,8 +172,10 @@
     "stylecheck",
     "sver",
     "syft",
+    "tablewriter",
     "tcell",
     "templ",
+    "testcontainers",
     "testdata",
     "testharness",
     "timestamppb",
@@ -191,13 +193,9 @@
     "varcheck",
     "warnf",
     "webdav",
-    "wireinject",
     "wrapf",
     "zeroinstall",
     "zerolog",
     "zpages"
-  ],
-  "gopls": {
-    "build.buildFlags": ["-tags=wireinject"]
-  }
+  ]
 }
