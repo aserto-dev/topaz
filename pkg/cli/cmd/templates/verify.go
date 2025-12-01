@@ -8,15 +8,21 @@ import (
 	v3 "github.com/aserto-dev/azm/v3"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/table"
+	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/rs/zerolog"
 )
 
 type VerifyTemplateCmd struct {
 	Name         string `arg:"" optional:"" help:"template name"`
+	Legacy       bool   `optional:"" default:"false" help:"use legacy templates"`
 	TemplatesURL string `optional:"" default:"${topaz_tmpl_url}" env:"TOPAZ_TMPL_URL" help:"URL of template catalog"`
 }
 
 func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
+	if cmd.Legacy {
+		cmd.TemplatesURL = x.TopazTmplV32URL
+	}
+
 	catalog, err := getCatalog(cmd.TemplatesURL)
 	if err != nil {
 		return err
@@ -25,8 +31,12 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	// limit the amount of noise from the azm parser.
 	zerolog.SetGlobalLevel(zerolog.Disabled)
 
-	tab := table.New(c.StdOut()).WithColumns("template", "asset", "exists", "parsed", "error")
-	tab.WithTableNoAutoWrapText()
+	tab := table.New(c.StdOut())
+	defer tab.Close()
+
+	tab.Header("template", "asset", "exists", "parsed", "error")
+
+	data := [][]any{}
 
 	for tmplName := range catalog {
 		if cmd.Name != "" && tmplName != cmd.Name {
@@ -46,7 +56,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 				errStr = v.err.Error()
 			}
 
-			tab.WithRow(tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr)
+			data = append(data, []any{tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr})
 		}
 		{
 			assets := []string{}
@@ -63,12 +73,13 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 					errStr = v.err.Error()
 				}
 
-				tab.WithRow(tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr)
+				data = append(data, []any{tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr})
 			}
 		}
 	}
 
-	tab.Do()
+	tab.Bulk(data)
+	tab.Render()
 
 	return nil
 }

@@ -14,7 +14,10 @@ type ListConfigCmd struct {
 }
 
 func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
-	tab := table.New(c.StdOut()).WithColumns("", "Name", "Config File")
+	tab := table.New(c.StdOut())
+	defer tab.Close()
+
+	tab.Header("", "Name", "Config File")
 
 	files, err := os.ReadDir(cmd.ConfigDir)
 	if err != nil {
@@ -25,6 +28,8 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
+	data := [][]any{}
+
 	for i := range files {
 		name := strings.Split(files[i].Name(), ".")[0]
 		active := ""
@@ -33,10 +38,11 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 			active = "*"
 		}
 
-		tab.WithRow(active, name, files[i].Name())
+		data = append(data, []any{active, name, files[i].Name()})
 	}
 
-	tab.Do()
+	tab.Bulk(data)
+	tab.Render()
 
 	return nil
 }
