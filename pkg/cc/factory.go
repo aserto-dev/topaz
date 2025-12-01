@@ -2,8 +2,8 @@ package cc
 
 import (
 	"github.com/aserto-dev/certs"
-	"github.com/aserto-dev/logger"
-	logger2 "github.com/aserto-dev/runtime/logger"
+	logger "github.com/aserto-dev/logger"
+	runtime_logger "github.com/aserto-dev/runtime/logger"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cc/context"
 )
@@ -27,7 +27,7 @@ func buildCC(
 		return nil, nil, err
 	}
 
-	zerologLogger, err := logger2.NewLogger(logOutput, errOutput, loggerConfig)
+	zerologLogger, err := runtime_logger.NewLogger(logOutput, errOutput, loggerConfig)
 	if err != nil {
 		return nil, nil, err
 	}
