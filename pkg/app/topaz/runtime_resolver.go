@@ -161,23 +161,3 @@ func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName str
 func (r *RuntimeResolver) GetRuntime(ctx context.Context, opaInstanceID, policyName string) (*runtime.Runtime, error) {
 	return r.runtime, nil
 }
-
-func (r *RuntimeResolver) PeekRuntime(ctx context.Context, opaInstanceID, policyName string) (*runtime.Runtime, error) {
-	return r.runtime, nil
-}
-
-func (r *RuntimeResolver) ReloadRuntime(ctx context.Context, opaInstanceID, policyName string) error {
-	return nil
-}
-
-func (r *RuntimeResolver) ListRuntimes(ctx context.Context) (map[string]*runtime.Runtime, error) {
-	if r.runtime == nil {
-		return nil, nil
-	}
-
-	return map[string]*runtime.Runtime{r.runtime.Config.InstanceID: r.runtime}, nil
-}
-
-func (r *RuntimeResolver) UnloadRuntime(ctx context.Context, opaInstanceID, policyName string) error {
-	return nil
-}
