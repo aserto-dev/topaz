@@ -20,7 +20,6 @@ SVU_VER 	         := 3.3.0
 GOTESTSUM_VER      := 1.13.0
 GOLANGCI-LINT_VER  := 2.6.2
 GORELEASER_VER     := 2.9.0
-WIRE_VER	         := 0.7.0
 SYFT_VER           := 1.13.0
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
@@ -28,7 +27,7 @@ RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 .DEFAULT_GOAL      := build
 
 .PHONY: deps
-deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-wire install-syft
+deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
@@ -167,11 +166,6 @@ install-goreleaser: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@tar -xvf ${EXT_TMP_DIR}/goreleaser.tar.gz --directory ${EXT_BIN_DIR} goreleaser &> /dev/null
 	@chmod +x ${EXT_BIN_DIR}/goreleaser
 	@${EXT_BIN_DIR}/goreleaser --version
-
-.PHONY: install-wire
-install-wire: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@GOBIN=${EXT_BIN_DIR} go install github.com/google/wire/cmd/wire@v${WIRE_VER}
 
 .PHONY: install-syft
 install-syft: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
