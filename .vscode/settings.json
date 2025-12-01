@@ -193,13 +193,9 @@
     "varcheck",
     "warnf",
     "webdav",
-    "wireinject",
     "wrapf",
     "zeroinstall",
     "zerolog",
     "zpages"
-  ],
-  "gopls": {
-    "build.buildFlags": ["-tags=wireinject"]
-  }
+  ]
 }
