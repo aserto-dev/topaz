@@ -5,7 +5,6 @@ import (
 
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
-	"github.com/aserto-dev/topaz/resolvers"
 	"google.golang.org/protobuf/encoding/protojson"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -27,7 +26,7 @@ const dsObjectHelp string = `ds.object({
 })`
 
 // RegisterObject - ds.object.
-func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterObject(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -57,7 +56,7 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr resolvers.Director
 				return ast.StringTerm(dsObjectHelp), nil
 			}
 
-			resp, err := reader.NewReaderClient(dr.GetConn()).GetObject(bctx.Context, req)
+			resp, err := dr.GetObject(bctx.Context, req)
 
 			switch {
 			case status.Code(err) == codes.NotFound:

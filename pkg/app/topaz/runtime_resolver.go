@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	runtime "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/builtins"
@@ -21,7 +22,9 @@ import (
 	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decisionlog"
 	"github.com/aserto-dev/topaz/plugins/edge"
 	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/authzen/access.go/api/access/v1"
 	"github.com/rs/zerolog"
+	"google.golang.org/grpc"
 )
 
 var _ resolvers.RuntimeResolver = (*RuntimeResolver)(nil)
@@ -35,30 +38,34 @@ func NewRuntimeResolver(
 	ctx context.Context,
 	logger *zerolog.Logger,
 	cfg *config.Config,
+	dsConn *grpc.ClientConn,
 	decisionLogger decisionlog.DecisionLogger,
-	directoryResolver resolvers.DirectoryResolver,
 ) (resolvers.RuntimeResolver, func(), error) {
+	dsClient := reader.NewReaderClient(dsConn)
+	acClient := access.NewAccessClient(dsConn)
+
 	sidecarRuntime, err := runtime.New(ctx, &cfg.OPA,
+
 		// directory get functions
-		runtime.WithBuiltin1(ds.RegisterIdentity(logger, builtins.DSIdentity, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterUser(logger, builtins.DSUser, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterObject(logger, builtins.DSObject, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterRelation(logger, builtins.DSRelation, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterRelations(logger, builtins.DSRelations, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterGraph(logger, builtins.DSGraph, directoryResolver)),
+		runtime.WithBuiltin1(ds.RegisterIdentity(logger, builtins.DSIdentity, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterUser(logger, builtins.DSUser, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterObject(logger, builtins.DSObject, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterRelation(logger, builtins.DSRelation, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterRelations(logger, builtins.DSRelations, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterGraph(logger, builtins.DSGraph, dsClient)),
 
 		// authorization check functions
-		runtime.WithBuiltin1(ds.RegisterCheck(logger, builtins.DSCheck, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterChecks(logger, builtins.DSChecks, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, builtins.DSCheckRelation, directoryResolver)),
-		runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, builtins.DSCheckPermission, directoryResolver)),
+		runtime.WithBuiltin1(ds.RegisterCheck(logger, builtins.DSCheck, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterChecks(logger, builtins.DSChecks, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, builtins.DSCheckRelation, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, builtins.DSCheckPermission, dsClient)),
 
 		// authZen built-ins
-		runtime.WithBuiltin1(az.RegisterEvaluation(logger, builtins.AZEvaluation, directoryResolver)),
-		runtime.WithBuiltin1(az.RegisterEvaluations(logger, builtins.AZEvaluations, directoryResolver)),
-		runtime.WithBuiltin1(az.RegisterSubjectSearch(logger, builtins.AZSubjectSearch, directoryResolver)),
-		runtime.WithBuiltin1(az.RegisterResourceSearch(logger, builtins.AZResourceSearch, directoryResolver)),
-		runtime.WithBuiltin1(az.RegisterActionSearch(logger, builtins.AZActionSearch, directoryResolver)),
+		runtime.WithBuiltin1(az.RegisterEvaluation(logger, builtins.AZEvaluation, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluations(logger, builtins.AZEvaluations, acClient)),
+		runtime.WithBuiltin1(az.RegisterSubjectSearch(logger, builtins.AZSubjectSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterResourceSearch(logger, builtins.AZResourceSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterActionSearch(logger, builtins.AZActionSearch, acClient)),
 
 		// plugins
 		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),

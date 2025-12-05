@@ -3,7 +3,6 @@ package ds
 import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
-	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -23,7 +22,7 @@ const dsCheckPermissionHelp string = `ds.check_permission({
 })`
 
 // RegisterCheckPermission - ds.check_permission (OBSOLETE).
-func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.B),
@@ -42,7 +41,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr resolvers
 			}
 
 			//nolint: staticcheck // SA1019: client.CheckPermission is deprecated
-			resp, err := reader.NewReaderClient(dr.GetConn()).CheckPermission(bctx.Context, &args)
+			resp, err := dr.CheckPermission(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

@@ -4,7 +4,6 @@ import (
 	"github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/builtins"
-	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -24,7 +23,7 @@ const azSubjectSearchHelp string = `az.subject_search({
 
 // RegisterSubjectSearch, note: subject_search omits `subject.id` fields when submitted.
 // https://openid.github.io/authzen/#name-subject-search-api.
-func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, ac access.AccessClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -41,7 +40,7 @@ func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, dr resolvers.D
 				return ast.StringTerm(azSubjectSearchHelp), nil
 			}
 
-			resp, err := access.NewAccessClient(dr.GetConn()).SubjectSearch(bctx.Context, &args)
+			resp, err := ac.SubjectSearch(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

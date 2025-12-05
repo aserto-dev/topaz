@@ -2,7 +2,6 @@ package az
 
 import (
 	"github.com/aserto-dev/topaz/builtins"
-	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/authzen/access.go/api/access/v1"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -23,7 +22,7 @@ const azActionSearchHelp string = `az.action_search({
 
 // RegisterActionSearch
 // https://openid.github.io/authzen/#name-action-search-api.
-func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterActionSearch(logger *zerolog.Logger, fnName string, ac access.AccessClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -40,7 +39,7 @@ func RegisterActionSearch(logger *zerolog.Logger, fnName string, dr resolvers.Di
 				return ast.StringTerm(azActionSearchHelp), nil
 			}
 
-			resp, err := access.NewAccessClient(dr.GetConn()).ActionSearch(bctx.Context, &args)
+			resp, err := ac.ActionSearch(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

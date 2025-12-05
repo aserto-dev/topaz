@@ -69,8 +69,8 @@ func run(cmd *cobra.Command, args []string) error {
 			topazApp.Context,
 			topazApp.Logger,
 			topazApp.Configuration,
+			dirResolver.GetConn(),
 			decisionlog,
-			dirResolver,
 		)
 		if err != nil {
 			return err
