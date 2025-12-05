@@ -175,6 +175,8 @@ jobs:
   release:
     needs: [test, push]
     runs-on: ubuntu-latest
+    env:
+      ASERTO_TAP: "{{ secret.ASERTO_TAP }}"
     # Only release when ref is a tag
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     steps:
