@@ -155,36 +155,36 @@ release:
 blobs:
   # https://goreleaser.com/customization/blob/
 
-brews:
-  # https://goreleaser.com/customization/homebrew/
-  -
-    name: topaz
+# brews:
+#   # https://goreleaser.com/customization/homebrew/
+#   -
+#     name: topaz
 
-    repository:
-      owner: "{{ .Env.ORG }}"
-      name: homebrew-tap
-      token: "{{ .Env.ASERTO_TAP }}"
+#     repository:
+#       owner: "{{ .Env.ORG }}"
+#       name: homebrew-tap
+#       token: "{{ .Env.ASERTO_TAP }}"
 
-    url_template: "https://github.com/aserto-dev/topaz/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+#     url_template: "https://github.com/aserto-dev/topaz/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
-    download_strategy: CurlDownloadStrategy
+#     download_strategy: CurlDownloadStrategy
 
-    commit_author:
-      name: Aserto Bot
-      email: github-bot@aserto.com
+#     commit_author:
+#       name: Aserto Bot
+#       email: github-bot@aserto.com
 
-    homepage: "https://www.topaz.sh/docs/"
+#     homepage: "https://www.topaz.sh/docs/"
 
-    description: "Topaz CLI"
+#     description: "Topaz CLI"
 
-    license: "MIT"
+#     license: "MIT"
 
-    skip_upload: false
+#     skip_upload: false
 
-    test: |
-      system "#{bin}/topaz version"
-    install: |
-      bin.install "topaz"
+#     test: |
+#       system "#{bin}/topaz version"
+#     install: |
+#       bin.install "topaz"
 
 dockers:
   # https://goreleaser.com/customization/docker/
