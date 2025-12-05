@@ -4,7 +4,6 @@ import (
 	"github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/builtins"
-	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -24,7 +23,7 @@ const azResourceSearchHelp string = `az.resource_search({
 
 // RegisterResourceSearch.
 // https://openid.github.io/authzen/#name-resource-search-api
-func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterResourceSearch(logger *zerolog.Logger, fnName string, ac access.AccessClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -41,7 +40,7 @@ func RegisterResourceSearch(logger *zerolog.Logger, fnName string, dr resolvers.
 				return ast.StringTerm(azResourceSearchHelp), nil
 			}
 
-			resp, err := access.NewAccessClient(dr.GetConn()).ResourceSearch(bctx.Context, &args)
+			resp, err := ac.ResourceSearch(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

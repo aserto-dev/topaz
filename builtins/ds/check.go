@@ -3,7 +3,6 @@ package ds
 import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
-	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -23,7 +22,7 @@ const dsCheckHelp string = `ds.check({
 })`
 
 // RegisterCheck - ds.check.
-func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterCheck(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.B),
@@ -40,7 +39,7 @@ func RegisterCheck(logger *zerolog.Logger, fnName string, dr resolvers.Directory
 				return ast.StringTerm(dsCheckHelp), nil
 			}
 
-			resp, err := reader.NewReaderClient(dr.GetConn()).Check(bctx.Context, &args)
+			resp, err := dr.Check(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

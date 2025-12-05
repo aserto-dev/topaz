@@ -4,7 +4,6 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/directory"
-	"github.com/aserto-dev/topaz/resolvers"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -20,7 +19,7 @@ const dsIdentityHelp string = `ds.identity({
 })`
 
 // RegisterIdentity - ds.identity - get user id (key) for identity.
-func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterIdentity(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -40,7 +39,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr resolvers.Direct
 				return ast.StringTerm(dsIdentityHelp), nil
 			}
 
-			user, err := directory.ResolveIdentity(bctx.Context, reader.NewReaderClient(dr.GetConn()), args.ID)
+			user, err := directory.ResolveIdentity(bctx.Context, dr, args.ID)
 
 			switch {
 			case status.Code(err) == codes.NotFound:

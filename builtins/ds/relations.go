@@ -7,7 +7,6 @@ import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/builtins"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
-	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/samber/lo"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -30,7 +29,7 @@ const dsRelationsHelp string = `ds.relations({
 })`
 
 // RegisterRelations - ds.relations.
-func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterRelations(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -53,7 +52,7 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr resolvers.Direc
 			resp := &reader.GetRelationsResponse{}
 
 			for {
-				r, err := reader.NewReaderClient(dr.GetConn()).GetRelations(bctx.Context, &args)
+				r, err := dr.GetRelations(bctx.Context, &args)
 				if err != nil {
 					builtins.TraceError(&bctx, fnName, err)
 					return nil, err

@@ -165,7 +165,11 @@ func accessRequests() []proto.Message {
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Page:    &access.Page{},
+			Page: &access.PaginationRequest{
+				Token:      nil,
+				Limit:      nil,
+				Properties: nil,
+			},
 		},
 		&access.ResourceSearchRequest{
 			Subject: &access.Subject{
@@ -183,7 +187,11 @@ func accessRequests() []proto.Message {
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Page:    &access.Page{},
+			Page: &access.PaginationRequest{
+				Token:      nil,
+				Limit:      nil,
+				Properties: nil,
+			},
 		},
 		&access.SubjectSearchRequest{
 			Subject: &access.Subject{
@@ -201,7 +209,11 @@ func accessRequests() []proto.Message {
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Page:    &access.Page{},
+			Page: &access.PaginationRequest{
+				Token:      nil,
+				Limit:      nil,
+				Properties: nil,
+			},
 		},
 	}
 

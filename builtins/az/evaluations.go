@@ -4,7 +4,6 @@ import (
 	"github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/builtins"
-	"github.com/aserto-dev/topaz/resolvers"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -38,7 +37,7 @@ const azEvaluationsHelp string = `az.evaluations({
 
 // RegisterEvaluations
 // https://openid.github.io/authzen/#name-access-evaluations-api.
-func RegisterEvaluations(logger *zerolog.Logger, fnName string, dr resolvers.DirectoryResolver) (*rego.Function, rego.Builtin1) {
+func RegisterEvaluations(logger *zerolog.Logger, fnName string, ac access.AccessClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -55,7 +54,7 @@ func RegisterEvaluations(logger *zerolog.Logger, fnName string, dr resolvers.Dir
 				return ast.StringTerm(azEvaluationsHelp), nil
 			}
 
-			resp, err := access.NewAccessClient(dr.GetConn()).Evaluations(bctx.Context, &args)
+			resp, err := ac.Evaluations(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
