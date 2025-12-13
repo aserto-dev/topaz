@@ -165,7 +165,7 @@ func accessRequests() []proto.Message {
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Page:    &access.Page{},
+			Page:    &access.PaginationRequest{},
 		},
 		&access.ResourceSearchRequest{
 			Subject: &access.Subject{
@@ -183,7 +183,7 @@ func accessRequests() []proto.Message {
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Page:    &access.Page{},
+			Page:    &access.PaginationRequest{},
 		},
 		&access.SubjectSearchRequest{
 			Subject: &access.Subject{
@@ -201,7 +201,7 @@ func accessRequests() []proto.Message {
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Page:    &access.Page{},
+			Page:    &access.PaginationRequest{},
 		},
 	}
 
