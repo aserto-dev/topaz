@@ -11,8 +11,8 @@ import (
 	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 
 	"github.com/aserto-dev/aserto-grpc/middlewares/gerr"
-	eds "github.com/aserto-dev/go-edge-ds"
-	"github.com/aserto-dev/go-edge-ds/pkg/directory"
+	eds "github.com/aserto-dev/topaz/internal/pkg/eds"
+	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 	"github.com/rs/zerolog"
 
 	"google.golang.org/grpc"

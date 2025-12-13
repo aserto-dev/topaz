@@ -16,8 +16,8 @@ import (
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
-	ds "github.com/aserto-dev/go-edge-ds/pkg/directory"
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
+	ds "github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 	dsa1 "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/pkg/config"

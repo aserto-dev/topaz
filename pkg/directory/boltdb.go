@@ -6,7 +6,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/aserto-dev/go-edge-ds/pkg/directory"
+	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/loiter"
 	"github.com/samber/lo"
