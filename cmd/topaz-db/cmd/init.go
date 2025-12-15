@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	eds "github.com/aserto-dev/topaz/internal/pkg/eds"
+	"github.com/aserto-dev/topaz/internal/pkg/eds"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 
 	"github.com/pkg/errors"

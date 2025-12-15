@@ -9,6 +9,7 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/topaz/cmd/topaz-db/cmd"
+	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
@@ -37,7 +38,9 @@ func main() {
 			"directory_token": "",
 			"tenant_id":       os.Getenv(x.EnvAsertoTenantID),
 			"insecure":        strconv.FormatBool(false),
+			"plaintext":       strconv.FormatBool(false),
 			"no_check":        strconv.FormatBool(false),
+			"timeout":         cc.Timeout().String(),
 		},
 	)
 

@@ -11,7 +11,7 @@ import (
 	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 
 	"github.com/aserto-dev/aserto-grpc/middlewares/gerr"
-	eds "github.com/aserto-dev/topaz/internal/pkg/eds"
+	"github.com/aserto-dev/topaz/internal/pkg/eds"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 	"github.com/rs/zerolog"
 
@@ -50,12 +50,17 @@ func NewServer(ctx context.Context, logger *zerolog.Logger, cfg *directory.Confi
 		}
 	}()
 
-	conn, _ := grpc.NewClient("",
-		grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
+	conn, err := grpc.NewClient(
+		"passthrough://bufnet",
+		grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
 			return listener.Dial()
 		}),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(), //nolint:staticcheck
 	)
+	if err != nil {
+		panic(err)
+	}
 
 	return conn, s.GracefulStop
 }

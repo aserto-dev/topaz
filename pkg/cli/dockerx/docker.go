@@ -412,7 +412,7 @@ func (dc *DockerClient) Run(opts ...RunOption) error {
 	return nil
 }
 
-// Start starts a container like `docker start` using the provided settings.
+// Start starts a container instance like `docker start` using the provided settings.
 func (dc *DockerClient) Start(opts ...RunOption) error {
 	r := &runner{
 		config:           &container.Config{},
