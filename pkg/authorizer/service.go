@@ -104,7 +104,6 @@ const (
 	keepaliveTimeout = 5 * time.Second  // wait 5 seconds for ping ack before considering the connection dead
 )
 
-//nolint:ireturn  // factory function
 func newDecisionLogger(ctx context.Context, cfg *DecisionLoggerConfig) (decisionlog.DecisionLogger, error) {
 	if !cfg.Enabled {
 		return noLogger, nil
