@@ -3,12 +3,11 @@ package decisionlog
 import (
 	"context"
 
-	"github.com/open-policy-agent/opa/v1/plugins"
-
-	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/decisionlog"
 	"github.com/aserto-dev/topaz/pkg/config"
+
+	"github.com/open-policy-agent/opa/v1/plugins"
 )
 
 const PluginName = "aserto_decision_log"

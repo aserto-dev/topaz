@@ -53,7 +53,9 @@ func (cmd *ResourceSearchCmd) template() proto.Message {
 		},
 		Context: &structpb.Struct{},
 		Page: &dsa1.PaginationRequest{
-			Token: new(string),
+			Token:      nil,
+			Limit:      nil,
+			Properties: nil,
 		},
 	}
 }
