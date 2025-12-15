@@ -1,0 +1,25 @@
+{
+	"objects": [
+      {
+        "type": "user",
+        "id": "michael",
+        "display_name": "Michael"
+      },
+      {
+        "type": "user",
+        "id": "jim",
+        "display_name": "Jim"
+      }
+	],
+
+	"relations": [
+      {
+        "object_type": "user",
+        "object_id": "jim",
+        "relation": "manager",
+        "subject_type": "user",
+        "subject_id": "michael"
+      }
+
+	]
+}

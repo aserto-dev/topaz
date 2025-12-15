@@ -98,6 +98,7 @@ test: gover test-snapshot run-test
 run-test:
 	@echo -e "$(ATTN_COLOR)==> run-test github.com/aserto-dev/topaz/pkg/app/tests/... $(NO_COLOR)"
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/... github.com/aserto-dev/topaz/pkg/app/tests/...
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/internal/pkg/eds/tests/... github.com/aserto-dev/topaz/internal/pkg/eds/tests/...
 
 .PHONY: run-tests
 run-tests:

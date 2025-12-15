@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	eds "github.com/aserto-dev/go-edge-ds"
-	"github.com/aserto-dev/go-edge-ds/pkg/directory"
+	eds "github.com/aserto-dev/topaz/internal/pkg/eds"
+	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"

@@ -6,9 +6,9 @@ import (
 
 	"github.com/aserto-dev/certs"
 	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/go-edge-ds/pkg/directory"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/debug"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/pkg/errors"
