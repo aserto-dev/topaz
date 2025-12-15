@@ -68,6 +68,13 @@ linters:
         - resolvers.RuntimeResolver
         - v3.ReaderClient
         - v1.AccessClient
+        - v1.AccessServer
+        - v3.ModelServer
+        - v3.ReaderServer
+        - v3.WriterServer
+        - v3.ExporterServer
+        - v3.ImporterServer
+        - datasync.SyncClient
 
     lll:
       line-length: 150
@@ -106,6 +113,9 @@ linters:
         linters:
           - dupl
       - path: builtins/
+        linters:
+          - dupl
+      - path: internal/pkg/eds/tests/
         linters:
           - dupl
 

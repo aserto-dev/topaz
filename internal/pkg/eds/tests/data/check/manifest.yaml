@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+### filename: manifest.yaml ###
+### datetime: 2023-12-19T00:00:00-00:00 ###
+### description: gdrive manifest ###
+#
+# model
+model:
+    version: 3
+
+# object type definitions
+types:
+    user: {}
+
+    admin:
+        relations:
+            account: user
+
+    identity:
+        relations:
+            identifier: user
+
+    group:
+        relations:
+            member: user | group#member
+
+    company:
+        relations:
+            employee: user
+
+    product:
+        relations:
+            # Assignees are users who have been assigned access to a product.
+            # There are two ways to give users accesss to a product:
+            # 1. Direct assignment: creating an 'assignee' relation between the product
+            #    and the user.
+            # 2. Bulk assignment (custom product): creating an 'assignee' relation between
+            #    a product and __all__ users in a company ('comapny#employee').
+            assignee: user | company#employee
+
+    profile:
+        relations:
+            target: user
+
+    entitlement:
+        relations:
+            # Product users who can access the entitlement.
+            grant: product#assignee
+            # Admin users who can administer the entitlement.
+            admin: admin#account
+
+            # profile_deny revokes users' access to the entitlement unless they are
+            # explicitly granted access through the profile_unless relation.
+            profile_deny: profile#target
+            profile_unless: profile#target
+
+        permissions:
+            can_administer: admin
+            can_access: grant - denied_by_profile
+
+            denied_by_profile: profile_deny - profile_unless
