@@ -81,7 +81,7 @@ func (dc *DockerClient) PullImage(img, platform string) error {
 	return nil
 }
 
-// RemoveImage removes an image-name:tag from the docker host.
+// RemoveImage removes container image (image-name:tag) from the container store.
 func (dc *DockerClient) RemoveImage(img string) error {
 	images, err := dc.cli.ImageList(dc.ctx, image.ListOptions{
 		Filters: filters.NewArgs(
