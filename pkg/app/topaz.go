@@ -12,7 +12,7 @@ import (
 	"github.com/aserto-dev/topaz/decisionlog"
 	"github.com/aserto-dev/topaz/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/decisionlog/logger/nop"
-	eds "github.com/aserto-dev/topaz/internal/pkg/eds"
+	"github.com/aserto-dev/topaz/internal/pkg/eds"
 	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
