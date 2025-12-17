@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/internal/pkg/xdg"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
@@ -76,45 +77,30 @@ func EnsureDirs() error {
 
 func EnsureTopazDir() error {
 	dir := GetTopazDir()
-	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
-		return nil
-	}
 
-	return os.MkdirAll(dir, x.FileMode0700)
+	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazCfgDir() error {
 	dir := GetTopazCfgDir()
-	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
-		return nil
-	}
 
-	return os.MkdirAll(dir, x.FileMode0700)
+	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazCertsDir() error {
 	dir := GetTopazCertsDir()
-	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
-		return nil
-	}
 
-	return os.MkdirAll(dir, x.FileMode0755)
+	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazDataDir() error {
 	dir := GetTopazDataDir()
-	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
-		return nil
-	}
 
-	return os.MkdirAll(dir, x.FileMode0700)
+	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazTemplateDir() error {
 	dir := GetTopazTemplateDir()
-	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
-		return nil
-	}
 
-	return os.MkdirAll(dir, x.FileMode0700)
+	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
 }

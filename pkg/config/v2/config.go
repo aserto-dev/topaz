@@ -7,8 +7,8 @@ import (
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/pkg/debug"
-	"github.com/aserto-dev/topaz/pkg/x"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
@@ -109,7 +109,7 @@ func NewConfig(
 	file := "config.yaml"
 
 	if configPath != "" {
-		exists, err := x.FileExists(string(configPath))
+		exists, err := fs.FileExistsEx(string(configPath))
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to determine if config file '%s' exists", configPath)
 		}
@@ -121,7 +121,7 @@ func NewConfig(
 		file = string(configPath)
 	}
 
-	configExists, err := x.FileExists(file)
+	configExists, err := fs.FileExistsEx(file)
 	if err != nil {
 		return nil, errors.Wrapf(err, "filesystem error")
 	}

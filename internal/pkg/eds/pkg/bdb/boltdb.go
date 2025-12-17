@@ -8,7 +8,7 @@ import (
 	"github.com/aserto-dev/azm/cache"
 	"github.com/aserto-dev/azm/model"
 	cerr "github.com/aserto-dev/errors"
-	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/fs"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -61,7 +61,7 @@ func (s *BoltDB) Open() error {
 
 	dbDir := filepath.Dir(s.config.DBPath)
 	if !fs.DirExists(dbDir) {
-		if err := fs.EnsureDirPath(dbDir); err != nil {
+		if err := fs.EnsureDirPath(dbDir, fs.FileModeOwnerRWX); err != nil {
 			return err
 		}
 	}

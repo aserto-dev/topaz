@@ -11,8 +11,7 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
-	"github.com/aserto-dev/topaz/pkg/cli/x"
-	xx "github.com/aserto-dev/topaz/pkg/x"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 )
 
 type TemplateCmd struct {
@@ -72,7 +71,7 @@ func download(src, dir string) (string, error) {
 		return "", err
 	}
 
-	if err := os.MkdirAll(dir, x.FileMode0700); err != nil {
+	if err := fs.EnsureDirPath(dir, fs.FileModeOwnerRWX); err != nil {
 		return "", err
 	}
 
@@ -90,7 +89,7 @@ func download(src, dir string) (string, error) {
 }
 
 func getBytes(fileURL string) ([]byte, error) {
-	if exists, _ := xx.FileExists(fileURL); exists {
+	if exists := fs.FileExists(fileURL); exists {
 		return os.ReadFile(fileURL)
 	}
 
@@ -109,7 +108,7 @@ func getBytes(fileURL string) ([]byte, error) {
 }
 
 func getTemplate(name, templatesURL string) (*template, error) {
-	if exists, _ := xx.FileExists(name); exists {
+	if exists := fs.FileExists(name); exists {
 		return getTemplateFromFile(name)
 	}
 
