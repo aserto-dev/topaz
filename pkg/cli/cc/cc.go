@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"sync"
 
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/pkg/cli/cc/iostream"
 	"github.com/aserto-dev/topaz/pkg/cli/dockerx"
-	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/docker/docker/api/types/container"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -82,7 +82,7 @@ func NewCommonContext(ctx context.Context, noCheck bool, configFilePath string) 
 		},
 	}
 
-	if _, err := os.Stat(configFilePath); err == nil {
+	if fs.FileExists(configFilePath) {
 		data, err := os.ReadFile(configFilePath)
 		if err != nil {
 			return nil, err
@@ -145,7 +145,7 @@ func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 		return err
 	}
 
-	if err := os.WriteFile(cliConfig, kongConfigBytes, x.FileMode0600); err != nil {
+	if err := os.WriteFile(cliConfig, kongConfigBytes, fs.FileModeOwnerRW); err != nil {
 		return err
 	}
 

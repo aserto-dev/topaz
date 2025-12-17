@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/topaz/cmd/topaz-backup/internal/plugin"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 )
@@ -30,7 +31,7 @@ func (cmd *Plugin) Run(ctx context.Context) error {
 	backupFileName := backupFileName(cmd)
 
 	// open DB in read-only mode.
-	roDB, err := bolt.Open(cmd.DBFile, plugin.ReadOnly, &bolt.Options{ReadOnly: true})
+	roDB, err := bolt.Open(cmd.DBFile, fs.FileModeOwnerRO, &bolt.Options{ReadOnly: true})
 	if err != nil {
 		return errors.Errorf("failed to open database file (%s): %v", cmd.DBFile, err)
 	}

@@ -5,7 +5,7 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/fs"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"

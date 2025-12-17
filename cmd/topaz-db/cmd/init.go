@@ -3,11 +3,11 @@ package cmd
 import (
 	"context"
 	"io"
-	"os"
 	"time"
 
 	"github.com/aserto-dev/topaz/internal/pkg/eds"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -20,11 +20,7 @@ func (cmd *InitCmd) Run(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	if fi, err := os.Stat(cmd.DBFile); err == nil {
-		if fi.IsDir() {
-			return errors.Errorf("%s is a directory", cmd.DBFile)
-		}
-
+	if fs.FileExists(cmd.DBFile) {
 		return errors.Errorf("%s already exists", cmd.DBFile)
 	}
 

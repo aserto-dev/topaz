@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	client "github.com/aserto-dev/go-aserto"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
@@ -18,7 +19,6 @@ import (
 	clicfg "github.com/aserto-dev/topaz/pkg/cli/config"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/servers"
-	xx "github.com/aserto-dev/topaz/pkg/x"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
@@ -81,10 +81,8 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
 	cmd.ContainerName = c.Config.Running.ContainerName
 
-	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
-		if err := os.MkdirAll(cc.GetTopazDir(), x.FileMode0700); err != nil {
-			return err
-		}
+	if err := fs.EnsureDirPath(cc.GetTopazDir(), fs.FileModeOwnerRWX); err != nil {
+		return err
 	}
 
 	cliConfig := filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
@@ -94,7 +92,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if err := os.WriteFile(cliConfig, kongConfigBytes, x.FileMode0600); err != nil {
+	if err := os.WriteFile(cliConfig, kongConfigBytes, fs.FileModeOwnerRW); err != nil {
 		return err
 	}
 
@@ -308,7 +306,7 @@ func (i *tmplInstaller) setManifest() error {
 		name = i.customName
 	}
 
-	if exists, _ := xx.FileExists(manifest); !exists {
+	if exists := fs.FileExists(manifest); !exists {
 		manifestDir := path.Join(i.topazTemplateDir, name, "model")
 
 		switch m, err := download(manifest, manifestDir); {
@@ -339,7 +337,7 @@ func (i *tmplInstaller) importData() error {
 
 	for _, v := range append(i.tmpl.Assets.IdentityData, i.tmpl.Assets.DomainData...) {
 		dataURL := i.tmpl.AbsURL(v)
-		if exists, _ := xx.FileExists(dataURL); exists {
+		if exists := fs.FileExists(dataURL); exists {
 			dataDirs[path.Dir(dataURL)] = struct{}{}
 			continue
 		}
@@ -377,7 +375,7 @@ func (i *tmplInstaller) runTemplateTests() error {
 
 	for _, v := range i.tmpl.Assets.Assertions {
 		assertionURL := i.tmpl.AbsURL(v)
-		if exists, _ := xx.FileExists(assertionURL); exists {
+		if exists := fs.FileExists(assertionURL); exists {
 			tests = append(tests, assertionURL)
 
 			continue

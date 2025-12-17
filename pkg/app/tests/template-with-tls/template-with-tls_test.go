@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
@@ -37,7 +38,7 @@ func TestTemplates(t *testing.T) {
 			testcontainers.ContainerFile{
 				Reader:            assets_test.ConfigWithTLSReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0o700,
+				FileMode:          int64(fs.FileModeOwnerRWX),
 			},
 		),
 		WaitingFor: wait.ForAll(
@@ -106,7 +107,7 @@ func certFiles(certsDir string) []testcontainers.ContainerFile {
 			return testcontainers.ContainerFile{
 				HostFilePath:      certsDir + file,
 				ContainerFilePath: x.DefCertsDir + file,
-				FileMode:          0o600,
+				FileMode:          int64(fs.FileModeOwnerRW),
 			}
 		},
 	)

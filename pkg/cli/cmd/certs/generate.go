@@ -1,12 +1,11 @@
 package certs
 
 import (
-	"os"
 	"path/filepath"
 
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/certs"
-	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
 type GenerateCertsCmd struct {
@@ -19,10 +18,8 @@ type GenerateCertsCmd struct {
 // Run generates a pair of gateway and grpc certificates.
 func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 	certsDir := cmd.CertsDir
-	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(certsDir, x.FileMode0755); err != nil {
-			return err
-		}
+	if err := fs.EnsureDirPath(certsDir, fs.FileModeDirectoryRWX); err != nil {
+		return err
 	}
 
 	pathGateway := &certs.CertPaths{

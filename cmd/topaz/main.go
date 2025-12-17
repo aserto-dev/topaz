@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd"
 	"github.com/aserto-dev/topaz/pkg/cli/cmd/common"
@@ -173,7 +174,7 @@ func logLevel(level int) zerolog.Level {
 }
 
 func checkDBFiles(topazDBDir string) (bool, error) {
-	if _, err := os.Stat(topazDBDir); os.IsNotExist(err) {
+	if !fs.DirExists(topazDBDir) {
 		return false, nil
 	}
 
