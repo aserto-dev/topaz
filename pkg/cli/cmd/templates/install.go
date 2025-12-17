@@ -81,10 +81,8 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
 	cmd.ContainerName = c.Config.Running.ContainerName
 
-	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
-		if err := fs.EnsureDirPath(cc.GetTopazDir(), fs.FileModeOwnerRWX); err != nil {
-			return err
-		}
+	if err := fs.EnsureDirPath(cc.GetTopazDir(), fs.FileModeOwnerRWX); err != nil {
+		return err
 	}
 
 	cliConfig := filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)

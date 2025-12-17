@@ -76,31 +76,21 @@ func EnsureDirs() error {
 }
 
 func EnsureTopazDir() error {
-	dir := GetTopazDir()
-
-	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
+	return fs.EnsureDirPath(GetTopazDir(), fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazCfgDir() error {
-	dir := GetTopazCfgDir()
-
-	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
+	return fs.EnsureDirPath(GetTopazCfgDir(), fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazCertsDir() error {
-	dir := GetTopazCertsDir()
-
-	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
+	return fs.EnsureDirPath(GetTopazCertsDir(), fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazDataDir() error {
-	dir := GetTopazDataDir()
-
-	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
+	return fs.EnsureDirPath(GetTopazDataDir(), fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazTemplateDir() error {
-	dir := GetTopazTemplateDir()
-
-	return fs.EnsureDirPath(dir, fs.FileModeOwnerRWX)
+	return fs.EnsureDirPath(GetTopazTemplateDir(), fs.FileModeOwnerRWX)
 }

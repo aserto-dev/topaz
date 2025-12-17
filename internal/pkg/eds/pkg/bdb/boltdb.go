@@ -60,10 +60,8 @@ func (s *BoltDB) Open() error {
 	}
 
 	dbDir := filepath.Dir(s.config.DBPath)
-	if !fs.DirExists(dbDir) {
-		if err := fs.EnsureDirPath(dbDir, fs.FileModeOwnerRWX); err != nil {
-			return err
-		}
+	if err := fs.EnsureDirPath(dbDir, fs.FileModeOwnerRWX); err != nil {
+		return err
 	}
 
 	db, err := bolt.Open(s.config.DBPath, fs.FileModeOwnerRW, &bolt.Options{
