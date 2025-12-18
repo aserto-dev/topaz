@@ -40,7 +40,7 @@ func TestManifest(t *testing.T) {
 		},
 		Files: []testcontainers.ContainerFile{
 			{
-				Reader:            assets_test.ConfigReader(),
+				Reader:            assets_test.ConfigNoTLSReader(),
 				ContainerFilePath: "/config/config.yaml",
 				FileMode:          int64(fs.FileModeOwnerRWX),
 			},

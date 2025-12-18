@@ -9,6 +9,7 @@ import (
 	azc "github.com/aserto-dev/go-aserto/az"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
@@ -38,12 +39,12 @@ func TestPolicy(t *testing.T) {
 			{
 				Reader:            assets_test.PeoplefinderConfigReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0o700,
+				FileMode:          int64(fs.FileModeOwnerRWX),
 			},
 			{
 				Reader:            assets_test.AcmecorpReader(),
 				ContainerFilePath: "/data/test.db",
-				FileMode:          0o700,
+				FileMode:          int64(fs.FileModeOwnerRWX),
 			},
 		},
 		WaitingFor: wait.ForAll(
