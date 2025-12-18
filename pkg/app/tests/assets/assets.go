@@ -5,11 +5,11 @@ import (
 	_ "embed"
 )
 
-//go:embed config/config.yaml
-var config []byte
+//go:embed config/config-with-tls.yaml
+var configWithTLS []byte
 
-func ConfigReader() *bytes.Reader {
-	return bytes.NewReader(config)
+func ConfigWithTLSReader() *bytes.Reader {
+	return bytes.NewReader(configWithTLS)
 }
 
 //go:embed config/config-no-tls.yaml
