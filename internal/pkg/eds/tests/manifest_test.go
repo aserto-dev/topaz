@@ -16,6 +16,7 @@ import (
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/server"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/samber/lo"
 
 	"github.com/gonvenience/ytbx"
@@ -163,7 +164,7 @@ func testGetManifest(client *server.TestEdgeClient, manifest string) func(*testi
 		require.NoError(t, err)
 
 		tempManifest := path.Join(os.TempDir(), "manifest.yaml")
-		if err := os.WriteFile(tempManifest, data, 0o600); err != nil {
+		if err := os.WriteFile(tempManifest, data, fs.FileModeOwnerRW); err != nil {
 			require.NoError(t, err)
 		}
 
@@ -220,7 +221,7 @@ func testGetModel(client *server.TestEdgeClient) func(*testing.T) {
 				}
 
 				tempModel := path.Join(os.TempDir(), "model.json")
-				if err := os.WriteFile(tempModel, buf.Bytes(), 0o600); err != nil {
+				if err := os.WriteFile(tempModel, buf.Bytes(), fs.FileModeOwnerRW); err != nil {
 					require.NoError(t, err)
 				}
 

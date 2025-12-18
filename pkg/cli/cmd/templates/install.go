@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	client "github.com/aserto-dev/go-aserto"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/cli/cc"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
@@ -80,7 +81,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 	cmd.ContainerName = c.Config.Running.ContainerName
 
 	if _, err := os.Stat(cc.GetTopazDir()); os.IsNotExist(err) {
-		if err := os.MkdirAll(cc.GetTopazDir(), x.FileMode0700); err != nil {
+		if err := os.MkdirAll(cc.GetTopazDir(), fs.FileModeOwnerRWX); err != nil {
 			return err
 		}
 	}
@@ -92,7 +93,7 @@ func (cmd *InstallTemplateCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if err := os.WriteFile(cliConfig, kongConfigBytes, x.FileMode0600); err != nil {
+	if err := os.WriteFile(cliConfig, kongConfigBytes, fs.FileModeOwnerRW); err != nil {
 		return err
 	}
 

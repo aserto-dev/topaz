@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/internal/pkg/xdg"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
@@ -80,7 +81,7 @@ func EnsureTopazDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, x.FileMode0700)
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazCfgDir() error {
@@ -89,7 +90,7 @@ func EnsureTopazCfgDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, x.FileMode0700)
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazCertsDir() error {
@@ -98,7 +99,7 @@ func EnsureTopazCertsDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, x.FileMode0755)
+	return os.MkdirAll(dir, fs.FileModeDirectoryRWX)
 }
 
 func EnsureTopazDataDir() error {
@@ -107,7 +108,7 @@ func EnsureTopazDataDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, x.FileMode0700)
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazTemplateDir() error {
@@ -116,5 +117,5 @@ func EnsureTopazTemplateDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, x.FileMode0700)
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
 }
