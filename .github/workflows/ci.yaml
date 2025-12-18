@@ -75,11 +75,6 @@ jobs:
         with:
           gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
       -
-        name: Unit Test
-        run: |
-          gotestsum --format short-verbose -- $(go list ./... | grep -v pkg/app/tests) \
-            -count=1 -timeout 120s -parallel=1 -v
-      -
         name: Test Snapshot
         uses: goreleaser/goreleaser-action@v6
         env:
@@ -89,14 +84,19 @@ jobs:
           version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean --snapshot --config .goreleaser-test.yml
       -
+        name: Unit Test
+        run: |
+          gotestsum --format short-verbose -- $(go list ./... | grep -v pkg/app/tests) \
+            -count=1 -timeout 120s -parallel=1 -v
+      -
         name: Test
         run: |
           gotestsum --format short-verbose -- $(go list ./pkg/app/tests/... | grep -v tests/template) \
             -count=1 -timeout 120s -parallel=1 -v
       -
-        name: Templates Test
+        name: Templates Test (No TLS)
         run: |
-          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template/... \
+          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-no-tls/... \
             -count=1 -timeout 240s -parallel=1 -v
       -
         name: Templates Test (With TLS)

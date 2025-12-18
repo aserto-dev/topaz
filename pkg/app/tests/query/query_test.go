@@ -11,6 +11,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	rt "github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
@@ -35,14 +36,14 @@ func TestQuery(t *testing.T) {
 		},
 		Files: []testcontainers.ContainerFile{
 			{
-				Reader:            assets_test.ConfigReader(),
+				Reader:            assets_test.ConfigNoTLSReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0o700,
+				FileMode:          int64(fs.FileModeOwnerRWX),
 			},
 			{
 				Reader:            assets_test.AcmecorpReader(),
 				ContainerFilePath: "/data/test.db",
-				FileMode:          0o700,
+				FileMode:          int64(fs.FileModeOwnerRWX),
 			},
 		},
 		WaitingFor: wait.ForAll(

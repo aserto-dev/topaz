@@ -17,7 +17,6 @@ EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
 GO_VER             := 1.25
-VAULT_VER	         := 1.8.12
 SVU_VER 	         := 3.3.0
 GOTESTSUM_VER      := 1.13.0
 GOLANGCI-LINT_VER  := 2.6.2
@@ -29,7 +28,7 @@ RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 .DEFAULT_GOAL      := build
 
 .PHONY: deps
-deps: info install-vault install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft
+deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
@@ -69,6 +68,14 @@ lint: gover
 	@${EXT_BIN_DIR}/golangci-lint config verify
 	@${EXT_BIN_DIR}/golangci-lint run --config ${PWD}/.golangci.yaml
 
+.PHONY: test
+test: gover test-snapshot
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./... | grep -v pkg/app/tests) -count=1 -timeout 120s -parallel=1 -v
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./pkg/app/tests/... | grep -v tests/template) -count=1 -timeout 120s -parallel=1 -v
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-no-tls/... -count=1 -timeout 240s -parallel=1 -v
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-with-tls/... -count=1 -timeout 120s -parallel=1 -v
+
 .PHONY: test-snapshot
 test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
@@ -80,50 +87,22 @@ container-tag:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@scripts/container-tag.sh > .container-tag.env
 
-.PHONY: run-test-snapshot
-run-test-snapshot:
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@echo "topaz run $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_file')"
-	@${TOPAZ_DIST} run --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
-
-.PHONY: start-test-snapshot
-start-test-snapshot:
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@echo "topaz start $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_name')"
-	@${TOPAZ_DIST} start --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
-
-.PHONY: test
-test: gover test-snapshot
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out ./...
-
-.PHONY: run-tests
-run-tests:
-	@echo -e "$(ATTN_COLOR)==> run-tests github.com/aserto-dev/topaz/pkg/app/tests/... $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v github.com/aserto-dev/topaz/pkg/app/tests/...
-
 .PHONY: write-version
 write-version:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@git describe --tags > ./VERSION.txt
 
-ASSETS = "assets/v32/api-auth/test/api-auth_" "assets/v32/gdrive/test/gdrive_" "assets/v32/github/test/github_" "assets/v32/multi-tenant/test/multi-tenant_" "assets/v32/slack/test/slack_" \
-		 "assets/v33/api-auth/test/api-auth_" "assets/v33/gdrive/test/gdrive_" "assets/v33/github/test/github_" "assets/v33/multi-tenant/test/multi-tenant_" "assets/v33/slack/test/slack_"
-
-TEMPLATES = "assets/v32/api-auth.json" "assets/v32/gdrive.json" "assets/v32/github.json" "assets/v32/multi-tenant.json" "assets/v32/peoplefinder.json" "assets/v32/simple-rbac.json" "assets/v32/slack.json" "assets/v32/todo.json" \
-			"assets/v33/api-auth.json" "assets/v33/gdrive.json" "assets/v33/github.json" "assets/v33/multi-tenant.json" "assets/v33/peoplefinder.json" "assets/v33/simple-rbac.json" "assets/v33/slack.json" "assets/v33/todo.json"
-.PHONY: test-templates
-test-templates: $(TEMPLATES)
-$(TEMPLATES): test-snapshot
-	@echo -e "$(ATTN_COLOR)==> github.com/aserto-dev/topaz/assets/$@ $(NO_COLOR)"
-	@echo topaz templates install $@ --force --no-console --container-tag=test-$$(git rev-parse --short HEAD)-${GOARCH}
-	@${TOPAZ_DIST} templates install $@ --force --no-console --container-tag=test-$$(git rev-parse --short HEAD)-${GOARCH}
-	@${TOPAZ_DIST} stop --wait
-
-.PHONY: vault-login
-vault-login:
+.PHONY: topaz-run-test-snapshot
+topaz-run-test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@vault login -method=github token=$$(gh auth token)
+	@echo "topaz run $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_file')"
+	@${TOPAZ_DIST} run --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
+
+.PHONY: topaz-start-test-snapshot
+topaz-start-test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@echo "topaz start $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_name')"
+	@${TOPAZ_DIST} start --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
 
 .PHONY: info
 info:
@@ -135,14 +114,6 @@ info:
 	@echo "EXT_TMP_DIR: ${EXT_TMP_DIR}"
 	@echo "RELEASE_TAG: ${RELEASE_TAG}"
 	@echo "TOPAZ_DIST:  ${TOPAZ_DIST}"
-
-.PHONY: install-vault
-install-vault: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@curl -s -o ${EXT_TMP_DIR}/vault.zip https://releases.hashicorp.com/vault/${VAULT_VER}/vault_${VAULT_VER}_${GOOS}_${GOARCH}.zip
-	@unzip -o ${EXT_TMP_DIR}/vault.zip vault -d ${EXT_BIN_DIR}/  &> /dev/null
-	@chmod +x ${EXT_BIN_DIR}/vault
-	@${EXT_BIN_DIR}/vault --version
 
 .PHONY: install-svu
 install-svu: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
