@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
@@ -34,9 +35,9 @@ func TestDirectory(t *testing.T) {
 		},
 		Files: []testcontainers.ContainerFile{
 			{
-				Reader:            assets_test.ConfigReader(),
+				Reader:            assets_test.ConfigWithTLSReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0x700,
+				FileMode:          int64(fs.FileModeOwnerRWX),
 			},
 		},
 		WaitingFor: wait.ForAll(

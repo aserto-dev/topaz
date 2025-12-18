@@ -13,7 +13,7 @@ import (
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/bdb/migrations/mig007"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/bdb/migrations/mig008"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/bdb/migrations/mig009"
-	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/fs"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/rs/zerolog"

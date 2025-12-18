@@ -15,8 +15,8 @@ import (
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
-	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/fs"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/server"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/pkg/errors"
 
 	"github.com/rs/zerolog"
@@ -43,7 +43,7 @@ func TestMain(m *testing.M) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	dirPath := os.TempDir()
-	if err := os.MkdirAll(dirPath, fs.FileModeOwnerRWX); err != nil {
+	if err := fs.EnsureDirPath(dirPath, fs.FileModeOwnerRWX); err != nil {
 		panic(err)
 	}
 

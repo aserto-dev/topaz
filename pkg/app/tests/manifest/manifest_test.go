@@ -13,6 +13,7 @@ import (
 	client "github.com/aserto-dev/go-aserto"
 	dsc "github.com/aserto-dev/go-aserto/ds/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/aserto-dev/topaz/pkg/cli/x"
@@ -39,9 +40,9 @@ func TestManifest(t *testing.T) {
 		},
 		Files: []testcontainers.ContainerFile{
 			{
-				Reader:            assets_test.ConfigReader(),
+				Reader:            assets_test.ConfigWithTLSReader(),
 				ContainerFilePath: "/config/config.yaml",
-				FileMode:          0x700,
+				FileMode:          int64(fs.FileModeOwnerRWX),
 			},
 		},
 		WaitingFor: wait.ForAll(

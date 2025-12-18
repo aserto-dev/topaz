@@ -8,6 +8,7 @@ ATTN_COLOR         := \033[33;01m
 
 GOOS               := $(shell go env GOOS)
 GOARCH             := $(shell go env GOARCH)
+TOPAZ_DIST         := ${PWD}/$(shell cat dist/artifacts.json | jq -r '.[] | select(.name == "topaz").path')
 GOPRIVATE          := "github.com/aserto-dev"
 DOCKER_BUILDKIT    := 1
 
@@ -67,6 +68,14 @@ lint: gover
 	@${EXT_BIN_DIR}/golangci-lint config verify
 	@${EXT_BIN_DIR}/golangci-lint run --config ${PWD}/.golangci.yaml
 
+.PHONY: test
+test: gover test-snapshot
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./... | grep -v pkg/app/tests) -count=1 -timeout 120s -parallel=1 -v
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./pkg/app/tests/... | grep -v tests/template) -count=1 -timeout 120s -parallel=1 -v
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-no-tls/... -count=1 -timeout 240s -parallel=1 -v
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-with-tls/... -count=1 -timeout 120s -parallel=1 -v
+
 .PHONY: test-snapshot
 test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
@@ -78,54 +87,22 @@ container-tag:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@scripts/container-tag.sh > .container-tag.env
 
-.PHONY: run-test-snapshot
-run-test-snapshot:
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@echo "topaz run $$(${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz config info | jq '.runtime.active_configuration_file')"
-	@${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz run --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
-
-.PHONY: start-test-snapshot
-start-test-snapshot:
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@echo "topaz start $$(${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz config info | jq '.runtime.active_configuration_name')"
-	@${PWD}/dist/topaz_${GOOS}_${GOARCH}/topaz start --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
-
-.PHONY: test
-test: gover test-snapshot run-test
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-
-.PHONY: run-test
-run-test:
-	@echo -e "$(ATTN_COLOR)==> run-test github.com/aserto-dev/topaz/pkg/app/tests/... $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/... github.com/aserto-dev/topaz/pkg/app/tests/...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/internal/pkg/eds/tests/... github.com/aserto-dev/topaz/internal/pkg/eds/tests/...
-
-.PHONY: run-tests
-run-tests:
-	@echo -e "$(ATTN_COLOR)==> run-tests github.com/aserto-dev/topaz/pkg/app/tests/... $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/authz/... github.com/aserto-dev/topaz/pkg/app/tests/authz/...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/builtin/... github.com/aserto-dev/topaz/pkg/app/tests/builtin/...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/ds/... github.com/aserto-dev/topaz/pkg/app/tests/ds/...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/manifest/... github.com/aserto-dev/topaz/pkg/app/tests/manifest/...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/policy/... github.com/aserto-dev/topaz/pkg/app/tests/policy/...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/query/... github.com/aserto-dev/topaz/pkg/app/tests/query/...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/template/... github.com/aserto-dev/topaz/pkg/app/tests/template/...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=github.com/aserto-dev/topaz/pkg/app/tests/template-no-tls/... github.com/aserto-dev/topaz/pkg/app/tests/template-no-tls/...
-
 .PHONY: write-version
 write-version:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@git describe --tags > ./VERSION.txt
 
-TEMPLATES = "assets/v32/api-auth.json" "assets/v32/gdrive.json" "assets/v32/github.json" "assets/v32/multi-tenant.json" "assets/v32/peoplefinder.json" "assets/v32/simple-rbac.json" "assets/v32/slack.json" "assets/v32/todo.json" \
-			"assets/v33/api-auth.json" "assets/v33/gdrive.json" "assets/v33/github.json" "assets/v33/multi-tenant.json" "assets/v33/peoplefinder.json" "assets/v33/simple-rbac.json" "assets/v33/slack.json" "assets/v33/todo.json"
-.PHONY: test-templates
-test-templates: $(TEMPLATES)
-$(TEMPLATES): test-snapshot
-	@echo -e "$(ATTN_COLOR)==> github.com/aserto-dev/topaz/assets/$@ $(NO_COLOR)"
-	@echo topaz templates install $@ --force --no-console --container-tag=test-$$(git rev-parse --short HEAD)-${GOARCH}
-	@./dist/topaz_${GOOS}_${GOARCH}/topaz templates install $@ --force --no-console --container-tag=test-$$(git rev-parse --short HEAD)-${GOARCH}
-	@./dist/topaz_${GOOS}_${GOARCH}/topaz stop --wait
+.PHONY: topaz-run-test-snapshot
+topaz-run-test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@echo "topaz run $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_file')"
+	@${TOPAZ_DIST} run --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
+
+.PHONY: topaz-start-test-snapshot
+topaz-start-test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@echo "topaz start $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_name')"
+	@${TOPAZ_DIST} start --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
 
 .PHONY: info
 info:
@@ -136,6 +113,7 @@ info:
 	@echo "EXT_BIN_DIR: ${EXT_BIN_DIR}"
 	@echo "EXT_TMP_DIR: ${EXT_TMP_DIR}"
 	@echo "RELEASE_TAG: ${RELEASE_TAG}"
+	@echo "TOPAZ_DIST:  ${TOPAZ_DIST}"
 
 .PHONY: install-svu
 install-svu: ${EXT_BIN_DIR} ${EXT_TMP_DIR}

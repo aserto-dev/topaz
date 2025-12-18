@@ -13,7 +13,7 @@ import (
 	v3 "github.com/aserto-dev/azm/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/bdb"
-	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/fs"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/rs/zerolog"
 
 	"github.com/Masterminds/semver/v3"
@@ -209,10 +209,8 @@ func Backup(db *bolt.DB, version *semver.Version) error {
 
 func OpenDB(cfg *bdb.Config) (*bolt.DB, error) {
 	dbDir := filepath.Dir(cfg.DBPath)
-	if !fs.DirExists(dbDir) {
-		if err := fs.EnsureDirPath(dbDir); err != nil {
-			return nil, err
-		}
+	if err := fs.EnsureDirPath(dbDir, fs.FileModeOwnerRWX); err != nil {
+		return nil, err
 	}
 
 	db, err := bolt.Open(cfg.DBPath, fs.FileModeOwnerRW, &bolt.Options{
