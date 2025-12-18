@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
-	"github.com/aserto-dev/topaz/pkg/cli/x"
 )
 
 type TemplateCmd struct {
@@ -72,7 +72,7 @@ func download(src, dir string) (string, error) {
 		return "", err
 	}
 
-	if err := os.MkdirAll(dir, x.FileMode0700); err != nil {
+	if err := os.MkdirAll(dir, fs.FileModeOwnerRWX); err != nil {
 		return "", err
 	}
 
