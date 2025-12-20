@@ -58,6 +58,8 @@ github.com/aserto-dev/openapi-directory v0.33.5 h1:uiNoLTkYE4qEiVBvjbq7A2AqsI+fA
 github.com/aserto-dev/openapi-directory v0.33.5/go.mod h1:t8jFi3PfdC5k3f/fvYT6DIU+OHzn+Ptidlw83W7h7lo=
 github.com/aserto-dev/runtime v1.11.1 h1:mN3fvdRJQ2lCpCE9B05c7GIjR4N/q0ILyTKYCcAgHeQ=
 github.com/aserto-dev/runtime v1.11.1/go.mod h1:j3oBOYwRvWTKJyRQbvlTPXpCUkZN34fQeVOxNlK2X9c=
+github.com/aserto-dev/runtime v1.12.1 h1:+nM2TsWbE0p4e2EqSkJ8eH72rEnLTmpOHSH9XhIjUuw=
+github.com/aserto-dev/runtime v1.12.1/go.mod h1:yBMUTbELpr3eun5JKv/aT6hlwmb8IXkOyHHnt9/zOiA=
 github.com/aserto-dev/self-decision-logger v0.0.12 h1:oMU43OCjgEMcsAx5EraWTncqyZHBea1H1+Dyyd8I3hI=
 github.com/aserto-dev/self-decision-logger v0.0.12/go.mod h1:nF3SyHJoMS5KbGm+EHF2BlDyNpzjPgodfp6H4MWS6QU=
 github.com/authzen/access.go v0.0.7-0.20251203180810-cb9efaf01fa0 h1:ZOGIL/OTNCrPVOGlRHsSI3ZSTfjfwLlkgG4xqq+NrQg=
@@ -387,6 +389,8 @@ github.com/onsi/gomega v1.38.0 h1:c/WX+w8SLAinvuKKQFh77WEucCnPk4j2OTUr7lt7BeY=
 github.com/onsi/gomega v1.38.0/go.mod h1:OcXcwId0b9QsE7Y49u+BTrL4IdKOBOKnD6VQNTJEB6o=
 github.com/open-policy-agent/opa v1.11.1 h1:4bMlG6DjRZTRAswRyF+KUCgxHu1Gsk0h9EbZ4W9REvM=
 github.com/open-policy-agent/opa v1.11.1/go.mod h1:QimuJO4T3KYxWzrmAymqlFvsIanCjKrGjmmC8GgAdgE=
+github.com/open-policy-agent/opa v1.12.1 h1:MWfmXuXB119O7rSOJ5GdKAaW15yBirjnLkFRBGy0EX0=
+github.com/open-policy-agent/opa v1.12.1/go.mod h1:RnDgm04GA1RjEXJvrsG9uNT/+FyBNmozcPvA2qz60M4=
 github.com/opencontainers/go-digest v1.0.0 h1:apOUWs51W5PlhuyGyz9FCeeBIOUDA/6nW8Oi/yOhh5U=
 github.com/opencontainers/go-digest v1.0.0/go.mod h1:0JzlMkj0TRzQZfJkVvzbP0HBR3IKzErnv2BNG4W4MAM=
 github.com/opencontainers/image-spec v1.1.1 h1:y0fUlFfIZhPF1W537XOLg0/fcx6zcHCJwooC2xJA040=
@@ -555,6 +559,8 @@ golang.org/x/crypto v0.46.0/go.mod h1:Evb/oLKmMraqjZ2iQTwDwvCtJkczlDuTmdJXoZVzqU
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/exp v0.0.0-20251209150349-8475f28825e9 h1:MDfG8Cvcqlt9XXrmEiD4epKn7VJHZO84hejP9Jmp0MM=
 golang.org/x/exp v0.0.0-20251209150349-8475f28825e9/go.mod h1:EPRbTFwzwjXj9NpYyyrvenVh9Y+GFeEvMNh7Xuz7xgU=
+golang.org/x/exp v0.0.0-20251219203646-944ab1f22d93 h1:fQsdNF2N+/YewlRZiricy4P1iimyPKZ/xwniHj8Q2a0=
+golang.org/x/exp v0.0.0-20251219203646-944ab1f22d93/go.mod h1:EPRbTFwzwjXj9NpYyyrvenVh9Y+GFeEvMNh7Xuz7xgU=
 golang.org/x/lint v0.0.0-20181026193005-c67002cb31c3/go.mod h1:UVdnD1Gm6xHRNCYTkRU2/jEulfH38KcIWyp/GAMgvoE=
 golang.org/x/lint v0.0.0-20190227174305-5b3e6a55c961/go.mod h1:wehouNa3lNwaWXcvxsM5YxQ5yQlVC4a0KAMCusXpPoU=
 golang.org/x/lint v0.0.0-20190313153728-d0100b6bd8b3/go.mod h1:6SW0HCj/g11FgYtHlgUYUwCkIfeOF89ocIRzGO/8vkc=

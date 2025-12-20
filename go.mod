@@ -1,6 +1,6 @@
 module github.com/aserto-dev/topaz
 
-go 1.24.11
+go 1.25
 
 toolchain go1.25.5
 
@@ -20,7 +20,7 @@ require (
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
 	github.com/aserto-dev/openapi-directory v0.33.5
-	github.com/aserto-dev/runtime v1.11.1
+	github.com/aserto-dev/runtime v1.12.1
 	github.com/aserto-dev/self-decision-logger v0.0.12
 	github.com/authzen/access.go v0.0.7-0.20251203180810-cb9efaf01fa0
 	github.com/cli/browser v1.3.0
@@ -45,7 +45,7 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/moby/term v0.5.2
 	github.com/olekukonko/tablewriter v1.1.2
-	github.com/open-policy-agent/opa v1.11.1
+	github.com/open-policy-agent/opa v1.12.1
 	github.com/opencontainers/image-spec v1.1.1
 	github.com/panmari/cuckoofilter v1.0.6
 	github.com/pkg/errors v0.9.1
