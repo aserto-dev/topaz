@@ -1,4 +1,8 @@
 {
+  "go.useLanguageServer": true,
+  "gopls": {
+    "formatting.gofumpt": true
+  },
   "cSpell.words": [
     "acmecorp",
     "acontext",
