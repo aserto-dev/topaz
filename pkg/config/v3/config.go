@@ -14,15 +14,15 @@ import (
 
 	"github.com/aserto-dev/logger"
 
-	"github.com/aserto-dev/topaz/pkg/authentication"
-	"github.com/aserto-dev/topaz/pkg/authorizer"
 	"github.com/aserto-dev/topaz/pkg/config"
-	"github.com/aserto-dev/topaz/pkg/debug"
-	"github.com/aserto-dev/topaz/pkg/directory"
-	"github.com/aserto-dev/topaz/pkg/health"
-	"github.com/aserto-dev/topaz/pkg/loiter"
-	"github.com/aserto-dev/topaz/pkg/metrics"
-	"github.com/aserto-dev/topaz/pkg/servers"
+	"github.com/aserto-dev/topaz/topazd/authentication"
+	"github.com/aserto-dev/topaz/topazd/authorizer"
+	"github.com/aserto-dev/topaz/topazd/debug"
+	"github.com/aserto-dev/topaz/topazd/directory"
+	"github.com/aserto-dev/topaz/topazd/health"
+	"github.com/aserto-dev/topaz/topazd/loiter"
+	"github.com/aserto-dev/topaz/topazd/metrics"
+	"github.com/aserto-dev/topaz/topazd/servers"
 )
 
 const Version int = 3

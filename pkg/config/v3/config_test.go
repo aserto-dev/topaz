@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aserto-dev/topaz/pkg/cli/x"
 	"github.com/aserto-dev/topaz/pkg/config/v3"
+	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
 
 	assrt "github.com/stretchr/testify/assert"
 	rqur "github.com/stretchr/testify/require"

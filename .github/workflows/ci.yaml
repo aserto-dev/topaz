@@ -86,22 +86,22 @@ jobs:
       -
         name: Unit Test
         run: |
-          gotestsum --format short-verbose -- $(go list ./... | grep -v pkg/app/tests) \
+          gotestsum --format short-verbose -- $(go list ./... | grep -v topazd/tests) \
             -count=1 -timeout 120s -parallel=1 -v
       -
         name: Test
         run: |
-          gotestsum --format short-verbose -- $(go list ./pkg/app/tests/... | grep -v tests/template) \
+          gotestsum --format short-verbose -- $(go list ./topazd/tests/... | grep -v tests/template) \
             -count=1 -timeout 120s -parallel=1 -v
       -
         name: Templates Test (No TLS)
         run: |
-          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-no-tls/... \
+          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-no-tls/... \
             -count=1 -timeout 240s -parallel=1 -v
       -
         name: Templates Test (With TLS)
         run: |
-          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-with-tls/... \
+          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-with-tls/... \
             -count=1 -timeout 120s -parallel=1 -v
       -
         name: Upload code coverage
