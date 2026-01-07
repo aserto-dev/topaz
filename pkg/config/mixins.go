@@ -5,7 +5,7 @@ import (
 	"net"
 
 	"github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/pkg/loiter"
+	"github.com/aserto-dev/topaz/topazd/loiter"
 )
 
 // Optional is a configuration mixin for features that can be enabled or disabled.

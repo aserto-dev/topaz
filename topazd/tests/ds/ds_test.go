@@ -1,0 +1,120 @@
+package ds_test
+
+import (
+	"context"
+	"testing"
+	"time"
+
+	"github.com/aserto-dev/topaz/internal/pkg/fs"
+	azc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/authorizer"
+	dsc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/directory"
+	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
+
+	client "github.com/aserto-dev/go-aserto"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
+	tc "github.com/aserto-dev/topaz/topazd/tests/common"
+
+	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
+)
+
+func TestDirectory(t *testing.T) {
+	ctx, cancel := context.WithCancel(t.Context())
+
+	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
+
+	req := testcontainers.ContainerRequest{
+		Image:        tc.TestImage(),
+		ExposedPorts: []string{"9292/tcp"},
+		Env: map[string]string{
+			x.EnvTopazCertsDir:  x.DefCertsDir,
+			x.EnvTopazDBDir:     x.DefDBDir,
+			x.EnvTopazDecisions: x.DefDecisionsDir,
+		},
+		Files: []testcontainers.ContainerFile{
+			{
+				Reader:            assets_test.ConfigNoTLSReader(),
+				ContainerFilePath: "/config/config.yaml",
+				FileMode:          int64(fs.FileModeOwnerRWX),
+			},
+		},
+		WaitingFor: wait.ForAll(
+			wait.ForExposedPort(),
+			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
+		).WithStartupTimeoutDefault(300 * time.Second),
+	}
+
+	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          false,
+	})
+	require.NoError(t, err)
+
+	if err := topaz.Start(ctx); err != nil {
+		if logs, e := tc.ContainerLogs(ctx, topaz); e == nil {
+			t.Log(logs)
+		}
+
+		require.NoError(t, err)
+	}
+
+	t.Cleanup(func() {
+		testcontainers.CleanupContainer(t, topaz)
+		cancel()
+	})
+
+	addr, err := tc.MappedAddr(ctx, topaz, "9292")
+	require.NoError(t, err)
+
+	dsConfig := &dsc.Config{
+		Host:      addr,
+		Insecure:  false,
+		Plaintext: true,
+		Timeout:   10 * time.Second,
+	}
+
+	azConfig := &azc.Config{
+		Host:      addr,
+		Insecure:  false,
+		Plaintext: true,
+		Timeout:   10 * time.Second,
+	}
+
+	t.Run("testDirectory", testDirectory(dsConfig, azConfig))
+
+	if logs, e := tc.ContainerLogs(ctx, topaz); e == nil {
+		t.Log(logs)
+	}
+}
+
+func testDirectory(dsConfig *dsc.Config, azConfig *azc.Config) func(*testing.T) {
+	return func(t *testing.T) {
+		opts := []client.ConnectionOption{
+			client.WithAddr(dsConfig.Host),
+			client.WithNoTLS(true),
+		}
+
+		conn, err := client.NewConnection(opts...)
+		require.NoError(t, err)
+		t.Cleanup(func() { _ = conn.Close() })
+
+		ctx, cancel := context.WithCancel(t.Context())
+		t.Cleanup(cancel)
+
+		t.Run("", tc.InstallTemplate(dsConfig, azConfig, "../../../assets/v32/gdrive.json"))
+
+		tests := []struct {
+			name string
+			test func(*testing.T)
+		}{
+			{"TestCheck", testCheck(ctx, dsr3.NewReaderClient(conn))},
+			{"TestChecks", testChecks(ctx, dsr3.NewReaderClient(conn))},
+		}
+
+		for _, testCase := range tests {
+			t.Run(testCase.name, testCase.test)
+		}
+	}
+}

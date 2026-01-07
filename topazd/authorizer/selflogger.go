@@ -1,0 +1,81 @@
+package authorizer
+
+import (
+	"io"
+	"iter"
+	"text/template"
+
+	"github.com/aserto-dev/self-decision-logger/logger/self"
+	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/topazd/loiter"
+	"github.com/samber/lo"
+)
+
+type SelfDecisionLoggerConfig self.Config
+
+const SelfDecisionLoggerPlugin string = `self`
+
+var _ config.Section = (*SelfDecisionLoggerConfig)(nil)
+
+//nolint:mnd  // default values
+func (c *SelfDecisionLoggerConfig) Defaults() map[string]any {
+	return map[string]any{
+		"port":                            4222,
+		"store_directory":                 "./nats_store",
+		"scribe.address":                  "ems.prod.aserto.com:8443",
+		"scribe.client_cert_path":         "${TOPAZ_DIR}/certs/sidecar-prod.crt",
+		"scribe.client_key_path":          "${TOPAZ_DIR}/certs/sidecar-prod.key",
+		"scribe.ack_wait_seconds":         30,
+		"shipper.max_bytes":               100 * 1024 * 1024, // 100MB
+		"shipper.max_batch_size":          512,
+		"shipper.publish_timeout_seconds": 10,
+		"shipper.max_inflight_batches":    10,
+		"shipper.ack_wait_seconds":        60,
+		"shipper.backoff_seconds":         []int{5, 10, 30, 60, 120, 300},
+	}
+}
+
+func (c *SelfDecisionLoggerConfig) Validate() error {
+	return nil
+}
+
+func (c *SelfDecisionLoggerConfig) Paths() iter.Seq2[string, config.AccessMode] {
+	return loiter.Chain2(
+		config.ClientCertPaths(&c.Scribe.Config),
+		loiter.Seq2(lo.T2(c.StoreDirectory, config.ReadWrite)),
+	)
+}
+
+func (c *SelfDecisionLoggerConfig) Serialize(w io.Writer) error {
+	tmpl, err := template.New("SELF_DECISION_LOGGER").Parse(selfDecisionLoggerTemplate)
+	if err != nil {
+		return err
+	}
+
+	type params struct {
+		*SelfDecisionLoggerConfig
+
+		Provider_ string
+	}
+
+	p := params{c, SelfDecisionLoggerPlugin}
+	if err := tmpl.Execute(w, p); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+const selfDecisionLoggerTemplate string = `
+{{ .Provider_ }}:
+  port: {{ .Port }}
+  store_directory: '{{ .StoreDirectory }}'
+  scribe:
+    address: '{{ .Scribe.Address }}'
+    client_cert_path: '{{ .Scribe.ClientCertPath }}'
+    client_key_path: '{{ .Scribe.ClientKeyPath }}'
+    ack_wait_seconds: {{ .Scribe.AckWaitSeconds }}
+    tenant_id: {{ .Scribe.TenantID }}
+  shipper:
+    publish_timeout_seconds: 2
+`

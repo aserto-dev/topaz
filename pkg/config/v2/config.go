@@ -8,7 +8,7 @@ import (
 	"github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/internal/pkg/fs"
-	"github.com/aserto-dev/topaz/pkg/debug"
+	"github.com/aserto-dev/topaz/topazd/debug"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
