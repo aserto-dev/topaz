@@ -18,7 +18,10 @@ const azSubjectSearchHelp string = `az.subject_search({
 	"action": {"name": "", "properties": {}},
 	"resource": {"type": "", "id": "", "properties": {}},
 	"context": {},
-	"page": {"next_token": ""}
+	"page": {
+		"limit": 100,
+		"token": ""
+	}
 })`
 
 // RegisterSubjectSearch, note: subject_search omits `subject.id` fields when submitted.

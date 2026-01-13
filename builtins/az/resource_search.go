@@ -18,7 +18,10 @@ const azResourceSearchHelp string = `az.resource_search({
 	"action": {"name": "", "properties": {}},
 	"resource": {"type": "", "id": "", "properties": {}},
 	"context": {},
-	"page": {"next_token": ""}
+	"page": {
+		"limit": 100,
+		"token": ""
+	}
 })`
 
 // RegisterResourceSearch.
