@@ -17,7 +17,10 @@ const azActionSearchHelp string = `az.action_search({
 	"action": {"name": "", "properties": {}},
 	"resource": {"type": "", "id": "", "properties": {}},
 	"context": {},
-	"page": {"next_token": ""}
+	"page": {
+		"limit": 100,
+		"token": ""
+	}
 })`
 
 // RegisterActionSearch

@@ -18,14 +18,18 @@ import (
 )
 
 const dsRelationsHelp string = `ds.relations({
-	object_type: "",
-	object_id: "",
-	relation: "",
-	subject_type: "",
-	subject_id: "",
-	subject_relation: "",
-	with_objects: false,
-	with_empty_subject_relation: false
+	"object_type": "",
+	"object_id": "",
+	"relation": "",
+	"subject_type": "",
+	"subject_id": "",
+	"subject_relation": "",
+	"with_objects": false,
+	"with_empty_subject_relation": false,
+	"page": {
+		"size": 100,
+		"token": ""
+	}
 })`
 
 // RegisterRelations - ds.relations.
@@ -47,7 +51,12 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr reader.ReaderCl
 				return ast.StringTerm(dsRelationsHelp), nil
 			}
 
-			args.Page = &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""}
+			switch {
+			case args.GetPage() == nil:
+				args.Page = &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""}
+			case args.GetPage().GetSize() <= 0 || args.GetPage().GetSize() > 100:
+				args.GetPage().Size = x.MaxPaginationSize
+			}
 
 			resp := &reader.GetRelationsResponse{}
 
