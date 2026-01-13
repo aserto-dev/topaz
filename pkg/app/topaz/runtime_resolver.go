@@ -23,6 +23,7 @@ import (
 	"github.com/aserto-dev/topaz/plugins/edge"
 	"github.com/aserto-dev/topaz/resolvers"
 	"github.com/authzen/access.go/api/access/v1"
+	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 )
@@ -70,6 +71,8 @@ func NewRuntimeResolver(
 		// plugins
 		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),
 		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
+
+		runtime.WithRegoVersion(ast.RegoV0),
 	)
 	if err != nil {
 		return nil, func() {}, err
