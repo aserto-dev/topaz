@@ -10,6 +10,6 @@ const (
 
 const (
 	MinPaginationSize int32 = 0
-	MaxPaginationSize int32 = 1000
+	MaxPaginationSize int32 = 100
 	DefPaginationSize int32 = MaxPaginationSize
 )
