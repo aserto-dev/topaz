@@ -25,12 +25,6 @@ const azEvaluationsHelp string = `az.evaluations({
 			"action": {"name": "", "properties": {}},
 			"resource": {"type": "", "id": "", "properties": {}},
 			"context": {}
-		},
-		{
-			"subject": {"type": "", "id": "", "properties": {}},
-			"action": {"name": "", "properties": {}},
-			"resource": {"type": "", "id": "", "properties": {}},
-			"context": {},
 		}
 	]
 })`
