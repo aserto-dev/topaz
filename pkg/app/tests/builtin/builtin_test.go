@@ -260,11 +260,7 @@ var BuiltinHelpTests = []struct {
 	"subject_id": "",
 	"subject_relation": "",
 	"with_objects": false,
-	"with_empty_subject_relation": false,
-	"page": {
-		"size": 100,
-		"token": ""
-	}
+	"with_empty_subject_relation": false
 })`,
 	},
 	{
