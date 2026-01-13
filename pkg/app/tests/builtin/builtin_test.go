@@ -253,14 +253,18 @@ var BuiltinHelpTests = []struct {
 		name:  "ds.relations",
 		query: "x = ds.relations({})",
 		expected: `ds.relations({
-	object_type: "",
-	object_id: "",
-	relation: "",
-	subject_type: "",
-	subject_id: "",
-	subject_relation: "",
-	with_objects: false,
-	with_empty_subject_relation: false
+	"object_type": "",
+	"object_id": "",
+	"relation": "",
+	"subject_type": "",
+	"subject_id": "",
+	"subject_relation": "",
+	"with_objects": false,
+	"with_empty_subject_relation": false,
+	"page": {
+		"size": 100,
+		"token": ""
+	}
 })`,
 	},
 	{
@@ -288,12 +292,6 @@ var BuiltinHelpTests = []struct {
 			"action": {"name": "", "properties": {}},
 			"resource": {"type": "", "id": "", "properties": {}},
 			"context": {}
-		},
-		{
-			"subject": {"type": "", "id": "", "properties": {}},
-			"action": {"name": "", "properties": {}},
-			"resource": {"type": "", "id": "", "properties": {}},
-			"context": {},
 		}
 	]
 })`,
@@ -306,7 +304,10 @@ var BuiltinHelpTests = []struct {
 	"action": {"name": "", "properties": {}},
 	"resource": {"type": "", "id": "", "properties": {}},
 	"context": {},
-	"page": {"next_token": ""}
+	"page": {
+		"limit": 100,
+		"token": ""
+	}
 })`,
 	},
 	{
@@ -317,7 +318,10 @@ var BuiltinHelpTests = []struct {
 	"action": {"name": "", "properties": {}},
 	"resource": {"type": "", "id": "", "properties": {}},
 	"context": {},
-	"page": {"next_token": ""}
+	"page": {
+		"limit": 100,
+		"token": ""
+	}
 })`,
 	},
 	{
@@ -328,7 +332,10 @@ var BuiltinHelpTests = []struct {
 	"action": {"name": "", "properties": {}},
 	"resource": {"type": "", "id": "", "properties": {}},
 	"context": {},
-	"page": {"next_token": ""}
+	"page": {
+		"limit": 100,
+		"token": ""
+	}
 })`,
 	},
 }
