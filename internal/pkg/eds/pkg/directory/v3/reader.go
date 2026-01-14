@@ -16,7 +16,7 @@ import (
 	"github.com/samber/lo"
 	bolt "go.etcd.io/bbolt"
 	"google.golang.org/grpc"
-	grpcmd "google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/metadata"
 )
 
 type Reader struct {
@@ -52,10 +52,10 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr3.GetObjectRequest) (*ds
 			return err
 		}
 
-		inMD, _ := grpcmd.FromIncomingContext(ctx)
+		inMD, _ := metadata.FromIncomingContext(ctx)
 		// optimistic concurrency check
 		if lo.Contains(inMD.Get(headers.IfNoneMatch), obj.GetEtag()) {
-			_ = grpc.SetHeader(ctx, grpcmd.Pairs("x-http-code", "304"))
+			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "304"))
 
 			return nil
 		}
@@ -207,9 +207,9 @@ func (s *Reader) GetRelation(ctx context.Context, req *dsr3.GetRelationRequest) 
 		dbRel := relations[0]
 		resp.Result = dbRel
 
-		inMD, _ := grpcmd.FromIncomingContext(ctx)
+		inMD, _ := metadata.FromIncomingContext(ctx)
 		if lo.Contains(inMD.Get(headers.IfNoneMatch), dbRel.GetEtag()) {
-			_ = grpc.SetHeader(ctx, grpcmd.Pairs("x-http-code", "304"))
+			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "304"))
 
 			return nil
 		}

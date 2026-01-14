@@ -4,9 +4,19 @@ import (
 	"context"
 
 	"github.com/aserto-dev/azm/cache"
+
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-directory/pkg/pb"
 	acc1 "github.com/authzen/access.go/api/access/v1"
+
 	"github.com/rs/zerolog"
+)
+
+const (
+	ExpandSubject  string = "expand-subject"
+	ExpandResource string = "expand-resource"
+	SubjectField   string = "subject"
+	ResourceField  string = "resource"
 )
 
 type Access struct {
@@ -28,9 +38,47 @@ func NewAccess(logger *zerolog.Logger, reader *Reader) *Access {
 // The Access Evaluation API defines the message exchange pattern between a client (PEP)
 // and an authorization service (PDP) for executing a single access evaluation.
 func (s *Access) Evaluation(ctx context.Context, req *acc1.EvaluationRequest) (*acc1.EvaluationResponse, error) {
+	if req.GetContext() == nil {
+		req.Context = pb.NewStruct()
+	}
+
 	resp, err := s.reader.Check(ctx, extractCheck(req))
 	if err != nil {
 		return &acc1.EvaluationResponse{}, err
+	}
+
+	if expand, ok := req.GetContext().GetFields()[ExpandSubject]; ok && expand.GetBoolValue() {
+		obj, err := s.reader.GetObject(ctx, &dsr3.GetObjectRequest{
+			ObjectType: req.GetSubject().GetType(),
+			ObjectId:   req.GetSubject().GetId(),
+		})
+		if err != nil {
+			return &acc1.EvaluationResponse{}, err
+		}
+
+		val, err := ProtoToValue(obj.GetResult())
+		if err != nil {
+			return &acc1.EvaluationResponse{}, err
+		}
+
+		resp.Context.Fields[SubjectField] = val
+	}
+
+	if expand, ok := req.GetContext().GetFields()[ExpandResource]; ok && expand.GetBoolValue() {
+		obj, err := s.reader.GetObject(ctx, &dsr3.GetObjectRequest{
+			ObjectType: req.GetResource().GetType(),
+			ObjectId:   req.GetResource().GetId(),
+		})
+		if err != nil {
+			return &acc1.EvaluationResponse{}, err
+		}
+
+		val, err := ProtoToValue(obj.GetResult())
+		if err != nil {
+			return &acc1.EvaluationResponse{}, err
+		}
+
+		resp.Context.Fields[ResourceField] = val
 	}
 
 	return &acc1.EvaluationResponse{
