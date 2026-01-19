@@ -4,8 +4,8 @@ import (
 	"github.com/aserto-dev/certs"
 	logger "github.com/aserto-dev/logger"
 	runtime_logger "github.com/aserto-dev/runtime/logger"
-	"github.com/aserto-dev/topaz/pkg/cc/context"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/topazd/cc/context"
 )
 
 // buildCC sets up the CC struct that contains all dependencies that are cross cutting.
