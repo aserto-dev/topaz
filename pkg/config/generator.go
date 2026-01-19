@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/topaz/internal/pkg/fs"
-	"github.com/aserto-dev/topaz/topaz/pkg/cc"
+	"github.com/aserto-dev/topaz/topaz/cc"
 )
 
 type Generator struct {

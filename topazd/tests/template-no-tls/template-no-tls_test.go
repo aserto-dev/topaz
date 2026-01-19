@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/aserto-dev/topaz/internal/pkg/fs"
-	azc "github.com/aserto-dev/topaz/topaz/pkg/clients/authorizer"
-	dsc "github.com/aserto-dev/topaz/topaz/pkg/clients/directory"
-	"github.com/aserto-dev/topaz/topaz/pkg/x"
+	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
+	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
+	"github.com/aserto-dev/topaz/topaz/x"
 	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
 	tc "github.com/aserto-dev/topaz/topazd/tests/common"
 

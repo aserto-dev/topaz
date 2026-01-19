@@ -10,14 +10,14 @@ import (
 	"syscall"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/aserto-dev/topaz/topaz/pkg/cc"
-	"github.com/aserto-dev/topaz/topaz/pkg/cmd"
-	"github.com/aserto-dev/topaz/topaz/pkg/cmd/common"
-	"github.com/aserto-dev/topaz/topaz/pkg/fflag"
-	"github.com/aserto-dev/topaz/topaz/pkg/x"
+	"github.com/aserto-dev/topaz/topaz/cc"
+	"github.com/aserto-dev/topaz/topaz/cmd"
+	"github.com/aserto-dev/topaz/topaz/cmd/common"
+	"github.com/aserto-dev/topaz/topaz/fflag"
+	"github.com/aserto-dev/topaz/topaz/x"
 	"github.com/pkg/errors"
 
-	ver "github.com/aserto-dev/topaz/topaz/pkg/version"
+	ver "github.com/aserto-dev/topaz/topaz/version"
 
 	"github.com/alecthomas/kong"
 	"github.com/rs/zerolog"

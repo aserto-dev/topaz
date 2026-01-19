@@ -4,12 +4,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/aserto-dev/topaz/topaz/pkg/cc"
-	azc "github.com/aserto-dev/topaz/topaz/pkg/clients/authorizer"
-	dsc "github.com/aserto-dev/topaz/topaz/pkg/clients/directory"
-	"github.com/aserto-dev/topaz/topaz/pkg/cmd/common"
-	"github.com/aserto-dev/topaz/topaz/pkg/cmd/directory"
-	"github.com/aserto-dev/topaz/topaz/pkg/cmd/templates"
+	"github.com/aserto-dev/topaz/topaz/cc"
+	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
+	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
+	"github.com/aserto-dev/topaz/topaz/cmd/common"
+	"github.com/aserto-dev/topaz/topaz/cmd/directory"
+	"github.com/aserto-dev/topaz/topaz/cmd/templates"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/stretchr/testify/assert"

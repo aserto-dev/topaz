@@ -106,10 +106,10 @@ linters:
     paths:
       - internal/pkg/xdg/
       - topazd/signals/
-      - topaz/pkg/editor/
+      - topaz/editor/
 
     rules:
-      - path: pkg/cmd/
+      - path: topaz/cmd/
         linters:
           - dupl
       - path: builtins/
