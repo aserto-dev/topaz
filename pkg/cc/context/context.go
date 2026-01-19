@@ -3,7 +3,7 @@ package context
 import (
 	"context"
 
-	"github.com/aserto-dev/topaz/pkg/cc/signals"
+	"github.com/aserto-dev/topaz/topazd/signals"
 
 	"golang.org/x/sync/errgroup"
 )
