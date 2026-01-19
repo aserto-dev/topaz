@@ -3,10 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/aserto-dev/topaz/pkg/app"
-	"github.com/aserto-dev/topaz/pkg/app/directory"
-	"github.com/aserto-dev/topaz/pkg/app/topaz"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/topazd/app"
+	"github.com/aserto-dev/topaz/topazd/app/directory"
+	"github.com/aserto-dev/topaz/topazd/app/topaz"
 	"github.com/aserto-dev/topaz/topazd/debug"
 	"github.com/spf13/cobra"
 )

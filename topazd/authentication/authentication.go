@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/topazd/app/handlers"
 	"github.com/rs/zerolog"
 )
 

@@ -90,7 +90,7 @@ linters:
           yaml: snake
 
         overrides:
-          - pkg: pkg/app/handlers
+          - pkg: topazd/app/handlers
             rules:
               json: camel
               
