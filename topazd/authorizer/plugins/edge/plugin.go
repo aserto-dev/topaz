@@ -8,8 +8,8 @@ import (
 
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/go-grpc/aserto/api/v2"
-	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/datasync"
-	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
+	"github.com/aserto-dev/topaz/internal/eds/pkg/datasync"
+	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	topaz "github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/app"
 	"google.golang.org/grpc"

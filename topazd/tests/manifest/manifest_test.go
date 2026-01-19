@@ -13,7 +13,7 @@ import (
 	client "github.com/aserto-dev/go-aserto"
 	dsc "github.com/aserto-dev/go-aserto/ds/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	"github.com/aserto-dev/topaz/internal/pkg/fs"
+	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/x"
 	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
 	tc "github.com/aserto-dev/topaz/topazd/tests/common"

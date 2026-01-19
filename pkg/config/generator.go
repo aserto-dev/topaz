@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aserto-dev/topaz/internal/pkg/fs"
+	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/cc"
 )
 

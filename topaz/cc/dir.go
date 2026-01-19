@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/aserto-dev/topaz/internal/pkg/fs"
-	"github.com/aserto-dev/topaz/internal/pkg/xdg"
+	"github.com/aserto-dev/topaz/internal/fs"
+	"github.com/aserto-dev/topaz/internal/xdg"
 	"github.com/aserto-dev/topaz/topaz/x"
 )
 

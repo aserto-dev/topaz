@@ -104,7 +104,7 @@ linters:
 
     # Paths to exclude
     paths:
-      - internal/pkg/xdg/
+      - internal/xdg/
       - topazd/signals/
       - topaz/editor/
 
@@ -115,7 +115,7 @@ linters:
       - path: builtins/
         linters:
           - dupl
-      - path: internal/pkg/eds/tests/
+      - path: internal/eds/tests/
         linters:
           - dupl
 

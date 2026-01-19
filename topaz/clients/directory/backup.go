@@ -11,7 +11,7 @@ import (
 	"path"
 
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	"github.com/aserto-dev/topaz/internal/pkg/fs"
+	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/js"
 
 	"google.golang.org/protobuf/types/known/timestamppb"

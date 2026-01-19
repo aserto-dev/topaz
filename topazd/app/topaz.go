@@ -9,7 +9,7 @@ import (
 	cerr "github.com/aserto-dev/errors"
 	console "github.com/aserto-dev/go-topaz-ui"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
-	"github.com/aserto-dev/topaz/internal/pkg/eds"
+	"github.com/aserto-dev/topaz/internal/eds"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/app/handlers"
 	"github.com/aserto-dev/topaz/topazd/app/middlewares"

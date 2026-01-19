@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
+	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/topaz-db/pkg/inproc"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 

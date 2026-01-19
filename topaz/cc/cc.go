@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/aserto-dev/topaz/internal/pkg/fs"
+	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/cc/iostream"
 	"github.com/aserto-dev/topaz/topaz/dockerx"
 	"github.com/docker/docker/api/types/container"

@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	rt "github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/internal/pkg/fs"
+	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/x"
 	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
 	tc "github.com/aserto-dev/topaz/topazd/tests/common"
