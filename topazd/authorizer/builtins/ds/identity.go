@@ -1,27 +1,25 @@
 package ds
 
 import (
-	"bytes"
-
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/topaz/builtins"
+	"github.com/aserto-dev/topaz/directory"
+	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
 
 	"github.com/rs/zerolog"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/proto"
 )
 
-const dsUserHelp string = `ds.user({
+const dsIdentityHelp string = `ds.identity({
 	"id": ""
 })`
 
-// RegisterUser - ds.user.
-func RegisterUser(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+// RegisterIdentity - ds.identity - get user id (key) for identity.
+func RegisterIdentity(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -33,18 +31,15 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr reader.ReaderClient)
 			}
 
 			if err := ast.As(op1.Value, &args); err != nil {
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			if args.ID == "" {
-				return ast.StringTerm(dsUserHelp), nil
+				return ast.StringTerm(dsIdentityHelp), nil
 			}
 
-			resp, err := dr.GetObject(bctx.Context, &reader.GetObjectRequest{
-				ObjectType:    "user",
-				ObjectId:      args.ID,
-				WithRelations: false,
-			})
+			user, err := directory.ResolveIdentity(bctx.Context, dr, args.ID)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
@@ -58,25 +53,8 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr reader.ReaderClient)
 				return ast.NewTerm(astVal), nil
 			case err != nil:
 				return nil, err
+			default:
+				return ast.StringTerm(user.GetId()), nil
 			}
-
-			buf := new(bytes.Buffer)
-
-			var result proto.Message
-
-			if resp.GetResult() != nil {
-				result = resp.GetResult()
-			}
-
-			if err := builtins.ProtoToBuf(buf, result); err != nil {
-				return nil, err
-			}
-
-			v, err := ast.ValueFromReader(buf)
-			if err != nil {
-				return nil, err
-			}
-
-			return ast.NewTerm(v), nil
 		}
 }

@@ -3,7 +3,7 @@ package az
 import (
 	"github.com/authzen/access.go/api/access/v1"
 
-	"github.com/aserto-dev/topaz/builtins"
+	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
