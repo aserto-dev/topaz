@@ -12,7 +12,7 @@ import (
 	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
-	"github.com/aserto-dev/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

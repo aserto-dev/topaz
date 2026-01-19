@@ -8,9 +8,9 @@ import (
 	"github.com/aserto-dev/topaz/internal/pkg/fs"
 	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
 	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
-	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
-	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
-	"github.com/aserto-dev/topaz/pkg/cli/x"
+	azc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/authorizer"
+	dsc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/directory"
+	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
 
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"

@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/aserto-dev/topaz/internal/pkg/fs"
-	azc "github.com/aserto-dev/topaz/pkg/cli/clients/authorizer"
-	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
-	"github.com/aserto-dev/topaz/pkg/cli/x"
+	azc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/authorizer"
+	dsc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/directory"
+	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
 
 	client "github.com/aserto-dev/go-aserto"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
