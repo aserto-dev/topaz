@@ -13,11 +13,11 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
 	"github.com/aserto-dev/topaz/pkg/config"
-	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/aserto-dev/topaz/topazd/authentication"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog/logger/nop"
+	"github.com/aserto-dev/topaz/topazd/service/builder"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"

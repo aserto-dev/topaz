@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"sync"
 
-	"github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/topazd/service/builder"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
