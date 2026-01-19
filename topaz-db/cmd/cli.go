@@ -1,6 +1,6 @@
 package cmd
 
-import dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+import dsc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/directory"
 
 type CLI struct {
 	Init InitCmd `cmd:"" help:"create new database file"`
