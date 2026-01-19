@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/cmd/certs"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/cmd/common"

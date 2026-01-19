@@ -12,7 +12,7 @@ import (
 	"github.com/aserto-dev/topaz/internal/pkg/eds"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/aserto-dev/topaz/topazd/authentication"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"

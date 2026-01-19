@@ -5,7 +5,7 @@ import (
 	"context"
 	"strings"
 
-	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
+	topaz "github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/noop"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/open-policy-agent/opa/v1/plugins"

@@ -5,7 +5,7 @@ import (
 
 	grpcutil "github.com/aserto-dev/aserto-grpc"
 	"github.com/aserto-dev/header"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/config"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 )

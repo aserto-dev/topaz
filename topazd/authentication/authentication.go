@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/rs/zerolog"
 )
 

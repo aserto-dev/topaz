@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/cc"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/cmd/common"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/dockerx"

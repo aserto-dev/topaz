@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
-	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"

@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/datasync"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/pkg/app"
-	topaz "github.com/aserto-dev/topaz/pkg/cc/config"
+	topaz "github.com/aserto-dev/topaz/pkg/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/health/grpc_health_v1"

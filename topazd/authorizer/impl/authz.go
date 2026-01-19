@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	runtime "github.com/aserto-dev/runtime"
 
-	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
 	"github.com/aserto-dev/topaz/topazd/version"
 

@@ -1,7 +1,7 @@
 package topaz
 
 import (
-	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/cc"
 )
 
