@@ -7,7 +7,7 @@ import (
 	"syscall"
 
 	"github.com/alecthomas/kong"
-	"github.com/aserto-dev/topaz/cmd/topaz-backup/internal/plugins/boltdb"
+	"github.com/aserto-dev/topaz/topaz-backup/internal/plugins/boltdb"
 )
 
 const (

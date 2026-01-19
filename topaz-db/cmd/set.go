@@ -5,9 +5,9 @@ import (
 	"io"
 	"os"
 
-	"github.com/aserto-dev/topaz/cmd/topaz-db/pkg/inproc"
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 	dsc "github.com/aserto-dev/topaz/pkg/cli/clients/directory"
+	"github.com/aserto-dev/topaz/topaz-db/pkg/inproc"
 
 	"github.com/rs/zerolog"
 )
