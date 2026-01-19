@@ -7,8 +7,8 @@ import (
 	"github.com/aserto-dev/aserto-grpc/middlewares/gerr"
 	"github.com/aserto-dev/aserto-grpc/middlewares/request"
 	"github.com/aserto-dev/aserto-grpc/middlewares/tracing"
-	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
+	"github.com/aserto-dev/topaz/topazd/authentication"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 )
@@ -17,7 +17,7 @@ func GetMiddlewaresForService(ctx context.Context, cfg *config.Config, logger *z
 	var middlewareList grpcutil.Middlewares
 
 	if len(cfg.Auth.APIKeys) > 0 {
-		authmiddleware, err := auth.NewAPIKeyAuthMiddleware(ctx, &cfg.Auth, logger)
+		authmiddleware, err := authentication.NewAPIKeyAuthMiddleware(ctx, &cfg.Auth, logger)
 		if err != nil {
 			return nil, err
 		}

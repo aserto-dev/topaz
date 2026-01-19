@@ -10,11 +10,11 @@ import (
 	console "github.com/aserto-dev/go-topaz-ui"
 	"github.com/aserto-dev/self-decision-logger/logger/self"
 	"github.com/aserto-dev/topaz/internal/pkg/eds"
-	"github.com/aserto-dev/topaz/pkg/app/auth"
 	"github.com/aserto-dev/topaz/pkg/app/handlers"
 	"github.com/aserto-dev/topaz/pkg/app/middlewares"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
+	"github.com/aserto-dev/topaz/topazd/authentication"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog/logger/file"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog/logger/nop"
@@ -204,7 +204,7 @@ func (e *Topaz) ConfigServices() error {
 		if con, ok := e.Services[consoleService]; ok {
 			if lo.Contains(serviceConfig.registeredServices, consoleService) {
 				if server.Gateway != nil && server.Gateway.Mux != nil {
-					apiKeyAuthMiddleware, err := auth.NewAPIKeyAuthMiddleware(e.Context, &e.Configuration.Auth, e.Logger)
+					apiKeyAuthMiddleware, err := authentication.NewAPIKeyAuthMiddleware(e.Context, &e.Configuration.Auth, e.Logger)
 					if err != nil {
 						return err
 					}
