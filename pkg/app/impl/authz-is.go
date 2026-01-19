@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/header"
-	decisionlog_plugin "github.com/aserto-dev/topaz/plugins/decisionlog"
+	decisionlog_plugin "github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog"
 
 	"github.com/google/uuid"
 	"github.com/open-policy-agent/opa/v1/rego"
