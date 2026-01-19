@@ -2,8 +2,8 @@ package ds
 
 import (
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/topaz/directory"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
+	"github.com/aserto-dev/topaz/topazd/directory"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
