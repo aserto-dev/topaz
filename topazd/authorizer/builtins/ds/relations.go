@@ -5,7 +5,7 @@ import (
 
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/topaz/pkg/x"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/samber/lo"
 

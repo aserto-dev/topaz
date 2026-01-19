@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/topaz/pkg/x"
 )
 
 var (

@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/self-decision-logger/logger/self"
-	"github.com/aserto-dev/topaz/topaz/pkg/cli/cc"
-	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
+	"github.com/aserto-dev/topaz/topaz/pkg/cc"
+	"github.com/aserto-dev/topaz/topaz/pkg/x"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/samber/lo"

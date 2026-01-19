@@ -106,10 +106,10 @@ linters:
     paths:
       - internal/pkg/xdg/
       - topazd/signals/
-      - topaz/pkg/cli/editor/
+      - topaz/pkg/editor/
 
     rules:
-      - path: pkg/cli/cmd/
+      - path: pkg/cmd/
         linters:
           - dupl
       - path: builtins/
@@ -118,7 +118,6 @@ linters:
       - path: internal/pkg/eds/tests/
         linters:
           - dupl
-
 
 formatters:
   enable:

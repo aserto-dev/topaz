@@ -7,7 +7,7 @@ import (
 
 	"github.com/aserto-dev/topaz/internal/pkg/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/topaz-db/pkg/inproc"
-	dsc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/directory"
+	dsc "github.com/aserto-dev/topaz/topaz/pkg/clients/directory"
 
 	"github.com/rs/zerolog"
 )
