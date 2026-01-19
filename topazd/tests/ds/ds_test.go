@@ -1,4 +1,4 @@
-package template_with_tls_test
+package ds_test
 
 import (
 	"context"
@@ -6,18 +6,21 @@ import (
 	"time"
 
 	"github.com/aserto-dev/topaz/internal/pkg/fs"
-	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
-	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	azc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/topaz/pkg/cli/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
+
+	client "github.com/aserto-dev/go-aserto"
+	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
+	tc "github.com/aserto-dev/topaz/topazd/tests/common"
 
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func TestTemplates(t *testing.T) {
+func TestDirectory(t *testing.T) {
 	ctx, cancel := context.WithCancel(t.Context())
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
@@ -75,35 +78,35 @@ func TestTemplates(t *testing.T) {
 		Timeout:   10 * time.Second,
 	}
 
-	for _, tmpl := range tcs {
-		t.Run("testTemplate", tc.InstallTemplate(dsConfig, azConfig, tmpl))
-	}
+	t.Run("testDirectory", testDirectory(dsConfig, azConfig))
 }
 
-var tcs = []string{
-	"../../../../assets/v32/acmecorp.json",
-	"../../../../assets/v32/peoplefinder.json",
+func testDirectory(dsConfig *dsc.Config, azConfig *azc.Config) func(*testing.T) {
+	return func(t *testing.T) {
+		opts := []client.ConnectionOption{
+			client.WithAddr(dsConfig.Host),
+			client.WithInsecure(true),
+		}
 
-	"../../../../assets/v32/citadel.json",
-	"../../../../assets/v32/api-auth.json",
-	// "../../../../assets/v32/api-gateway.json", // v32/api-gateway.json does not exist.
-	"../../../../assets/v32/gdrive.json",
-	"../../../../assets/v32/github.json",
-	"../../../../assets/v32/multi-tenant.json",
-	"../../../../assets/v32/simple-rbac.json",
-	"../../../../assets/v32/slack.json",
-	"../../../../assets/v32/todo.json",
+		conn, err := client.NewConnection(opts...)
+		require.NoError(t, err)
+		t.Cleanup(func() { _ = conn.Close() })
 
-	"../../../../assets/v33/acmecorp.json",
-	"../../../../assets/v33/peoplefinder.json",
+		ctx, cancel := context.WithCancel(t.Context())
+		t.Cleanup(cancel)
 
-	"../../../../assets/v33/citadel.json",
-	"../../../../assets/v33/api-auth.json",
-	"../../../../assets/v33/api-gateway.json",
-	"../../../../assets/v33/gdrive.json",
-	"../../../../assets/v33/github.json",
-	"../../../../assets/v33/multi-tenant.json",
-	"../../../../assets/v33/simple-rbac.json",
-	"../../../../assets/v33/slack.json",
-	"../../../../assets/v33/todo.json",
+		t.Run("", tc.InstallTemplate(dsConfig, azConfig, "../../../assets/v32/gdrive.json"))
+
+		tests := []struct {
+			name string
+			test func(*testing.T)
+		}{
+			{"TestCheck", testCheck(ctx, dsr3.NewReaderClient(conn))},
+			{"TestChecks", testChecks(ctx, dsr3.NewReaderClient(conn))},
+		}
+
+		for _, testCase := range tests {
+			t.Run(testCase.name, testCase.test)
+		}
+	}
 }

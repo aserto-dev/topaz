@@ -10,9 +10,9 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/internal/pkg/fs"
-	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
-	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
+	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
+	tc "github.com/aserto-dev/topaz/topazd/tests/common"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

@@ -14,9 +14,9 @@ import (
 	dsc "github.com/aserto-dev/go-aserto/ds/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	"github.com/aserto-dev/topaz/internal/pkg/fs"
-	assets_test "github.com/aserto-dev/topaz/pkg/app/tests/assets"
-	tc "github.com/aserto-dev/topaz/pkg/app/tests/common"
 	"github.com/aserto-dev/topaz/topaz/pkg/cli/x"
+	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
+	tc "github.com/aserto-dev/topaz/topazd/tests/common"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
