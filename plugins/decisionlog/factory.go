@@ -3,7 +3,7 @@ package decisionlog
 import (
 	"bytes"
 
-	"github.com/aserto-dev/topaz/decisionlog"
+	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/util"
