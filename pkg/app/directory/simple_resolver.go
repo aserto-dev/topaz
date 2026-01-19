@@ -2,7 +2,7 @@ package directory
 
 import (
 	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
 
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"

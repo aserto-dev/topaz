@@ -13,7 +13,7 @@ import (
 
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/version"
-	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
 
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/open-policy-agent/opa/v1/server/types"

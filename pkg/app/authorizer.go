@@ -9,7 +9,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/app/impl"
 	"github.com/aserto-dev/topaz/pkg/cc/config"
 	"github.com/aserto-dev/topaz/pkg/service/builder"
-	"github.com/aserto-dev/topaz/resolvers"
+	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
 	"github.com/pkg/errors"
