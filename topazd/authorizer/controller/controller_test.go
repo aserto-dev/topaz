@@ -8,7 +8,7 @@ import (
 
 	client "github.com/aserto-dev/go-aserto"
 	api "github.com/aserto-dev/go-grpc/aserto/api/v2"
-	"github.com/aserto-dev/topaz/controller"
+	"github.com/aserto-dev/topaz/topazd/authorizer/controller"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
