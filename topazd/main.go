@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/aserto-dev/topaz/pkg/version"
+	"github.com/aserto-dev/topaz/topazd/version"
 	"github.com/spf13/cobra"
 )
 
