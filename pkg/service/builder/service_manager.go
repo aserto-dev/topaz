@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/pkg/x"
+	"github.com/aserto-dev/topaz/topazd/x"
 
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
 	go_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"

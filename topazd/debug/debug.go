@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/aserto-dev/topaz/pkg/x"
+	"github.com/aserto-dev/topaz/topazd/x"
 	"github.com/rs/zerolog"
 )
 
