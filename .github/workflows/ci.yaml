@@ -84,25 +84,25 @@ jobs:
           version: ${{ env.GO_RELEASER_VERSION }}
           args: release --clean --snapshot --config .goreleaser-test.yml
       -
-        name: Unit Test
+        name: Unit Tests
         run: |
           gotestsum --format short-verbose -- $(go list ./... | grep -v topazd/tests) \
-            -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out
+            -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
       -
-        name: Test
+        name: Tests topazd
         run: |
           gotestsum --format short-verbose -- $(go list ./topazd/tests/... | grep -v tests/template) \
-            -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out
+            -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
       -
-        name: Templates Test (No TLS)
+        name: Templates Test (no-tls)
         run: |
           gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-no-tls/... \
-            -count=1 -timeout 240s -parallel=1 -v -coverprofile=cover.out
+            -count=1 -timeout 240s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
       -
-        name: Templates Test (With TLS)
+        name: Templates Test (with-tls)
         run: |
           gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-with-tls/... \
-            -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out
+            -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
       -
         name: Upload code coverage
         uses: shogo82148/actions-goveralls@v1
