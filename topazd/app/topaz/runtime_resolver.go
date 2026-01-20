@@ -1,0 +1,173 @@
+package topaz
+
+import (
+	"context"
+	"errors"
+	"os"
+	"strings"
+	"time"
+
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/go-grpc/aserto/api/v2"
+	runtime "github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/topaz/x"
+	"github.com/aserto-dev/topaz/topazd/app/management"
+	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
+	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/az"
+	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/ds"
+	"github.com/aserto-dev/topaz/topazd/authorizer/controller"
+	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
+	decisionlog_plugin "github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog"
+	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/edge"
+	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
+	"github.com/authzen/access.go/api/access/v1"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/rs/zerolog"
+	"google.golang.org/grpc"
+)
+
+var _ resolvers.RuntimeResolver = (*RuntimeResolver)(nil)
+
+type RuntimeResolver struct {
+	runtime *runtime.Runtime
+}
+
+//nolint:funlen,nestif
+func NewRuntimeResolver(
+	ctx context.Context,
+	logger *zerolog.Logger,
+	cfg *config.Config,
+	dsConn *grpc.ClientConn,
+	decisionLogger decisionlog.DecisionLogger,
+) (resolvers.RuntimeResolver, func(), error) {
+	dsClient := reader.NewReaderClient(dsConn)
+	acClient := access.NewAccessClient(dsConn)
+
+	sidecarRuntime, err := runtime.New(ctx, &cfg.OPA,
+
+		// directory get functions
+		runtime.WithBuiltin1(ds.RegisterIdentity(logger, builtins.DSIdentity, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterUser(logger, builtins.DSUser, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterObject(logger, builtins.DSObject, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterRelation(logger, builtins.DSRelation, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterRelations(logger, builtins.DSRelations, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterGraph(logger, builtins.DSGraph, dsClient)),
+
+		// authorization check functions
+		runtime.WithBuiltin1(ds.RegisterCheck(logger, builtins.DSCheck, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterChecks(logger, builtins.DSChecks, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, builtins.DSCheckRelation, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, builtins.DSCheckPermission, dsClient)),
+
+		// authZen built-ins
+		runtime.WithBuiltin1(az.RegisterEvaluation(logger, builtins.AZEvaluation, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluations(logger, builtins.AZEvaluations, acClient)),
+		runtime.WithBuiltin1(az.RegisterSubjectSearch(logger, builtins.AZSubjectSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterResourceSearch(logger, builtins.AZResourceSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterActionSearch(logger, builtins.AZActionSearch, acClient)),
+
+		// plugins
+		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),
+		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
+
+		runtime.WithRegoVersion(ast.RegoV0),
+	)
+	if err != nil {
+		return nil, func() {}, err
+	}
+
+	cleanupRuntime := func() {
+		sidecarRuntime.Stop(ctx)
+	}
+
+	cleanup := func() {
+		if cleanupRuntime != nil {
+			cleanupRuntime()
+		}
+	}
+
+	if cfg.OPA.Config.Discovery != nil {
+		host, err := discoveryHostname()
+		if err != nil {
+			return nil, func() {}, err
+		}
+
+		if cfg.OPA.Config.Discovery.Resource == nil {
+			return nil, func() {}, aerr.ErrBadRuntime.Msg("discovery resource must be provided")
+		}
+
+		details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
+
+		if cfg.ControllerConfig.Server.TenantID == "" {
+			cfg.ControllerConfig.Server.TenantID = cfg.OPA.InstanceID // get the tenant id from the opa instance id config.
+		}
+
+		if len(details) < 1 {
+			return nil, func() {}, aerr.ErrBadRuntime.Msg("provided discovery resource not formatted correctly")
+		}
+
+		ctrl, err := controller.NewController(logger, details[0], host, &cfg.ControllerConfig, func(cmdCtx context.Context, cmd *api.Command) error {
+			return management.HandleCommand(cmdCtx, cmd, sidecarRuntime)
+		})
+		if err != nil {
+			return nil, func() {}, err
+		}
+
+		cleanupController := ctrl.Start(ctx)
+
+		cleanup = func() {
+			if cleanupController != nil {
+				cleanupController()
+			}
+
+			if cleanupRuntime != nil {
+				cleanupRuntime()
+			}
+		}
+		if err != nil {
+			return nil, cleanup, err
+		}
+	}
+
+	if err := sidecarRuntime.Start(ctx); err != nil {
+		return nil, cleanup, err
+	}
+
+	if err := sidecarRuntime.WaitForPlugins(ctx, time.Duration(cfg.OPA.MaxPluginWaitTimeSeconds)*time.Second); err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return nil, cleanup, aerr.ErrRuntimeLoading.Err(err).Msg("timeout while waiting for runtime to load")
+		}
+
+		return nil, cleanup, aerr.ErrBadRuntime.Err(err)
+	}
+
+	return &RuntimeResolver{
+		runtime: sidecarRuntime,
+	}, cleanup, err
+}
+
+func discoveryHostname() (string, error) {
+	if host := os.Getenv(x.EnvAsertoHostName); host != "" {
+		return host, nil
+	}
+
+	if host, err := os.Hostname(); err == nil && host != "" {
+		return host, nil
+	}
+
+	if host := os.Getenv(x.EnvHostName); host != "" {
+		return host, nil
+	}
+
+	return "", aerr.ErrBadRuntime.Msg("discovery hostname not set")
+}
+
+func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName string) (*runtime.Runtime, error) {
+	return r.GetRuntime(ctx, "", policyName)
+}
+
+func (r *RuntimeResolver) GetRuntime(ctx context.Context, opaInstanceID, policyName string) (*runtime.Runtime, error) {
+	return r.runtime, nil
+}

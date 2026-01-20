@@ -90,7 +90,7 @@ linters:
           yaml: snake
 
         overrides:
-          - pkg: pkg/app/handlers
+          - pkg: topazd/app/handlers
             rules:
               json: camel
               
@@ -104,21 +104,20 @@ linters:
 
     # Paths to exclude
     paths:
-      - internal/pkg/xdg/
-      - pkg/cc/signals/
-      - pkg/cli/editor/
+      - internal/xdg/
+      - topazd/signals/
+      - topaz/editor/
 
     rules:
-      - path: pkg/cli/cmd/
+      - path: topaz/cmd/
         linters:
           - dupl
       - path: builtins/
         linters:
           - dupl
-      - path: internal/pkg/eds/tests/
+      - path: internal/eds/tests/
         linters:
           - dupl
-
 
 formatters:
   enable:

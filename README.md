@@ -72,7 +72,7 @@ Join the community [Slack channel](https://www.aserto.com/slack) for questions a
 * Via a GO install
 
   ```shell
-  go install github.com/aserto-dev/topaz/cmd/topaz@latest
+  go install github.com/aserto-dev/topaz/topaz@latest
   ```
 
 ### Building from source

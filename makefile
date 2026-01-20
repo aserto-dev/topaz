@@ -71,10 +71,10 @@ lint: gover
 .PHONY: test
 test: gover test-snapshot
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./... | grep -v pkg/app/tests) -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./pkg/app/tests/... | grep -v tests/template) -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-no-tls/... -count=1 -timeout 240s -parallel=1 -v -coverprofile=cover.out
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/pkg/app/tests/template-with-tls/... -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./... | grep -v topazd/tests) -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./topazd/tests/... | grep -v tests/template) -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-no-tls/... -count=1 -timeout 240s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-with-tls/... -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
 
 .PHONY: test-snapshot
 test-snapshot:

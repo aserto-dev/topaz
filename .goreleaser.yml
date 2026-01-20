@@ -17,7 +17,7 @@ before:
 builds:
   # https://goreleaser.com/customization/build/
   - id: topazd
-    main: ./cmd/topazd
+    main: ./topazd
     binary: topazd
     goos:
       - darwin
@@ -40,7 +40,7 @@ builds:
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: topaz
-    main: ./cmd/topaz
+    main: ./topaz
     binary: topaz
     goos:
       - darwin
@@ -63,7 +63,7 @@ builds:
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: topaz-db
-    main: ./cmd/topaz-db
+    main: ./topaz-db
     binary: topaz-db
     goos:
       - darwin
@@ -86,7 +86,7 @@ builds:
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: topaz-backup
-    main: ./cmd/topaz-backup
+    main: ./topaz-backup
     binary: topaz-backup
     goos:
       - darwin
