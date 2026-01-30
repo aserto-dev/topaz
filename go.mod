@@ -2,7 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.25
 
-toolchain go1.25.5
+toolchain go1.25.6
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
@@ -20,14 +20,14 @@ require (
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
 	github.com/aserto-dev/openapi-directory v0.33.5
-	github.com/aserto-dev/runtime v1.12.3
+	github.com/aserto-dev/runtime v1.13.1
 	github.com/aserto-dev/self-decision-logger v0.0.12
-	github.com/authzen/access.go v0.0.7-0.20251203180810-cb9efaf01fa0
+	github.com/authzen/access.go v1.0.1
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0
 	github.com/fatih/color v1.18.0
-	github.com/gdamore/tcell/v2 v2.13.7
+	github.com/gdamore/tcell/v2 v2.13.8
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/gonvenience/ytbx v1.4.7
@@ -35,7 +35,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.4
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.7
 	github.com/homeport/dyff v1.10.3
 	github.com/itchyny/gojq v0.12.18
 	github.com/lestrrat-go/jwx/v2 v2.1.6
@@ -44,8 +44,8 @@ require (
 	github.com/mennanov/fmutils v0.3.5
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/moby/term v0.5.2
-	github.com/olekukonko/tablewriter v1.1.2
-	github.com/open-policy-agent/opa v1.12.3
+	github.com/olekukonko/tablewriter v1.1.3
+	github.com/open-policy-agent/opa v1.13.1
 	github.com/opencontainers/image-spec v1.1.1
 	github.com/panmari/cuckoofilter v1.0.6
 	github.com/pkg/errors v0.9.1
@@ -79,7 +79,7 @@ require (
 	github.com/bytecodealliance/wasmtime-go/v39 v39.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/clipperhouse/displaywidth v0.6.1 // indirect
+	github.com/clipperhouse/displaywidth v0.6.2 // indirect
 	github.com/clipperhouse/stringish v0.1.1 // indirect
 	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
 	github.com/containerd/containerd/v2 v2.2.1 // indirect
@@ -100,7 +100,6 @@ require (
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/gdamore/encoding v1.0.1 // indirect
 	github.com/getkin/kin-openapi v0.133.0 // indirect
-	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
@@ -120,7 +119,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/huandu/go-clone v1.7.3 // indirect
-	github.com/huandu/go-sqlbuilder v1.38.2 // indirect
+	github.com/huandu/go-sqlbuilder v1.39.0 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/itchyny/timefmt-go v0.1.7 // indirect
@@ -168,7 +167,7 @@ require (
 	github.com/oasdiff/yaml3 v0.0.0-20250309153720-d2182401db90 // indirect
 	github.com/olekukonko/cat v0.0.0-20250911104152-50322a0618f6 // indirect
 	github.com/olekukonko/errors v1.1.0 // indirect
-	github.com/olekukonko/ll v0.1.3 // indirect
+	github.com/olekukonko/ll v0.1.4-0.20260115111900-9e59c2286df0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
@@ -216,8 +215,9 @@ require (
 	golang.org/x/term v0.39.0 // indirect
 	golang.org/x/text v0.33.0 // indirect
 	golang.org/x/time v0.14.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20260114163908-3f89685c29c3 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260114163908-3f89685c29c3 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20260128011058-8636f8732409 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260128011058-8636f8732409 // indirect
+	gopkg.in/ini.v1 v1.67.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.6.0 // indirect
