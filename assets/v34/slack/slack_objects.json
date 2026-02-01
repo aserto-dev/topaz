@@ -1,0 +1,28 @@
+{
+  "objects": [
+    {
+      "type": "workspace",
+      "id": "smiths",
+      "display_name": "The Smiths workspace",
+      "properties": {}
+    },
+    {
+      "type": "channel",
+      "id": "smiths.general",
+      "display_name": "general",
+      "properties": {}
+    },
+    {
+      "type": "channel",
+      "id": "smiths.citadel",
+      "display_name": "citadel",
+      "properties": {}
+    },
+    {
+      "type": "channel",
+      "id": "smiths.gossip",
+      "display_name": "gossip",
+      "properties": {}
+    }
+  ]
+}

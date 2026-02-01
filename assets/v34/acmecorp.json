@@ -1,0 +1,18 @@
+{
+    "name": "acmecorp",
+    "description": "Acmecorp directory instance",
+    "assets": {
+        "manifest": "acmecorp/manifest.yaml",
+        "policy": {
+            "name": "acmecorp",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+            "acmecorp/acmecorp_objects.json",
+            "acmecorp/acmecorp_relations.json"
+        ],
+        "domain_data": [
+        ],
+        "assertions": []
+    }
+}

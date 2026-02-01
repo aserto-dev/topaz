@@ -1,0 +1,20 @@
+{
+  "assertions": [
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "member"
+        },
+        "resource": {
+          "type": "group",
+          "id": "admin"
+        }
+      },
+      "expected": true
+    }
+  ]
+}

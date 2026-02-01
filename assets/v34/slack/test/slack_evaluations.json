@@ -1,0 +1,116 @@
+{
+  "assertions": [
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "channels_admin"
+        },
+        "resource": {
+          "type": "workspace",
+          "id": "smiths"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "channels_admin"
+        },
+        "resource": {
+          "type": "workspace",
+          "id": "smiths"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "channel",
+          "id": "smiths.citadel"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "channel",
+          "id": "smiths.citadel"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "channel",
+          "id": "smiths.gossip"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "channel",
+          "id": "smiths.general"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "user",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "writer"
+        },
+        "resource": {
+          "type": "channel",
+          "id": "smiths.general"
+        }
+      },
+      "expected": false
+    }
+  ]
+}
