@@ -1,0 +1,23 @@
+{
+    "name": "api-gateway",
+    "description": "API Gateway",
+    "assets": {
+        "manifest": "api-gateway/manifest.yaml",
+        "policy": {
+            "name": "api-gateway",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+            "citadel/citadel_objects.json",
+            "citadel/citadel_relations.json"
+        ],
+        "domain_data": [
+            "api-gateway/api-gateway_objects.json",
+            "api-gateway/api-gateway_relations.json"
+        ],
+        "assertions": [
+            "api-gateway/test/api-gateway_assertions.json",
+            "api-gateway/test/api-gateway_evaluations.json"
+        ]
+    }
+}

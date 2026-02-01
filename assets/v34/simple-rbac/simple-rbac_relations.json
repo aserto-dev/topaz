@@ -1,0 +1,88 @@
+{
+  "relations": [
+    {
+      "object_type": "resource-creator",
+      "object_id": "resource-creators",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "resource-creator",
+      "object_id": "resource-creators",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "resource-creator",
+      "object_id": "resource-creators",
+      "relation": "member",
+      "subject_type": "user",
+      "subject_id": "summer@the-smiths.com"
+    },
+    {
+      "object_type": "resource",
+      "object_id": "mega-seed",
+      "relation": "owner",
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "resource",
+      "object_id": "mega-seed",
+      "relation": "reader",
+      "subject_type": "user",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "resource",
+      "object_id": "space-cruiser",
+      "relation": "owner",
+      "subject_type": "user",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "resource",
+      "object_id": "space-cruiser",
+      "relation": "writer",
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "resource",
+      "object_id": "space-cruiser",
+      "relation": "reader",
+      "subject_type": "user",
+      "subject_id": "summer@the-smiths.com"
+    },
+    {
+      "object_type": "resource",
+      "object_id": "portal-gun",
+      "relation": "owner",
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
+    },
+    {
+      "object_type": "resource",
+      "object_id": "portal-gun",
+      "relation": "writer",
+      "subject_type": "user",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "resource",
+      "object_id": "time-crystal",
+      "relation": "writer",
+      "subject_type": "user",
+      "subject_id": "rick@the-citadel.com"
+    },
+    {
+      "object_type": "resource",
+      "object_id": "time-crystal",
+      "relation": "reader",
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
+    }
+  ]
+}
