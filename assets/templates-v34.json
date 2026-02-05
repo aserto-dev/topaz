@@ -4,7 +4,7 @@
     "short_description": "Corporate directory end-to-end sample",
     "description": "A corporate directory application that includes a React front-end and a node.js back-end. It demonstrates three styles of policies - RBAC, ABAC, and ReBAC.",
     "docs_url": "https://docs.aserto.com/docs/getting-started/peoplefinder/peoplefinder-overview",
-    "topaz_url": "v34/peoplefinder.json", 
+    "topaz_url": "v34/peoplefinder.json",
     "hosted_url": "v34/hosted/peoplefinder.json"
   },
   "todo": {

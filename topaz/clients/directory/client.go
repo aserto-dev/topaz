@@ -5,7 +5,6 @@ import (
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
-	dsa3 "github.com/aserto-dev/go-directory/aserto/directory/assertion/v3"
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
@@ -25,7 +24,6 @@ type Config struct {
 	Token     string            `flag:"token" default:"${directory_token}" env:"TOPAZ_DIRECTORY_TOKEN" help:"directory OAuth2.0 token" hidden:""`
 	Insecure  bool              `flag:"insecure" short:"i" default:"${insecure}" env:"TOPAZ_INSECURE" help:"skip TLS verification"`
 	Plaintext bool              `flag:"plaintext" short:"P" default:"${plaintext}" env:"TOPAZ_PLAINTEXT" help:"use plain-text HTTP/2 (no TLS)"`
-	TenantID  string            `flag:"tenant-id" help:"" default:"${tenant_id}" env:"ASERTO_TENANT_ID" `
 	Headers   map[string]string `flag:"headers" env:"TOPAZ_DIRECTORY_HEADERS" help:"additional headers to send to the directory service"`
 	Timeout   time.Duration     `flag:"timeout" short:"T" default:"${timeout}" env:"TOPAZ_TIMEOUT" help:"command timeout"`
 }
@@ -33,26 +31,24 @@ type Config struct {
 var _ clients.Config = &Config{}
 
 type Client struct {
-	conn      *grpc.ClientConn
-	Model     dsm3.ModelClient
-	Reader    dsr3.ReaderClient
-	Writer    dsw3.WriterClient
-	Importer  dsi3.ImporterClient
-	Exporter  dse3.ExporterClient
-	Assertion dsa3.AssertionClient
-	Access    acc1.AccessClient
+	conn     *grpc.ClientConn
+	Model    dsm3.ModelClient
+	Reader   dsr3.ReaderClient
+	Writer   dsw3.WriterClient
+	Importer dsi3.ImporterClient
+	Exporter dse3.ExporterClient
+	Access   acc1.AccessClient
 }
 
 func New(conn *grpc.ClientConn) *Client {
 	return &Client{
-		conn:      conn,
-		Model:     dsm3.NewModelClient(conn),
-		Reader:    dsr3.NewReaderClient(conn),
-		Writer:    dsw3.NewWriterClient(conn),
-		Importer:  dsi3.NewImporterClient(conn),
-		Exporter:  dse3.NewExporterClient(conn),
-		Assertion: dsa3.NewAssertionClient(conn),
-		Access:    acc1.NewAccessClient(conn),
+		conn:     conn,
+		Model:    dsm3.NewModelClient(conn),
+		Reader:   dsr3.NewReaderClient(conn),
+		Writer:   dsw3.NewWriterClient(conn),
+		Importer: dsi3.NewImporterClient(conn),
+		Exporter: dse3.NewExporterClient(conn),
+		Access:   acc1.NewAccessClient(conn),
 	}
 }
 
@@ -84,8 +80,8 @@ func (cfg *Config) ClientConfig() *client.Config {
 		NoTLS:    cfg.Plaintext,
 		APIKey:   cfg.APIKey,
 		Token:    cfg.Token,
-		TenantID: cfg.TenantID,
-		Headers:  cfg.Headers,
+		// TenantID: cfg.TenantID,
+		Headers: cfg.Headers,
 	}
 }
 

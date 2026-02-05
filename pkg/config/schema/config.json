@@ -143,10 +143,6 @@
                     "type": "string",
                     "description": "Bearer authorization token"
                 },
-                "tenant_id": {
-                    "type": "string",
-                    "description": "tenant identifier"
-                },
                 "api_key": {
                     "type": "string",
                     "description": "basic authorization token"
@@ -162,11 +158,6 @@
                 "ca_cert_path": {
                     "type": "string",
                     "description": "path to CA certificate file"
-                },
-                "timeout_in_seconds": {
-                    "type": "integer",
-                    "description": "gRPC connection timeout in seconds",
-                    "deprecated": true
                 },
                 "insecure": {
                     "type": "boolean",

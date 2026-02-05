@@ -74,6 +74,8 @@ linters:
         - v3.WriterServer
         - v3.ExporterServer
         - v3.ImporterServer
+        - v4.ReaderServer
+        - v4.WriterServer
         - datasync.SyncClient
 
     lll:

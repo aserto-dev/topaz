@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	azOpenAPI "github.com/aserto-dev/openapi-authorizer/publish/authorizer"
+	"github.com/aserto-dev/pb-authorizer/openapi"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/impl"
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
@@ -105,5 +105,5 @@ const (
 )
 
 func azOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	azOpenAPI.OpenApiHandler(w, r)
+	openapi.Handler(w, r)
 }

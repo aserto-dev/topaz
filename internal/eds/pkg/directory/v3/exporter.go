@@ -14,8 +14,6 @@ import (
 )
 
 type Exporter struct {
-	dse3.UnimplementedExporterServer
-
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
 }
@@ -26,6 +24,8 @@ func NewExporter(logger *zerolog.Logger, store *bdb.BoltDB) *Exporter {
 		store:  store,
 	}
 }
+
+var _ = dse3.ExporterServer(&Exporter{})
 
 func (s *Exporter) Export(req *dse3.ExportRequest, stream dse3.Exporter_ExportServer) error {
 	logger := s.logger.With().Str("method", "Export").Interface("req", req).Logger()

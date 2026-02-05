@@ -2,7 +2,6 @@ package authorizer
 
 import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
@@ -48,9 +47,9 @@ func (cmd *GetPolicyCmd) template() proto.Message {
 		FieldMask: &fieldmaskpb.FieldMask{
 			Paths: []string{},
 		},
-		PolicyInstance: &api.PolicyInstance{
-			Name:          "",
-			InstanceLabel: "",
-		},
+		// PolicyInstance: &api.PolicyInstance{
+		// 	Name:          "",
+		// 	InstanceLabel: "",
+		// },
 	}
 }

@@ -18,8 +18,6 @@ import (
 )
 
 type Writer struct {
-	dsw3.UnimplementedWriterServer
-
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
 }
@@ -30,6 +28,8 @@ func NewWriter(logger *zerolog.Logger, store *bdb.BoltDB) *Writer {
 		store:  store,
 	}
 }
+
+var _ = dsw3.WriterServer(&Writer{})
 
 // SetObject.
 func (s *Writer) SetObject(ctx context.Context, req *dsw3.SetObjectRequest) (*dsw3.SetObjectResponse, error) {

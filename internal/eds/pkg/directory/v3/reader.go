@@ -20,8 +20,6 @@ import (
 )
 
 type Reader struct {
-	dsr3.UnimplementedReaderServer
-
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
 }
@@ -32,6 +30,8 @@ func NewReader(logger *zerolog.Logger, store *bdb.BoltDB) *Reader {
 		store:  store,
 	}
 }
+
+var _ = dsr3.ReaderServer(&Reader{})
 
 // GetObject, get single object instance.
 func (s *Reader) GetObject(ctx context.Context, req *dsr3.GetObjectRequest) (*dsr3.GetObjectResponse, error) {
@@ -83,8 +83,6 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr3.GetObjectRequest) (*ds
 		}
 
 		resp.Result = obj
-
-		resp.Page = &dsc3.PaginationResponse{}
 
 		return nil
 	})
