@@ -54,8 +54,8 @@ func (cmd *QueryCmd) template() proto.Message {
 			Type:     api.IdentityType_IDENTITY_TYPE_NONE,
 		},
 		ResourceContext: &structpb.Struct{},
-		PolicyInstance: &api.PolicyInstance{
-			Name: "",
-		},
+		// PolicyInstance: &api.PolicyInstance{
+		// 	Name: "",
+		// },
 	}
 }

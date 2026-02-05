@@ -10,7 +10,6 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/go-directory/pkg/pb"
-	"github.com/aserto-dev/header"
 	decisionlog_plugin "github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog"
 
 	"github.com/google/uuid"
@@ -35,7 +34,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 	log.Debug().Interface("input", input).Msg("is")
 
-	policyRuntime, err := s.getRuntime(ctx, req.GetPolicyInstance())
+	policyRuntime, err := s.getRuntime(ctx /*, req.GetPolicyInstance()*/)
 	if err != nil {
 		return &authorizer.IsResponse{}, err
 	}
@@ -96,15 +95,15 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
 		Path:      req.GetPolicyContext().GetPath(),
 		Policy: &api.DecisionPolicy{
-			Context:        req.GetPolicyContext(),
-			PolicyInstance: req.GetPolicyInstance(),
+			Context: req.GetPolicyContext(),
+			// PolicyInstance: req.GetPolicyInstance(),
 		},
 		User: &api.DecisionUser{
 			Context: req.GetIdentityContext(),
 			Id:      getID(input),
 			Email:   getEmail(input),
 		},
-		TenantId: getTenantID(ctx),
+		// TenantId: getTenantID(ctx),
 		Resource: req.GetResourceContext(),
 		Outcomes: getOutcomes(resp.GetDecisions()),
 	}
@@ -116,14 +115,14 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	return resp, err
 }
 
-func getTenantID(ctx context.Context) *string {
-	tenantID := header.ExtractTenantID(ctx)
-	if tenantID != "" {
-		return &tenantID
-	}
+// func getTenantID(ctx context.Context) *string {
+// 	tenantID := header.ExtractTenantID(ctx)
+// 	if tenantID != "" {
+// 		return &tenantID
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func getOutcomes(decisions []*authorizer.Decision) map[string]bool {
 	return lo.SliceToMap(decisions, func(item *authorizer.Decision) (string, bool) {

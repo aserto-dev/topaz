@@ -10,13 +10,16 @@ import (
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr4 "github.com/aserto-dev/go-directory/aserto/directory/reader/v4"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsw4 "github.com/aserto-dev/go-directory/aserto/directory/writer/v4"
 	dsa1 "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/migrate"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/datasync"
 	v3 "github.com/aserto-dev/topaz/internal/eds/pkg/directory/v3"
+	v4 "github.com/aserto-dev/topaz/internal/eds/pkg/directory/v4"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/rs/zerolog"
@@ -43,6 +46,8 @@ type Directory struct {
 	config    *Config
 	logger    *zerolog.Logger
 	store     *bdb.BoltDB
+	reader4   dsr4.ReaderServer
+	writer4   dsw4.WriterServer
 	exporter3 dse3.ExporterServer
 	importer3 dsi3.ImporterServer
 	model3    dsm3.ModelServer
@@ -113,6 +118,9 @@ func newDirectory(_ context.Context, config *Config, logger *zerolog.Logger) (*D
 		return nil, err
 	}
 
+	reader4 := v4.NewReader(logger, store)
+	writer4 := v4.NewWriter(logger, store)
+
 	reader3 := v3.NewReader(logger, store)
 	writer3 := v3.NewWriter(logger, store)
 	exporter3 := v3.NewExporter(logger, store)
@@ -124,6 +132,8 @@ func newDirectory(_ context.Context, config *Config, logger *zerolog.Logger) (*D
 		config:    config,
 		logger:    &newLogger,
 		store:     store,
+		reader4:   reader4,
+		writer4:   writer4,
 		model3:    v3.NewModel(logger, store),
 		reader3:   reader3,
 		writer3:   writer3,
@@ -144,6 +154,14 @@ func (s *Directory) Close() {
 		s.store.Close()
 		s.store = nil
 	}
+}
+
+func (s *Directory) Reader4() dsr4.ReaderServer {
+	return s.reader4
+}
+
+func (s *Directory) Writer4() dsw4.WriterServer {
+	return s.writer4
 }
 
 func (s *Directory) Exporter3() dse3.ExporterServer {

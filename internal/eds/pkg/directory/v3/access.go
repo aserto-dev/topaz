@@ -10,8 +10,6 @@ import (
 )
 
 type Access struct {
-	acc1.UnimplementedAccessServer
-
 	logger *zerolog.Logger
 	reader *Reader
 }
@@ -22,6 +20,8 @@ func NewAccess(logger *zerolog.Logger, reader *Reader) *Access {
 		reader: reader,
 	}
 }
+
+var _ = acc1.AccessServer(&Access{})
 
 // Evaluation access check.
 //

@@ -91,11 +91,11 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 	directoryAPIKey := cfg.DirectoryResolver.APIKey
 
 	return &handlers.TopazCfg{
-		AuthorizerServiceURL:        authorizerURL,
-		AuthorizerAPIKey:            authorizerAPIKey,
-		DirectoryServiceURL:         directoryServiceURL,
-		DirectoryAPIKey:             directoryAPIKey,
-		DirectoryTenantID:           cfg.DirectoryResolver.TenantID,
+		AuthorizerServiceURL: authorizerURL,
+		AuthorizerAPIKey:     authorizerAPIKey,
+		DirectoryServiceURL:  directoryServiceURL,
+		DirectoryAPIKey:      directoryAPIKey,
+		// DirectoryTenantID:           cfg.DirectoryResolver.TenantID,
 		DirectoryReaderServiceURL:   readerURL,
 		DirectoryWriterServiceURL:   writerURL,
 		DirectoryImporterServiceURL: importerURL,

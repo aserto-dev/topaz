@@ -3,7 +3,6 @@ package edge
 import (
 	"bytes"
 	"context"
-	"strings"
 
 	topaz "github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/noop"
@@ -33,9 +32,6 @@ func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Lo
 
 func (f PluginFactory) New(m *plugins.Manager, config any) plugins.Plugin {
 	cfg, _ := config.(*Config)
-	if cfg.TenantID == "" {
-		cfg.TenantID = strings.Split(m.ID, "/")[0]
-	}
 
 	if !cfg.Enabled {
 		return &noop.Noop{

@@ -20,8 +20,6 @@ import (
 )
 
 type Importer struct {
-	dsi3.UnimplementedImporterServer
-
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
 }
@@ -39,6 +37,8 @@ func NewImporter(logger *zerolog.Logger, store *bdb.BoltDB) *Importer {
 		store:  store,
 	}
 }
+
+var _ = dsi3.ImporterServer(&Importer{})
 
 func (s *Importer) Import(stream dsi3.Importer_ImportServer) error {
 	ctx := stream.Context()

@@ -8,9 +8,11 @@ import (
 	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr4 "github.com/aserto-dev/go-directory/aserto/directory/reader/v4"
 	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsw4 "github.com/aserto-dev/go-directory/aserto/directory/writer/v4"
 	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
-	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
+	"github.com/aserto-dev/pb-directory/openapi"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 
@@ -59,11 +61,13 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 		}
 
 		if lo.Contains(services, readerService) {
+			dsr4.RegisterReaderServer(server, e.dir.Reader4())
 			dsr3.RegisterReaderServer(server, e.dir.Reader3())
 			dsa1.RegisterAccessServer(server, e.dir.Access1())
 		}
 
 		if lo.Contains(services, writerService) {
+			dsw4.RegisterWriterServer(server, e.dir.Writer4())
 			dsw3.RegisterWriterServer(server, e.dir.Writer3())
 		}
 
@@ -113,7 +117,7 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 		}
 
 		if len(services) > 0 {
-			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler(port, services...)); err != nil {
+			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler); err != nil {
 				return err
 			}
 		}
@@ -123,13 +127,9 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 }
 
 const (
-	directoryOpenAPISpec string = "/directory/openapi.json"
+	directoryOpenAPISpec string = "/directory.openapi.json"
 )
 
-func dsOpenAPIHandler(port string, services ...string) func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	handler := dsOpenAPI.OpenAPIHandler(port, services...)
-
-	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-		handler(w, r)
-	}
+func dsOpenAPIHandler(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	openapi.Handler(w, r)
 }

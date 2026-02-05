@@ -19,7 +19,6 @@ type Config struct {
 	Token     string            `flag:"token" default:"${authorizer_token}" env:"TOPAZ_AUTHORIZER_TOKEN" help:"authorizer OAuth2.0 token" hidden:""`
 	Insecure  bool              `flag:"insecure" short:"i" default:"${insecure}" env:"TOPAZ_INSECURE" help:"skip TLS verification"`
 	Plaintext bool              `flag:"plaintext" short:"P" default:"${plaintext}" env:"TOPAZ_PLAINTEXT" help:"use plain-text HTTP/2 (no TLS)"`
-	TenantID  string            `flag:"tenant-id" help:"" default:"${tenant_id}" env:"ASERTO_TENANT_ID" `
 	Headers   map[string]string `flag:"headers" env:"TOPAZ_AUTHORIZER_HEADERS" help:"additional headers to send to the authorizer service"`
 	Timeout   time.Duration     `flag:"timeout" short:"T" default:"${timeout}" env:"TOPAZ_TIMEOUT" help:"command timeout"`
 }
@@ -66,8 +65,8 @@ func (cfg *Config) ClientConfig() *client.Config {
 		NoTLS:    cfg.Plaintext,
 		APIKey:   cfg.APIKey,
 		Token:    cfg.Token,
-		TenantID: cfg.TenantID,
-		Headers:  cfg.Headers,
+		// TenantID: cfg.TenantID,
+		Headers: cfg.Headers,
 	}
 }
 
