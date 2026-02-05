@@ -1,0 +1,180 @@
+{
+  "assertions": [
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "smiths.budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "summer@the-smiths.com"
+        },
+        "action": {
+          "name": "can_triage"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "smiths.budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_triage"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "smiths.budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "smiths.budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "smiths.budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "smiths.budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "jerry@the-smiths.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "smiths.budget"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "smiths.budget"
+        }
+      },
+      "expected": false
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "rick@the-citadel.com"
+        },
+        "action": {
+          "name": "can_administer"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "citadel.missions"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "morty@the-citadel.com"
+        },
+        "action": {
+          "name": "can_write"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "citadel.missions"
+        }
+      },
+      "expected": true
+    },
+    {
+      "evaluation": {
+        "subject": {
+          "type": "identity",
+          "id": "beth@the-smiths.com"
+        },
+        "action": {
+          "name": "can_read"
+        },
+        "resource": {
+          "type": "repo",
+          "id": "citadel.missions"
+        }
+      },
+      "expected": false
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+    "assertions": [
+        {
+            "check": {
+                "subject_type": "user",
+                "subject_id": "rick@the-citadel.com",
+                "relation": "member",
+                "object_type": "group",
+                "object_id": "admin"
+            },
+            "expected": true
+        }
+    ]
+}

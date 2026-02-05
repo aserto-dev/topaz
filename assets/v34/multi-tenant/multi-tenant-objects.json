@@ -1,0 +1,33 @@
+{
+  "objects": [
+    {
+      "type": "system",
+      "id": "system",
+      "display_name": "The entire system"
+    },
+    {
+      "type": "tenant",
+      "id": "citadel",
+      "display_name": "Citadel tenant",
+      "properties": {}
+    },
+    {
+      "type": "tenant",
+      "id": "smiths",
+      "display_name": "Smiths tenant",
+      "properties": {}
+    },
+    {
+      "type": "resource",
+      "id": "citadel-adventures",
+      "display_name": "The Citadel adventures resource",
+      "properties": {}
+    },
+    {
+      "type": "resource",
+      "id": "smiths-budget",
+      "display_name": "The Smiths family's budget",
+      "properties": {}
+    }
+  ]
+}

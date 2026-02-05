@@ -1,0 +1,24 @@
+{
+  "objects": [
+    {
+      "type": "service",
+      "id": "todo",
+      "displayName": "Todo List API"
+    },
+    {
+      "type": "route",
+      "id": "/todos/{todoId}",
+      "displayName": "/todos/{todoId}"
+    },
+    {
+      "type": "route",
+      "id": "/todos",
+      "displayName": "/todos"
+    },
+    {
+      "type": "route",
+      "id": "/users/{userId}",
+      "displayName": "/todos/{userId}"
+    }
+  ]  
+}
