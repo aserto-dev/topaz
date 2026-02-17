@@ -86,16 +86,6 @@ func (p *Plugin) Start(ctx context.Context) error {
 
 	p.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateOK})
 
-	// if p.hasLoopBack() {
-	// 	p.logger.Warn().
-	// 		Str("edge-directory", p.config.Addr).
-	// 		Str("remote-directory", p.topazConfig.DirectoryResolver.Address).
-	// 		Bool("has-loopback", p.hasLoopBack()).
-	// 		Msg("EdgePlugin.Start")
-
-	// 	return nil
-	// }
-
 	go p.scheduler()
 
 	return nil
