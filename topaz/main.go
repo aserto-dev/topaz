@@ -125,7 +125,6 @@ func kongParse(c *cc.CommonCtx, cli *cmd.CLI, cwd string) *kong.Context {
 			"authorizer_svc":     cc.AuthorizerSvc(),
 			"authorizer_key":     cc.AuthorizerKey(),
 			"authorizer_token":   cc.AuthorizerToken(),
-			"tenant_id":          cc.TenantID(),
 			"insecure":           strconv.FormatBool(cc.Insecure()),
 			"plaintext":          strconv.FormatBool(cc.Plaintext()),
 			"no_check":           strconv.FormatBool(cc.NoCheck()),

@@ -72,6 +72,7 @@ func updateManifest(oldPath, newPath bdb.Path) func(*zerolog.Logger, *bolt.DB, *
 			if err != nil {
 				return err
 			}
+
 			defer func() { _ = wtx.Rollback() }()
 
 			rb, err := common.SetBucket(rtx, oldPath)

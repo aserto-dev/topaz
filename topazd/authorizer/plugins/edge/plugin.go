@@ -35,7 +35,6 @@ type Config struct {
 	Enabled           bool              `json:"enabled"`             //
 	Addr              string            `json:"addr"`                //
 	APIKey            string            `json:"apikey"`              //
-	TenantID          string            `json:"tenant_id,omitempty"` //
 	Timeout           int               `json:"timeout"`             // timeout in seconds.
 	SyncInterval      int               `json:"sync_interval"`       // interval in minutes.
 	Insecure          bool              `json:"insecure"`            //
@@ -87,16 +86,6 @@ func (p *Plugin) Start(ctx context.Context) error {
 
 	p.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateOK})
 
-	if p.hasLoopBack() {
-		p.logger.Warn().
-			Str("edge-directory", p.config.Addr).
-			Str("remote-directory", p.topazConfig.DirectoryResolver.Address).
-			Bool("has-loopback", p.hasLoopBack()).
-			Msg("EdgePlugin.Start")
-
-		return nil
-	}
-
 	go p.scheduler()
 
 	return nil
@@ -119,7 +108,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, config any) {
 	}
 
 	// handle enabled status changed
-	if p.config.Enabled != newConfig.Enabled && !p.hasLoopBack() {
+	if p.config.Enabled != newConfig.Enabled {
 		p.logger.Info().Str("id", p.manager.ID).Bool("old", p.config.Enabled).Bool("new", newConfig.Enabled).Msg("sync enabled changed")
 
 		if newConfig.Enabled {
@@ -138,32 +127,14 @@ func (p *Plugin) Reconfigure(ctx context.Context, config any) {
 		p.logger.Error().Str("config", "failed type assertion").Msg("EdgePlugin.Reconfigure")
 		return
 	}
-
-	p.config.TenantID = strings.Split(p.manager.ID, "/")[0]
 }
 
 func (p *Plugin) SyncNow(mode api.SyncMode) {
-	if p.hasLoopBack() {
-		p.logger.Trace().Str("mode", mode.String()).Msg("sync now event ignored, operating with remote directory mode")
-		return
-	}
-
 	p.syncNow <- mode
 }
 
 func (p *Plugin) resetContext() {
 	p.ctx, p.cancel = context.WithCancel(context.Background())
-}
-
-// A loopback configuration exists when Topaz is configured with a remote directory AND
-// an edge sync that points to the same directory instance and tenant as the edge-sync configuration.
-// The edge sync can be either explicitly configured in the Topaz configuration file or
-// implicitly contributed as part of the discovery response.
-// When a loopback is detected, the remote directory configuration takes precedence,
-// and the edge sync will be disabled.
-func (p *Plugin) hasLoopBack() bool {
-	return (p.config.Addr == p.topazConfig.DirectoryResolver.Address &&
-		p.config.TenantID == p.topazConfig.DirectoryResolver.TenantID)
 }
 
 const cycles int64 = 4
@@ -271,10 +242,6 @@ func (p *Plugin) task(mode api.SyncMode) {
 		}
 	}()
 
-	if p.config.TenantID == "" {
-		panic(errors.Errorf("tenant-id empty"))
-	}
-
 	ctx, cancel := context.WithCancel(context.Background())
 
 	defer func() {
@@ -357,7 +324,6 @@ func (p *Plugin) remoteDirectoryClient() (*grpc.ClientConn, error) {
 	cfg := &client.Config{
 		Address:        p.config.Addr,           //
 		APIKey:         p.config.APIKey,         //
-		TenantID:       p.config.TenantID,       //
 		ClientCertPath: p.config.ClientCertPath, //
 		ClientKeyPath:  p.config.ClientKeyPath,  //
 		CACertPath:     p.config.CACertPath,     //

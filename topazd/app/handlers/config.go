@@ -19,7 +19,6 @@ type TopazCfg struct {
 	AuthorizerAPIKey            string `json:"authorizerApiKey"`
 	DirectoryServiceURL         string `json:"directoryServiceUrl"`
 	DirectoryAPIKey             string `json:"directoryApiKey"`
-	DirectoryTenantID           string `json:"directoryTenantId"`
 	DirectoryReaderServiceURL   string `json:"directoryReaderServiceUrl,omitempty"`
 	DirectoryWriterServiceURL   string `json:"directoryWriterServiceUrl,omitempty"`
 	DirectoryImporterServiceURL string `json:"directoryImporterServiceUrl,omitempty"`
@@ -57,7 +56,6 @@ func ConfigHandlerV2(confServices *TopazCfg) http.Handler {
 			AuthorizerAPIKey:            authorizerAPIKey,
 			DirectoryServiceURL:         confServices.DirectoryServiceURL,
 			DirectoryAPIKey:             directoryAPIKey,
-			DirectoryTenantID:           confServices.DirectoryTenantID,
 			DirectoryReaderServiceURL:   confServices.DirectoryReaderServiceURL,
 			DirectoryWriterServiceURL:   confServices.DirectoryWriterServiceURL,
 			DirectoryImporterServiceURL: confServices.DirectoryImporterServiceURL,

@@ -63,6 +63,7 @@ var relationTestCasesV3 = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NoError(t, tErr)
+
 			switch resp := msg.(type) {
 			case *dsw3.SetRelationResponse:
 				require.NoError(t, tErr)

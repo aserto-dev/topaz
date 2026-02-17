@@ -93,14 +93,12 @@ type Info struct {
 		DirectoryKey   string `json:"topaz_directory_key"`
 		DirectoryToken string `json:"topaz_directory_token"`
 		Insecure       bool   `json:"topaz_insecure"`
-		TenantID       string `json:"aserto_tenant_id"`
 	} `json:"directory"`
 	Authorizer struct {
 		AuthorizerSvc   string `json:"topaz_authorizer_svc"`
 		AuthorizerKey   string `json:"topaz_authorizer_key"`
 		AuthorizerToken string `json:"topaz_authorizer_token"`
 		Insecure        bool   `json:"topaz_insecure"`
-		TenantID        string `json:"aserto_tenant_id"`
 	} `json:"authorizer"`
 }
 
@@ -135,13 +133,11 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 	info.Directory.DirectoryKey = cc.DirectoryKey()
 	info.Directory.DirectoryToken = cc.DirectoryToken()
 	info.Directory.Insecure = cc.Insecure()
-	info.Directory.TenantID = cc.TenantID()
 
 	info.Authorizer.AuthorizerSvc = cc.AuthorizerSvc()
 	info.Authorizer.AuthorizerKey = cc.AuthorizerKey()
 	info.Authorizer.AuthorizerToken = cc.AuthorizerToken()
 	info.Authorizer.Insecure = cc.Insecure()
-	info.Authorizer.TenantID = cc.TenantID()
 
 	return &info
 }

@@ -33,7 +33,6 @@ func GetMiddlewaresForService(ctx context.Context, cfg *config.Config, logger *z
 	// get tenant id from opa instance id.
 	middlewareList = append(middlewareList,
 		request.NewRequestIDMiddleware(),
-		NewTenantIDMiddleware(cfg),
 		tracing.NewTracingMiddleware(logger),
 		gerr.NewErrorMiddleware(),
 	)
