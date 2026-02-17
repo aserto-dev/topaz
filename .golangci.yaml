@@ -46,6 +46,12 @@ linters:
       statements: 60
       ignore-comments: true
 
+    gocritic:
+      enable-all: false
+      disable-all: true
+      enabled-checks:
+        - commentedOutCode
+
     gomoddirectives:
       replace-allow-list:
         - github.com/slok/go-http-metrics
