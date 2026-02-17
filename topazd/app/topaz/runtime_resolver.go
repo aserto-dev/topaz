@@ -100,10 +100,6 @@ func NewRuntimeResolver(
 
 		details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
 
-		if cfg.ControllerConfig.Server.TenantID == "" {
-			cfg.ControllerConfig.Server.TenantID = cfg.OPA.InstanceID // get the tenant id from the opa instance id config.
-		}
-
 		if len(details) < 1 {
 			return nil, func() {}, aerr.ErrBadRuntime.Msg("provided discovery resource not formatted correctly")
 		}
@@ -165,9 +161,9 @@ func discoveryHostname() (string, error) {
 }
 
 func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName string) (*runtime.Runtime, error) {
-	return r.GetRuntime(ctx, "", policyName)
+	return r.GetRuntime(ctx, policyName)
 }
 
-func (r *RuntimeResolver) GetRuntime(ctx context.Context, opaInstanceID, policyName string) (*runtime.Runtime, error) {
+func (r *RuntimeResolver) GetRuntime(ctx context.Context, policyName string) (*runtime.Runtime, error) {
 	return r.runtime, nil
 }

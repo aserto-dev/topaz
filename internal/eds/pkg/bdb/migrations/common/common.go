@@ -77,6 +77,7 @@ func CreateBucket(path bdb.Path) func(*zerolog.Logger, *bolt.DB, *bolt.DB) error
 				} else {
 					b, err = b.CreateBucketIfNotExists([]byte(p))
 				}
+
 				if err != nil {
 					return err
 				}
@@ -268,6 +269,7 @@ func loadModelV1(ctx context.Context, roDB *bolt.DB) (*model.Model, error) {
 		}
 
 		m, err = v3.Load(bytes.NewReader(manifestBody.GetData()))
+
 		return err
 	}); err != nil {
 		return m, err
@@ -309,6 +311,7 @@ func loadModelV2(ctx context.Context, roDB *bolt.DB) (*model.Model, error) {
 		}
 
 		m, err = v3.Load(bytes.NewReader(manifestBody.GetData()))
+
 		return err
 	}); err != nil {
 		return m, err

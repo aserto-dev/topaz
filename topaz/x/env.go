@@ -22,7 +22,6 @@ const (
 	EnvTopazNoCheck         string = "TOPAZ_NO_CHECK"
 	EnvTopazNoColor         string = "TOPAZ_NO_COLOR"
 	EnvTopazFeatureFlag     string = "TOPAZ_FFLAG"
-	EnvAsertoTenantID       string = "ASERTO_TENANT_ID"
 	EnvAsertoHostName       string = "ASERTO_HOSTNAME"
 	EnvHostName             string = "HOSTNAME"
 	EnvContainer            string = "CONTAINER"

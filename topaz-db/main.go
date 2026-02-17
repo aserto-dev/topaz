@@ -36,7 +36,6 @@ func main() {
 			"directory_svc":   os.Getenv(x.EnvTopazDirectorySvc),
 			"directory_key":   os.Getenv(x.EnvTopazDirectoryKey),
 			"directory_token": "",
-			"tenant_id":       os.Getenv(x.EnvAsertoTenantID),
 			"insecure":        strconv.FormatBool(false),
 			"plaintext":       strconv.FormatBool(false),
 			"no_check":        strconv.FormatBool(false),

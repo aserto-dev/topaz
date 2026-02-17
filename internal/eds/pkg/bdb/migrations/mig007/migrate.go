@@ -69,6 +69,7 @@ func updateManifest(path bdb.Path) func(*zerolog.Logger, *bolt.DB, *bolt.DB) err
 			if err != nil {
 				return err
 			}
+
 			defer func() { _ = wtx.Rollback() }()
 
 			b, err := common.SetBucket(rtx, path)
@@ -94,6 +95,7 @@ func updateManifest(path bdb.Path) func(*zerolog.Logger, *bolt.DB, *bolt.DB) err
 					return err
 				}
 			}
+
 			return wtx.Commit()
 		}); err != nil {
 			return err
@@ -150,6 +152,7 @@ func updateEncodingObjects() func(*zerolog.Logger, *bolt.DB, *bolt.DB) error {
 			if err != nil {
 				return err
 			}
+
 			defer func() { _ = wtx.Rollback() }()
 
 			b, err := common.SetBucket(rtx, bdb.ObjectsPath)
@@ -198,6 +201,7 @@ func updateEncodingRelations() func(*zerolog.Logger, *bolt.DB, *bolt.DB) error {
 			if err != nil {
 				return err
 			}
+
 			defer func() { _ = wtx.Rollback() }()
 
 			b, err := common.SetBucket(rtx, bdb.RelationsObjPath)
