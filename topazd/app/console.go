@@ -79,16 +79,22 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 	}
 
 	authorizerAPIKey := ""
+	directoryAPIKey := ""
 
 	if _, ok := cfg.APIConfig.Services[authorizerService]; ok {
 		for key := range cfg.Auth.APIKeys {
 			// we only need a key
 			authorizerAPIKey = key
+			directoryAPIKey = key
+
 			break
 		}
 	}
 
-	directoryAPIKey := cfg.DirectoryResolver.APIKey
+	// if the `remote directory` API key is set, use that instead the local API key.
+	if cfg.DirectoryResolver.APIKey != "" {
+		directoryAPIKey = cfg.DirectoryResolver.APIKey
+	}
 
 	return &handlers.TopazCfg{
 		AuthorizerServiceURL:        authorizerURL,
