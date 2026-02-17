@@ -86,7 +86,6 @@ func testBuiltins(addr string) func(*testing.T) {
 		ctx, cancel := context.WithCancel(t.Context())
 		t.Cleanup(cancel)
 
-		// BuiltinHelptests(ctx, client)
 		for _, tc := range BuiltinHelpTests {
 			f := func(t *testing.T) {
 				resp, err := azClient.Query(ctx, &authorizer.QueryRequest{
