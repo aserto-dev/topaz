@@ -217,7 +217,6 @@ func (e *Topaz) ConfigServices() error {
 					consoleConfig := consoleSvc.PrepareConfig(e.Configuration)
 
 					// config service.
-					// server.Gateway.Mux.HandleFunc("/api/v1/config", handlers.ConfigHandler(consoleConfig))
 					server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
 					server.Gateway.Mux.HandleFunc("/api/v1/authorizers", handlers.AuthorizersHandler(consoleConfig))
 					// console service. depends on config service.

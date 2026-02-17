@@ -28,17 +28,6 @@ type TopazCfg struct {
 	ConsoleURL                  string `json:"-"`
 }
 
-// type TopazCfgV1 struct {
-// 	AsertoDirectoryURL       string `json:"asertoDirectoryUrl"`
-// 	AuthorizerServiceURL     string `json:"authorizerServiceUrl"`
-// 	AuthorizerAPIKey         string `json:"authorizerApiKey"`
-// 	DirectoryAPIKey          string `json:"directoryApiKey"`
-// 	DirectoryTenantID        string `json:"directoryTenantId"`
-// 	AsertoDirectoryReaderURL string `json:"asertoDirectoryReaderUrl,omitempty"`
-// 	AsertoDirectoryWriterURL string `json:"asertoDirectoryWriterUrl,omitempty"`
-// 	AsertoDirectoryModelURL  string `json:"asertoDirectoryModelUrl,omitempty"`
-// }
-
 type TopazCfgV2 struct {
 	*TopazCfg
 
@@ -52,24 +41,6 @@ type CfgV2Response struct {
 	AuthenticationType string        `json:"authenticationType"`
 	Configs            []*TopazCfgV2 `json:"configs"`
 }
-
-// func ConfigHandler(confServices *TopazCfg) func(w http.ResponseWriter, r *http.Request) {
-// 	return func(w http.ResponseWriter, r *http.Request) {
-// 		v1Cfg := &TopazCfgV1{
-// 			AsertoDirectoryURL:       confServices.DirectoryServiceURL,
-// 			AuthorizerServiceURL:     confServices.AuthorizerServiceURL,
-// 			AuthorizerAPIKey:         confServices.AuthorizerAPIKey,
-// 			DirectoryAPIKey:          confServices.DirectoryAPIKey,
-// 			DirectoryTenantID:        confServices.DirectoryTenantID,
-// 			AsertoDirectoryReaderURL: confServices.DirectoryReaderServiceURL,
-// 			AsertoDirectoryWriterURL: confServices.DirectoryWriterServiceURL,
-// 			AsertoDirectoryModelURL:  confServices.DirectoryModelServiceURL,
-// 		}
-
-// 		buf, _ := json.Marshal(v1Cfg)
-// 		writeJSON(buf, w, r)
-// 	}
-// }
 
 func ConfigHandlerV2(confServices *TopazCfg) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
