@@ -130,7 +130,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 
 	for i := range fields.Len() {
 		c := i
-		path := append(parent, fields.Get(i).TextName()) //nolint: gocritic
+		path := append(parent, fields.Get(i).TextName())
 		fieldName := strings.Join(path, ".")
 		fd := fields.Get(i)
 

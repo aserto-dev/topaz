@@ -15,7 +15,6 @@ const (
 	defaultAuthorizerSvc   = "localhost:8282"
 	defaultAuthorizerKey   = ""
 	defaultAuthorizerToken = ""
-	defaultTenantID        = ""
 	defaultInsecure        = false
 	defaultPlaintext       = false
 	defaultTimeout         = 5 * time.Second
@@ -69,14 +68,6 @@ func AuthorizerToken() string {
 	}
 
 	return defaultAuthorizerToken
-}
-
-func TenantID() string {
-	if tenantID := os.Getenv(x.EnvAsertoTenantID); tenantID != "" {
-		return tenantID
-	}
-
-	return defaultTenantID
 }
 
 func Insecure() bool {

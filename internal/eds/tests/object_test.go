@@ -37,6 +37,7 @@ var objectTestCasesWithID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsw.SetObjectResponse:
 				require.NoError(t, tErr)
@@ -52,6 +53,7 @@ var objectTestCasesWithID = []*TestCase{
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
 				assert.Equal(t, "3016620182482667549", resp.GetResult().GetEtag())
 			}
+
 			return func(proto.Message) {}
 		},
 	},
@@ -63,6 +65,7 @@ var objectTestCasesWithID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsr.GetObjectResponse:
 				require.NoError(t, tErr)
@@ -78,6 +81,7 @@ var objectTestCasesWithID = []*TestCase{
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
 				assert.Equal(t, "3016620182482667549", resp.GetResult().GetEtag())
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -93,6 +97,7 @@ var objectTestCasesWithID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsw.SetObjectResponse:
 				require.NoError(t, tErr)
@@ -108,6 +113,7 @@ var objectTestCasesWithID = []*TestCase{
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
 				assert.Equal(t, "2708540687187161441", resp.GetResult().GetEtag())
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -119,6 +125,7 @@ var objectTestCasesWithID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsr.GetObjectResponse:
 				require.NoError(t, tErr)
@@ -134,6 +141,7 @@ var objectTestCasesWithID = []*TestCase{
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
 				assert.Equal(t, "2708540687187161441", resp.GetResult().GetEtag())
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -145,12 +153,14 @@ var objectTestCasesWithID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsw.DeleteObjectResponse:
 				require.NoError(t, tErr)
 				assert.NotNil(t, resp)
 				assert.NotNil(t, resp.GetResult())
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -175,12 +185,14 @@ var objectTestCasesWithID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsw.DeleteObjectResponse:
 				require.NoError(t, tErr)
 				assert.NotNil(t, resp)
 				assert.NotNil(t, resp.GetResult())
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -201,6 +213,7 @@ var objectTestCasesWithoutID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsw.SetObjectResponse:
 				require.NoError(t, tErr)
@@ -223,6 +236,7 @@ var objectTestCasesWithoutID = []*TestCase{
 					case *dsw.SetObjectRequest:
 						r.Object.Etag = lastHash
 					}
+
 					t.Logf("propagated hash:%s", lastHash)
 				}
 			}
@@ -237,6 +251,7 @@ var objectTestCasesWithoutID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsr.GetObjectResponse:
 				require.NoError(t, tErr)
@@ -259,9 +274,11 @@ var objectTestCasesWithoutID = []*TestCase{
 					case *dsw.SetObjectRequest:
 						r.Object.Etag = lastHash
 					}
+
 					t.Logf("propagated hash:%s", lastHash)
 				}
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -276,6 +293,7 @@ var objectTestCasesWithoutID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsw.SetObjectResponse:
 				require.NoError(t, tErr)
@@ -302,6 +320,7 @@ var objectTestCasesWithoutID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsr.GetObjectResponse:
 				require.NoError(t, tErr)
@@ -317,6 +336,7 @@ var objectTestCasesWithoutID = []*TestCase{
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
 				assert.Greater(t, len(resp.GetResult().GetEtag()), 4)
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -328,6 +348,7 @@ var objectTestCasesWithoutID = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NotNil(t, msg)
+
 			switch resp := msg.(type) {
 			case *dsw.DeleteObjectResponse:
 				require.NoError(t, tErr)

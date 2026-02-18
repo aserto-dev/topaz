@@ -58,11 +58,6 @@ func (g *Generator) WithEnableDirectoryV2(enabled bool) *Generator {
 	return g
 }
 
-func (g *Generator) WithTenantID(tenantID string) *Generator {
-	g.TenantID = tenantID
-	return g
-}
-
 func (g *Generator) WithDiscovery(url, key string) *Generator {
 	g.DiscoveryURL = url
 	g.TenantKey = key

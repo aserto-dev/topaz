@@ -215,6 +215,7 @@ func (s *Model) DeleteManifest(ctx context.Context, req *dsm3.DeleteManifestRequ
 		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
 		if ifMatchHeader != "" {
 			dbMd := &dsm3.Metadata{UpdatedAt: timestamppb.Now(), Etag: ""}
+
 			manifest, err := ds.Manifest(dbMd).Get(ctx, tx)
 			if err != nil {
 				return nil //nolint:nilerr // early return when manifest does not exists, delete should not fail.
