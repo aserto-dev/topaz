@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync"
 
 	"github.com/aserto-dev/topaz/topazd/service/builder"
@@ -62,11 +63,15 @@ func endpoint(cfg *builder.API) (*url.URL, error) {
 	if cfg.Gateway.ListenAddress != "" {
 		u := url.URL{
 			Scheme: lo.Ternary(cfg.Gateway.HTTP, "http", "https"),
-			Host:   cfg.Gateway.ListenAddress,
+			Host:   serviceAddress(cfg.Gateway.ListenAddress),
 		}
 
 		return url.Parse(u.String())
 	}
 
 	return nil, errors.Errorf("no fqdn or listen address")
+}
+
+func serviceAddress(listenAddress string) string {
+	return strings.Replace(listenAddress, "0.0.0.0", "localhost", 1)
 }
