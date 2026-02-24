@@ -15,7 +15,7 @@ func GoARCH() *string {
 	if runtime.GOARCH == "amd64" {
 		goarch = runtime.GOARCH + "_v1"
 	} else {
-		goarch = runtime.GOARCH
+		goarch = runtime.GOARCH + "_v8"
 	}
 
 	return &goarch
@@ -30,7 +30,7 @@ func CommitSHA() string {
 }
 
 func TestImage() string {
-	return "ghcr.io/aserto-dev/topaz:0.0.0-test-" + CommitSHA() + "-" + runtime.GOARCH
+	return "ghcr.io/gertd/topaz:0.0.0-test-" + CommitSHA() + "-" + runtime.GOARCH
 }
 
 func MappedAddr(ctx context.Context, container testcontainers.Container, port string) (string, error) {
