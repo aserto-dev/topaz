@@ -1,6 +1,8 @@
 FROM alpine
 
 ARG GOARCH
+ARG TARGETOS
+ARG TARGETARCH
 
 RUN apk add --no-cache bash tzdata ca-certificates
 
@@ -12,7 +14,7 @@ VOLUME ["/config", "/certs", "/db", "/decisions"]
 
 WORKDIR /app
 
-COPY dist/topaz*_linux_${GOARCH}/topaz* /app/
+COPY topazd topaz /app/
 
 ENTRYPOINT ["./topazd"]
 CMD ["run", "-c", "/config/config.yaml"]
