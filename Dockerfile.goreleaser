@@ -1,5 +1,8 @@
 FROM alpine
 
+ARG TARGETOS
+ARG TARGETARCH
+
 RUN apk add --no-cache bash tzdata ca-certificates
 
 RUN mkdir /config && \
@@ -10,7 +13,7 @@ VOLUME ["/config", "/certs", "/db", "/decisions"]
 
 WORKDIR /app
 
-COPY topaz* /app/
+COPY topazd topaz topaz-backup /app/
 
 ENTRYPOINT ["./topazd"]
 CMD ["run", "-c", "/config/config.yaml"]

@@ -39,7 +39,7 @@ gover:
 .PHONY: build
 build: gover
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/goreleaser build --clean --snapshot --single-target
+	@${EXT_BIN_DIR}/goreleaser build --config .goreleaser.yml --clean --snapshot --single-target
 
 PHONY: go-mod-tidy
 go-mod-tidy:
@@ -47,14 +47,14 @@ go-mod-tidy:
 	@go work edit -json | jq -r '.Use[].DiskPath' | xargs -I{} bash -c 'cd {} && echo "${PWD}/go.mod" && go mod tidy -v && cd -'
 
 .PHONY: release
-release:
+release: gover
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/goreleaser release --clean
+	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser.yml --clean
 
 .PHONY: snapshot
-snapshot:
+snapshot: gover
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/goreleaser release --clean --snapshot
+	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser.yml --clean --snapshot --skip archive,homebrew,sbom
 
 .PHONY: generate
 generate:
@@ -80,7 +80,7 @@ test: gover test-snapshot
 test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@docker image rm ghcr.io/aserto-dev/topaz:0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m) || true
-	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot --skip archive
+	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot --skip archive,homebrew,sbom
 
 .PHONE: container-tag
 container-tag:
