@@ -15,7 +15,7 @@ func GoARCH() *string {
 	if runtime.GOARCH == "amd64" {
 		goarch = runtime.GOARCH + "_v1"
 	} else {
-		goarch = runtime.GOARCH
+		goarch = runtime.GOARCH + "_v8"
 	}
 
 	return &goarch

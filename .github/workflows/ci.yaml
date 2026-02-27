@@ -14,10 +14,14 @@ on:
   # Run tests for all PRs
   pull_request:
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
   GO_VERSION: "1.25"
-  GO_RELEASER_VERSION: "v2.9.0"
+  GO_RELEASER_VERSION: "v2.14.1"
   GO_LANGCI_LINT_VERSION: "v2.6.2"
   GO_TESTSUM_VERSION: "1.13.0"
   SYFT_VERSION: "v1.13.0"
@@ -34,8 +38,16 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
       -
+        name: Test Setup
+        uses: gertd/action-gotestsum@v3.0.0
+        with:
+          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
+      -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v3
+      - 
+        name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
       -
         name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@v3
@@ -44,21 +56,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       -
-        name: Docker SSH Setup
-        run: |
-          mkdir -p $HOME/.ssh
-          umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
-          ssh-keyscan github.com >> $HOME/.ssh/known_hosts
-          git config --global url."git@github.com:".insteadOf https://github.com/
-          git config --global user.email "github-bot@aserto.com"
-          git config --global user.name "Aserto Bot"
-          eval `ssh-agent`
-          ssh-add $HOME/.ssh/id_rsa
-      -
         name: Build
         uses: goreleaser/goreleaser-action@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_CLI_EXPERIMENTAL: "enabled"
         with:
           distribution: goreleaser
           version: ${{ env.GO_RELEASER_VERSION }}
@@ -70,19 +72,15 @@ jobs:
           version: ${{ env.GO_LANGCI_LINT_VERSION }}
           args: --timeout=30m
       -
-        name: Test Setup
-        uses: gertd/action-gotestsum@v3.0.0
-        with:
-          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
-      -
         name: Test Snapshot
         uses: goreleaser/goreleaser-action@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_CLI_EXPERIMENTAL: "enabled"
         with:
           distribution: goreleaser
           version: ${{ env.GO_RELEASER_VERSION }}
-          args: release --clean --snapshot --config .goreleaser-test.yml
+          args: release --config .goreleaser-test.yml --clean --snapshot --skip archive,homebrew,sbom
       -
         name: Unit Tests
         run: |
@@ -111,6 +109,7 @@ jobs:
           path-to-profile: cover.out
 
   push:
+    needs: [test]
     runs-on: ubuntu-latest
     # when on a branch only push if the branch is main
     # always push when ref is a tag
@@ -128,6 +127,9 @@ jobs:
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v3
+      - 
+        name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
       -
         name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@v3
@@ -135,29 +137,6 @@ jobs:
           registry: https://ghcr.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      -
-        name: Docker SSH Setup
-        run: |
-          mkdir -p $HOME/.ssh
-          umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
-          ssh-keyscan github.com >> $HOME/.ssh/known_hosts
-          git config --global url."git@github.com:".insteadOf https://github.com/
-          git config --global user.email "github-bot@aserto.com"
-          git config --global user.name "Aserto Bot"
-          eval `ssh-agent`
-          ssh-add $HOME/.ssh/id_rsa
-      -
-        name: Wait for tests to succeed
-        uses: fountainhead/action-wait-for-check@v1.2.0
-        id: wait-for-tests
-        with:
-          token: ${{ secrets.READ_WRITE_TOKEN }}
-          checkName: test
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      -
-        name: Stop if tests fail
-        if: steps.wait-for-tests.outputs.conclusion != 'success'
-        run: exit 1
       -
         name: Setup syft
         uses: anchore/sbom-action/download-syft@v0
@@ -172,6 +151,7 @@ jobs:
           args: release --clean --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_CLI_EXPERIMENTAL: "enabled"
 
   release:
     needs: [test, push]
@@ -193,6 +173,9 @@ jobs:
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v3
+      - 
+        name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
       -
         name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@v3
@@ -200,17 +183,6 @@ jobs:
           registry: https://ghcr.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      -
-        name: Docker SSH Setup
-        run: |
-          mkdir -p $HOME/.ssh
-          umask 0077 && echo -e "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
-          ssh-keyscan github.com >> $HOME/.ssh/known_hosts
-          git config --global url."git@github.com:".insteadOf https://github.com/
-          git config --global user.email "github-bot@aserto.com"
-          git config --global user.name "Aserto Bot"
-          eval `ssh-agent`
-          ssh-add $HOME/.ssh/id_rsa
       -
         name: Setup syft
         uses: anchore/sbom-action/download-syft@v0
@@ -222,6 +194,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_CLI_EXPERIMENTAL: "enabled"
         with:
           distribution: goreleaser
           version: ${{ env.GO_RELEASER_VERSION }}
