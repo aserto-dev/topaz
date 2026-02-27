@@ -57,42 +57,66 @@ builds:
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
+  - id: topaz-backup
+    main: ./topaz-backup
+    binary: topaz-backup
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
 snapshot:
   # https://goreleaser.com/customization/snapshots/
   version_template: "0.0.0-test-{{ .ShortCommit }}"
 
-dockers:
-  # https://goreleaser.com/customization/docker/
-  - use: buildx
-    goos: linux
-    goarch: amd64
-    image_templates:
-      - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-amd64"
-    skip_push: true
-    dockerfile: ./Dockerfile.test
-    build_flag_templates:
-      - "--platform=linux/amd64/v1"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
-      - "--label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}"
-      - "--label=org.opencontainers.image.licenses={{ .Env.LICENSE }}"
+dockers_v2:
+  # https://goreleaser.com/customization/dockers_v2
+  - 
+    dockerfile: "Dockerfile"
 
-  - use: buildx
-    goos: linux
-    goarch: arm64
-    image_templates:
-      - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-arm64"
-    skip_push: true
-    dockerfile: ./Dockerfile.test
-    build_flag_templates:
-      - "--platform=linux/arm64/v8"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
-      - "--label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}"
-      - "--label=org.opencontainers.image.licenses={{ .Env.LICENSE }}"
+    platforms:
+      - linux/arm64
+      - linux/amd64
+
+    ids:
+      - topaz
+      - topazd
+      - topaz-backup
+
+    images:
+      - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}"
+
+    tags:
+      - "{{ .Version }}"
+
+    labels:
+      "org.opencontainers.image.created": "{{.Date}}"
+      "org.opencontainers.image.name": "{{.ProjectName}}"
+      "org.opencontainers.image.revision": "{{.FullCommit}}"
+      "org.opencontainers.image.version": "{{.Version}}"
+      "org.opencontainers.image.source": "https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      "org.opencontainers.image.description": "{{ .Env.DESCRIPTION }}"
+      "org.opencontainers.image.licenses": "{{ .Env.LICENSE }}"
+
+    sbom: false # Attestation is not supported for the docker driver.
+
+    retry:
+      attempts: 10
+      delay: 10s
+      max_delay: 2m
+
+    extra_files:
+    annotations:
+    build_args:
+    flags:

@@ -6,6 +6,12 @@ ERR_COLOR          := \033[31;01m
 WARN_COLOR         := \033[36;01m
 ATTN_COLOR         := \033[33;01m
 
+REGISTRY           := ghcr.io
+ORG                := aserto-dev
+REPO               := topaz
+DESCRIPTION        := "Topaz Authorization Service"
+LICENSE            := Apache-2.0
+
 GOOS               := $(shell go env GOOS)
 GOARCH             := $(shell go env GOARCH)
 TOPAZ_DIST         := ${PWD}/$(shell cat dist/artifacts.json | jq -r '.[] | select(.name == "topaz").path')
@@ -20,7 +26,7 @@ GO_VER             := 1.25
 SVU_VER 	         := 3.3.0
 GOTESTSUM_VER      := 1.13.0
 GOLANGCI-LINT_VER  := 2.6.2
-GORELEASER_VER     := 2.9.0
+GORELEASER_VER     := 2.14.1
 SYFT_VER           := 1.13.0
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
@@ -40,6 +46,39 @@ gover:
 build: gover
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/goreleaser build --config .goreleaser.yml --clean --snapshot --single-target
+
+.PHONY: docker-build
+docker-build:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@docker buildx build \
+  --platform=linux/arm64,linux/amd64 \
+  --tag ${REGISTRY}/${ORG}/${REPO}:$$(svu current) \
+	--tag ${REGISTRY}/${ORG}/${REPO}:latest  \
+	--progress=plain \
+  --build-arg BUILD_DATE=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+	--build-arg TITLE=${REPO} \
+  --build-arg VCS_REF=$$(git rev-parse HEAD) \
+  --build-arg VERSION=$$(svu current) \
+  --build-arg REPO_URL="https://github.com/${ORG}/${REPO}" \
+  --build-arg DESCRIPTION=${DESCRIPTION} \
+  --build-arg LICENSE=${LICENSE} \
+  --push .
+
+.PHONY: docker-build-test
+docker-build-test:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@docker buildx build \
+  --platform=linux/${GOARCH} \
+  --tag ${REGISTRY}/${ORG}/${REPO}:0.0.0-test-$$(git rev-parse --short HEAD)-$(GOARCH) \
+	--progress=plain \
+  --build-arg BUILD_DATE=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+	--build-arg TITLE=${REPO} \
+  --build-arg VCS_REF=$$(git rev-parse HEAD) \
+  --build-arg VERSION=$$(svu current) \
+  --build-arg REPO_URL="https://github.com/${ORG}/${REPO}" \
+  --build-arg DESCRIPTION=${DESCRIPTION} \
+  --build-arg LICENSE=${LICENSE} \
+  .
 
 PHONY: go-mod-tidy
 go-mod-tidy:
@@ -73,13 +112,13 @@ test: gover test-snapshot
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./... | grep -v topazd/tests) -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./topazd/tests/... | grep -v tests/template) -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-no-tls/... -count=1 -timeout 240s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-with-tls/... -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/${ORG}/${REPO}/topazd/tests/template-no-tls/... -count=1 -timeout 240s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/${ORG}/${REPO}/topazd/tests/template-with-tls/... -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
 
 .PHONY: test-snapshot
 test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@docker image rm ghcr.io/aserto-dev/topaz:0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m) || true
+	@docker image rm ${REGISTRY}/${ORG}/${REPO}:0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m) || true
 	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser-test.yml --clean --snapshot --skip archive,homebrew,sbom
 
 .PHONE: container-tag
@@ -114,6 +153,9 @@ info:
 	@echo "EXT_TMP_DIR: ${EXT_TMP_DIR}"
 	@echo "RELEASE_TAG: ${RELEASE_TAG}"
 	@echo "TOPAZ_DIST:  ${TOPAZ_DIST}"
+	@echo "REGISTRY:    ${REGISTRY}"
+	@echo "ORG:         ${ORG}"
+	@echo "REPO:        ${REPO}"
 
 .PHONY: install-svu
 install-svu: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
