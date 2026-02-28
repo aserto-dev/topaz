@@ -34,9 +34,9 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: topaz
@@ -57,9 +57,9 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: topaz-db
