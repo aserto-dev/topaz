@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/aserto-dev/topaz/topaz/x"
 	"github.com/aserto-dev/topaz/topazd/version"
+	"github.com/aserto-dev/topaz/topazd/x"
 	"github.com/spf13/cobra"
 )
 
