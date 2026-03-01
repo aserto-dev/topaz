@@ -230,7 +230,7 @@ jobs:
         id: download_exe
         shell: bash
         run: |
-          gh release download "${GITHUB_REF#refs/tags/}" -p "topaz_windows_x86_64.zip"
+          gh release download "${GITHUB_REF#refs/tags/}" -p "topaz_windows_amd.zip"
           printf "zip=%s\n" *.zip >> $GITHUB_OUTPUT
           unzip -o *.zip && rm -v *.zip
         env:
