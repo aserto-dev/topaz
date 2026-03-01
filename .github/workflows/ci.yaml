@@ -196,7 +196,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HOMEBREW_TAP: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP: ${{ secrets.RELEASE_TOKEN }}
           DOCKER_CLI_EXPERIMENTAL: "enabled"
         with:
           distribution: goreleaser
