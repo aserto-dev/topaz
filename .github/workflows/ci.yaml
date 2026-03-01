@@ -15,7 +15,10 @@ on:
   pull_request:
 
 permissions:
+  actions: write
+  attestations: write
   contents: write
+  deployments: write
   packages: write
 
 env:
@@ -192,8 +195,8 @@ jobs:
         name: Release
         uses: goreleaser/goreleaser-action@v6
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          HOMEBREW_TAP: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_CLI_EXPERIMENTAL: "enabled"
         with:
           distribution: goreleaser
@@ -231,7 +234,7 @@ jobs:
           printf "zip=%s\n" *.zip >> $GITHUB_OUTPUT
           unzip -o *.zip && rm -v *.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - 
         name: Install go-msi
         run: choco install -y "go-msi"
@@ -260,4 +263,4 @@ jobs:
           gh release upload "$tag_name" "$MSI_FILE" --repo aserto-dev/topaz --clobber
         env:
           MSI_FILE: ${{ steps.buildmsi.outputs.msi }}
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
