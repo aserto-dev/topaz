@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/aserto-dev/topaz/topazd/version"
+	"github.com/aserto-dev/topaz/topazd/x"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print version and exit",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("topazd %s\n", version.GetInfo().Version)
+		fmt.Printf("%s %s\n", x.AppName, version.GetInfo().String())
 	},
 }
 
