@@ -14,7 +14,7 @@ import (
 )
 
 func TestObjects(t *testing.T) {
-	tcs := []*TestCase{}
+	tcs := []*TestCase{} //nolint: prealloc
 
 	tcs = append(tcs, objectTestCasesWithID...)
 	tcs = append(tcs, objectTestCasesWithoutID...)
@@ -174,6 +174,7 @@ var objectTestCasesWithID = []*TestCase{
 			require.Error(t, tErr)
 			assert.Contains(t, tErr.Error(), "key not found")
 			assert.Nil(t, msg)
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -240,6 +241,7 @@ var objectTestCasesWithoutID = []*TestCase{
 					t.Logf("propagated hash:%s", lastHash)
 				}
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -309,6 +311,7 @@ var objectTestCasesWithoutID = []*TestCase{
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
 				assert.Greater(t, len(resp.GetResult().GetEtag()), 4)
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -355,6 +358,7 @@ var objectTestCasesWithoutID = []*TestCase{
 				assert.NotNil(t, resp)
 				assert.NotNil(t, resp.GetResult())
 			}
+
 			return func(req proto.Message) {}
 		},
 	},
@@ -368,6 +372,7 @@ var objectTestCasesWithoutID = []*TestCase{
 			require.Error(t, tErr)
 			assert.Contains(t, tErr.Error(), "key not found")
 			assert.Nil(t, msg)
+
 			return func(req proto.Message) {}
 		},
 	},

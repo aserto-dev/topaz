@@ -59,7 +59,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 			data = append(data, []any{tmplName, absURL, strconv.FormatBool(v.exists), strconv.FormatBool(v.parsed), errStr})
 		}
 		{
-			assets := []string{}
+			assets := []string{} //nolint: prealloc
 			assets = append(assets, tmpl.Assets.Assertions...)
 			assets = append(assets, tmpl.Assets.IdentityData...)
 			assets = append(assets, tmpl.Assets.DomainData...)

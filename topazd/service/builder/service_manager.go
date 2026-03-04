@@ -130,16 +130,12 @@ func (s *ServiceManager) SetupMetricsServer(address string, certCfg *aserto.TLSC
 		return nil
 	}
 
-	var opts []grpc.ServerOption
-
-	unary := grpc.ChainUnaryInterceptor(grpcm.UnaryServerInterceptor(grpc_prometheus.WithExemplarFromContext(exemplarFromContext)))
-	stream := grpc.ChainStreamInterceptor(grpcm.StreamServerInterceptor(grpc_prometheus.WithExemplarFromContext(exemplarFromContext)))
-	opts = append(opts,
-		unary,
-		stream,
+	opts := []grpc.ServerOption{
+		grpc.ChainUnaryInterceptor(grpcm.UnaryServerInterceptor(grpc_prometheus.WithExemplarFromContext(exemplarFromContext))),
+		grpc.ChainStreamInterceptor(grpcm.StreamServerInterceptor(grpc_prometheus.WithExemplarFromContext(exemplarFromContext))),
 		grpc.ChainUnaryInterceptor(go_prometheus.UnaryServerInterceptor),
 		grpc.ChainStreamInterceptor(go_prometheus.StreamServerInterceptor),
-	)
+	}
 
 	return opts, nil
 }

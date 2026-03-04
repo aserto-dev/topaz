@@ -168,7 +168,7 @@ func (f *prompt) addFields(msg proto.Message, md protoreflect.MessageDescriptor,
 			})
 
 		case protoreflect.EnumKind:
-			options := []string{}
+			options := []string{} //nolint: prealloc
 			lookup := map[string]int32{}
 
 			for v := range fields.Get(i).Enum().Values().Len() {

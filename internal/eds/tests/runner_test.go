@@ -77,7 +77,8 @@ func importFile(stream dsi3.Importer_ImportClient, file string) error {
 
 	reader, err := NewReader(r)
 	if err != nil || reader == nil {
-		fmt.Fprintf(os.Stderr, "Skipping file [%s]: [%s]\n", file, err.Error())
+		fmt.Fprintf(os.Stderr, "Skipping file [%s]: [%s]\n", file, err.Error()) //nolint: gosec // G705
+
 		return nil
 	}
 	defer reader.Close()
@@ -95,7 +96,7 @@ func importFile(stream dsi3.Importer_ImportClient, file string) error {
 		}
 
 	default:
-		fmt.Fprintf(os.Stderr, "skipping file [%s] with object type [%s]\n", file, objectType)
+		fmt.Fprintf(os.Stderr, "skipping file [%s] with object type [%s]\n", file, objectType) //nolint: gosec // G705
 	}
 
 	return nil

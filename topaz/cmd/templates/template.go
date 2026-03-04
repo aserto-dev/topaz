@@ -91,7 +91,7 @@ func download(src, dir string) (string, error) {
 
 func getBytes(fileURL string) ([]byte, error) {
 	if exists, _ := config.FileExists(fileURL); exists {
-		return os.ReadFile(fileURL)
+		return os.ReadFile(fileURL) //nolint:gosec // G703
 	}
 
 	resp, err := http.Get(fileURL) //nolint:gosec,noctx
