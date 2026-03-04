@@ -13,7 +13,9 @@ import (
 )
 
 func TestRelations(t *testing.T) {
-	tcs := []*TestCase{} //nolint: prealloc
+	numberOfTestCases := len(relationTestCasesV3) + len(relationTestCasesStreamMode)
+
+	tcs := make([]*TestCase, 0, numberOfTestCases)
 
 	tcs = append(tcs, relationTestCasesV3...)
 	tcs = append(tcs, relationTestCasesStreamMode...)

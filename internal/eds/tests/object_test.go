@@ -14,7 +14,9 @@ import (
 )
 
 func TestObjects(t *testing.T) {
-	tcs := []*TestCase{} //nolint: prealloc
+	numberOfTestCases := len(objectTestCasesWithID) + len(objectTestCasesWithoutID) + len(objectTestCasesStreamMode)
+
+	tcs := make([]*TestCase, 0, numberOfTestCases)
 
 	tcs = append(tcs, objectTestCasesWithID...)
 	tcs = append(tcs, objectTestCasesWithoutID...)
