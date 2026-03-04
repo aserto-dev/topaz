@@ -82,8 +82,7 @@ snapshot:
 
 dockers_v2:
   # https://goreleaser.com/customization/dockers_v2
-  - 
-    dockerfile: "Dockerfile"
+  - dockerfile: "Dockerfile"
 
     platforms:
       - linux/arm64

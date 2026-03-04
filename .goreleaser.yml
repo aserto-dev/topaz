@@ -110,12 +110,12 @@ builds:
 
 archives:
   # https://goreleaser.com/customization/archive/
-  - formats: 
+  - formats:
       - zip
     ids:
-    - topaz
-    - topazd
-    - topaz-backup
+      - topaz
+      - topazd
+      - topaz-backup
     files:
       - LICENSE
       - README.md
@@ -164,6 +164,9 @@ homebrew_casks:
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP }}"
 
+    url:
+      verified: "github.com/{{ .Env.ORG }}/{{ .ProjectName }}"
+
     commit_author:
       name: Topaz Bot
       email: info@topaz.sh
@@ -172,15 +175,21 @@ homebrew_casks:
     description: "Topaz CLI"
     license: "MIT"
 
-    binaries: 
+    binaries:
       - topaz
 
     skip_upload: false
 
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/svu"]
+          end
+
 dockers_v2:
   # https://goreleaser.com/customization/dockers_v2
-  - 
-    dockerfile: "Dockerfile"
+  - dockerfile: "Dockerfile"
 
     platforms:
       - linux/amd64
@@ -227,10 +236,10 @@ sboms:
     cmd: syft
     args:
       - "$artifact"
-      - "--output" 
+      - "--output"
       - "spdx-json=$document"
     env:
-      - SYFT_FILE_METADATA_CATALOGER_ENABLED=true 
+      - SYFT_FILE_METADATA_CATALOGER_ENABLED=true
     artifacts: binary
     ids:
       - topaz
