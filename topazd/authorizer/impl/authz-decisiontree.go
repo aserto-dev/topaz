@@ -187,7 +187,7 @@ func (*AuthorizerServer) decisionTreeBuildQuery(
 				continue
 			}
 
-			queryStmt.WriteString(fmt.Sprintf("r%d = %s\n", i, policy.AST.Package.Path)) //nolint: staticcheck // QF1012
+			fmt.Fprintf(&queryStmt, "r%d = %s\n", i, policy.AST.Package.Path)
 
 			r++
 

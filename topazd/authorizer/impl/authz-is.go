@@ -41,7 +41,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 	queryStmt := strings.Builder{}
 	for i, decision := range req.GetPolicyContext().GetDecisions() {
-		queryStmt.WriteString(fmt.Sprintf("x%d = data.%s.%s\n", i, req.GetPolicyContext().GetPath(), decision)) //nolint: staticcheck // QF1012
+		fmt.Fprintf(&queryStmt, "x%d = data.%s.%s\n", i, req.GetPolicyContext().GetPath(), decision)
 	}
 
 	query, err := rego.New(

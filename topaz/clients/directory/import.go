@@ -52,7 +52,8 @@ func (c *Client) importFile(stream dsi3.Importer_ImportClient, file string) erro
 
 	reader, err := js.NewReader(r)
 	if err != nil || reader == nil {
-		fmt.Fprintf(os.Stderr, "Skipping file [%s]: [%s]\n", file, err.Error()) //nolint: gosec // G705
+		// #nosec G705 -- CLI stderr output, no HTML context
+		fmt.Fprintf(os.Stderr, "Skipping file [%s]: [%s]\n", file, err.Error())
 		return nil
 	}
 	defer reader.Close()
@@ -70,7 +71,8 @@ func (c *Client) importFile(stream dsi3.Importer_ImportClient, file string) erro
 		}
 
 	default:
-		fmt.Fprintf(os.Stderr, "skipping file [%s] with object type [%s]\n", file, objectType) //nolint: gosec // G705
+		// #nosec G705 -- CLI stderr output, no HTML context
+		fmt.Fprintf(os.Stderr, "skipping file [%s] with object type [%s]\n", file, objectType)
 	}
 
 	return nil

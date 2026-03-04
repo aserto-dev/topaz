@@ -10,7 +10,7 @@ func AuthorizersHandler(confServices *TopazCfg) func(w http.ResponseWriter, r *h
 		type AuthorizerInstance struct {
 			Name   string `json:"name"`
 			URL    string `json:"url"`
-			APIKey string `json:"apiKey"` //nolint: gosec // G117
+			APIKey string `json:"apiKey"` //nolint:gosec // G117
 		}
 
 		type authorizersResult struct {

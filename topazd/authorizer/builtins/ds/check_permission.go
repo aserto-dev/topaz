@@ -40,7 +40,7 @@ func RegisterCheckPermission(logger *zerolog.Logger, fnName string, dr reader.Re
 				return ast.StringTerm(dsCheckPermissionHelp), nil
 			}
 
-			//nolint: staticcheck // SA1019: client.CheckPermission is deprecated
+			//nolint:staticcheck // SA1019: client.CheckPermission is deprecated
 			resp, err := dr.CheckPermission(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
