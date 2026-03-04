@@ -41,12 +41,12 @@ func NewRuntimeResolver(
 	cfg *config.Config,
 	dsConn *grpc.ClientConn,
 	decisionLogger decisionlog.DecisionLogger,
+	extraOpts ...runtime.Option,
 ) (resolvers.RuntimeResolver, func(), error) {
 	dsClient := reader.NewReaderClient(dsConn)
 	acClient := access.NewAccessClient(dsConn)
 
-	sidecarRuntime, err := runtime.New(ctx, &cfg.OPA,
-
+	opts := []runtime.Option{
 		// directory get functions
 		runtime.WithBuiltin1(ds.RegisterIdentity(logger, builtins.DSIdentity, dsClient)),
 		runtime.WithBuiltin1(ds.RegisterUser(logger, builtins.DSUser, dsClient)),
@@ -73,7 +73,11 @@ func NewRuntimeResolver(
 		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
 
 		runtime.WithRegoVersion(ast.RegoV0),
-	)
+	}
+
+	opts = append(opts, extraOpts...)
+
+	sidecarRuntime, err := runtime.New(ctx, &cfg.OPA, opts...)
 	if err != nil {
 		return nil, func() {}, err
 	}
