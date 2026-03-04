@@ -13,7 +13,7 @@ import (
 )
 
 func TestRelations(t *testing.T) {
-	tcs := []*TestCase{}
+	tcs := []*TestCase{} //nolint: prealloc
 
 	tcs = append(tcs, relationTestCasesV3...)
 	tcs = append(tcs, relationTestCasesStreamMode...)
@@ -36,6 +36,7 @@ var relationTestCasesV3 = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NoError(t, tErr)
+
 			switch resp := msg.(type) {
 			case *dsw3.SetRelationResponse:
 				require.NoError(t, tErr)
@@ -47,6 +48,7 @@ var relationTestCasesV3 = []*TestCase{
 				assert.Equal(t, "child-group", resp.GetResult().GetSubjectId())
 				assert.Equal(t, "member", resp.GetResult().GetSubjectRelation())
 			}
+
 			return func(proto.Message) {}
 		},
 	},
@@ -75,6 +77,7 @@ var relationTestCasesV3 = []*TestCase{
 				assert.Equal(t, "test-user-1@acmecorp.com", resp.GetResult().GetSubjectId())
 				assert.Empty(t, resp.GetResult().GetSubjectRelation())
 			}
+
 			return func(proto.Message) {}
 		},
 	},
@@ -87,12 +90,14 @@ var relationTestCasesV3 = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NoError(t, tErr)
+
 			switch resp := msg.(type) {
 			case *dsr3.GetRelationsResponse:
 				require.NoError(t, tErr)
 				assert.NotNil(t, resp)
 				assert.Len(t, resp.GetResults(), 2)
 			}
+
 			return func(proto.Message) {}
 		},
 	},
@@ -106,6 +111,7 @@ var relationTestCasesV3 = []*TestCase{
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
 			require.NoError(t, tErr)
+
 			switch resp := msg.(type) {
 			case *dsr3.GetRelationsResponse:
 				require.NoError(t, tErr)
@@ -114,6 +120,7 @@ var relationTestCasesV3 = []*TestCase{
 
 				assert.Equal(t, "user", resp.GetResults()[0].GetSubjectType())
 			}
+
 			return func(proto.Message) {}
 		},
 	},

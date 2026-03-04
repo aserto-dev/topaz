@@ -1,3 +1,4 @@
+//nolint:gosec
 package common
 
 import (
@@ -84,6 +85,7 @@ func GetCheckType(msg *structpb.Struct) CheckType {
 
 func (cr *CheckResult) PrintTable(w io.Writer, index int, expected bool, checkType CheckType, noColor bool) {
 	if noColor {
+		//nolint: gosec // G705
 		fmt.Fprintf(w,
 			"%04d %-16s %v  %s [%s] (%s)\n",
 			index+1,
@@ -94,6 +96,7 @@ func (cr *CheckResult) PrintTable(w io.Writer, index int, expected bool, checkTy
 			cr.Duration,
 		)
 	} else {
+		//nolint: gosec // G705
 		fmt.Fprintf(w,
 			"%04d %-16s %v  %s [%s] (%s)\n",
 			index+1,

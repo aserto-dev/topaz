@@ -33,7 +33,7 @@ func (c *CertPaths) FindExisting() []string {
 
 func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...*CertPaths) error {
 	if !force {
-		existingFiles := []string{}
+		existingFiles := []string{} //nolint: prealloc
 		for _, cert := range certPaths {
 			existingFiles = append(existingFiles, cert.FindExisting()...)
 		}
@@ -44,7 +44,7 @@ func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...
 
 			tab.Header("File", "Action")
 
-			data := [][]any{}
+			data := [][]any{} //nolint: prealloc
 			for _, fqn := range existingFiles {
 				data = append(data, []any{filepath.Base(fqn), "skipped, file already exists"})
 			}
