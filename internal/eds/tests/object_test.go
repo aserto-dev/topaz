@@ -14,9 +14,7 @@ import (
 )
 
 func TestObjects(t *testing.T) {
-	numberOfTestCases := len(objectTestCasesWithID) + len(objectTestCasesWithoutID) + len(objectTestCasesStreamMode)
-
-	tcs := make([]*TestCase, 0, numberOfTestCases)
+	tcs := make([]*TestCase, 0, len(objectTestCasesWithID)+len(objectTestCasesWithoutID)+len(objectTestCasesStreamMode))
 
 	tcs = append(tcs, objectTestCasesWithID...)
 	tcs = append(tcs, objectTestCasesWithoutID...)

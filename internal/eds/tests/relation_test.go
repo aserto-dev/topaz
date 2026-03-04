@@ -13,9 +13,7 @@ import (
 )
 
 func TestRelations(t *testing.T) {
-	numberOfTestCases := len(relationTestCasesV3) + len(relationTestCasesStreamMode)
-
-	tcs := make([]*TestCase, 0, numberOfTestCases)
+	tcs := make([]*TestCase, 0, len(relationTestCasesV3)+len(relationTestCasesStreamMode))
 
 	tcs = append(tcs, relationTestCasesV3...)
 	tcs = append(tcs, relationTestCasesStreamMode...)
