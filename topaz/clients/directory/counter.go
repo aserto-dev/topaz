@@ -40,7 +40,8 @@ func (c *Item) Skip() *Item {
 
 func (c *Item) Print(w io.Writer) {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
-		fmt.Fprintf(w, "\033[2K\r%15s: %d", c.Name, c.value) //nolint:gosec // G705: XSS via taint analysis
+		// #nosec G705 -- CLI output, no HTML context
+		fmt.Fprintf(w, "\033[2K\r%15s: %d", c.Name, c.value)
 	}
 }
 
@@ -73,7 +74,8 @@ func (c *Counter) Print(w io.Writer) {
 			msg = unknownFieldsMsg
 		}
 
-		fmt.Fprintf(w, "%-9s : %d%s\n", objectsCounter, c.objects.value, msg) //nolint:gosec // G705: XSS via taint analysis
+		// #nosec G705 -- CLI stderr, no HTML context
+		fmt.Fprintf(w, "%-9s : %d%s\n", objectsCounter, c.objects.value, msg)
 	} else {
 		fmt.Fprintf(w, "%-9s : %s\n", objectsCounter, skipped)
 	}
@@ -84,7 +86,8 @@ func (c *Counter) Print(w io.Writer) {
 			msg = unknownFieldsMsg
 		}
 
-		fmt.Fprintf(w, "%-9s : %d%s\n", relationsCounter, c.relations.value, msg) //nolint:gosec // G705: XSS via taint analysis
+		// #nosec G705 -- CLI output, no HTML context
+		fmt.Fprintf(w, "%-9s : %d%s\n", relationsCounter, c.relations.value, msg)
 	} else {
 		fmt.Fprintf(w, "%-9s : %s\n", relationsCounter, skipped)
 	}

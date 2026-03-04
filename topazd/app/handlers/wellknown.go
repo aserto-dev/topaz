@@ -17,12 +17,12 @@ const AuthZENConfiguration string = `/.well-known/authzen-configuration`
 var once sync.Once
 
 type WellKnownConfig struct {
-	PolicyDecisionPoint       string `json:"policy_decision_point"`       //nolint: tagliatelle
-	AccessEvaluationEndpoint  string `json:"access_evaluation_endpoint"`  //nolint: tagliatelle
-	AccessEvaluationsEndpoint string `json:"access_evaluations_endpoint"` //nolint: tagliatelle
-	SearchSubjectEndpoint     string `json:"search_subject_endpoint"`     //nolint: tagliatelle
-	SearchResourceEndpoint    string `json:"search_resource_endpoint"`    //nolint: tagliatelle
-	SearchActionEndpoint      string `json:"search_action_endpoint"`      //nolint: tagliatelle
+	PolicyDecisionPoint       string `json:"policy_decision_point"`       //nolint:tagliatelle
+	AccessEvaluationEndpoint  string `json:"access_evaluation_endpoint"`  //nolint:tagliatelle
+	AccessEvaluationsEndpoint string `json:"access_evaluations_endpoint"` //nolint:tagliatelle
+	SearchSubjectEndpoint     string `json:"search_subject_endpoint"`     //nolint:tagliatelle
+	SearchResourceEndpoint    string `json:"search_resource_endpoint"`    //nolint:tagliatelle
+	SearchActionEndpoint      string `json:"search_action_endpoint"`      //nolint:tagliatelle
 }
 
 func WellKnownConfigHandler(endpoint *url.URL) func(w http.ResponseWriter, r *http.Request) {

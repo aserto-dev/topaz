@@ -1,4 +1,3 @@
-//nolint:gosec
 package common
 
 import (
@@ -85,7 +84,7 @@ func GetCheckType(msg *structpb.Struct) CheckType {
 
 func (cr *CheckResult) PrintTable(w io.Writer, index int, expected bool, checkType CheckType, noColor bool) {
 	if noColor {
-		//nolint: gosec // G705
+		// #nosec G705 -- CLI output, no HTML context
 		fmt.Fprintf(w,
 			"%04d %-16s %v  %s [%s] (%s)\n",
 			index+1,
@@ -96,7 +95,7 @@ func (cr *CheckResult) PrintTable(w io.Writer, index int, expected bool, checkTy
 			cr.Duration,
 		)
 	} else {
-		//nolint: gosec // G705
+		// #nosec G705 -- CLI output, no HTML context
 		fmt.Fprintf(w,
 			"%04d %-16s %v  %s [%s] (%s)\n",
 			index+1,
@@ -155,7 +154,7 @@ type TestResults struct {
 
 func NewTestResults(assertions []json.RawMessage) *TestResults {
 	return &TestResults{
-		total:   int32(len(assertions)), //nolint: gosec // G115: integer overflow conversion int -> int32.
+		total:   int32(len(assertions)), //nolint:gosec // G115: integer overflow conversion int -> int32.
 		passed:  0,
 		failed:  0,
 		errored: 0,
@@ -193,6 +192,8 @@ func (t *TestResults) Passed(passed bool) {
 
 const headerLen int = 23
 
+// PrintSummary.
+// #nosec G705 -- CLI output, no HTML context
 func (t *TestResults) PrintSummary(w io.Writer) {
 	fmt.Fprintf(w, "\nTest Execution Summary:\n")
 	fmt.Fprintf(w, "%s\n", strings.Repeat("-", headerLen))

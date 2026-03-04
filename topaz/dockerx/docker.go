@@ -39,7 +39,7 @@ func PolicyRoot() string {
 		policyRoot = path.Join(home, defaultPolicyRoot)
 	}
 
-	//nolint: gosec // G703
+	//nolint:gosec // G703
 	if fi, err := os.Stat(policyRoot); err == nil && fi.IsDir() {
 		return policyRoot
 	}
