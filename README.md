@@ -66,7 +66,7 @@ Join the community [Slack channel](https://www.aserto.com/slack) for questions a
 * Via Homebrew for macOS or LinuxBrew for Linux
 
    ```shell
-  brew tap aserto-dev/tap && brew install aserto-dev/tap/topaz
+  brew install --cask topaz
    ```
 
 * Via a GO install
