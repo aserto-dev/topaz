@@ -1,0 +1,34 @@
+{
+  "objects": [
+    {
+      "type": "resource-creator",
+      "id": "resource-creators",
+      "display_name": "Resource creators",
+      "properties": {}
+    },
+    {
+      "type": "resource",
+      "id": "mega-seed",
+      "display_name": "Mega seed",
+      "properties": {}
+    },
+    {
+      "type": "resource",
+      "id": "portal-gun",
+      "display_name": "Portal gun",
+      "properties": {}
+    },
+    {
+      "type": "resource",
+      "id": "space-cruiser",
+      "display_name": "Space cruiser",
+      "properties": {}
+    },
+    {
+      "type": "resource",
+      "id": "time-crystal",
+      "display_name": "Time crystal",
+      "properties": {}
+    }
+  ]
+}

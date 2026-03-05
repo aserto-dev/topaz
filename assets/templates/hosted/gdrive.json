@@ -1,0 +1,18 @@
+{
+    "idp_data": [
+        {
+            "name": "Citadel",
+            "description": "Demo Citadel IDP",
+            "provider_id": "6dd707ac-e7bd-11ec-808a-049ec1ced886",
+            "ds_load": "/assets/templates/citadel/ds-load/citadel.json"
+        }
+    ],
+    "domain_data": [
+        {
+            "name": "GDrive",
+            "description": "Sample data for GDrive template",
+            "provider_id": "b621b22b-7340-11ee-9420-04bc608bef02",
+            "ds_load":"/assets/templates/gdrive/ds-load/gdrive.json"
+        }
+    ]
+}

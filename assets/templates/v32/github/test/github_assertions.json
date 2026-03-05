@@ -1,0 +1,114 @@
+{
+    "assertions": [
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "smiths.budget",
+                "relation": "can_read",
+                "subject_type": "user",
+                "subject_id": "summer@the-smiths.com"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "smiths.budget",
+                "relation": "can_triage",
+                "subject_type": "user",
+                "subject_id": "summer@the-smiths.com"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "smiths.budget",
+                "relation": "can_triage",
+                "subject_type": "user",
+                "subject_id": "morty@the-citadel.com"
+            },
+            "expected": false
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "smiths.budget",
+                "relation": "can_administer",
+                "subject_type": "user",
+                "subject_id": "beth@the-smiths.com"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "smiths.budget",
+                "relation": "can_read",
+                "subject_type": "user",
+                "subject_id": "morty@the-citadel.com"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "smiths.budget",
+                "relation": "can_administer",
+                "subject_type": "user",
+                "subject_id": "morty@the-citadel.com"
+            },
+            "expected": false
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "smiths.budget",
+                "relation": "can_write",
+                "subject_type": "user",
+                "subject_id": "jerry@the-smiths.com"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "smiths.budget",
+                "relation": "can_administer",
+                "subject_type": "user",
+                "subject_id": "rick@the-citadel.com"
+            },
+            "expected": false
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "citadel.missions",
+                "relation": "can_administer",
+                "subject_type": "user",
+                "subject_id": "rick@the-citadel.com"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "citadel.missions",
+                "relation": "can_write",
+                "subject_type": "user",
+                "subject_id": "morty@the-citadel.com"
+            },
+            "expected": true
+        },
+        {
+            "check": {
+                "object_type": "repo",
+                "object_id": "citadel.missions",
+                "relation": "can_read",
+                "subject_type": "user",
+                "subject_id": "beth@the-smiths.com"
+            },
+            "expected": false
+        }
+    ]
+}

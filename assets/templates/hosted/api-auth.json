@@ -1,0 +1,19 @@
+{
+  "idp_data": [
+    {
+      "name": "Citadel",
+      "description": "Demo Citadel IDP",
+      "provider_id": "6dd707ac-e7bd-11ec-808a-049ec1ced886",
+      "ds_load": "/assets/templates/citadel/ds-load/citadel.json"
+    }
+  ],
+  "domain_data": [
+    {
+      "name": "API Authorization",
+      "description": "Sample data for API Authorization template",
+      "provider_id": "b357e76c-4083-11ef-b0b3-0425c56990f7",
+      "ds_load": "/assets/templates/api-auth/ds-load/api-auth.json"
+    }
+  ]
+}
+

@@ -1,0 +1,23 @@
+{
+    "name": "simple-rbac",
+    "description": "Simple RBAC",
+    "assets": {
+        "manifest": "simple-rbac/manifest.yaml",
+        "policy": {
+            "name": "simple-rbac",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+            "citadel/citadel_objects.json",
+            "citadel/citadel_relations.json"
+        ],
+        "domain_data": [
+            "simple-rbac/simple-rbac_objects.json",
+            "simple-rbac/simple-rbac_relations.json"
+        ],
+        "assertions": [
+            "simple-rbac/assertions.json",
+            "simple-rbac/decisions.json"
+        ]
+    }
+}

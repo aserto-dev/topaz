@@ -1,0 +1,18 @@
+{
+    "idp_data": [
+        {
+            "name": "Citadel",
+            "description": "Demo Citadel IDP",
+            "provider_id": "6dd707ac-e7bd-11ec-808a-049ec1ced886",
+            "ds_load": "/assets/templates/citadel/ds-load/citadel.json"
+        }
+    ],
+    "domain_data": [
+        {
+            "name": "Slack",
+            "description": "Sample data for slack template",
+            "provider_id": "478469d0-c422-11ee-908c-040d00fbb81f",
+            "ds_load":"/assets/templates/slack/ds-load/slack.json"
+        }
+    ]
+}

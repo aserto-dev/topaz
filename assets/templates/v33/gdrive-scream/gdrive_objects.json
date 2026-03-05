@@ -1,0 +1,76 @@
+{
+  "objects": [
+    {
+      "type": "FOLDER",
+      "id": "root",
+      "display_name": "Root folder",
+      "properties": {}
+    },
+    {
+      "type": "FOLDER",
+      "id": "rick",
+      "display_name": "Rick's home folder",
+      "properties": {}
+    },
+    {
+      "type": "FOLDER",
+      "id": "morty",
+      "display_name": "Morty's home folder",
+      "properties": {}
+    },
+    {
+      "type": "FOLDER",
+      "id": "morty.shared",
+      "display_name": "Morty's shared folder",
+      "properties": {}
+    },
+    {
+      "type": "FOLDER",
+      "id": "summer",
+      "display_name": "Summer's home folder",
+      "properties": {}
+    },
+    {
+      "type": "FOLDER",
+      "id": "jerry",
+      "display_name": "Jerry's home folder",
+      "properties": {}
+    },
+    {
+      "type": "FOLDER",
+      "id": "beth",
+      "display_name": "Beths's home folder",
+      "properties": {}
+    },
+    {
+      "type": "DOC",
+      "id": "secrets",
+      "display_name": "Family secrets",
+      "properties": {}
+    },
+    {
+      "type": "DOC",
+      "id": "groceries",
+      "display_name": "Grocery list",
+      "properties": {}
+    },
+    {
+      "type": "DOC",
+      "id": "rick.inventions",
+      "display_name": "Rick's inventions",
+      "properties": {}
+    },
+    {
+      "type": "DOC",
+      "id": "morty.journal",
+      "display_name": "Morty's private journal",
+      "properties": {}
+    },
+    {
+      "type": "DOC",
+      "id": "morty.shared.notes",
+      "display_name": "Morty's shared notes",
+      "properties": {}
+    }
+  ]
+}

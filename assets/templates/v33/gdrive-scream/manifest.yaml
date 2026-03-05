@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+### filename: manifest.yaml ###
+### datetime: 2023-12-19T00:00:00-00:00 ###
+### description: gdrive-scream manifest ###
+#
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  ### display_name: IDENTITY ###
+  IDENTITY: {}
+
+  ### display_name: USER ###
+  USER:
+    relations:
+      ### display_name: identifier ###
+      IDENTIFIER: IDENTITY
+      ### display_name: user#manager ###
+      MANAGER: USER
+
+    permissions:
+      ### display_name: user#in_management_chain ###
+      IN_MANAGEMENT_CHAIN: MANAGER | MANAGER->IN_MANAGEMENT_CHAIN
+
+  ### display_name: GROUP ###
+  GROUP:
+    relations:
+      ### display_name: group#member ###
+      MEMBER: USER | GROUP#MEMBER
+
+  ### display_name: FOLDER ###
+  # folder represents a collection of documents and/or other folders
+  FOLDER:
+    relations:
+      PARENT: FOLDER
+
+      OWNER:  USER
+      EDITOR: USER | GROUP#MEMBER
+      VIEWER: USER | GROUP#MEMBER
+
+    permissions:
+      CAN_SHARE: OWNER  | OWNER->IDENTIFIER  | PARENT->CAN_SHARE
+      CAN_WRITE: EDITOR | EDITOR->IDENTIFIER | CAN_SHARE | PARENT->CAN_WRITE
+      CAN_READ:  VIEWER | VIEWER->IDENTIFIER | CAN_WRITE | PARENT->CAN_READ
+
+  ### display_name: DOC ###
+  # doc represents a document within a folder
+  DOC:
+    relations:
+      PARENT: FOLDER
+
+      OWNER:  USER
+      EDITOR: USER | GROUP#MEMBER
+      VIEWER: USER | GROUP#MEMBER
+
+      PUBLIC-VIEWER: USER:* | IDENTITY:*
+
+    permissions:
+      CAN_SHARE:  OWNER     | OWNER->IDENTIFIER  | PARENT->CAN_SHARE
+      CAN_DELETE: CAN_SHARE | PARENT->CAN_WRITE
+      CAN_WRITE:  EDITOR    | EDITOR->IDENTIFIER | CAN_DELETE | PARENT->CAN_WRITE
+      CAN_READ:   VIEWER    | VIEWER->IDENTIFIER | PUBLIC-VIEWER | CAN_WRITE | PARENT->CAN_READ

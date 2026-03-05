@@ -1,0 +1,23 @@
+{
+    "name": "multi-tenant",
+    "description": "Multi-tenant template",
+    "assets": {
+        "manifest": "multi-tenant/manifest.yaml",
+        "policy": {
+            "name": "multi-tenant",
+            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+        },
+        "idp_data": [
+            "citadel/citadel_objects.json",
+            "citadel/citadel_relations.json"
+        ],
+        "domain_data": [
+            "multi-tenant/multi-tenant-objects.json",
+            "multi-tenant/multi-tenant-relations.json"
+        ],
+        "assertions": [
+            "multi-tenant/test/multi-tenant_assertions.json",
+            "multi-tenant/test/multi-tenant_decisions.json"
+        ]
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "idp_data": [
+        {
+            "name": "Citadel",
+            "description": "Demo Citadel IDP",
+            "provider_id": "6dd707ac-e7bd-11ec-808a-049ec1ced886",
+            "ds_load": "/assets/templates/citadel/ds-load/citadel.json"
+        }
+    ],
+    "domain_data": [
+        {
+            "name": "Todo",
+            "description": "Sample data for Todo template",
+            "provider_id": "8277f2cc-bc80-11ee-a2eb-042027460e83",
+            "ds_load":"/assets/templates/todo/ds-load/todo.json"
+        }
+    ]
+}

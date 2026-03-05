@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="80" height="80" viewBox="0 0 80 80">
+  <defs>
+    <clipPath id="clip-Python-test-XD_-solid">
+      <rect width="80" height="80" />
+    </clipPath>
+  </defs>
+  <g id="Python-test-XD_-solid" data-name="Python-test-XD -solid" clip-path="url(#clip-Python-test-XD_-solid)">
+    <rect width="80" height="80" fill="rgba(0,0,0,0)" />
+    <g id="layer1" transform="translate(-473.361 -251.725)">
+      <g id="g1894" transform="translate(473.361 251.725)">
+        <path id="path8615" d="M84.649,67.469c-20.309,0-19.041,8.807-19.041,8.807l.023,9.124h19.38v2.74H57.933s-13-1.474-13,19.018S56.28,126.923,56.28,126.923h6.77v-9.509s-.365-11.343,11.162-11.343H93.434s10.8.175,10.8-10.437V78.087S105.873,67.469,84.649,67.469ZM73.963,73.6a3.487,3.487,0,1,1-3.487,3.487A3.483,3.483,0,0,1,73.963,73.6Z" transform="translate(-44.938 -67.469)" fill="#3571a3" />
+        <path id="path8620" d="M93.088,154.705c20.309,0,19.041-8.807,19.041-8.807l-.023-9.124H92.726v-2.74H119.8s13,1.474,13-19.018-11.343-19.765-11.343-19.765h-6.77v9.509s.365,11.343-11.162,11.343H84.3s-10.8-.175-10.8,10.437v17.546S71.864,154.705,93.088,154.705Zm10.686-6.136a3.487,3.487,0,1,1,3.487-3.487A3.483,3.483,0,0,1,103.774,148.57Z" transform="translate(-52.799 -75.122)" fill="#ffd343" />
+      </g>
+    </g>
+  </g>
+</svg>
