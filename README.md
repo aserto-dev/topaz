@@ -65,15 +65,15 @@ Join the community [Slack channel](https://www.aserto.com/slack) for questions a
 
 * Via Homebrew for macOS or LinuxBrew for Linux
 
-   ```shell
-  brew install --cask topaz
-   ```
+```console
+$ brew install --cask aserto-dev/tap/topaz
+```
 
 * Via a GO install
 
-  ```shell
-  go install github.com/aserto-dev/topaz/topaz@latest
-  ```
+```console
+$ go install github.com/aserto-dev/topaz/topaz@latest
+```
 
 ### Building from source
 
@@ -82,17 +82,17 @@ Join the community [Slack channel](https://www.aserto.com/slack) for questions a
  1. Clone the repo
  2. Build and run the executable
 
-      ```shell
-      make build && ./dist/build_linux_amd64/topaz
-      ```
+```console
+$ make build && ./dist/build_linux_amd64/topaz
+```
 
 ### Running with Docker
 
   You can run as a Docker container:
 
-  ```shell
-  docker run -it --rm ghcr.io/aserto-dev/topaz:latest --help
-  ```
+```console 
+$ docker run -it --rm ghcr.io/aserto-dev/topaz:latest --help
+```
 
 ## Quickstart
 
@@ -102,8 +102,8 @@ These instructions help you get Topaz up and running as the authorizer for a sam
 
 The Topaz authorizer is packaged as a Docker container. You can get the latest image using the following command:
 
-```shell
-topaz install
+```console
+$ topaz install
 ```
 
 **NOTE:** If you get the following errors/warnings from Topaz commands:
@@ -121,16 +121,16 @@ Topaz has a set of pre-built templates that contain three types of artifacts:
 
 You can use the CLI to install the todo template:
 
-```shell
-topaz templates install todo
+```console
+$ topaz templates install todo
 ```
 
 #### Artifacts
 
 This command will install the following artifacts in `$HOME/.config/topaz/`:
 
-```shell
-tree $HOME/.config/topaz
+```console
+$ tree $HOME/.config/topaz
 /Users/ogazitt/.config/topaz
 ├── cfg
 │   └── todo.yaml
@@ -148,8 +148,8 @@ tree $HOME/.config/topaz
 * `todo/data/` contains the objects and relations for the Todo template - in this case, a set of 5 users and 4 groups that are based on the "Rick & Morty" cartoon.
 * `todo/model/manifest.yaml` contains the manifest file which describes the domain model.
 
-```shell
-tree ~/.local/share/topaz
+```console
+$ tree ~/.local/share/topaz
 /Users/ogazitt/.local/share/topaz
 ├── certs
 │   ├── gateway-ca.crt
@@ -194,16 +194,16 @@ To verify that Topaz is running with the right policy image, you can issue a `cu
 
 This API call retrieves the set of policies that Topaz has loaded:
 
-```shell
-curl -k https://localhost:8383/api/v2/policies
+```console
+$ curl -k https://localhost:8383/api/v2/policies
 ```
 
 ### Issue an authorization request
 
 Issue an authorization request using the `is` REST API to verify that the user Rick is allowed to GET the list of todos:
 
-```shell
-curl -k -X POST 'https://localhost:8383/api/v2/authz/is' \
+```console
+$ curl -k -X POST 'https://localhost:8383/api/v2/authz/is' \
 -H 'Content-Type: application/json' \
 -d '{
      "identity_context": {
@@ -225,8 +225,9 @@ To start an interactive session with the Topaz endpoints over gRPC, see the [gRP
 
 ## Command line options
 
-```shell
-topaz --help
+```console
+$ topaz --help
+
 Usage: topaz <command> [flags]
 
 Topaz CLI
@@ -261,14 +262,14 @@ Run "topaz <command> --help" for more information on a command.
 
 To interact with the authorizer endpoint, install [grpcui](https://github.com/fullstorydev/grpcui) or [grpcurl](https://github.com/fullstorydev/grpcurl) and point them to `localhost:8282`:
 
-```shell
-grpcui --insecure localhost:8282
+```console
+$ grpcui --insecure localhost:8282
 ```
 
 To interact with the directory endpoint, use `localhost:9292`:
 
-```shell
-grpcui --insecure localhost:9292
+```console
+$ grpcui --insecure localhost:9292
 ```
 
 For more information on APIs, see the [docs](https://www.topaz.sh/docs/intro).
