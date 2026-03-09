@@ -52,7 +52,7 @@ opa:
       policy-registry:
         url: "{{ .PolicyRegistry }}"
         type: "oci"
-        response_header_timeout_seconds: 5
+        response_header_timeout_seconds: 10
     bundles:
       {{ .PolicyName }}:
         service: policy-registry
