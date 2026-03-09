@@ -1,4 +1,5 @@
 SHELL              := $(shell which bash)
+export PATH        := $(HOME)/.goenv/shims:$(PATH)
 
 NO_COLOR           := \033[0m
 OK_COLOR           := \033[32;01m

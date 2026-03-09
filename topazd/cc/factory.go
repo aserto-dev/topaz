@@ -32,6 +32,9 @@ func buildCC(
 		return nil, nil, err
 	}
 
+	// Inject logger into context so that runtime.New() can extract it via zerolog.Ctx(ctx)
+	contextContext = zerologLogger.WithContext(contextContext)
+
 	generator := certs.NewGenerator(zerologLogger)
 
 	configConfig, err := config.NewConfig(configPath, zerologLogger, overrides, generator)

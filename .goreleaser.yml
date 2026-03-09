@@ -5,7 +5,7 @@ project_name: topaz
 env:
   # https://goreleaser.com/customization/env/
   - REGISTRY=ghcr.io
-  - ORG=aserto-dev
+  - ORG=dynamik-software-lab
   - REPO=topaz
   - DESCRIPTION="Topaz Authorization Service"
   - LICENSE=Apache-2.0
@@ -85,6 +85,29 @@ builds:
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
+  - id: topazd-envoy
+    main: ./topazd-envoy
+    binary: topazd-envoy
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
   - id: topaz-backup
     main: ./topaz-backup
     binary: topaz-backup
@@ -115,6 +138,7 @@ archives:
     ids:
       - topaz
       - topazd
+      - topazd-envoy
       - topaz-backup
     files:
       - LICENSE
@@ -228,6 +252,46 @@ dockers_v2:
     build_args:
     flags:
 
+  - id: topaz-envoy-docker
+    dockerfile: "Dockerfile.envoy"
+
+    platforms:
+      - linux/amd64
+      - linux/arm64
+
+    ids:
+      - topaz
+      - topazd-envoy
+      - topaz-backup
+
+    images:
+      - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}-envoy"
+
+    tags:
+      - "{{ .Version }}"
+      - "{{ if not .IsSnapshot }}latest{{ end }}"
+
+    labels:
+      "org.opencontainers.image.created": "{{.Date}}"
+      "org.opencontainers.image.name": "{{.ProjectName}}-envoy"
+      "org.opencontainers.image.revision": "{{.FullCommit}}"
+      "org.opencontainers.image.version": "{{.Version}}"
+      "org.opencontainers.image.source": "https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      "org.opencontainers.image.description": "{{ .Env.DESCRIPTION }} with Envoy ext_authz support"
+      "org.opencontainers.image.licenses": "{{ .Env.LICENSE }}"
+
+    sbom: false
+
+    retry:
+      attempts: 10
+      delay: 10s
+      max_delay: 2m
+
+    extra_files:
+    annotations:
+    build_args:
+    flags:
+
 sboms:
   # https://goreleaser.com/customization/sbom/
   - id: default
@@ -244,5 +308,6 @@ sboms:
     ids:
       - topaz
       - topazd
+      - topazd-envoy
       - topaz-backup
       - topaz-db

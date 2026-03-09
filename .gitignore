@@ -67,3 +67,9 @@ __debug_bin*
 # LLM agent configs
 AGENTS.md
 CLAUDE.md
+
+# IDE
+.idea/
+
+# goenv
+.go-version
