@@ -173,7 +173,7 @@ homebrew_casks:
 
     homepage: "https://www.topaz.sh/docs/"
     description: "Topaz CLI"
-    license: "MIT"
+    license: "{{ .Env.LICENSE }}"
 
     binaries:
       - topaz
