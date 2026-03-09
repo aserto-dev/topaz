@@ -20,7 +20,7 @@ which enables both the editor and prompter (1 | 2 = 3)
 
 To set the feature flags for the terminal sesssion:
 
-```shell
+```console
 export TOPAZ_FFLAG=3
 ```
 

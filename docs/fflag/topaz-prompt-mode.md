@@ -2,8 +2,8 @@
 
 For those topaz CLI commands, that accept inline JSON request payloads, like:
 
-```shell
-topaz directory get object '{"object_type":"user", "object_id":"euang@acmecorp.com"}' --insecure
+```console
+$ topaz directory get object '{"object_type":"user", "object_id":"euang@acmecorp.com"}' --insecure
 ```
 
 we have added the ability to construct these requests using an input prompter.
@@ -43,9 +43,9 @@ Authorizer:
 
 For example:
 
-```shell
-export TOPAZ_FFLAG=2
-topaz directory check --insecure
+```console
+$ export TOPAZ_FFLAG=2
+$ topaz directory check --insecure
 ```
 Opening prompt:
 
@@ -55,12 +55,12 @@ Finished prompt:
 
 ![prompter](topaz-prompt-finish.png)
 
-
 Result:
 
-```
-topaz directory check --insecure
+```console
+$ topaz directory check --insecure
 {
   "check":  true,
   "trace":  []
 }
+```

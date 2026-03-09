@@ -2,8 +2,8 @@
 
 For those topaz CLI commands, that accept inline JSON request payloads, like:
 
-```shell
-topaz directory get object '{"object_type":"user", "object_id":"euang@acmecorp.com"}' --insecure
+```console
+$ topaz directory get object '{"object_type":"user", "object_id":"euang@acmecorp.com"}' --insecure
 ```
 
 we have added the ability to construct these requests using a text editor.
