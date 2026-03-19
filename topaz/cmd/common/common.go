@@ -10,16 +10,11 @@ import (
 	"syscall"
 )
 
-type SaveContext bool
-
 const (
 	CLIConfigurationFile = "topaz.json"
 )
 
-var (
-	Save                  SaveContext
-	RestrictedNamePattern = regexp.MustCompile(`^[a-z0-9][a-z0-9_.-]*$`)
-)
+var RestrictedNamePattern = regexp.MustCompile(`^[a-z0-9][a-z0-9_.-]*$`)
 
 func PromptYesNo(label string, def bool) bool {
 	choices := "Y/n"

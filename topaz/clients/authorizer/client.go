@@ -9,7 +9,6 @@ import (
 	"google.golang.org/grpc"
 
 	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/clients"
 )
 
@@ -37,8 +36,8 @@ func New(conn *grpc.ClientConn) *Client {
 	}
 }
 
-func NewClient(c *cc.CommonCtx, cfg *Config) (*Client, error) {
-	conn, err := cfg.Connect(c.Context)
+func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
+	conn, err := cfg.Connect(ctx)
 	if err != nil {
 		return nil, err
 	}

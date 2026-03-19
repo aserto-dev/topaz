@@ -18,8 +18,6 @@ const (
 	defaultInsecure        = false
 	defaultPlaintext       = false
 	defaultTimeout         = 5 * time.Second
-	defaultNoCheck         = false
-	defaultNoColor         = false
 )
 
 func DirectorySvc() string {

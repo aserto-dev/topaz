@@ -1,13 +1,14 @@
 package directory
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 
 	"github.com/aserto-dev/azm/stats"
 	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	"github.com/aserto-dev/topaz/topaz/cc"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
 	"github.com/aserto-dev/topaz/topaz/table"
@@ -22,13 +23,13 @@ type StatsCmd struct {
 	Output string `flag:"" short:"o" enum:"table,json" default:"table" help:"output format"`
 }
 
-func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
-	client, err := dsc.NewClient(c, &cmd.Config)
+func (cmd *StatsCmd) Run(ctx context.Context) error {
+	client, err := dsc.NewClient(ctx, &cmd.Config)
 	if err != nil {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	stream, err := client.Exporter.Export(c.Context, &dse3.ExportRequest{
+	stream, err := client.Exporter.Export(ctx, &dse3.ExportRequest{
 		Options: uint32(dse3.Option_OPTION_DATA + dse3.Option_OPTION_STATS),
 	})
 	if err != nil {
@@ -53,7 +54,7 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	if cmd.Output == "json" {
-		if err := jsonx.OutputJSONPB(c.StdOut(), pbStats); err != nil {
+		if err := jsonx.OutputJSONPB(os.Stdout, pbStats); err != nil {
 			return err
 		}
 
@@ -71,7 +72,7 @@ func (cmd *StatsCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 
-		statsTable(c.StdErr(), &s)
+		statsTable(os.Stderr, &s)
 	}
 
 	return nil

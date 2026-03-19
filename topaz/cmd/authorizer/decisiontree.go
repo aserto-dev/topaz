@@ -1,7 +1,9 @@
 package authorizer
 
 import (
-	"github.com/aserto-dev/topaz/topaz/cc"
+	"context"
+	"os"
+
 	"github.com/aserto-dev/topaz/topaz/clients"
 	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
@@ -20,20 +22,20 @@ type DecisionTreeCmd struct {
 	resp authorizer.DecisionTreeResponse
 }
 
-func (cmd *DecisionTreeCmd) Run(c *cc.CommonCtx) error {
+func (cmd *DecisionTreeCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, authorizer.Authorizer_DecisionTree_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, authorizer.Authorizer_DecisionTree_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+	return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 }
 
 func (cmd *DecisionTreeCmd) template() proto.Message {

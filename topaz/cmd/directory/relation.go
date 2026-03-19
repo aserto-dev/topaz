@@ -1,10 +1,12 @@
 package directory
 
 import (
+	"context"
+	"os"
+
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
@@ -21,20 +23,20 @@ type GetRelationCmd struct {
 	resp reader.GetRelationResponse
 }
 
-func (cmd *GetRelationCmd) Run(c *cc.CommonCtx) error {
+func (cmd *GetRelationCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, reader.Reader_GetRelation_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, reader.Reader_GetRelation_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+	return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 }
 
 func (cmd *GetRelationCmd) template() proto.Message {
@@ -57,20 +59,20 @@ type SetRelationCmd struct {
 	resp writer.SetRelationResponse
 }
 
-func (cmd *SetRelationCmd) Run(c *cc.CommonCtx) error {
+func (cmd *SetRelationCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, writer.Writer_SetRelation_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, writer.Writer_SetRelation_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+	return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 }
 
 func (cmd *SetRelationCmd) template() proto.Message {
@@ -97,20 +99,20 @@ type DeleteRelationCmd struct {
 	resp writer.DeleteRelationResponse
 }
 
-func (cmd *DeleteRelationCmd) Run(c *cc.CommonCtx) error {
+func (cmd *DeleteRelationCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, writer.Writer_DeleteRelation_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, writer.Writer_DeleteRelation_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+	return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 }
 
 func (cmd *DeleteRelationCmd) template() proto.Message {
@@ -132,20 +134,20 @@ type ListRelationsCmd struct {
 	resp reader.GetRelationsResponse
 }
 
-func (cmd *ListRelationsCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ListRelationsCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, reader.Reader_GetRelations_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, reader.Reader_GetRelations_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+	return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 }
 
 func (cmd *ListRelationsCmd) template() proto.Message {

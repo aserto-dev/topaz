@@ -35,30 +35,30 @@ const (
 )
 
 //nolint:funlen
-func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
-	if c.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
+func (cmd *StartRunCmd) run(cfg *cc.Config, mode runMode) error {
+	if cfg.CheckRunStatus(cmd.ContainerName, cc.StatusRunning) {
 		return cc.ErrIsRunning
 	}
 
-	if _, err := os.Stat(c.Config.Active.ConfigFile); errors.Is(err, os.ErrNotExist) {
-		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(c.Config.Active.ConfigFile))
+	if _, err := os.Stat(cfg.Active.ConfigFile); errors.Is(err, os.ErrNotExist) {
+		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(cfg.Active.ConfigFile))
 	}
 
-	cfg, err := config.LoadConfiguration(c.Config.Active.ConfigFile)
+	activeConfig, err := config.LoadConfiguration(cfg.Active.ConfigFile)
 	if err != nil {
 		return err
 	}
 
-	c.Config.Running.Config = c.Config.Active.Config
-	c.Config.Running.ConfigFile = c.Config.Active.ConfigFile
-	c.Config.Running.ContainerName = cc.ContainerName(c.Config.Active.ConfigFile)
+	cfg.Running.Config = cfg.Active.Config
+	cfg.Running.ConfigFile = cfg.Active.ConfigFile
+	cfg.Running.ContainerName = cc.ContainerName(cfg.Active.ConfigFile)
 
-	if cfg.HasTopazDir {
-		c.Con().Warn().Msg("This configuration file still uses TOPAZ_DIR environment variable.")
-		c.Con().Msg("Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
+	if activeConfig.HasTopazDir {
+		cc.Con().Warn().Msg("This configuration file still uses TOPAZ_DIR environment variable.")
+		cc.Con().Msg("Please change to using the new TOPAZ_DB_DIR and TOPAZ_CERTS_DIR environment variables.")
 	}
 
-	generator := config.NewGenerator(filepath.Base(c.Config.Active.ConfigFile))
+	generator := config.NewGenerator(filepath.Base(cfg.Active.ConfigFile))
 	if _, err := generator.CreateCertsDir(); err != nil {
 		return err
 	}
@@ -67,17 +67,17 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		return err
 	}
 
-	ports, err := getPorts(cfg)
+	ports, err := getPorts(activeConfig)
 	if err != nil {
 		return err
 	}
 
-	volumes, err := getVolumes(cfg)
+	volumes, err := getVolumes(activeConfig)
 	if err != nil {
 		return err
 	}
 
-	c.Con().Info().Msg(">>> starting topaz %q...", c.Config.Running.Config)
+	cc.Con().Info().Msg(">>> starting topaz %q...", cfg.Running.Config)
 
 	dc, err := dockerx.New()
 	if err != nil {
@@ -103,14 +103,14 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		dockerx.WithContainerHostname(cmd.ContainerHostname),
 		dockerx.WithWorkingDir("/app"),
 		dockerx.WithEntrypoint([]string{"./topazd"}),
-		dockerx.WithCmd([]string{"run", "--config-file", "/config/" + filepath.Base(c.Config.Active.ConfigFile)}),
+		dockerx.WithCmd([]string{"run", "--config-file", "/config/" + filepath.Base(cfg.Active.ConfigFile)}),
 		dockerx.WithAutoRemove(),
 		dockerx.WithEnvs(getEnvFromVolumes(volumes)),
 		dockerx.WithEnvs(cmd.Env),
 		dockerx.WithPorts(ports),
 		dockerx.WithVolumes(volumes),
-		dockerx.WithOutput(c.StdOut()),
-		dockerx.WithError(c.StdErr()),
+		dockerx.WithOutput(os.Stdout),
+		dockerx.WithError(os.Stderr),
 	}
 
 	if mode == modeInteractive {
@@ -125,9 +125,9 @@ func (cmd *StartRunCmd) run(c *cc.CommonCtx, mode runMode) error {
 		}
 	}
 
-	c.Con().Msg("")
+	cc.Con().Msg("")
 
-	if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
+	if err := cfg.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}

@@ -1,6 +1,7 @@
 package certs
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 
@@ -17,7 +18,7 @@ type GenerateCertsCmd struct {
 }
 
 // Run generates a pair of gateway and grpc certificates.
-func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
+func (cmd *GenerateCertsCmd) Run(ctx context.Context) error {
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
 		if err := os.MkdirAll(certsDir, fs.FileModeDirectoryRWX); err != nil {
@@ -41,15 +42,15 @@ func (cmd *GenerateCertsCmd) Run(c *cc.CommonCtx) error {
 		Dir:  certsDir,
 	}
 
-	c.Con().Info().Msg("certs directory: %s", certsDir)
+	cc.Con().Info().Msg("certs directory: %s", certsDir)
 
-	if err := certs.GenerateCerts(c, cmd.Force, cmd.DNSNames, pathGateway, pathGRPC); err != nil {
+	if err := certs.GenerateCerts(cmd.Force, cmd.DNSNames, pathGateway, pathGRPC); err != nil {
 		return err
 	}
 
 	if cmd.Trust {
 		certTrust := &TrustCertsCmd{CertsDir: certsDir}
-		return certTrust.Run(c)
+		return certTrust.Run(ctx)
 	}
 
 	return nil

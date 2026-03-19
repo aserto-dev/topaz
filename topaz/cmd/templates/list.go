@@ -1,7 +1,9 @@
 package templates
 
 import (
-	"github.com/aserto-dev/topaz/topaz/cc"
+	"context"
+	"os"
+
 	"github.com/aserto-dev/topaz/topaz/table"
 	"github.com/aserto-dev/topaz/topaz/x"
 )
@@ -11,7 +13,7 @@ type ListTemplatesCmd struct {
 	TemplatesURL string `optional:"" default:"${topaz_tmpl_url}" env:"TOPAZ_TMPL_URL" help:"URL of template catalog"`
 }
 
-func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ListTemplatesCmd) Run(ctx context.Context) error {
 	if cmd.Legacy {
 		cmd.TemplatesURL = x.TopazTmplV32URL
 	}
@@ -26,7 +28,7 @@ func (cmd *ListTemplatesCmd) Run(c *cc.CommonCtx) error {
 		data = append(data, []any{n, t.ShortDescription, t.DocumentationURL})
 	}
 
-	t := table.New(c.StdOut())
+	t := table.New(os.Stdout)
 
 	t.Header(colName, colDescription, colDocumentation)
 	t.Bulk(data)

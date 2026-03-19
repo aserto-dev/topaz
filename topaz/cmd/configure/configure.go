@@ -1,10 +1,10 @@
 package configure
 
 import (
+	"context"
 	"regexp"
 
 	"github.com/alecthomas/kong"
-	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/fflag"
 	"github.com/pkg/errors"
 )
@@ -39,7 +39,7 @@ func (c ConfigName) String() string {
 	return string(c)
 }
 
-func (cmd *ConfigCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ConfigCmd) Run(ctx context.Context) error {
 	return nil
 }
 

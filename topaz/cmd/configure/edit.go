@@ -1,6 +1,7 @@
 package configure
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -15,7 +16,7 @@ type EditConfigCmd struct {
 	ConfigDir string     `flag:"" default:"${topaz_cfg_dir}" help:"path to config folder"`
 }
 
-func (cmd *EditConfigCmd) Run(c *cc.CommonCtx) error {
+func (cmd *EditConfigCmd) Run(ctx context.Context) error {
 	cfg := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	if cmd.Name == "defaults" {
 		cfg = filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)

@@ -4,7 +4,9 @@
     "formatting.gofumpt": true
   },
   "go.testFlags": [
-    "-race"
+    "-v",
+    "-gcflags=all=-N -l",
+    "-count=1"
   ],
   "sarif-viewer.connectToGithubCodeScanning": "off",
   "cSpell.words": [
@@ -332,5 +334,8 @@
     "zeroinstall",
     "zerolog",
     "zpages"
-  ]
+  ],
+  "go.alternateTools": {
+  
+  }
 }

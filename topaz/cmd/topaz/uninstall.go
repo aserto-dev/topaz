@@ -1,6 +1,7 @@
 package topaz
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 
@@ -17,13 +18,13 @@ type UninstallCmd struct {
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 }
 
-func (cmd *UninstallCmd) Run(c *cc.CommonCtx) error {
+func (cmd *UninstallCmd) Run(ctx context.Context) error {
 	// stop container instance, if running.
-	if err := (&StopCmd{ContainerName: cmd.ContainerName, Wait: true}).Run(c); err != nil {
+	if err := (&StopCmd{ContainerName: cmd.ContainerName, Wait: true}).Run(ctx); err != nil {
 		return err
 	}
 
-	c.Con().Info().Msg(">>> uninstalling %s...",
+	cc.Con().Info().Msg(">>> uninstalling %s...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name

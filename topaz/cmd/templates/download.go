@@ -1,6 +1,7 @@
 package templates
 
 import (
+	"context"
 	"path"
 
 	"github.com/aserto-dev/topaz/topaz/cc"
@@ -17,7 +18,7 @@ type DownloadTemplateCmd struct {
 	ConfigName   string `optional:"" help:"set config name"`
 }
 
-func (cmd *DownloadTemplateCmd) Run(c *cc.CommonCtx) error {
+func (cmd *DownloadTemplateCmd) Run(ctx context.Context) error {
 	if cmd.ConfigName == "" {
 		cmd.ConfigName = cmd.Name
 	}
@@ -55,7 +56,7 @@ func (cmd *DownloadTemplateCmd) Run(c *cc.CommonCtx) error {
 			return err
 		}
 
-		c.Con().Msg(s)
+		cc.Con().Msg(s)
 	}
 
 	// data
@@ -70,7 +71,7 @@ func (cmd *DownloadTemplateCmd) Run(c *cc.CommonCtx) error {
 					return err
 				}
 
-				c.Con().Msg(s)
+				cc.Con().Msg(s)
 			}
 		}
 
@@ -82,7 +83,7 @@ func (cmd *DownloadTemplateCmd) Run(c *cc.CommonCtx) error {
 					return err
 				}
 
-				c.Con().Msg(s)
+				cc.Con().Msg(s)
 			}
 		}
 	}
@@ -97,7 +98,7 @@ func (cmd *DownloadTemplateCmd) Run(c *cc.CommonCtx) error {
 				return err
 			}
 
-			c.Con().Msg(s)
+			cc.Con().Msg(s)
 		}
 	}
 

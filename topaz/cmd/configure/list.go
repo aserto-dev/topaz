@@ -1,6 +1,7 @@
 package configure
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,8 +14,8 @@ type ListConfigCmd struct {
 	ConfigDir string `flag:"" required:"false" default:"${topaz_cfg_dir}" help:"path to config folder" `
 }
 
-func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
-	tab := table.New(c.StdOut())
+func (cmd ListConfigCmd) Run(ctx context.Context) error {
+	tab := table.New(os.Stdout)
 	defer tab.Close()
 
 	tab.Header("", "Name", "Config File")
@@ -34,7 +35,7 @@ func (cmd ListConfigCmd) Run(c *cc.CommonCtx) error {
 		name := strings.Split(files[i].Name(), ".")[0]
 		active := ""
 
-		if files[i].Name() == filepath.Base(c.Config.Active.ConfigFile) {
+		if files[i].Name() == filepath.Base(cc.GetConfig().Active.ConfigFile) {
 			active = "*"
 		}
 

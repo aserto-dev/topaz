@@ -1,12 +1,13 @@
 package authorizer
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/aserto-dev/topaz/topaz/cc"
 	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
 	"github.com/aserto-dev/topaz/topaz/cmd/common"
 )
@@ -21,7 +22,7 @@ type TestExecCmd struct {
 	azc.Config
 }
 
-func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
+func (cmd *TestExecCmd) Run(ctx context.Context) error {
 	files := []string{}
 
 	for _, file := range cmd.Files {
@@ -31,7 +32,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	runner, err := common.NewAuthorizerTestRunner(
-		c,
+		ctx,
 		&common.TestExecCmd{
 			Files:   files,
 			Stdin:   cmd.Stdin,
@@ -45,7 +46,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	return runner.Run(c)
+	return runner.Run(ctx)
 }
 
 type TestTemplateCmd struct {
@@ -59,9 +60,9 @@ const assertionsTemplate string = `{
   ]
 }`
 
-func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
+func (cmd *TestTemplateCmd) Run(ctx context.Context) error {
 	if !cmd.Pretty {
-		fmt.Fprintln(c.StdOut(), assertionsTemplate)
+		fmt.Fprintln(os.Stdout, assertionsTemplate)
 		return nil
 	}
 
@@ -74,7 +75,7 @@ func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	enc := json.NewEncoder(c.StdOut())
+	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
 

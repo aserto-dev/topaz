@@ -1,6 +1,8 @@
 package topaz
 
 import (
+	"context"
+
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/dockerx"
 )
@@ -13,14 +15,16 @@ type InstallCmd struct {
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 }
 
-func (cmd *InstallCmd) Run(c *cc.CommonCtx) error {
+func (cmd *InstallCmd) Run(ctx context.Context) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	if c.CheckRunStatus(cc.ContainerName(c.Config.Active.Config), cc.StatusRunning) {
+	cfg := cc.GetConfig()
+
+	if cfg.CheckRunStatus(cc.ContainerName(cfg.Active.Config), cc.StatusRunning) {
 		return cc.ErrIsRunning
 	}
 
-	c.Con().Info().Msg(">>> installing %s (%s)...",
+	cc.Con().Info().Msg(">>> installing %s (%s)...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name

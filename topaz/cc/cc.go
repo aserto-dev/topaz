@@ -9,7 +9,6 @@ import (
 	"sync"
 
 	"github.com/aserto-dev/topaz/internal/fs"
-	"github.com/aserto-dev/topaz/topaz/cc/iostream"
 	"github.com/aserto-dev/topaz/topaz/dockerx"
 	"github.com/docker/docker/api/types/container"
 	"github.com/pkg/errors"
@@ -21,13 +20,7 @@ var (
 	ErrIsRunning  = errors.New("topaz is already running, use 'topaz stop' to stop")
 )
 
-type CommonCtx struct {
-	Context context.Context
-	std     *iostream.StdIO
-	Config  *CLIConfig
-}
-
-type CLIConfig struct {
+type Config struct {
 	Version  int            `json:"version"`
 	Active   ActiveConfig   `json:"active"`
 	Running  RunningConfig  `json:"running"`
@@ -61,25 +54,22 @@ const (
 )
 
 var (
+	config   *Config
 	defaults DefaultsConfig
 	once     sync.Once
 )
 
-func NewCommonContext(ctx context.Context, noCheck bool, configFilePath string) (*CommonCtx, error) {
-	commonCtx := &CommonCtx{
-		Context: ctx,
-		std:     iostream.DefaultIO(),
-		Config: &CLIConfig{
-			Version: 1,
-			Active: ActiveConfig{
-				ConfigFile: filepath.Join(GetTopazCfgDir(), "config.yaml"),
-				Config:     "config.yaml",
-			},
-			Defaults: DefaultsConfig{
-				NoCheck: noCheck,
-			},
-			Running: RunningConfig{},
+func NewConfig(ctx context.Context, noCheck bool, configFilePath string) (*Config, error) {
+	cfg := &Config{
+		Version: 1,
+		Active: ActiveConfig{
+			ConfigFile: filepath.Join(GetTopazCfgDir(), "config.yaml"),
+			Config:     "config.yaml",
 		},
+		Defaults: DefaultsConfig{
+			NoCheck: noCheck,
+		},
+		Running: RunningConfig{},
 	}
 
 	if _, err := os.Stat(configFilePath); err == nil {
@@ -88,24 +78,32 @@ func NewCommonContext(ctx context.Context, noCheck bool, configFilePath string) 
 			return nil, err
 		}
 
-		if err := json.Unmarshal(data, commonCtx.Config); err != nil {
+		if err := json.Unmarshal(data, cfg); err != nil {
 			return nil, err
 		}
 	}
 
-	setDefaults(commonCtx)
+	setDefaults(cfg)
 
-	return commonCtx, nil
+	return cfg, nil
 }
 
-func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatus) bool {
-	if c.Config.Defaults.NoCheck {
+func GetConfig() *Config {
+	if config == nil {
+		panic("config not initialized")
+	}
+
+	return config
+}
+
+func (cfg *Config) CheckRunStatus(containerName string, expectedStatus runStatus) bool {
+	if cfg.Defaults.NoCheck {
 		return false
 	}
 
 	// set default container name if not specified.
 	if containerName == "" {
-		containerName = ContainerName(c.Config.Active.ConfigFile)
+		containerName = ContainerName(cfg.Active.ConfigFile)
 	}
 
 	dc, err := dockerx.New()
@@ -123,7 +121,7 @@ func (c *CommonCtx) CheckRunStatus(containerName string, expectedStatus runStatu
 	return lo.Ternary(running, StatusRunning, StatusNotRunning) == expectedStatus
 }
 
-func (c *CommonCtx) GetRunningContainers() ([]container.Summary, error) {
+func (cfg *Config) GetRunningContainers() ([]container.Summary, error) {
 	dc, err := dockerx.New()
 	if err != nil {
 		return nil, err
@@ -137,10 +135,10 @@ func (c *CommonCtx) GetRunningContainers() ([]container.Summary, error) {
 	return topazContainers, nil
 }
 
-func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
+func (cfg *Config) SaveContextConfig(configurationFile string) error {
 	cliConfig := filepath.Join(GetTopazDir(), configurationFile)
 
-	kongConfigBytes, err := json.Marshal(c.Config)
+	kongConfigBytes, err := json.Marshal(cfg)
 	if err != nil {
 		return err
 	}
@@ -149,21 +147,14 @@ func (c *CommonCtx) SaveContextConfig(configurationFile string) error {
 		return err
 	}
 
-	defaults = c.Config.Defaults
+	defaults = cfg.Defaults
 
 	return nil
 }
 
-func setDefaults(ctx *CommonCtx) {
+func setDefaults(cfg *Config) {
 	once.Do(func() {
-		defaults = ctx.Config.Defaults
+		config = cfg
+		defaults = cfg.Defaults
 	})
-}
-
-func (c *CommonCtx) StdOut() *os.File {
-	return c.std.StdOut()
-}
-
-func (c *CommonCtx) StdErr() *os.File {
-	return c.std.StdErr()
 }

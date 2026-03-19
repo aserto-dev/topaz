@@ -1,6 +1,7 @@
 package directory
 
 import (
+	"context"
 	"os"
 	"path"
 
@@ -15,12 +16,12 @@ type RestoreCmd struct {
 	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
 }
 
-func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
-	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+func (cmd *RestoreCmd) Run(ctx context.Context) error {
+	if ok, err := clients.Validate(ctx, &cmd.Config); !ok {
 		return err
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.Config)
+	dsClient, err := dsc.NewClient(ctx, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -34,7 +35,7 @@ func (cmd *RestoreCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, "backup.tar.gz")
 	}
 
-	c.Con().Info().Msg(">>> restore from %s", cmd.File)
+	cc.Con().Info().Msg(">>> restore from %s", cmd.File)
 
-	return dsClient.Restore(c.Context, cmd.File)
+	return dsClient.Restore(ctx, cmd.File)
 }

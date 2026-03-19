@@ -1,7 +1,9 @@
 package directory
 
 import (
+	"context"
 	"encoding/json"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -20,7 +22,7 @@ type TestExecCmd struct {
 	dsc.Config
 }
 
-func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
+func (cmd *TestExecCmd) Run(ctx context.Context) error {
 	files := []string{}
 
 	for _, file := range cmd.Files {
@@ -30,7 +32,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	runner, err := common.NewDirectoryTestRunner(
-		c,
+		ctx,
 		&common.TestExecCmd{
 			Files:   files,
 			Stdin:   cmd.Stdin,
@@ -44,7 +46,7 @@ func (cmd *TestExecCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	return runner.Run(c)
+	return runner.Run(ctx)
 }
 
 type TestTemplateCmd struct {
@@ -57,9 +59,9 @@ const assertionsTemplateV3 string = `{
   ]
 }`
 
-func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
+func (cmd *TestTemplateCmd) Run(ctx context.Context) error {
 	if !cmd.Pretty {
-		c.Out().Msg(assertionsTemplateV3)
+		cc.Out().Msg(assertionsTemplateV3)
 		return nil
 	}
 
@@ -71,7 +73,7 @@ func (cmd *TestTemplateCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	enc := json.NewEncoder(c.StdOut())
+	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
 

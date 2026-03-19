@@ -44,8 +44,8 @@ type TestRunner struct {
 	results  *TestResults
 }
 
-func NewDirectoryTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, dsConfig *dsc.Config) (*TestRunner, error) {
-	dsClient, err := dsc.NewClient(c, dsConfig)
+func NewDirectoryTestRunner(ctx context.Context, cmd *TestExecCmd, dsConfig *dsc.Config) (*TestRunner, error) {
+	dsClient, err := dsc.NewClient(ctx, dsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +56,8 @@ func NewDirectoryTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, dsConfig *dsc.Con
 	}, nil
 }
 
-func NewAuthorizerTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Config) (*TestRunner, error) {
-	azClient, err := azc.NewClient(c, azConfig)
+func NewAuthorizerTestRunner(ctx context.Context, cmd *TestExecCmd, azConfig *azc.Config) (*TestRunner, error) {
+	azClient, err := azc.NewClient(ctx, azConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -68,13 +68,13 @@ func NewAuthorizerTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Co
 	}, nil
 }
 
-func NewTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Config, dsConfig *dsc.Config) (*TestRunner, error) {
-	dsClient, err := dsc.NewClient(c, dsConfig)
+func NewTestRunner(ctx context.Context, cmd *TestExecCmd, azConfig *azc.Config, dsConfig *dsc.Config) (*TestRunner, error) {
+	dsClient, err := dsc.NewClient(ctx, dsConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	azClient, err := azc.NewClient(c, azConfig)
+	azClient, err := azc.NewClient(ctx, azConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -86,13 +86,13 @@ func NewTestRunner(c *cc.CommonCtx, cmd *TestExecCmd, azConfig *azc.Config, dsCo
 	}, nil
 }
 
-func (runner *TestRunner) Run(c *cc.CommonCtx) error {
+func (runner *TestRunner) Run(ctx context.Context) error {
 	if runner.cmd.Stdin {
-		return runner.exec(c, os.Stdin)
+		return runner.exec(ctx, os.Stdin)
 	}
 
 	for _, file := range runner.cmd.Files {
-		if err := runner.execFile(c, file); err != nil {
+		if err := runner.execFile(ctx, file); err != nil {
 			return err
 		}
 	}
@@ -100,23 +100,23 @@ func (runner *TestRunner) Run(c *cc.CommonCtx) error {
 	return nil
 }
 
-func (runner *TestRunner) execFile(c *cc.CommonCtx, file string) error {
+func (runner *TestRunner) execFile(ctx context.Context, file string) error {
 	r, err := os.Open(file)
 	if err != nil {
 		return err
 	}
 	defer r.Close()
 
-	c.Con().Info().Msg(file)
+	cc.Con().Info().Msg(file)
 
-	return runner.exec(c, r)
+	return runner.exec(ctx, r)
 }
 
 var pbUnmarshal = protojson.UnmarshalOptions{DiscardUnknown: true}
 
 //nolint:funlen
-func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
-	csvWriter := csv.NewWriter(c.StdOut())
+func (runner *TestRunner) exec(ctx context.Context, r *os.File) error {
+	csvWriter := csv.NewWriter(os.Stdout)
 
 	var assertions struct {
 		Assertions []json.RawMessage `json:"assertions"`
@@ -152,7 +152,7 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 			return errors.Errorf("unknown request version")
 		}
 
-		result := setCheckType(checkType, reqVersion, c, runner, &msg)
+		result := setCheckType(ctx, checkType, reqVersion, runner, &msg)
 
 		runner.results.Passed(result.Outcome == expected)
 
@@ -200,20 +200,20 @@ func (runner *TestRunner) exec(c *cc.CommonCtx, r *os.File) error {
 	return nil
 }
 
-func setCheckType(checkType CheckType, reqVersion int, c *cc.CommonCtx, runner *TestRunner, msg *structpb.Struct) *CheckResult {
+func setCheckType(ctx context.Context, checkType CheckType, reqVersion int, runner *TestRunner, msg *structpb.Struct) *CheckResult {
 	var result *CheckResult
 
 	switch {
 	case checkType == Check && reqVersion == 3:
-		result = checkV3(c.Context, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
+		result = checkV3(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	case checkType == CheckPermission && reqVersion == 3:
-		result = checkPermissionV3(c.Context, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
+		result = checkPermissionV3(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	case checkType == CheckRelation && reqVersion == 3:
-		result = checkRelationV3(c.Context, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
+		result = checkRelationV3(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	case checkType == CheckDecision:
-		result = checkDecisionV2(c.Context, runner.azClient, msg.GetFields()[CheckTypeMapStr[checkType]])
+		result = checkDecisionV2(ctx, runner.azClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	case checkType == Evaluation:
-		result = evaluationV1(c.Context, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
+		result = evaluationV1(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	}
 
 	return result

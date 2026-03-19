@@ -1,11 +1,13 @@
 package directory
 
 import (
+	"context"
+	"os"
+
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/fflag"
@@ -30,20 +32,20 @@ func (cmd *GetObjectCmd) BeforeReset(ctx *kong.Context) error {
 	return nil
 }
 
-func (cmd *GetObjectCmd) Run(c *cc.CommonCtx) error {
+func (cmd *GetObjectCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, reader.Reader_GetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, reader.Reader_GetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+	return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 }
 
 func (cmd *GetObjectCmd) template() proto.Message {
@@ -68,20 +70,20 @@ func (cmd *SetObjectCmd) BeforeReset(ctx *kong.Context) error {
 	return nil
 }
 
-func (cmd *SetObjectCmd) Run(c *cc.CommonCtx) error {
+func (cmd *SetObjectCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, writer.Writer_SetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, writer.Writer_SetObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+	return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 }
 
 func (cmd *SetObjectCmd) template() proto.Message {
@@ -111,20 +113,20 @@ func (cmd *DeleteObjectCmd) BeforeReset(ctx *kong.Context) error {
 	return nil
 }
 
-func (cmd *DeleteObjectCmd) Run(c *cc.CommonCtx) error {
+func (cmd *DeleteObjectCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, writer.Writer_DeleteObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, writer.Writer_DeleteObject_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+	return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 }
 
 func (cmd *DeleteObjectCmd) template() proto.Message {
@@ -148,20 +150,20 @@ func (cmd *ListObjectsCmd) BeforeReset(ctx *kong.Context) error {
 	return nil
 }
 
-func (cmd *ListObjectsCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ListObjectsCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, reader.Reader_GetObjects_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, reader.Reader_GetObjects_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
-	return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+	return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 }
 
 func (cmd *ListObjectsCmd) template() proto.Message {

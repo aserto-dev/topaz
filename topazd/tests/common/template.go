@@ -1,10 +1,10 @@
 package common_test
 
 import (
+	"context"
 	"path/filepath"
 	"testing"
 
-	"github.com/aserto-dev/topaz/topaz/cc"
 	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/cmd/common"
@@ -16,14 +16,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func InstallTemplate(dsConfig *dsc.Config, azConfig *azc.Config, tmpl string) func(*testing.T) {
+func InstallTemplate(ctx context.Context, dsConfig *dsc.Config, azConfig *azc.Config, tmpl string) func(*testing.T) {
 	return func(t *testing.T) {
 		t.Logf("addr: %s tmpl: %s", dsConfig.Host, tmpl)
 
 		t.Setenv("TOPAZ_NO_COLOR", "true")
-
-		c, err := cc.NewCommonContext(t.Context(), true, filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile))
-		require.NoError(t, err)
 
 		absPath, err := filepath.Abs(tmpl)
 		require.NoError(t, err)
@@ -39,64 +36,64 @@ func InstallTemplate(dsConfig *dsc.Config, azConfig *azc.Config, tmpl string) fu
 
 		manifestFile := filepath.Join(dirPath, tmpl.Assets.Manifest)
 		t.Logf("manifestFile: %s", manifestFile)
-		t.Run(tmpl.Name+"-DeleteManifest", DeleteManifest(c, dsConfig))
-		t.Run(tmpl.Name+"-SetManifest", SetManifest(c, dsConfig, manifestFile))
+		t.Run(tmpl.Name+"-DeleteManifest", DeleteManifest(ctx, dsConfig))
+		t.Run(tmpl.Name+"-SetManifest", SetManifest(ctx, dsConfig, manifestFile))
 
 		if len(tmpl.Assets.IdentityData) > 0 {
 			idpDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.IdentityData[0]))
 			t.Logf("idp_data: %s", idpDataDir)
-			t.Run(tmpl.Name+"-ImportIdentityData", ImportData(c, dsConfig, idpDataDir))
+			t.Run(tmpl.Name+"-ImportIdentityData", ImportData(ctx, dsConfig, idpDataDir))
 		}
 
 		if len(tmpl.Assets.DomainData) > 0 {
 			domainDataDir := filepath.Dir(filepath.Join(dirPath, tmpl.Assets.DomainData[0]))
 			t.Logf("domain_data: %s", domainDataDir)
-			t.Run(tmpl.Name+"-ImportDomainData", ImportData(c, dsConfig, domainDataDir))
+			t.Run(tmpl.Name+"-ImportDomainData", ImportData(ctx, dsConfig, domainDataDir))
 		}
 
 		if len(tmpl.Assets.Assertions) > 0 {
 			for _, assertions := range tmpl.Assets.Assertions {
 				assertionsFile := filepath.Join(dirPath, assertions)
 				t.Logf("assertionsFile: %s", assertionsFile)
-				t.Run(assertions, ExecTests(c, dsConfig, azConfig, []string{assertionsFile}))
+				t.Run(assertions, ExecTests(ctx, dsConfig, azConfig, []string{assertionsFile}))
 			}
 		}
 	}
 }
 
-func DeleteManifest(c *cc.CommonCtx, cfg *dsc.Config) func(*testing.T) {
+func DeleteManifest(ctx context.Context, cfg *dsc.Config) func(*testing.T) {
 	return func(t *testing.T) {
 		cmd := directory.DeleteManifestCmd{Config: *cfg, Force: true}
-		if err := cmd.Run(c); err != nil {
+		if err := cmd.Run(ctx); err != nil {
 			assert.NoError(t, err)
 		}
 	}
 }
 
-func SetManifest(c *cc.CommonCtx, cfg *dsc.Config, path string) func(*testing.T) {
+func SetManifest(ctx context.Context, cfg *dsc.Config, path string) func(*testing.T) {
 	return func(t *testing.T) {
 		cmd := directory.SetManifestCmd{Config: *cfg, Path: path}
-		if err := cmd.Run(c); err != nil {
+		if err := cmd.Run(ctx); err != nil {
 			assert.NoError(t, err)
 		}
 	}
 }
 
-func ImportData(c *cc.CommonCtx, cfg *dsc.Config, dir string) func(*testing.T) {
+func ImportData(ctx context.Context, cfg *dsc.Config, dir string) func(*testing.T) {
 	return func(t *testing.T) {
 		cmd := directory.ImportCmd{Config: *cfg, Directory: dir}
-		if err := cmd.Run(c); err != nil {
+		if err := cmd.Run(ctx); err != nil {
 			assert.NoError(t, err)
 		}
 	}
 }
 
-func ExecTests(c *cc.CommonCtx, dsConfig *dsc.Config, azConfig *azc.Config, files []string) func(*testing.T) {
+func ExecTests(ctx context.Context, dsConfig *dsc.Config, azConfig *azc.Config, files []string) func(*testing.T) {
 	return func(t *testing.T) {
-		cmd, err := common.NewTestRunner(c, &common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}, azConfig, dsConfig)
+		cmd, err := common.NewTestRunner(ctx, &common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}, azConfig, dsConfig)
 		require.NoError(t, err)
 
-		if err := cmd.Run(c); err != nil {
+		if err := cmd.Run(ctx); err != nil {
 			assert.NoError(t, err)
 		}
 	}

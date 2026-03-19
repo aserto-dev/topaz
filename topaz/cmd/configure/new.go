@@ -29,24 +29,26 @@ type NewConfigCmd struct {
 }
 
 //nolint:funlen,nestif
-func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
+func (cmd *NewConfigCmd) Run(ctx context.Context) error {
 	if cmd.Resource == "" {
 		if cmd.LocalPolicyImage == "" {
 			return errors.New("no policy specified. Please provide a policy URI with the --resource (-r) option")
 		} else {
-			c.Con().Warn().Msg("The --local-policy-image options (-l) is deprecated and will be removed in a future release. " +
+			cc.Con().Warn().Msg("The --local-policy-image options (-l) is deprecated and will be removed in a future release. " +
 				"Please use the --local flag instead.")
 		}
 	}
 
+	cfg := cc.GetConfig()
+
 	configFile := cmd.Name.String() + ".yaml"
-	if configFile != c.Config.Active.ConfigFile {
-		c.Config.Active.Config = cmd.Name.String()
-		c.Config.Active.ConfigFile = filepath.Join(cc.GetTopazCfgDir(), configFile)
+	if configFile != cfg.Active.ConfigFile {
+		cfg.Active.Config = cmd.Name.String()
+		cfg.Active.ConfigFile = filepath.Join(cc.GetTopazCfgDir(), configFile)
 	}
 
 	if !cmd.Stdout {
-		c.Con().Info().Msg(">>> configure policy\n")
+		cc.Con().Info().Msg(">>> configure policy\n")
 	}
 
 	// Backward-compatibility with deprecated LocalPolicyImage option.
@@ -71,7 +73,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	certGenerator := certs.GenerateCertsCmd{CertsDir: cc.GetTopazCertsDir()}
-	if err := certGenerator.Run(c); err != nil {
+	if err := certGenerator.Run(ctx); err != nil {
 		return err
 	}
 
@@ -85,11 +87,11 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 	)
 
 	if cmd.Stdout {
-		w = c.StdOut()
+		w = os.Stdout
 	} else {
 		if !cmd.Force {
-			if _, err := os.Stat(c.Config.Active.ConfigFile); err == nil {
-				c.Con().Warn().Msg("Configuration file %q already exists.", c.Config.Active.ConfigFile)
+			if _, err := os.Stat(cfg.Active.ConfigFile); err == nil {
+				cc.Con().Warn().Msg("Configuration file %q already exists.", cfg.Active.ConfigFile)
 
 				if !common.PromptYesNo("Do you want to continue?", false) {
 					return nil
@@ -97,7 +99,7 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 			}
 		}
 
-		w, err = os.Create(c.Config.Active.ConfigFile)
+		w, err = os.Create(cfg.Active.ConfigFile)
 		if err != nil {
 			return err
 		}
@@ -105,14 +107,12 @@ func (cmd *NewConfigCmd) Run(c *cc.CommonCtx) error {
 
 	if !cmd.Stdout {
 		if local {
-			c.Con().Info().Msg("using local policy image: %s", resource)
+			cc.Con().Info().Msg("using local policy image: %s", resource)
 			return configGenerator.GenerateConfig(w, config.LocalImageTemplate)
 		}
 
-		c.Con().Info().Msg("policy name: %s", cmd.Name)
+		cc.Con().Info().Msg("policy name: %s", cmd.Name)
 	}
-
-	c.Context = context.WithValue(c.Context, common.Save, true)
 
 	return configGenerator.GenerateConfig(w, config.Template)
 }

@@ -1,6 +1,7 @@
 package directory
 
 import (
+	"context"
 	"io"
 	"os"
 
@@ -30,19 +31,19 @@ type DeleteManifestCmd struct {
 	Force bool `flag:"" help:"do not ask for conformation to delete manifest"`
 }
 
-func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
-	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+func (cmd *GetManifestCmd) Run(ctx context.Context) error {
+	if ok, err := clients.Validate(ctx, &cmd.Config); !ok {
 		return err
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.Config)
+	dsClient, err := dsc.NewClient(ctx, &cmd.Config)
 	if err != nil {
 		return err
 	}
 
-	c.Con().Info().Msg(">>> get manifest to %s", cmd.Path)
+	cc.Con().Info().Msg(">>> get manifest to %s", cmd.Path)
 
-	r, err := dsClient.GetManifest(c.Context)
+	r, err := dsClient.GetManifest(ctx)
 	if err != nil {
 		return err
 	}
@@ -65,12 +66,12 @@ func (cmd *GetManifestCmd) Run(c *cc.CommonCtx) error {
 	return nil
 }
 
-func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
-	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+func (cmd *SetManifestCmd) Run(ctx context.Context) error {
+	if ok, err := clients.Validate(ctx, &cmd.Config); !ok {
 		return err
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.Config)
+	dsClient, err := dsc.NewClient(ctx, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -83,26 +84,26 @@ func (cmd *SetManifestCmd) Run(c *cc.CommonCtx) error {
 		}
 	}
 
-	c.Con().Info().Msg(">>> set manifest to %s\n", cmd.Path)
+	cc.Con().Info().Msg(">>> set manifest to %s\n", cmd.Path)
 
-	return dsClient.SetManifest(c.Context, r)
+	return dsClient.SetManifest(ctx, r)
 }
 
-func (cmd *DeleteManifestCmd) Run(c *cc.CommonCtx) error {
-	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+func (cmd *DeleteManifestCmd) Run(ctx context.Context) error {
+	if ok, err := clients.Validate(ctx, &cmd.Config); !ok {
 		return err
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.Config)
+	dsClient, err := dsc.NewClient(ctx, &cmd.Config)
 	if err != nil {
 		return err
 	}
 
-	c.Con().Warn().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
+	cc.Con().Warn().Msg("WARNING: delete manifest resets all directory state, including relation and object data")
 
 	if cmd.Force || common.PromptYesNo("Do you want to continue?", false) {
-		c.Con().Info().Msg(">>> delete manifest")
-		return dsClient.DeleteManifest(c.Context)
+		cc.Con().Info().Msg(">>> delete manifest")
+		return dsClient.DeleteManifest(ctx)
 	}
 
 	return nil

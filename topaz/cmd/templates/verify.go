@@ -2,11 +2,12 @@ package templates
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"os"
 	"strconv"
 
 	v3 "github.com/aserto-dev/azm/v3"
-	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/table"
 	"github.com/aserto-dev/topaz/topaz/x"
 	"github.com/rs/zerolog"
@@ -18,7 +19,7 @@ type VerifyTemplateCmd struct {
 	TemplatesURL string `optional:"" default:"${topaz_tmpl_url}" env:"TOPAZ_TMPL_URL" help:"URL of template catalog"`
 }
 
-func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
+func (cmd *VerifyTemplateCmd) Run(ctx context.Context) error {
 	if cmd.Legacy {
 		cmd.TemplatesURL = x.TopazTmplV32URL
 	}
@@ -31,7 +32,7 @@ func (cmd *VerifyTemplateCmd) Run(c *cc.CommonCtx) error {
 	// limit the amount of noise from the azm parser.
 	zerolog.SetGlobalLevel(zerolog.Disabled)
 
-	tab := table.New(c.StdOut())
+	tab := table.New(os.Stdout)
 	defer tab.Close()
 
 	tab.Header("template", "asset", "exists", "parsed", "error")
