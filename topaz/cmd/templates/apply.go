@@ -1,6 +1,7 @@
 package templates
 
 import (
+	"context"
 	"os"
 	"path"
 	"path/filepath"
@@ -21,49 +22,49 @@ type ApplyTemplateCmd struct {
 	Force bool   `flag:"" short:"f" default:"false" required:"false" help:"skip confirmation prompt"`
 }
 
-func (cmd *ApplyTemplateCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ApplyTemplateCmd) Run(ctx context.Context) error {
 	templateDir := path.Join(cc.GetTopazTemplateDir(), cmd.Name)
 	if !fs.DirExists(templateDir) {
 		return errors.Errorf("directory %q does not exist", templateDir)
 	}
 
 	if !cmd.Force {
-		c.Con().Warn().Msg("Applying this template will reset the topaz directory content.")
+		cc.Con().Warn().Msg("Applying this template will reset the topaz directory content.")
 
 		if !common.PromptYesNo("Do you want to continue?", false) {
 			return nil
 		}
 	}
 
-	if err := cmd.deleteManifest(c); err != nil {
+	if err := cmd.deleteManifest(ctx); err != nil {
 		return err
 	}
 
-	if err := cmd.setManifest(c); err != nil {
+	if err := cmd.setManifest(ctx); err != nil {
 		return err
 	}
 
-	if err := cmd.importData(c); err != nil {
+	if err := cmd.importData(ctx); err != nil {
 		return err
 	}
 
-	if err := cmd.execAssertions(c); err != nil {
+	if err := cmd.execAssertions(ctx); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (cmd *ApplyTemplateCmd) deleteManifest(c *cc.CommonCtx) error {
+func (cmd *ApplyTemplateCmd) deleteManifest(ctx context.Context) error {
 	command := directory.DeleteManifestCmd{
 		Force:  true,
 		Config: cmd.Config,
 	}
 
-	return command.Run(c)
+	return command.Run(ctx)
 }
 
-func (cmd *ApplyTemplateCmd) setManifest(c *cc.CommonCtx) error {
+func (cmd *ApplyTemplateCmd) setManifest(ctx context.Context) error {
 	manifestDir := path.Join(cc.GetTopazTemplateDir(), cmd.Name, "model")
 	if !fs.DirExists(manifestDir) {
 		return errors.Errorf("directory %q does not exist", manifestDir)
@@ -79,10 +80,10 @@ func (cmd *ApplyTemplateCmd) setManifest(c *cc.CommonCtx) error {
 		Config: cmd.Config,
 	}
 
-	return command.Run(c)
+	return command.Run(ctx)
 }
 
-func (cmd *ApplyTemplateCmd) importData(c *cc.CommonCtx) error {
+func (cmd *ApplyTemplateCmd) importData(ctx context.Context) error {
 	dataDir := path.Join(cc.GetTopazTemplateDir(), cmd.Name, "data")
 	if !fs.DirExists(dataDir) {
 		return errors.Errorf("directory %q does not exist", dataDir)
@@ -93,10 +94,10 @@ func (cmd *ApplyTemplateCmd) importData(c *cc.CommonCtx) error {
 		Config:    cmd.Config,
 	}
 
-	return command.Run(c)
+	return command.Run(ctx)
 }
 
-func (cmd *ApplyTemplateCmd) execAssertions(c *cc.CommonCtx) error {
+func (cmd *ApplyTemplateCmd) execAssertions(ctx context.Context) error {
 	assertionsDir := path.Join(cc.GetTopazTemplateDir(), cmd.Name, "assertions")
 	if !fs.DirExists(assertionsDir) {
 		return errors.Errorf("directory %q does not exist", assertionsDir)
@@ -118,7 +119,7 @@ func (cmd *ApplyTemplateCmd) execAssertions(c *cc.CommonCtx) error {
 	}
 
 	runner, err := common.NewTestRunner(
-		c,
+		ctx,
 		&common.TestExecCmd{
 			Files:   tests,
 			Stdin:   false,
@@ -149,7 +150,7 @@ func (cmd *ApplyTemplateCmd) execAssertions(c *cc.CommonCtx) error {
 		return err
 	}
 
-	if err := runner.Run(c); err != nil {
+	if err := runner.Run(ctx); err != nil {
 		return err
 	}
 

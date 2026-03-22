@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/edit"
 	"github.com/aserto-dev/topaz/topaz/fflag"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
@@ -22,7 +21,7 @@ type RequestArgs struct {
 	Editor   bool   `name:"edit" short:"e" help:"open request in editor" hidden:"" type:"fflag.Editor"`
 }
 
-func (cmd *RequestArgs) Process(c *cc.CommonCtx, req proto.Message, tmpl func() proto.Message) error {
+func (cmd *RequestArgs) Process(req proto.Message, tmpl func() proto.Message) error {
 	if cmd.Request == "" && cmd.Editor && fflag.Enabled(fflag.Editor) {
 		req, err := edit.Msg(tmpl())
 		if err != nil {

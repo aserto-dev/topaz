@@ -76,7 +76,7 @@ func TestTemplates(t *testing.T) {
 	}
 
 	for _, tmpl := range tcs {
-		t.Run("testTemplate", tc.InstallTemplate(dsConfig, azConfig, tmpl))
+		t.Run("testTemplate", tc.InstallTemplate(ctx, dsConfig, azConfig, tmpl))
 	}
 }
 

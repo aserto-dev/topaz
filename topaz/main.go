@@ -55,7 +55,7 @@ func run() int {
 		return exitErr(err)
 	}
 
-	c, err := cc.NewCommonContext(ctx, cli.NoCheck, cliConfigFile)
+	c, err := cc.NewConfig(ctx, cli.NoCheck, cliConfigFile)
 	if err != nil {
 		return exitErr(err)
 	}
@@ -65,8 +65,8 @@ func run() int {
 	}
 
 	if warn && len(os.Args) == 1 {
-		c.Con().Warn().Msg("Detected directory db files in the old data location %q", oldDBPath)
-		c.Con().Msg("Check the documentation on how to update your configuration:\n%s", docLink)
+		cc.Con().Warn().Msg("Detected directory db files in the old data location %q", oldDBPath)
+		cc.Con().Msg("Check the documentation on how to update your configuration:\n%s", docLink)
 	}
 
 	cwd, err := os.Getwd()
@@ -86,6 +86,8 @@ func run() int {
 		return exitErr(err)
 	}
 
+	kongCtx.BindTo(ctx, (*context.Context)(nil))
+
 	if err := kongCtx.Run(c); err != nil {
 		return exitErr(err)
 	}
@@ -93,7 +95,7 @@ func run() int {
 	return rcOK
 }
 
-func kongParse(c *cc.CommonCtx, cli *cmd.CLI, cwd string) *kong.Context {
+func kongParse(cfg *cc.Config, cli *cmd.CLI, cwd string) *kong.Context {
 	kongCtx := kong.Parse(cli,
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
@@ -118,7 +120,7 @@ func kongParse(c *cc.CommonCtx, cli *cmd.CLI, cwd string) *kong.Context {
 			"container_image":    cc.ContainerImage(),
 			"container_tag":      cc.ContainerTag(),
 			"container_platform": cc.ContainerPlatform(),
-			"container_name":     cc.ContainerName(c.Config.Active.ConfigFile),
+			"container_name":     cc.ContainerName(cfg.Active.ConfigFile),
 			"directory_svc":      cc.DirectorySvc(),
 			"directory_key":      cc.DirectoryKey(),
 			"directory_token":    cc.DirectoryToken(),
@@ -129,7 +131,7 @@ func kongParse(c *cc.CommonCtx, cli *cmd.CLI, cwd string) *kong.Context {
 			"plaintext":          strconv.FormatBool(cc.Plaintext()),
 			"no_check":           strconv.FormatBool(cc.NoCheck()),
 			"no_color":           strconv.FormatBool(cc.NoColor()),
-			"active_config":      c.Config.Active.Config,
+			"active_config":      cfg.Active.Config,
 			"cwd":                cwd,
 			"timeout":            cc.Timeout().String(),
 		},
@@ -189,7 +191,7 @@ func checkDBFiles(topazDBDir string) (bool, error) {
 }
 
 // check set version in defaults and suggest update if needed.
-func checkVersion(c *cc.CommonCtx) error {
+func checkVersion(cfg *cc.Config) error {
 	if cc.ContainerTag() == "latest" {
 		return nil
 	}
@@ -212,8 +214,8 @@ func checkVersion(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	c.Con().Warn().Msg("The default container tag configuration setting (%s), is different from the current topaz version (%v).",
-		c.Config.Defaults.ContainerTag,
+	cc.Con().Warn().Msg("The default container tag configuration setting (%s), is different from the current topaz version (%v).",
+		cfg.Defaults.ContainerTag,
 		ver.GetInfo().Version,
 	)
 
@@ -221,7 +223,7 @@ func checkVersion(c *cc.CommonCtx) error {
 		return nil
 	}
 
-	c.Config.Defaults.ContainerTag = ver.GetInfo().Version
+	cfg.Defaults.ContainerTag = ver.GetInfo().Version
 
-	return c.SaveContextConfig(common.CLIConfigurationFile)
+	return cfg.SaveContextConfig(common.CLIConfigurationFile)
 }

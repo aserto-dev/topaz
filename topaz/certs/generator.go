@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/aserto-dev/certs"
-	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/table"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -31,7 +30,7 @@ func (c *CertPaths) FindExisting() []string {
 	return existing
 }
 
-func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...*CertPaths) error {
+func GenerateCerts(force bool, dnsNames []string, certPaths ...*CertPaths) error {
 	if !force {
 		existingFiles := make([]string, 0, len(certPaths))
 		for _, cert := range certPaths {
@@ -39,7 +38,7 @@ func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...
 		}
 
 		if len(existingFiles) != 0 {
-			tab := table.New(c.StdErr())
+			tab := table.New(os.Stderr)
 			defer tab.Close()
 
 			tab.Header("File", "Action")
@@ -56,14 +55,14 @@ func GenerateCerts(c *cc.CommonCtx, force bool, dnsNames []string, certPaths ...
 		}
 	}
 
-	return generate(c, dnsNames, certPaths...)
+	return generate(dnsNames, certPaths...)
 }
 
-func generate(c *cc.CommonCtx, dnsNames []string, certPaths ...*CertPaths) error {
+func generate(dnsNames []string, certPaths ...*CertPaths) error {
 	logger := zerolog.Nop()
 	generator := certs.NewGenerator(&logger)
 
-	tab := table.New(c.StdErr())
+	tab := table.New(os.Stderr)
 	defer tab.Close()
 
 	tab.Header("File", "Action")

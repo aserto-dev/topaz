@@ -14,7 +14,7 @@ type ConMsg struct {
 }
 
 // Con() - console message send to StdErr, default no-color.
-func (c *CommonCtx) Con() *ConMsg {
+func Con() *ConMsg {
 	return &ConMsg{
 		out:   color.Error,
 		color: color.New(),
@@ -22,7 +22,7 @@ func (c *CommonCtx) Con() *ConMsg {
 }
 
 // Out() - console output message send to StdOut, default no-color.
-func (c *CommonCtx) Out() *ConMsg {
+func Out() *ConMsg {
 	return &ConMsg{
 		out:   color.Output,
 		color: color.New(),

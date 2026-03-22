@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"os"
 
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/dockerx"
@@ -18,10 +20,10 @@ type VersionCmd struct {
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 }
 
-func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
+func (cmd *VersionCmd) Run(ctx context.Context) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	c.Con().Info().Msg("%s %s", x.AppName, version.GetInfo().String())
+	cc.Con().Info().Msg("%s %s", x.AppName, version.GetInfo().String())
 
 	if !cmd.Container {
 		return nil
@@ -39,8 +41,8 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 	)
 
 	if !dc.ImageExists(image) {
-		c.Con().Warn().Msg("!!! container image %q does not exist locally", image)
-		c.Con().Msg("!!! run 'topaz install' to download")
+		cc.Con().Warn().Msg("!!! container image %q does not exist locally", image)
+		cc.Con().Msg("!!! run 'topaz install' to download")
 
 		return nil
 	}
@@ -50,13 +52,13 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		dockerx.WithEntrypoint([]string{"/app/topazd", "version"}),
 		dockerx.WithContainerPlatform(cmd.ContainerPlatform),
 		dockerx.WithContainerName("topazd-version"),
-		dockerx.WithOutput(c.StdOut()),
-		dockerx.WithError(c.StdErr()),
+		dockerx.WithOutput(os.Stdout),
+		dockerx.WithError(os.Stderr),
 	); err != nil {
 		return err
 	}
 
-	fmt.Fprintln(c.StdOut())
+	fmt.Fprintln(os.Stdout)
 
 	return nil
 }

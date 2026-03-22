@@ -1,6 +1,7 @@
 package configure
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -18,14 +19,14 @@ type InfoConfigCmd struct {
 	Raw bool   `flag:"" short:"r" help:"output raw strings"`
 }
 
-func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
+func (cmd InfoConfigCmd) Run(ctx context.Context) error {
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
 
 	// use Info struct when output all, to preserve ordering of root objects.
 	if cmd.Var == "" {
-		return enc.Encode(cmd.info(c))
+		return enc.Encode(cmd.info())
 	}
 
 	query, err := gojq.Parse("." + cmd.Var)
@@ -33,7 +34,7 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	iter := query.Run(cmd.json(c))
+	iter := query.Run(cmd.json())
 
 	for {
 		v, ok := iter.Next()
@@ -50,7 +51,7 @@ func (cmd InfoConfigCmd) Run(c *cc.CommonCtx) error {
 		}
 
 		if s, ok := v.(string); ok && cmd.Raw {
-			fmt.Fprintln(c.StdOut(), s)
+			fmt.Fprintln(os.Stdout, s)
 		} else {
 			_ = enc.Encode(v) //nolint:errchkjson // ok
 		}
@@ -102,7 +103,7 @@ type Info struct {
 	} `json:"authorizer"`
 }
 
-func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
+func (cmd InfoConfigCmd) info() *Info {
 	info := Info{}
 
 	info.Environment.Home = xdg.Home
@@ -115,11 +116,12 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 	info.Config.TopazTemplateDir = cc.GetTopazTemplateDir()
 	info.Config.TopazDir = cc.GetTopazDir()
 
-	info.Runtime.ActiveConfigurationName = c.Config.Active.Config
-	info.Runtime.ActiveConfigurationFile = c.Config.Active.ConfigFile
-	info.Runtime.RunningConfigurationName = c.Config.Running.Config
-	info.Runtime.RunningConfigurationFile = c.Config.Running.ConfigFile
-	info.Runtime.RunningContainerName = c.Config.Running.ContainerName
+	cfg := cc.GetConfig()
+	info.Runtime.ActiveConfigurationName = cfg.Active.Config
+	info.Runtime.ActiveConfigurationFile = cfg.Active.ConfigFile
+	info.Runtime.RunningConfigurationName = cfg.Running.Config
+	info.Runtime.RunningConfigurationFile = cfg.Running.ConfigFile
+	info.Runtime.RunningContainerName = cfg.Running.ContainerName
 	info.Runtime.TopazConfigFile = filepath.Join(cc.GetTopazDir(), common.CLIConfigurationFile)
 
 	info.Default.ContainerRegistry = cc.ContainerRegistry()
@@ -142,10 +144,10 @@ func (cmd InfoConfigCmd) info(c *cc.CommonCtx) *Info {
 	return &info
 }
 
-func (cmd InfoConfigCmd) json(c *cc.CommonCtx) map[string]any {
+func (cmd InfoConfigCmd) json() map[string]any {
 	var j map[string]any
 
-	buf, err := json.Marshal(cmd.info(c))
+	buf, err := json.Marshal(cmd.info())
 	if err != nil {
 		return map[string]any{}
 	}

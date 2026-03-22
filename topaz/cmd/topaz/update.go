@@ -1,6 +1,8 @@
 package topaz
 
 import (
+	"context"
+
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/dockerx"
 )
@@ -13,10 +15,10 @@ type UpdateCmd struct {
 	ContainerVersion  string `optional:"" hidden:"" default:"" env:"CONTAINER_VERSION"`
 }
 
-func (cmd *UpdateCmd) Run(c *cc.CommonCtx) error {
+func (cmd *UpdateCmd) Run(ctx context.Context) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	c.Con().Info().Msg(">>> updating %s (%s)...",
+	cc.Con().Info().Msg(">>> updating %s (%s)...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image

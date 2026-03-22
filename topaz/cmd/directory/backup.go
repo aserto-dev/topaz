@@ -1,6 +1,7 @@
 package directory
 
 import (
+	"context"
 	"os"
 	"path"
 
@@ -17,12 +18,12 @@ type BackupCmd struct {
 
 const defaultFileName = "backup.tar.gz"
 
-func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
-	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+func (cmd *BackupCmd) Run(ctx context.Context) error {
+	if ok, err := clients.Validate(ctx, &cmd.Config); !ok {
 		return err
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.Config)
+	dsClient, err := dsc.NewClient(ctx, &cmd.Config)
 	if err != nil {
 		return err
 	}
@@ -36,7 +37,7 @@ func (cmd *BackupCmd) Run(c *cc.CommonCtx) error {
 		cmd.File = path.Join(currentDir, defaultFileName)
 	}
 
-	c.Con().Info().Msg(">>> backup to %s", cmd.File)
+	cc.Con().Info().Msg(">>> backup to %s", cmd.File)
 
-	return dsClient.Backup(c.Context, cmd.File)
+	return dsClient.Backup(ctx, cmd.File)
 }

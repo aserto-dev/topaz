@@ -76,7 +76,7 @@ func TestTemplatesNoTLS(t *testing.T) {
 	}
 
 	for _, tmpl := range tcs {
-		t.Run("testTemplatesWithNoTLS", tc.InstallTemplate(dsConfig, azConfig, tmpl))
+		t.Run("testTemplatesWithNoTLS", tc.InstallTemplate(ctx, dsConfig, azConfig, tmpl))
 	}
 }
 

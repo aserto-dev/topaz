@@ -1,6 +1,7 @@
 package directory
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 
@@ -16,12 +17,12 @@ type ImportCmd struct {
 	Directory string `short:"d" required:"" help:"directory containing .json data"  default:"${cwd}"`
 }
 
-func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
-	if ok, err := clients.Validate(c.Context, &cmd.Config); !ok {
+func (cmd *ImportCmd) Run(ctx context.Context) error {
+	if ok, err := clients.Validate(ctx, &cmd.Config); !ok {
 		return err
 	}
 
-	c.Con().Info().Msg(">>> importing data from %s", cmd.Directory)
+	cc.Con().Info().Msg(">>> importing data from %s", cmd.Directory)
 
 	if fi, err := os.Stat(cmd.Directory); err != nil || !fi.IsDir() {
 		if err != nil {
@@ -38,10 +39,10 @@ func (cmd *ImportCmd) Run(c *cc.CommonCtx) error {
 		return err
 	}
 
-	dsClient, err := dsc.NewClient(c, &cmd.Config)
+	dsClient, err := dsc.NewClient(ctx, &cmd.Config)
 	if err != nil {
 		return err
 	}
 
-	return dsClient.Import(c.Context, files)
+	return dsClient.Import(ctx, files)
 }

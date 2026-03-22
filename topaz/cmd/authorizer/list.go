@@ -1,11 +1,12 @@
 package authorizer
 
 import (
+	"context"
+	"os"
 	"strings"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
@@ -23,24 +24,24 @@ type ListPoliciesCmd struct {
 	resp authorizer.ListPoliciesResponse
 }
 
-func (cmd *ListPoliciesCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ListPoliciesCmd) Run(ctx context.Context) error {
 	if cmd.Template {
-		return jsonx.OutputJSONPB(c.StdOut(), cmd.template())
+		return jsonx.OutputJSONPB(os.Stdout, cmd.template())
 	}
 
-	if err := cmd.Process(c, &cmd.req, cmd.template); err != nil {
+	if err := cmd.Process(&cmd.req, cmd.template); err != nil {
 		return err
 	}
 
-	if err := cmd.Invoke(c.Context, authorizer.Authorizer_ListPolicies_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, authorizer.Authorizer_ListPolicies_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
 	if cmd.Raw {
-		return jsonx.OutputJSONPB(c.StdOut(), &cmd.resp)
+		return jsonx.OutputJSONPB(os.Stdout, &cmd.resp)
 	}
 
-	tab := table.New(c.StdOut())
+	tab := table.New(os.Stdout)
 	defer tab.Close()
 
 	tab.Header("package path", "id")

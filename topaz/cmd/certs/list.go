@@ -1,6 +1,7 @@
 package certs
 
 import (
+	"context"
 	"crypto/x509"
 	"encoding/pem"
 	"os"
@@ -19,13 +20,13 @@ type ListCertsCmd struct {
 	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
 }
 
-func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
+func (cmd *ListCertsCmd) Run(ctx context.Context) error {
 	certsDir := cmd.CertsDir
 	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
 		return errors.Errorf("directory %s not found", certsDir)
 	}
 
-	c.Con().Info().Msg("certs directory: %s", certsDir)
+	cc.Con().Info().Msg("certs directory: %s", certsDir)
 
 	certDetails := make(map[string]*x509.Certificate)
 
@@ -50,7 +51,7 @@ func (cmd *ListCertsCmd) Run(c *cc.CommonCtx) error {
 		certDetails[fn] = cert
 	}
 
-	tab := table.New(c.StdOut())
+	tab := table.New(os.Stdout)
 	defer tab.Close()
 
 	tab.Header("File", "Not Before", "Not After", "Valid", "CN", "DNS names")

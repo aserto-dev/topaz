@@ -1,6 +1,7 @@
 package configure
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -14,12 +15,14 @@ type UseConfigCmd struct {
 	ConfigDir string     `flag:"" required:"false" default:"${topaz_cfg_dir}" help:"path to config folder" `
 }
 
-func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
+func (cmd *UseConfigCmd) Run(ctx context.Context) error {
 	if _, err := os.Stat(filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))); err != nil {
 		return err
 	}
 
-	topazContainers, err := c.GetRunningContainers()
+	cfg := cc.GetConfig()
+
+	topazContainers, err := cfg.GetRunningContainers()
 	if err != nil {
 		return err
 	}
@@ -28,12 +31,12 @@ func (cmd *UseConfigCmd) Run(c *cc.CommonCtx) error {
 		return cc.ErrIsRunning
 	}
 
-	c.Config.Active.Config = cmd.Name.String()
-	c.Config.Active.ConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
+	cfg.Active.Config = cmd.Name.String()
+	cfg.Active.ConfigFile = filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 
-	c.Con().Info().Msg("Using configuration %q", cmd.Name)
+	cc.Con().Info().Msg("Using configuration %q", cmd.Name)
 
-	if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
+	if err := cfg.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}

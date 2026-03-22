@@ -1,6 +1,7 @@
 package certs
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -16,15 +17,15 @@ type RemoveCertFileCmd struct {
 	CertsDir string `flag:"" required:"false" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
 }
 
-func (cmd *RemoveCertFileCmd) Run(c *cc.CommonCtx) error {
+func (cmd *RemoveCertFileCmd) Run(ctx context.Context) error {
 	certsDir := cmd.CertsDir
 	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
 		return errors.Errorf("directory %s not found", certsDir)
 	}
 
-	c.Con().Info().Msg("certs directory: %s", certsDir)
+	cc.Con().Info().Msg("certs directory: %s", certsDir)
 
-	tab := table.New(c.StdOut())
+	tab := table.New(os.Stdout)
 	defer tab.Close()
 
 	tab.Header("File", "Action")

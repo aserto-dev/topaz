@@ -1,6 +1,8 @@
 package topaz
 
 import (
+	"context"
+
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topaz/cc"
 )
@@ -11,13 +13,15 @@ type StartCmd struct {
 	Wait bool `optional:"" default:"false" help:"wait for ports to be opened"`
 }
 
-func (cmd *StartCmd) Run(c *cc.CommonCtx) error {
-	if err := cmd.run(c, modeDaemon); err != nil {
+func (cmd *StartCmd) Run(ctx context.Context) error {
+	cfg := cc.GetConfig()
+
+	if err := cmd.run(cfg, modeDaemon); err != nil {
 		return err
 	}
 
 	if cmd.Wait {
-		ports, err := config.GetConfig(c.Config.Active.ConfigFile).Ports()
+		ports, err := config.GetConfig(cfg.Active.ConfigFile).Ports()
 		if err != nil {
 			return err
 		}

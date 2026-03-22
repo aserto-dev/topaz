@@ -1,6 +1,7 @@
 package certs
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -18,13 +19,13 @@ type TrustCertsCmd struct {
 	Remove   bool   `flag:"" default:"false" help:"remove dev cert from trust store"`
 }
 
-func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
+func (cmd *TrustCertsCmd) Run(ctx context.Context) error {
 	certsDir := cmd.CertsDir
 	if fi, err := os.Stat(certsDir); os.IsNotExist(err) || !fi.IsDir() {
 		return errors.Errorf("directory %s not found", certsDir)
 	}
 
-	c.Con().Info().Msg("certs directory: %s", certsDir)
+	cc.Con().Info().Msg("certs directory: %s", certsDir)
 
 	if runtime.GOOS == `linux` {
 		var err error
@@ -34,14 +35,14 @@ func (cmd *TrustCertsCmd) Run(c *cc.CommonCtx) error {
 			err = certs.AddTrustedCert("")
 		}
 
-		c.Con().Error().Msg(err.Error())
+		cc.Con().Error().Msg(err.Error())
 
 		return nil
 	}
 
 	data := [][]any{}
 
-	tab := table.New(c.StdOut())
+	tab := table.New(os.Stdout)
 
 	defer func() {
 		tab.Bulk(data)

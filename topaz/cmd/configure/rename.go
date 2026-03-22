@@ -1,6 +1,7 @@
 package configure
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -16,21 +17,23 @@ type RenameConfigCmd struct {
 	ConfigDir string     `flag:"" required:"false" default:"${topaz_cfg_dir}" help:"path to config folder" `
 }
 
-func (cmd *RenameConfigCmd) Run(c *cc.CommonCtx) error {
-	if c.CheckRunStatus(cc.ContainerName(fmt.Sprintf("%s.yaml", cmd.Name)), cc.StatusRunning) {
+func (cmd *RenameConfigCmd) Run(ctx context.Context) error {
+	cfg := cc.GetConfig()
+
+	if cfg.CheckRunStatus(cc.ContainerName(fmt.Sprintf("%s.yaml", cmd.Name)), cc.StatusRunning) {
 		return errors.Errorf("configuration %q is running, use 'topaz stop' to stop, before renaming", cmd.Name)
 	}
 
-	c.Con().Info().Msg("Renaming configuration %q to %q", cmd.Name, cmd.NewName)
+	cc.Con().Info().Msg("Renaming configuration %q to %q", cmd.Name, cmd.NewName)
 
 	oldFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.Name))
 	newFile := filepath.Join(cmd.ConfigDir, fmt.Sprintf("%s.yaml", cmd.NewName))
 
-	if c.Config.Active.Config == cmd.Name.String() {
-		c.Config.Active.Config = cmd.NewName.String()
-		c.Config.Active.ConfigFile = newFile
+	if cfg.Active.Config == cmd.Name.String() {
+		cfg.Active.Config = cmd.NewName.String()
+		cfg.Active.ConfigFile = newFile
 
-		if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
+		if err := cfg.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 			return errors.Wrap(err, "failed to update active context")
 		}
 	}
