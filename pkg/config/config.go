@@ -4,10 +4,10 @@ import (
 	"io"
 	"os"
 
-	"github.com/aserto-dev/certs"
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/internal/certs"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/topazd/debug"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
