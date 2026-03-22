@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+BIN=topaz-db
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+BIN_PATH=${PWD}/dist/${BIN}_$(go env GOOS)_$(go env GOARCH)
+
+if [[ -n $(go env GOARM64) ]] then 
+  BIN_PATH+="_"$(go env GOARM64)
+fi 
+
+if [[ -n $(go env GOAMD64) ]] then
+  BIN_PATH+="_"$(go env GOAMD64)
+fi
+
+BIN_PATH+="/${BIN}"
+
+if [ ! -f $BIN_PATH ]; then
+    echo "local binary \"${BIN_PATH}\" not found!"
+fi
+
+${BIN_PATH} $*
