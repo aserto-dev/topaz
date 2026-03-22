@@ -1,6 +1,7 @@
 package certs
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 
@@ -60,7 +61,8 @@ func GenerateCerts(force bool, dnsNames []string, certPaths ...*CertPaths) error
 
 func generate(dnsNames []string, certPaths ...*CertPaths) error {
 	logger := zerolog.Nop()
-	generator := certs.NewGenerator(&logger)
+	ctx := logger.WithContext(context.Background())
+	generator := certs.NewGenerator(ctx)
 
 	tab := table.New(os.Stderr)
 	defer tab.Close()
