@@ -35,7 +35,7 @@ opa:
       acmecorp:
         url: https://ghcr.io/
         type: "oci"
-        response_header_timeout_seconds: 5
+        response_header_timeout_seconds: 15
     bundles:
       peoplefinder:
         service: acmecorp
