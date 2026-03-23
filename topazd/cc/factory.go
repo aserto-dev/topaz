@@ -32,7 +32,9 @@ func buildCC(
 		return nil, nil, err
 	}
 
-	generator := certs.NewGenerator(zerologLogger)
+	ctx := zerologLogger.WithContext(errGroupAndContext.Ctx)
+
+	generator := certs.NewGenerator(ctx)
 
 	configConfig, err := config.NewConfig(configPath, zerologLogger, overrides, generator)
 	if err != nil {

@@ -2,6 +2,7 @@ package certs
 
 import (
 	"bytes"
+	"context"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
@@ -34,9 +35,9 @@ type CertGenConfig struct {
 	DNSNames         []string
 }
 
-// NewGenerator creates a new cert generator.
-func NewGenerator(logger *zerolog.Logger) *Generator {
-	log := logger.With().Str("component", "cert-generator").Logger()
+// NewGenerator creates a new cert generator using the logger from the context.
+func NewGenerator(ctx context.Context) *Generator {
+	log := zerolog.Ctx(ctx).With().Str("component", "cert-generator").Logger()
 
 	return &Generator{
 		logger: &log,
