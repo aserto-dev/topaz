@@ -34,6 +34,6 @@ opa:
           bearer:
             token: '<my-tenant>:<my-registry-key>'
             scheme: 'basic'
-        response_header_timeout_seconds: 60
+        response_header_timeout_seconds: 15
         url:  "https://apcr.io/v2"
  
