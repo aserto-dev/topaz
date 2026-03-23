@@ -15,7 +15,6 @@ require (
 	github.com/aserto-dev/go-directory v0.33.11
 	github.com/aserto-dev/go-grpc v0.9.7
 	github.com/aserto-dev/go-topaz-ui v0.1.26
-	github.com/aserto-dev/header v0.0.11
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
 	github.com/aserto-dev/openapi-directory v0.33.5
@@ -74,6 +73,7 @@ require (
 	github.com/agnivade/levenshtein v1.2.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/aserto-dev/go-decision-logs v0.1.5 // indirect
+	github.com/aserto-dev/header v0.0.11 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytecodealliance/wasmtime-go/v39 v39.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect

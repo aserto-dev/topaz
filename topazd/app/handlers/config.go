@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-
-	"github.com/aserto-dev/header"
 )
 
+type CtxKey string
+
 var (
-	AuthEnabled       = header.CtxKey("AuthEnabled")
-	AuthenticatedUser = header.CtxKey("AuthenticatedUser")
+	AuthEnabled       = CtxKey("AuthEnabled")
+	AuthenticatedUser = CtxKey("AuthenticatedUser")
 )
 
 type TopazCfg struct {
@@ -100,7 +100,7 @@ func writeJSON(buf []byte, w http.ResponseWriter, _ *http.Request) {
 	_, _ = w.Write(buf)
 }
 
-func getValueFromCtx[T any](ctx context.Context, k header.CtxKey) (T, bool) {
+func getValueFromCtx[T any](ctx context.Context, k CtxKey) (T, bool) {
 	val := ctx.Value(k)
 	if val == nil {
 		var zero T
