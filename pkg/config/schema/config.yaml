@@ -326,14 +326,6 @@ opa:
             min_delay_seconds: 60
             max_delay_seconds: 120
 
-controller:
-  enabled: true
-  server:
-    address: relay.prod.aserto.com:8443
-    api_key: "0xdeadbeef"
-    client_cert_path: "${TOPAZ_DIR}/certs/grpc.crt"
-    client_key_path: "${TOPAZ_DIR}/certs/grpc.key"
-
 decision_logger:
   type: self
   config:

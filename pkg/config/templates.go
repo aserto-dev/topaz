@@ -11,14 +11,8 @@ type templateParams struct {
 	SeedMetadata      bool
 	EnableDirectoryV2 bool
 
-	DiscoveryURL string
-	TenantKey    string
-	ControlPlane struct {
-		Enabled        bool
-		Address        string
-		ClientCertPath string
-		ClientKeyPath  string
-	}
+	DiscoveryURL    string
+	TenantKey       string
 	DecisionLogging bool
 	DecisionLogger  struct {
 		EMSAddress     string

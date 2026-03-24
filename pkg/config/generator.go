@@ -65,15 +65,6 @@ func (g *Generator) WithDiscovery(url, key string) *Generator {
 	return g
 }
 
-func (g *Generator) WithController(url, clientCertPath, clientKeyPath string) *Generator {
-	g.ControlPlane.Enabled = true
-	g.ControlPlane.Address = url
-	g.ControlPlane.ClientCertPath = clientCertPath
-	g.ControlPlane.ClientKeyPath = clientKeyPath
-
-	return g
-}
-
 func (g *Generator) WithSelfDecisionLogger(emsURL, clientCertPath, clientKeyPath, storePath string) *Generator {
 	g.DecisionLogging = true
 	g.DecisionLogger.EMSAddress = emsURL
