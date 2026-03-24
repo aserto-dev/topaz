@@ -5,7 +5,6 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/aserto-dev/topaz/topazd/authorizer/controller"
 	"github.com/pkg/errors"
 )
 
@@ -14,9 +13,8 @@ const ConfigFileVersion = 2
 type Config struct {
 	Common `json:"common,squash"` //nolint:staticcheck // squash is used by mapstructure
 
-	Auth             AuthnConfig       `json:"auth"`
-	DecisionLogger   DecisionLogConfig `json:"decision_logger"`
-	ControllerConfig controller.Config `json:"controller"`
+	Auth           AuthnConfig       `json:"auth"`
+	DecisionLogger DecisionLogConfig `json:"decision_logger"`
 }
 
 type DecisionLogConfig struct {

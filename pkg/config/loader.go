@@ -134,20 +134,6 @@ func (l *Loader) GetPaths() ([]string, error) {
 		paths[servicePaths[i]] = true
 	}
 
-	if l.Configuration.ControllerConfig.Enabled {
-		if l.Configuration.ControllerConfig.Server.CACertPath != "" {
-			paths[l.Configuration.ControllerConfig.Server.CACertPath] = true
-		}
-
-		if l.Configuration.ControllerConfig.Server.ClientCertPath != "" {
-			paths[l.Configuration.ControllerConfig.Server.ClientCertPath] = true
-		}
-
-		if l.Configuration.ControllerConfig.Server.ClientKeyPath != "" {
-			paths[l.Configuration.ControllerConfig.Server.ClientKeyPath] = true
-		}
-	}
-
 	decisionLogPaths, err := getDecisionLogPaths(l.Configuration.DecisionLogger)
 	if err != nil {
 		return nil, err

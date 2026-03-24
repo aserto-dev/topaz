@@ -32,9 +32,6 @@
                 "api": {
                     "$ref": "#definitions/API"
                 },
-                "controller": {
-                    "$ref": "#definitions/Controller"
-                },
                 "decision_logger": {
                     "$ref": "#definitions/DecisionLogger"
                 },
@@ -521,40 +518,6 @@
         },
         "OpenPolicyAgentConfig": {
             "description": "OPA config block"
-        },
-        "Controller": {
-            "description": "Control plane configuration",
-            "properties": {
-                "enabled": {
-                    "description": "enable connection to control plane",
-                    "type": "boolean"
-                },
-                "server": {
-                    "description":"control plane service configuration",
-                    "type": "object",
-                    "properties": {
-                        "address": {
-                            "description": "address of relay service",
-                            "type": "string",
-                            "examples": [
-                                "relay.prod.aserto.com:8443"
-                            ]
-                        },
-                        "api_key": {
-                            "description": "API key",
-                            "type": "string"
-                        },
-                        "client_cert_path": {
-                            "description": "mTLS control plane cert path",
-                            "type": "string"
-                        },
-                        "client_key_path": {
-                            "description": "mTLS control plane key path",
-                            "type": "string"
-                        }
-                    }
-                }
-            }
         },
         "DecisionLogger": {
             "description": "Decision Logger configuration",

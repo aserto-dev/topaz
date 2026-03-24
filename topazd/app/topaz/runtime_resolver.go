@@ -3,21 +3,15 @@ package topaz
 import (
 	"context"
 	"errors"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	runtime "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/pkg/config"
-	"github.com/aserto-dev/topaz/topaz/x"
-	"github.com/aserto-dev/topaz/topazd/app/management"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/az"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/ds"
-	"github.com/aserto-dev/topaz/topazd/authorizer/controller"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
 	decisionlog_plugin "github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/edge"
@@ -34,7 +28,6 @@ type RuntimeResolver struct {
 	runtime *runtime.Runtime
 }
 
-//nolint:funlen,nestif
 func NewRuntimeResolver(
 	ctx context.Context,
 	logger *zerolog.Logger,
@@ -88,45 +81,6 @@ func NewRuntimeResolver(
 		}
 	}
 
-	if cfg.OPA.Config.Discovery != nil {
-		host, err := discoveryHostname()
-		if err != nil {
-			return nil, func() {}, err
-		}
-
-		if cfg.OPA.Config.Discovery.Resource == nil {
-			return nil, func() {}, aerr.ErrBadRuntime.Msg("discovery resource must be provided")
-		}
-
-		details := strings.Split(*cfg.OPA.Config.Discovery.Resource, "/")
-
-		if len(details) < 1 {
-			return nil, func() {}, aerr.ErrBadRuntime.Msg("provided discovery resource not formatted correctly")
-		}
-
-		ctrl, err := controller.NewController(logger, details[0], host, &cfg.ControllerConfig, func(cmdCtx context.Context, cmd *api.Command) error {
-			return management.HandleCommand(cmdCtx, cmd, sidecarRuntime)
-		})
-		if err != nil {
-			return nil, func() {}, err
-		}
-
-		cleanupController := ctrl.Start(ctx)
-
-		cleanup = func() {
-			if cleanupController != nil {
-				cleanupController()
-			}
-
-			if cleanupRuntime != nil {
-				cleanupRuntime()
-			}
-		}
-		if err != nil {
-			return nil, cleanup, err
-		}
-	}
-
 	if err := sidecarRuntime.Start(ctx); err != nil {
 		return nil, cleanup, err
 	}
@@ -142,22 +96,6 @@ func NewRuntimeResolver(
 	return &RuntimeResolver{
 		runtime: sidecarRuntime,
 	}, cleanup, err
-}
-
-func discoveryHostname() (string, error) {
-	if host := os.Getenv(x.EnvAsertoHostName); host != "" {
-		return host, nil
-	}
-
-	if host, err := os.Hostname(); err == nil && host != "" {
-		return host, nil
-	}
-
-	if host := os.Getenv(x.EnvHostName); host != "" {
-		return host, nil
-	}
-
-	return "", aerr.ErrBadRuntime.Msg("discovery hostname not set")
 }
 
 func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName string) (*runtime.Runtime, error) {
