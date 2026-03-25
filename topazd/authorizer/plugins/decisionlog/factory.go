@@ -17,10 +17,8 @@ type PluginFactory struct {
 
 var _ plugins.Factory = (*PluginFactory)(nil)
 
-func NewFactory(logger decisionlog.DecisionLogger) PluginFactory {
-	return PluginFactory{
-		logger: logger,
-	}
+func NewFactory() PluginFactory {
+	return PluginFactory{}
 }
 
 func (f PluginFactory) New(m *plugins.Manager, config any) plugins.Plugin {

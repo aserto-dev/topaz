@@ -8,15 +8,14 @@ import (
 
 	cerr "github.com/aserto-dev/errors"
 	console "github.com/aserto-dev/go-topaz-ui"
-	"github.com/aserto-dev/self-decision-logger/logger/self"
 	"github.com/aserto-dev/topaz/internal/eds"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/app/handlers"
 	"github.com/aserto-dev/topaz/topazd/app/middlewares"
 	"github.com/aserto-dev/topaz/topazd/authentication"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
-	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog/logger/file"
-	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog/logger/nop"
+	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog/file"
+	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog/nop"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -236,18 +235,17 @@ func (e *Topaz) ConfigServices() error {
 
 func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
 	switch cfg.Type {
-	case "self":
-		return self.New(e.Context, cfg.Config, e.Logger, KeepAliveDialOption()...)
-
 	case "file":
 		logPath := cfg.Config["log_file_path"]
 		maxSize, _ := cfg.Config["max_file_size_mb"].(int)
 		maxFiles, _ := cfg.Config["max_file_count"].(int)
+		compress, _ := cfg.Config["compress"].(bool)
 
 		return file.New(e.Context, &file.Config{
 			LogFilePath:   fmt.Sprintf("%v", logPath),
 			MaxFileSizeMB: maxSize,
 			MaxFileCount:  maxFiles,
+			Compress:      compress,
 		}, e.Logger)
 
 	default:

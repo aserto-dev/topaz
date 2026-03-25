@@ -266,8 +266,13 @@ opa:
    skip_verification: true
  config:
    plugins:
-     aserto_decision_log:
+     topaz_file_decision_logger:
        enabled: true
+      config:
+        log_file_path: /tmp/mytopaz.log
+        max_file_size_mb: 50
+        max_file_count: 2
+        compress: false
        policy_info:
          registry_service: 'ghcr.io'
          registry_image: 'aserto-policies/policy-peoplefinder-rbac'

@@ -5,25 +5,27 @@ import (
 
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
+	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog/file"
 
 	"github.com/open-policy-agent/opa/v1/plugins"
 )
 
-const PluginName = "aserto_decision_log"
+const PluginName = "topaz_file_decision_logger"
 
 type PolicyInfo struct {
-	PolicyID        string `json:"policy_id"`
 	PolicyName      string `json:"policy_name"`
-	InstanceLabel   string `json:"instance_label"` // DO NOT REMOVE InstanceLabel, required by discovery.
 	RegistryService string `json:"registry_service"`
 	RegistryImage   string `json:"registry_image"`
 	RegistryTag     string `json:"registry_tag"`
 	Digest          string `json:"digest"`
 }
+
 type Config struct {
-	Enabled    bool       `json:"enabled"`
-	PolicyInfo PolicyInfo `json:"policy_info"`
+	Enabled    bool        `json:"enabled"`
+	PolicyInfo PolicyInfo  `json:"policy_info"`
+	FileLogger file.Config `json:"config"`
 }
+
 type DecisionLogsPlugin struct {
 	manager *plugins.Manager
 	cfg     *Config

@@ -12,7 +12,6 @@ import (
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/az"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/ds"
-	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
 	decisionlog_plugin "github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/edge"
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
@@ -33,7 +32,6 @@ func NewRuntimeResolver(
 	logger *zerolog.Logger,
 	cfg *config.Config,
 	dsConn *grpc.ClientConn,
-	decisionLogger decisionlog.DecisionLogger,
 ) (resolvers.RuntimeResolver, func(), error) {
 	dsClient := reader.NewReaderClient(dsConn)
 	acClient := access.NewAccessClient(dsConn)
@@ -62,7 +60,7 @@ func NewRuntimeResolver(
 		runtime.WithBuiltin1(az.RegisterActionSearch(logger, builtins.AZActionSearch, acClient)),
 
 		// plugins
-		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory(decisionLogger)),
+		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory()),
 		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
 
 		runtime.WithRegoVersion(ast.RegoV0),

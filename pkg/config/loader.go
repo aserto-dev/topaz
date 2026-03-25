@@ -8,7 +8,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/aserto-dev/self-decision-logger/logger/self"
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/x"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
@@ -134,10 +133,7 @@ func (l *Loader) GetPaths() ([]string, error) {
 		paths[servicePaths[i]] = true
 	}
 
-	decisionLogPaths, err := getDecisionLogPaths(l.Configuration.DecisionLogger)
-	if err != nil {
-		return nil, err
-	}
+	decisionLogPaths := getDecisionLogPaths(l.Configuration.DecisionLogger)
 
 	for i := range decisionLogPaths {
 		paths[decisionLogPaths[i]] = true
@@ -273,29 +269,13 @@ func getUniqueServiceCertPaths(services map[string]*builder.API) []string {
 	return lo.Keys(paths)
 }
 
-func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) ([]string, error) {
+func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) []string {
 	switch decisionLogConfig.Type {
 	case "file":
-		logpath := fmt.Sprintf("%s", decisionLogConfig.Config["log_file_path"])
-		return []string{logpath}, nil
-	case "self":
-		selfCfg := self.Config{}
-
-		dec, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-			Result:  &selfCfg,
-			TagName: "json",
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		if err := dec.Decode(decisionLogConfig.Config); err != nil {
-			return nil, err
-		}
-
-		return []string{selfCfg.StoreDirectory, selfCfg.Scribe.CACertPath, selfCfg.Scribe.ClientCertPath, selfCfg.Scribe.ClientKeyPath}, nil
+		logPath := fmt.Sprintf("%s", decisionLogConfig.Config["log_file_path"])
+		return []string{logPath}
 	default:
-		return nil, nil // nop decision logger
+		return nil // nop decision logger
 	}
 }
 

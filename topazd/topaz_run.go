@@ -58,19 +58,11 @@ func run(cmd *cobra.Command, args []string) error {
 
 		defer dirResolver.Close()
 
-		decisionlog, err := topazApp.GetDecisionLogger(topazApp.Configuration.DecisionLogger)
-		if err != nil {
-			return err
-		}
-
-		defer decisionlog.Shutdown()
-
 		runtime, runtimeCleanup, err := topaz.NewRuntimeResolver(
 			topazApp.Context,
 			topazApp.Logger,
 			topazApp.Configuration,
 			dirResolver.GetConn(),
-			decisionlog,
 		)
 		if err != nil {
 			return err

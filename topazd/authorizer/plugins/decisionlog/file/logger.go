@@ -23,6 +23,8 @@ func New(ctx context.Context, cfg *Config, logger *zerolog.Logger) (*fileLogger,
 		Filename:   cfg.LogFilePath,
 		MaxSize:    cfg.MaxFileSizeMB,
 		MaxBackups: cfg.MaxFileCount,
+		LocalTime:  false,
+		Compress:   cfg.Compress,
 	}
 
 	decisionLogger := zerolog.New(ljLogger)
