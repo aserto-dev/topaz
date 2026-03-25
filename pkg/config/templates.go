@@ -88,7 +88,7 @@ opa:
           registry_service: ''
           registry_image: ''
           registry_tag: ''
-          digest: ''      
+          digest: ''
 `
 
 const templatePreamble = `# yaml-language-server: $schema=https://topaz.sh/schema/config.json
