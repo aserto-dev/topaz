@@ -325,17 +325,17 @@ opa:
           polling:
             min_delay_seconds: 60
             max_delay_seconds: 120
-
-decision_logger:
-  type: self
-  config:
-    store_directory: "${TOPAZ_DIR}/decisions"
-    scribe:
-      address: ems.prod.aserto.com:8443
-      client_cert_path: "${TOPAZ_DIR}/certs/sidecar-prod.crt"
-      client_key_path: "${TOPAZ_DIR}/certs/sidecar-prod.key"
-      ack_wait_seconds: 30
-      headers:
-        Aserto-Tenant-Id: 55cf8ea9-30b2-4f9a-b0bb-021ca12170f3
-    shipper:
-      publish_timeout_seconds: 2
+    plugins:
+      topaz_file_decision_logger:
+        enabled: false
+        config:
+          log_file_path: '/tmp/decisions.json'
+          max_file_size_mb: 50
+          max_file_count: 2
+          compress: false
+        policy_info:
+          policy_name: 'policy-rebac'
+          registry_service: 'ghcr.io'
+          registry_image: 'aserto-policies/policy-rebac'
+          registry_tag: 'latest'
+          digest: ''

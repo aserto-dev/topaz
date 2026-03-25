@@ -31,6 +31,23 @@ opa:
     local_policy_image: {{ .Resource }}
     watch: true
     skip_verification: true
+  config:
+    decision_logs:
+      console: false
+    plugins:
+      topaz_file_decision_logger:
+        enabled: false
+        config:
+          log_file_path: '/tmp/decisions.json'
+          max_file_size_mb: 50
+          max_file_count: 2
+          compress: false
+        policy_info:
+          policy_name: ''
+          registry_service: ''
+          registry_image: ''
+          registry_tag: ''
+          digest: ''
 `
 
 const Template = templatePreamble + `
@@ -56,6 +73,22 @@ opa:
           polling:
             min_delay_seconds: 60
             max_delay_seconds: 120
+    decision_logs:
+      console: false
+    plugins:
+      topaz_file_decision_logger:
+        enabled: false
+        config:
+          log_file_path: '/tmp/decisions.json'
+          max_file_size_mb: 50
+          max_file_count: 2
+          compress: false
+        policy_info:
+          policy_name: ''
+          registry_service: ''
+          registry_image: ''
+          registry_tag: ''
+          digest: ''
 `
 
 const templatePreamble = `# yaml-language-server: $schema=https://topaz.sh/schema/config.json
