@@ -7,7 +7,6 @@ import (
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/go-grpc/aserto/api/v2"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/datasync"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	topaz "github.com/aserto-dev/topaz/pkg/config"
@@ -29,6 +28,21 @@ const (
 	status        string = "status"
 	started       string = "started"
 	finished      string = "finished"
+)
+
+type SyncMode int32
+
+const (
+	// SyncModeUnknown nothing selected (default initialization value).
+	SyncModeUnknown SyncMode = 0
+	// SyncModeFull full sync, requests full export of source, contains new and updated elements only.
+	SyncModeFull SyncMode = 1
+	// SyncModeDiff full sync with differential, removing items deleted in source from target.
+	SyncModeDiff SyncMode = 2
+	// SyncModeWatermark watermark sync, pulls all new and updated data since last watermark.
+	SyncModeWatermark SyncMode = 4
+	// SyncModeManifest manifest sync, pulls manifest from source and applies to target when etags are different.
+	SyncModeManifest SyncMode = 8
 )
 
 type Config struct {
@@ -55,7 +69,7 @@ type Plugin struct {
 	logger      *zerolog.Logger
 	config      *Config
 	topazConfig *topaz.Config
-	syncNow     chan api.SyncMode
+	syncNow     chan SyncMode
 }
 
 func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Config, manager *plugins.Manager) *Plugin {
@@ -77,7 +91,7 @@ func newEdgePlugin(logger *zerolog.Logger, cfg *Config, topazConfig *topaz.Confi
 		manager:     manager,
 		config:      cfg,
 		topazConfig: topazConfig,
-		syncNow:     make(chan api.SyncMode),
+		syncNow:     make(chan SyncMode),
 	}
 }
 
@@ -129,7 +143,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, config any) {
 	}
 }
 
-func (p *Plugin) SyncNow(mode api.SyncMode) {
+func (p *Plugin) SyncNow(mode SyncMode) {
 	p.syncNow <- mode
 }
 
@@ -150,8 +164,8 @@ func (p *Plugin) scheduler() {
 
 	cycle := cycles
 
-	intervalMode := api.SyncMode_SYNC_MODE_UNKNOWN
-	onDemandMode := api.SyncMode_SYNC_MODE_UNKNOWN
+	intervalMode := SyncModeUnknown
+	onDemandMode := SyncModeUnknown
 
 	for {
 		select {
@@ -163,10 +177,10 @@ func (p *Plugin) scheduler() {
 			p.logger.Info().Time("dispatch", t).Msg(syncScheduler)
 			interval.Stop()
 
-			intervalMode = api.SyncMode_SYNC_MODE_WATERMARK
+			intervalMode = SyncModeWatermark
 
 			if cycle%cycles == 0 {
-				intervalMode = api.SyncMode_SYNC_MODE_DIFF
+				intervalMode = SyncModeDiff
 				cycle = 0
 			}
 
@@ -185,10 +199,10 @@ func (p *Plugin) scheduler() {
 
 		if !running.Load() {
 			// determine the run mode
-			runMode := api.SyncMode_SYNC_MODE_UNKNOWN
-			if onDemandMode != api.SyncMode_SYNC_MODE_UNKNOWN {
+			runMode := SyncModeUnknown
+			if onDemandMode != SyncModeUnknown {
 				runMode = onDemandMode
-				onDemandMode = api.SyncMode_SYNC_MODE_UNKNOWN
+				onDemandMode = SyncModeUnknown
 			} else {
 				runMode = intervalMode
 			}
@@ -206,7 +220,7 @@ func (p *Plugin) scheduler() {
 				p.task(runMode)
 
 				// if on-demand mode is UNKNOWN, meaning no new on-demand requests were received while processing the last run, fall back to interval mode.
-				if onDemandMode == api.SyncMode_SYNC_MODE_UNKNOWN {
+				if onDemandMode == SyncModeUnknown {
 					wait := p.calcInterval()
 					interval.Reset(wait)
 					p.logger.Info().Str("interval", wait.String()).Time("next-run", time.Now().Add(wait)).Msg(syncScheduler)
@@ -233,7 +247,7 @@ func (p *Plugin) calcInterval() time.Duration {
 	return time.Duration(waitInSec) * time.Second
 }
 
-func (p *Plugin) task(mode api.SyncMode) {
+func (p *Plugin) task(mode SyncMode) {
 	p.logger.Info().Str(status, started).Msg(syncTask)
 
 	defer func() {
@@ -264,7 +278,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 		return
 	}
 
-	if mode == api.SyncMode_SYNC_MODE_UNKNOWN {
+	if mode == SyncModeUnknown {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Full),
@@ -273,14 +287,14 @@ func (p *Plugin) task(mode api.SyncMode) {
 		return
 	}
 
-	if has(mode, api.SyncMode_SYNC_MODE_WATERMARK) {
+	if has(mode, SyncModeWatermark) {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Watermark),
 		})
 	}
 
-	if has(mode, api.SyncMode_SYNC_MODE_DIFF) {
+	if has(mode, SyncModeDiff) {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Diff),
@@ -289,7 +303,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 		return
 	}
 
-	if has(mode, api.SyncMode_SYNC_MODE_FULL) {
+	if has(mode, SyncModeFull) {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 			datasync.WithMode(datasync.Full),
@@ -298,7 +312,7 @@ func (p *Plugin) task(mode api.SyncMode) {
 		return
 	}
 
-	if has(mode, api.SyncMode_SYNC_MODE_MANIFEST) && !has(mode, api.SyncMode_SYNC_MODE_WATERMARK) {
+	if has(mode, SyncModeManifest) && !has(mode, SyncModeWatermark) {
 		p.exec(ctx, ds, conn, []datasync.Option{
 			datasync.WithMode(datasync.Manifest),
 		})
@@ -348,8 +362,8 @@ func (p *Plugin) remoteDirectoryClient() (*grpc.ClientConn, error) {
 	return conn, nil
 }
 
-func fold(m ...api.SyncMode) api.SyncMode {
-	r := api.SyncMode_SYNC_MODE_UNKNOWN
+func fold(m ...SyncMode) SyncMode {
+	r := SyncModeUnknown
 
 	for _, v := range m {
 		r |= v
@@ -358,31 +372,31 @@ func fold(m ...api.SyncMode) api.SyncMode {
 	return r
 }
 
-func printMode(mode api.SyncMode) string {
+func printMode(mode SyncMode) string {
 	modes := []string{}
-	if mode&api.SyncMode_SYNC_MODE_MANIFEST != 0 {
+	if mode&SyncModeManifest != 0 {
 		modes = append(modes, "MANIFEST")
 	}
 
-	if mode&api.SyncMode_SYNC_MODE_FULL != 0 {
+	if mode&SyncModeFull != 0 {
 		modes = append(modes, "FULL")
 	}
 
-	if mode&api.SyncMode_SYNC_MODE_DIFF != 0 {
+	if mode&SyncModeDiff != 0 {
 		modes = append(modes, "DIFF")
 	}
 
-	if mode&api.SyncMode_SYNC_MODE_WATERMARK != 0 {
+	if mode&SyncModeWatermark != 0 {
 		modes = append(modes, "WATERMARK")
 	}
 
-	if mode == api.SyncMode_SYNC_MODE_UNKNOWN {
+	if mode == SyncModeUnknown {
 		modes = append(modes, "UNKNOWN")
 	}
 
 	return strings.Join(modes, "|")
 }
 
-func has(mode, instance api.SyncMode) bool {
+func has(mode, instance SyncMode) bool {
 	return mode&instance != 0
 }

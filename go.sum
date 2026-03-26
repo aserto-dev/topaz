@@ -38,8 +38,6 @@ github.com/aserto-dev/go-authorizer v0.20.14 h1:ejHgwqs43YYFECv1r9O7nYr13xz64cSi
 github.com/aserto-dev/go-authorizer v0.20.14/go.mod h1:4MIt/Y8CfWMASlpvmNw3hQPg0X/KhqSbUZdrPOHyV+8=
 github.com/aserto-dev/go-directory v0.33.11 h1:SAzI6P2oFFJq6djmVpBT0tAckbbxYG74nrhlM8v1tZ4=
 github.com/aserto-dev/go-directory v0.33.11/go.mod h1:wJ05/P+i2qpmsdxra6qPNvZozshsRNoY4kuSv0BMLCY=
-github.com/aserto-dev/go-grpc v0.9.7 h1:9RcqbO/laXHl2x0TYRC6fvN3Gds4vl5/wLmiTfLZoAo=
-github.com/aserto-dev/go-grpc v0.9.7/go.mod h1:eTf2AZ6b+TbompDRe2NQWCeYmuDwU5wMVGTTOo3ObGE=
 github.com/aserto-dev/go-topaz-ui v0.1.26 h1:pndp1j5Gbf5Fl6gE5pkYfZuB4TNi4gIY3aJvpvZBLf4=
 github.com/aserto-dev/go-topaz-ui v0.1.26/go.mod h1:qQ0kgjgvsLinUFrJtxdbxNl7GF2LJ4naTrRa/gSKPug=
 github.com/aserto-dev/header v0.0.11 h1:Qx7lWzfq29h0OgaJQ8W9KD+/q9q14yOwKBFmD0viAfQ=
