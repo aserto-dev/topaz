@@ -33,11 +33,6 @@ func (c *Item) Incr() *Item {
 	return c
 }
 
-func (c *Item) Skip() *Item {
-	atomic.AddInt64(&c.skipped, 1)
-	return c
-}
-
 func (c *Item) Print(w io.Writer) {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		// #nosec G705 -- CLI output, no HTML context

@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"runtime"
 	"time"
-
-	"github.com/aserto-dev/topaz/topaz/x"
 )
 
 var (
@@ -51,8 +49,4 @@ func (vi Info) String() string {
 		runtime.GOARCH,
 		vi.Date,
 	)
-}
-
-func UserAgent() string {
-	return fmt.Sprintf("%s/%s", x.AppName, GetInfo().Version)
 }

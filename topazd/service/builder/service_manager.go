@@ -52,11 +52,6 @@ func NewServiceManager(logger *zerolog.Logger) *ServiceManager {
 	}
 }
 
-func (s *ServiceManager) WithShutdownTimeout(seconds int) *ServiceManager {
-	s.shutdownTimeout = seconds
-	return s
-}
-
 func (s *ServiceManager) AddGRPCServer(server *Service) error {
 	s.Servers[server.Config.GRPC.ListenAddress] = server
 	return nil

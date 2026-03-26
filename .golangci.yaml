@@ -81,6 +81,7 @@ linters:
         - v3.ExporterServer
         - v3.ImporterServer
         - datasync.SyncClient
+        - grpc.ServerOption
 
     lll:
       line-length: 150

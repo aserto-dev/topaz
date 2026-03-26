@@ -2,9 +2,7 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-	"time"
 
 	cerr "github.com/aserto-dev/errors"
 	console "github.com/aserto-dev/go-topaz-ui"
@@ -13,9 +11,6 @@ import (
 	"github.com/aserto-dev/topaz/topazd/app/handlers"
 	"github.com/aserto-dev/topaz/topazd/app/middlewares"
 	"github.com/aserto-dev/topaz/topazd/authentication"
-	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
-	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog/file"
-	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog/nop"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -26,13 +21,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
-	"google.golang.org/grpc/keepalive"
 	"google.golang.org/grpc/status"
-)
-
-const (
-	keepaliveTime    = 30 * time.Second // send pings every 30 seconds if there is no activity
-	keepaliveTimeout = 5 * time.Second  // wait 5 seconds for ping ack before considering the connection dead
 )
 
 // Topaz is an authorizer service instance, responsible for managing
@@ -65,10 +54,6 @@ func SetServiceStatus(log *zerolog.Logger, service string, servingStatus grpc_he
 		log.Info().Str("service", service).Str("status", servingStatus.String()).Msg("health")
 		healthCheck.SetServingStatus(service, servingStatus)
 	}
-}
-
-func (e *Topaz) AddGRPCServerOptions(grpcOptions ...grpc.ServerOption) {
-	e.ServerOptions = append(e.ServerOptions, grpcOptions...)
 }
 
 // Start starts all services required by the engine.
@@ -233,26 +218,6 @@ func (e *Topaz) ConfigServices() error {
 	return nil
 }
 
-func (e *Topaz) GetDecisionLogger(cfg config.DecisionLogConfig) (decisionlog.DecisionLogger, error) {
-	switch cfg.Type {
-	case "file":
-		logPath := cfg.Config["log_file_path"]
-		maxSize, _ := cfg.Config["max_file_size_mb"].(int)
-		maxFiles, _ := cfg.Config["max_file_count"].(int)
-		compress, _ := cfg.Config["compress"].(bool)
-
-		return file.New(e.Context, &file.Config{
-			LogFilePath:   fmt.Sprintf("%v", logPath),
-			MaxFileSizeMB: maxSize,
-			MaxFileCount:  maxFiles,
-			Compress:      compress,
-		}, e.Logger)
-
-	default:
-		return nop.New(e.Context, e.Logger)
-	}
-}
-
 func (e *Topaz) setupHealthAndMetrics() ([]grpc.ServerOption, error) {
 	if e.Configuration.APIConfig.Health.ListenAddress != "" {
 		err := e.Manager.SetupHealthServer(e.Configuration.APIConfig.Health.ListenAddress, &e.Configuration.APIConfig.Health.Certificates)
@@ -332,15 +297,6 @@ func mapToGRPCPorts(api map[string]*builder.API) map[string]services {
 	}
 
 	return portMap
-}
-
-func KeepAliveDialOption() []grpc.DialOption {
-	kacp := keepalive.ClientParameters{
-		Time:    keepaliveTime,    // send pings every 30 seconds if there is no activity
-		Timeout: keepaliveTimeout, // wait 5 seconds for ping ack before considering the connection dead
-	}
-
-	return []grpc.DialOption{grpc.WithKeepaliveParams(kacp)}
 }
 
 func (e *Topaz) validateConfig() error {
