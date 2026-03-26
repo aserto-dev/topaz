@@ -161,10 +161,6 @@ func NewTestResults(assertions []json.RawMessage) *TestResults {
 	}
 }
 
-func (t *TestResults) IncrTotal() {
-	atomic.AddInt32(&t.total, 1)
-}
-
 func (t *TestResults) IncrPassed() {
 	atomic.AddInt32(&t.passed, 1)
 }
@@ -203,14 +199,6 @@ func (t *TestResults) PrintSummary(w io.Writer) {
 	fmt.Fprintf(w, "skipped: %d\n", t.skipped)
 	fmt.Fprintf(w, "errored: %d\n", t.errored)
 	fmt.Fprintln(w)
-}
-
-func (t *TestResults) Errored() int32 {
-	return t.errored
-}
-
-func (t *TestResults) Failed() int32 {
-	return t.failed
 }
 
 func GetBool(msg *structpb.Struct, fieldName string) (bool, bool) {

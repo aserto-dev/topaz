@@ -23,13 +23,3 @@ func NewContext() *ErrGroupAndContext {
 		ErrGroup: errGroup,
 	}
 }
-
-// NewTestContext creates a context that can be used for testing.
-func NewTestContext() *ErrGroupAndContext {
-	errGroup, ctx := errgroup.WithContext(context.Background())
-
-	return &ErrGroupAndContext{
-		Ctx:      ctx,
-		ErrGroup: errGroup,
-	}
-}

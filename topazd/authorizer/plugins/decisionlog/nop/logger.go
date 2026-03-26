@@ -3,7 +3,7 @@ package nop
 import (
 	"context"
 
-	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/topaz/topazd/authorizer/decisionlog"
 	"github.com/rs/zerolog"
 )

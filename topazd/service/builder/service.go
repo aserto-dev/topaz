@@ -60,7 +60,3 @@ type API struct {
 		IdleTimeout       time.Duration    `json:"idle_timeout"`
 	} `json:"gateway"`
 }
-
-func (g *Gateway) AddHandler(pattern string, handler http.HandlerFunc) {
-	g.Mux.Handle(pattern, handler)
-}

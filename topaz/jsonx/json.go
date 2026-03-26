@@ -29,24 +29,6 @@ func OutputJSONPB(w io.Writer, msg proto.Message, opts ...protojson.MarshalOptio
 	return nil
 }
 
-func EncodeJSONPB(w io.Writer, msg proto.Message, opts ...protojson.MarshalOptions) error {
-	options := DefaultMarshalOpts()
-	if len(opts) == 1 {
-		options = opts[0]
-	}
-
-	b, err := options.Marshal(msg)
-	if err != nil {
-		return err
-	}
-
-	if _, err := w.Write(b); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func DefaultMarshalOpts() protojson.MarshalOptions {
 	return protojson.MarshalOptions{
 		Multiline:       false,
