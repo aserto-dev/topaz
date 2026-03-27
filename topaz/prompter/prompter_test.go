@@ -50,12 +50,7 @@ func TestPrompter(t *testing.T) {
 
 func directoryRequests() []proto.Message {
 	reqs := []proto.Message{
-		&reader.GetObjectRequest{
-			Page: &common.PaginationRequest{
-				Size:  x.MaxPaginationSize,
-				Token: "",
-			},
-		},
+		&reader.GetObjectRequest{},
 		&reader.GetObjectsRequest{
 			Page: &common.PaginationRequest{
 				Size:  x.MaxPaginationSize,

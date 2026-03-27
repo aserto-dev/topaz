@@ -53,7 +53,6 @@ func (cmd *GetObjectCmd) template() proto.Message {
 		ObjectType:    "",
 		ObjectId:      "",
 		WithRelations: false,
-		Page:          &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""},
 	}
 }
 
