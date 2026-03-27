@@ -84,8 +84,6 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr3.GetObjectRequest) (*ds
 
 		resp.Result = obj
 
-		resp.Page = &dsc3.PaginationResponse{}
-
 		return nil
 	})
 

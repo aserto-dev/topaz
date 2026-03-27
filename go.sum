@@ -28,6 +28,8 @@ github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0 h1:jfIu9sQUG6Ig
 github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0/go.mod h1:t2tdKJDJF9BV14lnkjHmOQgcvEKgtqs5a1N3LNdJhGE=
 github.com/aserto-dev/azm v0.2.12 h1:P6MRBrBPTz5r9ZrPw8jB36teBhReLvIRzcHQOTGx5cw=
 github.com/aserto-dev/azm v0.2.12/go.mod h1:5Ya/e5Zv6PX3gadO7uJMNU/OFWazuHrYJ0Lu6e1xoGc=
+github.com/aserto-dev/azm v0.2.22 h1:vLaVuj/mrB5NWaWga/dQMpYEfRMAx7pbzead4/U3QEg=
+github.com/aserto-dev/azm v0.2.22/go.mod h1:h5zdUp2mBTvGnja3pGD7IEK479TJT1pQKY2rQ1TH1fE=
 github.com/aserto-dev/errors v0.0.17 h1:Jlb38zvMAEOhbl8SSt8pz0p4/r3wgRMNcnBtnhzhD2g=
 github.com/aserto-dev/errors v0.0.17/go.mod h1:42SHPNyCVOYYLgmz5KPvoc9GESAUuff0lN4S/hXLrz4=
 github.com/aserto-dev/go-aserto v0.33.10 h1:dKk3xTOzvf/h3PXDpAGjQaH52Gjz6WCDhYlRoNnaYMI=
@@ -36,6 +38,8 @@ github.com/aserto-dev/go-authorizer v0.20.14 h1:ejHgwqs43YYFECv1r9O7nYr13xz64cSi
 github.com/aserto-dev/go-authorizer v0.20.14/go.mod h1:4MIt/Y8CfWMASlpvmNw3hQPg0X/KhqSbUZdrPOHyV+8=
 github.com/aserto-dev/go-directory v0.33.11 h1:SAzI6P2oFFJq6djmVpBT0tAckbbxYG74nrhlM8v1tZ4=
 github.com/aserto-dev/go-directory v0.33.11/go.mod h1:wJ05/P+i2qpmsdxra6qPNvZozshsRNoY4kuSv0BMLCY=
+github.com/aserto-dev/go-directory v0.34.0 h1:0lKYrq/3JzPwrEk4qFeYX31Pedv5bouZ0H2juh7mOeY=
+github.com/aserto-dev/go-directory v0.34.0/go.mod h1:qsggY7bbeXcOttvIcTSa7wBsDt7JEh+xtuRtKtfo+TU=
 github.com/aserto-dev/go-topaz-ui v0.1.26 h1:pndp1j5Gbf5Fl6gE5pkYfZuB4TNi4gIY3aJvpvZBLf4=
 github.com/aserto-dev/go-topaz-ui v0.1.26/go.mod h1:qQ0kgjgvsLinUFrJtxdbxNl7GF2LJ4naTrRa/gSKPug=
 github.com/aserto-dev/header v0.0.11 h1:Qx7lWzfq29h0OgaJQ8W9KD+/q9q14yOwKBFmD0viAfQ=
@@ -337,6 +341,7 @@ github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
 github.com/nsf/jsondiff v0.0.0-20230430225905-43f6cf3098c1 h1:dOYG7LS/WK00RWZc8XGgcUTlTxpp3mKhdR2Q9z9HbXM=
 github.com/nsf/jsondiff v0.0.0-20230430225905-43f6cf3098c1/go.mod h1:mpRZBD8SJ55OIICQ3iWH0Yz3cjzA61JdqMLoWXeB2+8=
+github.com/nsf/jsondiff v0.0.0-20260207060731-8e8d90c4c0ac h1:4YV96Dzy2csSnhzl14/Qk5YsSrKAQusGsIADDn/4/g8=
 github.com/oasdiff/yaml v0.0.0-20250309154309-f31be36b4037 h1:G7ERwszslrBzRxj//JalHPu/3yz+De2J+4aLtSRlHiY=
 github.com/oasdiff/yaml v0.0.0-20250309154309-f31be36b4037/go.mod h1:2bpvgLBZEtENV5scfDFEtB/5+1M4hkQhDQrccEJ/qGw=
 github.com/oasdiff/yaml3 v0.0.0-20250309153720-d2182401db90 h1:bQx3WeLcUWy+RletIKwUIt4x3t8n2SxavmoclizMb8c=
