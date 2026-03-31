@@ -174,9 +174,9 @@ func (s *ServiceManager) StartServers(ctx context.Context) error {
 	return nil
 }
 
-func (s *ServiceManager) StopServers(ctx context.Context) {
+func (s *ServiceManager) StopServers() {
 	timeout := time.Duration(s.shutdownTimeout) * time.Second
-	timeoutContext, cancel := context.WithTimeout(ctx, timeout)
+	timeoutContext, cancel := context.WithTimeout(context.Background(), timeout)
 
 	defer cancel()
 

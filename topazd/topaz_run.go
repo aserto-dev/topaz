@@ -35,7 +35,7 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	defer topazApp.Manager.StopServers(topazApp.Context)
+	defer topazApp.Manager.StopServers()
 
 	defer cleanup()
 
