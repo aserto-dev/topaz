@@ -48,7 +48,7 @@ const (
 type Config struct {
 	Enabled           bool              `json:"enabled"`             //
 	Addr              string            `json:"addr"`                //
-	APIKey            string            `json:"apikey"`              //nolint:gosec // G117
+	APIKey            string            `json:"apikey"`              //
 	Timeout           int               `json:"timeout"`             // timeout in seconds.
 	SyncInterval      int               `json:"sync_interval"`       // interval in minutes.
 	Insecure          bool              `json:"insecure"`            //

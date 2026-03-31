@@ -167,7 +167,7 @@ func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.UR
 
 	client := &http.Client{}
 
-	resp, err := client.Do(req) //nolint:gosec // G704: SSRF via taint analysis
+	resp, err := client.Do(req)
 	if err == nil {
 		defer func() { _ = resp.Body.Close() }()
 
