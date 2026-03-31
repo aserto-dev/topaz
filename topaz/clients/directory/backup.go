@@ -46,7 +46,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 
 	tf, err := os.Create(file)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	defer func() {
@@ -55,7 +55,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 
 	gw, err := gzip.NewWriterLevel(tf, gzip.BestCompression)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	defer func() {
@@ -68,8 +68,13 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 		_ = tw.Close()
 	}()
 
-	_ = addToArchive(tw, path.Join(dirPath, ObjectsFileName))
-	_ = addToArchive(tw, path.Join(dirPath, RelationsFileName))
+	if err := addToArchive(tw, path.Join(dirPath, ObjectsFileName)); err != nil {
+		return err
+	}
+
+	if err := addToArchive(tw, path.Join(dirPath, RelationsFileName)); err != nil {
+		return err
+	}
 
 	return nil
 }
