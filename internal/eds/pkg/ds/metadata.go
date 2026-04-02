@@ -23,7 +23,7 @@ func UpdateMetadataObject(ctx context.Context, tx *bolt.Tx, path []string, keyFi
 	switch {
 	case status.Code(err) == codes.NotFound:
 		// new instance, set created_at timestamp.
-		msg.CreatedAt = ts
+		msg.CreatedAt = ts //nolint:staticcheck
 		// if new instance set Etag to empty string.
 		msg.Etag = ""
 
@@ -31,7 +31,7 @@ func UpdateMetadataObject(ctx context.Context, tx *bolt.Tx, path []string, keyFi
 		return nil, err
 	default:
 		// existing instance, propagate created_at timestamp.
-		msg.CreatedAt = cur.GetCreatedAt()
+		msg.CreatedAt = cur.GetCreatedAt() //nolint:staticcheck
 	}
 
 	// always set updated_at timestamp.
@@ -54,7 +54,7 @@ func UpdateMetadataRelation(ctx context.Context, tx *bolt.Tx, path []string, key
 	switch {
 	case status.Code(err) == codes.NotFound:
 		// new instance, set created_at timestamp.
-		msg.CreatedAt = ts
+		msg.CreatedAt = ts //nolint:staticcheck
 		// if new instance set Etag to empty string.
 		msg.Etag = ""
 
@@ -62,7 +62,7 @@ func UpdateMetadataRelation(ctx context.Context, tx *bolt.Tx, path []string, key
 		return nil, err
 	default:
 		// existing instance, propagate created_at timestamp.
-		msg.CreatedAt = cur.GetCreatedAt()
+		msg.CreatedAt = cur.GetCreatedAt() //nolint:staticcheck
 	}
 
 	// always set updated_at timestamp.
