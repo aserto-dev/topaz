@@ -11,7 +11,7 @@ require (
 	github.com/aserto-dev/errors v0.0.17
 	github.com/aserto-dev/go-aserto v0.33.10
 	github.com/aserto-dev/go-authorizer v0.20.14
-	github.com/aserto-dev/go-directory v0.34.0
+	github.com/aserto-dev/go-directory v0.34.1
 	github.com/aserto-dev/go-topaz-ui v0.1.26
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6

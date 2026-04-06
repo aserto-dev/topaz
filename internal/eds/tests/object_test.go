@@ -47,7 +47,7 @@ var objectTestCasesWithID = []*TestCase{
 
 				assert.Equal(t, "user", resp.GetResult().GetType())
 				assert.Equal(t, "test-user@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 1", resp.GetResult().GetDisplayName())
+				assert.Equal(t, "test obj 1", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -75,7 +75,7 @@ var objectTestCasesWithID = []*TestCase{
 
 				assert.Equal(t, "user", resp.GetResult().GetType())
 				assert.Equal(t, "test-user@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 1", resp.GetResult().GetDisplayName())
+				assert.Equal(t, "test obj 1", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -107,7 +107,7 @@ var objectTestCasesWithID = []*TestCase{
 
 				assert.Equal(t, "user", resp.GetResult().GetType())
 				assert.Equal(t, "test-user-11@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 11", resp.GetResult().GetDisplayName())
+				assert.Equal(t, "test obj 11", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -135,7 +135,7 @@ var objectTestCasesWithID = []*TestCase{
 
 				assert.Equal(t, "user", resp.GetResult().GetType())
 				assert.Equal(t, "test-user-11@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 11", resp.GetResult().GetDisplayName())
+				assert.Equal(t, "test obj 11", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -224,7 +224,7 @@ var objectTestCasesWithoutID = []*TestCase{
 
 				assert.Equal(t, "user", resp.GetResult().GetType())
 				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 2", resp.GetResult().GetDisplayName())
+				assert.Equal(t, "test obj 2", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -263,7 +263,7 @@ var objectTestCasesWithoutID = []*TestCase{
 
 				assert.Equal(t, "user", resp.GetResult().GetType())
 				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 2", resp.GetResult().GetDisplayName())
+				assert.Equal(t, "test obj 2", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -305,7 +305,7 @@ var objectTestCasesWithoutID = []*TestCase{
 
 				assert.Equal(t, "user", resp.GetResult().GetType())
 				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 22", resp.GetResult().GetDisplayName())
+				assert.Equal(t, "test obj 22", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -333,7 +333,7 @@ var objectTestCasesWithoutID = []*TestCase{
 
 				assert.Equal(t, "user", resp.GetResult().GetType())
 				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 22", resp.GetResult().GetDisplayName())
+				assert.Equal(t, "test obj 22", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
