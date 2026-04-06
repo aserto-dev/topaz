@@ -47,7 +47,7 @@ func (cmd *EvalCmd) template() proto.Message {
 			Identity: "",
 			Type:     api.IdentityType_IDENTITY_TYPE_NONE,
 		},
-		PolicyInstance: &api.PolicyInstance{
+		PolicyInstance: &api.PolicyInstance{ //nolint:staticcheck
 			Name: "",
 		},
 		ResourceContext: &structpb.Struct{},

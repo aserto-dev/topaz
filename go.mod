@@ -2,16 +2,16 @@ module github.com/aserto-dev/topaz
 
 go 1.25.0
 
-toolchain go1.26.0
+toolchain go1.26.1
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
-	github.com/alecthomas/kong v1.14.0
+	github.com/alecthomas/kong v1.15.0
 	github.com/aserto-dev/azm v0.2.22
 	github.com/aserto-dev/errors v0.0.17
-	github.com/aserto-dev/go-aserto v0.33.10
-	github.com/aserto-dev/go-authorizer v0.20.14
-	github.com/aserto-dev/go-directory v0.34.0
+	github.com/aserto-dev/go-aserto v0.34.1
+	github.com/aserto-dev/go-authorizer v0.24.0
+	github.com/aserto-dev/go-directory v0.34.1
 	github.com/aserto-dev/go-topaz-ui v0.1.26
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
@@ -32,9 +32,9 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.28.0
 	github.com/homeport/dyff v1.11.3
-	github.com/itchyny/gojq v0.12.18
+	github.com/itchyny/gojq v0.12.19
 	github.com/lestrrat-go/jwx/v2 v2.1.6
-	github.com/magefile/mage v1.17.0
+	github.com/magefile/mage v1.17.1
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mennanov/fmutils v0.3.6
 	github.com/mitchellh/go-wordwrap v1.0.1
@@ -57,8 +57,8 @@ require (
 	go.etcd.io/bbolt v1.4.3
 	golang.org/x/sync v0.20.0
 	golang.org/x/sys v0.42.0
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260330182312-d5a96adf58d8
-	google.golang.org/grpc v1.79.3
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260406210006-6f92a3bedf2d
+	google.golang.org/grpc v1.80.0
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
@@ -70,7 +70,6 @@ require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/agnivade/levenshtein v1.2.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
-	github.com/aserto-dev/header v0.0.11 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytecodealliance/wasmtime-go/v39 v39.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
@@ -116,7 +115,7 @@ require (
 	github.com/huandu/go-sqlbuilder v1.39.1 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/itchyny/timefmt-go v0.1.7 // indirect
+	github.com/itchyny/timefmt-go v0.1.8 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.18.4 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.4 // indirect
@@ -202,7 +201,7 @@ require (
 	golang.org/x/term v0.41.0 // indirect
 	golang.org/x/text v0.35.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20260330182312-d5a96adf58d8 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20260406210006-6f92a3bedf2d // indirect
 	gopkg.in/ini.v1 v1.67.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.6.0 // indirect

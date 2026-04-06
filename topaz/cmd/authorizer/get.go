@@ -51,7 +51,7 @@ func (cmd *GetPolicyCmd) template() proto.Message {
 		FieldMask: &fieldmaskpb.FieldMask{
 			Paths: []string{},
 		},
-		PolicyInstance: &api.PolicyInstance{
+		PolicyInstance: &api.PolicyInstance{ //nolint:staticcheck
 			Name:          "",
 			InstanceLabel: "",
 		},
