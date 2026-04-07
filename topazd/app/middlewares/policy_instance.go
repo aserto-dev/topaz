@@ -34,7 +34,7 @@ func (m *PolicyInstanceMiddleware) Unary() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 		request, ok := req.(*authorizer.IsRequest)
 		if ok {
-			request.PolicyInstance = &api.PolicyInstance{
+			request.PolicyInstance = &api.PolicyInstance{ //nolint:staticcheck
 				Name: m.policyName,
 			}
 		}

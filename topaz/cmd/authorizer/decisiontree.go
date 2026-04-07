@@ -52,7 +52,7 @@ func (cmd *DecisionTreeCmd) template() proto.Message {
 		Options: &authorizer.DecisionTreeOptions{
 			PathSeparator: authorizer.PathSeparator_PATH_SEPARATOR_DOT,
 		},
-		PolicyInstance: &api.PolicyInstance{
+		PolicyInstance: &api.PolicyInstance{ //nolint:staticcheck
 			Name: "",
 		},
 	}

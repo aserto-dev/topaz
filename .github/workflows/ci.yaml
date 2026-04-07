@@ -23,11 +23,10 @@ permissions:
 
 env:
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
-  GO_VERSION: "1.26"
-  GO_RELEASER_VERSION: "v2.14.1"
-  GO_LANGCI_LINT_VERSION: "v2.11.4"
-  GO_TESTSUM_VERSION: "1.13.0"
-  SYFT_VERSION: "v1.13.0"
+  GO_RELEASER_VER: "v2.14.1"
+  GO_LANGCI_LINT_VER: "v2.11.4"
+  GO_TESTSUM_VER: "1.13.0"
+  SYFT_VER: "v1.13.0"
 
 jobs:
   test:
@@ -39,12 +38,13 @@ jobs:
         name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version-file: 'go.mod'
+          cache: true
       -
         name: Test Setup
         uses: gertd/action-gotestsum@v3.0.0
         with:
-          gotestsum_version: ${{ env.GO_TESTSUM_VERSION }}
+          gotestsum_version: ${{ env.GO_TESTSUM_VER }}
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v4
@@ -66,13 +66,13 @@ jobs:
           DOCKER_CLI_EXPERIMENTAL: "enabled"
         with:
           distribution: goreleaser
-          version: ${{ env.GO_RELEASER_VERSION }}
+          version: ${{ env.GO_RELEASER_VER }}
           args: build --clean --snapshot --single-target
       -
         name: Lint
         uses: golangci/golangci-lint-action@v9
         with:
-          version: ${{ env.GO_LANGCI_LINT_VERSION }}
+          version: ${{ env.GO_LANGCI_LINT_VER }}
           args: --timeout=30m
       -
         name: Test Snapshot
@@ -82,7 +82,7 @@ jobs:
           DOCKER_CLI_EXPERIMENTAL: "enabled"
         with:
           distribution: goreleaser
-          version: ${{ env.GO_RELEASER_VERSION }}
+          version: ${{ env.GO_RELEASER_VER }}
           args: release --config .goreleaser-test.yml --clean --snapshot --skip archive,homebrew,sbom
       -
         name: Unit Tests
@@ -126,7 +126,8 @@ jobs:
         name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version-file: 'go.mod'
+          cache: true
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v4
@@ -144,13 +145,13 @@ jobs:
         name: Setup syft
         uses: anchore/sbom-action/download-syft@v0
         with:
-          syft-version: ${{ env.SYFT_VERSION }}
+          syft-version: ${{ env.SYFT_VER }}
       -
         name: Push image to GitHub Container Registry
         uses: goreleaser/goreleaser-action@v7
         with:
           distribution: goreleaser
-          version: ${{ env.GO_RELEASER_VERSION }}
+          version: ${{ env.GO_RELEASER_VER }}
           args: release --clean --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -172,7 +173,8 @@ jobs:
         name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version-file: 'go.mod'
+          cache: true
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v4
@@ -190,7 +192,7 @@ jobs:
         name: Setup syft
         uses: anchore/sbom-action/download-syft@v0
         with:
-          syft-version: ${{ env.SYFT_VERSION }}
+          syft-version: ${{ env.SYFT_VER }}
       -
         name: Release
         uses: goreleaser/goreleaser-action@v7
@@ -200,7 +202,7 @@ jobs:
           DOCKER_CLI_EXPERIMENTAL: "enabled"
         with:
           distribution: goreleaser
-          version: ${{ env.GO_RELEASER_VERSION }}
+          version: ${{ env.GO_RELEASER_VER }}
           args: release --clean
       - 
         name: Archive deployment examples

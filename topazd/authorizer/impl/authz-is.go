@@ -34,7 +34,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 	log.Debug().Interface("input", input).Msg("is")
 
-	policyRuntime, err := s.getRuntime(ctx, req.GetPolicyInstance())
+	policyRuntime, err := s.getRuntime(ctx, req.GetPolicyInstance()) //nolint:staticcheck
 	if err != nil {
 		return &authorizer.IsResponse{}, err
 	}
@@ -96,7 +96,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		Path:      req.GetPolicyContext().GetPath(),
 		Policy: &api.DecisionPolicy{
 			Context:        req.GetPolicyContext(),
-			PolicyInstance: req.GetPolicyInstance(),
+			PolicyInstance: req.GetPolicyInstance(), //nolint:staticcheck
 		},
 		User: &api.DecisionUser{
 			Context: req.GetIdentityContext(),
