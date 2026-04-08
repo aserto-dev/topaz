@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 
-	topaz "github.com/aserto-dev/topaz/pkg/config"
+	topaz "github.com/aserto-dev/topaz/internal/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/noop"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/open-policy-agent/opa/v1/plugins"

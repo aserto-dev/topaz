@@ -8,7 +8,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	runtime "github.com/aserto-dev/runtime"
-	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/internal/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/az"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/ds"

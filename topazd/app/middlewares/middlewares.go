@@ -3,11 +3,11 @@ package middlewares
 import (
 	"context"
 
+	"github.com/aserto-dev/topaz/internal/config"
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
 	"github.com/aserto-dev/topaz/internal/grpc/middlewares/gerr"
 	"github.com/aserto-dev/topaz/internal/grpc/middlewares/request"
 	"github.com/aserto-dev/topaz/internal/grpc/middlewares/tracing"
-	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authentication"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"

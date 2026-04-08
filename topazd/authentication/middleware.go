@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/internal/config"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	"github.com/rs/zerolog"

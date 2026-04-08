@@ -6,8 +6,8 @@ import (
 
 	cerr "github.com/aserto-dev/errors"
 	console "github.com/aserto-dev/go-topaz-ui"
+	"github.com/aserto-dev/topaz/internal/config"
 	"github.com/aserto-dev/topaz/internal/eds"
-	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/app/handlers"
 	"github.com/aserto-dev/topaz/topazd/app/middlewares"
 	"github.com/aserto-dev/topaz/topazd/authentication"

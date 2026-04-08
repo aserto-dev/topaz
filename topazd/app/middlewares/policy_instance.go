@@ -6,8 +6,8 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	"github.com/aserto-dev/topaz/internal/config"
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
-	"github.com/aserto-dev/topaz/pkg/config"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"

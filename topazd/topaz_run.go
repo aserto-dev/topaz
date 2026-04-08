@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/internal/config"
 	"github.com/aserto-dev/topaz/topazd/app"
 	"github.com/aserto-dev/topaz/topazd/app/directory"
 	"github.com/aserto-dev/topaz/topazd/app/topaz"

@@ -3,7 +3,7 @@ package topaz
 import (
 	"context"
 
-	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/internal/config"
 	"github.com/aserto-dev/topaz/topaz/cc"
 )
 

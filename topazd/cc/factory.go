@@ -4,7 +4,7 @@ import (
 	logger "github.com/aserto-dev/logger"
 	runtime_logger "github.com/aserto-dev/runtime/logger"
 	"github.com/aserto-dev/topaz/internal/certs"
-	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/internal/config"
 	"github.com/aserto-dev/topaz/topazd/cc/context"
 )
 

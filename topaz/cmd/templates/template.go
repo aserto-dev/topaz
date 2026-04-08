@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/go-directory/pkg/derr"
+	"github.com/aserto-dev/topaz/internal/config"
 	"github.com/aserto-dev/topaz/internal/fs"
-	"github.com/aserto-dev/topaz/pkg/config"
 )
 
 type TemplateCmd struct {

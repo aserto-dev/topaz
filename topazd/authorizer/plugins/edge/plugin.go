@@ -7,9 +7,9 @@ import (
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
+	topaz "github.com/aserto-dev/topaz/internal/config"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/datasync"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
-	topaz "github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/app"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
