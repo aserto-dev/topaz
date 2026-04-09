@@ -83,7 +83,12 @@ docker-build-test:
 PHONY: go-mod-tidy
 go-mod-tidy:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@go work edit -json | jq -r '.Use[].DiskPath' | xargs -I{} bash -c 'cd {} && echo "${PWD}/go.mod" && go mod tidy -v && cd -'
+	@go work edit -json \
+		| jq -r '.Use[].DiskPath' \
+		| while read -r dir; do \
+			echo "go mod tidy $$dir"; \
+			( cd "$$dir" && go mod tidy -v); \
+		done	
 
 .PHONY: release
 release: gover

@@ -1,0 +1,9 @@
+go 1.26.1
+
+use (
+	./internal
+	./topaz
+	./topaz-backup
+	./topaz-db
+	./topazd
+)
