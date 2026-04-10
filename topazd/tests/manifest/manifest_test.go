@@ -26,7 +26,7 @@ import (
 )
 
 func TestManifest(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 

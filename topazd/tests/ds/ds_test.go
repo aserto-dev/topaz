@@ -21,7 +21,7 @@ import (
 )
 
 func TestDirectory(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(t.Context())
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
@@ -68,14 +68,14 @@ func TestDirectory(t *testing.T) {
 		Host:      addr,
 		Insecure:  true,
 		Plaintext: false,
-		Timeout:   30 * time.Second,
+		Timeout:   10 * time.Second,
 	}
 
 	azConfig := &azc.Config{
 		Host:      addr,
 		Insecure:  true,
 		Plaintext: false,
-		Timeout:   31 * time.Second,
+		Timeout:   10 * time.Second,
 	}
 
 	t.Run("testDirectory", testDirectory(dsConfig, azConfig))
