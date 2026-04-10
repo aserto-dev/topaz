@@ -178,7 +178,6 @@ The remote address can also be configured to a service that implements the proto
 
 - *address* - string - address:port of the remote directory service
 - *api_key* - string - API key for the directory
-- *tenant_id* - string - the directory tenant ID
 
 Example (using the hosted Aserto directory):
 
@@ -187,7 +186,6 @@ Example (using the hosted Aserto directory):
 remote_directory:
   address: "directory.prod.aserto.com:8443"
   api_key: <Your Aserto Directory Access Key>
-  tenant_id: <Your Aserto Tenant ID>
 ```
 
 ### e. OPA

@@ -140,10 +140,6 @@
                     "type": "string",
                     "description": "Bearer authorization token"
                 },
-                "tenant_id": {
-                    "type": "string",
-                    "description": "tenant identifier"
-                },
                 "api_key": {
                     "type": "string",
                     "description": "basic authorization token"
@@ -159,11 +155,6 @@
                 "ca_cert_path": {
                     "type": "string",
                     "description": "path to CA certificate file"
-                },
-                "timeout_in_seconds": {
-                    "type": "integer",
-                    "description": "gRPC connection timeout in seconds",
-                    "deprecated": true
                 },
                 "insecure": {
                     "type": "boolean",
@@ -185,7 +176,7 @@
                     "description": "map of additional gRPC headers",
                     "additionalProperties": {
                         "description": "header key : value",
-                        "type":"string"
+                        "type": "string"
                     },
                     "examples": [
                         {
@@ -197,7 +188,7 @@
         },
         "JSONWebToken": {
             "description": "JWT validation configuration",
-            "type":"object",
+            "type": "object",
             "additionalProperties": false,
             "properties": {
                 "acceptable_time_skew_seconds": {
@@ -232,7 +223,7 @@
                             "type": "object",
                             "additionalProperties": false,
                             "properties": {
-                                "enable_api_key":{
+                                "enable_api_key": {
                                     "description": "enable API key access",
                                     "type": "boolean"
                                 },
@@ -248,7 +239,7 @@
                             "properties": {
                                 "paths": {
                                     "description": "paths",
-                                    "type":"array",
+                                    "type": "array",
                                     "items": {
                                         "description": "path to override",
                                         "type": "string"
@@ -259,7 +250,7 @@
                                     "type": "object",
                                     "additionalProperties": false,
                                     "properties": {
-                                        "enable_api_key":{
+                                        "enable_api_key": {
                                             "description": "enable API key access",
                                             "type": "boolean"
                                         },
@@ -275,12 +266,12 @@
                 }
             }
         },
-        "API":{
+        "API": {
             "type": "object",
             "description": "API services",
             "additionalProperties": false,
             "properties": {
-                "health":{
+                "health": {
                     "$ref": "#definitions/Health"
                 },
                 "metrics": {
@@ -379,7 +370,7 @@
                 }
             }
         },
-        "ServiceNeeds":{
+        "ServiceNeeds": {
             "type": "array",
             "uniqueItems": true
         },
@@ -417,7 +408,7 @@
                     "description": "REST gateway TLS certificate configuration",
                     "$ref": "#/definitions/ServiceTLSCertificates"
                 },
-                "allowed_origins":{
+                "allowed_origins": {
                     "description": "allowed CORS origins",
                     "type": "array",
                     "items": {
@@ -452,25 +443,25 @@
                     "description": "ReadTimeout is the maximum duration for reading the entire request, including the body",
                     "$comment": "https://pkg.go.dev/net/http@go1.20.7#Server",
                     "type": "string",
-                    "default":  "2s"
+                    "default": "2s"
                 },
                 "read_header_timeout": {
                     "description": "ReadHeaderTimeout is the amount of time allowed to read request headers",
                     "$comment": "https://pkg.go.dev/net/http@go1.20.7#Server",
                     "type": "string",
-                    "default":  "2s"
+                    "default": "2s"
                 },
                 "write_timeout": {
                     "description": "WriteTimeout is the maximum duration before timing out writes of the response",
                     "$comment": "https://pkg.go.dev/net/http@go1.20.7#Server",
                     "type": "string",
-                    "default":  "2s"
+                    "default": "2s"
                 },
                 "idle_timeout": {
                     "description": "IdleTimeout is the maximum amount of time to wait for the next request when keep-alives are enabled",
                     "$comment": "https://pkg.go.dev/net/http@go1.20.7#Server",
                     "type": "string",
-                    "default":  "30s"
+                    "default": "30s"
                 }
             }
         },
@@ -533,7 +524,9 @@
                         "store_directory": {
                             "description": "path to mount point for decision logs buffer storage",
                             "type": "string",
-                            "examples": ["/decisions"]
+                            "examples": [
+                                "/decisions"
+                            ]
                         },
                         "scribe": {
                             "description": "Scribe configuration",
@@ -557,7 +550,7 @@
                                     "type": "object",
                                     "additionalProperties": {
                                         "description": "header key : value",
-                                        "type":"string"
+                                        "type": "string"
                                     },
                                     "examples": [
                                         {
@@ -619,7 +612,12 @@
                                     "description": "backoff in seconds",
                                     "type": "array",
                                     "default": [
-                                        5, 10, 30, 60, 120, 300
+                                        5,
+                                        10,
+                                        30,
+                                        60,
+                                        120,
+                                        300
                                     ]
                                 }
                             }

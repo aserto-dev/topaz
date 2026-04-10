@@ -3,6 +3,7 @@ package clients
 import (
 	"context"
 	"io"
+	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/topaz/topaz/version"
@@ -14,11 +15,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func Validate(ctx context.Context, cfg Config) (bool, error) {
-	g, ctx := errgroup.WithContext(ctx)
+const defaultValidationTimeout = time.Second * 10
 
-	ctx, cancel := context.WithTimeout(ctx, cfg.CommandTimeout())
+func Validate(ctx context.Context, cfg Config) (bool, error) {
+	ctx, cancel := context.WithTimeout(ctx, defaultValidationTimeout)
 	defer cancel()
+
+	g, ctx := errgroup.WithContext(ctx)
 
 	clientCfg := cfg.ClientConfig()
 
@@ -30,12 +33,11 @@ func Validate(ctx context.Context, cfg Config) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-
-	callOpts := []grpc.CallOption{}
+	defer conn.Close()
 
 	refClient := grpc_reflection_v1.NewServerReflectionClient(conn)
 
-	stream, err := refClient.ServerReflectionInfo(ctx, callOpts...)
+	stream, err := refClient.ServerReflectionInfo(ctx)
 	if err != nil {
 		if st, ok := status.FromError(err); ok {
 			return false, errors.Errorf("%s: %s", st.Code().String(), st.Message())
@@ -44,31 +46,39 @@ func Validate(ctx context.Context, cfg Config) (bool, error) {
 		return false, err
 	}
 
+	// Receiver
 	g.Go(func() error {
-		in, err := stream.Recv()
-		if errors.Is(err, io.EOF) {
-			return nil
-		}
+		for {
+			in, err := stream.Recv()
+			if err != nil {
+				if errors.Is(err, io.EOF) {
+					return nil
+				}
 
-		if err != nil {
-			return err
-		}
+				return err
+			}
 
-		if in.GetValidHost() == "" {
-			return status.Errorf(codes.Unavailable, "no valid host")
-		}
+			if in.GetValidHost() == "" {
+				return status.Errorf(codes.Unavailable, "no valid host")
+			}
 
-		return nil
+			// Only need first valid response
+			return nil //nolint:staticcheck
+		}
 	})
 
+	// Sender
 	if err := stream.Send(&grpc_reflection_v1.ServerReflectionRequest{
 		Host:           clientCfg.Address,
 		MessageRequest: &grpc_reflection_v1.ServerReflectionRequest_ListServices{},
 	}); err != nil {
+		cancel()
 		return false, err
 	}
 
-	_ = stream.CloseSend()
+	if err := stream.CloseSend(); err != nil {
+		return false, err
+	}
 
 	if err := g.Wait(); err != nil {
 		return false, err

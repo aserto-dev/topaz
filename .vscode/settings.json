@@ -3,7 +3,7 @@
   "gopls": {
     "formatting.gofumpt": true
   },
-  "go.testFlags": [
+   "go.testFlags": [
     "-v",
     "-gcflags=all=-N -l",
     "-count=1"
@@ -335,7 +335,6 @@
     "zerolog",
     "zpages"
   ],
-  "go.alternateTools": {
-  
-  }
+  "go.alternateTools": {},
+  "go.languageServerFlags": []
 }
