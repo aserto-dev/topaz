@@ -63,6 +63,9 @@ func InstallTemplate(ctx context.Context, dsConfig *dsc.Config, azConfig *azc.Co
 
 func DeleteManifest(ctx context.Context, cfg *dsc.Config) func(*testing.T) {
 	return func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(ctx, cfg.Timeout)
+		t.Cleanup(cancel)
+
 		cmd := directory.DeleteManifestCmd{Config: *cfg, Force: true}
 		if err := cmd.Run(ctx); err != nil {
 			assert.NoError(t, err)
@@ -72,6 +75,9 @@ func DeleteManifest(ctx context.Context, cfg *dsc.Config) func(*testing.T) {
 
 func SetManifest(ctx context.Context, cfg *dsc.Config, path string) func(*testing.T) {
 	return func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(ctx, cfg.Timeout)
+		t.Cleanup(cancel)
+
 		cmd := directory.SetManifestCmd{Config: *cfg, Path: path}
 		if err := cmd.Run(ctx); err != nil {
 			assert.NoError(t, err)
@@ -81,6 +87,9 @@ func SetManifest(ctx context.Context, cfg *dsc.Config, path string) func(*testin
 
 func ImportData(ctx context.Context, cfg *dsc.Config, dir string) func(*testing.T) {
 	return func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(ctx, cfg.Timeout)
+		t.Cleanup(cancel)
+
 		cmd := directory.ImportCmd{Config: *cfg, Directory: dir}
 		if err := cmd.Run(ctx); err != nil {
 			assert.NoError(t, err)
@@ -90,6 +99,9 @@ func ImportData(ctx context.Context, cfg *dsc.Config, dir string) func(*testing.
 
 func ExecTests(ctx context.Context, dsConfig *dsc.Config, azConfig *azc.Config, files []string) func(*testing.T) {
 	return func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(ctx, dsConfig.Timeout)
+		t.Cleanup(cancel)
+
 		cmd, err := common.NewTestRunner(ctx, &common.TestExecCmd{Files: files, Summary: true, Desc: "on-error"}, azConfig, dsConfig)
 		require.NoError(t, err)
 

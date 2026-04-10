@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/docker/go-connections/nat"
 	"github.com/magefile/mage/sh"
 	"github.com/testcontainers/testcontainers-go"
 )
@@ -39,7 +38,7 @@ func MappedAddr(ctx context.Context, container testcontainers.Container, port st
 		return "", err
 	}
 
-	mappedPort, err := container.MappedPort(ctx, nat.Port(port))
+	mappedPort, err := container.MappedPort(ctx, port)
 	if err != nil {
 		return "", err
 	}

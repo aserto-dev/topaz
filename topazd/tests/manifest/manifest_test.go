@@ -26,7 +26,7 @@ import (
 )
 
 func TestManifest(t *testing.T) {
-	ctx, cancel := context.WithCancel(t.Context())
+	ctx, cancel := context.WithCancel(context.Background())
 
 	t.Logf("\nTEST CONTAINER IMAGE: %q\n", tc.TestImage())
 
@@ -69,10 +69,10 @@ func TestManifest(t *testing.T) {
 	grpcAddr, err := tc.MappedAddr(ctx, topaz, "9292")
 	require.NoError(t, err)
 
-	t.Run("testManifest", testManifest(grpcAddr))
+	t.Run("testManifest", testManifest(ctx, grpcAddr))
 }
 
-func testManifest(addr string) func(*testing.T) {
+func testManifest(ctx context.Context, addr string) func(*testing.T) {
 	return func(t *testing.T) {
 		opts := []client.ConnectionOption{
 			client.WithAddr(addr),
@@ -83,7 +83,7 @@ func testManifest(addr string) func(*testing.T) {
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = dsClient.Close() })
 
-		ctx, cancel := context.WithCancel(t.Context())
+		ctx, cancel := context.WithCancel(ctx)
 		t.Cleanup(cancel)
 
 		// write manifest to store

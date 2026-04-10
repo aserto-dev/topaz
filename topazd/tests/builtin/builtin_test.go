@@ -69,10 +69,10 @@ func TestBuiltins(t *testing.T) {
 	grpcAddr, err := tc.MappedAddr(ctx, topaz, "9292")
 	require.NoError(t, err)
 
-	t.Run("testBuiltins", testBuiltins(grpcAddr))
+	t.Run("testBuiltins", testBuiltins(ctx, grpcAddr))
 }
 
-func testBuiltins(addr string) func(*testing.T) {
+func testBuiltins(ctx context.Context, addr string) func(*testing.T) {
 	return func(t *testing.T) {
 		opts := []client.ConnectionOption{
 			client.WithAddr(addr),
@@ -83,7 +83,7 @@ func testBuiltins(addr string) func(*testing.T) {
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = azClient.Close() })
 
-		ctx, cancel := context.WithCancel(t.Context())
+		ctx, cancel := context.WithCancel(ctx)
 		t.Cleanup(cancel)
 
 		for _, tc := range BuiltinHelpTests {

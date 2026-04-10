@@ -110,14 +110,14 @@ directory:
 # remote directory is used to resolve the identity for the authorizer.
 remote_directory:
   address: "0.0.0.0:9292" # set as default, it should be the same as the reader as we resolve the identity from the local directory service.
-  tenant_id: ""
+  insecure: true
+  no_tls: false
+  no_proxy: false
   api_key: ""
   token: ""
   client_cert_path: ""
   client_key_path: ""
   ca_cert_path: ""
-  insecure: true
-  no_tls: false
   headers:
 
 # default jwt validation configuration

@@ -70,10 +70,10 @@ func TestQuery(t *testing.T) {
 	grpcAddr, err := tc.MappedAddr(ctx, topaz, "9292")
 	require.NoError(t, err)
 
-	t.Run("testQuery", testQuery(grpcAddr))
+	t.Run("testQuery", testQuery(ctx, grpcAddr))
 }
 
-func testQuery(addr string) func(*testing.T) {
+func testQuery(ctx context.Context, addr string) func(*testing.T) {
 	return func(t *testing.T) {
 		opts := []client.ConnectionOption{
 			client.WithAddr(addr),
@@ -84,7 +84,7 @@ func testQuery(addr string) func(*testing.T) {
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = azClient.Close() })
 
-		ctx, cancel := context.WithCancel(t.Context())
+		ctx, cancel := context.WithCancel(ctx)
 		t.Cleanup(cancel)
 
 		for _, tc := range queryTests {
