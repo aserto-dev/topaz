@@ -1,0 +1,3235 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Protocol Documentation</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic"/>
+    <style>
+      body {
+        width: 60em;
+        margin: 1em auto;
+        color: #222;
+        font-family: "Ubuntu", sans-serif;
+        padding-bottom: 4em;
+      }
+
+      h1 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      h2 {
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+        margin: 1.5em 0;
+      }
+
+      h3 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      a {
+        text-decoration: none;
+        color: #567e25;
+      }
+
+      table {
+        width: 100%;
+        font-size: 80%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        font-weight: 700;
+        background-color: #dcdcdc;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #fbfbfb;
+      }
+
+      td {
+        border: 1px solid #ccc;
+        padding: 0.5ex 2ex;
+      }
+
+      td p {
+        text-indent: 1em;
+        margin: 0;
+      }
+
+      td p:nth-child(1) {
+        text-indent: 0;  
+      }
+
+       
+      .field-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(3) {  
+        width: 6em;
+      }
+      .field-table td:nth-child(4) {  
+        width: auto;
+      }
+
+       
+      .extension-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(3) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(4) {  
+        width: 5em;
+      }
+      .extension-table td:nth-child(5) {  
+        width: auto;
+      }
+
+       
+      .enum-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(3) {  
+        width: auto;
+      }
+
+       
+      .scalar-value-types-table tr {
+        height: 3em;
+      }
+
+       
+      #toc-container ul {
+        list-style-type: none;
+        padding-left: 1em;
+        line-height: 180%;
+        margin: 0;
+      }
+      #toc > li > a {
+        font-weight: bold;
+      }
+
+       
+      .file-heading {
+        width: 100%;
+        display: table;
+        border-bottom: 1px solid #aaa;
+        margin: 4em 0 1.5em 0;
+      }
+      .file-heading h2 {
+        border: none;
+        display: table-cell;
+      }
+      .file-heading a {
+        text-align: right;
+        display: table-cell;
+      }
+
+       
+      .badge {
+        width: 1.6em;
+        height: 1.6em;
+        display: inline-block;
+
+        line-height: 1.6em;
+        text-align: center;
+        font-weight: bold;
+        font-size: 60%;
+
+        color: #89ba48;
+        background-color: #dff0c8;
+
+        margin: 0.5ex 1em 0.5ex -1em;
+        border: 1px solid #fbfbfb;
+        border-radius: 1ex;
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+  </head>
+
+  <body>
+
+    <h1 id="title">Protocol Documentation</h1>
+
+    <h2>Table of Contents</h2>
+
+    <div id="toc-container">
+      <ul id="toc">
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fmanifest.proto">directory/v4/manifest.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.Manifest"><span class="badge">M</span>Manifest</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fmodel.proto">directory/v4/model.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.Model"><span class="badge">M</span>Model</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fobject.proto">directory/v4/object.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.Object"><span class="badge">M</span>Object</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fobject_identifier.proto">directory/v4/object_identifier.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.ObjectIdentifier"><span class="badge">M</span>ObjectIdentifier</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fopenapi.proto">directory/v4/openapi.proto</a>
+            <ul>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fpagination.proto">directory/v4/pagination.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.PaginationRequest"><span class="badge">M</span>PaginationRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.PaginationResponse"><span class="badge">M</span>PaginationResponse</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2freader%2fcheck.proto">directory/v4/reader/check.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.reader.CheckRequest"><span class="badge">M</span>CheckRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.CheckResponse"><span class="badge">M</span>CheckResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.ChecksRequest"><span class="badge">M</span>ChecksRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.ChecksResponse"><span class="badge">M</span>ChecksResponse</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2frelation.proto">directory/v4/relation.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.Relation"><span class="badge">M</span>Relation</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2freader%2fexport.proto">directory/v4/reader/export.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.reader.ExportRequest"><span class="badge">M</span>ExportRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.ExportResponse"><span class="badge">M</span>ExportResponse</a>
+                </li>
+              
+              
+                <li>
+                  <a href="#directory.v4.reader.Option"><span class="badge">E</span>Option</a>
+                </li>
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2freader%2fgraph.proto">directory/v4/reader/graph.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.reader.GraphRequest"><span class="badge">M</span>GraphRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.GraphResponse"><span class="badge">M</span>GraphResponse</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2freader%2fmanifest.proto">directory/v4/reader/manifest.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.reader.GetManifestRequest"><span class="badge">M</span>GetManifestRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.GetManifestResponse"><span class="badge">M</span>GetManifestResponse</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2freader%2fmodel.proto">directory/v4/reader/model.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.reader.GetModelRequest"><span class="badge">M</span>GetModelRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.GetModelResponse"><span class="badge">M</span>GetModelResponse</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2freader%2fobject.proto">directory/v4/reader/object.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.reader.GetObjectRequest"><span class="badge">M</span>GetObjectRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.GetObjectResponse"><span class="badge">M</span>GetObjectResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.ListObjectsRequest"><span class="badge">M</span>ListObjectsRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.ListObjectsResponse"><span class="badge">M</span>ListObjectsResponse</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2freader%2frelation.proto">directory/v4/reader/relation.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.reader.GetRelationRequest"><span class="badge">M</span>GetRelationRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.GetRelationResponse"><span class="badge">M</span>GetRelationResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.GetRelationResponse.ObjectsEntry"><span class="badge">M</span>GetRelationResponse.ObjectsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.ListRelationsRequest"><span class="badge">M</span>ListRelationsRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.ListRelationsResponse"><span class="badge">M</span>ListRelationsResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.reader.ListRelationsResponse.ObjectsEntry"><span class="badge">M</span>ListRelationsResponse.ObjectsEntry</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2freader%2fservice.proto">directory/v4/reader/service.proto</a>
+            <ul>
+              
+              
+              
+              
+                <li>
+                  <a href="#directory.v4.reader.Reader"><span class="badge">S</span>Reader</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2frelation_identifier.proto">directory/v4/relation_identifier.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.RelationIdentifier"><span class="badge">M</span>RelationIdentifier</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fwriter%2fimport.proto">directory/v4/writer/import.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.writer.ImportCounter"><span class="badge">M</span>ImportCounter</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.ImportRequest"><span class="badge">M</span>ImportRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.ImportResponse"><span class="badge">M</span>ImportResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.ImportStatus"><span class="badge">M</span>ImportStatus</a>
+                </li>
+              
+              
+                <li>
+                  <a href="#directory.v4.writer.Opcode"><span class="badge">E</span>Opcode</a>
+                </li>
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fwriter%2fmanifest.proto">directory/v4/writer/manifest.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.writer.DeleteManifestRequest"><span class="badge">M</span>DeleteManifestRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.DeleteManifestResponse"><span class="badge">M</span>DeleteManifestResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.SetManifestRequest"><span class="badge">M</span>SetManifestRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.SetManifestResponse"><span class="badge">M</span>SetManifestResponse</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fwriter%2fobject.proto">directory/v4/writer/object.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.writer.DeleteObjectRequest"><span class="badge">M</span>DeleteObjectRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.DeleteObjectResponse"><span class="badge">M</span>DeleteObjectResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.SetObjectRequest"><span class="badge">M</span>SetObjectRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.SetObjectResponse"><span class="badge">M</span>SetObjectResponse</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fwriter%2frelation.proto">directory/v4/writer/relation.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#directory.v4.writer.DeleteRelationRequest"><span class="badge">M</span>DeleteRelationRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.DeleteRelationResponse"><span class="badge">M</span>DeleteRelationResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.SetRelationRequest"><span class="badge">M</span>SetRelationRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#directory.v4.writer.SetRelationResponse"><span class="badge">M</span>SetRelationResponse</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#directory%2fv4%2fwriter%2fservice.proto">directory/v4/writer/service.proto</a>
+            <ul>
+              
+              
+              
+              
+                <li>
+                  <a href="#directory.v4.writer.Writer"><span class="badge">S</span>Writer</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+        <li><a href="#scalar-value-types">Scalar Value Types</a></li>
+      </ul>
+    </div>
+
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/manifest.proto">directory/v4/manifest.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.Manifest">Manifest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>manifest identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>content</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>manifest content data </p></td>
+                </tr>
+              
+                <tr>
+                  <td>updated_at</td>
+                  <td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
+                  <td></td>
+                  <td><p>last updated timestamp (UTC) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>etag</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance etag (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/model.proto">directory/v4/model.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.Model">Model</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>model identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>model</td>
+                  <td><a href="#google.protobuf.Struct">google.protobuf.Struct</a></td>
+                  <td></td>
+                  <td><p>model </p></td>
+                </tr>
+              
+                <tr>
+                  <td>updated_at</td>
+                  <td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
+                  <td></td>
+                  <td><p>last updated timestamp (UTC) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>etag</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance etag (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/object.proto">directory/v4/object.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.Object">Object</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>properties</td>
+                  <td><a href="#google.protobuf.Struct">google.protobuf.Struct</a></td>
+                  <td></td>
+                  <td><p>property bag (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>updated_at</td>
+                  <td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
+                  <td></td>
+                  <td><p>last updated timestamp (UTC) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>etag</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance etag (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/object_identifier.proto">directory/v4/object_identifier.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.ObjectIdentifier">ObjectIdentifier</h3>
+        <p>Object identifier</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/openapi.proto">directory/v4/openapi.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/pagination.proto">directory/v4/pagination.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.PaginationRequest">PaginationRequest</h3>
+        <p>Pagination request</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>size</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p>requested page size, valid value between 1-100 rows (optional, default 100) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>token</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>pagination start token (optional, default &#34;&#34;) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.PaginationResponse">PaginationResponse</h3>
+        <p>Pagination response</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>next_token</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>next page token, when empty there are no more pages to fetch </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/reader/check.proto">directory/v4/reader/check.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.reader.CheckRequest">CheckRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>relation name </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>trace</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>collect trace information (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.CheckResponse">CheckResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>check</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>check result </p></td>
+                </tr>
+              
+                <tr>
+                  <td>trace</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>trace information </p></td>
+                </tr>
+              
+                <tr>
+                  <td>context</td>
+                  <td><a href="#google.protobuf.Struct">google.protobuf.Struct</a></td>
+                  <td></td>
+                  <td><p>context </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.ChecksRequest">ChecksRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>default</td>
+                  <td><a href="#directory.v4.reader.CheckRequest">CheckRequest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>checks</td>
+                  <td><a href="#directory.v4.reader.CheckRequest">CheckRequest</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.ChecksResponse">ChecksResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>checks</td>
+                  <td><a href="#directory.v4.reader.CheckResponse">CheckResponse</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/relation.proto">directory/v4/relation.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.Relation">Relation</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object relation name </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject relation name (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>updated_at</td>
+                  <td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
+                  <td></td>
+                  <td><p>last updated timestamp (UTC) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>etag</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance etag (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/reader/export.proto">directory/v4/reader/export.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.reader.ExportRequest">ExportRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>options</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>data export options mask </p></td>
+                </tr>
+              
+                <tr>
+                  <td>start_from</td>
+                  <td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
+                  <td></td>
+                  <td><p>start export from timestamp (UTC) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.ExportResponse">ExportResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object</td>
+                  <td><a href="#directory.v4.Object">directory.v4.Object</a></td>
+                  <td></td>
+                  <td><p>object instance (data) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#directory.v4.Relation">directory.v4.Relation</a></td>
+                  <td></td>
+                  <td><p>relation instance (data) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>stats</td>
+                  <td><a href="#google.protobuf.Struct">google.protobuf.Struct</a></td>
+                  <td></td>
+                  <td><p>object and/or relation stats (no data) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+        <h3 id="directory.v4.reader.Option">Option</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>OPTION_UNKNOWN</td>
+                <td>0</td>
+                <td><p>nothing selected (default initialization value)</p></td>
+              </tr>
+            
+              <tr>
+                <td>OPTION_DATA_OBJECTS</td>
+                <td>8</td>
+                <td><p>object instances</p></td>
+              </tr>
+            
+              <tr>
+                <td>OPTION_DATA_RELATIONS</td>
+                <td>16</td>
+                <td><p>relation instances</p></td>
+              </tr>
+            
+              <tr>
+                <td>OPTION_DATA</td>
+                <td>24</td>
+                <td><p>all data = OPTION_DATA_OBJECTS | OPTION_DATA_RELATIONS</p></td>
+              </tr>
+            
+              <tr>
+                <td>OPTION_STATS</td>
+                <td>64</td>
+                <td><p>stats</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/reader/graph.proto">directory/v4/reader/graph.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.reader.GraphRequest">GraphRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>relation name </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject instance identifier (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject relation name (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>explain</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>return graph paths for each result (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>trace</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>collect trace information (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.GraphResponse">GraphResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>results</td>
+                  <td><a href="#directory.v4.ObjectIdentifier">directory.v4.ObjectIdentifier</a></td>
+                  <td>repeated</td>
+                  <td><p>matching object identifiers </p></td>
+                </tr>
+              
+                <tr>
+                  <td>explanation</td>
+                  <td><a href="#google.protobuf.Struct">google.protobuf.Struct</a></td>
+                  <td></td>
+                  <td><p>explanation of results </p></td>
+                </tr>
+              
+                <tr>
+                  <td>trace</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>trace information </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/reader/manifest.proto">directory/v4/reader/manifest.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.reader.GetManifestRequest">GetManifestRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.GetManifestResponse">GetManifestResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>manifest</td>
+                  <td><a href="#directory.v4.Manifest">directory.v4.Manifest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/reader/model.proto">directory/v4/reader/model.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.reader.GetModelRequest">GetModelRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.GetModelResponse">GetModelResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>model</td>
+                  <td><a href="#directory.v4.Model">directory.v4.Model</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/reader/object.proto">directory/v4/reader/object.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.reader.GetObjectRequest">GetObjectRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>with_relations</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>materialize the object relations objects (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.GetObjectResponse">GetObjectResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>result</td>
+                  <td><a href="#directory.v4.Object">directory.v4.Object</a></td>
+                  <td></td>
+                  <td><p>object instance </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relations</td>
+                  <td><a href="#directory.v4.Relation">directory.v4.Relation</a></td>
+                  <td>repeated</td>
+                  <td><p>object relations </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.ListObjectsRequest">ListObjectsRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>page</td>
+                  <td><a href="#directory.v4.PaginationRequest">directory.v4.PaginationRequest</a></td>
+                  <td></td>
+                  <td><p>pagination request (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.ListObjectsResponse">ListObjectsResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>results</td>
+                  <td><a href="#directory.v4.Object">directory.v4.Object</a></td>
+                  <td>repeated</td>
+                  <td><p>array of object instances </p></td>
+                </tr>
+              
+                <tr>
+                  <td>page</td>
+                  <td><a href="#directory.v4.PaginationResponse">directory.v4.PaginationResponse</a></td>
+                  <td></td>
+                  <td><p>pagination response </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/reader/relation.proto">directory/v4/reader/relation.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.reader.GetRelationRequest">GetRelationRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>relation name </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject relation name (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>with_objects</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>materialize relation objects (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.GetRelationResponse">GetRelationResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>result</td>
+                  <td><a href="#directory.v4.Relation">directory.v4.Relation</a></td>
+                  <td></td>
+                  <td><p>relation instance </p></td>
+                </tr>
+              
+                <tr>
+                  <td>objects</td>
+                  <td><a href="#directory.v4.reader.GetRelationResponse.ObjectsEntry">GetRelationResponse.ObjectsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>map of materialized relation objects </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.GetRelationResponse.ObjectsEntry">GetRelationResponse.ObjectsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#directory.v4.Object">directory.v4.Object</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.ListRelationsRequest">ListRelationsRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>relation name (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject type identifier (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject instance identifier (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject relation name (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>with_objects</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>materialize relation objects (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>with_empty_subject_relation</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>only return relations that do not have a subject relation  (optional) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>page</td>
+                  <td><a href="#directory.v4.PaginationRequest">directory.v4.PaginationRequest</a></td>
+                  <td></td>
+                  <td><p>pagination request (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.ListRelationsResponse">ListRelationsResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>results</td>
+                  <td><a href="#directory.v4.Relation">directory.v4.Relation</a></td>
+                  <td>repeated</td>
+                  <td><p>array of relation instances </p></td>
+                </tr>
+              
+                <tr>
+                  <td>objects</td>
+                  <td><a href="#directory.v4.reader.ListRelationsResponse.ObjectsEntry">ListRelationsResponse.ObjectsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>map of materialized relation objects </p></td>
+                </tr>
+              
+                <tr>
+                  <td>page</td>
+                  <td><a href="#directory.v4.PaginationResponse">directory.v4.PaginationResponse</a></td>
+                  <td></td>
+                  <td><p>pagination response </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.reader.ListRelationsResponse.ObjectsEntry">ListRelationsResponse.ObjectsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#directory.v4.Object">directory.v4.Object</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/reader/service.proto">directory/v4/reader/service.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+
+      
+
+      
+
+      
+        <h3 id="directory.v4.reader.Reader">Reader</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>GetManifest</td>
+                <td><a href="#directory.v4.reader.GetManifestRequest">GetManifestRequest</a></td>
+                <td><a href="#directory.v4.reader.GetManifestResponse">GetManifestResponse</a></td>
+                <td><p>get manifest</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetModel</td>
+                <td><a href="#directory.v4.reader.GetModelRequest">GetModelRequest</a></td>
+                <td><a href="#directory.v4.reader.GetModelResponse">GetModelResponse</a></td>
+                <td><p>get model</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetObject</td>
+                <td><a href="#directory.v4.reader.GetObjectRequest">GetObjectRequest</a></td>
+                <td><a href="#directory.v4.reader.GetObjectResponse">GetObjectResponse</a></td>
+                <td><p>get object</p></td>
+              </tr>
+            
+              <tr>
+                <td>ListObjects</td>
+                <td><a href="#directory.v4.reader.ListObjectsRequest">ListObjectsRequest</a></td>
+                <td><a href="#directory.v4.reader.ListObjectsResponse">ListObjectsResponse</a></td>
+                <td><p>list objects</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetRelation</td>
+                <td><a href="#directory.v4.reader.GetRelationRequest">GetRelationRequest</a></td>
+                <td><a href="#directory.v4.reader.GetRelationResponse">GetRelationResponse</a></td>
+                <td><p>get relation</p></td>
+              </tr>
+            
+              <tr>
+                <td>ListRelations</td>
+                <td><a href="#directory.v4.reader.ListRelationsRequest">ListRelationsRequest</a></td>
+                <td><a href="#directory.v4.reader.ListRelationsResponse">ListRelationsResponse</a></td>
+                <td><p>list relations</p></td>
+              </tr>
+            
+              <tr>
+                <td>Check</td>
+                <td><a href="#directory.v4.reader.CheckRequest">CheckRequest</a></td>
+                <td><a href="#directory.v4.reader.CheckResponse">CheckResponse</a></td>
+                <td><p>check if subject has relation or permission with object</p></td>
+              </tr>
+            
+              <tr>
+                <td>Checks</td>
+                <td><a href="#directory.v4.reader.ChecksRequest">ChecksRequest</a></td>
+                <td><a href="#directory.v4.reader.ChecksResponse">ChecksResponse</a></td>
+                <td><p>checks validates a set of check requests in a single roundtrip</p></td>
+              </tr>
+            
+              <tr>
+                <td>Graph</td>
+                <td><a href="#directory.v4.reader.GraphRequest">GraphRequest</a></td>
+                <td><a href="#directory.v4.reader.GraphResponse">GraphResponse</a></td>
+                <td><p>get object relationship graph</p></td>
+              </tr>
+            
+              <tr>
+                <td>Export</td>
+                <td><a href="#directory.v4.reader.ExportRequest">ExportRequest</a></td>
+                <td><a href="#directory.v4.reader.ExportResponse">ExportResponse</a> stream</td>
+                <td><p>export objects and relations as a stream</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+          
+          
+          <h4>Methods with HTTP bindings</h4>
+          <table>
+            <thead>
+              <tr>
+                <td>Method Name</td>
+                <td>Method</td>
+                <td>Pattern</td>
+                <td>Body</td>
+              </tr>
+            </thead>
+            <tbody>
+            
+              
+              
+              <tr>
+                <td>GetManifest</td>
+                <td>GET</td>
+                <td>/api/v4/directory/manifest/{id}</td>
+                <td></td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>GetModel</td>
+                <td>GET</td>
+                <td>/api/v4/directory/model/{id}</td>
+                <td></td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>GetObject</td>
+                <td>GET</td>
+                <td>/api/v4/directory/object/{object_type}/{object_id}</td>
+                <td></td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>ListObjects</td>
+                <td>GET</td>
+                <td>/api/v4/directory/objects</td>
+                <td></td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>GetRelation</td>
+                <td>GET</td>
+                <td>/api/v4/directory/relation</td>
+                <td></td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>ListRelations</td>
+                <td>GET</td>
+                <td>/api/v4/directory/relations</td>
+                <td></td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>Check</td>
+                <td>POST</td>
+                <td>/api/v4/directory/check</td>
+                <td>*</td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>Checks</td>
+                <td>POST</td>
+                <td>/api/v4/directory/checks</td>
+                <td>*</td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>Graph</td>
+                <td>GET</td>
+                <td>/api/v4/directory/graph/{object_type}/{relation}/{subject_type}</td>
+                <td></td>
+              </tr>
+              
+            
+            </tbody>
+          </table>
+          
+        
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/relation_identifier.proto">directory/v4/relation_identifier.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.RelationIdentifier">RelationIdentifier</h3>
+        <p>Relation identifier</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object relation name </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject relation name (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/writer/import.proto">directory/v4/writer/import.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.writer.ImportCounter">ImportCounter</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>recv</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>number of messages received </p></td>
+                </tr>
+              
+                <tr>
+                  <td>set</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>number of messages with OPCODE_SET </p></td>
+                </tr>
+              
+                <tr>
+                  <td>delete</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>number of messages with OPCODE_DELETE </p></td>
+                </tr>
+              
+                <tr>
+                  <td>error</td>
+                  <td><a href="#uint64">uint64</a></td>
+                  <td></td>
+                  <td><p>number of messages resulting in error </p></td>
+                </tr>
+              
+                <tr>
+                  <td>type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>counter of type (object|relation) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.ImportRequest">ImportRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>op_code</td>
+                  <td><a href="#directory.v4.writer.Opcode">Opcode</a></td>
+                  <td></td>
+                  <td><p>operation Opcode enum value </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object</td>
+                  <td><a href="#directory.v4.Object">directory.v4.Object</a></td>
+                  <td></td>
+                  <td><p>object import message </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#directory.v4.Relation">directory.v4.Relation</a></td>
+                  <td></td>
+                  <td><p>relation import message </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.ImportResponse">ImportResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object</td>
+                  <td><a href="#directory.v4.writer.ImportCounter">ImportCounter</a></td>
+                  <td></td>
+                  <td><p><strong>Deprecated.</strong> object import counter </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#directory.v4.writer.ImportCounter">ImportCounter</a></td>
+                  <td></td>
+                  <td><p><strong>Deprecated.</strong> relation import counter </p></td>
+                </tr>
+              
+                <tr>
+                  <td>status</td>
+                  <td><a href="#directory.v4.writer.ImportStatus">ImportStatus</a></td>
+                  <td></td>
+                  <td><p>import status message </p></td>
+                </tr>
+              
+                <tr>
+                  <td>counter</td>
+                  <td><a href="#directory.v4.writer.ImportCounter">ImportCounter</a></td>
+                  <td></td>
+                  <td><p>import counter per type </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+            
+            
+            <h4>Fields with deprecated option</h4>
+            <table>
+              <thead>
+                <tr>
+                  <td>Name</td>
+                  <td>Option</td>
+                </tr>
+              </thead>
+              <tbody>
+              
+                <tr>
+                  <td>object</td>
+                  <td><p>true</p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><p>true</p></td>
+                </tr>
+              
+              </tbody>
+            </table>
+            
+          
+
+        
+      
+        <h3 id="directory.v4.writer.ImportStatus">ImportStatus</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>code</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>gRPC status code (google.golang.org/grpc/codes) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>msg</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>gRPC status message (google.golang.org/grpc/status) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>req</td>
+                  <td><a href="#directory.v4.writer.ImportRequest">ImportRequest</a></td>
+                  <td></td>
+                  <td><p>req contains the original import request message </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+        <h3 id="directory.v4.writer.Opcode">Opcode</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>OPCODE_UNKNOWN</td>
+                <td>0</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>OPCODE_SET</td>
+                <td>1</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>OPCODE_DELETE</td>
+                <td>2</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>OPCODE_DELETE_WITH_RELATIONS</td>
+                <td>3</td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/writer/manifest.proto">directory/v4/writer/manifest.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.writer.DeleteManifestRequest">DeleteManifestRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.DeleteManifestResponse">DeleteManifestResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>result</td>
+                  <td><a href="#google.protobuf.Empty">google.protobuf.Empty</a></td>
+                  <td></td>
+                  <td><p>empty result </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.SetManifestRequest">SetManifestRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>manifest</td>
+                  <td><a href="#directory.v4.Manifest">directory.v4.Manifest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.SetManifestResponse">SetManifestResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>manifest</td>
+                  <td><a href="#directory.v4.Manifest">directory.v4.Manifest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/writer/object.proto">directory/v4/writer/object.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.writer.DeleteObjectRequest">DeleteObjectRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>with_relations</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>delete object relations, both object and subject relations  (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.DeleteObjectResponse">DeleteObjectResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>result</td>
+                  <td><a href="#google.protobuf.Empty">google.protobuf.Empty</a></td>
+                  <td></td>
+                  <td><p>empty result </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.SetObjectRequest">SetObjectRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object</td>
+                  <td><a href="#directory.v4.Object">directory.v4.Object</a></td>
+                  <td></td>
+                  <td><p>object instance </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.SetObjectResponse">SetObjectResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>result</td>
+                  <td><a href="#directory.v4.Object">directory.v4.Object</a></td>
+                  <td></td>
+                  <td><p>object instance </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/writer/relation.proto">directory/v4/writer/relation.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="directory.v4.writer.DeleteRelationRequest">DeleteRelationRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>object_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>object_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>object relation name </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject type identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject instance identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subject_relation</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subject relation name  (optional) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.DeleteRelationResponse">DeleteRelationResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>result</td>
+                  <td><a href="#google.protobuf.Empty">google.protobuf.Empty</a></td>
+                  <td></td>
+                  <td><p>empty result </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.SetRelationRequest">SetRelationRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>relation</td>
+                  <td><a href="#directory.v4.Relation">directory.v4.Relation</a></td>
+                  <td></td>
+                  <td><p>relation instance </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="directory.v4.writer.SetRelationResponse">SetRelationResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>result</td>
+                  <td><a href="#directory.v4.Relation">directory.v4.Relation</a></td>
+                  <td></td>
+                  <td><p>relation instance </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="directory/v4/writer/service.proto">directory/v4/writer/service.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+
+      
+
+      
+
+      
+        <h3 id="directory.v4.writer.Writer">Writer</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>SetManifest</td>
+                <td><a href="#directory.v4.writer.SetManifestRequest">SetManifestRequest</a></td>
+                <td><a href="#directory.v4.writer.SetManifestResponse">SetManifestResponse</a></td>
+                <td><p>set manifest</p></td>
+              </tr>
+            
+              <tr>
+                <td>DeleteManifest</td>
+                <td><a href="#directory.v4.writer.DeleteManifestRequest">DeleteManifestRequest</a></td>
+                <td><a href="#directory.v4.writer.DeleteManifestResponse">DeleteManifestResponse</a></td>
+                <td><p>delete manifest</p></td>
+              </tr>
+            
+              <tr>
+                <td>SetObject</td>
+                <td><a href="#directory.v4.writer.SetObjectRequest">SetObjectRequest</a></td>
+                <td><a href="#directory.v4.writer.SetObjectResponse">SetObjectResponse</a></td>
+                <td><p>set object instance</p></td>
+              </tr>
+            
+              <tr>
+                <td>DeleteObject</td>
+                <td><a href="#directory.v4.writer.DeleteObjectRequest">DeleteObjectRequest</a></td>
+                <td><a href="#directory.v4.writer.DeleteObjectResponse">DeleteObjectResponse</a></td>
+                <td><p>delete object instance</p></td>
+              </tr>
+            
+              <tr>
+                <td>SetRelation</td>
+                <td><a href="#directory.v4.writer.SetRelationRequest">SetRelationRequest</a></td>
+                <td><a href="#directory.v4.writer.SetRelationResponse">SetRelationResponse</a></td>
+                <td><p>set relation instance</p></td>
+              </tr>
+            
+              <tr>
+                <td>DeleteRelation</td>
+                <td><a href="#directory.v4.writer.DeleteRelationRequest">DeleteRelationRequest</a></td>
+                <td><a href="#directory.v4.writer.DeleteRelationResponse">DeleteRelationResponse</a></td>
+                <td><p>delete relation instance</p></td>
+              </tr>
+            
+              <tr>
+                <td>Import</td>
+                <td><a href="#directory.v4.writer.ImportRequest">ImportRequest</a> stream</td>
+                <td><a href="#directory.v4.writer.ImportResponse">ImportResponse</a> stream</td>
+                <td><p>import stream of objects and relations</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+          
+          
+          <h4>Methods with HTTP bindings</h4>
+          <table>
+            <thead>
+              <tr>
+                <td>Method Name</td>
+                <td>Method</td>
+                <td>Pattern</td>
+                <td>Body</td>
+              </tr>
+            </thead>
+            <tbody>
+            
+              
+              
+              <tr>
+                <td>SetManifest</td>
+                <td>POST</td>
+                <td>/api/v4/directory/manifest/{manifest.id}</td>
+                <td>manifest</td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>DeleteManifest</td>
+                <td>DELETE</td>
+                <td>/api/v4/directory/manifest/{id}</td>
+                <td></td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>SetObject</td>
+                <td>POST</td>
+                <td>/api/v4/directory/object</td>
+                <td>*</td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>DeleteObject</td>
+                <td>DELETE</td>
+                <td>/api/v4/directory/object/{object_type}/{object_id}</td>
+                <td></td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>SetRelation</td>
+                <td>POST</td>
+                <td>/api/v4/directory/relation</td>
+                <td>*</td>
+              </tr>
+              
+            
+              
+              
+              <tr>
+                <td>DeleteRelation</td>
+                <td>DELETE</td>
+                <td>/api/v4/directory/relation</td>
+                <td></td>
+              </tr>
+              
+            
+            </tbody>
+          </table>
+          
+        
+    
+
+    <h2 id="scalar-value-types">Scalar Value Types</h2>
+    <table class="scalar-value-types-table">
+      <thead>
+        <tr><td>.proto Type</td><td>Notes</td><td>C++</td><td>Java</td><td>Python</td><td>Go</td><td>C#</td><td>PHP</td><td>Ruby</td></tr>
+      </thead>
+      <tbody>
+        
+          <tr id="double">
+            <td>double</td>
+            <td></td>
+            <td>double</td>
+            <td>double</td>
+            <td>float</td>
+            <td>float64</td>
+            <td>double</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="float">
+            <td>float</td>
+            <td></td>
+            <td>float</td>
+            <td>float</td>
+            <td>float</td>
+            <td>float32</td>
+            <td>float</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="int32">
+            <td>int32</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="int64">
+            <td>int64</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="uint32">
+            <td>uint32</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int/long</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="uint64">
+            <td>uint64</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint32">
+            <td>sint32</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint64">
+            <td>sint64</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="fixed32">
+            <td>fixed32</td>
+            <td>Always four bytes. More efficient than uint32 if values are often greater than 2^28.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="fixed64">
+            <td>fixed64</td>
+            <td>Always eight bytes. More efficient than uint64 if values are often greater than 2^56.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="sfixed32">
+            <td>sfixed32</td>
+            <td>Always four bytes.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sfixed64">
+            <td>sfixed64</td>
+            <td>Always eight bytes.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="bool">
+            <td>bool</td>
+            <td></td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>boolean</td>
+            <td>bool</td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>TrueClass/FalseClass</td>
+          </tr>
+        
+          <tr id="string">
+            <td>string</td>
+            <td>A string must always contain UTF-8 encoded or 7-bit ASCII text.</td>
+            <td>string</td>
+            <td>String</td>
+            <td>str/unicode</td>
+            <td>string</td>
+            <td>string</td>
+            <td>string</td>
+            <td>String (UTF-8)</td>
+          </tr>
+        
+          <tr id="bytes">
+            <td>bytes</td>
+            <td>May contain any arbitrary sequence of bytes.</td>
+            <td>string</td>
+            <td>ByteString</td>
+            <td>str</td>
+            <td>[]byte</td>
+            <td>ByteString</td>
+            <td>string</td>
+            <td>String (ASCII-8BIT)</td>
+          </tr>
+        
+      </tbody>
+    </table>
+  </body>
+</html>
+
