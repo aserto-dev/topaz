@@ -1,0 +1,204 @@
+syntax = "proto3";
+
+package directory.v4.reader;
+
+import "directory/v4/reader/check.proto";
+import "directory/v4/reader/export.proto";
+import "directory/v4/reader/graph.proto";
+import "directory/v4/reader/manifest.proto";
+import "directory/v4/reader/model.proto";
+import "directory/v4/reader/object.proto";
+import "directory/v4/reader/relation.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/reader;reader";
+
+service Reader {
+  // get manifest
+  rpc GetManifest(GetManifestRequest) returns (GetManifestResponse) {
+    option (google.api.http) = {get: "/api/v4/directory/manifest/{id}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Get manifest"
+      description: "Returns directory manifest."
+      operation_id: "directory.v4.manifest.get"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+      responses: {
+        key: "304"
+        value: {description: "Object not modified."}
+      }
+    };
+  }
+
+  // get model
+  rpc GetModel(GetModelRequest) returns (GetModelResponse) {
+    option (google.api.http) = {get: "/api/v4/directory/model/{id}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Get model"
+      description: "Returns directory model."
+      operation_id: "directory.v4.model.get"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+      responses: {
+        key: "304"
+        value: {description: "Object not modified."}
+      }
+    };
+  }
+
+  // get object
+  rpc GetObject(GetObjectRequest) returns (GetObjectResponse) {
+    option (google.api.http) = {get: "/api/v4/directory/object/{object_type}/{object_id}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Get object instance"
+      description: "Returns single object instance, optionally with relations."
+      operation_id: "directory.v4.object.get"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+      responses: {
+        key: "304"
+        value: {description: "Object not modified."}
+      }
+    };
+  }
+
+  // list objects
+  rpc ListObjects(ListObjectsRequest) returns (ListObjectsResponse) {
+    option (google.api.http) = {get: "/api/v4/directory/objects"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "List object instances"
+      description: "Returns list of object instances."
+      operation_id: "directory.v4.objects.list"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+    };
+  }
+
+  // get relation
+  rpc GetRelation(GetRelationRequest) returns (GetRelationResponse) {
+    option (google.api.http) = {get: "/api/v4/directory/relation"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Get relation instance"
+      description: "Returns single relation instance, optionally with objects."
+      operation_id: "directory.v4.relation.get"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+      responses: {
+        key: "304"
+        value: {description: "Relation not modified."}
+      }
+    };
+  }
+
+  // list relations
+  rpc ListRelations(ListRelationsRequest) returns (ListRelationsResponse) {
+    option (google.api.http) = {get: "/api/v4/directory/relations"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "List relations instances"
+      description: "Returns list of relation instances."
+      operation_id: "directory.v4.relations.list"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+    };
+  }
+
+  // check if subject has relation or permission with object
+  rpc Check(CheckRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      post: "/api/v4/directory/check"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Check"
+      description: "Returns check outcome."
+      operation_id: "directory.v4.check"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+    };
+  }
+
+  // checks validates a set of check requests in a single roundtrip
+  rpc Checks(ChecksRequest) returns (ChecksResponse) {
+    option (google.api.http) = {
+      post: "/api/v4/directory/checks"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Checks"
+      description: "Returns multiple check outcomes."
+      operation_id: "directory.v4.checks"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+    };
+  }
+
+  // get object relationship graph
+  rpc Graph(GraphRequest) returns (GraphResponse) {
+    option (google.api.http) = {get: "/api/v4/directory/graph/{object_type}/{relation}/{subject_type}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Get graph"
+      description: "Returns object graph from anchor to subject or object."
+      operation_id: "directory.v4.graph"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+    };
+  }
+
+  // export objects and relations as a stream
+  rpc Export(ExportRequest) returns (stream ExportResponse) {}
+}

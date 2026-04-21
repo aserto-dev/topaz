@@ -1,0 +1,50 @@
+---
+version: v2
+
+clean: false
+
+plugins:
+  - remote: buf.build/protocolbuffers/go:v1.36.11
+    out: ./api
+    opt: paths=source_relative
+
+  - remote: buf.build/grpc/go:v1.6.1
+    out: ./api
+    opt:
+      - paths=source_relative
+      - require_unimplemented_servers=false
+
+  - remote: buf.build/grpc-ecosystem/gateway:v2.29.0
+    out: ./api
+    opt:
+      - paths=source_relative
+      - logtostderr=true
+      - generate_unbound_methods=true
+
+  - remote: buf.build/community/planetscale-vtprotobuf:v0.6.0
+    out: ./api
+    opt:
+      - paths=source_relative
+      - features=marshal+unmarshal+size+clone+pool+equal
+      - pool=github.com/aserto-dev/topaz/api/directory/v4.RelationIdentifier
+
+  - remote: buf.build/community/pseudomuto-doc:v1.5.1
+    out: ./api/docs
+    opt: 
+      - markdown,api.md
+
+  - remote: buf.build/community/pseudomuto-doc:v1.5.1
+    out: ./api/html
+    opt:
+      - html,index.html
+
+  # use v2.27.4 to avoid breaking error incl v2.27.5 <-> v2.27.7, resulting in:
+  # Error converting document: Error converting Swagger to 3.0 failed to resolve "readerV4CheckRequest" 
+  # in fragment in URI: "#/components/schemas/readerV4CheckRequest": map key "readerV4CheckRequest" not found
+  - remote: buf.build/grpc-ecosystem/openapiv2:v2.28.0
+    out: ./tmp
+    opt:
+      - json_names_for_fields=false  # use proto names.
+      - allow_delete_body=true       # DELETE requests may have a body.
+      - simple_operation_ids=true    # Remove service prefix from operation IDs.
+      - enable_rpc_deprecation=true  # process grpc method's deprecated options.

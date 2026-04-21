@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package directory.v4.writer;
+
+import "directory/v4/relation.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/writer;writer";
+
+message SetRelationRequest {
+  // relation instance
+  directory.v4.Relation relation = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message SetRelationResponse {
+  // relation instance
+  directory.v4.Relation result = 1;
+}
+
+message DeleteRelationRequest {
+  // object type identifier
+  string object_type = 1 [(google.api.field_behavior) = REQUIRED];
+  // object instance identifier
+  string object_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // object relation name
+  string relation = 3 [(google.api.field_behavior) = REQUIRED];
+  // subject type identifier
+  string subject_type = 4 [(google.api.field_behavior) = REQUIRED];
+  // subject instance identifier
+  string subject_id = 5 [(google.api.field_behavior) = REQUIRED];
+  // subject relation name  (optional)
+  string subject_relation = 6 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message DeleteRelationResponse {
+  // empty result
+  google.protobuf.Empty result = 1;
+}

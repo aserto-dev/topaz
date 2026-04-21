@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package directory.v4.reader;
+
+import "google/api/field_behavior.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/reader;reader";
+
+message CheckRequest {
+  // object type identifier
+  string object_type = 1 [(google.api.field_behavior) = REQUIRED];
+  // object instance identifier
+  string object_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // relation name
+  string relation = 3 [(google.api.field_behavior) = REQUIRED];
+  // subject type identifier
+  string subject_type = 4 [(google.api.field_behavior) = REQUIRED];
+  // subject instance identifier
+  string subject_id = 5 [(google.api.field_behavior) = REQUIRED];
+  // collect trace information (optional)
+  bool trace = 7 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message CheckResponse {
+  // check result
+  bool check = 1;
+  // trace information
+  repeated string trace = 2;
+  // context
+  google.protobuf.Struct context = 3;
+}
+
+message ChecksRequest {
+  CheckRequest default = 1;
+  repeated CheckRequest checks = 2;
+}
+
+message ChecksResponse {
+  repeated CheckResponse checks = 1;
+}

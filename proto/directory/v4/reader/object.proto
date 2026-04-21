@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package directory.v4.reader;
+
+import "directory/v4/object.proto";
+import "directory/v4/pagination.proto";
+import "directory/v4/relation.proto";
+import "google/api/field_behavior.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/reader;reader";
+
+message GetObjectRequest {
+  // object type identifier
+  string object_type = 1 [(google.api.field_behavior) = REQUIRED];
+  // object instance identifier
+  string object_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // materialize the object relations objects (optional)
+  bool with_relations = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message GetObjectResponse {
+  // object instance
+  directory.v4.Object result = 1;
+  // object relations
+  repeated directory.v4.Relation relations = 4;
+}
+
+message ListObjectsRequest {
+  // object type identifier (optional)
+  string object_type = 1 [(google.api.field_behavior) = OPTIONAL];
+  // pagination request (optional)
+  directory.v4.PaginationRequest page = 9 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ListObjectsResponse {
+  // array of object instances
+  repeated directory.v4.Object results = 1;
+  // pagination response
+  directory.v4.PaginationResponse page = 9;
+}

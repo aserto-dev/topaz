@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package directory.v4;
+
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4;directory";
+
+message Manifest {
+  // manifest identifier
+  string id = 1;
+  // manifest content data
+  bytes content = 2;
+  // last updated timestamp (UTC)
+  google.protobuf.Timestamp updated_at = 21 [(google.api.field_behavior) = OUTPUT_ONLY];
+  // object instance etag (optional)
+  string etag = 23 [(google.api.field_behavior) = OPTIONAL];
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package directory.v4.reader;
+
+import "directory/v4/model.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/reader;reader";
+
+message GetModelRequest {
+  string id = 1;
+}
+
+message GetModelResponse {
+  directory.v4.Model model = 1;
+}

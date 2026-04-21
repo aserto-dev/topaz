@@ -18,6 +18,7 @@ TOPAZ_DIST         := ${PWD}/$(shell cat dist/artifacts.json | jq -r '.[] | sele
 GOPRIVATE          := "github.com/aserto-dev"
 DOCKER_BUILDKIT    := 1
 
+BIN_DIR            := ${PWD}/bin
 EXT_DIR            := ${PWD}/.ext
 EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
@@ -28,13 +29,19 @@ GOTESTSUM_VER      := 1.13.0
 GOLANGCI-LINT_VER  := 2.11.4
 GORELEASER_VER     := 2.14.1
 SYFT_VER           := 1.13.0
+BUF_VER            := 1.66.1
+MERGE-JSON_VER     := 0.1.6
+
+BUF_REPO           := "buf.build/topaz/directory"
+BUF_LATEST         := $(shell ${EXT_BIN_DIR}/buf registry module label list ${BUF_REPO} --format json | jq -r '.labels[0].name')
+BUF_DEV_IMAGE      := "directory.bin"
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 
 .DEFAULT_GOAL      := build
 
 .PHONY: deps
-deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft
+deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft install-buf install-openapi-spec-converter install-merge-json
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
@@ -143,19 +150,71 @@ topaz-start-test-snapshot:
 	@echo "topaz start $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_name')"
 	@${TOPAZ_DIST} start --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
 
+.PHONY: buf-login
+buf-login:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@echo ${BUF_TOKEN} | ${EXT_BIN_DIR}/buf registry login --token-stdin
+
+.PHONY: buf-dep-update
+buf-dep-update:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/buf dep update
+
+.PHONY: buf-format
+buf-format:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/buf format -w proto
+
+.PHONY: buf-build
+buf-build: ${BIN_DIR} buf-format 
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/buf build --output ${BIN_DIR}/${BUF_DEV_IMAGE}
+
+.PHONY: buf-lint
+buf-lint:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/buf lint
+
+.PHONY: buf-breaking
+buf-breaking:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/buf breaking --against "${GIT_ORG}/${PROTO_REPO}.git#branch=main"
+
+.PHONY: buf-push
+buf-push:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/buf push --label ${RELEASE_TAG}
+
+.PHONY: buf-generate
+buf-generate:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@find . -name 'buf.gen*.yaml' -exec ${EXT_BIN_DIR}/buf generate --template {} \;
+	@${PWD}/scripts/upd-openapi.sh
+
+.PHONY: buf-generate-dev
+buf-generate-dev:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@find . -name 'buf.gen*.yaml' -exec ${EXT_BIN_DIR}/buf generate --template {} ${PWD}/bin/${BUF_DEV_IMAGE} \;
+	@${PWD}/scripts/upd-openapi.sh
+
 .PHONY: info
 info:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@echo "GOOS:        ${GOOS}"
-	@echo "GOARCH:      ${GOARCH}"
-	@echo "EXT_DIR:     ${EXT_DIR}"
-	@echo "EXT_BIN_DIR: ${EXT_BIN_DIR}"
-	@echo "EXT_TMP_DIR: ${EXT_TMP_DIR}"
-	@echo "RELEASE_TAG: ${RELEASE_TAG}"
-	@echo "TOPAZ_DIST:  ${TOPAZ_DIST}"
-	@echo "REGISTRY:    ${REGISTRY}"
-	@echo "ORG:         ${ORG}"
-	@echo "REPO:        ${REPO}"
+	@echo "GOOS:          ${GOOS}"
+	@echo "GOARCH:        ${GOARCH}"
+	@echo "BIN_DIR:       ${BIN_DIR}"
+	@echo "EXT_DIR:       ${EXT_DIR}"
+	@echo "EXT_BIN_DIR:   ${EXT_BIN_DIR}"
+	@echo "EXT_TMP_DIR:   ${EXT_TMP_DIR}"
+	@echo "RELEASE_TAG:   ${RELEASE_TAG}"
+	@echo "TOPAZ_DIST:    ${TOPAZ_DIST}"
+	@echo "REGISTRY:      ${REGISTRY}"
+	@echo "ORG:           ${ORG}"
+	@echo "REPO:          ${REPO}"
+	@echo "BUF_REPO:      ${BUF_REPO}"
+	@echo "BUF_LATEST:    ${BUF_LATEST}"
+	@echo "BUF_DEV_IMAGE: ${BUF_DEV_IMAGE}"
+	@echo "PROTO_REPO:    ${PROTO_REPO}"
 
 .PHONY: install-svu
 install-svu: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
@@ -195,6 +254,22 @@ install-syft: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@tar -xvf ${EXT_TMP_DIR}/syft.tar.gz --directory ${EXT_BIN_DIR} syft &> /dev/null
 	@chmod +x ${EXT_BIN_DIR}/syft
 	@${EXT_BIN_DIR}/syft --version
+
+.PHONY: install-buf
+install-buf: ${EXT_BIN_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install github.com/bufbuild/buf/cmd/buf@v${BUF_VER}
+	@${EXT_BIN_DIR}/buf --version
+
+.PHONY: install-openapi-spec-converter
+install-openapi-spec-converter: ${EXT_BIN_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install github.com/dense-analysis/openapi-spec-converter/cmd/openapi-spec-converter@latest
+
+.PHONY: install-merge-json
+install-merge-json: ${EXT_BIN_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install github.com/topaz-authz/merge-json@v${MERGE-JSON_VER}
 
 .PHONY: clean
 clean:

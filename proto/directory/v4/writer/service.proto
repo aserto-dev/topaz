@@ -1,0 +1,144 @@
+syntax = "proto3";
+
+package directory.v4.writer;
+
+import "directory/v4/writer/import.proto";
+import "directory/v4/writer/manifest.proto";
+import "directory/v4/writer/object.proto";
+import "directory/v4/writer/relation.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/writer;writer";
+
+service Writer {
+  // set manifest
+  rpc SetManifest(SetManifestRequest) returns (SetManifestResponse) {
+    option (google.api.http) = {
+      post: "/api/v4/directory/manifest/{manifest.id}"
+      body: "manifest"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Set manifest"
+      description: "Set directory manifest."
+      operation_id: "directory.v4.manifest.set"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+      responses: {
+        key: "304"
+        value: {description: "Object not modified."}
+      }
+    };
+  }
+
+  // delete manifest
+  rpc DeleteManifest(DeleteManifestRequest) returns (DeleteManifestResponse) {
+    option (google.api.http) = {delete: "/api/v4/directory/manifest/{id}"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Delete manifest"
+      description: "Delete directory manifest."
+      operation_id: "directory.v4.manifest.delete"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+      responses: {
+        key: "304"
+        value: {description: "Object not modified."}
+      }
+    };
+  }
+
+  // set object instance
+  rpc SetObject(SetObjectRequest) returns (SetObjectResponse) {
+    option (google.api.http) = {
+      post: "/api/v4/directory/object"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Set object"
+      description: "Set object."
+      operation_id: "directory.v4.object.set"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+    };
+  }
+
+  // delete object instance
+  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResponse) {
+    option (google.api.http) = {delete: "/api/v4/directory/object/{object_type}/{object_id}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Delete object"
+      description: "Delete object."
+      operation_id: "directory.v4.object.delete"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+    };
+  }
+
+  // set relation instance
+  rpc SetRelation(SetRelationRequest) returns (SetRelationResponse) {
+    option (google.api.http) = {
+      post: "/api/v4/directory/relation"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Set relation"
+      description: "Set relation."
+      operation_id: "directory.v4.relation.set"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+    };
+  }
+
+  // delete relation instance
+  rpc DeleteRelation(DeleteRelationRequest) returns (DeleteRelationResponse) {
+    option (google.api.http) = {delete: "/api/v4/directory/relation"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "directory"
+      summary: "Delete relation"
+      description: "Delete relation."
+      operation_id: "directory.v4.relation.delete"
+      deprecated: false
+      security: {
+        security_requirement: {
+          key: "AuthorizationHeader"
+          value: {}
+        }
+      }
+    };
+  }
+
+  // import stream of objects and relations
+  rpc Import(stream ImportRequest) returns (stream ImportResponse) {}
+}

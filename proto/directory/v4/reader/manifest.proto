@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package directory.v4.reader;
+
+import "directory/v4/manifest.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/reader;reader";
+
+message GetManifestRequest {
+  string id = 1;
+}
+
+message GetManifestResponse {
+  directory.v4.Manifest manifest = 1;
+}

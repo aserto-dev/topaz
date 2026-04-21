@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package directory.v4.reader;
+
+import "directory/v4/object.proto";
+import "directory/v4/pagination.proto";
+import "directory/v4/relation.proto";
+import "google/api/field_behavior.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/reader;reader";
+
+message GetRelationRequest {
+  // object type identifier
+  string object_type = 1 [(google.api.field_behavior) = REQUIRED];
+  // object instance identifier
+  string object_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // relation name
+  string relation = 3 [(google.api.field_behavior) = REQUIRED];
+  // subject type identifier
+  string subject_type = 4 [(google.api.field_behavior) = REQUIRED];
+  // subject instance identifier
+  string subject_id = 5 [(google.api.field_behavior) = REQUIRED];
+  // subject relation name (optional)
+  string subject_relation = 6 [(google.api.field_behavior) = OPTIONAL];
+  // materialize relation objects (optional)
+  bool with_objects = 7 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message GetRelationResponse {
+  // relation instance
+  directory.v4.Relation result = 1;
+  // map of materialized relation objects
+  map<string, directory.v4.Object> objects = 2;
+}
+
+message ListRelationsRequest {
+  // object type identifier (optional)
+  string object_type = 1 [(google.api.field_behavior) = OPTIONAL];
+  // object instance identifier (optional)
+  string object_id = 2 [(google.api.field_behavior) = OPTIONAL];
+  // relation name (optional)
+  string relation = 3 [(google.api.field_behavior) = OPTIONAL];
+  // subject type identifier (optional)
+  string subject_type = 4 [(google.api.field_behavior) = OPTIONAL];
+  // subject instance identifier (optional)
+  string subject_id = 5 [(google.api.field_behavior) = OPTIONAL];
+  // subject relation name (optional)
+  string subject_relation = 6 [(google.api.field_behavior) = OPTIONAL];
+  // materialize relation objects (optional)
+  bool with_objects = 7 [(google.api.field_behavior) = OPTIONAL];
+  // only return relations that do not have a subject relation  (optional)
+  bool with_empty_subject_relation = 8 [(google.api.field_behavior) = OPTIONAL];
+  // pagination request (optional)
+  directory.v4.PaginationRequest page = 9 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ListRelationsResponse {
+  // array of relation instances
+  repeated directory.v4.Relation results = 1;
+  // map of materialized relation objects
+  map<string, directory.v4.Object> objects = 2;
+  // pagination response
+  directory.v4.PaginationResponse page = 9;
+}

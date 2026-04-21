@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package directory.v4;
+
+import "google/api/field_behavior.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4;directory";
+
+// Pagination request
+message PaginationRequest {
+  // requested page size, valid value between 1-100 rows (optional, default 100)
+  int32 size = 1 [(google.api.field_behavior) = OPTIONAL];
+  // pagination start token (optional, default "")
+  string token = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Pagination response
+message PaginationResponse {
+  // next page token, when empty there are no more pages to fetch
+  string next_token = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+}

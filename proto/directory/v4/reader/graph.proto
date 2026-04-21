@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package directory.v4.reader;
+
+import "directory/v4/object_identifier.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/reader;reader";
+
+message GraphRequest {
+  // object type identifier
+  string object_type = 3 [(google.api.field_behavior) = REQUIRED];
+  // object instance identifier (optional)
+  string object_id = 4 [(google.api.field_behavior) = OPTIONAL];
+  // relation name
+  string relation = 5 [(google.api.field_behavior) = REQUIRED];
+  // subject type identifier
+  string subject_type = 6 [(google.api.field_behavior) = REQUIRED];
+  // subject instance identifier (optional)
+  string subject_id = 7 [(google.api.field_behavior) = OPTIONAL];
+  // subject relation name (optional)
+  string subject_relation = 8 [(google.api.field_behavior) = OPTIONAL];
+  // return graph paths for each result (optional)
+  bool explain = 9 [(google.api.field_behavior) = OPTIONAL];
+  // collect trace information (optional)
+  bool trace = 10 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message GraphResponse {
+  // matching object identifiers
+  repeated directory.v4.ObjectIdentifier results = 2;
+  // explanation of results
+  google.protobuf.Struct explanation = 3;
+  // trace information
+  repeated string trace = 4;
+}

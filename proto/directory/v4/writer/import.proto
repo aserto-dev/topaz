@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package directory.v4.writer;
+
+import "directory/v4/object.proto";
+import "directory/v4/relation.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/writer;writer";
+
+message ImportRequest {
+  // operation Opcode enum value
+  Opcode op_code = 1;
+  oneof msg {
+    // object import message
+    directory.v4.Object object = 5;
+    // relation import message
+    directory.v4.Relation relation = 6;
+  }
+}
+
+message ImportResponse {
+  // object import counter
+  ImportCounter object = 1 [deprecated = true];
+  // relation import counter
+  ImportCounter relation = 2 [deprecated = true];
+
+  oneof msg {
+    // import status message
+    ImportStatus status = 4;
+    // import counter per type
+    ImportCounter counter = 5;
+  }
+}
+
+message ImportCounter {
+  // number of messages received
+  uint64 recv = 1;
+  // number of messages with OPCODE_SET
+  uint64 set = 2;
+  // number of messages with OPCODE_DELETE
+  uint64 delete = 3;
+  // number of messages resulting in error
+  uint64 error = 4;
+  // counter of type (object|relation)
+  string type = 5;
+}
+
+enum Opcode {
+  OPCODE_UNKNOWN = 0;
+  OPCODE_SET = 1;
+  OPCODE_DELETE = 2;
+  OPCODE_DELETE_WITH_RELATIONS = 3;
+}
+
+message ImportStatus {
+  // gRPC status code (google.golang.org/grpc/codes)
+  uint32 code = 1;
+  // gRPC status message (google.golang.org/grpc/status)
+  string msg = 2;
+  // req contains the original import request message
+  ImportRequest req = 3;
+}

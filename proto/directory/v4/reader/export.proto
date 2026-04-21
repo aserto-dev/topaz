@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package directory.v4.reader;
+
+import "directory/v4/object.proto";
+import "directory/v4/relation.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4/reader;reader";
+
+message ExportRequest {
+  // data export options mask
+  uint32 options = 1;
+  // start export from timestamp (UTC)
+  google.protobuf.Timestamp start_from = 20;
+}
+
+message ExportResponse {
+  oneof msg {
+    // object instance (data)
+    directory.v4.Object object = 2;
+    // relation instance (data)
+    directory.v4.Relation relation = 4;
+    // object and/or relation stats (no data)
+    google.protobuf.Struct stats = 8;
+  }
+}
+
+enum Option {
+  // nothing selected (default initialization value)
+  OPTION_UNKNOWN = 0x0;
+  // object instances
+  OPTION_DATA_OBJECTS = 0x8;
+  // relation instances
+  OPTION_DATA_RELATIONS = 0x10;
+  // all data = OPTION_DATA_OBJECTS | OPTION_DATA_RELATIONS
+  OPTION_DATA = 0x18;
+  // stats
+  OPTION_STATS = 0x40;
+}

@@ -1,0 +1,31 @@
+version: v2
+modules:
+  - path: proto
+    name: buf.build/topaz/directory
+
+deps:
+  - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway
+
+lint:
+  use:
+    - STANDARD
+  except:
+    - FIELD_NOT_REQUIRED
+    - PACKAGE_DIRECTORY_MATCH
+    - PACKAGE_NO_IMPORT_CYCLE
+    - PACKAGE_VERSION_SUFFIX
+    - SERVICE_SUFFIX
+  enum_zero_value_suffix: _UNKNOWN
+  disallow_comment_ignores: true
+
+breaking:
+  use:
+    - FILE
+    - PACKAGE
+    - WIRE
+    - WIRE_JSON
+  except:
+    - EXTENSION_NO_DELETE
+    - FIELD_SAME_DEFAULT
+    - PACKAGE_EXTENSION_NO_DELETE

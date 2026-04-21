@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package directory.v4;
+
+import "google/api/field_behavior.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4;directory";
+
+// Object identifier
+message ObjectIdentifier {
+  // object type identifier
+  string object_type = 1 [(google.api.field_behavior) = REQUIRED];
+  // object instance identifier
+  string object_id = 2 [(google.api.field_behavior) = REQUIRED];
+}

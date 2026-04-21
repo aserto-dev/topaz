@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package directory.v4;
+
+import "google/api/field_behavior.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4;directory";
+
+// Relation identifier
+message RelationIdentifier {
+  // object type identifier
+  string object_type = 1 [(google.api.field_behavior) = REQUIRED];
+  // object instance identifier
+  string object_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // object relation name
+  string relation = 3 [(google.api.field_behavior) = REQUIRED];
+  // subject type identifier
+  string subject_type = 4 [(google.api.field_behavior) = REQUIRED];
+  // subject instance identifier
+  string subject_id = 5 [(google.api.field_behavior) = REQUIRED];
+  //subject relation name (optional)
+  string subject_relation = 6 [(google.api.field_behavior) = OPTIONAL];
+}

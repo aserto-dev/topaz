@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package directory.v4;
+
+import "google/api/field_behavior.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v4;directory";
+
+message Model {
+  // model identifier
+  string id = 1;
+  // model
+  google.protobuf.Struct model = 2;
+  // last updated timestamp (UTC)
+  google.protobuf.Timestamp updated_at = 21 [(google.api.field_behavior) = OUTPUT_ONLY];
+  // object instance etag (optional)
+  string etag = 23 [(google.api.field_behavior) = OPTIONAL];
+}
