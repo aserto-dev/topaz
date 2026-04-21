@@ -15,10 +15,10 @@ var (
 	ObjectTypesPath   Path = []string{"object_types"}                               // OBSOLETE
 	PermissionsPath   Path = []string{"permissions"}                                // OBSOLETE
 	RelationTypesPath Path = []string{"relation_types"}                             // OBSOLETE
-	ObjectsPath       Path = []string{"objects"}
-	RelationsSubPath  Path = []string{"relations_sub"}
-	RelationsObjPath  Path = []string{"relations_obj"}
-	MetadataKey            = []byte("metadata")
-	BodyKey                = []byte("body")
-	ModelKey               = []byte("model")
+	ObjectsPath       Path = []string{"objects"}                                    // objects path
+	RelationsSubPath  Path = []string{"relations_sub"}                              // relation subject ordered path
+	RelationsObjPath  Path = []string{"relations_obj"}                              // relation object ordered path
+	MetadataKey            = []byte("metadata")                                     // _manifest.default.metadata key
+	BodyKey                = []byte("body")                                         // _manifest.default.body key
+	ModelKey               = []byte("model")                                        // _manifest.default.model cache key
 )

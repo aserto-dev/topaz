@@ -68,7 +68,8 @@ func exportObjects(tx *bolt.Tx, stream dse3.Exporter_ExportServer) error {
 	}
 
 	for iter.Next() {
-		if err := stream.Send(&dse3.ExportResponse{Msg: &dse3.ExportResponse_Object{Object: iter.Value()}}); err != nil {
+		obj := ds.PatchObjectRead(iter.Value())
+		if err := stream.Send(&dse3.ExportResponse{Msg: &dse3.ExportResponse_Object{Object: obj}}); err != nil {
 			return err
 		}
 	}

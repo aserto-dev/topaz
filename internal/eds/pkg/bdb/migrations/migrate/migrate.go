@@ -13,6 +13,7 @@ import (
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/mig007"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/mig008"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/mig009"
+	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/mig010"
 	"github.com/aserto-dev/topaz/internal/fs"
 
 	"github.com/Masterminds/semver/v3"
@@ -31,6 +32,7 @@ var migMap = map[string]Migration{
 	mig007.Version: mig007.Migrate,
 	mig008.Version: mig008.Migrate,
 	mig009.Version: mig009.Migrate,
+	mig010.Version: mig010.Migrate,
 }
 
 //nolint:lll // single line readability more important.

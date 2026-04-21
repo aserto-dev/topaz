@@ -1,13 +1,19 @@
 {
-  "go.useLanguageServer": true,
-  "gopls": {
-    "formatting.gofumpt": true
-  },
-   "go.testFlags": [
+  "go.buildFlags": [
+    "-gcflags all=-N -l",
+    "-ldflags=-s -w"
+  ],
+  "go.testFlags": [
     "-v",
     "-gcflags=all=-N -l",
     "-count=1"
   ],
+  "go.useLanguageServer": true,
+  "go.languageServerFlags": [],
+  "gopls": {
+    "formatting.gofumpt": true
+  },
+  "go.alternateTools": {},
   "sarif-viewer.connectToGithubCodeScanning": "off",
   "cSpell.words": [
     "acmecorp",
@@ -334,7 +340,5 @@
     "zeroinstall",
     "zerolog",
     "zpages"
-  ],
-  "go.alternateTools": {},
-  "go.languageServerFlags": []
+  ]
 }

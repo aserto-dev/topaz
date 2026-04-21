@@ -82,7 +82,7 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr3.GetObjectRequest) (*ds
 			s.logger.Trace().Msg("get object with relations")
 		}
 
-		resp.Result = obj
+		resp.Result = ds.PatchObjectRead(obj)
 
 		return nil
 	})
@@ -112,7 +112,7 @@ func (s *Reader) GetObjectMany(ctx context.Context, req *dsr3.GetObjectManyReque
 				return err
 			}
 
-			resp.Results = append(resp.GetResults(), obj)
+			resp.Results = append(resp.GetResults(), ds.PatchObjectRead(obj))
 		}
 
 		return nil
@@ -155,7 +155,10 @@ func (s *Reader) GetObjects(ctx context.Context, req *dsr3.GetObjectsRequest) (*
 
 		iter.Next()
 
-		resp.Results = iter.Value()
+		resp.Results = lo.Map(iter.Value(), func(x *dsc3.Object, _ int) *dsc3.Object {
+			return ds.PatchObjectRead(x)
+		})
+
 		resp.Page = &dsc3.PaginationResponse{NextToken: iter.NextToken()}
 
 		return nil
