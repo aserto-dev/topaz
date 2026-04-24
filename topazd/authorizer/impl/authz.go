@@ -17,7 +17,6 @@ import (
 
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/open-policy-agent/opa/v1/server/types"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -72,16 +71,7 @@ func (s *AuthorizerServer) Info(ctx context.Context, req *authorizer.InfoRequest
 	return res, nil
 }
 
-func (s *AuthorizerServer) getRuntime(ctx context.Context, policyInstance *api.PolicyInstance) (*runtime.Runtime, error) { //nolint:staticcheck
-	if policyInstance != nil {
-		rt, err := s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, policyInstance.GetName()) //nolint:staticcheck
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to procure tenant runtime")
-		}
-
-		return rt, err
-	}
-
+func (s *AuthorizerServer) getRuntime(ctx context.Context) (*runtime.Runtime, error) {
 	rt, err := s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, "")
 	if err != nil {
 		return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
