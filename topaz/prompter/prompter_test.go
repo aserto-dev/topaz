@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	common "github.com/aserto-dev/topaz/api/directory/v4"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
+	"github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/aserto-dev/topaz/topaz/prompter"
 	"github.com/aserto-dev/topaz/topaz/x"
 	"github.com/authzen/access.go/api/access/v1"
@@ -51,7 +51,7 @@ func TestPrompter(t *testing.T) {
 func directoryRequests() []proto.Message {
 	reqs := []proto.Message{
 		&reader.GetObjectRequest{},
-		&reader.GetObjectsRequest{
+		&reader.ListObjectsRequest{
 			Page: &common.PaginationRequest{
 				Size:  x.MaxPaginationSize,
 				Token: "",
@@ -60,13 +60,12 @@ func directoryRequests() []proto.Message {
 		&writer.SetObjectRequest{
 			Object: &common.Object{
 				Properties: &structpb.Struct{},
-				CreatedAt:  &timestamppb.Timestamp{},
 				UpdatedAt:  &timestamppb.Timestamp{},
 			},
 		},
 		&writer.DeleteObjectRequest{},
 		&reader.GetRelationRequest{},
-		&reader.GetRelationsRequest{
+		&reader.ListRelationsRequest{
 			Page: &common.PaginationRequest{
 				Size:  x.MaxPaginationSize,
 				Token: "",
@@ -81,7 +80,7 @@ func directoryRequests() []proto.Message {
 			Default: &reader.CheckRequest{},
 			Checks:  []*reader.CheckRequest{},
 		},
-		&reader.GetGraphRequest{},
+		&reader.GraphRequest{},
 	}
 
 	return reqs

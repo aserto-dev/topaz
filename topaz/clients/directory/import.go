@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsi3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/aserto-dev/topaz/topaz/js"
 
 	"github.com/pkg/errors"
@@ -15,7 +15,7 @@ import (
 func (c *Client) Import(ctx context.Context, files []string) error {
 	g, iCtx := errgroup.WithContext(context.Background())
 
-	stream, err := c.Importer.Import(iCtx)
+	stream, err := c.Writer.Import(iCtx)
 	if err != nil {
 		return err
 	}
@@ -27,7 +27,7 @@ func (c *Client) Import(ctx context.Context, files []string) error {
 	return g.Wait()
 }
 
-func (c *Client) importHandler(stream dsi3.Importer_ImportClient, files []string) func() error {
+func (c *Client) importHandler(stream dsi3.Writer_ImportClient, files []string) func() error {
 	return func() error {
 		for _, file := range files {
 			if err := c.importFile(stream, file); err != nil {
@@ -43,7 +43,7 @@ func (c *Client) importHandler(stream dsi3.Importer_ImportClient, files []string
 	}
 }
 
-func (c *Client) importFile(stream dsi3.Importer_ImportClient, file string) error {
+func (c *Client) importFile(stream dsi3.Writer_ImportClient, file string) error {
 	r, err := os.Open(file)
 	if err != nil {
 		return errors.Wrapf(err, "failed to open file: [%s]", file)

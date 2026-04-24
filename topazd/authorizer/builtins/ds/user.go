@@ -3,7 +3,7 @@ package ds
 import (
 	"bytes"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"

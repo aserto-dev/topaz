@@ -1,7 +1,7 @@
 package mig010
 
 import (
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
 
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/common"

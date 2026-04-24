@@ -3,13 +3,13 @@ package ds
 import (
 	"context"
 
-	"github.com/aserto-dev/azm/cache"
-	"github.com/aserto-dev/azm/graph"
-	"github.com/aserto-dev/azm/safe"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
-	"github.com/aserto-dev/go-directory/pkg/prop"
+	"github.com/aserto-dev/topaz/api/directory/pkg/derr"
+	"github.com/aserto-dev/topaz/api/directory/pkg/prop"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	"github.com/aserto-dev/topaz/azm/cache"
+	"github.com/aserto-dev/topaz/azm/graph"
+	"github.com/aserto-dev/topaz/azm/safe"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 
 	bolt "go.etcd.io/bbolt"

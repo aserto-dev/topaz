@@ -3,9 +3,10 @@ package v3
 import (
 	"context"
 
-	"github.com/aserto-dev/azm/cache"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	"github.com/aserto-dev/topaz/azm/cache"
 	acc1 "github.com/authzen/access.go/api/access/v1"
+
 	"github.com/rs/zerolog"
 )
 
@@ -132,7 +133,7 @@ func (s *Access) SubjectSearch(ctx context.Context, req *acc1.SubjectSearchReque
 		Page:    &acc1.PaginationResponse{},
 	}
 
-	graphResp, err := s.reader.GetGraph(ctx, extractSubjectSearch(req))
+	graphResp, err := s.reader.Graph(ctx, extractSubjectSearch(req))
 	if err != nil {
 		return resp, err
 	}
@@ -148,8 +149,8 @@ func (s *Access) SubjectSearch(ctx context.Context, req *acc1.SubjectSearchReque
 	return resp, nil
 }
 
-func extractSubjectSearch(req *acc1.SubjectSearchRequest) *dsr3.GetGraphRequest {
-	resp := &dsr3.GetGraphRequest{}
+func extractSubjectSearch(req *acc1.SubjectSearchRequest) *dsr3.GraphRequest {
+	resp := &dsr3.GraphRequest{}
 	if res := req.GetResource(); res != nil {
 		resp.ObjectType = res.GetType()
 		resp.ObjectId = res.GetId()
@@ -181,7 +182,7 @@ func (s *Access) ResourceSearch(ctx context.Context, req *acc1.ResourceSearchReq
 		Page:    &acc1.PaginationResponse{},
 	}
 
-	graphResp, err := s.reader.GetGraph(ctx, extractResourceSearch(req))
+	graphResp, err := s.reader.Graph(ctx, extractResourceSearch(req))
 	if err != nil {
 		return resp, err
 	}
@@ -198,8 +199,8 @@ func (s *Access) ResourceSearch(ctx context.Context, req *acc1.ResourceSearchReq
 	return resp, nil
 }
 
-func extractResourceSearch(req *acc1.ResourceSearchRequest) *dsr3.GetGraphRequest {
-	resp := &dsr3.GetGraphRequest{}
+func extractResourceSearch(req *acc1.ResourceSearchRequest) *dsr3.GraphRequest {
+	resp := &dsr3.GraphRequest{}
 	if res := req.GetResource(); res != nil {
 		resp.ObjectType = res.GetType()
 	}
@@ -285,8 +286,8 @@ func (s *Access) ActionSearch(ctx context.Context, req *acc1.ActionSearchRequest
 	return resp, nil
 }
 
-func extractActionSearch(req *acc1.ActionSearchRequest) *dsr3.GetGraphRequest {
-	resp := &dsr3.GetGraphRequest{}
+func extractActionSearch(req *acc1.ActionSearchRequest) *dsr3.GraphRequest {
+	resp := &dsr3.GraphRequest{}
 	if res := req.GetResource(); res != nil {
 		resp.ObjectType = res.GetType()
 		resp.ObjectId = res.GetId()

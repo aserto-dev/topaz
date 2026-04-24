@@ -3,7 +3,7 @@ package ds
 import (
 	"bytes"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -33,18 +33,18 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr reader.ReaderClient
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args reader.GetGraphRequest
+			var args reader.GraphRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
-			if proto.Equal(&args, &reader.GetGraphRequest{}) {
+			if proto.Equal(&args, &reader.GraphRequest{}) {
 				return ast.StringTerm(dsGraphHelp), nil
 			}
 
-			resp, err := dr.GetGraph(bctx.Context, &args)
+			resp, err := dr.Graph(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

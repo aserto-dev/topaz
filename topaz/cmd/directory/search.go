@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
@@ -15,8 +15,8 @@ type SearchCmd struct {
 	clients.RequestArgs
 	dsc.Config
 
-	req  reader.GetGraphRequest
-	resp reader.GetGraphResponse
+	req  reader.GraphRequest
+	resp reader.GraphResponse
 }
 
 func (cmd *SearchCmd) Run(ctx context.Context) error {
@@ -28,7 +28,7 @@ func (cmd *SearchCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	if err := cmd.Invoke(ctx, reader.Reader_GetGraph_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, reader.Reader_Graph_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
@@ -36,7 +36,7 @@ func (cmd *SearchCmd) Run(ctx context.Context) error {
 }
 
 func (cmd *SearchCmd) template() proto.Message {
-	return &reader.GetGraphRequest{
+	return &reader.GraphRequest{
 		ObjectType:      "",
 		ObjectId:        "",
 		Relation:        "",

@@ -1,7 +1,7 @@
 package ds
 
 import (
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/aserto-dev/topaz/topazd/directory"
 	"google.golang.org/grpc/codes"
@@ -54,7 +54,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr reader.ReaderCli
 			case err != nil:
 				return nil, err
 			default:
-				return ast.StringTerm(user.GetId()), nil
+				return ast.StringTerm(user.GetObjectId()), nil
 			}
 		}
 }

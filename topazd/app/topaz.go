@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	cerr "github.com/aserto-dev/errors"
 	console "github.com/aserto-dev/go-topaz-ui"
+	cerr "github.com/aserto-dev/topaz/errors"
 	"github.com/aserto-dev/topaz/internal/eds"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/app/handlers"

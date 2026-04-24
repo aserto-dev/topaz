@@ -3,8 +3,8 @@ package ds
 import (
 	"bytes"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	common "github.com/aserto-dev/topaz/api/directory/v4"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/topaz/x"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/samber/lo"
@@ -36,23 +36,23 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr reader.ReaderCl
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args reader.GetRelationsRequest
+			var args reader.ListRelationsRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
-			if proto.Equal(&args, &reader.GetRelationsRequest{}) {
+			if proto.Equal(&args, &reader.ListRelationsRequest{}) {
 				return ast.StringTerm(dsRelationsHelp), nil
 			}
 
 			args.Page = &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""}
 
-			resp := &reader.GetRelationsResponse{}
+			resp := &reader.ListRelationsResponse{}
 
 			for {
-				r, err := dr.GetRelations(bctx.Context, &args)
+				r, err := dr.ListRelations(bctx.Context, &args)
 				if err != nil {
 					builtins.TraceError(&bctx, fnName, err)
 					return nil, err

@@ -6,13 +6,13 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
 )
 
 func BenchmarkSearchSerial(b *testing.B) {
 	assert := require.New(b)
 
-	checks, err := loadChecks[dsr3.GetGraphRequest]()
+	checks, err := loadChecks[dsr3.GraphRequest]()
 	assert.NoError(err)
 	assert.NotEmpty(checks)
 
@@ -26,7 +26,7 @@ func BenchmarkSearchSerial(b *testing.B) {
 	b.ResetTimer()
 
 	for _, check := range checks {
-		_, err := client.V3.Reader.GetGraph(ctx, check)
+		_, err := client.V3.Reader.Graph(ctx, check)
 		assert.NoError(err)
 	}
 }
@@ -34,7 +34,7 @@ func BenchmarkSearchSerial(b *testing.B) {
 func BenchmarkSearchParallelChunks(b *testing.B) {
 	assert := require.New(b)
 
-	checks, err := loadChecks[dsr3.GetGraphRequest]()
+	checks, err := loadChecks[dsr3.GraphRequest]()
 	assert.NoError(err)
 	assert.NotEmpty(checks)
 
@@ -45,7 +45,7 @@ func BenchmarkSearchParallelChunks(b *testing.B) {
 
 	ctx := b.Context()
 
-	var chunks [][]*dsr3.GetGraphRequest
+	var chunks [][]*dsr3.GraphRequest
 
 	numChunks := runtime.NumCPU()
 	chunkSize := (len(checks) + numChunks - 1) / numChunks
@@ -61,7 +61,7 @@ func BenchmarkSearchParallelChunks(b *testing.B) {
 		b.RunParallel(func(pb *testing.PB) {
 			for _, check := range chunk {
 				for pb.Next() {
-					_, err := client.V3.Reader.GetGraph(ctx, check)
+					_, err := client.V3.Reader.Graph(ctx, check)
 					assert.NoError(err)
 				}
 			}

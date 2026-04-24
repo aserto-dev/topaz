@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"testing"
 
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	dsi3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/server"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
@@ -111,7 +111,7 @@ func setupBenchmark(b *testing.B, client *server.TestEdgeClient) {
 	assert.NoError(setManifest(client, manifest))
 
 	g, iCtx := errgroup.WithContext(b.Context())
-	stream, err := client.V3.Importer.Import(iCtx)
+	stream, err := client.V3.Writer.Import(iCtx)
 	assert.NoError(err)
 
 	g.Go(receiver(stream))
@@ -137,7 +137,7 @@ func loadChecks[T any]() ([]*T, error) {
 	return checks, nil
 }
 
-func receiver(stream dsi3.Importer_ImportClient) func() error {
+func receiver(stream dsi3.Writer_ImportClient) func() error {
 	return func() error {
 		for {
 			_, err := stream.Recv()

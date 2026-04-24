@@ -3,10 +3,9 @@ package ds
 import (
 	"bytes"
 
-	"github.com/aserto-dev/azm/safe"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	"github.com/aserto-dev/topaz/azm/safe"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/x"
-	"google.golang.org/protobuf/types/known/structpb"
 )
 
 type object struct {
@@ -16,7 +15,7 @@ type object struct {
 func Object(i *dsc3.Object) *object { return &object{safe.Object(i)} }
 
 func (i *object) StrKey() string {
-	return i.GetType() + string(TypeIDSeparator) + i.GetId()
+	return i.GetObjectType() + string(TypeIDSeparator) + i.GetObjectId()
 }
 
 func (i *object) Key() []byte {
@@ -24,9 +23,9 @@ func (i *object) Key() []byte {
 
 	buf.Grow(x.MaxObjectIdentifierSize)
 
-	buf.WriteString(i.GetType())
+	buf.WriteString(i.GetObjectType())
 	buf.WriteByte(TypeIDSeparator)
-	buf.WriteString(i.GetId())
+	buf.WriteString(i.GetObjectId())
 
 	return buf.Bytes()
 }
@@ -68,25 +67,25 @@ const (
 
 // PatchObjectRead: transfers Objects.Properties["display_name"] to Object.DisplayName (BACKWARD COMPATIBILITY).
 func PatchObjectRead(i *dsc3.Object) *dsc3.Object {
-	fields := i.GetProperties().GetFields()
+	// fields := i.GetProperties().GetFields()
 
-	if displayName, ok := fields[propDisplayName]; ok {
-		i.DisplayName = displayName.GetStringValue() //nolint:staticcheck // Marked as deprecated
-	}
+	// if displayName, ok := fields[propDisplayName]; ok {
+	// 	i.DisplayName = displayName.GetStringValue() //nolint:staticcheck // Marked as deprecated
+	// }
 
 	return i
 }
 
 // PatchObjectWrite: transfers Object.DisplayName to Objects.Properties["display_name"] (FORWARD COMPATIBILITY).
 func PatchObjectWrite(i *dsc3.Object) *dsc3.Object {
-	if displayName := i.GetDisplayName(); len(displayName) > 0 { //nolint:staticcheck // Marked as deprecated
-		if i.GetProperties().Fields == nil {
-			i.Properties.Fields = map[string]*structpb.Value{}
-		}
+	// if displayName := i.GetDisplayName(); len(displayName) > 0 { //nolint:staticcheck // Marked as deprecated
+	// 	if i.GetProperties().Fields == nil {
+	// 		i.Properties.Fields = map[string]*structpb.Value{}
+	// 	}
 
-		i.Properties.Fields[propDisplayName] = structpb.NewStringValue(displayName)
-		i.DisplayName = "" //nolint:staticcheck // Marked as deprecated
-	}
+	// 	i.Properties.Fields[propDisplayName] = structpb.NewStringValue(displayName)
+	// 	i.DisplayName = "" //nolint:staticcheck // Marked as deprecated
+	// }
 
 	return i
 }

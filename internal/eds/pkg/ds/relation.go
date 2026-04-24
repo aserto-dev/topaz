@@ -6,9 +6,9 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/aserto-dev/azm/safe"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	"github.com/aserto-dev/topaz/azm/safe"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 )
 
@@ -46,7 +46,7 @@ func GetRelation(i *dsr3.GetRelationRequest) *relations {
 	return &relations{r, relation{r.SafeRelation}}
 }
 
-func GetRelations(i *dsr3.GetRelationsRequest) *relations {
+func GetRelations(i *dsr3.ListRelationsRequest) *relations {
 	r := safe.GetRelations(i)
 	return &relations{r, relation{r.SafeRelation}}
 }

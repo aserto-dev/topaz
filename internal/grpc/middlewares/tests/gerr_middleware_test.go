@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"testing"
 
-	aerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/logger"
+	aerr "github.com/aserto-dev/topaz/errors"
 	"github.com/aserto-dev/topaz/internal/grpc/middlewares/gerr"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"

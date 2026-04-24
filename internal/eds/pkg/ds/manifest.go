@@ -6,11 +6,18 @@ import (
 	"hash/fnv"
 	"strconv"
 
-	"github.com/aserto-dev/azm/model"
 	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsc "github.com/aserto-dev/topaz/api/directory/v4"
+
+	"github.com/aserto-dev/topaz/azm/model"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 
 	bolt "go.etcd.io/bbolt"
+)
+
+var (
+	_ = &dsc.Manifest{}
+	_ = &dsc.Model{}
 )
 
 type manifest struct {

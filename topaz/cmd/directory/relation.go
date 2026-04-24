@@ -4,9 +4,9 @@ import (
 	"context"
 	"os"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	common "github.com/aserto-dev/topaz/api/directory/v4"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
+	"github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
@@ -84,9 +84,9 @@ func (cmd *SetRelationCmd) template() proto.Message {
 			SubjectType:     "",
 			SubjectId:       "",
 			SubjectRelation: "",
-			CreatedAt:       timestamppb.Now(),
-			UpdatedAt:       timestamppb.Now(),
-			Etag:            "",
+			// CreatedAt:       timestamppb.Now(),
+			UpdatedAt: timestamppb.Now(),
+			Etag:      "",
 		},
 	}
 }
@@ -130,8 +130,8 @@ type ListRelationsCmd struct {
 	clients.RequestArgs
 	dsc.Config
 
-	req  reader.GetRelationsRequest
-	resp reader.GetRelationsResponse
+	req  reader.ListRelationsRequest
+	resp reader.ListRelationsResponse
 }
 
 func (cmd *ListRelationsCmd) Run(ctx context.Context) error {
@@ -143,7 +143,7 @@ func (cmd *ListRelationsCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	if err := cmd.Invoke(ctx, reader.Reader_GetRelations_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, reader.Reader_ListRelations_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
@@ -151,7 +151,7 @@ func (cmd *ListRelationsCmd) Run(ctx context.Context) error {
 }
 
 func (cmd *ListRelationsCmd) template() proto.Message {
-	return &reader.GetRelationsRequest{
+	return &reader.ListRelationsRequest{
 		ObjectType:      "",
 		ObjectId:        "",
 		Relation:        "",

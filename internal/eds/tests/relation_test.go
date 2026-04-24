@@ -3,9 +3,9 @@ package tests_test
 import (
 	"testing"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	dsw3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -83,7 +83,7 @@ var relationTestCasesV3 = []*TestCase{
 	},
 	{
 		Name: "list all members of parent group",
-		Req: &dsr3.GetRelationsRequest{
+		Req: &dsr3.ListRelationsRequest{
 			ObjectType: "group",
 			ObjectId:   "parent-group",
 			Relation:   "member",
@@ -92,7 +92,7 @@ var relationTestCasesV3 = []*TestCase{
 			require.NoError(t, tErr)
 
 			switch resp := msg.(type) {
-			case *dsr3.GetRelationsResponse:
+			case *dsr3.ListRelationsResponse:
 				require.NoError(t, tErr)
 				assert.NotNil(t, resp)
 				assert.Len(t, resp.GetResults(), 2)
@@ -103,7 +103,7 @@ var relationTestCasesV3 = []*TestCase{
 	},
 	{
 		Name: "list member relations of parent group excluding subject relation",
-		Req: &dsr3.GetRelationsRequest{
+		Req: &dsr3.ListRelationsRequest{
 			ObjectType:               "group",
 			ObjectId:                 "parent-group",
 			Relation:                 "member",
@@ -113,7 +113,7 @@ var relationTestCasesV3 = []*TestCase{
 			require.NoError(t, tErr)
 
 			switch resp := msg.(type) {
-			case *dsr3.GetRelationsResponse:
+			case *dsr3.ListRelationsResponse:
 				require.NoError(t, tErr)
 				assert.NotNil(t, resp)
 				assert.Len(t, resp.GetResults(), 1)

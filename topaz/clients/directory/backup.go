@@ -10,7 +10,7 @@ import (
 	"os"
 	"path"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/js"
 
@@ -18,7 +18,7 @@ import (
 )
 
 func (c *Client) Backup(ctx context.Context, file string) error {
-	stream, err := c.Exporter.Export(ctx, &dse3.ExportRequest{
+	stream, err := c.Reader.Export(ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
 		StartFrom: &timestamppb.Timestamp{},
 	})
@@ -107,7 +107,7 @@ func addToArchive(tw *tar.Writer, filename string) error {
 	return nil
 }
 
-func (c *Client) createBackupFiles(stream dse3.Exporter_ExportClient, dirPath string) error {
+func (c *Client) createBackupFiles(stream dse3.Reader_ExportClient, dirPath string) error {
 	objects, err := js.NewWriter(path.Join(dirPath, ObjectsFileName), ObjectsStr)
 	if err != nil {
 		return err

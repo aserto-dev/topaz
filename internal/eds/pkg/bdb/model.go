@@ -3,7 +3,7 @@ package bdb
 import (
 	"context"
 
-	"github.com/aserto-dev/azm/model"
+	"github.com/aserto-dev/topaz/azm/model"
 	bolt "go.etcd.io/bbolt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

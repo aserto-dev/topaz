@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/alecthomas/kong"
-	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	common "github.com/aserto-dev/topaz/api/directory/v4"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
+	"github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/fflag"
@@ -88,13 +88,13 @@ func (cmd *SetObjectCmd) Run(ctx context.Context) error {
 func (cmd *SetObjectCmd) template() proto.Message {
 	return &writer.SetObjectRequest{
 		Object: &common.Object{
-			Type:        "",
-			Id:          "",
-			DisplayName: "",
-			Properties:  &structpb.Struct{Fields: map[string]*structpb.Value{}},
-			CreatedAt:   &timestamppb.Timestamp{},
-			UpdatedAt:   &timestamppb.Timestamp{},
-			Etag:        "",
+			ObjectType: "",
+			ObjectId:   "",
+			// DisplayName: "",
+			Properties: &structpb.Struct{Fields: map[string]*structpb.Value{}},
+			// CreatedAt:   &timestamppb.Timestamp{},
+			UpdatedAt: &timestamppb.Timestamp{},
+			Etag:      "",
 		},
 	}
 }
@@ -140,8 +140,8 @@ type ListObjectsCmd struct {
 	clients.RequestArgs
 	dsc.Config
 
-	req  reader.GetObjectsRequest
-	resp reader.GetObjectsResponse
+	req  reader.ListObjectsRequest
+	resp reader.ListObjectsResponse
 }
 
 func (cmd *ListObjectsCmd) BeforeReset(ctx *kong.Context) error {
@@ -158,7 +158,7 @@ func (cmd *ListObjectsCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	if err := cmd.Invoke(ctx, reader.Reader_GetObjects_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, reader.Reader_ListObjects_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
@@ -166,7 +166,7 @@ func (cmd *ListObjectsCmd) Run(ctx context.Context) error {
 }
 
 func (cmd *ListObjectsCmd) template() proto.Message {
-	return &reader.GetObjectsRequest{
+	return &reader.ListObjectsRequest{
 		ObjectType: "",
 		Page:       &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""},
 	}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/aserto-dev/go-directory/pkg/pb"
+	"github.com/aserto-dev/topaz/api/directory/pkg/pb"
 	"google.golang.org/protobuf/proto"
 )
 

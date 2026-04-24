@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	// dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	// dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	// dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	dsw3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
 	dsa1 "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
@@ -38,15 +38,15 @@ type Config struct {
 }
 
 type Directory struct {
-	config    *Config
-	logger    *zerolog.Logger
-	store     *bdb.BoltDB
-	exporter3 dse3.ExporterServer
-	importer3 dsi3.ImporterServer
-	model3    dsm3.ModelServer
-	reader3   dsr3.ReaderServer
-	writer3   dsw3.WriterServer
-	access1   dsa1.AccessServer
+	config *Config
+	logger *zerolog.Logger
+	store  *bdb.BoltDB
+	// exporter3 dse3.ExporterServer
+	// importer3 dsi3.ImporterServer
+	// model3    dsm3.ModelServer
+	reader3 dsr3.ReaderServer
+	writer3 dsw3.WriterServer
+	access1 dsa1.AccessServer
 }
 
 var (
@@ -113,21 +113,21 @@ func newDirectory(_ context.Context, config *Config, logger *zerolog.Logger) (*D
 
 	reader3 := v3.NewReader(logger, store)
 	writer3 := v3.NewWriter(logger, store)
-	exporter3 := v3.NewExporter(logger, store)
-	importer3 := v3.NewImporter(logger, store)
+	// exporter3 := v3.NewExporter(logger, store)
+	// importer3 := v3.NewImporter(logger, store)
 
 	access1 := v3.NewAccess(logger, reader3)
 
 	dir := &Directory{
-		config:    config,
-		logger:    &newLogger,
-		store:     store,
-		model3:    v3.NewModel(logger, store),
-		reader3:   reader3,
-		writer3:   writer3,
-		exporter3: exporter3,
-		importer3: importer3,
-		access1:   access1,
+		config: config,
+		logger: &newLogger,
+		store:  store,
+		// model3:    v3.NewModel(logger, store),
+		reader3: reader3,
+		writer3: writer3,
+		// exporter3: exporter3,
+		// importer3: importer3,
+		access1: access1,
 	}
 
 	if err := store.LoadModel(); err != nil {
@@ -144,17 +144,17 @@ func (s *Directory) Close() {
 	}
 }
 
-func (s *Directory) Exporter3() dse3.ExporterServer {
-	return s.exporter3
-}
+// func (s *Directory) Exporter3() dse3.ExporterServer {
+// 	return s.exporter3
+// }
 
-func (s *Directory) Importer3() dsi3.ImporterServer {
-	return s.importer3
-}
+// func (s *Directory) Importer3() dsi3.ImporterServer {
+// 	return s.importer3
+// }
 
-func (s *Directory) Model3() dsm3.ModelServer {
-	return s.model3
-}
+// func (s *Directory) Model3() dsm3.ModelServer {
+// 	return s.model3
+// }
 
 func (s *Directory) Reader3() dsr3.ReaderServer {
 	return s.reader3

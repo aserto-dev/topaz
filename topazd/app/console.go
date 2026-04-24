@@ -70,9 +70,9 @@ func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {
 		writerURL = getGatewayAddress(serviceConfig)
 	}
 
-	if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
-		modelURL = getGatewayAddress(serviceConfig)
-	}
+	// if serviceConfig, ok := cfg.APIConfig.Services[modelService]; ok {
+	// 	modelURL = getGatewayAddress(serviceConfig)
+	// }
 
 	if serviceConfig, ok := cfg.APIConfig.Services[consoleService]; ok {
 		consoleURL = getGatewayAddress(serviceConfig)

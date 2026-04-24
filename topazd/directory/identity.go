@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
+	"github.com/aserto-dev/topaz/api/directory/pkg/derr"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/samber/lo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -106,8 +106,8 @@ func resolveIdentityToUser(ctx context.Context, client dsr3.ReaderClient, relReq
 		return nil, aerr.ErrDirectoryObjectNotFound
 	case len(relResp.GetObjects()) == 0:
 		return &dsc3.Object{
-			Type: User,
-			Id: lo.Ternary(
+			ObjectType: User,
+			ObjectId: lo.Ternary(
 				relResp.GetResult().GetObjectType() == User,
 				relResp.GetResult().GetObjectId(),
 				relResp.GetResult().GetSubjectId(),

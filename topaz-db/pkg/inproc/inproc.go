@@ -4,11 +4,8 @@ import (
 	"context"
 	"net"
 
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsr "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	dsw "github.com/aserto-dev/topaz/api/directory/v4/writer"
 
 	"github.com/aserto-dev/topaz/internal/eds"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
@@ -38,11 +35,8 @@ func NewServer(ctx context.Context, logger *zerolog.Logger, cfg *directory.Confi
 		grpc.StreamInterceptor(errMiddleware.Stream()),
 	)
 
-	dsm.RegisterModelServer(s, inProcDirectory.Model3())
 	dsr.RegisterReaderServer(s, inProcDirectory.Reader3())
 	dsw.RegisterWriterServer(s, inProcDirectory.Writer3())
-	dse.RegisterExporterServer(s, inProcDirectory.Exporter3())
-	dsi.RegisterImporterServer(s, inProcDirectory.Importer3())
 
 	go func() {
 		if err := s.Serve(listener); err != nil {

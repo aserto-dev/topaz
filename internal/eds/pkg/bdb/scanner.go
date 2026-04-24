@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 
-	"github.com/aserto-dev/azm/graph"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	"github.com/aserto-dev/topaz/azm/graph"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/x"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"

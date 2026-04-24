@@ -5,7 +5,7 @@ package validator
 
 // 	dsm3 "go-directory/aserto/directory/model/v3"
 
-// 	"github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
+// 	"github.com/aserto-dev/topaz/api/directory/pkg/gateway/model/v3"
 // )
 
 // func GetManifestRequest(msg *dsm3.GetManifestRequest) error {

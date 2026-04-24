@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/aserto-dev/azm/model"
-	v3 "github.com/aserto-dev/azm/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsm3 "github.com/aserto-dev/topaz/api/directory/v4"
+	"github.com/aserto-dev/topaz/azm/model"
+	v3 "github.com/aserto-dev/topaz/azm/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/rs/zerolog"
@@ -263,12 +263,12 @@ func MigrateModelV1(log *zerolog.Logger, roDB, rwDB *bolt.DB) error {
 func loadModelV1(ctx context.Context, roDB *bolt.DB) (*model.Model, error) {
 	var m *model.Model
 	if err := roDB.View(func(rtx *bolt.Tx) error {
-		manifestBody, err := bdb.Get[dsm3.Body](ctx, rtx, bdb.ManifestPathV1, bdb.BodyKey)
+		manifestBody, err := bdb.Get[dsm3.Manifest](ctx, rtx, bdb.ManifestPathV1, bdb.BodyKey)
 		if err != nil {
 			return err
 		}
 
-		m, err = v3.Load(bytes.NewReader(manifestBody.GetData()))
+		m, err = v3.Load(bytes.NewReader(manifestBody.GetContent()))
 
 		return err
 	}); err != nil {
@@ -305,12 +305,12 @@ func MigrateModelV2(log *zerolog.Logger, roDB, rwDB *bolt.DB) error {
 func loadModelV2(ctx context.Context, roDB *bolt.DB) (*model.Model, error) {
 	var m *model.Model
 	if err := roDB.View(func(rtx *bolt.Tx) error {
-		manifestBody, err := bdb.Get[dsm3.Body](ctx, rtx, bdb.ManifestPathV2, bdb.BodyKey)
+		manifestBody, err := bdb.Get[dsm3.Manifest](ctx, rtx, bdb.ManifestPathV2, bdb.BodyKey)
 		if err != nil {
 			return err
 		}
 
-		m, err = v3.Load(bytes.NewReader(manifestBody.GetData()))
+		m, err = v3.Load(bytes.NewReader(manifestBody.GetContent()))
 
 		return err
 	}); err != nil {

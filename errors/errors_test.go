@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 
-	cerr "github.com/aserto-dev/errors"
+	cerr "github.com/aserto-dev/topaz/errors"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"

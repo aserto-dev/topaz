@@ -6,8 +6,8 @@ package model
 // 	"net/http"
 
 // 	dms3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-// 	"github.com/aserto-dev/go-directory/pkg/manifest"
-// 	"github.com/aserto-dev/go-directory/pkg/pb"
+// 	"github.com/aserto-dev/topaz/api/directory/pkg/manifest"
+// 	"github.com/aserto-dev/topaz/api/directory/pkg/pb"
 // 	"github.com/go-http-utils/headers"
 // 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 // 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"

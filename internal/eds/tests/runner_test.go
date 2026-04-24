@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	dsi3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
+	dsw3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/server"
 	"github.com/aserto-dev/topaz/internal/fs"
@@ -68,7 +68,7 @@ func TestMain(m *testing.M) {
 	os.Exit(exitVal)
 }
 
-func importFile(stream dsi3.Importer_ImportClient, file string) error {
+func importFile(stream dsi3.Writer_ImportClient, file string) error {
 	r, err := os.Open(file)
 	if err != nil {
 		return errors.Wrapf(err, "failed to open file: [%s]", file)
@@ -104,7 +104,7 @@ func importFile(stream dsi3.Importer_ImportClient, file string) error {
 	return nil
 }
 
-func loadObjects(stream dsi3.Importer_ImportClient, objects *Reader) error {
+func loadObjects(stream dsi3.Writer_ImportClient, objects *Reader) error {
 	defer objects.Close()
 
 	var m dsc3.Object
@@ -136,7 +136,7 @@ func loadObjects(stream dsi3.Importer_ImportClient, objects *Reader) error {
 	return nil
 }
 
-func loadRelations(stream dsi3.Importer_ImportClient, relations *Reader) error {
+func loadRelations(stream dsi3.Writer_ImportClient, relations *Reader) error {
 	defer relations.Close()
 
 	var m dsc3.Relation
@@ -225,8 +225,8 @@ func runTestCase(ctx context.Context, t *testing.T, tc *TestCase) func(proto.Mes
 		resp, err := client.V3.Writer.DeleteRelation(ctx, req)
 		return tc.Checks(t, resp, err)
 
-	case *dsr3.GetRelationsRequest:
-		resp, err := client.V3.Reader.GetRelations(ctx, req)
+	case *dsr3.ListRelationsRequest:
+		resp, err := client.V3.Reader.ListRelations(ctx, req)
 		return tc.Checks(t, resp, err)
 	}
 

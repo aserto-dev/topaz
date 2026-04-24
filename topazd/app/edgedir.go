@@ -4,13 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
-	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	dsw3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
+	dsOpenAPI "github.com/aserto-dev/topaz/api/openapi"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 
@@ -22,12 +18,9 @@ import (
 )
 
 const (
-	modelService    = "model"
-	readerService   = "reader"
-	writerService   = "writer"
-	exporterService = "exporter"
-	importerService = "importer"
-	accessService   = "access"
+	readerService = "reader"
+	writerService = "writer"
+	accessService = "access"
 )
 
 type EdgeDir struct {
@@ -49,14 +42,14 @@ func (e *EdgeDir) Close() {
 }
 
 func (e *EdgeDir) AvailableServices() []string {
-	return []string{modelService, readerService, writerService, exporterService, importerService, accessService}
+	return []string{readerService, writerService, accessService}
 }
 
 func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
-		if lo.Contains(services, modelService) {
-			dsm3.RegisterModelServer(server, e.dir.Model3())
-		}
+		// if lo.Contains(services, modelService) {
+		// 	dsm3.RegisterModelServer(server, e.dir.Model3())
+		// }
 
 		if lo.Contains(services, readerService) {
 			dsr3.RegisterReaderServer(server, e.dir.Reader3())
@@ -67,28 +60,28 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 			dsw3.RegisterWriterServer(server, e.dir.Writer3())
 		}
 
-		if lo.Contains(services, importerService) {
-			dsi3.RegisterImporterServer(server, e.dir.Importer3())
-		}
+		// if lo.Contains(services, importerService) {
+		// 	dsi3.RegisterImporterServer(server, e.dir.Importer3())
+		// }
 
-		if lo.Contains(services, exporterService) {
-			dse3.RegisterExporterServer(server, e.dir.Exporter3())
-		}
+		// if lo.Contains(services, exporterService) {
+		// 	dse3.RegisterExporterServer(server, e.dir.Exporter3())
+		// }
 	}
 }
 
 func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-		if lo.Contains(services, modelService) {
-			err := dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
-				return err
-			}
+		// if lo.Contains(services, modelService) {
+		// 	err := dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+		// 	if err != nil {
+		// 		return err
+		// 	}
 
-			if err := dsm3stream.RegisterModelStreamHandlersFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
-				return err
-			}
-		}
+		// 	// if err := dsm3stream.RegisterModelStreamHandlersFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
+		// 	// 	return err
+		// 	// }
+		// }
 
 		if lo.Contains(services, readerService) {
 			{
@@ -123,7 +116,7 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 }
 
 const (
-	directoryOpenAPISpec string = "/directory/openapi.json"
+	directoryOpenAPISpec string = "api/directory/openapi/directory.openapi.json"
 )
 
 func dsOpenAPIHandler(port string, services ...string) func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {

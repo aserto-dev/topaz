@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	v3 "github.com/aserto-dev/azm/v3"
+	v3 "github.com/aserto-dev/topaz/azm/v3"
 	"github.com/aserto-dev/topaz/topaz/table"
 	"github.com/aserto-dev/topaz/topaz/x"
 	"github.com/rs/zerolog"

@@ -10,8 +10,8 @@ import (
 	"path"
 	"strings"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	dsi3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/aserto-dev/topaz/topaz/js"
 
 	"golang.org/x/sync/errgroup"
@@ -34,7 +34,7 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 
 	g, iCtx := errgroup.WithContext(context.Background())
 
-	stream, err := c.Importer.Import(iCtx)
+	stream, err := c.Writer.Import(iCtx)
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 	return g.Wait()
 }
 
-func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
+func (c *Client) receiver(stream dsi3.Writer_ImportClient) func() error {
 	return func() error {
 		objCounter := &dsi3.ImportCounter{Type: objectsCounter}
 		relCounter := &dsi3.ImportCounter{Type: relationsCounter}
@@ -90,7 +90,7 @@ func (c *Client) receiver(stream dsi3.Importer_ImportClient) func() error {
 	}
 }
 
-func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reader) func() error {
+func (c *Client) restoreHandler(stream dsi3.Writer_ImportClient, tr *tar.Reader) func() error {
 	return func() error {
 		for {
 			header, err := tr.Next()
@@ -133,7 +133,7 @@ func (c *Client) restoreHandler(stream dsi3.Importer_ImportClient, tr *tar.Reade
 	}
 }
 
-func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Reader) error {
+func (c *Client) loadObjects(stream dsi3.Writer_ImportClient, objects *js.Reader) error {
 	defer objects.Close()
 
 	var m dsc3.Object
@@ -165,7 +165,7 @@ func (c *Client) loadObjects(stream dsi3.Importer_ImportClient, objects *js.Read
 	return nil
 }
 
-func (c *Client) loadRelations(stream dsi3.Importer_ImportClient, relations *js.Reader) error {
+func (c *Client) loadRelations(stream dsi3.Writer_ImportClient, relations *js.Reader) error {
 	defer relations.Close()
 
 	var m dsc3.Relation

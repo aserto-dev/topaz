@@ -7,14 +7,14 @@ import (
 	"io"
 	"os"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/topaz/js"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (c *Client) Export(ctx context.Context, objectsFile, relationsFile string) error {
-	stream, err := c.Exporter.Export(ctx, &dse3.ExportRequest{
+	stream, err := c.Reader.Export(ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
 		StartFrom: &timestamppb.Timestamp{},
 	})

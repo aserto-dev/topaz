@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+model:
+  version: 3
+
+types:
+  identity:
+
+  user:
+    relations:
+      identifier: identity
+      manager: user
+
+  team:
+    relations:
+      mate: user
+
+  ### display_name: Group ###
+  group:
+    relations:
+      ### display_name: group#member ###
+      member: user | group#member | team#mate
+
+  ### display_name: Folder ###
+  folder:
+    relations:
+      owner: user
+      parent: folder
+      viewer: user | user:* | group#member
+    permissions:
+      in_parent_chain: parent | parent->in_parent_chain
+
+      is_owner: owner | parent->is_owner
+      can_create_file: is_owner
+      can_read: viewer | owner | parent->can_read
+      can_share: can_create_file
+
+  ### display_name: Document ###
+  doc:
+    relations:
+      owner: user
+      parent: folder
+      viewer: user | user:* | group#member
+      auditor: user#manager
+    permissions:
+      in_parent_chain: parent | parent->in_parent_chain
+
+      can_view: viewer
+      can_change_owner: owner | parent->is_owner
+      can_write: owner | parent->is_owner
+      can_read: viewer | can_write | parent->can_read
+      can_share: can_write & parent->can_share
+      can_invite: parent->can_read - viewer
+
+      # viewer can be user or group but owner can only be user
+      union_type_subset: viewer | owner
+      union_type_subset_arrow: viewer | parent->owner
+      negation_type_subset: viewer - owner
+      negation_type_subset_arrow: viewer - parent->owner
+      intersection_type_subset: viewer & owner
+      intersection_type_subset_arrow: viewer & parent->owner
+
+  cycle:
+    relations:
+      parent: cycle
+      owner: user
+    permissions:
+      can_delete: owner & parent->can_delete
+
+  # A group#member can be a resource#editor in two ways:
+  # 1. Excplicit assignement (resource#editor@group#member)
+  # 2. Indirectly via editors#member@group#member
+  resource:
+    relations:
+      editor: user | group#member | editors#member
+  editors:
+    relations:
+      member: user | group#member

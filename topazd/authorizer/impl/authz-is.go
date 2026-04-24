@@ -9,7 +9,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	"github.com/aserto-dev/go-directory/pkg/pb"
+	"github.com/aserto-dev/topaz/api/directory/pkg/pb"
 	decisionlog_plugin "github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog"
 
 	"github.com/google/uuid"

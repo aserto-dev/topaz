@@ -3,7 +3,7 @@ package ds
 import (
 	"net/http"
 
-	cerr "github.com/aserto-dev/errors"
+	cerr "github.com/aserto-dev/topaz/errors"
 
 	"google.golang.org/grpc/codes"
 )

@@ -3,9 +3,9 @@ package datasync
 import (
 	"context"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
-	"github.com/aserto-dev/go-directory/pkg/validator"
+	"github.com/aserto-dev/topaz/api/directory/pkg/derr"
+	"github.com/aserto-dev/topaz/api/directory/pkg/validator"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
 

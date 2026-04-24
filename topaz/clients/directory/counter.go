@@ -6,7 +6,7 @@ import (
 	"os"
 	"sync/atomic"
 
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsi3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/mattn/go-isatty"
 	"google.golang.org/grpc/codes"
 )

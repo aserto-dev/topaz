@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/prop"
+	"github.com/aserto-dev/topaz/api/directory/pkg/prop"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
 	tc "github.com/aserto-dev/topaz/topazd/tests/common"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

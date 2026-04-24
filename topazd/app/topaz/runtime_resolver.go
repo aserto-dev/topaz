@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	runtime "github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/az"
@@ -49,8 +49,6 @@ func NewRuntimeResolver(
 		// authorization check functions
 		runtime.WithBuiltin1(ds.RegisterCheck(logger, builtins.DSCheck, dsClient)),
 		runtime.WithBuiltin1(ds.RegisterChecks(logger, builtins.DSChecks, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, builtins.DSCheckRelation, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, builtins.DSCheckPermission, dsClient)),
 
 		// authZen built-ins
 		runtime.WithBuiltin1(az.RegisterEvaluation(logger, builtins.AZEvaluation, acClient)),

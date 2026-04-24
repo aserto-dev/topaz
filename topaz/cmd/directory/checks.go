@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/jsonx"

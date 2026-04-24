@@ -4,9 +4,9 @@ import (
 	"context"
 	"sync/atomic"
 
-	"github.com/aserto-dev/azm/model"
-	"github.com/aserto-dev/azm/stats"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	"github.com/aserto-dev/topaz/azm/model"
+	"github.com/aserto-dev/topaz/azm/stats"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 
 	bolt "go.etcd.io/bbolt"
@@ -64,12 +64,12 @@ func (s *Stats) CountRelations(ctx context.Context, tx *bolt.Tx) error {
 }
 
 func (s *Stats) incObject(obj *dsc3.Object) {
-	ot, ok := s.ObjectTypes[model.ObjectName(obj.GetType())]
+	ot, ok := s.ObjectTypes[model.ObjectName(obj.GetObjectType())]
 	if !ok {
 		ot = &stats.ObjectType{
 			Relations: stats.Relations{},
 		}
-		s.ObjectTypes[model.ObjectName(obj.GetType())] = ot
+		s.ObjectTypes[model.ObjectName(obj.GetObjectType())] = ot
 	}
 
 	atomic.AddInt32(&ot.ObjCount, 1)

@@ -106,7 +106,7 @@ const file_directory_v4_model_proto_rawDesc = "" +
 	"\x05model\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x05model\x12>\n" +
 	"\n" +
 	"updated_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03R\tupdatedAt\x12\x17\n" +
-	"\x04etag\x18\x17 \x01(\tB\x03\xe0A\x01R\x04etagB8Z6github.com/aserto-dev/topaz/api/directory/v4;directoryb\x06proto3"
+	"\x04etag\x18\x17 \x01(\tB\x03\xe0A\x03R\x04etagB8Z6github.com/aserto-dev/topaz/api/directory/v4;directoryb\x06proto3"
 
 var (
 	file_directory_v4_model_proto_rawDescOnce sync.Once

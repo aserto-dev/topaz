@@ -5,11 +5,11 @@ import (
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	// dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	// dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	// dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	dsw3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	acc1 "github.com/authzen/access.go/api/access/v1"
 
@@ -30,24 +30,24 @@ type Config struct {
 var _ clients.Config = &Config{}
 
 type Client struct {
-	conn     *grpc.ClientConn
-	Model    dsm3.ModelClient
-	Reader   dsr3.ReaderClient
-	Writer   dsw3.WriterClient
-	Importer dsi3.ImporterClient
-	Exporter dse3.ExporterClient
-	Access   acc1.AccessClient
+	conn *grpc.ClientConn
+	// Model    dsm3.ModelClient
+	Reader dsr3.ReaderClient
+	Writer dsw3.WriterClient
+	// Importer dsi3.ImporterClient
+	// Exporter dse3.ExporterClient
+	Access acc1.AccessClient
 }
 
 func New(conn *grpc.ClientConn) *Client {
 	return &Client{
-		conn:     conn,
-		Model:    dsm3.NewModelClient(conn),
-		Reader:   dsr3.NewReaderClient(conn),
-		Writer:   dsw3.NewWriterClient(conn),
-		Importer: dsi3.NewImporterClient(conn),
-		Exporter: dse3.NewExporterClient(conn),
-		Access:   acc1.NewAccessClient(conn),
+		conn: conn,
+		// Model:    dsm3.NewModelClient(conn),
+		Reader: dsr3.NewReaderClient(conn),
+		Writer: dsw3.NewWriterClient(conn),
+		// Importer: dsi3.NewImporterClient(conn),
+		// Exporter: dse3.NewExporterClient(conn),
+		Access: acc1.NewAccessClient(conn),
 	}
 }
 

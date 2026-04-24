@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/aserto-dev/azm/cache"
-	"github.com/aserto-dev/azm/model"
-	cerr "github.com/aserto-dev/errors"
+	"github.com/aserto-dev/topaz/azm/cache"
+	"github.com/aserto-dev/topaz/azm/model"
+	cerr "github.com/aserto-dev/topaz/errors"
 	"github.com/aserto-dev/topaz/internal/fs"
 
 	"github.com/pkg/errors"

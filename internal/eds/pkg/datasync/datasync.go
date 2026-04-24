@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 
 	cuckoo "github.com/panmari/cuckoofilter"

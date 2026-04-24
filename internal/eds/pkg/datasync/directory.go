@@ -8,8 +8,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	dse3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	bolt "go.etcd.io/bbolt"
 
@@ -106,7 +106,7 @@ func (s *Sync) producer(ctx context.Context, conn *grpc.ClientConn) error {
 
 	s.logger.Debug().Str("start_from", ts.String()).Msg(syncProducer)
 
-	stream, err := dse3.NewExporterClient(conn).Export(ctx, &dse3.ExportRequest{
+	stream, err := dse3.NewReaderClient(conn).Export(ctx, &dse3.ExportRequest{
 		Options:   uint32(dse3.Option_OPTION_DATA),
 		StartFrom: ts,
 	})
@@ -307,7 +307,7 @@ func (s *Sync) diff(ctx context.Context) error {
 }
 
 func getObjectKey(obj *dsc3.Object) []byte {
-	return fmt.Appendf([]byte{}, "%s:%s", obj.GetType(), obj.GetId())
+	return fmt.Appendf([]byte{}, "%s:%s", obj.GetObjectType(), obj.GetObjectId())
 }
 
 func getRelationKey(rel *dsc3.Relation) []byte {

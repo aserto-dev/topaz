@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	cerr "github.com/aserto-dev/errors"
+	cerr "github.com/aserto-dev/topaz/errors"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/common"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/mig004"

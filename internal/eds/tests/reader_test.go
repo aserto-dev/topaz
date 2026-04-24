@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/aserto-dev/go-directory/pkg/pb"
+	"github.com/aserto-dev/topaz/api/directory/pkg/pb"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 )

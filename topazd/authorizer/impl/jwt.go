@@ -11,9 +11,9 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/pb"
+	"github.com/aserto-dev/topaz/api/directory/pkg/pb"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
 	"github.com/aserto-dev/topaz/topazd/directory"
 
 	"github.com/lestrrat-go/jwx/v2/jwk"

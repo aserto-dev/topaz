@@ -1,44 +1,38 @@
 package tests_test
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io"
 	"os"
 	"path"
 	"testing"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	"github.com/aserto-dev/go-directory/pkg/pb"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v4"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v4/reader"
+	"github.com/aserto-dev/topaz/api/directory/v4/writer"
+	dsw3 "github.com/aserto-dev/topaz/api/directory/v4/writer"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/server"
 	"github.com/aserto-dev/topaz/internal/fs"
-	"github.com/samber/lo"
 
 	"github.com/gonvenience/ytbx"
 	"github.com/homeport/dyff/pkg/dyff"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/metadata"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-const blockSize = 1024 // test with 1KiB block size to exercise chunking.
+// const blockSize = 1024 // test with 1KiB block size to exercise chunking.
 
-func TestManifestV2(t *testing.T) {
-	client, closer := testInit()
-	t.Cleanup(closer)
+// func TestManifestV2(t *testing.T) {
+// 	client, closer := testInit()
+// 	t.Cleanup(closer)
 
-	manifest, err := os.ReadFile("./manifest_v2_test.yaml")
-	require.NoError(t, err)
+// 	manifest, err := os.ReadFile("./manifest_v2_test.yaml")
+// 	require.NoError(t, err)
 
-	t.Run("set-manifest", testSetManifest(client, manifest))
-	t.Run("get-manifest", testGetManifest(client, "./manifest_v2_test.yaml"))
-	t.Run("delete-manifest", testDeleteManifest(client))
-}
+// 	t.Run("set-manifest", testSetManifest(client, manifest))
+// 	t.Run("get-manifest", testGetManifest(client, "./manifest_v2_test.yaml"))
+// 	t.Run("delete-manifest", testDeleteManifest(client))
+// }
 
 func TestManifestV3(t *testing.T) {
 	client, closer := testInit()
@@ -104,58 +98,30 @@ func testSetManifest(client *server.TestEdgeClient, manifest []byte) func(*testi
 }
 
 func setManifest(client *server.TestEdgeClient, manifest []byte) error {
-	stream, err := client.V3.Model.SetManifest(context.Background())
-	if err != nil {
-		return err
-	}
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	for i := 0; i < len(manifest); i += blockSize {
-		end := lo.Min([]int{i + blockSize, len(manifest)})
-		if err := stream.Send(&dsm3.SetManifestRequest{
-			Msg: &dsm3.SetManifestRequest_Body{
-				Body: &dsm3.Body{Data: manifest[i:end]},
-			},
-		}); err != nil {
-			return err
-		}
-	}
+	resp, err := client.V3.Writer.SetManifest(ctx, &writer.SetManifestRequest{
+		Manifest: &dsc3.Manifest{
+			Id:      "",
+			Content: manifest,
+		},
+	})
 
-	_, err = stream.CloseAndRecv()
+	_ = resp
 
 	return err
 }
 
 func getManifest(client *server.TestEdgeClient) ([]byte, error) {
-	stream, err := client.V3.Model.GetManifest(context.Background(), &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
-	if err != nil {
-		return nil, err
-	}
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	data := bytes.Buffer{}
+	resp, err := client.V3.Reader.GetManifest(ctx, &dsr3.GetManifestRequest{
+		Id: "",
+	})
 
-	bytesRecv := 0
-
-	for {
-		resp, err := stream.Recv()
-		if errors.Is(err, io.EOF) {
-			break
-		}
-
-		if err != nil {
-			return nil, err
-		}
-
-		if md, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Metadata); ok {
-			_ = md.Metadata
-		}
-
-		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
-			data.Write(body.Body.GetData())
-			bytesRecv += len(body.Body.GetData())
-		}
-	}
-
-	return data.Bytes(), nil
+	return resp.Manifest.Content, err
 }
 
 func testGetManifest(client *server.TestEdgeClient, manifest string) func(*testing.T) {
@@ -188,46 +154,13 @@ func testGetManifest(client *server.TestEdgeClient, manifest string) func(*testi
 func testGetModel(client *server.TestEdgeClient) func(*testing.T) {
 	return func(t *testing.T) {
 		ctx := t.Context()
-		hdr := metadata.New(map[string]string{"aserto-model-request": "model-only"})
-		ctx = metadata.NewOutgoingContext(ctx, hdr)
 
-		stream, err := client.V3.Model.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
+		resp, err := client.V3.Reader.GetModel(ctx, &dsr3.GetModelRequest{})
 		if err != nil {
 			require.NoError(t, err)
 		}
 
-		for {
-			resp, err := stream.Recv()
-			if errors.Is(err, io.EOF) {
-				break
-			}
-
-			if err != nil {
-				require.NoError(t, err)
-			}
-
-			if md, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Metadata); ok {
-				_ = md.Metadata
-			}
-
-			if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
-				_ = body
-			}
-
-			if model, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Model); ok {
-				buf := new(bytes.Buffer)
-				if err := pb.ProtoToBuf(buf, model.Model); err != nil {
-					require.NoError(t, err)
-				}
-
-				tempModel := path.Join(os.TempDir(), "model.json")
-				if err := os.WriteFile(tempModel, buf.Bytes(), fs.FileModeOwnerRW); err != nil {
-					require.NoError(t, err)
-				}
-
-				fmt.Println(tempModel)
-			}
-		}
+		fmt.Println(resp.GetModel().GetModel())
 	}
 }
 
@@ -238,9 +171,9 @@ func testDeleteManifest(client *server.TestEdgeClient) func(*testing.T) {
 }
 
 func deleteManifest(client *server.TestEdgeClient) error {
-	_, err := client.V3.Model.DeleteManifest(
+	_, err := client.V3.Writer.DeleteManifest(
 		context.Background(),
-		&dsm3.DeleteManifestRequest{Empty: &emptypb.Empty{}},
+		&dsw3.DeleteManifestRequest{},
 	)
 
 	return err

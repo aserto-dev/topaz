@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+types:
+  # valid
+  user: {}
+  User: {}
+  USER: {}
+  UsEr: {}
+
+  # invalid
+  _user: {}
+  12user: {}
+  u!s@e#r: {}
+
+  resource:
+    relations:
+      # valid
+      reader: user
+      Reader: User
+      READER: USER
+      ReAdEr: Us@Er
+
+      # invalid
+      _reader: user
+      reader.: user
+      1reader: user
+      r)e(d*e&r: user
+
+    permissions:
+      # valid
+      can_read: reader
+      CanRead: Reader
+      CAN_READ: READER
+      canRead: ReAdEr
+
+      # invalid
+      _can_read_: reader
+      Can+Reader: Reader
+      "@!#": READER

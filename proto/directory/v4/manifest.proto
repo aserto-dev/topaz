@@ -15,5 +15,5 @@ message Manifest {
   // last updated timestamp (UTC)
   google.protobuf.Timestamp updated_at = 21 [(google.api.field_behavior) = OUTPUT_ONLY];
   // object instance etag (optional)
-  string etag = 23 [(google.api.field_behavior) = OPTIONAL];
+  string etag = 23 [(google.api.field_behavior) = OUTPUT_ONLY];
 }
