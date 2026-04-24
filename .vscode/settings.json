@@ -1,8 +1,4 @@
 {
-  "go.buildFlags": [
-    "-gcflags all=-N -l",
-    "-ldflags=-s -w"
-  ],
   "go.testFlags": [
     "-v",
     "-gcflags=all=-N -l",

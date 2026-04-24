@@ -15,6 +15,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
+//nolint:funlen
 func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.DecisionTreeRequest) (*authorizer.DecisionTreeResponse, error) {
 	log := s.logger.With().Str("api", "decision_tree").Logger()
 
@@ -29,20 +30,25 @@ func (s *AuthorizerServer) DecisionTree(ctx context.Context, req *authorizer.Dec
 
 	log.Debug().Interface("input", input).Msg("decision_tree")
 
-	policyRuntime, err := s.getRuntime(ctx, req.GetPolicyInstance()) //nolint:staticcheck
+	rt, err := s.getRuntime(ctx)
 	if err != nil {
 		return &authorizer.DecisionTreeResponse{}, err
 	}
 
-	queryStmt, err := s.decisionTreeBuildQuery(ctx, policyRuntime, req)
+	queryStmt, err := s.decisionTreeBuildQuery(ctx, rt, req)
 	if err != nil {
 		return &authorizer.DecisionTreeResponse{}, err
+	}
+
+	pq, err := rt.ValidateQuery(queryStmt.String())
+	if err != nil {
+		return &authorizer.DecisionTreeResponse{}, aerr.ErrBadQuery.Err(err)
 	}
 
 	query, err := rego.New(
-		rego.Compiler(policyRuntime.GetPluginsManager().GetCompiler()),
-		rego.Store(policyRuntime.GetPluginsManager().Store),
-		rego.Query(queryStmt.String()),
+		rego.Compiler(rt.GetPluginsManager().GetCompiler()),
+		rego.Store(rt.GetPluginsManager().Store),
+		rego.ParsedQuery(pq),
 	).PrepareForEval(ctx)
 	if err != nil {
 		return &authorizer.DecisionTreeResponse{}, aerr.ErrBadQuery.Err(err).Msg(queryStmt.String())
