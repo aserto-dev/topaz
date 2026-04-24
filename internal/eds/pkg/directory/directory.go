@@ -27,7 +27,7 @@ import (
 // required minimum schema version, when the current version is lower,
 // migration will be invoked to update to the minimum schema version required.
 const (
-	schemaVersion string = "0.0.10"
+	schemaVersion string = "0.0.9"
 )
 
 type Config struct {
