@@ -1,0 +1,3 @@
+module github.com/aserto-dev/topaz/api/openapi/directory
+
+go 1.26.2

@@ -34,20 +34,38 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 	log.Debug().Interface("input", input).Msg("is")
 
-	policyRuntime, err := s.getRuntime(ctx, req.GetPolicyInstance()) //nolint:staticcheck
+	rt, err := s.getRuntime(ctx)
 	if err != nil {
 		return &authorizer.IsResponse{}, err
 	}
 
 	queryStmt := strings.Builder{}
+
 	for i, decision := range req.GetPolicyContext().GetDecisions() {
-		fmt.Fprintf(&queryStmt, "x%d = data.%s.%s\n", i, req.GetPolicyContext().GetPath(), decision)
+		rule := fmt.Sprintf("data.%s.%s\n", req.GetPolicyContext().GetPath(), decision)
+
+		if ok, err := rt.ValidateRule(rule); !ok {
+			return &authorizer.IsResponse{}, aerr.ErrBadQuery.Err(err).Msgf("invalid rule: %q", rule)
+		}
+
+		query := fmt.Sprintf("x%d = %s\n", i, rule)
+
+		if _, err := rt.ValidateQuery(query); err != nil {
+			return &authorizer.IsResponse{}, aerr.ErrBadQuery.Err(err).Msgf("invalid query: %q", query)
+		}
+
+		queryStmt.WriteString(query)
+	}
+
+	pq, err := rt.ValidateQuery(queryStmt.String())
+	if err != nil {
+		return &authorizer.IsResponse{}, aerr.ErrBadQuery.Err(err).Msgf("invalid query batch: %q", queryStmt.String())
 	}
 
 	query, err := rego.New(
-		rego.Compiler(policyRuntime.GetPluginsManager().GetCompiler()),
-		rego.Store(policyRuntime.GetPluginsManager().Store),
-		rego.Query(queryStmt.String()),
+		rego.Compiler(rt.GetPluginsManager().GetCompiler()),
+		rego.Store(rt.GetPluginsManager().Store),
+		rego.ParsedQuery(pq),
 	).PrepareForEval(ctx)
 	if err != nil {
 		return &authorizer.IsResponse{}, aerr.ErrBadQuery.Err(err).Msg(queryStmt.String())
@@ -59,11 +77,11 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 	queryResults, err := query.Eval(ctx, rego.EvalInput(input))
 	if err != nil {
-		return resp, aerr.ErrBadQuery.Err(err).Msgf("query evaluation failed: %s", queryStmt.String())
+		return resp, aerr.ErrBadQuery.Err(err).Msgf("query evaluation failed: %q", queryStmt.String())
 	}
 
 	if len(queryResults) == 0 {
-		return resp, aerr.ErrBadQuery.Err(err).Msgf("undefined results: %s", queryStmt.String())
+		return resp, aerr.ErrBadQuery.Err(err).Msgf("undefined results: %q", queryStmt.String())
 	}
 
 	for i, d := range req.GetPolicyContext().GetDecisions() {
@@ -85,7 +103,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		resp.Decisions = append(resp.GetDecisions(), &decision)
 	}
 
-	dlPlugin := decisionlog_plugin.Lookup(policyRuntime.GetPluginsManager())
+	dlPlugin := decisionlog_plugin.Lookup(rt.GetPluginsManager())
 	if dlPlugin == nil {
 		return resp, err
 	}
@@ -95,8 +113,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
 		Path:      req.GetPolicyContext().GetPath(),
 		Policy: &api.DecisionPolicy{
-			Context:        req.GetPolicyContext(),
-			PolicyInstance: req.GetPolicyInstance(), //nolint:staticcheck
+			Context: req.GetPolicyContext(),
 		},
 		User: &api.DecisionUser{
 			Context: req.GetIdentityContext(),

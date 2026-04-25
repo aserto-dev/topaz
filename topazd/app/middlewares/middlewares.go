@@ -17,20 +17,14 @@ func GetMiddlewaresForService(ctx context.Context, cfg *config.Config, logger *z
 	var middlewareList grpcutil.Middlewares
 
 	if len(cfg.Auth.APIKeys) > 0 {
-		authmiddleware, err := authentication.NewAPIKeyAuthMiddleware(ctx, &cfg.Auth, logger)
+		authMiddleware, err := authentication.NewAPIKeyAuthMiddleware(ctx, &cfg.Auth, logger)
 		if err != nil {
 			return nil, err
 		}
 
-		middlewareList = append(middlewareList, authmiddleware)
+		middlewareList = append(middlewareList, authMiddleware)
 	}
 
-	// only attach policy instance information if discovery resource is configured.
-	if cfg.OPA.Config.Discovery != nil && cfg.OPA.Config.Discovery.Resource != nil {
-		middlewareList = append(middlewareList, NewInstanceMiddleware(cfg, logger))
-	}
-
-	// get tenant id from opa instance id.
 	middlewareList = append(middlewareList,
 		request.NewRequestIDMiddleware(),
 		tracing.NewTracingMiddleware(logger),
