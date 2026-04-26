@@ -313,15 +313,9 @@ func (e *Topaz) validateConfig() error {
 	}
 
 	if _, ok := e.Configuration.APIConfig.Services["console"]; ok {
-		if _, ok := e.Configuration.APIConfig.Services["reader"]; ok {
-			if _, ok := e.Configuration.APIConfig.Services["model"]; !ok {
-				return errors.New("console needs the model service to be configured")
-			}
+		if _, ok := e.Configuration.APIConfig.Services["reader"]; !ok {
+			return errors.New("console needs the reader service to be configured")
 		}
-	}
-
-	if _, ok := e.Configuration.APIConfig.Services["model"]; !ok {
-		e.Logger.Info().Msg("model service not configured, you will not be able to read or update the directory manifest")
 	}
 
 	for key := range e.Configuration.APIConfig.Services {

@@ -16,6 +16,6 @@ printf '\n'
 
 mkdir -p ./api/openapi
 
-.ext/bin/merge-json -output ./api/openapi/directory.openapi.json $(find ./tmp -type f -name "*.json")
+.ext/bin/merge-json -output ./api/openapi/directory/openapi.json $(find ./tmp -type f -name "*.json")
 
 rm -rf ./tmp

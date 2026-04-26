@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-//go:embed directory.openapi.json
+//go:embed openapi.json
 var directory embed.FS
 
 var (
@@ -21,7 +21,7 @@ var (
 
 func loadOpenAPI() ([]byte, error) {
 	loadOnce.Do(func() {
-		buf, errLoad = fs.ReadFile(directory, "directory.openapi.json")
+		buf, errLoad = fs.ReadFile(directory, "openapi.json")
 		sum := sha256.Sum256(buf)
 		etag = `"` + hex.EncodeToString(sum[:]) + `"`
 	})
@@ -36,14 +36,14 @@ func OpenAPIHandler() http.HandlerFunc {
 			return
 		}
 
-		if match := r.Header.Get("If-None-Match"); match == etag {
-			w.WriteHeader(http.StatusNotModified)
-			return
-		}
-
 		data, err := loadOpenAPI()
 		if err != nil {
 			http.Error(w, "failed to load OpenAPI spec", http.StatusInternalServerError)
+			return
+		}
+
+		if match := r.Header.Get("If-None-Match"); match == etag {
+			w.WriteHeader(http.StatusNotModified)
 			return
 		}
 

@@ -95,7 +95,7 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 }
 
 const (
-	directoryOpenAPISpec string = "api/directory/openapi/directory.openapi.json"
+	directoryOpenAPISpec string = "/directory/openapi.json"
 )
 
 func dsOpenAPIHandler() func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
