@@ -19,6 +19,7 @@ linters:
     - exhaustive
     - forbidigo
     - gochecknoglobals # no configuration options
+    - gomodguard # deprecated, replaced by gomodguard_v2
     - nilnil
     - nlreturn # redundant with wsl
     - noinlineerr
@@ -29,7 +30,7 @@ linters:
     - varnamelen
     - wrapcheck
     - wsl
-
+  
   settings:
     cyclop:
       max-complexity: 12
@@ -51,10 +52,6 @@ linters:
       disable-all: true
       enabled-checks:
         - commentedOutCode
-
-    gomoddirectives:
-      replace-allow-list:
-        - github.com/slok/go-http-metrics
 
     gosec:
       excludes:
@@ -125,6 +122,10 @@ linters:
       - path: internal/eds/tests/
         linters:
           - dupl
+          - goconst
+      - path: topazd/tests
+        linters:
+          - goconst
 
 formatters:
   enable:

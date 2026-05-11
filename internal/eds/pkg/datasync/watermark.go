@@ -110,8 +110,8 @@ func (s *Sync) setWatermark(ts *timestamppb.Timestamp) error {
 		return err
 	}
 
-	wm.ObjectCount = uint(objStats.KeyN)   //nolint:gosec // G115: integer overflow conversion int -> uint
-	wm.RelationCount = uint(relStats.KeyN) //nolint:gosec // G115: integer overflow conversion int -> uint
+	wm.ObjectCount = uint(objStats.KeyN)
+	wm.RelationCount = uint(relStats.KeyN)
 
 	wm.TotalCount = wm.ObjectCount + wm.RelationCount
 

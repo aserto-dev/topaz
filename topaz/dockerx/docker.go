@@ -24,6 +24,7 @@ import (
 
 const (
 	running = "running"
+	status  = "status"
 )
 
 func PolicyRoot() string {
@@ -126,7 +127,7 @@ func (dc *DockerClient) Stop(name string) error {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: running,
+				Key: status, Value: running,
 			},
 			filters.KeyValuePair{
 				Key: "name", Value: name,
@@ -151,7 +152,7 @@ func (dc *DockerClient) IsRunning(name string) (bool, error) {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: running,
+				Key: status, Value: running,
 			},
 			filters.KeyValuePair{
 				Key: "name", Value: name,
@@ -173,7 +174,7 @@ func (dc *DockerClient) GetRunningTopazContainers() ([]container.Summary, error)
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
-				Key: "status", Value: running,
+				Key: status, Value: running,
 			},
 		),
 	})

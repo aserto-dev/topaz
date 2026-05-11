@@ -49,7 +49,7 @@ func (cmd *QueryCmd) template() proto.Message {
 		},
 		PolicyContext: &api.PolicyContext{
 			Path:      "",
-			Decisions: []string{"allowed"},
+			Decisions: []string{allowed},
 		},
 		IdentityContext: &api.IdentityContext{
 			Identity: "",
