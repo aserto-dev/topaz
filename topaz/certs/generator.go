@@ -59,6 +59,8 @@ func GenerateCerts(force bool, dnsNames []string, certPaths ...*CertPaths) error
 	return generate(dnsNames, certPaths...)
 }
 
+const generated string = "generated"
+
 func generate(dnsNames []string, certPaths ...*CertPaths) error {
 	logger := zerolog.Nop()
 	ctx := logger.WithContext(context.Background())
@@ -82,9 +84,9 @@ func generate(dnsNames []string, certPaths ...*CertPaths) error {
 			return errors.Wrap(err, "failed to create dev certs")
 		}
 
-		data = append(data, []any{filepath.Base(certPaths.CA), "generated"})
-		data = append(data, []any{filepath.Base(certPaths.Cert), "generated"})
-		data = append(data, []any{filepath.Base(certPaths.Key), "generated"})
+		data = append(data, []any{filepath.Base(certPaths.CA), generated})
+		data = append(data, []any{filepath.Base(certPaths.Cert), generated})
+		data = append(data, []any{filepath.Base(certPaths.Key), generated})
 	}
 
 	tab.Bulk(data)

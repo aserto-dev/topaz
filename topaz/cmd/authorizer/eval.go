@@ -41,7 +41,7 @@ func (cmd *EvalCmd) template() proto.Message {
 	return &authorizer.IsRequest{
 		PolicyContext: &api.PolicyContext{
 			Path:      "",
-			Decisions: []string{"allowed"},
+			Decisions: []string{allowed},
 		},
 		IdentityContext: &api.IdentityContext{
 			Identity: "",

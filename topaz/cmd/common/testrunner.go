@@ -24,6 +24,10 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
+const (
+	skipped string = "SKIPPED"
+)
+
 var (
 	ErrSkippedAuthorizerAssertion = cerr.NewAsertoError("T10001", codes.Internal, http.StatusInternalServerError, "no authorizer client")
 	ErrSkippedDirectoryAssertion  = cerr.NewAsertoError("T10002", codes.Internal, http.StatusInternalServerError, "no directory client")
@@ -258,7 +262,7 @@ func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResu
 			Outcome:  false,
 			Duration: 0,
 			Err:      ErrSkippedDirectoryAssertion,
-			Str:      "SKIPPED",
+			Str:      skipped,
 		}
 	}
 
@@ -287,7 +291,7 @@ func checkPermissionV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) 
 			Outcome:  false,
 			Duration: 0,
 			Err:      ErrSkippedDirectoryAssertion,
-			Str:      "SKIPPED",
+			Str:      skipped,
 		}
 	}
 
@@ -317,7 +321,7 @@ func checkRelationV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *C
 			Outcome:  false,
 			Duration: 0,
 			Err:      ErrSkippedDirectoryAssertion,
-			Str:      "SKIPPED",
+			Str:      skipped,
 		}
 	}
 
@@ -347,7 +351,7 @@ func checkDecisionV2(ctx context.Context, c *azc.Client, msg *structpb.Value) *C
 			Outcome:  false,
 			Duration: 0,
 			Err:      ErrSkippedAuthorizerAssertion,
-			Str:      "SKIPPED",
+			Str:      skipped,
 		}
 	}
 
@@ -385,7 +389,7 @@ func evaluationV1(ctx context.Context, c *dsc.Client, msg *structpb.Value) *Chec
 			Outcome:  false,
 			Duration: 0,
 			Err:      ErrSkippedDirectoryAssertion,
-			Str:      "SKIPPED",
+			Str:      skipped,
 		}
 	}
 

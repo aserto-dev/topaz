@@ -42,7 +42,7 @@ func (cmd *DecisionTreeCmd) template() proto.Message {
 	return &authorizer.DecisionTreeRequest{
 		PolicyContext: &api.PolicyContext{
 			Path:      "",
-			Decisions: []string{"allowed"},
+			Decisions: []string{allowed},
 		},
 		IdentityContext: &api.IdentityContext{
 			Identity: "",

@@ -1,5 +1,9 @@
 package authorizer
 
+const (
+	allowed string = "allowed"
+)
+
 type AuthorizerCmd struct {
 	CheckDecision EvalCmd         `cmd:"" name:"eval" help:"evaluate policy decision"`
 	ExecQuery     QueryCmd        `cmd:"" name:"query" help:"execute query"`
