@@ -43,7 +43,7 @@ jobs:
       -
         name: Test Setup
         run: |
-          go install gotest.tools/gotestsum@v${GOTESTSUM_VER} \
+          go install gotest.tools/gotestsum@v${{ env.GO_TESTSUM_VER }}
           gotestsum --version
       -
         name: Setup QEMU
