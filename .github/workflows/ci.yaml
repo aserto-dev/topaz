@@ -42,9 +42,9 @@ jobs:
           cache: true
       -
         name: Test Setup
-        uses: gertd/action-gotestsum@v3.0.0
-        with:
-          gotestsum_version: ${{ env.GO_TESTSUM_VER }}
+        run: |
+          go install gotest.tools/gotestsum@v${GOTESTSUM_VER}
+          gotestsum --version
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v4
