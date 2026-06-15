@@ -4,7 +4,7 @@ type DirectoryCmd struct {
 	Check   CheckCmd   `cmd:"" help:"check single permission"`
 	Checks  ChecksCmd  `cmd:"" help:"check multiple permissions"`
 	Search  SearchCmd  `cmd:"" help:"search relation graph"`
-	Get     GetCmd     `cmd:"" help:"get object|relation|manifest"`
+	Get     GetCmd     `cmd:"" help:"get object|relation|manifest|model"`
 	Set     SetCmd     `cmd:"" help:"set object|relation|manifest"`
 	Delete  DeleteCmd  `cmd:"" help:"delete object|relation|manifest"`
 	List    ListCmd    `cmd:"" help:"list objects|relations"`

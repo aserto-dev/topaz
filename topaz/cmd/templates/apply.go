@@ -76,7 +76,7 @@ func (cmd *ApplyTemplateCmd) setManifest(ctx context.Context) error {
 	}
 
 	command := directory.SetManifestCmd{
-		Path:   manifest,
+		File:   manifest,
 		Config: cmd.Config,
 	}
 
