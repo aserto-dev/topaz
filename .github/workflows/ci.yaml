@@ -25,7 +25,6 @@ env:
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
   GO_RELEASER_VER: "v2.14.1"
   GO_LANGCI_LINT_VER: "v2.12.2"
-  GO_TESTSUM_VER: "1.13.0"
   SYFT_VER: "v1.13.0"
 
 jobs:
@@ -42,9 +41,8 @@ jobs:
           cache: true
       -
         name: Test Setup
-        uses: gertd/action-gotestsum@v3.0.0
-        with:
-          gotestsum_version: ${{ env.GO_TESTSUM_VER }}
+        run: |
+          make install-gotestsum
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v4
