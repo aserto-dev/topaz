@@ -78,7 +78,7 @@ func SetManifest(ctx context.Context, cfg *dsc.Config, path string) func(*testin
 		ctx, cancel := context.WithTimeout(ctx, cfg.Timeout)
 		t.Cleanup(cancel)
 
-		cmd := directory.SetManifestCmd{Config: *cfg, Path: path}
+		cmd := directory.SetManifestCmd{Config: *cfg, File: path}
 		if err := cmd.Run(ctx); err != nil {
 			assert.NoError(t, err)
 		}
