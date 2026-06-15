@@ -13,7 +13,7 @@ import (
 type RestoreCmd struct {
 	dsc.Config
 
-	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
+	File string `arg:""  default:"backup.tar.gz" help:"file path to backup source file"`
 }
 
 func (cmd *RestoreCmd) Run(ctx context.Context) error {

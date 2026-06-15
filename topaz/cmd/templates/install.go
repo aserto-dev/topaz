@@ -320,7 +320,7 @@ func (i *tmplInstaller) setManifest(ctx context.Context) error {
 	}
 
 	command := directory.SetManifestCmd{
-		Path:   manifest,
+		File:   manifest,
 		Config: *i.dscConfig,
 	}
 
