@@ -3,12 +3,12 @@ package impl
 import (
 	"context"
 	"strings"
-	"sync"
 
 	runtime "github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/internal/tsync"
+	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/storage"
-	"golang.org/x/sync/singleflight"
 )
 
 // preparedQueryCache memoizes rego.PreparedEvalQuery values keyed by the
@@ -30,9 +30,9 @@ import (
 // concurrent misses for the same key into one PrepareForEval call so a
 // thundering herd on first use doesn't multiply work.
 type preparedQueryCache struct {
-	entries     sync.Map // key (string) -> *rego.PreparedEvalQuery
-	prepGroup   singleflight.Group
-	watcherOnce sync.Map // runtime pointer -> struct{} (one-time RegisterCompilerTrigger per runtime)
+	entries     tsync.Map[string, *rego.PreparedEvalQuery] // key (string) -> *rego.PreparedEvalQuery
+	prepGroup   tsync.Group[string, *rego.PreparedEvalQuery]
+	watcherOnce tsync.Map[*plugins.Manager, struct{}] // key (*plugins.Manager) -> struct{} (one-time RegisterCompilerTrigger per runtime)
 }
 
 func newPreparedQueryCache() *preparedQueryCache {
@@ -45,15 +45,19 @@ func newPreparedQueryCache() *preparedQueryCache {
 // semantically different query.
 func cacheKey(path string, decisions []string) string {
 	var b strings.Builder
+
 	b.Grow(len(path) + 1 + len(decisions)*8)
 	b.WriteString(path)
 	b.WriteByte('\x1f') // unit separator: cannot appear in path or decision names
+
 	for i, d := range decisions {
 		if i > 0 {
 			b.WriteByte('\x1e') // record separator
 		}
+
 		b.WriteString(d)
 	}
+
 	return b.String()
 }
 
@@ -73,28 +77,32 @@ func (c *preparedQueryCache) getOrPrepare(
 	c.ensureCompilerWatcher(rt)
 
 	if v, ok := c.entries.Load(key); ok {
-		return *(v.(*rego.PreparedEvalQuery)), nil
+		return *v, nil
 	}
 
 	// Collapse concurrent misses on the same key.
-	v, err, _ := c.prepGroup.Do(key, func() (any, error) {
+	v, err, _ := c.prepGroup.Do(key, func() (*rego.PreparedEvalQuery, error) {
 		// Re-check under the singleflight: a concurrent call may have
 		// just populated the entry while we were waiting to enter Do.
 		if entry, ok := c.entries.Load(key); ok {
 			return entry, nil
 		}
+
 		pq, err := preparedQueryFactory(ctx)
 		if err != nil {
 			return nil, err
 		}
+
 		stored := &pq
 		c.entries.Store(key, stored)
+
 		return stored, nil
 	})
 	if err != nil {
 		return rego.PreparedEvalQuery{}, err
 	}
-	return *(v.(*rego.PreparedEvalQuery)), nil
+
+	return *v, nil
 }
 
 // ensureCompilerWatcher registers (exactly once per runtime) a callback on
@@ -106,17 +114,20 @@ func (c *preparedQueryCache) ensureCompilerWatcher(rt *runtime.Runtime) {
 	if rt == nil {
 		return
 	}
+
 	pm := rt.GetPluginsManager()
 	if pm == nil {
 		return
 	}
+
 	if _, alreadyRegistered := c.watcherOnce.LoadOrStore(pm, struct{}{}); alreadyRegistered {
 		return
 	}
+
 	// Discard everything when the compiler rotates. We don't try to be
 	// precise — bundle reloads are rare relative to Is() rate.
 	pm.RegisterCompilerTrigger(func(_ storage.Transaction) {
-		c.entries.Range(func(k, _ any) bool {
+		c.entries.Range(func(k string, _ *rego.PreparedEvalQuery) bool {
 			c.entries.Delete(k)
 			return true
 		})
