@@ -23,9 +23,9 @@ permissions:
 
 env:
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
+  GH_TOKEN: ${{ github.token }}
   GO_RELEASER_VER: "v2.14.1"
   GO_LANGCI_LINT_VER: "v2.12.2"
-  GO_TESTSUM_VER: "1.13.0"
   SYFT_VER: "v1.13.0"
 
 jobs:
@@ -42,9 +42,8 @@ jobs:
           cache: true
       -
         name: Test Setup
-        uses: gertd/action-gotestsum@v3.0.0
-        with:
-          gotestsum_version: ${{ env.GO_TESTSUM_VER }}
+        run: |
+          make install-gotestsum
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v4
@@ -87,22 +86,22 @@ jobs:
       -
         name: Unit Tests
         run: |
-          gotestsum --format short-verbose -- $(go list ./... | grep -v topazd/tests) \
+          .ext/bin/gotestsum --format short-verbose -- $(go list ./... | grep -v topazd/tests) \
             -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
       -
         name: Tests topazd
         run: |
-          gotestsum --format short-verbose -- $(go list ./topazd/tests/... | grep -v tests/template) \
+          .ext/bin/gotestsum --format short-verbose -- $(go list ./topazd/tests/... | grep -v tests/template) \
             -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
       -
         name: Templates Test (no-tls)
         run: |
-          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-no-tls/... \
+          .ext/bin/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-no-tls/... \
             -count=1 -timeout 240s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
       -
         name: Templates Test (with-tls)
         run: |
-          gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-with-tls/... \
+          .ext/bin/gotestsum --format short-verbose -- github.com/aserto-dev/topaz/topazd/tests/template-with-tls/... \
             -count=1 -timeout 120s -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
       -
         name: Upload code coverage
