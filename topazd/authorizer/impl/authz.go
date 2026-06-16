@@ -37,6 +37,12 @@ type AuthorizerServer struct {
 	jwkCache *jwk.Cache
 
 	resolver *resolvers.Resolvers
+
+	// preparedQueries memoizes the rego.PreparedEvalQuery values produced
+	// for each (policy path, decisions) tuple seen via Is(). Without this
+	// cache every Is() call re-parses + re-plans the same Rego query and
+	// serializes goroutines on the OPA compiler's internal structures.
+	preparedQueries *preparedQueryCache
 }
 
 func NewAuthorizerServer(
@@ -50,10 +56,11 @@ func NewAuthorizerServer(
 	jwkCache := jwk.NewCache(ctx)
 
 	return &AuthorizerServer{
-		cfg:      cfg,
-		logger:   &newLogger,
-		resolver: rf,
-		jwkCache: jwkCache,
+		cfg:             cfg,
+		logger:          &newLogger,
+		resolver:        rf,
+		jwkCache:        jwkCache,
+		preparedQueries: newPreparedQueryCache(),
 	}
 }
 
