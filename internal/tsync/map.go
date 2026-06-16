@@ -55,11 +55,16 @@ func (m *Map[K, V]) Swap(key K, value V) (V, bool) {
 	return prevVal.(V), true
 }
 
+// CompareAndSwap compares the existing value for key with old and, if they are equal, replaces it with newVal.
+// Note: Like sync.Map, this requires V's dynamic type to be comparable; otherwise it will panic.
+//
 //nolint:predeclared
 func (m *Map[K, V]) CompareAndSwap(key K, old, new V) bool {
 	return m.internal.CompareAndSwap(key, old, new)
 }
 
+// CompareAndDelete deletes the entry for key if its value is equal to old.
+// Note: Like sync.Map, this requires V's dynamic type to be comparable; otherwise it will panic.
 func (m *Map[K, V]) CompareAndDelete(key K, old V) bool {
 	return m.internal.CompareAndDelete(key, old)
 }

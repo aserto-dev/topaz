@@ -318,8 +318,12 @@ func gatewayContextValue(r *http.Request) *gatewayPathPattern {
 func numCPU() uint32 {
 	numCPU := goruntime.NumCPU()
 
-	if numCPU < 0 || numCPU > math.MaxUint32 {
+	if numCPU <= 0 {
 		return 1
+	}
+
+	if uint64(numCPU) > uint64(math.MaxUint32) {
+		return uint32(math.MaxInt32)
 	}
 
 	return uint32(numCPU)

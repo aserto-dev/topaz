@@ -88,7 +88,7 @@ func (c *preparedQueryCache) getOrPrepare(
 			return entry, nil
 		}
 
-		pq, err := preparedQueryFactory(ctx)
+		pq, err := preparedQueryFactory(context.WithoutCancel(ctx))
 		if err != nil {
 			return nil, err
 		}
@@ -128,7 +128,7 @@ func (c *preparedQueryCache) ensureCompilerWatcher(rt *runtime.Runtime) {
 	// precise — bundle reloads are rare relative to Is() rate.
 	pm.RegisterCompilerTrigger(func(_ storage.Transaction) {
 		c.entries.Range(func(k string, _ *rego.PreparedEvalQuery) bool {
-			c.entries.Delete(k)
+			c.entries.Clear()
 			return true
 		})
 	})
