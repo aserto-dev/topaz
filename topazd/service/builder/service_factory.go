@@ -2,6 +2,7 @@ package builder
 
 import (
 	"context"
+	"math"
 	"net"
 	"net/http"
 	goruntime "runtime"
@@ -253,7 +254,7 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, p proto.Me
 // but has been stable since 2022; the option is what production gRPC
 // servers use to bound goroutine creation under high RPS.
 func prepareGrpcServer(certCfg *aserto.TLSConfig, opts []grpc.ServerOption) (*grpc.Server, error) {
-	opts = append(opts, grpc.NumStreamWorkers(uint32(goruntime.NumCPU())))
+	opts = append(opts, grpc.NumStreamWorkers(numCPU()))
 
 	// NoTLS path.
 	if !certCfg.HasCert() {
@@ -312,4 +313,14 @@ func gatewayContextValue(r *http.Request) *gatewayPathPattern {
 	}
 
 	return gwPathPattern
+}
+
+func numCPU() uint32 {
+	numCPU := goruntime.NumCPU()
+
+	if numCPU < 0 || numCPU > math.MaxUint32 {
+		return 1
+	}
+
+	return uint32(numCPU)
 }
