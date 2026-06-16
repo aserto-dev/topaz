@@ -81,6 +81,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		if err != nil {
 			return rego.PreparedEvalQuery{}, aerr.ErrBadQuery.Err(err).Msg(queryStmt.String())
 		}
+
 		return prepared, nil
 	})
 	if err != nil {

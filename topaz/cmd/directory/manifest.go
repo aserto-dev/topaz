@@ -14,14 +14,14 @@ import (
 type GetManifestCmd struct {
 	dsc.Config
 
-	Path   string `arg:"path" help:"filepath to manifest file" type:"path" optional:""`
+	File   string `arg:"" help:"file path to manifest target file" type:"path" optional:""`
 	Stdout bool   `flag:"" help:"output manifest to --stdout"`
 }
 
 type SetManifestCmd struct {
 	dsc.Config
 
-	Path  string `arg:"" help:"filepath to manifest file" type:"path" optional:""`
+	File  string `arg:"" help:"file path to manifest source file" type:"path" optional:""`
 	Stdin bool   `flag:"" help:"set manifest from --stdin"`
 }
 
@@ -41,7 +41,7 @@ func (cmd *GetManifestCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	cc.Con().Info().Msg(">>> get manifest to %s", cmd.Path)
+	cc.Con().Info().Msg(">>> get manifest to %s", cmd.File)
 
 	r, err := dsClient.GetManifest(ctx)
 	if err != nil {
@@ -50,8 +50,8 @@ func (cmd *GetManifestCmd) Run(ctx context.Context) error {
 
 	w := os.Stdout
 
-	if cmd.Path != "" {
-		w, err = os.Create(cmd.Path)
+	if cmd.File != "" {
+		w, err = os.Create(cmd.File)
 		if err != nil {
 			return err
 		}
@@ -77,14 +77,14 @@ func (cmd *SetManifestCmd) Run(ctx context.Context) error {
 	}
 
 	r := os.Stdin
-	if cmd.Path != "" {
-		r, err = os.Open(cmd.Path)
+	if cmd.File != "" {
+		r, err = os.Open(cmd.File)
 		if err != nil {
 			return err
 		}
 	}
 
-	cc.Con().Info().Msg(">>> set manifest to %s\n", cmd.Path)
+	cc.Con().Info().Msg(">>> set manifest to %s\n", cmd.File)
 
 	return dsClient.SetManifest(ctx, r)
 }
