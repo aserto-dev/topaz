@@ -14,15 +14,13 @@ type Result[V any] struct {
 
 // Group represents a class of work and forms a namespace in which
 // units of work can be executed with duplicate suppression.
-type Group[K comparable, V any] struct {
+type Group[K ~string, V any] struct {
 	internal singleflight.Group
 }
 
 // Do executes and suppresses duplicate calls for the given key.
 func (g *Group[K, V]) Do(key K, fn func() (V, error)) (V, error, bool) {
-	// Convert key to string representation for internal singleflight
-	// You can use a dedicated stringifier function or fmt.Sprint if K is complex
-	stringKey := any(key).(string)
+	stringKey := string(key)
 
 	val, err, shared := g.internal.Do(stringKey, func() (any, error) {
 		return fn()
@@ -39,7 +37,7 @@ func (g *Group[K, V]) Do(key K, fn func() (V, error)) (V, error, bool) {
 // DoChan is like Do but returns a channel that will receive the
 // results when they become ready.
 func (g *Group[K, V]) DoChan(key K, fn func() (V, error)) <-chan Result[V] {
-	stringKey := any(key).(string)
+	stringKey := string(key)
 
 	internalCh := g.internal.DoChan(stringKey, func() (any, error) {
 		return fn()
@@ -70,6 +68,5 @@ func (g *Group[K, V]) DoChan(key K, fn func() (V, error)) <-chan Result[V] {
 
 // Forget tells the singleflight to forget about a key.
 func (g *Group[K, V]) Forget(key K) {
-	stringKey := any(key).(string)
-	g.internal.Forget(stringKey)
+	g.internal.Forget(string(key))
 }
