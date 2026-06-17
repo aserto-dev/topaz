@@ -9,6 +9,7 @@ import (
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/cmd/common"
 	"github.com/aserto-dev/topaz/topaz/cmd/directory"
+	"github.com/aserto-dev/topaz/topaz/cmd/directory/data"
 	"github.com/aserto-dev/topaz/topaz/cmd/templates"
 	"google.golang.org/protobuf/types/known/structpb"
 
@@ -90,7 +91,7 @@ func ImportData(ctx context.Context, cfg *dsc.Config, dir string) func(*testing.
 		ctx, cancel := context.WithTimeout(ctx, cfg.Timeout)
 		t.Cleanup(cancel)
 
-		cmd := directory.ImportCmd{Config: *cfg, Directory: dir}
+		cmd := data.ImportCmd{Config: *cfg, Directory: dir}
 		if err := cmd.Run(ctx); err != nil {
 			assert.NoError(t, err)
 		}

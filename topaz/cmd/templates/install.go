@@ -17,6 +17,7 @@ import (
 	"github.com/aserto-dev/topaz/topaz/cmd/common"
 	"github.com/aserto-dev/topaz/topaz/cmd/configure"
 	"github.com/aserto-dev/topaz/topaz/cmd/directory"
+	"github.com/aserto-dev/topaz/topaz/cmd/directory/data"
 	"github.com/aserto-dev/topaz/topaz/cmd/topaz"
 	"github.com/aserto-dev/topaz/topaz/x"
 	"github.com/pkg/errors"
@@ -352,7 +353,7 @@ func (i *tmplInstaller) importData(ctx context.Context) error {
 	}
 
 	for dir := range dataDirs {
-		command := directory.ImportCmd{
+		command := data.ImportCmd{
 			Directory: dir,
 			Config:    *i.dscConfig,
 		}
