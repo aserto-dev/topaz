@@ -13,7 +13,7 @@ import (
 type BackupCmd struct {
 	dsc.Config
 
-	File string `arg:""  default:"backup.tar.gz" help:"file path to backup target file"`
+	File string `arg:""  default:"backup.tar.gz" help:"file path to target backup file"`
 }
 
 const defaultFileName = "backup.tar.gz"
