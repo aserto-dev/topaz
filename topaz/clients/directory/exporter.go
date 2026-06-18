@@ -2,13 +2,13 @@ package directory
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 
 	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	"github.com/aserto-dev/topaz/topaz/jsonx"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -21,7 +21,7 @@ func (c *Client) ExportToFile(ctx context.Context, w io.Writer, options uint32) 
 		return err
 	}
 
-	encoder := json.NewEncoder(w)
+	encoder := jsonx.NewEncoder(w)
 
 	for {
 		msg, err := stream.Recv()
