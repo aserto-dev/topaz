@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"path/filepath"
 
 	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	"github.com/aserto-dev/topaz/internal/fs"
@@ -79,34 +80,6 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	return nil
 }
 
-func addToArchive(tw *tar.Writer, filename string) error {
-	file, err := os.Open(filename)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	info, err := file.Stat()
-	if err != nil {
-		return err
-	}
-
-	header, err := tar.FileInfoHeader(info, info.Name())
-	if err != nil {
-		return err
-	}
-
-	if err := tw.WriteHeader(header); err != nil {
-		return err
-	}
-
-	if _, err := io.Copy(tw, file); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (c *Client) createBackupFiles(stream dse.Exporter_ExportClient, dirPath string) error {
 	objects, err := js.NewWriter(path.Join(dirPath, ObjectsFileName), ObjectsStr)
 	if err != nil {
@@ -159,6 +132,152 @@ func (c *Client) createBackupFiles(stream dse.Exporter_ExportClient, dirPath str
 	return nil
 }
 
+const (
+	ManifestFile  string = "manifest.yaml"
+	ObjectsFile   string = "objects.jsonl"
+	RelationsFile string = "relations.jsonl"
+)
+
 func (c *Client) BackupToFile(ctx context.Context, w io.Writer) error {
+	// step 0 -- create temp directory folder to gather artifacts
+	tmpDir, err := os.MkdirTemp("", "*")
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		_ = os.RemoveAll(tmpDir)
+	}()
+
+	dirPath := path.Join(tmpDir, "backup")
+	if err := os.MkdirAll(dirPath, fs.FileModeOwnerRWX); err != nil {
+		return err
+	}
+
+	// step 1 - download manifest.yaml
+	manifestFQN := filepath.Join(dirPath, ManifestFile)
+	if err := c.getManifestFile(ctx, manifestFQN); err != nil {
+		return err
+	}
+
+	// step 2 -- download objects.jsonl
+	objectsFQN := filepath.Join(dirPath, ObjectsFile)
+	if err := c.getObjectsFile(ctx, objectsFQN); err != nil {
+		return err
+	}
+
+	// step 3 -- download relations.jsonl
+	relationsFQN := filepath.Join(dirPath, RelationsFile)
+	if err := c.getRelationsFile(ctx, relationsFQN); err != nil {
+		return err
+	}
+
+	// step 4 -- create tarbal from tmp directory
+	fqns := []string{
+		manifestFQN,
+		objectsFQN,
+		relationsFQN,
+	}
+
+	if err := c.createTar(w, fqns); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (*Client) createTar(w io.Writer, fqns []string) error {
+	gw, err := gzip.NewWriterLevel(w, gzip.BestCompression)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		_ = gw.Close()
+	}()
+
+	tw := tar.NewWriter(gw)
+
+	defer func() {
+		_ = tw.Close()
+	}()
+
+	for _, fqn := range fqns {
+		if err := addToArchive(tw, fqn); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (c *Client) getManifestFile(ctx context.Context, fqn string) error {
+	manReader, err := c.GetManifest(ctx)
+	if err != nil {
+		return err
+	}
+
+	manWriter, err := os.Create(fqn)
+	if err != nil {
+		return err
+	}
+	defer manWriter.Close()
+
+	if _, err := io.Copy(manWriter, manReader); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) getObjectsFile(ctx context.Context, fqn string) error {
+	objWriter, err := os.Create(fqn)
+	if err != nil {
+		return err
+	}
+	defer objWriter.Close()
+
+	c.ExportToFile(ctx, objWriter, uint32(dse.Option_OPTION_DATA_OBJECTS))
+
+	return nil
+}
+
+func (c *Client) getRelationsFile(ctx context.Context, fqn string) error {
+	relWriter, err := os.Create(fqn)
+	if err != nil {
+		return err
+	}
+	defer relWriter.Close()
+
+	c.ExportToFile(ctx, relWriter, uint32(dse.Option_OPTION_DATA_RELATIONS))
+
+	return nil
+}
+
+func addToArchive(tw *tar.Writer, filename string) error {
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	info, err := file.Stat()
+	if err != nil {
+		return err
+	}
+
+	header, err := tar.FileInfoHeader(info, info.Name())
+	if err != nil {
+		return err
+	}
+
+	if err := tw.WriteHeader(header); err != nil {
+		return err
+	}
+
+	if _, err := io.Copy(tw, file); err != nil {
+		return err
+	}
+
 	return nil
 }
