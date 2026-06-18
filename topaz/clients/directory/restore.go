@@ -196,3 +196,7 @@ func (c *Client) loadRelations(stream dsi.Importer_ImportClient, relations *js.R
 
 	return nil
 }
+
+func (c *Client) RestoreFromFile(ctx context.Context, r io.Reader) error {
+	return nil
+}

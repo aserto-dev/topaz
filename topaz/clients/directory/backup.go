@@ -158,3 +158,7 @@ func (c *Client) createBackupFiles(stream dse.Exporter_ExportClient, dirPath str
 
 	return nil
 }
+
+func (c *Client) BackupToFile(ctx context.Context, w io.Writer) error {
+	return nil
+}
