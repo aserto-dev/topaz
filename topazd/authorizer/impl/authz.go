@@ -127,12 +127,13 @@ func traceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
 // to preserve enum values as strings when marshaled to JSON.
 func convert(msg proto.Message) any {
 	b, err := protojson.MarshalOptions{
-		Multiline:       false,
-		Indent:          "  ",
-		AllowPartial:    false,
-		UseProtoNames:   true,
-		UseEnumNumbers:  false,
-		EmitUnpopulated: true,
+		Multiline:         false,
+		Indent:            "  ",
+		AllowPartial:      false,
+		UseProtoNames:     true,
+		UseEnumNumbers:    false,
+		EmitUnpopulated:   true,
+		EmitDefaultValues: false,
 	}.Marshal(msg)
 	if err != nil {
 		return nil
