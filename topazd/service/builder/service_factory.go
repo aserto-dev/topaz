@@ -188,7 +188,7 @@ func (f *ServiceFactory) gatewayMux(allowedHeaders []string, errorHandler runtim
 					EmitDefaultValues: false,
 				},
 				UnmarshalOptions: protojson.UnmarshalOptions{
-					AllowPartial:   true,
+					AllowPartial:   false,
 					DiscardUnknown: true,
 					RecursionLimit: 0,
 				},
@@ -206,8 +206,9 @@ func (f *ServiceFactory) gatewayMux(allowedHeaders []string, errorHandler runtim
 					EmitUnpopulated: false,
 				},
 				UnmarshalOptions: protojson.UnmarshalOptions{
-					AllowPartial:   true,
+					AllowPartial:   false,
 					DiscardUnknown: true,
+					RecursionLimit: 0,
 				},
 			},
 		),

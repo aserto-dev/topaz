@@ -245,7 +245,9 @@ type Message[T any] interface {
 }
 
 var unmarshalOpts = protojson.UnmarshalOptions{
+	AllowPartial:   false,
 	DiscardUnknown: true,
+	RecursionLimit: 0,
 }
 
 func unmarshal[T any, M Message[T]](b []byte) (M, error) {

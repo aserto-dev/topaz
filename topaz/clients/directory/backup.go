@@ -237,9 +237,7 @@ func (c *Client) getObjectsFile(ctx context.Context, fqn string) error {
 	}
 	defer objWriter.Close()
 
-	c.ExportToFile(ctx, objWriter, uint32(dse.Option_OPTION_DATA_OBJECTS))
-
-	return nil
+	return c.ExportToFile(ctx, objWriter, uint32(dse.Option_OPTION_DATA_OBJECTS))
 }
 
 func (c *Client) getRelationsFile(ctx context.Context, fqn string) error {
@@ -249,9 +247,7 @@ func (c *Client) getRelationsFile(ctx context.Context, fqn string) error {
 	}
 	defer relWriter.Close()
 
-	c.ExportToFile(ctx, relWriter, uint32(dse.Option_OPTION_DATA_RELATIONS))
-
-	return nil
+	return c.ExportToFile(ctx, relWriter, uint32(dse.Option_OPTION_DATA_RELATIONS))
 }
 
 func addToArchive(tw *tar.Writer, filename string) error {

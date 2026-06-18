@@ -107,8 +107,8 @@ func (e *Encoder) Encode(m proto.Message) error {
 
 func Unmarshal(b []byte, m proto.Message) error {
 	return protojson.UnmarshalOptions{
-		AllowPartial:   true,
-		DiscardUnknown: false,
+		AllowPartial:   false,
+		DiscardUnknown: true,
 		RecursionLimit: 0,
 	}.Unmarshal(b, m)
 }

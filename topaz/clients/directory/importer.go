@@ -11,6 +11,8 @@ import (
 	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
 	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (c *Client) ImportFromFile(ctx context.Context, r io.Reader) error {
@@ -68,8 +70,15 @@ func (c *Client) sender(stream dsi.Importer_ImportClient, r io.Reader) func() er
 	}
 }
 
+const (
+	buf64k  int = 64 * 1024
+	max16Mb int = 16 * 1024 * 1024
+)
+
 func (c *Client) importFromReader(stream dsi.Importer_ImportClient, r io.Reader) error {
 	scanner := bufio.NewScanner(r)
+	// bufio.Scanner defaults to a 64K token limit, increase scanner to handle the token limit.
+	scanner.Buffer(make([]byte, buf64k), max16Mb)
 
 	for scanner.Scan() {
 		obj := &dsc.Object{}
@@ -100,6 +109,9 @@ func (c *Client) importFromReader(stream dsi.Importer_ImportClient, r io.Reader)
 
 			continue
 		}
+
+		// catch when JSONL does not represent an object or relation.
+		return status.Errorf(codes.Internal, "unknown type %q", string(scanner.Bytes()))
 	}
 
 	return scanner.Err()

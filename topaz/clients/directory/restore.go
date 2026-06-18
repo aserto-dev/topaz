@@ -293,11 +293,10 @@ func (*Client) extractFiles(tr *tar.Reader, dirPath string) error {
 			return status.Error(codes.Internal, "security violation: symbolic or hard links are strictly forbidden")
 		}
 
-		// Skip directory entries if they show up explicitly
-		if header.Typeflag == tar.TypeDir {
+		// skip anything that os not a regular file
+		if header.Typeflag != tar.TypeReg {
 			continue
 		}
-
 		// Path validation & Zip-Slip defense
 		cleanedName := filepath.Clean(header.Name)
 		if strings.HasPrefix(cleanedName, "..") || strings.HasPrefix(cleanedName, "/") {
@@ -330,7 +329,7 @@ func (*Client) extractFiles(tr *tar.Reader, dirPath string) error {
 
 		// Stream to Temp Disk Storage safely
 		targetPath := filepath.Join(dirPath, baseName)
-		if err := writeStreamToDisk(tr, targetPath, sizeLimit, header.FileInfo().Mode()); err != nil {
+		if err := writeStreamToDisk(tr, targetPath, sizeLimit); err != nil {
 			return status.Errorf(codes.Internal, "failed writing %s to disk: %s", baseName, err.Error())
 		}
 	}
@@ -338,8 +337,8 @@ func (*Client) extractFiles(tr *tar.Reader, dirPath string) error {
 	return nil
 }
 
-func writeStreamToDisk(tr *tar.Reader, destPath string, limit int64, mode os.FileMode) error {
-	outFile, err := os.OpenFile(destPath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, mode)
+func writeStreamToDisk(tr *tar.Reader, destPath string, limit int64) error {
+	outFile, err := os.OpenFile(destPath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, fs.FileModeOwnerRW)
 	if err != nil {
 		return err
 	}

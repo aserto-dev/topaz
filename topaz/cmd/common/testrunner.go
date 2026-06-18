@@ -116,7 +116,11 @@ func (runner *TestRunner) execFile(ctx context.Context, file string) error {
 	return runner.exec(ctx, r)
 }
 
-var pbUnmarshal = protojson.UnmarshalOptions{DiscardUnknown: true}
+var pbUnmarshal = protojson.UnmarshalOptions{
+	AllowPartial:   false,
+	DiscardUnknown: true,
+	RecursionLimit: 0,
+}
 
 //nolint:funlen
 func (runner *TestRunner) exec(ctx context.Context, r *os.File) error {
