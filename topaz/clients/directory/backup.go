@@ -10,7 +10,7 @@ import (
 	"os"
 	"path"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/js"
 
@@ -18,8 +18,8 @@ import (
 )
 
 func (c *Client) Backup(ctx context.Context, file string) error {
-	stream, err := c.Exporter.Export(ctx, &dse3.ExportRequest{
-		Options:   uint32(dse3.Option_OPTION_DATA),
+	stream, err := c.Exporter.Export(ctx, &dse.ExportRequest{
+		Options:   uint32(dse.Option_OPTION_DATA),
 		StartFrom: &timestamppb.Timestamp{},
 	})
 	if err != nil {
@@ -107,7 +107,7 @@ func addToArchive(tw *tar.Writer, filename string) error {
 	return nil
 }
 
-func (c *Client) createBackupFiles(stream dse3.Exporter_ExportClient, dirPath string) error {
+func (c *Client) createBackupFiles(stream dse.Exporter_ExportClient, dirPath string) error {
 	objects, err := js.NewWriter(path.Join(dirPath, ObjectsFileName), ObjectsStr)
 	if err != nil {
 		return err
@@ -135,12 +135,12 @@ func (c *Client) createBackupFiles(stream dse3.Exporter_ExportClient, dirPath st
 		}
 
 		switch m := msg.GetMsg().(type) {
-		case *dse3.ExportResponse_Object:
+		case *dse.ExportResponse_Object:
 			err = objects.Write(m.Object)
 
 			objectsCounter.Incr().Print(os.Stdout)
 
-		case *dse3.ExportResponse_Relation:
+		case *dse.ExportResponse_Relation:
 			err = relations.Write(m.Relation)
 
 			relationsCounter.Incr().Print(os.Stdout)

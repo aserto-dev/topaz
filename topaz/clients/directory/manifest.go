@@ -6,13 +6,13 @@ import (
 	"errors"
 	"io"
 
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func (c *Client) GetManifest(ctx context.Context) (*bytes.Reader, error) {
-	stream, err := c.Model.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
+	stream, err := c.Model.GetManifest(ctx, &dsm.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, err
 	}
@@ -31,11 +31,11 @@ func (c *Client) GetManifest(ctx context.Context) (*bytes.Reader, error) {
 			return nil, err
 		}
 
-		if md, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Metadata); ok {
+		if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
 			_ = md.Metadata
 		}
 
-		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
+		if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
 			data.Write(body.Body.GetData())
 			bytesRecv += len(body.Body.GetData())
 		}
@@ -64,9 +64,9 @@ func (c *Client) SetManifest(ctx context.Context, r io.Reader) error {
 			return err
 		}
 
-		if err := stream.Send(&dsm3.SetManifestRequest{
-			Msg: &dsm3.SetManifestRequest_Body{
-				Body: &dsm3.Body{Data: buf[0:n]},
+		if err := stream.Send(&dsm.SetManifestRequest{
+			Msg: &dsm.SetManifestRequest_Body{
+				Body: &dsm.Body{Data: buf[0:n]},
 			},
 		}); err != nil {
 			return err
@@ -85,6 +85,6 @@ func (c *Client) SetManifest(ctx context.Context, r io.Reader) error {
 }
 
 func (c *Client) DeleteManifest(ctx context.Context) error {
-	_, err := c.Model.DeleteManifest(ctx, &dsm3.DeleteManifestRequest{Empty: &emptypb.Empty{}})
+	_, err := c.Model.DeleteManifest(ctx, &dsm.DeleteManifestRequest{Empty: &emptypb.Empty{}})
 	return err
 }
