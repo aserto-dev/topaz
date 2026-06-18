@@ -2,17 +2,23 @@ package directory
 
 import (
 	"archive/tar"
+	"bufio"
 	"compress/gzip"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/js"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -197,6 +203,166 @@ func (c *Client) loadRelations(stream dsi.Importer_ImportClient, relations *js.R
 	return nil
 }
 
+const (
+	maxManifestSize int64 = 4 * 1024 * 1024        // 4 MB
+	maxJsonlSize    int64 = 4 * 1024 * 1024 * 1024 // 4 GB
+)
+
 func (c *Client) RestoreFromFile(ctx context.Context, r io.Reader) error {
+	// step 0 -- create temp directory to export tarbal artifacts to.
+	tmpDir, err := os.MkdirTemp("", "*")
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		_ = os.RemoveAll(tmpDir)
+	}()
+
+	dirPath := path.Join(tmpDir, "restore")
+	if err := os.MkdirAll(dirPath, fs.FileModeOwnerRWX); err != nil {
+		return err
+	}
+
+	gz, err := gzip.NewReader(r)
+	if err != nil {
+		return err
+	}
+	defer gz.Close()
+
+	tr := tar.NewReader(gz)
+
+	if err := c.extractFiles(tr, dirPath); err != nil {
+		return err
+	}
+
+	{
+		r, err := os.Open(filepath.Join(dirPath, ManifestFile))
+		if err != nil {
+			return err
+		}
+		defer r.Close()
+
+		if err := c.SetManifest(ctx, r); err != nil {
+			return err
+		}
+	}
+
+	{
+		r, err := os.Open(filepath.Join(dirPath, ObjectsFile))
+		if err != nil {
+			return err
+		}
+		defer r.Close()
+
+		if err := c.ImportFromFile(ctx, r); err != nil {
+			return err
+		}
+	}
+
+	{
+		r, err := os.Open(filepath.Join(dirPath, RelationsFile))
+		if err != nil {
+			return err
+		}
+		defer r.Close()
+
+		if err := c.ImportFromFile(ctx, r); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (*Client) extractFiles(tr *tar.Reader, dirPath string) error {
+	processedFiles := make(map[string]bool)
+
+	for {
+		header, err := tr.Next()
+		if errors.Is(err, io.EOF) {
+			break
+		}
+
+		if err != nil {
+			return fmt.Errorf("failed reading tar header: %w", err)
+		}
+
+		// Explicitly reject symlinks and hardlinks
+		if header.Typeflag == tar.TypeSymlink || header.Typeflag == tar.TypeLink {
+			return status.Error(codes.Internal, "security violation: symbolic or hard links are strictly forbidden")
+		}
+
+		// Skip directory entries if they show up explicitly
+		if header.Typeflag == tar.TypeDir {
+			continue
+		}
+
+		// Path validation & Zip-Slip defense
+		cleanedName := filepath.Clean(header.Name)
+		if strings.HasPrefix(cleanedName, "..") || strings.HasPrefix(cleanedName, "/") {
+			return status.Errorf(codes.Internal, "security violation: invalid file path traversal detected: %s", header.Name)
+		}
+
+		// Extract just the file name to handle files safely even if they are nested inside a root folder
+		baseName := filepath.Base(cleanedName)
+
+		var sizeLimit int64
+
+		// Enforce max file size validation
+		switch baseName {
+		case ManifestFile:
+			sizeLimit = maxManifestSize
+		case ObjectsFile:
+			fallthrough
+		case RelationsFile:
+			sizeLimit = maxJsonlSize
+		default:
+			return status.Errorf(codes.Internal, "unexpected file type found in tarball: %s", baseName)
+		}
+
+		// Prevent tracking/writing the same file target twice
+		if processedFiles[baseName] {
+			return status.Errorf(codes.Internal, "duplicate file entry detected: %s", baseName)
+		}
+
+		processedFiles[baseName] = true
+
+		// Stream to Temp Disk Storage safely
+		targetPath := filepath.Join(dirPath, baseName)
+		if err := writeStreamToDisk(tr, targetPath, sizeLimit, header.FileInfo().Mode()); err != nil {
+			return status.Errorf(codes.Internal, "failed writing %s to disk: %s", baseName, err.Error())
+		}
+	}
+
+	return nil
+}
+
+func writeStreamToDisk(tr *tar.Reader, destPath string, limit int64, mode os.FileMode) error {
+	outFile, err := os.OpenFile(destPath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, mode)
+	if err != nil {
+		return err
+	}
+	defer outFile.Close()
+
+	bufferedWriter := bufio.NewWriter(outFile)
+	defer bufferedWriter.Flush()
+
+	// Enforce strict payload limitations.
+	limitedReader := io.LimitReader(tr, limit)
+
+	written, err := io.Copy(bufferedWriter, limitedReader)
+	if err != nil {
+		return err
+	}
+
+	// Check if the file went over your threshold boundaries.
+	if written == limit {
+		var singleByte [1]byte
+		if n, _ := tr.Read(singleByte[:]); n > 0 {
+			return status.Errorf(codes.Aborted, "file size exceeded allowed limit of %d bytes", limit)
+		}
+	}
+
 	return nil
 }
