@@ -26,13 +26,13 @@ func (cmd *RestoreCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	if cmd.File == "backup.tar.gz" {
+	if cmd.File == defBackupFileName {
 		currentDir, err := os.Getwd()
 		if err != nil {
 			return err
 		}
 
-		cmd.File = path.Join(currentDir, "backup.tar.gz")
+		cmd.File = path.Join(currentDir, defBackupFileName)
 	}
 
 	cc.Con().Info().Msg(">>> restore from %s", cmd.File)

@@ -16,7 +16,7 @@ type BackupCmd struct {
 	File string `arg:""  default:"backup.tar.gz" help:"file path to target backup file"`
 }
 
-const defaultFileName = "backup.tar.gz"
+const defBackupFileName = "backup.tar.gz"
 
 func (cmd *BackupCmd) Run(ctx context.Context) error {
 	if ok, err := clients.Validate(ctx, &cmd.Config); !ok {
@@ -28,13 +28,13 @@ func (cmd *BackupCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	if cmd.File == defaultFileName {
+	if cmd.File == defBackupFileName {
 		currentDir, err := os.Getwd()
 		if err != nil {
 			return err
 		}
 
-		cmd.File = path.Join(currentDir, defaultFileName)
+		cmd.File = path.Join(currentDir, defBackupFileName)
 	}
 
 	cc.Con().Info().Msg(">>> backup to %s", cmd.File)
