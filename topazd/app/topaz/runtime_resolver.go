@@ -49,8 +49,6 @@ func NewRuntimeResolver(
 		// authorization check functions
 		runtime.WithBuiltin1(ds.RegisterCheck(logger, builtins.DSCheck, dsClient)),
 		runtime.WithBuiltin1(ds.RegisterChecks(logger, builtins.DSChecks, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterCheckRelation(logger, builtins.DSCheckRelation, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterCheckPermission(logger, builtins.DSCheckPermission, dsClient)),
 
 		// authZen built-ins
 		runtime.WithBuiltin1(az.RegisterEvaluation(logger, builtins.AZEvaluation, acClient)),

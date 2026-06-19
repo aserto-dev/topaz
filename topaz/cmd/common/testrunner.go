@@ -214,10 +214,6 @@ func setCheckType(ctx context.Context, checkType CheckType, reqVersion int, runn
 	switch {
 	case checkType == Check && reqVersion == 3:
 		result = checkV3(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
-	case checkType == CheckPermission && reqVersion == 3:
-		result = checkPermissionV3(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
-	case checkType == CheckRelation && reqVersion == 3:
-		result = checkRelationV3(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	case checkType == CheckDecision:
 		result = checkDecisionV2(ctx, runner.azClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	case checkType == Evaluation:
@@ -286,66 +282,6 @@ func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResu
 		Duration: duration,
 		Err:      err,
 		Str:      checkStringV3(&req),
-	}
-}
-
-func checkPermissionV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
-	if c == nil {
-		return &CheckResult{
-			Outcome:  false,
-			Duration: 0,
-			Err:      ErrSkippedDirectoryAssertion,
-			Str:      skipped,
-		}
-	}
-
-	var req dsr.CheckPermissionRequest
-	if err := UnmarshalReq(msg, &req); err != nil {
-		return &CheckResult{Err: err}
-	}
-
-	start := time.Now()
-
-	//nolint:staticcheck // SA1019: c.Reader.CheckPermission
-	resp, err := c.Reader.CheckPermission(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &CheckResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkPermissionStringV3(&req),
-	}
-}
-
-func checkRelationV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
-	if c == nil {
-		return &CheckResult{
-			Outcome:  false,
-			Duration: 0,
-			Err:      ErrSkippedDirectoryAssertion,
-			Str:      skipped,
-		}
-	}
-
-	var req dsr.CheckRelationRequest
-	if err := UnmarshalReq(msg, &req); err != nil {
-		return &CheckResult{Err: err}
-	}
-
-	start := time.Now()
-
-	//nolint:staticcheck // SA1019: c.Reader.CheckRelation
-	resp, err := c.Reader.CheckRelation(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &CheckResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkRelationStringV3(&req),
 	}
 }
 
@@ -420,22 +356,6 @@ func checkStringV3(req *dsr.CheckRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
 		req.GetRelation(),
-		req.GetSubjectType(), req.GetSubjectId(),
-	)
-}
-
-func checkRelationStringV3(req *dsr.CheckRelationRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.GetObjectType(), req.GetObjectId(),
-		req.GetRelation(),
-		req.GetSubjectType(), req.GetSubjectId(),
-	)
-}
-
-func checkPermissionStringV3(req *dsr.CheckPermissionRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.GetObjectType(), req.GetObjectId(),
-		req.GetPermission(),
 		req.GetSubjectType(), req.GetSubjectId(),
 	)
 }

@@ -16,7 +16,9 @@ import (
 	"github.com/samber/lo"
 	bolt "go.etcd.io/bbolt"
 	"google.golang.org/grpc"
-	grpcmd "google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 type Reader struct {
@@ -52,10 +54,10 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr.GetObjectRequest) (*dsr
 			return err
 		}
 
-		inMD, _ := grpcmd.FromIncomingContext(ctx)
+		inMD, _ := metadata.FromIncomingContext(ctx)
 		// optimistic concurrency check
 		if lo.Contains(inMD.Get(headers.IfNoneMatch), obj.GetEtag()) {
-			_ = grpc.SetHeader(ctx, grpcmd.Pairs("x-http-code", "304"))
+			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "304"))
 
 			return nil
 		}
@@ -208,9 +210,9 @@ func (s *Reader) GetRelation(ctx context.Context, req *dsr.GetRelationRequest) (
 		dbRel := relations[0]
 		resp.Result = dbRel
 
-		inMD, _ := grpcmd.FromIncomingContext(ctx)
+		inMD, _ := metadata.FromIncomingContext(ctx)
 		if lo.Contains(inMD.Get(headers.IfNoneMatch), dbRel.GetEtag()) {
-			_ = grpc.SetHeader(ctx, grpcmd.Pairs("x-http-code", "304"))
+			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "304"))
 
 			return nil
 		}
@@ -351,80 +353,14 @@ func (s *Reader) Checks(ctx context.Context, req *dsr.ChecksRequest) (*dsr.Check
 	return resp, nil
 }
 
-// CheckPermission, check if subject is permitted to access resource (object).
-//
-//nolint:dupl
-func (s *Reader) CheckPermission(ctx context.Context, req *dsr.CheckPermissionRequest) (*dsr.CheckPermissionResponse, error) {
-	resp := &dsr.CheckPermissionResponse{}
-
-	if err := validator.CheckPermissionRequest(req); err != nil {
-		return resp, err
-	}
-
-	if err := ds.CheckPermission(req).Validate(s.store.MC()); err != nil {
-		return resp, err
-	}
-
-	check := ds.Check(&dsr.CheckRequest{
-		ObjectType:  req.GetObjectType(),
-		ObjectId:    req.GetObjectId(),
-		Relation:    req.GetPermission(),
-		SubjectType: req.GetSubjectType(),
-		SubjectId:   req.GetSubjectId(),
-		Trace:       req.GetTrace(),
-	})
-
-	err := s.store.DB().View(func(tx *bolt.Tx) error {
-		var err error
-
-		r, err := check.Exec(ctx, tx, s.store.MC())
-		if err == nil {
-			resp.Check = r.GetCheck()
-			resp.Trace = r.GetTrace()
-		}
-
-		return err
-	})
-
-	return resp, err
+// CheckPermission is obsolete, use Check instead.
+func (s *Reader) CheckPermission(_ context.Context, _ *dsr.CheckPermissionRequest) (*dsr.CheckPermissionResponse, error) {
+	return &dsr.CheckPermissionResponse{}, status.Error(codes.Unimplemented, "check permission is obsolete, use check instead")
 }
 
-// CheckRelation, check if subject has the specified relation to a resource (object).
-//
-//nolint:dupl
-func (s *Reader) CheckRelation(ctx context.Context, req *dsr.CheckRelationRequest) (*dsr.CheckRelationResponse, error) {
-	resp := &dsr.CheckRelationResponse{}
-
-	if err := validator.CheckRelationRequest(req); err != nil {
-		return resp, err
-	}
-
-	if err := ds.CheckRelation(req).Validate(s.store.MC()); err != nil {
-		return resp, err
-	}
-
-	check := ds.Check(&dsr.CheckRequest{
-		ObjectType:  req.GetObjectType(),
-		ObjectId:    req.GetObjectId(),
-		Relation:    req.GetRelation(),
-		SubjectType: req.GetSubjectType(),
-		SubjectId:   req.GetSubjectId(),
-		Trace:       req.GetTrace(),
-	})
-
-	err := s.store.DB().View(func(tx *bolt.Tx) error {
-		var err error
-
-		r, err := check.Exec(ctx, tx, s.store.MC())
-		if err == nil {
-			resp.Check = r.GetCheck()
-			resp.Trace = r.GetTrace()
-		}
-
-		return err
-	})
-
-	return resp, err
+// CheckRelation is obsolete, use Check instead.
+func (s *Reader) CheckRelation(_ context.Context, _ *dsr.CheckRelationRequest) (*dsr.CheckRelationResponse, error) {
+	return &dsr.CheckRelationResponse{}, status.Error(codes.Unimplemented, "check relation is obsolete, use check instead")
 }
 
 // GetGraph, return graph of connected objects and relations for requested anchor subject/object.
