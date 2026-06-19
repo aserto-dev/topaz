@@ -9,7 +9,13 @@
   "gopls": {
     "formatting.gofumpt": true
   },
-  "go.alternateTools": {},
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": [
+    "--config=${workspaceFolder}/.golangci.yml"
+  ],
+  "go.alternateTools": {
+    "golangci-lint": "${workspaceFolder}/.ext/bin/golangci-lint"
+  },
   "sarif-viewer.connectToGithubCodeScanning": "off",
   "cSpell.words": [
     "acmecorp",
