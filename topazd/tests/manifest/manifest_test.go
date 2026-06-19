@@ -6,7 +6,7 @@ import (
 	"errors"
 	"io"
 	"os"
-	"path"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -91,7 +91,7 @@ func testManifest(ctx context.Context, addr string) func(*testing.T) {
 		require.NoError(t, err)
 
 		tmpDir := t.TempDir()
-		w, err := os.Create(path.Join(tmpDir, "manifest.new.yaml"))
+		w, err := os.Create(filepath.Join(tmpDir, "manifest.new.yaml"))
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = w.Close() })
 

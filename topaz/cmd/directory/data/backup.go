@@ -1,4 +1,4 @@
-package directory
+package data
 
 import (
 	"context"
@@ -10,13 +10,15 @@ import (
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 )
 
-type RestoreCmd struct {
+type BackupCmd struct {
 	dsc.Config
 
-	File string `arg:"" default:"backup.tar.gz" help:"path to source backup file"`
+	File string `arg:""  default:"backup.tar.gz" help:"file path to target backup file"`
 }
 
-func (cmd *RestoreCmd) Run(ctx context.Context) error {
+const defBackupFileName = "backup.tar.gz"
+
+func (cmd *BackupCmd) Run(ctx context.Context) error {
 	if ok, err := clients.Validate(ctx, &cmd.Config); !ok {
 		return err
 	}
@@ -35,13 +37,7 @@ func (cmd *RestoreCmd) Run(ctx context.Context) error {
 		cmd.File = filepath.Join(currentDir, defBackupFileName)
 	}
 
-	r, err := os.Open(cmd.File)
-	if err != nil {
-		return err
-	}
-	defer r.Close()
+	cc.Con().Info().Msg(">>> backup to %s", cmd.File)
 
-	cc.Con().Info().Msg(">>> restore from %q", cmd.File)
-
-	return dsClient.RestoreFromFile(ctx, r)
+	return dsClient.Backup(ctx, cmd.File)
 }

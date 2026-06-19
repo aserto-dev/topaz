@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -47,7 +47,7 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 
-	dbPath := path.Join(dirPath, "edge-ds", "test-eds.db")
+	dbPath := filepath.Join(dirPath, "edge-ds", "test-eds.db")
 	os.Remove(dbPath)
 	fmt.Println(dbPath)
 

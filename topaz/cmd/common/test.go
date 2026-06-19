@@ -217,7 +217,11 @@ func UnmarshalReq(value *structpb.Value, msg proto.Message) error {
 		return err
 	}
 
-	err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(b, msg)
+	err = protojson.UnmarshalOptions{
+		AllowPartial:   true,
+		DiscardUnknown: true,
+		RecursionLimit: 0,
+	}.Unmarshal(b, msg)
 	if err != nil {
 		return err
 	}

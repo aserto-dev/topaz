@@ -2,7 +2,7 @@ package templates
 
 import (
 	"context"
-	"path"
+	"path/filepath"
 
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/cmd/common"
@@ -49,7 +49,7 @@ func (cmd *DownloadTemplateCmd) Run(ctx context.Context) error {
 
 	// manifest
 	{
-		manifestDir := path.Join(topazTemplateDir, cmd.ConfigName, "model")
+		manifestDir := filepath.Join(topazTemplateDir, cmd.ConfigName, "model")
 
 		s, err := download(tmpl.AbsURL(tmpl.Assets.Manifest), manifestDir)
 		if err != nil {
@@ -61,7 +61,7 @@ func (cmd *DownloadTemplateCmd) Run(ctx context.Context) error {
 
 	// data
 	{
-		dataDir := path.Join(topazTemplateDir, cmd.ConfigName, "data")
+		dataDir := filepath.Join(topazTemplateDir, cmd.ConfigName, "data")
 
 		// identity data
 		{
@@ -90,7 +90,7 @@ func (cmd *DownloadTemplateCmd) Run(ctx context.Context) error {
 
 	// test data
 	{
-		testDir := path.Join(topazTemplateDir, cmd.ConfigName, "assertions")
+		testDir := filepath.Join(topazTemplateDir, cmd.ConfigName, "assertions")
 
 		for _, url := range tmpl.Assets.Assertions {
 			s, err := download(tmpl.AbsURL(url), testDir)
