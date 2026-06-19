@@ -69,7 +69,7 @@ func (cmd *ExportCmd) checkPath() error {
 		return nil
 	}
 
-	dir, _ := filepath.Split(cmd.File)
+	dir := filepath.Dir(cmd.File)
 
 	ok, err := fs.DirExistsEx(dir)
 	if ok && err == nil {
