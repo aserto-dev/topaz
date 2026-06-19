@@ -7,8 +7,6 @@ import (
 
 	"github.com/aserto-dev/topaz/topaz/edit"
 	"github.com/aserto-dev/topaz/topaz/fflag"
-	"github.com/aserto-dev/topaz/topaz/jsonx"
-	"github.com/aserto-dev/topaz/topaz/prompter"
 
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -31,14 +29,14 @@ func (cmd *RequestArgs) Process(req proto.Message, tmpl func() proto.Message) er
 		cmd.Request = req
 	}
 
-	if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
-		p := prompter.New(tmpl())
-		if err := p.Show(); err != nil {
-			return err
-		}
+	// if cmd.Request == "" && fflag.Enabled(fflag.Prompter) {
+	// 	p := prompter.New(tmpl())
+	// 	if err := p.Show(); err != nil {
+	// 		return err
+	// 	}
 
-		cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
-	}
+	// 	cmd.Request = jsonx.MaskedMarshalOpts().Format(p.Req())
+	// }
 
 	if cmd.Request == "" {
 		return errors.New("request argument is required")

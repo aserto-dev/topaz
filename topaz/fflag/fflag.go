@@ -17,7 +17,6 @@ type FFlag uint64
 
 const (
 	Editor FFlag = 1 << iota
-	Prompter
 )
 
 var (
