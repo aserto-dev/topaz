@@ -6,7 +6,7 @@ import (
 	"os"
 	"sync/atomic"
 
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	"github.com/mattn/go-isatty"
 	"google.golang.org/grpc/codes"
 )
@@ -88,7 +88,7 @@ func (c *Counter) Print(w io.Writer) {
 	}
 }
 
-func printStatus(w io.Writer, status *dsi3.ImportStatus) {
+func printStatus(w io.Writer, status *dsi.ImportStatus) {
 	fmt.Fprintf(w, "%-9s : %s - %s (%d)\n",
 		"error",
 		status.GetMsg(),
@@ -96,7 +96,7 @@ func printStatus(w io.Writer, status *dsi3.ImportStatus) {
 		status.GetCode())
 }
 
-func printCounter(w io.Writer, ctr *dsi3.ImportCounter) {
+func printCounter(w io.Writer, ctr *dsi.ImportCounter) {
 	fmt.Fprintf(w, "%-9s : %d (set:%d delete:%d error:%d)\n",
 		ctr.GetType(),
 		ctr.GetRecv(),

@@ -1,7 +1,7 @@
 package az
 
 import (
-	"github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 
@@ -26,20 +26,20 @@ const azResourceSearchHelp string = `az.resource_search({
 
 // RegisterResourceSearch.
 // https://openid.github.io/authzen/#name-resource-search-api
-func RegisterResourceSearch(logger *zerolog.Logger, fnName string, ac access.AccessClient) (*rego.Function, rego.Builtin1) {
+func RegisterResourceSearch(logger *zerolog.Logger, fnName string, ac dsa.AccessClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args access.ResourceSearchRequest
+			var args dsa.ResourceSearchRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
-			if proto.Equal(&args, &access.ResourceSearchRequest{}) {
+			if proto.Equal(&args, &dsa.ResourceSearchRequest{}) {
 				return ast.StringTerm(azResourceSearchHelp), nil
 			}
 

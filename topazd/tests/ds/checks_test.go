@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/prop"
 	tc "github.com/aserto-dev/topaz/topazd/tests/common"
 	"github.com/stretchr/testify/assert"
@@ -13,12 +13,12 @@ import (
 )
 
 type checksTestCase struct {
-	req  *dsr3.ChecksRequest
-	resp *dsr3.ChecksResponse
+	req  *dsr.ChecksRequest
+	resp *dsr.ChecksResponse
 	err  error
 }
 
-func testChecks(ctx context.Context, dsClient dsr3.ReaderClient) func(*testing.T) {
+func testChecks(ctx context.Context, dsClient dsr.ReaderClient) func(*testing.T) {
 	return func(t *testing.T) {
 		for i, tc := range checksTCs {
 			t.Run(fmt.Sprintf("checks-%d", i), func(t *testing.T) {
@@ -56,8 +56,8 @@ func testChecks(ctx context.Context, dsClient dsr3.ReaderClient) func(*testing.T
 var checksTCs []*checksTestCase = []*checksTestCase{
 	// id = 0
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{
 				ObjectType:  "folder",
 				ObjectId:    "morty",
 				Relation:    "owner",
@@ -65,12 +65,12 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				SubjectId:   "morty@the-citadel.com",
 				Trace:       false,
 			},
-			Checks: []*dsr3.CheckRequest{
+			Checks: []*dsr.CheckRequest{
 				{},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   true,
 					Context: tc.SetContext(prop.Reason, ""),
@@ -81,8 +81,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 1
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{
 				ObjectType:  "folder2",
 				ObjectId:    "morty",
 				Relation:    "owner",
@@ -90,12 +90,12 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				SubjectId:   "morty@the-citadel.com",
 				Trace:       false,
 			},
-			Checks: []*dsr3.CheckRequest{
+			Checks: []*dsr.CheckRequest{
 				{},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20026 object type not found: folder2: object_type"),
@@ -106,8 +106,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 2
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{
 				ObjectType:  "folder",
 				ObjectId:    "morty2",
 				Relation:    "owner",
@@ -115,12 +115,12 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				SubjectId:   "morty@the-citadel.com",
 				Trace:       false,
 			},
-			Checks: []*dsr3.CheckRequest{
+			Checks: []*dsr.CheckRequest{
 				{},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20025 object not found: object folder:morty2"),
@@ -131,8 +131,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 3
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{
 				ObjectType:  "folder",
 				ObjectId:    "morty",
 				Relation:    "owner2",
@@ -140,12 +140,12 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				SubjectId:   "morty@the-citadel.com",
 				Trace:       false,
 			},
-			Checks: []*dsr3.CheckRequest{
+			Checks: []*dsr.CheckRequest{
 				{},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20036 relation type not found: relation: folder#owner2"),
@@ -156,8 +156,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 4
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{
 				ObjectType:  "folder",
 				ObjectId:    "morty",
 				Relation:    "owner",
@@ -165,12 +165,12 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				SubjectId:   "morty@the-citadel.com",
 				Trace:       false,
 			},
-			Checks: []*dsr3.CheckRequest{
+			Checks: []*dsr.CheckRequest{
 				{},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20026 object type not found: user2: subject_type"),
@@ -181,8 +181,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 5
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{
 				ObjectType:  "folder",
 				ObjectId:    "morty",
 				Relation:    "owner",
@@ -190,12 +190,12 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				SubjectId:   "morty@the-citadel.com2",
 				Trace:       false,
 			},
-			Checks: []*dsr3.CheckRequest{
+			Checks: []*dsr.CheckRequest{
 				{},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20025 object not found: subject user:morty@the-citadel.com2"),
@@ -206,9 +206,9 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 6
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{},
-			Checks: []*dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
+			Checks: []*dsr.CheckRequest{
 				{
 					ObjectType:  "folder",
 					ObjectId:    "morty",
@@ -219,8 +219,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   true,
 					Context: tc.SetContext(prop.Reason, ""),
@@ -231,9 +231,9 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 7
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{},
-			Checks: []*dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
+			Checks: []*dsr.CheckRequest{
 				{
 					ObjectType:  "folder2",
 					ObjectId:    "morty",
@@ -244,8 +244,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20026 object type not found: folder2: object_type"),
@@ -256,9 +256,9 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 8
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{},
-			Checks: []*dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
+			Checks: []*dsr.CheckRequest{
 				{
 					ObjectType:  "folder",
 					ObjectId:    "morty2",
@@ -269,8 +269,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20025 object not found: object folder:morty2"),
@@ -281,9 +281,9 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 9
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{},
-			Checks: []*dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
+			Checks: []*dsr.CheckRequest{
 				{
 					ObjectType:  "folder",
 					ObjectId:    "morty",
@@ -294,8 +294,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20036 relation type not found: relation: folder#owner2"),
@@ -306,9 +306,9 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 10
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{},
-			Checks: []*dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
+			Checks: []*dsr.CheckRequest{
 				{
 					ObjectType:  "folder",
 					ObjectId:    "morty",
@@ -319,8 +319,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20026 object type not found: user2: subject_type"),
@@ -331,9 +331,9 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 11
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{},
-			Checks: []*dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
+			Checks: []*dsr.CheckRequest{
 				{
 					ObjectType:  "folder",
 					ObjectId:    "morty",
@@ -344,8 +344,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20025 object not found: subject user:morty@the-citadel.com2"),
@@ -356,8 +356,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 12
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{
 				ObjectType:  "folder",
 				ObjectId:    "morty",
 				Relation:    "",
@@ -365,7 +365,7 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				SubjectId:   "morty@the-citadel.com",
 				Trace:       false,
 			},
-			Checks: []*dsr3.CheckRequest{
+			Checks: []*dsr.CheckRequest{
 				{
 					Relation: "owner",
 				},
@@ -380,8 +380,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   true,
 					Context: tc.SetContext(prop.Reason, ""),
@@ -404,36 +404,36 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 13 - default checks request, no fields set.
 	{
-		req:  &dsr3.ChecksRequest{},
-		resp: &dsr3.ChecksResponse{},
+		req:  &dsr.ChecksRequest{},
+		resp: &dsr.ChecksResponse{},
 		err:  nil,
 	},
 	// id = 14 - default checks request, with empty "default" field.
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{},
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
 		},
-		resp: &dsr3.ChecksResponse{},
+		resp: &dsr.ChecksResponse{},
 		err:  nil,
 	},
 	// id 15 - default checks request, with empty "checks" field.
 	{
-		req: &dsr3.ChecksRequest{
-			Checks: []*dsr3.CheckRequest{},
+		req: &dsr.ChecksRequest{
+			Checks: []*dsr.CheckRequest{},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{},
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{},
 		},
 		err: nil,
 	},
 	// id = 16 - default checks request, with empty "checks" field.
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{},
-			Checks:  []*dsr3.CheckRequest{{}},
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
+			Checks:  []*dsr.CheckRequest{{}},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check:   false,
 					Context: tc.SetContext(prop.Reason, "E20046 invalid argument object identifier: type: object_type"),
@@ -444,8 +444,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 17 - default sub-request is nil
 	{
-		req: &dsr3.ChecksRequest{
-			Checks: []*dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Checks: []*dsr.CheckRequest{
 				{
 					ObjectType:  "folder",
 					ObjectId:    "morty",
@@ -456,8 +456,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				},
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{
 				{
 					Check: true,
 				},
@@ -467,8 +467,8 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 	},
 	// id = 18 - checks array in nil
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{
 				ObjectType:  "folder",
 				ObjectId:    "morty",
 				Relation:    "owner",
@@ -477,15 +477,15 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				Trace:       false,
 			},
 		},
-		resp: &dsr3.ChecksResponse{
-			Checks: []*dsr3.CheckResponse{},
+		resp: &dsr.ChecksResponse{
+			Checks: []*dsr.CheckResponse{},
 		},
 		err: nil,
 	},
 	// id = 19 - checks array is empty
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{
 				ObjectType:  "folder",
 				ObjectId:    "morty",
 				Relation:    "owner",
@@ -493,36 +493,36 @@ var checksTCs []*checksTestCase = []*checksTestCase{
 				SubjectId:   "morty@the-citadel.com",
 				Trace:       false,
 			},
-			Checks: []*dsr3.CheckRequest{},
+			Checks: []*dsr.CheckRequest{},
 		},
-		resp: &dsr3.ChecksResponse{},
+		resp: &dsr.ChecksResponse{},
 		err:  nil,
 	},
 	// id = 20 - default + checks == nil
 	{
-		req: &dsr3.ChecksRequest{
+		req: &dsr.ChecksRequest{
 			Default: nil,
 			Checks:  nil,
 		},
-		resp: &dsr3.ChecksResponse{},
+		resp: &dsr.ChecksResponse{},
 		err:  nil,
 	},
 	// id = 20 - default = empty, checks = nil
 	{
-		req: &dsr3.ChecksRequest{
-			Default: &dsr3.CheckRequest{},
+		req: &dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
 			Checks:  nil,
 		},
-		resp: &dsr3.ChecksResponse{},
+		resp: &dsr.ChecksResponse{},
 		err:  nil,
 	},
 	// id = 20 - default = nil;, checks = empty
 	{
-		req: &dsr3.ChecksRequest{
+		req: &dsr.ChecksRequest{
 			Default: nil,
-			Checks:  []*dsr3.CheckRequest{},
+			Checks:  []*dsr.CheckRequest{},
 		},
-		resp: &dsr3.ChecksResponse{},
+		resp: &dsr.ChecksResponse{},
 		err:  nil,
 	},
 }

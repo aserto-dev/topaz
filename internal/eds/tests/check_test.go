@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"testing"
 
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/server"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
@@ -18,7 +18,7 @@ import (
 func BenchmarkCheckSerial(b *testing.B) {
 	assert := require.New(b)
 
-	checks, err := loadChecks[dsr3.CheckRequest]()
+	checks, err := loadChecks[dsr.CheckRequest]()
 	assert.NoError(err)
 	assert.NotEmpty(checks)
 
@@ -40,7 +40,7 @@ func BenchmarkCheckSerial(b *testing.B) {
 func BenchmarkCheckParallel(b *testing.B) {
 	assert := require.New(b)
 
-	checks, err := loadChecks[dsr3.CheckRequest]()
+	checks, err := loadChecks[dsr.CheckRequest]()
 	assert.NoError(err)
 	assert.NotEmpty(checks)
 
@@ -66,7 +66,7 @@ func BenchmarkCheckParallel(b *testing.B) {
 func BenchmarkCheckParallelChunks(b *testing.B) {
 	assert := require.New(b)
 
-	checks, err := loadChecks[dsr3.CheckRequest]()
+	checks, err := loadChecks[dsr.CheckRequest]()
 	assert.NoError(err)
 	assert.NotEmpty(checks)
 
@@ -77,7 +77,7 @@ func BenchmarkCheckParallelChunks(b *testing.B) {
 
 	ctx := b.Context()
 
-	var chunks [][]*dsr3.CheckRequest
+	var chunks [][]*dsr.CheckRequest
 
 	numChunks := runtime.NumCPU()
 	chunkSize := (len(checks) + numChunks - 1) / numChunks
@@ -137,7 +137,7 @@ func loadChecks[T any]() ([]*T, error) {
 	return checks, nil
 }
 
-func receiver(stream dsi3.Importer_ImportClient) func() error {
+func receiver(stream dsi.Importer_ImportClient) func() error {
 	return func() error {
 		for {
 			_, err := stream.Recv()

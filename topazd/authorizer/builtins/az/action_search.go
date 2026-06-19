@@ -2,7 +2,7 @@ package az
 
 import (
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
-	"github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -25,20 +25,20 @@ const azActionSearchHelp string = `az.action_search({
 
 // RegisterActionSearch
 // https://openid.github.io/authzen/#name-action-search-api.
-func RegisterActionSearch(logger *zerolog.Logger, fnName string, ac access.AccessClient) (*rego.Function, rego.Builtin1) {
+func RegisterActionSearch(logger *zerolog.Logger, fnName string, ac dsa.AccessClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args access.ActionSearchRequest
+			var args dsa.ActionSearchRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
-			if proto.Equal(&args, &access.ActionSearchRequest{}) {
+			if proto.Equal(&args, &dsa.ActionSearchRequest{}) {
 				return ast.StringTerm(azActionSearchHelp), nil
 			}
 

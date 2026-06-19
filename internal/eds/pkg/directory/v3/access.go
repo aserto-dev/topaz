@@ -4,13 +4,13 @@ import (
 	"context"
 
 	"github.com/aserto-dev/azm/cache"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	acc1 "github.com/authzen/access.go/api/access/v1"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsa "github.com/authzen/access.go/api/access/v1"
 	"github.com/rs/zerolog"
 )
 
 type Access struct {
-	acc1.UnimplementedAccessServer
+	dsa.UnimplementedAccessServer
 
 	logger *zerolog.Logger
 	reader *Reader
@@ -27,20 +27,20 @@ func NewAccess(logger *zerolog.Logger, reader *Reader) *Access {
 //
 // The Access Evaluation API defines the message exchange pattern between a client (PEP)
 // and an authorization service (PDP) for executing a single access evaluation.
-func (s *Access) Evaluation(ctx context.Context, req *acc1.EvaluationRequest) (*acc1.EvaluationResponse, error) {
+func (s *Access) Evaluation(ctx context.Context, req *dsa.EvaluationRequest) (*dsa.EvaluationResponse, error) {
 	resp, err := s.reader.Check(ctx, extractCheck(req))
 	if err != nil {
-		return &acc1.EvaluationResponse{}, err
+		return &dsa.EvaluationResponse{}, err
 	}
 
-	return &acc1.EvaluationResponse{
+	return &dsa.EvaluationResponse{
 		Decision: resp.GetCheck(),
 		Context:  resp.GetContext(),
 	}, nil
 }
 
-func extractCheck(req *acc1.EvaluationRequest) *dsr3.CheckRequest {
-	checkReq := &dsr3.CheckRequest{}
+func extractCheck(req *dsa.EvaluationRequest) *dsr.CheckRequest {
+	checkReq := &dsr.CheckRequest{}
 	if res := req.GetResource(); res != nil {
 		checkReq.ObjectType = res.GetType()
 		checkReq.ObjectId = res.GetId()
@@ -63,21 +63,21 @@ func extractCheck(req *acc1.EvaluationRequest) *dsr3.CheckRequest {
 // The Access Evaluations API defines the message exchange pattern between a client (PEP)
 // and an authorization service (PDP) for evaluating multiple access evaluations within
 // the scope of a single message exchange (also known as "boxcarring" requests).
-func (s *Access) Evaluations(ctx context.Context, req *acc1.EvaluationsRequest) (*acc1.EvaluationsResponse, error) {
+func (s *Access) Evaluations(ctx context.Context, req *dsa.EvaluationsRequest) (*dsa.EvaluationsResponse, error) {
 	defCheck, checks := extractChecks(req)
 
-	checksResp, err := s.reader.Checks(ctx, &dsr3.ChecksRequest{Default: defCheck, Checks: checks})
+	checksResp, err := s.reader.Checks(ctx, &dsr.ChecksRequest{Default: defCheck, Checks: checks})
 	if err != nil {
-		return &acc1.EvaluationsResponse{}, err
+		return &dsa.EvaluationsResponse{}, err
 	}
 
-	return &acc1.EvaluationsResponse{
+	return &dsa.EvaluationsResponse{
 		Evaluations: extractDecisions(checksResp),
 	}, nil
 }
 
-func extractChecks(req *acc1.EvaluationsRequest) (*dsr3.CheckRequest, []*dsr3.CheckRequest) {
-	check := &dsr3.CheckRequest{}
+func extractChecks(req *dsa.EvaluationsRequest) (*dsr.CheckRequest, []*dsr.CheckRequest) {
+	check := &dsr.CheckRequest{}
 
 	if sub := req.GetSubject(); sub != nil {
 		check.SubjectType = sub.GetType()
@@ -93,7 +93,7 @@ func extractChecks(req *acc1.EvaluationsRequest) (*dsr3.CheckRequest, []*dsr3.Ch
 		check.ObjectId = res.GetId()
 	}
 
-	checks := make([]*dsr3.CheckRequest, len(req.GetEvaluations()))
+	checks := make([]*dsr.CheckRequest, len(req.GetEvaluations()))
 
 	for k, v := range req.GetEvaluations() {
 		c := extractCheck(v)
@@ -103,11 +103,11 @@ func extractChecks(req *acc1.EvaluationsRequest) (*dsr3.CheckRequest, []*dsr3.Ch
 	return check, checks
 }
 
-func extractDecisions(resp *dsr3.ChecksResponse) []*acc1.EvaluationResponse {
-	evaluations := make([]*acc1.EvaluationResponse, len(resp.GetChecks()))
+func extractDecisions(resp *dsr.ChecksResponse) []*dsa.EvaluationResponse {
+	evaluations := make([]*dsa.EvaluationResponse, len(resp.GetChecks()))
 
 	for k, v := range resp.GetChecks() {
-		e := &acc1.EvaluationResponse{}
+		e := &dsa.EvaluationResponse{}
 		e.Decision = v.GetCheck()
 
 		if v.GetContext() != nil {
@@ -126,10 +126,10 @@ func extractDecisions(resp *dsr3.ChecksResponse) []*acc1.EvaluationResponse {
 // for returning all of the subjects that match the search criteria.
 //
 // The Subject Search API is based on the Access Evaluation information model, but omits the Subject ID.
-func (s *Access) SubjectSearch(ctx context.Context, req *acc1.SubjectSearchRequest) (*acc1.SubjectSearchResponse, error) {
-	resp := &acc1.SubjectSearchResponse{
-		Results: []*acc1.Subject{},
-		Page:    &acc1.PaginationResponse{},
+func (s *Access) SubjectSearch(ctx context.Context, req *dsa.SubjectSearchRequest) (*dsa.SubjectSearchResponse, error) {
+	resp := &dsa.SubjectSearchResponse{
+		Results: []*dsa.Subject{},
+		Page:    &dsa.PaginationResponse{},
 	}
 
 	graphResp, err := s.reader.GetGraph(ctx, extractSubjectSearch(req))
@@ -138,7 +138,7 @@ func (s *Access) SubjectSearch(ctx context.Context, req *acc1.SubjectSearchReque
 	}
 
 	for _, oid := range graphResp.GetResults() {
-		sub := &acc1.Subject{
+		sub := &dsa.Subject{
 			Type: oid.GetObjectType(),
 			Id:   oid.GetObjectId(),
 		}
@@ -148,8 +148,8 @@ func (s *Access) SubjectSearch(ctx context.Context, req *acc1.SubjectSearchReque
 	return resp, nil
 }
 
-func extractSubjectSearch(req *acc1.SubjectSearchRequest) *dsr3.GetGraphRequest {
-	resp := &dsr3.GetGraphRequest{}
+func extractSubjectSearch(req *dsa.SubjectSearchRequest) *dsr.GetGraphRequest {
+	resp := &dsr.GetGraphRequest{}
 	if res := req.GetResource(); res != nil {
 		resp.ObjectType = res.GetType()
 		resp.ObjectId = res.GetId()
@@ -175,10 +175,10 @@ func extractSubjectSearch(req *acc1.SubjectSearchRequest) *dsr3.GetGraphRequest 
 // for returning all of the resources that match the search criteria.
 //
 // The Resource Search API is based on the Access Evaluation information model, but omits the Resource ID.
-func (s *Access) ResourceSearch(ctx context.Context, req *acc1.ResourceSearchRequest) (*acc1.ResourceSearchResponse, error) {
-	resp := &acc1.ResourceSearchResponse{
-		Results: []*acc1.Resource{},
-		Page:    &acc1.PaginationResponse{},
+func (s *Access) ResourceSearch(ctx context.Context, req *dsa.ResourceSearchRequest) (*dsa.ResourceSearchResponse, error) {
+	resp := &dsa.ResourceSearchResponse{
+		Results: []*dsa.Resource{},
+		Page:    &dsa.PaginationResponse{},
 	}
 
 	graphResp, err := s.reader.GetGraph(ctx, extractResourceSearch(req))
@@ -187,7 +187,7 @@ func (s *Access) ResourceSearch(ctx context.Context, req *acc1.ResourceSearchReq
 	}
 
 	for _, oid := range graphResp.GetResults() {
-		res := &acc1.Resource{
+		res := &dsa.Resource{
 			Type: oid.GetObjectType(),
 			Id:   oid.GetObjectId(),
 		}
@@ -198,8 +198,8 @@ func (s *Access) ResourceSearch(ctx context.Context, req *acc1.ResourceSearchReq
 	return resp, nil
 }
 
-func extractResourceSearch(req *acc1.ResourceSearchRequest) *dsr3.GetGraphRequest {
-	resp := &dsr3.GetGraphRequest{}
+func extractResourceSearch(req *dsa.ResourceSearchRequest) *dsr.GetGraphRequest {
+	resp := &dsr.GetGraphRequest{}
 	if res := req.GetResource(); res != nil {
 		resp.ObjectType = res.GetType()
 	}
@@ -225,10 +225,10 @@ func extractResourceSearch(req *acc1.ResourceSearchRequest) *dsr3.GetGraphReques
 // for returning all of the actions that match the search criteria.
 //
 // The Action Search API is based on the Access Evaluation information model.
-func (s *Access) ActionSearch(ctx context.Context, req *acc1.ActionSearchRequest) (*acc1.ActionSearchResponse, error) {
-	resp := &acc1.ActionSearchResponse{
-		Results: []*acc1.Action{},
-		Page:    &acc1.PaginationResponse{},
+func (s *Access) ActionSearch(ctx context.Context, req *dsa.ActionSearchRequest) (*dsa.ActionSearchResponse, error) {
+	resp := &dsa.ActionSearchResponse{
+		Results: []*dsa.Action{},
+		Page:    &dsa.PaginationResponse{},
 	}
 
 	graphReq := extractActionSearch(req)
@@ -258,13 +258,13 @@ func (s *Access) ActionSearch(ctx context.Context, req *acc1.ActionSearchRequest
 
 	assignable = append(assignable, availablePermissions...)
 
-	checks := []*dsr3.CheckRequest{}
+	checks := []*dsr.CheckRequest{}
 	for _, rel := range assignable {
-		checks = append(checks, &dsr3.CheckRequest{Relation: rel.String()})
+		checks = append(checks, &dsr.CheckRequest{Relation: rel.String()})
 	}
 
-	checksResp, err := s.reader.Checks(ctx, &dsr3.ChecksRequest{
-		Default: &dsr3.CheckRequest{
+	checksResp, err := s.reader.Checks(ctx, &dsr.ChecksRequest{
+		Default: &dsr.CheckRequest{
 			ObjectType:  graphReq.GetObjectType(),
 			ObjectId:    graphReq.GetObjectId(),
 			SubjectType: graphReq.GetSubjectType(),
@@ -278,15 +278,15 @@ func (s *Access) ActionSearch(ctx context.Context, req *acc1.ActionSearchRequest
 
 	for i, chk := range checksResp.GetChecks() {
 		if chk.GetCheck() {
-			resp.Results = append(resp.GetResults(), &acc1.Action{Name: assignable[i].String()})
+			resp.Results = append(resp.GetResults(), &dsa.Action{Name: assignable[i].String()})
 		}
 	}
 
 	return resp, nil
 }
 
-func extractActionSearch(req *acc1.ActionSearchRequest) *dsr3.GetGraphRequest {
-	resp := &dsr3.GetGraphRequest{}
+func extractActionSearch(req *dsa.ActionSearchRequest) *dsr.GetGraphRequest {
+	resp := &dsr.GetGraphRequest{}
 	if res := req.GetResource(); res != nil {
 		resp.ObjectType = res.GetType()
 		resp.ObjectId = res.GetId()

@@ -11,8 +11,8 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/topazd/directory"
 
@@ -37,7 +37,7 @@ var (
 
 // getUserFromJWT.
 func (s *AuthorizerServer) getUserFromJWT(ctx context.Context, bearerJWT string) (proto.Message, error) {
-	resp := dsc3.Object{}
+	resp := dsc.Object{}
 
 	ident, err := s.getIdentityFromJWT(ctx, bearerJWT)
 	if err != nil {
@@ -232,7 +232,7 @@ func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, ident
 }
 
 func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity string) (proto.Message, error) {
-	client := dsr3.NewReaderClient(s.resolver.GetDirectoryResolver().GetConn())
+	client := dsr.NewReaderClient(s.resolver.GetDirectoryResolver().GetConn())
 
 	user, err := directory.ResolveIdentity(ctx, client, identity)
 
@@ -248,9 +248,9 @@ func (s *AuthorizerServer) getUserFromIdentity(ctx context.Context, identity str
 
 // getUserObject, retrieves an user object, using the identity as the object_id (legacy).
 func (s *AuthorizerServer) getUserObject(ctx context.Context, objID string) (proto.Message, error) {
-	client := dsr3.NewReaderClient(s.resolver.GetDirectoryResolver().GetConn())
+	client := dsr.NewReaderClient(s.resolver.GetDirectoryResolver().GetConn())
 
-	objResp, err := client.GetObject(ctx, &dsr3.GetObjectRequest{
+	objResp, err := client.GetObject(ctx, &dsr.GetObjectRequest{
 		ObjectType: directory.User,
 		ObjectId:   objID,
 	})

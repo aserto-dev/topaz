@@ -3,8 +3,8 @@ package v3
 import (
 	"context"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/validator"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
@@ -20,7 +20,7 @@ import (
 )
 
 type Reader struct {
-	dsr3.UnimplementedReaderServer
+	dsr.UnimplementedReaderServer
 
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
@@ -34,20 +34,20 @@ func NewReader(logger *zerolog.Logger, store *bdb.BoltDB) *Reader {
 }
 
 // GetObject, get single object instance.
-func (s *Reader) GetObject(ctx context.Context, req *dsr3.GetObjectRequest) (*dsr3.GetObjectResponse, error) {
-	resp := &dsr3.GetObjectResponse{}
+func (s *Reader) GetObject(ctx context.Context, req *dsr.GetObjectRequest) (*dsr.GetObjectResponse, error) {
+	resp := &dsr.GetObjectResponse{}
 
 	if err := validator.GetObjectRequest(req); err != nil {
 		return resp, err
 	}
 
-	objIdent := ds.ObjectIdentifier(&dsc3.ObjectIdentifier{ObjectType: req.GetObjectType(), ObjectId: req.GetObjectId()})
+	objIdent := ds.ObjectIdentifier(&dsc.ObjectIdentifier{ObjectType: req.GetObjectType(), ObjectId: req.GetObjectId()})
 	if err := objIdent.Validate(s.store.MC()); err != nil {
 		return resp, err
 	}
 
 	err := s.store.DB().View(func(tx *bolt.Tx) error {
-		obj, err := bdb.Get[dsc3.Object](ctx, tx, bdb.ObjectsPath, objIdent.Key())
+		obj, err := bdb.Get[dsc.Object](ctx, tx, bdb.ObjectsPath, objIdent.Key())
 		if err != nil {
 			return err
 		}
@@ -63,7 +63,7 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr3.GetObjectRequest) (*ds
 		if req.GetWithRelations() {
 			// incoming object relations of object instance
 			// (result.type == incoming.subject.type && result.key == incoming.subject.key)
-			incoming, err := bdb.Scan[dsc3.Relation](ctx, tx, bdb.RelationsSubPath, ds.Object(obj).Key())
+			incoming, err := bdb.Scan[dsc.Relation](ctx, tx, bdb.RelationsSubPath, ds.Object(obj).Key())
 			if err != nil {
 				return err
 			}
@@ -72,7 +72,7 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr3.GetObjectRequest) (*ds
 
 			// outgoing object relations of object instance
 			// (result.type == outgoing.object.type && result.key == outgoing.object.key)
-			outgoing, err := bdb.Scan[dsc3.Relation](ctx, tx, bdb.RelationsObjPath, ds.Object(obj).Key())
+			outgoing, err := bdb.Scan[dsc.Relation](ctx, tx, bdb.RelationsObjPath, ds.Object(obj).Key())
 			if err != nil {
 				return err
 			}
@@ -91,8 +91,8 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr3.GetObjectRequest) (*ds
 }
 
 // GetObjectMany, get multiple object instances by type+id, in a single request.
-func (s *Reader) GetObjectMany(ctx context.Context, req *dsr3.GetObjectManyRequest) (*dsr3.GetObjectManyResponse, error) {
-	resp := &dsr3.GetObjectManyResponse{Results: []*dsc3.Object{}}
+func (s *Reader) GetObjectMany(ctx context.Context, req *dsr.GetObjectManyRequest) (*dsr.GetObjectManyResponse, error) {
+	resp := &dsr.GetObjectManyResponse{Results: []*dsc.Object{}}
 
 	if err := validator.GetObjectManyRequest(req); err != nil {
 		return resp, err
@@ -107,7 +107,7 @@ func (s *Reader) GetObjectMany(ctx context.Context, req *dsr3.GetObjectManyReque
 
 	err := s.store.DB().View(func(tx *bolt.Tx) error {
 		for _, i := range req.GetParam() {
-			obj, err := bdb.Get[dsc3.Object](ctx, tx, bdb.ObjectsPath, ds.ObjectIdentifier(i).Key())
+			obj, err := bdb.Get[dsc.Object](ctx, tx, bdb.ObjectsPath, ds.ObjectIdentifier(i).Key())
 			if err != nil {
 				return err
 			}
@@ -122,15 +122,15 @@ func (s *Reader) GetObjectMany(ctx context.Context, req *dsr3.GetObjectManyReque
 }
 
 // GetObjects, gets (all) object instances, optionally filtered by object type, as a paginated array of objects.
-func (s *Reader) GetObjects(ctx context.Context, req *dsr3.GetObjectsRequest) (*dsr3.GetObjectsResponse, error) {
-	resp := &dsr3.GetObjectsResponse{Results: []*dsc3.Object{}, Page: &dsc3.PaginationResponse{}}
+func (s *Reader) GetObjects(ctx context.Context, req *dsr.GetObjectsRequest) (*dsr.GetObjectsResponse, error) {
+	resp := &dsr.GetObjectsResponse{Results: []*dsc.Object{}, Page: &dsc.PaginationResponse{}}
 
 	if err := validator.GetObjectsRequest(req); err != nil {
 		return resp, err
 	}
 
 	if req.GetPage() == nil {
-		req.Page = &dsc3.PaginationRequest{Size: x.MaxPageSize}
+		req.Page = &dsc.PaginationRequest{Size: x.MaxPageSize}
 	}
 
 	opts := []bdb.ScanOption{
@@ -139,7 +139,7 @@ func (s *Reader) GetObjects(ctx context.Context, req *dsr3.GetObjectsRequest) (*
 	}
 
 	if req.GetObjectType() != "" {
-		oid := ds.ObjectIdentifier(&dsc3.ObjectIdentifier{ObjectType: req.GetObjectType()})
+		oid := ds.ObjectIdentifier(&dsc.ObjectIdentifier{ObjectType: req.GetObjectType()})
 		if err := ds.ObjectSelector(oid.ObjectIdentifier).Validate(s.store.MC()); err != nil {
 			return resp, err
 		}
@@ -148,18 +148,18 @@ func (s *Reader) GetObjects(ctx context.Context, req *dsr3.GetObjectsRequest) (*
 	}
 
 	err := s.store.DB().View(func(tx *bolt.Tx) error {
-		iter, err := bdb.NewPageIterator[dsc3.Object](ctx, tx, bdb.ObjectsPath, opts...)
+		iter, err := bdb.NewPageIterator[dsc.Object](ctx, tx, bdb.ObjectsPath, opts...)
 		if err != nil {
 			return err
 		}
 
 		iter.Next()
 
-		resp.Results = lo.Map(iter.Value(), func(x *dsc3.Object, _ int) *dsc3.Object {
+		resp.Results = lo.Map(iter.Value(), func(x *dsc.Object, _ int) *dsc.Object {
 			return ds.PatchObjectRead(x)
 		})
 
-		resp.Page = &dsc3.PaginationResponse{NextToken: iter.NextToken()}
+		resp.Page = &dsc.PaginationResponse{NextToken: iter.NextToken()}
 
 		return nil
 	})
@@ -168,10 +168,10 @@ func (s *Reader) GetObjects(ctx context.Context, req *dsr3.GetObjectsRequest) (*
 }
 
 // GetRelation, get a single relation instance based on subject, relation, object filter.
-func (s *Reader) GetRelation(ctx context.Context, req *dsr3.GetRelationRequest) (*dsr3.GetRelationResponse, error) {
-	resp := &dsr3.GetRelationResponse{
-		Result:  &dsc3.Relation{},
-		Objects: map[string]*dsc3.Object{},
+func (s *Reader) GetRelation(ctx context.Context, req *dsr.GetRelationRequest) (*dsr.GetRelationResponse, error) {
+	resp := &dsr.GetRelationResponse{
+		Result:  &dsc.Relation{},
+		Objects: map[string]*dsc.Object{},
 	}
 
 	if err := validator.GetRelationRequest(req); err != nil {
@@ -192,7 +192,7 @@ func (s *Reader) GetRelation(ctx context.Context, req *dsr3.GetRelationRequest) 
 	}
 
 	err = s.store.DB().View(func(tx *bolt.Tx) error {
-		relations, err := bdb.Scan[dsc3.Relation](ctx, tx, path, filter.Bytes())
+		relations, err := bdb.Scan[dsc.Relation](ctx, tx, path, filter.Bytes())
 		if err != nil {
 			return err
 		}
@@ -216,7 +216,7 @@ func (s *Reader) GetRelation(ctx context.Context, req *dsr3.GetRelationRequest) 
 		}
 
 		if req.GetWithObjects() {
-			relations := []*dsc3.Relation{resp.GetResult()}
+			relations := []*dsc.Relation{resp.GetResult()}
 			resp.Objects = s.getWithObjects(ctx, tx, relations)
 		}
 
@@ -227,11 +227,11 @@ func (s *Reader) GetRelation(ctx context.Context, req *dsr3.GetRelationRequest) 
 }
 
 // GetRelations, gets paginated set of relation instances based on subject, relation, object filter.
-func (s *Reader) GetRelations(ctx context.Context, req *dsr3.GetRelationsRequest) (*dsr3.GetRelationsResponse, error) {
-	resp := &dsr3.GetRelationsResponse{
-		Results: []*dsc3.Relation{},
-		Objects: map[string]*dsc3.Object{},
-		Page:    &dsc3.PaginationResponse{},
+func (s *Reader) GetRelations(ctx context.Context, req *dsr.GetRelationsRequest) (*dsr.GetRelationsResponse, error) {
+	resp := &dsr.GetRelationsResponse{
+		Results: []*dsc.Relation{},
+		Objects: map[string]*dsc.Object{},
+		Page:    &dsc.PaginationResponse{},
 	}
 
 	if err := validator.GetRelationsRequest(req); err != nil {
@@ -239,7 +239,7 @@ func (s *Reader) GetRelations(ctx context.Context, req *dsr3.GetRelationsRequest
 	}
 
 	if req.GetPage() == nil {
-		req.Page = &dsc3.PaginationRequest{Size: x.MaxPageSize}
+		req.Page = &dsc.PaginationRequest{Size: x.MaxPageSize}
 	}
 
 	getRelations := ds.GetRelations(req)
@@ -258,7 +258,7 @@ func (s *Reader) GetRelations(ctx context.Context, req *dsr3.GetRelationsRequest
 	}
 
 	err := s.store.DB().View(func(tx *bolt.Tx) error {
-		iter, err := bdb.NewScanIterator[dsc3.Relation](ctx, tx, path, opts...)
+		iter, err := bdb.NewScanIterator[dsc.Relation](ctx, tx, path, opts...)
 		if err != nil {
 			return err
 		}
@@ -290,8 +290,8 @@ func (s *Reader) GetRelations(ctx context.Context, req *dsr3.GetRelationsRequest
 }
 
 // Check, if subject is permitted to access resource (object).
-func (s *Reader) Check(ctx context.Context, req *dsr3.CheckRequest) (*dsr3.CheckResponse, error) {
-	resp := &dsr3.CheckResponse{}
+func (s *Reader) Check(ctx context.Context, req *dsr.CheckRequest) (*dsr.CheckResponse, error) {
+	resp := &dsr.CheckResponse{}
 
 	if err := validator.CheckRequest(req); err != nil {
 		resp.Check = false
@@ -329,8 +329,8 @@ func (s *Reader) Check(ctx context.Context, req *dsr3.CheckRequest) (*dsr3.Check
 }
 
 // Checks, execute multiple check requests in parallel.
-func (s *Reader) Checks(ctx context.Context, req *dsr3.ChecksRequest) (*dsr3.ChecksResponse, error) {
-	resp := &dsr3.ChecksResponse{}
+func (s *Reader) Checks(ctx context.Context, req *dsr.ChecksRequest) (*dsr.ChecksResponse, error) {
+	resp := &dsr.ChecksResponse{}
 
 	checks := ds.Checks(req)
 	if err := checks.Validate(s.store.MC()); err != nil {
@@ -354,8 +354,8 @@ func (s *Reader) Checks(ctx context.Context, req *dsr3.ChecksRequest) (*dsr3.Che
 // CheckPermission, check if subject is permitted to access resource (object).
 //
 //nolint:dupl
-func (s *Reader) CheckPermission(ctx context.Context, req *dsr3.CheckPermissionRequest) (*dsr3.CheckPermissionResponse, error) {
-	resp := &dsr3.CheckPermissionResponse{}
+func (s *Reader) CheckPermission(ctx context.Context, req *dsr.CheckPermissionRequest) (*dsr.CheckPermissionResponse, error) {
+	resp := &dsr.CheckPermissionResponse{}
 
 	if err := validator.CheckPermissionRequest(req); err != nil {
 		return resp, err
@@ -365,7 +365,7 @@ func (s *Reader) CheckPermission(ctx context.Context, req *dsr3.CheckPermissionR
 		return resp, err
 	}
 
-	check := ds.Check(&dsr3.CheckRequest{
+	check := ds.Check(&dsr.CheckRequest{
 		ObjectType:  req.GetObjectType(),
 		ObjectId:    req.GetObjectId(),
 		Relation:    req.GetPermission(),
@@ -392,8 +392,8 @@ func (s *Reader) CheckPermission(ctx context.Context, req *dsr3.CheckPermissionR
 // CheckRelation, check if subject has the specified relation to a resource (object).
 //
 //nolint:dupl
-func (s *Reader) CheckRelation(ctx context.Context, req *dsr3.CheckRelationRequest) (*dsr3.CheckRelationResponse, error) {
-	resp := &dsr3.CheckRelationResponse{}
+func (s *Reader) CheckRelation(ctx context.Context, req *dsr.CheckRelationRequest) (*dsr.CheckRelationResponse, error) {
+	resp := &dsr.CheckRelationResponse{}
 
 	if err := validator.CheckRelationRequest(req); err != nil {
 		return resp, err
@@ -403,7 +403,7 @@ func (s *Reader) CheckRelation(ctx context.Context, req *dsr3.CheckRelationReque
 		return resp, err
 	}
 
-	check := ds.Check(&dsr3.CheckRequest{
+	check := ds.Check(&dsr.CheckRequest{
 		ObjectType:  req.GetObjectType(),
 		ObjectId:    req.GetObjectId(),
 		Relation:    req.GetRelation(),
@@ -428,11 +428,11 @@ func (s *Reader) CheckRelation(ctx context.Context, req *dsr3.CheckRelationReque
 }
 
 // GetGraph, return graph of connected objects and relations for requested anchor subject/object.
-func (s *Reader) GetGraph(ctx context.Context, req *dsr3.GetGraphRequest) (*dsr3.GetGraphResponse, error) {
-	resp := &dsr3.GetGraphResponse{}
+func (s *Reader) GetGraph(ctx context.Context, req *dsr.GetGraphRequest) (*dsr.GetGraphResponse, error) {
+	resp := &dsr.GetGraphResponse{}
 
 	if err := validator.GetGraphRequest(req); err != nil {
-		return &dsr3.GetGraphResponse{}, err
+		return &dsr.GetGraphResponse{}, err
 	}
 
 	getGraph := ds.GetGraph(req)
@@ -456,22 +456,22 @@ func (s *Reader) GetGraph(ctx context.Context, req *dsr3.GetGraphRequest) (*dsr3
 	return resp, err
 }
 
-func (*Reader) getWithObjects(ctx context.Context, tx *bolt.Tx, relations []*dsc3.Relation) map[string]*dsc3.Object {
-	objects := map[string]*dsc3.Object{}
+func (*Reader) getWithObjects(ctx context.Context, tx *bolt.Tx, relations []*dsc.Relation) map[string]*dsc.Object {
+	objects := map[string]*dsc.Object{}
 
 	for _, r := range relations {
 		rel := ds.Relation(r)
 
-		sub, err := bdb.Get[dsc3.Object](ctx, tx, bdb.ObjectsPath, ds.ObjectIdentifier(rel.Subject()).Key())
+		sub, err := bdb.Get[dsc.Object](ctx, tx, bdb.ObjectsPath, ds.ObjectIdentifier(rel.Subject()).Key())
 		if err != nil {
-			sub = &dsc3.Object{Type: rel.SubjectType, Id: rel.SubjectId}
+			sub = &dsc.Object{Type: rel.SubjectType, Id: rel.SubjectId}
 		}
 
 		objects[ds.Object(sub).StrKey()] = sub
 
-		obj, err := bdb.Get[dsc3.Object](ctx, tx, bdb.ObjectsPath, ds.ObjectIdentifier(rel.Object()).Key())
+		obj, err := bdb.Get[dsc.Object](ctx, tx, bdb.ObjectsPath, ds.ObjectIdentifier(rel.Object()).Key())
 		if err != nil {
-			obj = &dsc3.Object{Type: rel.ObjectType, Id: rel.ObjectId}
+			obj = &dsc.Object{Type: rel.ObjectType, Id: rel.ObjectId}
 		}
 
 		objects[ds.Object(obj).StrKey()] = obj

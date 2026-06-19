@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/aserto-dev/azm/stats"
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
 	"github.com/aserto-dev/topaz/topaz/table"
@@ -29,8 +29,8 @@ func (cmd *StatsCmd) Run(ctx context.Context) error {
 		return errors.Wrap(err, "failed to get directory client")
 	}
 
-	stream, err := client.Exporter.Export(ctx, &dse3.ExportRequest{
-		Options: uint32(dse3.Option_OPTION_DATA + dse3.Option_OPTION_STATS),
+	stream, err := client.Exporter.Export(ctx, &dse.ExportRequest{
+		Options: uint32(dse.Option_OPTION_DATA + dse.Option_OPTION_STATS),
 	})
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func (cmd *StatsCmd) Run(ctx context.Context) error {
 			return err
 		}
 
-		if m, ok := msg.GetMsg().(*dse3.ExportResponse_Stats); ok {
+		if m, ok := msg.GetMsg().(*dse.ExportResponse_Stats); ok {
 			pbStats = m.Stats
 		}
 	}

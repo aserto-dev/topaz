@@ -6,12 +6,12 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/topaz/prompter"
 	"github.com/aserto-dev/topaz/topaz/x"
-	"github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -50,38 +50,38 @@ func TestPrompter(t *testing.T) {
 
 func directoryRequests() []proto.Message {
 	reqs := []proto.Message{
-		&reader.GetObjectRequest{},
-		&reader.GetObjectsRequest{
-			Page: &common.PaginationRequest{
+		&dsr.GetObjectRequest{},
+		&dsr.GetObjectsRequest{
+			Page: &dsc.PaginationRequest{
 				Size:  x.MaxPaginationSize,
 				Token: "",
 			},
 		},
-		&writer.SetObjectRequest{
-			Object: &common.Object{
+		&dsw.SetObjectRequest{
+			Object: &dsc.Object{
 				Properties: &structpb.Struct{},
 				CreatedAt:  &timestamppb.Timestamp{},
 				UpdatedAt:  &timestamppb.Timestamp{},
 			},
 		},
-		&writer.DeleteObjectRequest{},
-		&reader.GetRelationRequest{},
-		&reader.GetRelationsRequest{
-			Page: &common.PaginationRequest{
+		&dsw.DeleteObjectRequest{},
+		&dsr.GetRelationRequest{},
+		&dsr.GetRelationsRequest{
+			Page: &dsc.PaginationRequest{
 				Size:  x.MaxPaginationSize,
 				Token: "",
 			},
 		},
-		&writer.SetRelationRequest{
-			Relation: &common.Relation{},
+		&dsw.SetRelationRequest{
+			Relation: &dsc.Relation{},
 		},
-		&writer.DeleteRelationRequest{},
-		&reader.CheckRequest{},
-		&reader.ChecksRequest{
-			Default: &reader.CheckRequest{},
-			Checks:  []*reader.CheckRequest{},
+		&dsw.DeleteRelationRequest{},
+		&dsr.CheckRequest{},
+		&dsr.ChecksRequest{
+			Default: &dsr.CheckRequest{},
+			Checks:  []*dsr.CheckRequest{},
 		},
-		&reader.GetGraphRequest{},
+		&dsr.GetGraphRequest{},
 	}
 
 	return reqs
@@ -90,51 +90,51 @@ func directoryRequests() []proto.Message {
 //nolint:funlen
 func accessRequests() []proto.Message {
 	reqs := []proto.Message{
-		&access.EvaluationRequest{
-			Subject: &access.Subject{
+		&dsa.EvaluationRequest{
+			Subject: &dsa.Subject{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
-			Action: &access.Action{
+			Action: &dsa.Action{
 				Name:       "",
 				Properties: &structpb.Struct{},
 			},
-			Resource: &access.Resource{
+			Resource: &dsa.Resource{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
 		},
-		&access.EvaluationsRequest{
-			Subject: &access.Subject{
+		&dsa.EvaluationsRequest{
+			Subject: &dsa.Subject{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
-			Action: &access.Action{
+			Action: &dsa.Action{
 				Name:       "",
 				Properties: &structpb.Struct{},
 			},
-			Resource: &access.Resource{
+			Resource: &dsa.Resource{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Evaluations: []*access.EvaluationRequest{
+			Evaluations: []*dsa.EvaluationRequest{
 				{
-					Subject: &access.Subject{
+					Subject: &dsa.Subject{
 						Type:       "",
 						Id:         "",
 						Properties: &structpb.Struct{},
 					},
-					Action: &access.Action{
+					Action: &dsa.Action{
 						Name:       "",
 						Properties: &structpb.Struct{},
 					},
-					Resource: &access.Resource{
+					Resource: &dsa.Resource{
 						Type:       "",
 						Id:         "",
 						Properties: &structpb.Struct{},
@@ -144,67 +144,67 @@ func accessRequests() []proto.Message {
 			},
 			Options: &structpb.Struct{},
 		},
-		&access.ActionSearchRequest{
-			Subject: &access.Subject{
+		&dsa.ActionSearchRequest{
+			Subject: &dsa.Subject{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
-			Action: &access.Action{
+			Action: &dsa.Action{
 				Name:       "",
 				Properties: &structpb.Struct{},
 			},
-			Resource: &access.Resource{
+			Resource: &dsa.Resource{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Page: &access.PaginationRequest{
+			Page: &dsa.PaginationRequest{
 				Token:      nil,
 				Limit:      nil,
 				Properties: nil,
 			},
 		},
-		&access.ResourceSearchRequest{
-			Subject: &access.Subject{
+		&dsa.ResourceSearchRequest{
+			Subject: &dsa.Subject{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
-			Action: &access.Action{
+			Action: &dsa.Action{
 				Name:       "",
 				Properties: &structpb.Struct{},
 			},
-			Resource: &access.Resource{
+			Resource: &dsa.Resource{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Page: &access.PaginationRequest{
+			Page: &dsa.PaginationRequest{
 				Token:      nil,
 				Limit:      nil,
 				Properties: nil,
 			},
 		},
-		&access.SubjectSearchRequest{
-			Subject: &access.Subject{
+		&dsa.SubjectSearchRequest{
+			Subject: &dsa.Subject{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
-			Action: &access.Action{
+			Action: &dsa.Action{
 				Name:       "",
 				Properties: &structpb.Struct{},
 			},
-			Resource: &access.Resource{
+			Resource: &dsa.Resource{
 				Type:       "",
 				Id:         "",
 				Properties: &structpb.Struct{},
 			},
 			Context: &structpb.Struct{},
-			Page: &access.PaginationRequest{
+			Page: &dsa.PaginationRequest{
 				Token:      nil,
 				Limit:      nil,
 				Properties: nil,

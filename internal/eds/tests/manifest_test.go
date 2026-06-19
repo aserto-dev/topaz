@@ -11,9 +11,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/server"
 	"github.com/aserto-dev/topaz/internal/fs"
@@ -111,9 +111,9 @@ func setManifest(client *server.TestEdgeClient, manifest []byte) error {
 
 	for i := 0; i < len(manifest); i += blockSize {
 		end := lo.Min([]int{i + blockSize, len(manifest)})
-		if err := stream.Send(&dsm3.SetManifestRequest{
-			Msg: &dsm3.SetManifestRequest_Body{
-				Body: &dsm3.Body{Data: manifest[i:end]},
+		if err := stream.Send(&dsm.SetManifestRequest{
+			Msg: &dsm.SetManifestRequest_Body{
+				Body: &dsm.Body{Data: manifest[i:end]},
 			},
 		}); err != nil {
 			return err
@@ -126,7 +126,7 @@ func setManifest(client *server.TestEdgeClient, manifest []byte) error {
 }
 
 func getManifest(client *server.TestEdgeClient) ([]byte, error) {
-	stream, err := client.V3.Model.GetManifest(context.Background(), &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
+	stream, err := client.V3.Model.GetManifest(context.Background(), &dsm.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, err
 	}
@@ -145,11 +145,11 @@ func getManifest(client *server.TestEdgeClient) ([]byte, error) {
 			return nil, err
 		}
 
-		if md, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Metadata); ok {
+		if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
 			_ = md.Metadata
 		}
 
-		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
+		if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
 			data.Write(body.Body.GetData())
 			bytesRecv += len(body.Body.GetData())
 		}
@@ -191,7 +191,7 @@ func testGetModel(client *server.TestEdgeClient) func(*testing.T) {
 		hdr := metadata.New(map[string]string{"aserto-model-request": "model-only"})
 		ctx = metadata.NewOutgoingContext(ctx, hdr)
 
-		stream, err := client.V3.Model.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
+		stream, err := client.V3.Model.GetManifest(ctx, &dsm.GetManifestRequest{Empty: &emptypb.Empty{}})
 		if err != nil {
 			require.NoError(t, err)
 		}
@@ -206,15 +206,15 @@ func testGetModel(client *server.TestEdgeClient) func(*testing.T) {
 				require.NoError(t, err)
 			}
 
-			if md, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Metadata); ok {
+			if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
 				_ = md.Metadata
 			}
 
-			if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
+			if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
 				_ = body
 			}
 
-			if model, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Model); ok {
+			if model, ok := resp.GetMsg().(*dsm.GetManifestResponse_Model); ok {
 				buf := new(bytes.Buffer)
 				if err := pb.ProtoToBuf(buf, model.Model); err != nil {
 					require.NoError(t, err)
@@ -240,15 +240,15 @@ func testDeleteManifest(client *server.TestEdgeClient) func(*testing.T) {
 func deleteManifest(client *server.TestEdgeClient) error {
 	_, err := client.V3.Model.DeleteManifest(
 		context.Background(),
-		&dsm3.DeleteManifestRequest{Empty: &emptypb.Empty{}},
+		&dsm.DeleteManifestRequest{Empty: &emptypb.Empty{}},
 	)
 
 	return err
 }
 
 type testData struct {
-	Objects   []*dsc3.Object   `json:"objects"`
-	Relations []*dsc3.Relation `json:"relations"`
+	Objects   []*dsc.Object   `json:"objects"`
+	Relations []*dsc.Relation `json:"relations"`
 }
 
 func loadData(client *server.TestEdgeClient, dataFile string) error {
@@ -265,13 +265,13 @@ func loadData(client *server.TestEdgeClient, dataFile string) error {
 	ctx := context.Background()
 
 	for _, obj := range td.Objects {
-		if _, err := client.V3.Writer.SetObject(ctx, &dsw3.SetObjectRequest{Object: obj}); err != nil {
+		if _, err := client.V3.Writer.SetObject(ctx, &dsw.SetObjectRequest{Object: obj}); err != nil {
 			return err
 		}
 	}
 
 	for _, rel := range td.Relations {
-		if _, err := client.V3.Writer.SetRelation(ctx, &dsw3.SetRelationRequest{Relation: rel}); err != nil {
+		if _, err := client.V3.Writer.SetRelation(ctx, &dsw.SetRelationRequest{Relation: rel}); err != nil {
 			return err
 		}
 	}

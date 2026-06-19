@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/azm/safe"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 )
 
@@ -23,8 +23,8 @@ type relations struct {
 	relation            // implements Filter
 }
 
-func Relation(i *dsc3.Relation) *relation {
-	return &relation{safe.Relation(&dsc3.RelationIdentifier{
+func Relation(i *dsc.Relation) *relation {
+	return &relation{safe.Relation(&dsc.RelationIdentifier{
 		ObjectType:      i.GetObjectType(),
 		ObjectId:        i.GetObjectId(),
 		Relation:        i.GetRelation(),
@@ -34,19 +34,19 @@ func Relation(i *dsc3.Relation) *relation {
 	})}
 }
 
-func RelationIdentifier(i *dsc3.RelationIdentifier) *relation {
+func RelationIdentifier(i *dsc.RelationIdentifier) *relation {
 	return &relation{&safe.SafeRelation{
 		RelationIdentifier: i,
 		HasSubjectRelation: i.GetSubjectRelation() != "",
 	}}
 }
 
-func GetRelation(i *dsr3.GetRelationRequest) *relations {
+func GetRelation(i *dsr.GetRelationRequest) *relations {
 	r := safe.GetRelation(i)
 	return &relations{r, relation{r.SafeRelation}}
 }
 
-func GetRelations(i *dsr3.GetRelationsRequest) *relations {
+func GetRelations(i *dsr.GetRelationsRequest) *relations {
 	r := safe.GetRelations(i)
 	return &relations{r, relation{r.SafeRelation}}
 }
@@ -174,10 +174,10 @@ func (i *relation) SubFilter(buf *bytes.Buffer) {
 
 const relationFilterCount int = 6
 
-func (i *relation) Filter(keyFilter *bytes.Buffer) (bdb.Path, func(*dsc3.RelationIdentifier) bool) {
+func (i *relation) Filter(keyFilter *bytes.Buffer) (bdb.Path, func(*dsc.RelationIdentifier) bool) {
 	var (
 		path        bdb.Path
-		valueFilter func(*dsc3.RelationIdentifier) bool
+		valueFilter func(*dsc.RelationIdentifier) bool
 	)
 
 	// #1  determine if object identifier is complete (has type+id)
@@ -198,38 +198,38 @@ func (i *relation) Filter(keyFilter *bytes.Buffer) (bdb.Path, func(*dsc3.Relatio
 	}
 
 	// #2 build valueFilter function
-	filters := make([]func(item *dsc3.RelationIdentifier) bool, 0, relationFilterCount)
+	filters := make([]func(item *dsc.RelationIdentifier) bool, 0, relationFilterCount)
 
 	if fv := i.GetObjectType(); fv != "" {
-		filters = append(filters, func(item *dsc3.RelationIdentifier) bool {
+		filters = append(filters, func(item *dsc.RelationIdentifier) bool {
 			equal := strings.Compare(item.GetObjectType(), fv)
 			return equal == 0
 		})
 	}
 
 	if fv := i.GetObjectId(); fv != "" {
-		filters = append(filters, func(item *dsc3.RelationIdentifier) bool {
+		filters = append(filters, func(item *dsc.RelationIdentifier) bool {
 			equal := strings.Compare(fv, item.GetObjectId())
 			return equal == 0
 		})
 	}
 
 	if fv := i.GetRelation(); fv != "" {
-		filters = append(filters, func(item *dsc3.RelationIdentifier) bool {
+		filters = append(filters, func(item *dsc.RelationIdentifier) bool {
 			equal := strings.Compare(item.GetRelation(), fv)
 			return equal == 0
 		})
 	}
 
 	if fv := i.GetSubjectType(); fv != "" {
-		filters = append(filters, func(item *dsc3.RelationIdentifier) bool {
+		filters = append(filters, func(item *dsc.RelationIdentifier) bool {
 			equal := strings.Compare(item.GetSubjectType(), fv)
 			return equal == 0
 		})
 	}
 
 	if fv := i.GetSubjectId(); fv != "" {
-		filters = append(filters, func(item *dsc3.RelationIdentifier) bool {
+		filters = append(filters, func(item *dsc.RelationIdentifier) bool {
 			equal := strings.Compare(fv, item.GetSubjectId())
 			return equal == 0
 		})
@@ -238,13 +238,13 @@ func (i *relation) Filter(keyFilter *bytes.Buffer) (bdb.Path, func(*dsc3.Relatio
 	if i.HasSubjectRelation {
 		fv := i.GetSubjectRelation()
 
-		filters = append(filters, func(item *dsc3.RelationIdentifier) bool {
+		filters = append(filters, func(item *dsc.RelationIdentifier) bool {
 			equal := strings.Compare(item.GetSubjectRelation(), fv)
 			return equal == 0
 		})
 	}
 
-	valueFilter = func(i *dsc3.RelationIdentifier) bool {
+	valueFilter = func(i *dsc.RelationIdentifier) bool {
 		for _, filter := range filters {
 			if !filter(i) {
 				return false
@@ -257,10 +257,10 @@ func (i *relation) Filter(keyFilter *bytes.Buffer) (bdb.Path, func(*dsc3.Relatio
 	return path, valueFilter
 }
 
-func (i *relation) RelationValueFilter(keyFilter *bytes.Buffer) (bdb.Path, func(*dsc3.Relation) bool) {
+func (i *relation) RelationValueFilter(keyFilter *bytes.Buffer) (bdb.Path, func(*dsc.Relation) bool) {
 	var (
 		path        bdb.Path
-		valueFilter func(*dsc3.Relation) bool
+		valueFilter func(*dsc.Relation) bool
 	)
 
 	// #1  determine if object identifier is complete (has type+id)
@@ -281,38 +281,38 @@ func (i *relation) RelationValueFilter(keyFilter *bytes.Buffer) (bdb.Path, func(
 	}
 
 	// #2 build valueFilter function
-	filters := []func(item *dsc3.Relation) bool{}
+	filters := []func(item *dsc.Relation) bool{}
 
 	if fv := i.GetObjectType(); fv != "" {
-		filters = append(filters, func(item *dsc3.Relation) bool {
+		filters = append(filters, func(item *dsc.Relation) bool {
 			equal := strings.Compare(item.GetObjectType(), fv)
 			return equal == 0
 		})
 	}
 
 	if fv := i.GetObjectId(); fv != "" {
-		filters = append(filters, func(item *dsc3.Relation) bool {
+		filters = append(filters, func(item *dsc.Relation) bool {
 			equal := strings.Compare(fv, item.GetObjectId())
 			return equal == 0
 		})
 	}
 
 	if fv := i.GetRelation(); fv != "" {
-		filters = append(filters, func(item *dsc3.Relation) bool {
+		filters = append(filters, func(item *dsc.Relation) bool {
 			equal := strings.Compare(item.GetRelation(), fv)
 			return equal == 0
 		})
 	}
 
 	if fv := i.GetSubjectType(); fv != "" {
-		filters = append(filters, func(item *dsc3.Relation) bool {
+		filters = append(filters, func(item *dsc.Relation) bool {
 			equal := strings.Compare(item.GetSubjectType(), fv)
 			return equal == 0
 		})
 	}
 
 	if fv := i.GetSubjectId(); fv != "" {
-		filters = append(filters, func(item *dsc3.Relation) bool {
+		filters = append(filters, func(item *dsc.Relation) bool {
 			equal := strings.Compare(fv, item.GetSubjectId())
 			return equal == 0
 		})
@@ -321,13 +321,13 @@ func (i *relation) RelationValueFilter(keyFilter *bytes.Buffer) (bdb.Path, func(
 	if i.HasSubjectRelation {
 		fv := i.GetSubjectRelation()
 
-		filters = append(filters, func(item *dsc3.Relation) bool {
+		filters = append(filters, func(item *dsc.Relation) bool {
 			equal := strings.Compare(item.GetSubjectRelation(), fv)
 			return equal == 0
 		})
 	}
 
-	valueFilter = func(i *dsc3.Relation) bool {
+	valueFilter = func(i *dsc.Relation) bool {
 		for _, filter := range filters {
 			if !filter(i) {
 				return false

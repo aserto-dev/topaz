@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 
 	cuckoo "github.com/panmari/cuckoofilter"
@@ -61,7 +61,7 @@ type Sync struct {
 	*Client
 
 	options    *Options
-	exportChan chan *dse3.ExportResponse
+	exportChan chan *dse.ExportResponse
 	errChan    chan error
 	tsChan     chan *timestamppb.Timestamp
 	filter     *cuckoo.Filter
@@ -70,7 +70,7 @@ type Sync struct {
 func newSync(c *Client, o *Options) *Sync {
 	return &Sync{
 		options:    o,
-		exportChan: make(chan *dse3.ExportResponse, channelSize),
+		exportChan: make(chan *dse.ExportResponse, channelSize),
 		errChan:    make(chan error, 1),
 		tsChan:     make(chan *timestamppb.Timestamp, 1),
 		Client:     c,

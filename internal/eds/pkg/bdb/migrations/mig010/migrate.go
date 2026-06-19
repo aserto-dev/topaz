@@ -1,7 +1,7 @@
 package mig010
 
 import (
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/common"
@@ -75,7 +75,7 @@ func updateObjects() func(*zerolog.Logger, *bolt.DB, *bolt.DB) error {
 
 			c := b.Cursor()
 			for key, value := c.First(); key != nil; key, value = c.Next() {
-				obj, err := unmarshal[dsc3.Object](value)
+				obj, err := unmarshal[dsc.Object](value)
 				if err != nil {
 					return err
 				}

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	runtime "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
@@ -15,7 +15,7 @@ import (
 	decisionlog_plugin "github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/edge"
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
-	"github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
@@ -33,8 +33,8 @@ func NewRuntimeResolver(
 	cfg *config.Config,
 	dsConn *grpc.ClientConn,
 ) (resolvers.RuntimeResolver, func(), error) {
-	dsClient := reader.NewReaderClient(dsConn)
-	acClient := access.NewAccessClient(dsConn)
+	dsClient := dsr.NewReaderClient(dsConn)
+	acClient := dsa.NewAccessClient(dsConn)
 
 	sidecarRuntime, err := runtime.New(ctx, &cfg.OPA,
 

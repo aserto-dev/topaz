@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/topaz/topaz/x"
 
 	client "github.com/aserto-dev/go-aserto"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
 	tc "github.com/aserto-dev/topaz/topazd/tests/common"
 
@@ -101,8 +101,8 @@ func testDirectory(dsConfig *dsc.Config, azConfig *azc.Config) func(*testing.T) 
 			name string
 			test func(*testing.T)
 		}{
-			{"TestCheck", testCheck(ctx, dsr3.NewReaderClient(conn))},
-			{"TestChecks", testChecks(ctx, dsr3.NewReaderClient(conn))},
+			{"TestCheck", testCheck(ctx, dsr.NewReaderClient(conn))},
+			{"TestChecks", testChecks(ctx, dsr.NewReaderClient(conn))},
 		}
 
 		for _, testCase := range tests {
