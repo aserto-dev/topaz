@@ -353,8 +353,8 @@ func (s *Reader) Checks(ctx context.Context, req *dsr.ChecksRequest) (*dsr.Check
 	return resp, nil
 }
 
-// CheckPermission, check if subject is permitted to access resource (object).
-func (s *Reader) CheckPermission(ctx context.Context, req *dsr.CheckPermissionRequest) (*dsr.CheckPermissionResponse, error) {
+// CheckPermission is obsolete, use Check instead.
+func (s *Reader) CheckPermission(_ context.Context, _ *dsr.CheckPermissionRequest) (*dsr.CheckPermissionResponse, error) {
 	return &dsr.CheckPermissionResponse{}, status.Error(codes.Unimplemented, "check permission is obsolete, use check instead")
 }
 
