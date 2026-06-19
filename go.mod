@@ -22,7 +22,6 @@ require (
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0
 	github.com/fatih/color v1.19.0
-	github.com/gdamore/tcell/v2 v2.13.9
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/gonvenience/ytbx v1.4.9
@@ -45,7 +44,6 @@ require (
 	github.com/panmari/cuckoofilter v1.0.6
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.23.2
-	github.com/rivo/tview v0.42.0
 	github.com/rs/cors v1.11.1
 	github.com/rs/zerolog v1.35.1
 	github.com/samber/lo v1.53.0
@@ -92,7 +90,6 @@ require (
 	github.com/ebitengine/purego v0.10.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
-	github.com/gdamore/encoding v1.0.1 // indirect
 	github.com/getkin/kin-openapi v0.133.0 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -167,7 +164,6 @@ require (
 	github.com/prometheus/common v0.67.5 // indirect
 	github.com/prometheus/procfs v0.20.1 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 // indirect
-	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/sagikazarmark/locafero v0.11.0 // indirect
 	github.com/segmentio/asm v1.2.1 // indirect
 	github.com/sergi/go-diff v1.4.0 // indirect
