@@ -358,8 +358,8 @@ func (s *Reader) CheckPermission(_ context.Context, _ *dsr.CheckPermissionReques
 	return &dsr.CheckPermissionResponse{}, status.Error(codes.Unimplemented, "check permission is obsolete, use check instead")
 }
 
-// CheckRelation, check if subject has the specified relation to a resource (object).
-func (s *Reader) CheckRelation(ctx context.Context, req *dsr.CheckRelationRequest) (*dsr.CheckRelationResponse, error) {
+// CheckRelation is obsolete, use Check instead.
+func (s *Reader) CheckRelation(_ context.Context, _ *dsr.CheckRelationRequest) (*dsr.CheckRelationResponse, error) {
 	return &dsr.CheckRelationResponse{}, status.Error(codes.Unimplemented, "check relation is obsolete, use check instead")
 }
 
