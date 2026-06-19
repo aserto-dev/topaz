@@ -17,7 +17,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-//nolint:gosec // G117 APIKey
 type Config struct {
 	Host      string            `flag:"host" short:"H" default:"${directory_svc}" env:"TOPAZ_DIRECTORY_SVC" help:"directory service address"`
 	APIKey    string            `flag:"api-key" short:"k" default:"${directory_key}" env:"TOPAZ_DIRECTORY_KEY" help:"directory API key"`
