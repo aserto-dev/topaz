@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/clients"
@@ -32,7 +32,7 @@ func (cmd *RestoreCmd) Run(ctx context.Context) error {
 			return err
 		}
 
-		cmd.File = path.Join(currentDir, defBackupFileName)
+		cmd.File = filepath.Join(currentDir, defBackupFileName)
 	}
 
 	cc.Con().Info().Msg(">>> restore from %s", cmd.File)

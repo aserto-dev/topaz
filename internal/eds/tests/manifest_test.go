@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
+	"path/filepath"
 	"testing"
 
 	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
@@ -163,7 +163,7 @@ func testGetManifest(client *server.TestEdgeClient, manifest string) func(*testi
 		data, err := getManifest(client)
 		require.NoError(t, err)
 
-		tempManifest := path.Join(os.TempDir(), "manifest.yaml")
+		tempManifest := filepath.Join(os.TempDir(), "manifest.yaml")
 		if err := os.WriteFile(tempManifest, data, fs.FileModeOwnerRW); err != nil {
 			require.NoError(t, err)
 		}
@@ -220,7 +220,7 @@ func testGetModel(client *server.TestEdgeClient) func(*testing.T) {
 					require.NoError(t, err)
 				}
 
-				tempModel := path.Join(os.TempDir(), "model.json")
+				tempModel := filepath.Join(os.TempDir(), "model.json")
 				if err := os.WriteFile(tempModel, buf.Bytes(), fs.FileModeOwnerRW); err != nil {
 					require.NoError(t, err)
 				}

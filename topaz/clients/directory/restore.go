@@ -210,7 +210,7 @@ const (
 
 func (c *Client) RestoreFromFile(ctx context.Context, r io.Reader) error {
 	// step 0 -- create temp directory to export tarbal artifacts to.
-	tmpDir, err := os.MkdirTemp("", "*")
+	tmpDir, err := os.MkdirTemp("", "topaz")
 	if err != nil {
 		return err
 	}
@@ -219,7 +219,7 @@ func (c *Client) RestoreFromFile(ctx context.Context, r io.Reader) error {
 		_ = os.RemoveAll(tmpDir)
 	}()
 
-	dirPath := path.Join(tmpDir, "restore")
+	dirPath := filepath.Join(tmpDir, "restore")
 	if err := os.MkdirAll(dirPath, fs.FileModeOwnerRWX); err != nil {
 		return err
 	}

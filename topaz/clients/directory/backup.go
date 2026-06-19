@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path"
 	"path/filepath"
 
 	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
@@ -27,7 +26,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 		return err
 	}
 
-	tmpDir, err := os.MkdirTemp("", "*")
+	tmpDir, err := os.MkdirTemp("", "topaz")
 	if err != nil {
 		return err
 	}
@@ -36,7 +35,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 		_ = os.RemoveAll(tmpDir)
 	}()
 
-	dirPath := path.Join(tmpDir, "backup")
+	dirPath := filepath.Join(tmpDir, "backup")
 	if err := os.MkdirAll(dirPath, fs.FileModeOwnerRWX); err != nil {
 		return err
 	}
@@ -69,11 +68,11 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 		_ = tw.Close()
 	}()
 
-	if err := addToArchive(tw, path.Join(dirPath, ObjectsFileName)); err != nil {
+	if err := addToArchive(tw, filepath.Join(dirPath, ObjectsFileName)); err != nil {
 		return err
 	}
 
-	if err := addToArchive(tw, path.Join(dirPath, RelationsFileName)); err != nil {
+	if err := addToArchive(tw, filepath.Join(dirPath, RelationsFileName)); err != nil {
 		return err
 	}
 
@@ -81,13 +80,13 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 }
 
 func (c *Client) createBackupFiles(stream dse.Exporter_ExportClient, dirPath string) error {
-	objects, err := js.NewWriter(path.Join(dirPath, ObjectsFileName), ObjectsStr)
+	objects, err := js.NewWriter(filepath.Join(dirPath, ObjectsFileName), ObjectsStr)
 	if err != nil {
 		return err
 	}
 	defer objects.Close()
 
-	relations, err := js.NewWriter(path.Join(dirPath, RelationsFileName), RelationsStr)
+	relations, err := js.NewWriter(filepath.Join(dirPath, RelationsFileName), RelationsStr)
 	if err != nil {
 		return err
 	}
@@ -140,7 +139,7 @@ const (
 
 func (c *Client) BackupToFile(ctx context.Context, w io.Writer) error {
 	// step 0 -- create temp directory folder to gather artifacts
-	tmpDir, err := os.MkdirTemp("", "*")
+	tmpDir, err := os.MkdirTemp("", "topaz")
 	if err != nil {
 		return err
 	}
@@ -149,7 +148,7 @@ func (c *Client) BackupToFile(ctx context.Context, w io.Writer) error {
 		_ = os.RemoveAll(tmpDir)
 	}()
 
-	dirPath := path.Join(tmpDir, "backup")
+	dirPath := filepath.Join(tmpDir, "backup")
 	if err := os.MkdirAll(dirPath, fs.FileModeOwnerRWX); err != nil {
 		return err
 	}

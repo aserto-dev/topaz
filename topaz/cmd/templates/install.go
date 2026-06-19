@@ -310,7 +310,7 @@ func (i *tmplInstaller) setManifest(ctx context.Context) error {
 	}
 
 	if exists, _ := config.FileExists(manifest); !exists {
-		manifestDir := path.Join(i.topazTemplateDir, name, "model")
+		manifestDir := filepath.Join(i.topazTemplateDir, name, "model")
 
 		switch m, err := download(manifest, manifestDir); {
 		case err != nil:
@@ -334,7 +334,7 @@ func (i *tmplInstaller) importData(ctx context.Context) error {
 		name = i.customName
 	}
 
-	defaultDataDir := path.Join(i.topazTemplateDir, name, "data")
+	defaultDataDir := filepath.Join(i.topazTemplateDir, name, "data")
 
 	dataDirs := map[string]struct{}{}
 
@@ -372,7 +372,7 @@ func (i *tmplInstaller) runTemplateTests(ctx context.Context) error {
 		name = i.customName
 	}
 
-	assertionsDir := path.Join(i.topazTemplateDir, name, "assertions")
+	assertionsDir := filepath.Join(i.topazTemplateDir, name, "assertions")
 
 	tests := []string{}
 
