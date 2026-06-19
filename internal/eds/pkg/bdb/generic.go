@@ -24,6 +24,7 @@ var (
 		Merge:          false,
 		AllowPartial:   false,
 		DiscardUnknown: true,
+		RecursionLimit: 0,
 	}
 )
 

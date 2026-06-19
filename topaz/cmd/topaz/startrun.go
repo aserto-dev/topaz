@@ -3,7 +3,6 @@ package topaz
 import (
 	"fmt"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 
@@ -41,7 +40,7 @@ func (cmd *StartRunCmd) run(cfg *cc.Config, mode runMode) error {
 	}
 
 	if _, err := os.Stat(cfg.Active.ConfigFile); errors.Is(err, os.ErrNotExist) {
-		return errors.Errorf("%s does not exist, please run 'topaz config new'", path.Join(cfg.Active.ConfigFile))
+		return errors.Errorf("%s does not exist, please run 'topaz config new'", filepath.Join(cfg.Active.ConfigFile))
 	}
 
 	activeConfig, err := config.LoadConfiguration(cfg.Active.ConfigFile)

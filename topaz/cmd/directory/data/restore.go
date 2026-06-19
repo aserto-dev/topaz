@@ -1,4 +1,4 @@
-package directory
+package data
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 type RestoreCmd struct {
 	dsc.Config
 
-	File string `arg:"" default:"backup.tar.gz" help:"path to source backup file"`
+	File string `arg:""  default:"backup.tar.gz" help:"file path to source backup file"`
 }
 
 func (cmd *RestoreCmd) Run(ctx context.Context) error {
@@ -35,13 +35,7 @@ func (cmd *RestoreCmd) Run(ctx context.Context) error {
 		cmd.File = filepath.Join(currentDir, defBackupFileName)
 	}
 
-	r, err := os.Open(cmd.File)
-	if err != nil {
-		return err
-	}
-	defer r.Close()
+	cc.Con().Info().Msg(">>> restore from %s", cmd.File)
 
-	cc.Con().Info().Msg(">>> restore from %q", cmd.File)
-
-	return dsClient.RestoreFromFile(ctx, r)
+	return dsClient.Restore(ctx, cmd.File)
 }

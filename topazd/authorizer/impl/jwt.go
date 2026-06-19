@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"path"
+	"path/filepath"
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
@@ -158,7 +158,7 @@ func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.UR
 	}
 
 	originalPath := u.Path
-	u.Path = path.Join(originalPath, wellknownConfig)
+	u.Path = filepath.Join(originalPath, wellknownConfig)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), http.NoBody)
 	if err != nil {
@@ -182,7 +182,7 @@ func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.UR
 		}
 	}
 
-	u.Path = path.Join(originalPath, wellknownJWKS)
+	u.Path = filepath.Join(originalPath, wellknownJWKS)
 
 	return u, nil
 }

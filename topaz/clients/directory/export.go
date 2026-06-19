@@ -7,15 +7,15 @@ import (
 	"io"
 	"os"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	"github.com/aserto-dev/topaz/topaz/js"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (c *Client) Export(ctx context.Context, objectsFile, relationsFile string) error {
-	stream, err := c.Exporter.Export(ctx, &dse3.ExportRequest{
-		Options:   uint32(dse3.Option_OPTION_DATA),
+	stream, err := c.Exporter.Export(ctx, &dse.ExportRequest{
+		Options:   uint32(dse.Option_OPTION_DATA),
 		StartFrom: &timestamppb.Timestamp{},
 	})
 	if err != nil {
@@ -49,12 +49,12 @@ func (c *Client) Export(ctx context.Context, objectsFile, relationsFile string) 
 		}
 
 		switch m := msg.GetMsg().(type) {
-		case *dse3.ExportResponse_Object:
+		case *dse.ExportResponse_Object:
 			err = objects.Write(m.Object)
 
 			objectsCounter.Incr().Print(os.Stdout)
 
-		case *dse3.ExportResponse_Relation:
+		case *dse.ExportResponse_Relation:
 			err = relations.Write(m.Relation)
 
 			relationsCounter.Incr().Print(os.Stdout)
