@@ -7,7 +7,7 @@ import (
 	"github.com/aserto-dev/azm/cache"
 	"github.com/aserto-dev/azm/jobpool"
 	"github.com/aserto-dev/azm/safe"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/prop"
 
 	bolt "go.etcd.io/bbolt"
@@ -18,9 +18,9 @@ type checks struct {
 	*safe.SafeChecks
 }
 
-func Checks(i *dsr3.ChecksRequest) *checks {
+func Checks(i *dsr.ChecksRequest) *checks {
 	if i.GetDefault() == nil {
-		i.Default = &dsr3.CheckRequest{}
+		i.Default = &dsr.CheckRequest{}
 	}
 
 	return &checks{safe.Checks(i)}
@@ -30,8 +30,8 @@ func (i *checks) Validate(mc *cache.Cache) error {
 	return nil
 }
 
-func (i *checks) Exec(ctx context.Context, tx *bolt.Tx, mc *cache.Cache) (*dsr3.ChecksResponse, error) {
-	consumer := func(in *dsr3.CheckRequest) *dsr3.CheckResponse {
+func (i *checks) Exec(ctx context.Context, tx *bolt.Tx, mc *cache.Cache) (*dsr.ChecksResponse, error) {
+	consumer := func(in *dsr.CheckRequest) *dsr.CheckResponse {
 		check := Check(in)
 		if err := check.Validate(mc); err != nil {
 			return checkError(err)
@@ -48,7 +48,7 @@ func (i *checks) Exec(ctx context.Context, tx *bolt.Tx, mc *cache.Cache) (*dsr3.
 	pool := jobpool.NewJobPool(len(i.Checks), runtime.GOMAXPROCS(0), consumer)
 	pool.Start()
 
-	resp := &dsr3.ChecksResponse{}
+	resp := &dsr.ChecksResponse{}
 
 	for check := range i.CheckRequests() {
 		if err := pool.Produce(check.CheckRequest); err != nil {
@@ -61,8 +61,8 @@ func (i *checks) Exec(ctx context.Context, tx *bolt.Tx, mc *cache.Cache) (*dsr3.
 	return resp, nil
 }
 
-func checkError(err error) *dsr3.CheckResponse {
-	return &dsr3.CheckResponse{
+func checkError(err error) *dsr.CheckResponse {
+	return &dsr.CheckResponse{
 		Check: false,
 		Context: &structpb.Struct{
 			Fields: map[string]*structpb.Value{

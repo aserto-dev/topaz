@@ -4,17 +4,16 @@ import (
 	"context"
 	"net/http"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
-
-	dsa1 "github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/samber/lo"
@@ -55,24 +54,24 @@ func (e *EdgeDir) AvailableServices() []string {
 func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrations {
 	return func(server *grpc.Server) {
 		if lo.Contains(services, modelService) {
-			dsm3.RegisterModelServer(server, e.dir.Model3())
+			dsm.RegisterModelServer(server, e.dir.Model3())
 		}
 
 		if lo.Contains(services, readerService) {
-			dsr3.RegisterReaderServer(server, e.dir.Reader3())
-			dsa1.RegisterAccessServer(server, e.dir.Access1())
+			dsr.RegisterReaderServer(server, e.dir.Reader3())
+			dsa.RegisterAccessServer(server, e.dir.Access1())
 		}
 
 		if lo.Contains(services, writerService) {
-			dsw3.RegisterWriterServer(server, e.dir.Writer3())
+			dsw.RegisterWriterServer(server, e.dir.Writer3())
 		}
 
 		if lo.Contains(services, importerService) {
-			dsi3.RegisterImporterServer(server, e.dir.Importer3())
+			dsi.RegisterImporterServer(server, e.dir.Importer3())
 		}
 
 		if lo.Contains(services, exporterService) {
-			dse3.RegisterExporterServer(server, e.dir.Exporter3())
+			dse.RegisterExporterServer(server, e.dir.Exporter3())
 		}
 	}
 }
@@ -80,7 +79,7 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		if lo.Contains(services, modelService) {
-			err := dsm3.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+			err := dsm.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
 			}
@@ -92,13 +91,13 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 
 		if lo.Contains(services, readerService) {
 			{
-				err := dsr3.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+				err := dsr.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 				if err != nil {
 					return err
 				}
 			}
 			{
-				err := dsa1.RegisterAccessHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+				err := dsa.RegisterAccessHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 				if err != nil {
 					return err
 				}
@@ -106,7 +105,7 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 		}
 
 		if lo.Contains(services, writerService) {
-			err := dsw3.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
+			err := dsw.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 			if err != nil {
 				return err
 			}

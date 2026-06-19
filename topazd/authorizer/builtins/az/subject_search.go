@@ -1,7 +1,7 @@
 package az
 
 import (
-	"github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 
@@ -26,20 +26,20 @@ const azSubjectSearchHelp string = `az.subject_search({
 
 // RegisterSubjectSearch, note: subject_search omits `subject.id` fields when submitted.
 // https://openid.github.io/authzen/#name-subject-search-api.
-func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, ac access.AccessClient) (*rego.Function, rego.Builtin1) {
+func RegisterSubjectSearch(logger *zerolog.Logger, fnName string, ac dsa.AccessClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args access.SubjectSearchRequest
+			var args dsa.SubjectSearchRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
-			if proto.Equal(&args, &access.SubjectSearchRequest{}) {
+			if proto.Equal(&args, &dsa.SubjectSearchRequest{}) {
 				return ast.StringTerm(azSubjectSearchHelp), nil
 			}
 

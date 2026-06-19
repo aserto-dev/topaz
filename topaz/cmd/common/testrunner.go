@@ -11,11 +11,11 @@ import (
 
 	cerr "github.com/aserto-dev/errors"
 	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/topaz/cc"
 	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
-	acc1 "github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -270,7 +270,7 @@ func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResu
 		}
 	}
 
-	var req dsr3.CheckRequest
+	var req dsr.CheckRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
 	}
@@ -299,7 +299,7 @@ func checkPermissionV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) 
 		}
 	}
 
-	var req dsr3.CheckPermissionRequest
+	var req dsr.CheckPermissionRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
 	}
@@ -329,7 +329,7 @@ func checkRelationV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *C
 		}
 	}
 
-	var req dsr3.CheckRelationRequest
+	var req dsr.CheckRelationRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
 	}
@@ -397,7 +397,7 @@ func evaluationV1(ctx context.Context, c *dsc.Client, msg *structpb.Value) *Chec
 		}
 	}
 
-	var req acc1.EvaluationRequest
+	var req dsa.EvaluationRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
 	}
@@ -416,7 +416,7 @@ func evaluationV1(ctx context.Context, c *dsc.Client, msg *structpb.Value) *Chec
 	}
 }
 
-func checkStringV3(req *dsr3.CheckRequest) string {
+func checkStringV3(req *dsr.CheckRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
 		req.GetRelation(),
@@ -424,7 +424,7 @@ func checkStringV3(req *dsr3.CheckRequest) string {
 	)
 }
 
-func checkRelationStringV3(req *dsr3.CheckRelationRequest) string {
+func checkRelationStringV3(req *dsr.CheckRelationRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
 		req.GetRelation(),
@@ -432,7 +432,7 @@ func checkRelationStringV3(req *dsr3.CheckRelationRequest) string {
 	)
 }
 
-func checkPermissionStringV3(req *dsr3.CheckPermissionRequest) string {
+func checkPermissionStringV3(req *dsr.CheckPermissionRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
 		req.GetPermission(),
@@ -448,7 +448,7 @@ func checkDecisionStringV2(req *az2.IsRequest) string {
 	)
 }
 
-func checkEvaluationStringV1(req *acc1.EvaluationRequest) string {
+func checkEvaluationStringV1(req *dsa.EvaluationRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetResource().GetType(), req.GetResource().GetId(),
 		req.GetAction().GetName(),

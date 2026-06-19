@@ -1,7 +1,7 @@
 package az
 
 import (
-	"github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 
@@ -31,20 +31,20 @@ const azEvaluationsHelp string = `az.evaluations({
 
 // RegisterEvaluations
 // https://openid.github.io/authzen/#name-access-evaluations-api.
-func RegisterEvaluations(logger *zerolog.Logger, fnName string, ac access.AccessClient) (*rego.Function, rego.Builtin1) {
+func RegisterEvaluations(logger *zerolog.Logger, fnName string, ac dsa.AccessClient) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
 			Memoize: true,
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
-			var args access.EvaluationsRequest
+			var args dsa.EvaluationsRequest
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
-			if proto.Equal(&args, &access.EvaluationsRequest{}) {
+			if proto.Equal(&args, &dsa.EvaluationsRequest{}) {
 				return ast.StringTerm(azEvaluationsHelp), nil
 			}
 

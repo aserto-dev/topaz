@@ -62,9 +62,13 @@ func Validate(ctx context.Context, cfg Config) (bool, error) {
 				return status.Errorf(codes.Unavailable, "no valid host")
 			}
 
-			// Only need first valid response
-			return nil //nolint:staticcheck
+			// only need the first response.
+			if in.GetValidHost() != "" {
+				break
+			}
 		}
+
+		return nil
 	})
 
 	// Sender

@@ -10,7 +10,7 @@ import (
 
 	"github.com/aserto-dev/azm/model"
 	manifest "github.com/aserto-dev/azm/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/go-directory/pkg/validator"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
@@ -32,25 +32,25 @@ func (s *Sync) syncManifest(ctx context.Context, conn *grpc.ClientConn) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	remoteMD, remoteBuf, err := s.getManifest(ctx, dsm3.NewModelClient(conn))
+	remoteMD, remoteBuf, err := s.getManifest(ctx, dsm.NewModelClient(conn))
 	if err != nil {
 		return err
 	}
 
-	localMD, _, err := func() (*dsm3.Metadata, io.Reader, error) {
+	localMD, _, err := func() (*dsm.Metadata, io.Reader, error) {
 		var (
-			localMD     *dsm3.Metadata
+			localMD     *dsm.Metadata
 			localReader io.Reader
 		)
 
 		err := s.store.DB().View(func(tx *bolt.Tx) error {
-			md := &dsm3.Metadata{UpdatedAt: timestamppb.Now(), Etag: ""}
+			md := &dsm.Metadata{UpdatedAt: timestamppb.Now(), Etag: ""}
 			manifest, err := ds.Manifest(md).Get(ctx, tx)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
 				if manifest == nil {
-					manifest = ds.Manifest(&dsm3.Metadata{})
+					manifest = ds.Manifest(&dsm.Metadata{})
 				}
 			case err != nil:
 				return errors.Errorf("failed to get manifest")
@@ -96,7 +96,7 @@ func (s *Sync) setManifest(ctx context.Context, remoteBuf []byte) (*model.Model,
 	h.Reset()
 	_, _ = h.Write(remoteBuf)
 
-	md := &dsm3.Metadata{
+	md := &dsm.Metadata{
 		UpdatedAt: timestamppb.Now(),
 		Etag:      strconv.FormatUint(h.Sum64(), 10),
 	}
@@ -136,14 +136,14 @@ func (s *Sync) setManifest(ctx context.Context, remoteBuf []byte) (*model.Model,
 	return m, nil
 }
 
-func (s *Sync) getManifest(ctx context.Context, mc dsm3.ModelClient) (*dsm3.Metadata, []byte, error) {
-	stream, err := mc.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
+func (s *Sync) getManifest(ctx context.Context, mc dsm.ModelClient) (*dsm.Metadata, []byte, error) {
+	stream, err := mc.GetManifest(ctx, &dsm.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, nil, err
 	}
 
 	data := bytes.Buffer{}
-	metadata := &dsm3.Metadata{}
+	metadata := &dsm.Metadata{}
 	bytesRecv := 0
 
 	for {
@@ -156,11 +156,11 @@ func (s *Sync) getManifest(ctx context.Context, mc dsm3.ModelClient) (*dsm3.Meta
 			return nil, nil, err
 		}
 
-		if md, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Metadata); ok {
+		if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
 			metadata = md.Metadata
 		}
 
-		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
+		if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
 			data.Write(body.Body.GetData())
 			bytesRecv += len(body.Body.GetData())
 		}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 
 	"github.com/aserto-dev/azm/safe"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/x"
 	"google.golang.org/protobuf/types/known/structpb"
 )
@@ -13,7 +13,7 @@ type object struct {
 	*safe.SafeObject
 }
 
-func Object(i *dsc3.Object) *object { return &object{safe.Object(i)} }
+func Object(i *dsc.Object) *object { return &object{safe.Object(i)} }
 
 func (i *object) StrKey() string {
 	return i.GetType() + string(TypeIDSeparator) + i.GetId()
@@ -35,7 +35,7 @@ type objectIdentifier struct {
 	*safe.SafeObjectIdentifier
 }
 
-func ObjectIdentifier(i *dsc3.ObjectIdentifier) *objectIdentifier {
+func ObjectIdentifier(i *dsc.ObjectIdentifier) *objectIdentifier {
 	return &objectIdentifier{safe.ObjectIdentifier(i)}
 }
 
@@ -58,7 +58,7 @@ func (i *objectIdentifier) Key() []byte {
 	return buf.Bytes()
 }
 
-func ObjectSelector(i *dsc3.ObjectIdentifier) *safe.SafeObjectSelector {
+func ObjectSelector(i *dsc.ObjectIdentifier) *safe.SafeObjectSelector {
 	return safe.ObjectSelector(i)
 }
 
@@ -67,7 +67,7 @@ const (
 )
 
 // PatchObjectRead: transfers Objects.Properties["display_name"] to Object.DisplayName (BACKWARD COMPATIBILITY).
-func PatchObjectRead(i *dsc3.Object) *dsc3.Object {
+func PatchObjectRead(i *dsc.Object) *dsc.Object {
 	fields := i.GetProperties().GetFields()
 
 	if displayName, ok := fields[propDisplayName]; ok {
@@ -78,7 +78,7 @@ func PatchObjectRead(i *dsc3.Object) *dsc3.Object {
 }
 
 // PatchObjectWrite: transfers Object.DisplayName to Objects.Properties["display_name"] (FORWARD COMPATIBILITY).
-func PatchObjectWrite(i *dsc3.Object) *dsc3.Object {
+func PatchObjectWrite(i *dsc.Object) *dsc.Object {
 	if displayName := i.GetDisplayName(); len(displayName) > 0 { //nolint:staticcheck // Marked as deprecated
 		if i.GetProperties().Fields == nil {
 			i.Properties.Fields = map[string]*structpb.Value{}

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 
 	bolt "go.etcd.io/bbolt"
@@ -13,12 +13,12 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func UpdateMetadataObject(ctx context.Context, tx *bolt.Tx, path []string, keyFilter []byte, msg *dsc3.Object) (*dsc3.Object, error) {
+func UpdateMetadataObject(ctx context.Context, tx *bolt.Tx, path []string, keyFilter []byte, msg *dsc.Object) (*dsc.Object, error) {
 	// get timestamp once for transaction.
 	ts := timestamppb.New(time.Now().UTC())
 
 	// get current instance.
-	cur, err := bdb.Get[dsc3.Object](ctx, tx, path, keyFilter)
+	cur, err := bdb.Get[dsc.Object](ctx, tx, path, keyFilter)
 
 	switch {
 	case status.Code(err) == codes.NotFound:
@@ -44,12 +44,12 @@ func UpdateMetadataObject(ctx context.Context, tx *bolt.Tx, path []string, keyFi
 	return msg, nil
 }
 
-func UpdateMetadataRelation(ctx context.Context, tx *bolt.Tx, path []string, key []byte, msg *dsc3.Relation) (*dsc3.Relation, error) {
+func UpdateMetadataRelation(ctx context.Context, tx *bolt.Tx, path []string, key []byte, msg *dsc.Relation) (*dsc.Relation, error) {
 	// get timestamp once for transaction.
 	ts := timestamppb.New(time.Now().UTC())
 
 	// get current instance.
-	cur, err := bdb.Get[dsc3.Relation](ctx, tx, path, key)
+	cur, err := bdb.Get[dsc.Relation](ctx, tx, path, key)
 
 	switch {
 	case status.Code(err) == codes.NotFound:

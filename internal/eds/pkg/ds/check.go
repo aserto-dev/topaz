@@ -6,8 +6,8 @@ import (
 	"github.com/aserto-dev/azm/cache"
 	"github.com/aserto-dev/azm/graph"
 	"github.com/aserto-dev/azm/safe"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/go-directory/pkg/prop"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
@@ -20,13 +20,13 @@ type check struct {
 	*safe.SafeCheck
 }
 
-func Check(i *dsr3.CheckRequest) *check {
+func Check(i *dsr.CheckRequest) *check {
 	return &check{safe.Check(i)}
 }
 
-func (i *check) Exec(ctx context.Context, tx *bolt.Tx, mc *cache.Cache) (*dsr3.CheckResponse, error) {
+func (i *check) Exec(ctx context.Context, tx *bolt.Tx, mc *cache.Cache) (*dsr.CheckResponse, error) {
 	if err := i.RelationIdentifiersExist(ctx, tx); err != nil {
-		return &dsr3.CheckResponse{
+		return &dsr.CheckResponse{
 			Check:   false,
 			Context: SetContextWithReason(err),
 		}, err
@@ -36,7 +36,7 @@ func (i *check) Exec(ctx context.Context, tx *bolt.Tx, mc *cache.Cache) (*dsr3.C
 }
 
 func getRelations(ctx context.Context, tx *bolt.Tx) graph.RelationReader {
-	return func(r *dsc3.RelationIdentifier, pool graph.RelationPool, out *[]*dsc3.RelationIdentifier) error {
+	return func(r *dsc.RelationIdentifier, pool graph.RelationPool, out *[]*dsc.RelationIdentifier) error {
 		keyFilter := RelationIdentifierBuffer()
 		defer ReturnRelationIdentifierBuffer(keyFilter)
 
@@ -49,14 +49,14 @@ func getRelations(ctx context.Context, tx *bolt.Tx) graph.RelationReader {
 func (i *check) RelationIdentifiersExist(ctx context.Context, tx *bolt.Tx) error {
 	if !i.relationIdentifierExist(
 		ctx, tx, bdb.RelationsSubPath,
-		ObjectIdentifier(&dsc3.ObjectIdentifier{ObjectType: i.SubjectType, ObjectId: i.SubjectId}).Key(),
+		ObjectIdentifier(&dsc.ObjectIdentifier{ObjectType: i.SubjectType, ObjectId: i.SubjectId}).Key(),
 	) {
 		return derr.ErrObjectNotFound.Msgf("subject %s:%s", i.SubjectType, i.SubjectId)
 	}
 
 	if !i.relationIdentifierExist(
 		ctx, tx, bdb.RelationsObjPath,
-		ObjectIdentifier(&dsc3.ObjectIdentifier{ObjectType: i.ObjectType, ObjectId: i.ObjectId}).Key(),
+		ObjectIdentifier(&dsc.ObjectIdentifier{ObjectType: i.ObjectType, ObjectId: i.ObjectId}).Key(),
 	) {
 		return derr.ErrObjectNotFound.Msgf("object %s:%s", i.ObjectType, i.ObjectId)
 	}
@@ -65,7 +65,7 @@ func (i *check) RelationIdentifiersExist(ctx context.Context, tx *bolt.Tx) error
 }
 
 func (i *check) relationIdentifierExist(ctx context.Context, tx *bolt.Tx, path bdb.Path, keyFilter []byte) bool {
-	exists, err := bdb.KeyPrefixExists[dsc3.Relation](ctx, tx, path, keyFilter)
+	exists, err := bdb.KeyPrefixExists[dsc.Relation](ctx, tx, path, keyFilter)
 	if err != nil {
 		return false
 	}

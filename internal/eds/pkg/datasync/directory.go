@@ -8,8 +8,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	bolt "go.etcd.io/bbolt"
 
@@ -106,8 +106,8 @@ func (s *Sync) producer(ctx context.Context, conn *grpc.ClientConn) error {
 
 	s.logger.Debug().Str("start_from", ts.String()).Msg(syncProducer)
 
-	stream, err := dse3.NewExporterClient(conn).Export(ctx, &dse3.ExportRequest{
-		Options:   uint32(dse3.Option_OPTION_DATA),
+	stream, err := dse.NewExporterClient(conn).Export(ctx, &dse.ExportRequest{
+		Options:   uint32(dse.Option_OPTION_DATA),
 		StartFrom: ts,
 	})
 	if err != nil {
@@ -127,13 +127,13 @@ func (s *Sync) producer(ctx context.Context, conn *grpc.ClientConn) error {
 		recvCtr.Add(1)
 
 		switch m := msg.GetMsg().(type) {
-		case *dse3.ExportResponse_Object:
+		case *dse.ExportResponse_Object:
 			objCtr.Add(1)
 
 			if Has(s.options.Mode, Diff) {
 				s.filter.Insert(getObjectKey(m.Object))
 			}
-		case *dse3.ExportResponse_Relation:
+		case *dse.ExportResponse_Relation:
 			relCtr.Add(1)
 
 			if Has(s.options.Mode, Diff) {
@@ -177,7 +177,7 @@ func (s *Sync) subscriber(ctx context.Context) error {
 			recvCtr.Add(1)
 
 			switch m := msg.GetMsg().(type) {
-			case *dse3.ExportResponse_Object:
+			case *dse.ExportResponse_Object:
 				if err := s.objectSetHandler(ctx, tx, m.Object); err == nil {
 					ts = maxTS(ts, m.Object.GetUpdatedAt())
 
@@ -190,7 +190,7 @@ func (s *Sync) subscriber(ctx context.Context) error {
 					s.errChan <- err
 				}
 
-			case *dse3.ExportResponse_Relation:
+			case *dse.ExportResponse_Relation:
 				if err := s.relationSetHandler(ctx, tx, m.Relation); err == nil {
 					ts = maxTS(ts, m.Relation.GetUpdatedAt())
 
@@ -241,7 +241,7 @@ func (s *Sync) diff(ctx context.Context) error {
 	batchErr := s.store.DB().Batch(func(tx *bolt.Tx) error {
 		// objects
 		{
-			iter, err := bdb.NewScanIterator[dsc3.Object](ctx, tx, bdb.ObjectsPath)
+			iter, err := bdb.NewScanIterator[dsc.Object](ctx, tx, bdb.ObjectsPath)
 			if err != nil {
 				return err
 			}
@@ -267,7 +267,7 @@ func (s *Sync) diff(ctx context.Context) error {
 
 		// relations
 		{
-			iter, err := bdb.NewScanIterator[dsc3.Relation](ctx, tx, bdb.RelationsObjPath)
+			iter, err := bdb.NewScanIterator[dsc.Relation](ctx, tx, bdb.RelationsObjPath)
 			if err != nil {
 				return err
 			}
@@ -306,11 +306,11 @@ func (s *Sync) diff(ctx context.Context) error {
 	return nil
 }
 
-func getObjectKey(obj *dsc3.Object) []byte {
+func getObjectKey(obj *dsc.Object) []byte {
 	return fmt.Appendf([]byte{}, "%s:%s", obj.GetType(), obj.GetId())
 }
 
-func getRelationKey(rel *dsc3.Relation) []byte {
+func getRelationKey(rel *dsc.Relation) []byte {
 	return fmt.Appendf([]byte{}, "%s:%s#%s@%s:%s%s",
 		rel.GetObjectType(), rel.GetObjectId(), rel.GetRelation(), rel.GetSubjectType(), rel.GetSubjectId(),
 		lo.Ternary(rel.GetSubjectRelation() == "", "", "#"+rel.GetSubjectRelation()))

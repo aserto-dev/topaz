@@ -4,27 +4,27 @@ package ds
 import (
 	"github.com/aserto-dev/azm/cache"
 	"github.com/aserto-dev/azm/model"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 )
 
 type checkPermission struct {
-	*dsr3.CheckPermissionRequest
+	*dsr.CheckPermissionRequest
 }
 
-func CheckPermission(i *dsr3.CheckPermissionRequest) *checkPermission {
+func CheckPermission(i *dsr.CheckPermissionRequest) *checkPermission {
 	return &checkPermission{i}
 }
 
-func (i *checkPermission) Object() *dsc3.ObjectIdentifier {
-	return &dsc3.ObjectIdentifier{
+func (i *checkPermission) Object() *dsc.ObjectIdentifier {
+	return &dsc.ObjectIdentifier{
 		ObjectType: i.ObjectType,
 		ObjectId:   i.ObjectId,
 	}
 }
 
-func (i *checkPermission) Subject() *dsc3.ObjectIdentifier {
-	return &dsc3.ObjectIdentifier{
+func (i *checkPermission) Subject() *dsc.ObjectIdentifier {
+	return &dsc.ObjectIdentifier{
 		ObjectType: i.SubjectType,
 		ObjectId:   i.SubjectId,
 	}

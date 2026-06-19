@@ -7,7 +7,7 @@ import (
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
-	dsa1 "github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -17,8 +17,8 @@ type EvaluationCmd struct {
 	clients.RequestArgs
 	dsc.Config
 
-	req  dsa1.EvaluationRequest
-	resp dsa1.EvaluationResponse
+	req  dsa.EvaluationRequest
+	resp dsa.EvaluationResponse
 }
 
 func (cmd *EvaluationCmd) Run(ctx context.Context) error {
@@ -30,7 +30,7 @@ func (cmd *EvaluationCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	if err := cmd.Invoke(ctx, dsa1.Access_Evaluation_FullMethodName, &cmd.req, &cmd.resp); err != nil {
+	if err := cmd.Invoke(ctx, dsa.Access_Evaluation_FullMethodName, &cmd.req, &cmd.resp); err != nil {
 		return err
 	}
 
@@ -38,17 +38,17 @@ func (cmd *EvaluationCmd) Run(ctx context.Context) error {
 }
 
 func (cmd *EvaluationCmd) template() proto.Message {
-	return &dsa1.EvaluationRequest{
-		Subject: &dsa1.Subject{
+	return &dsa.EvaluationRequest{
+		Subject: &dsa.Subject{
 			Type:       "",
 			Id:         "",
 			Properties: &structpb.Struct{},
 		},
-		Action: &dsa1.Action{
+		Action: &dsa.Action{
 			Name:       "",
 			Properties: &structpb.Struct{},
 		},
-		Resource: &dsa1.Resource{
+		Resource: &dsa.Resource{
 			Type:       "",
 			Id:         "",
 			Properties: &structpb.Struct{},

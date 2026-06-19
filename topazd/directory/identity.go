@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/samber/lo"
 	"google.golang.org/grpc/codes"
@@ -31,8 +31,8 @@ const (
 	userToIdentity
 )
 
-func resolutionDirection(ctx context.Context, client dsr3.ReaderClient) identityResolutionDirection {
-	resp, _ := client.Check(ctx, &dsr3.CheckRequest{
+func resolutionDirection(ctx context.Context, client dsr.ReaderClient) identityResolutionDirection {
+	resp, _ := client.Check(ctx, &dsr.CheckRequest{
 		ObjectType:  User,
 		ObjectId:    DummyUser,
 		Relation:    Identifier,
@@ -48,7 +48,7 @@ func resolutionDirection(ctx context.Context, client dsr3.ReaderClient) identity
 	return userToIdentity
 }
 
-func ResolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity string) (*dsc3.Object, error) {
+func ResolveIdentity(ctx context.Context, client dsr.ReaderClient, identity string) (*dsc.Object, error) {
 	switch resolutionDirection(ctx, client) {
 	// object_type:identity->subject_type:user (legacy).
 	case identityToUser:
@@ -69,8 +69,8 @@ func ResolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity str
 }
 
 // resolveIdentity, resolves object_type:user->subject_type:identity (inverted identity).
-func resolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity string) (*dsc3.Object, error) {
-	relReq := &dsr3.GetRelationRequest{
+func resolveIdentity(ctx context.Context, client dsr.ReaderClient, identity string) (*dsc.Object, error) {
+	relReq := &dsr.GetRelationRequest{
 		ObjectType:  User,
 		Relation:    Identifier,
 		SubjectType: Identity,
@@ -82,8 +82,8 @@ func resolveIdentity(ctx context.Context, client dsr3.ReaderClient, identity str
 }
 
 // resolveIdentityLegacy, resolves object_type:identity->subject_type:user (legacy).
-func resolveIdentityLegacy(ctx context.Context, client dsr3.ReaderClient, identity string) (*dsc3.Object, error) {
-	relReq := &dsr3.GetRelationRequest{
+func resolveIdentityLegacy(ctx context.Context, client dsr.ReaderClient, identity string) (*dsc.Object, error) {
+	relReq := &dsr.GetRelationRequest{
 		ObjectType:  Identity,
 		ObjectId:    identity,
 		Relation:    Identifier,
@@ -94,7 +94,7 @@ func resolveIdentityLegacy(ctx context.Context, client dsr3.ReaderClient, identi
 	return resolveIdentityToUser(ctx, client, relReq)
 }
 
-func resolveIdentityToUser(ctx context.Context, client dsr3.ReaderClient, relReq *dsr3.GetRelationRequest) (*dsc3.Object, error) {
+func resolveIdentityToUser(ctx context.Context, client dsr.ReaderClient, relReq *dsr.GetRelationRequest) (*dsc.Object, error) {
 	relResp, err := client.GetRelation(ctx, relReq)
 
 	switch {
@@ -105,7 +105,7 @@ func resolveIdentityToUser(ctx context.Context, client dsr3.ReaderClient, relReq
 	case relResp.GetResult() == nil:
 		return nil, aerr.ErrDirectoryObjectNotFound
 	case len(relResp.GetObjects()) == 0:
-		return &dsc3.Object{
+		return &dsc.Object{
 			Type: User,
 			Id: lo.Ternary(
 				relResp.GetResult().GetObjectType() == User,
