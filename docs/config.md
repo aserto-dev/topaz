@@ -190,7 +190,7 @@ remote_directory:
 
 ### e. OPA
 
-The OPA configuration section represent the [runtime configuration](https://github.com/aserto-dev/runtime/blob/main/config.go). The main elements of the runtime configuration are:
+The OPA configuration section represent the [runtime configuration](https://github.com/aserto-dev/topaz/internal/runtime/blob/main/config.go). The main elements of the runtime configuration are:
 
 
 - *local_bundles* - runtime.LocalBundlesConfig - allows the runtime to run with a local bundle (local path or local policy OCI image)

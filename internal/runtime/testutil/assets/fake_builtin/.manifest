@@ -1,0 +1,23 @@
+{
+  "revision": "1",
+  "metadata": {
+    "required_builtins": {
+      "builtin1": [
+        {
+          "name": "hello",
+          "decl": {
+            "args": [
+              {
+                "type": "string"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        }
+      ]
+    }
+  }
+}

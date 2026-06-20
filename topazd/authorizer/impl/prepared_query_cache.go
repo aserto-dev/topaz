@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	runtime "github.com/aserto-dev/runtime"
+	runtime "github.com/aserto-dev/topaz/internal/runtime"
 	"github.com/aserto-dev/topaz/internal/tsync"
 	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/rego"

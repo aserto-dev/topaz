@@ -2,8 +2,8 @@ package cc
 
 import (
 	logger "github.com/aserto-dev/logger"
-	runtime_logger "github.com/aserto-dev/runtime/logger"
 	"github.com/aserto-dev/topaz/internal/certs"
+	runtime_logger "github.com/aserto-dev/topaz/internal/runtime/logger"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/cc/context"
 )
