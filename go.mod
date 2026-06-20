@@ -16,12 +16,12 @@ require (
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
 	github.com/aserto-dev/openapi-directory v0.33.5
-	github.com/aserto-dev/runtime v1.16.2
 	github.com/authzen/access.go v1.0.1
 	github.com/cli/browser v1.3.0
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.6.0
 	github.com/fatih/color v1.19.0
+	github.com/fsnotify/fsnotify v1.9.0
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/gonvenience/ytbx v1.4.9
@@ -30,12 +30,14 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.29.0
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/homeport/dyff v1.11.3
 	github.com/itchyny/gojq v0.12.19
 	github.com/lestrrat-go/jwx/v2 v2.1.6
 	github.com/magefile/mage v1.17.2
 	github.com/mattn/go-isatty v0.0.21
 	github.com/mennanov/fmutils v0.3.6
+	github.com/mitchellh/copystructure v1.2.0
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/moby/term v0.5.2
 	github.com/olekukonko/tablewriter v1.1.4
@@ -47,6 +49,7 @@ require (
 	github.com/rs/cors v1.11.1
 	github.com/rs/zerolog v1.35.1
 	github.com/samber/lo v1.53.0
+	github.com/sirupsen/logrus v1.9.4
 	github.com/slok/go-http-metrics v0.13.0
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.21.0
@@ -89,7 +92,6 @@ require (
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/ebitengine/purego v0.10.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
-	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/getkin/kin-openapi v0.133.0 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -106,7 +108,6 @@ require (
 	github.com/gonvenience/text v1.0.10 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.3 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
-	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/huandu/go-clone v1.7.3 // indirect
 	github.com/huandu/go-sqlbuilder v1.39.1 // indirect
@@ -132,7 +133,6 @@ require (
 	github.com/mattn/go-ciede2000 v0.0.0-20170301095244-782e8c62fec3 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-runewidth v0.0.23 // indirect
-	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/go-ps v1.0.0 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
@@ -168,7 +168,6 @@ require (
 	github.com/segmentio/asm v1.2.1 // indirect
 	github.com/sergi/go-diff v1.4.0 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.3 // indirect
-	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/sourcegraph/conc v0.3.1-0.20240121214520-5f936abd7ae8 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
 	github.com/spf13/cast v1.10.0 // indirect

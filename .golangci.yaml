@@ -53,6 +53,9 @@ linters:
       enabled-checks:
         - commentedOutCode
 
+    gomoddirectives:
+      replace-local: true
+
     gosec:
       excludes:
         - G104 # Errors unhandled
@@ -79,6 +82,9 @@ linters:
         - v3.ImporterServer
         - datasync.SyncClient
         - grpc.ServerOption
+        - logging.Logger
+        - storage.Transaction
+        - storage.TriggerHandle
 
     lll:
       line-length: 150
@@ -92,6 +98,10 @@ linters:
         rules:
           json: snake
           yaml: snake
+
+        ignored-fields:
+          - BuiltinDyn
+          - Version
 
         overrides:
           - pkg: topazd/app/handlers
