@@ -3,8 +3,8 @@ package v3
 import (
 	"context"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/go-directory/pkg/validator"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
@@ -18,7 +18,7 @@ import (
 )
 
 type Writer struct {
-	dsw3.UnimplementedWriterServer
+	dsw.UnimplementedWriterServer
 
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
@@ -32,8 +32,8 @@ func NewWriter(logger *zerolog.Logger, store *bdb.BoltDB) *Writer {
 }
 
 // SetObject.
-func (s *Writer) SetObject(ctx context.Context, req *dsw3.SetObjectRequest) (*dsw3.SetObjectResponse, error) {
-	resp := &dsw3.SetObjectResponse{}
+func (s *Writer) SetObject(ctx context.Context, req *dsw.SetObjectRequest) (*dsw.SetObjectResponse, error) {
+	resp := &dsw.SetObjectResponse{}
 
 	if err := validator.SetObjectRequest(req); err != nil {
 		return resp, err
@@ -83,26 +83,26 @@ func (s *Writer) SetObject(ctx context.Context, req *dsw3.SetObjectRequest) (*ds
 	return resp, err
 }
 
-func (s *Writer) DeleteObject(ctx context.Context, req *dsw3.DeleteObjectRequest) (*dsw3.DeleteObjectResponse, error) {
-	resp := &dsw3.DeleteObjectResponse{}
+func (s *Writer) DeleteObject(ctx context.Context, req *dsw.DeleteObjectRequest) (*dsw.DeleteObjectResponse, error) {
+	resp := &dsw.DeleteObjectResponse{}
 
 	if err := validator.DeleteObjectRequest(req); err != nil {
 		return resp, err
 	}
 
-	objIdent := ds.ObjectIdentifier(&dsc3.ObjectIdentifier{ObjectType: req.GetObjectType(), ObjectId: req.GetObjectId()})
+	objIdent := ds.ObjectIdentifier(&dsc.ObjectIdentifier{ObjectType: req.GetObjectType(), ObjectId: req.GetObjectId()})
 
 	if err := objIdent.Validate(s.store.MC()); err != nil {
 		return resp, err
 	}
 
 	err := s.store.DB().Update(func(tx *bolt.Tx) error {
-		objIdent := ds.ObjectIdentifier(&dsc3.ObjectIdentifier{ObjectType: req.GetObjectType(), ObjectId: req.GetObjectId()})
+		objIdent := ds.ObjectIdentifier(&dsc.ObjectIdentifier{ObjectType: req.GetObjectType(), ObjectId: req.GetObjectId()})
 
 		// optimistic concurrency check
 		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
 		if ifMatchHeader != "" {
-			obj := &dsc3.Object{Type: req.GetObjectType(), Id: req.GetObjectId()}
+			obj := &dsc.Object{Type: req.GetObjectType(), Id: req.GetObjectId()}
 
 			updObj, err := ds.UpdateMetadataObject(ctx, tx, bdb.ObjectsPath, ds.Object(obj).Key(), obj)
 			if err != nil {
@@ -138,8 +138,8 @@ func (s *Writer) DeleteObject(ctx context.Context, req *dsw3.DeleteObjectRequest
 }
 
 // SetRelation.
-func (s *Writer) SetRelation(ctx context.Context, req *dsw3.SetRelationRequest) (*dsw3.SetRelationResponse, error) {
-	resp := &dsw3.SetRelationResponse{}
+func (s *Writer) SetRelation(ctx context.Context, req *dsw.SetRelationRequest) (*dsw.SetRelationResponse, error) {
+	resp := &dsw.SetRelationResponse{}
 
 	if err := validator.SetRelationRequest(req); err != nil {
 		return resp, err
@@ -194,14 +194,14 @@ func (s *Writer) SetRelation(ctx context.Context, req *dsw3.SetRelationRequest) 
 	return resp, err
 }
 
-func (s *Writer) DeleteRelation(ctx context.Context, req *dsw3.DeleteRelationRequest) (*dsw3.DeleteRelationResponse, error) {
-	resp := &dsw3.DeleteRelationResponse{}
+func (s *Writer) DeleteRelation(ctx context.Context, req *dsw.DeleteRelationRequest) (*dsw.DeleteRelationResponse, error) {
+	resp := &dsw.DeleteRelationResponse{}
 
 	if err := validator.DeleteRelationRequest(req); err != nil {
 		return resp, err
 	}
 
-	rel := &dsc3.Relation{
+	rel := &dsc.Relation{
 		ObjectType:      req.GetObjectType(),
 		ObjectId:        req.GetObjectId(),
 		Relation:        req.GetRelation(),
@@ -247,10 +247,10 @@ func (s *Writer) DeleteRelation(ctx context.Context, req *dsw3.DeleteRelationReq
 	return resp, err
 }
 
-func (*Writer) deleteRelations(ctx context.Context, path bdb.Path, tx *bolt.Tx, oid *dsc3.ObjectIdentifier) error {
+func (*Writer) deleteRelations(ctx context.Context, path bdb.Path, tx *bolt.Tx, oid *dsc.ObjectIdentifier) error {
 	objIdent := ds.ObjectIdentifier(oid)
 
-	iter, err := bdb.NewScanIterator[dsc3.Relation](
+	iter, err := bdb.NewScanIterator[dsc.Relation](
 		ctx, tx, path,
 		bdb.WithKeyFilter(append(objIdent.Key(), ds.InstanceSeparator)),
 	)

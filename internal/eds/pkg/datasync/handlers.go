@@ -3,7 +3,7 @@ package datasync
 import (
 	"context"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/go-directory/pkg/validator"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
@@ -12,7 +12,7 @@ import (
 	bolt "go.etcd.io/bbolt"
 )
 
-func (s *Sync) objectSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Object) error {
+func (s *Sync) objectSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc.Object) error {
 	s.logger.Debug().Interface("object", req).Msg("ImportObject")
 
 	if req == nil {
@@ -43,14 +43,14 @@ func (s *Sync) objectSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Obje
 
 	updReq.Etag = etag
 
-	if _, err := bdb.Set[dsc3.Object](ctx, tx, bdb.ObjectsPath, ds.Object(updReq).Key(), updReq); err != nil {
+	if _, err := bdb.Set[dsc.Object](ctx, tx, bdb.ObjectsPath, ds.Object(updReq).Key(), updReq); err != nil {
 		return derr.ErrInvalidObject.Msg("set")
 	}
 
 	return nil
 }
 
-func (s *Sync) objectDeleteHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Object) error {
+func (s *Sync) objectDeleteHandler(ctx context.Context, tx *bolt.Tx, req *dsc.Object) error {
 	s.logger.Debug().Interface("object", req).Msg("ImportObject")
 
 	if req == nil {
@@ -73,7 +73,7 @@ func (s *Sync) objectDeleteHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.O
 	return nil
 }
 
-func (s *Sync) relationSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Relation) error {
+func (s *Sync) relationSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc.Relation) error {
 	s.logger.Debug().Interface("relation", req).Msg("ImportRelation")
 
 	if req == nil {
@@ -103,18 +103,18 @@ func (s *Sync) relationSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Re
 
 	updReq.Etag = etag
 
-	if _, err := bdb.Set[dsc3.Relation](ctx, tx, bdb.RelationsObjPath, rel.ObjKey(), updReq); err != nil {
+	if _, err := bdb.Set[dsc.Relation](ctx, tx, bdb.RelationsObjPath, rel.ObjKey(), updReq); err != nil {
 		return derr.ErrInvalidRelation.Msg("set")
 	}
 
-	if _, err := bdb.Set[dsc3.Relation](ctx, tx, bdb.RelationsSubPath, rel.SubKey(), updReq); err != nil {
+	if _, err := bdb.Set[dsc.Relation](ctx, tx, bdb.RelationsSubPath, rel.SubKey(), updReq); err != nil {
 		return derr.ErrInvalidRelation.Msg("set")
 	}
 
 	return nil
 }
 
-func (s *Sync) relationDeleteHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Relation) error {
+func (s *Sync) relationDeleteHandler(ctx context.Context, tx *bolt.Tx, req *dsc.Relation) error {
 	s.logger.Debug().Interface("relation", req).Msg("ImportRelation")
 
 	if req == nil {

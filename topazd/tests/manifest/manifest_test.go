@@ -6,13 +6,13 @@ import (
 	"errors"
 	"io"
 	"os"
-	"path"
+	"path/filepath"
 	"testing"
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	dsc "github.com/aserto-dev/go-aserto/ds/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/x"
 	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
@@ -91,7 +91,7 @@ func testManifest(ctx context.Context, addr string) func(*testing.T) {
 		require.NoError(t, err)
 
 		tmpDir := t.TempDir()
-		w, err := os.Create(path.Join(tmpDir, "manifest.new.yaml"))
+		w, err := os.Create(filepath.Join(tmpDir, "manifest.new.yaml"))
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = w.Close() })
 
@@ -133,14 +133,14 @@ func testManifest(ctx context.Context, addr string) func(*testing.T) {
 	}
 }
 
-func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, *bytes.Reader, error) {
-	stream, err := dsm.GetManifest(ctx, &dsm3.GetManifestRequest{Empty: &emptypb.Empty{}})
+func getManifest(ctx context.Context, mc dsm.ModelClient) (*dsm.Metadata, *bytes.Reader, error) {
+	stream, err := mc.GetManifest(ctx, &dsm.GetManifestRequest{Empty: &emptypb.Empty{}})
 	if err != nil {
 		return nil, nil, err
 	}
 
 	var (
-		metadata  *dsm3.Metadata
+		metadata  *dsm.Metadata
 		data      bytes.Buffer
 		bytesRecv int
 	)
@@ -155,11 +155,11 @@ func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, *by
 			return nil, nil, err
 		}
 
-		if md, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Metadata); ok {
+		if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
 			metadata = md.Metadata
 		}
 
-		if body, ok := resp.GetMsg().(*dsm3.GetManifestResponse_Body); ok {
+		if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
 			data.Write(body.Body.GetData())
 			bytesRecv += len(body.Body.GetData())
 		}
@@ -170,8 +170,8 @@ func getManifest(ctx context.Context, dsm dsm3.ModelClient) (*dsm3.Metadata, *by
 
 const blockSize = 1024 // intentionally small block size for testing chunking
 
-func setManifest(ctx context.Context, dsm dsm3.ModelClient, r io.Reader) (int64, error) {
-	stream, err := dsm.SetManifest(ctx)
+func setManifest(ctx context.Context, mc dsm.ModelClient, r io.Reader) (int64, error) {
+	stream, err := mc.SetManifest(ctx)
 	if err != nil {
 		return 0, err
 	}
@@ -191,9 +191,9 @@ func setManifest(ctx context.Context, dsm dsm3.ModelClient, r io.Reader) (int64,
 
 		bytesSend += int64(n)
 
-		if err := stream.Send(&dsm3.SetManifestRequest{
-			Msg: &dsm3.SetManifestRequest_Body{
-				Body: &dsm3.Body{Data: buf[0:n]},
+		if err := stream.Send(&dsm.SetManifestRequest{
+			Msg: &dsm.SetManifestRequest_Body{
+				Body: &dsm.Body{Data: buf[0:n]},
 			},
 		}); err != nil {
 			return bytesSend, err
@@ -211,7 +211,7 @@ func setManifest(ctx context.Context, dsm dsm3.ModelClient, r io.Reader) (int64,
 	return bytesSend, nil
 }
 
-func deleteManifest(ctx context.Context, dsm dsm3.ModelClient) error {
-	_, err := dsm.DeleteManifest(ctx, &dsm3.DeleteManifestRequest{Empty: &emptypb.Empty{}})
+func deleteManifest(ctx context.Context, mc dsm.ModelClient) error {
+	_, err := mc.DeleteManifest(ctx, &dsm.DeleteManifestRequest{Empty: &emptypb.Empty{}})
 	return err
 }

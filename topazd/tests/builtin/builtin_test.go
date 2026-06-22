@@ -189,30 +189,6 @@ var BuiltinHelpTests = []struct {
 })`,
 	},
 	{
-		name:  "ds.check_relation",
-		query: "x = ds.check_relation({})",
-		expected: `ds.check_relation({
-	"object_id": "",
-	"object_type": "",
-	"relation": "",
-	"subject_id": "",
-	"subject_type": "",
-	"trace": false
-})`,
-	},
-	{
-		name:  "ds.check_permission",
-		query: "x = ds.check_permission({})",
-		expected: `ds.check_permission({
-	"object_id": "",
-	"object_type": "",
-	"permission": "",
-	"subject_id": "",
-	"subject_type": "",
-	"trace": false
-})`,
-	},
-	{
 		name:  "ds.graph",
 		query: "x = ds.graph({})",
 		expected: `ds.graph({

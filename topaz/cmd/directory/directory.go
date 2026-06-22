@@ -1,10 +1,12 @@
 package directory
 
+import "github.com/aserto-dev/topaz/topaz/cmd/directory/data"
+
 type DirectoryCmd struct {
 	Check   CheckCmd   `cmd:"" help:"check single permission"`
 	Checks  ChecksCmd  `cmd:"" help:"check multiple permissions"`
 	Search  SearchCmd  `cmd:"" help:"search relation graph"`
-	Get     GetCmd     `cmd:"" help:"get object|relation|manifest"`
+	Get     GetCmd     `cmd:"" help:"get object|relation|manifest|model"`
 	Set     SetCmd     `cmd:"" help:"set object|relation|manifest"`
 	Delete  DeleteCmd  `cmd:"" help:"delete object|relation|manifest"`
 	List    ListCmd    `cmd:"" help:"list objects|relations"`
@@ -14,6 +16,7 @@ type DirectoryCmd struct {
 	Restore RestoreCmd `cmd:"" help:"restore directory data"`
 	Stats   StatsCmd   `cmd:"" help:"directory statistics"`
 	Test    TestCmd    `cmd:"" help:"execute directory assertions"`
+	Data    DataCmd    `cmd:"" help:"backwards compatible [import|export|backup|restore] commands"`
 }
 
 type GetCmd struct {
@@ -37,4 +40,11 @@ type DeleteCmd struct {
 type ListCmd struct {
 	Objects   ListObjectsCmd   `cmd:"" help:"list objects"`
 	Relations ListRelationsCmd `cmd:"" help:"list relations"`
+}
+
+type DataCmd struct {
+	Import  data.ImportCmd  `cmd:"" help:"import directory data (COMPAT)"`
+	Export  data.ExportCmd  `cmd:"" help:"export directory data (COMPAT)"`
+	Backup  data.BackupCmd  `cmd:"" help:"backup directory data (COMPAT)"`
+	Restore data.RestoreCmd `cmd:"" help:"restore directory data (COMPAT)"`
 }

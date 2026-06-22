@@ -3,7 +3,7 @@ package certs
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/magefile/mage/sh"
 	"github.com/pkg/errors"
@@ -17,7 +17,7 @@ func AddTrustedCert(certPath string) error {
 		return err
 	}
 
-	keyChain := path.Join(homedir, loginKeyChain)
+	keyChain := filepath.Join(homedir, loginKeyChain)
 
 	if err := sh.RunV("security", "add-trusted-cert", "-k", keyChain, certPath); err != nil {
 		return errors.Wrap(err, "trusting ca cert")
@@ -32,7 +32,7 @@ func RemoveTrustedCert(certPath, filter string) error {
 		return err
 	}
 
-	keyChain := path.Join(homedir, loginKeyChain)
+	keyChain := filepath.Join(homedir, loginKeyChain)
 
 	if !findCert(filter, keyChain) {
 		fmt.Println("No certificate to remove.")

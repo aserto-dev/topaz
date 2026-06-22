@@ -11,11 +11,11 @@ import (
 
 	cerr "github.com/aserto-dev/errors"
 	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/topaz/cc"
 	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
-	acc1 "github.com/authzen/access.go/api/access/v1"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -116,7 +116,11 @@ func (runner *TestRunner) execFile(ctx context.Context, file string) error {
 	return runner.exec(ctx, r)
 }
 
-var pbUnmarshal = protojson.UnmarshalOptions{DiscardUnknown: true}
+var pbUnmarshal = protojson.UnmarshalOptions{
+	AllowPartial:   false,
+	DiscardUnknown: true,
+	RecursionLimit: 0,
+}
 
 //nolint:funlen
 func (runner *TestRunner) exec(ctx context.Context, r *os.File) error {
@@ -210,10 +214,6 @@ func setCheckType(ctx context.Context, checkType CheckType, reqVersion int, runn
 	switch {
 	case checkType == Check && reqVersion == 3:
 		result = checkV3(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
-	case checkType == CheckPermission && reqVersion == 3:
-		result = checkPermissionV3(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
-	case checkType == CheckRelation && reqVersion == 3:
-		result = checkRelationV3(ctx, runner.dsClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	case checkType == CheckDecision:
 		result = checkDecisionV2(ctx, runner.azClient, msg.GetFields()[CheckTypeMapStr[checkType]])
 	case checkType == Evaluation:
@@ -266,7 +266,7 @@ func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResu
 		}
 	}
 
-	var req dsr3.CheckRequest
+	var req dsr.CheckRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
 	}
@@ -282,66 +282,6 @@ func checkV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResu
 		Duration: duration,
 		Err:      err,
 		Str:      checkStringV3(&req),
-	}
-}
-
-func checkPermissionV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
-	if c == nil {
-		return &CheckResult{
-			Outcome:  false,
-			Duration: 0,
-			Err:      ErrSkippedDirectoryAssertion,
-			Str:      skipped,
-		}
-	}
-
-	var req dsr3.CheckPermissionRequest
-	if err := UnmarshalReq(msg, &req); err != nil {
-		return &CheckResult{Err: err}
-	}
-
-	start := time.Now()
-
-	//nolint:staticcheck // SA1019: c.Reader.CheckPermission
-	resp, err := c.Reader.CheckPermission(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &CheckResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkPermissionStringV3(&req),
-	}
-}
-
-func checkRelationV3(ctx context.Context, c *dsc.Client, msg *structpb.Value) *CheckResult {
-	if c == nil {
-		return &CheckResult{
-			Outcome:  false,
-			Duration: 0,
-			Err:      ErrSkippedDirectoryAssertion,
-			Str:      skipped,
-		}
-	}
-
-	var req dsr3.CheckRelationRequest
-	if err := UnmarshalReq(msg, &req); err != nil {
-		return &CheckResult{Err: err}
-	}
-
-	start := time.Now()
-
-	//nolint:staticcheck // SA1019: c.Reader.CheckRelation
-	resp, err := c.Reader.CheckRelation(ctx, &req)
-
-	duration := time.Since(start)
-
-	return &CheckResult{
-		Outcome:  resp.GetCheck(),
-		Duration: duration,
-		Err:      err,
-		Str:      checkRelationStringV3(&req),
 	}
 }
 
@@ -393,7 +333,7 @@ func evaluationV1(ctx context.Context, c *dsc.Client, msg *structpb.Value) *Chec
 		}
 	}
 
-	var req acc1.EvaluationRequest
+	var req dsa.EvaluationRequest
 	if err := UnmarshalReq(msg, &req); err != nil {
 		return &CheckResult{Err: err}
 	}
@@ -412,26 +352,10 @@ func evaluationV1(ctx context.Context, c *dsc.Client, msg *structpb.Value) *Chec
 	}
 }
 
-func checkStringV3(req *dsr3.CheckRequest) string {
+func checkStringV3(req *dsr.CheckRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetObjectType(), req.GetObjectId(),
 		req.GetRelation(),
-		req.GetSubjectType(), req.GetSubjectId(),
-	)
-}
-
-func checkRelationStringV3(req *dsr3.CheckRelationRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.GetObjectType(), req.GetObjectId(),
-		req.GetRelation(),
-		req.GetSubjectType(), req.GetSubjectId(),
-	)
-}
-
-func checkPermissionStringV3(req *dsr3.CheckPermissionRequest) string {
-	return fmt.Sprintf("%s:%s#%s@%s:%s",
-		req.GetObjectType(), req.GetObjectId(),
-		req.GetPermission(),
 		req.GetSubjectType(), req.GetSubjectId(),
 	)
 }
@@ -444,7 +368,7 @@ func checkDecisionStringV2(req *az2.IsRequest) string {
 	)
 }
 
-func checkEvaluationStringV1(req *acc1.EvaluationRequest) string {
+func checkEvaluationStringV1(req *dsa.EvaluationRequest) string {
 	return fmt.Sprintf("%s:%s#%s@%s:%s",
 		req.GetResource().GetType(), req.GetResource().GetId(),
 		req.GetAction().GetName(),

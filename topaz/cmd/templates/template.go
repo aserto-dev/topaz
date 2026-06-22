@@ -61,7 +61,7 @@ type template struct {
 
 func (t *template) AbsURL(relative string) string {
 	abs := *t.base
-	abs.Path = path.Join(abs.Path, relative)
+	abs.Path = filepath.Join(abs.Path, relative)
 
 	return abs.String()
 }
@@ -161,7 +161,7 @@ func getTemplateRef(name string, templatesURL *url.URL) (*tmplRef, error) {
 
 		if parsed.Scheme == "" {
 			absURL := *templatesURL
-			absURL.Path = path.Join(path.Dir(absURL.Path), parsed.Path)
+			absURL.Path = filepath.Join(path.Dir(absURL.Path), parsed.Path)
 			ref.absURL = &absURL
 		}
 

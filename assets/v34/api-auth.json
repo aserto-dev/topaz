@@ -12,8 +12,8 @@
             "citadel/citadel_relations.json"
         ],
         "domain_data": [
-            "api-auth/api-auth-objects.json",
-            "api-auth/api-auth-relations.json"
+            "api-auth/api-auth_objects.json",
+            "api-auth/api-auth_relations.json"
         ],
         "assertions": [
             "api-auth/test/api-auth_assertions.json",

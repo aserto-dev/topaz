@@ -7,21 +7,21 @@ import (
 	"strconv"
 
 	"github.com/aserto-dev/azm/model"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 
 	bolt "go.etcd.io/bbolt"
 )
 
 type manifest struct {
-	Metadata *dsm3.Metadata
-	Body     *dsm3.Body
+	Metadata *dsm.Metadata
+	Body     *dsm.Body
 }
 
-func Manifest(metadata *dsm3.Metadata) *manifest {
+func Manifest(metadata *dsm.Metadata) *manifest {
 	return &manifest{
 		Metadata: metadata,
-		Body:     &dsm3.Body{},
+		Body:     &dsm.Body{},
 	}
 }
 
@@ -33,12 +33,12 @@ func (m *manifest) Get(ctx context.Context, tx *bolt.Tx) (*manifest, error) {
 		return nil, bdb.ErrPathNotFound
 	}
 
-	metadata, err := bdb.Get[dsm3.Metadata](ctx, tx, bdb.ManifestPath, bdb.MetadataKey)
+	metadata, err := bdb.Get[dsm.Metadata](ctx, tx, bdb.ManifestPath, bdb.MetadataKey)
 	if err != nil {
 		return nil, err
 	}
 
-	body, err := bdb.Get[dsm3.Body](ctx, tx, bdb.ManifestPath, bdb.BodyKey)
+	body, err := bdb.Get[dsm.Body](ctx, tx, bdb.ManifestPath, bdb.BodyKey)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (m *manifest) Set(ctx context.Context, tx *bolt.Tx, buf *bytes.Buffer) erro
 		return err
 	}
 
-	m.Body = &dsm3.Body{Data: buf.Bytes()}
+	m.Body = &dsm.Body{Data: buf.Bytes()}
 	if _, err := bdb.Set(ctx, tx, bdb.ManifestPath, bdb.BodyKey, m.Body); err != nil {
 		return err
 	}

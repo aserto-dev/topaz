@@ -3,20 +3,20 @@ package directory
 import (
 	"context"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 )
 
+const defBackupFileName = "backup.tar.gz"
+
 type BackupCmd struct {
 	dsc.Config
 
-	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to make backup to"`
+	File string `arg:"" default:"backup.tar.gz" help:"path to target backup file"`
 }
-
-const defaultFileName = "backup.tar.gz"
 
 func (cmd *BackupCmd) Run(ctx context.Context) error {
 	if ok, err := clients.Validate(ctx, &cmd.Config); !ok {
@@ -28,16 +28,22 @@ func (cmd *BackupCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	if cmd.File == defaultFileName {
+	if cmd.File == defBackupFileName {
 		currentDir, err := os.Getwd()
 		if err != nil {
 			return err
 		}
 
-		cmd.File = path.Join(currentDir, defaultFileName)
+		cmd.File = filepath.Join(currentDir, defBackupFileName)
 	}
 
-	cc.Con().Info().Msg(">>> backup to %s", cmd.File)
+	w, err := os.Create(cmd.File)
+	if err != nil {
+		return err
+	}
+	defer w.Close()
 
-	return dsClient.Backup(ctx, cmd.File)
+	cc.Con().Info().Msg(">>> backup to %q", cmd.File)
+
+	return dsClient.BackupToFile(ctx, w)
 }

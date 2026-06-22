@@ -5,7 +5,7 @@ import (
 	"context"
 
 	"github.com/aserto-dev/azm/graph"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/x"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
@@ -200,9 +200,9 @@ func ScanWithFilter(
 	tx *bolt.Tx,
 	path Path,
 	keyFilter []byte,
-	valueFilter func(*dsc3.RelationIdentifier) bool,
+	valueFilter func(*dsc.RelationIdentifier) bool,
 	pool graph.RelationPool,
-	out *[]*dsc3.RelationIdentifier,
+	out *[]*dsc.RelationIdentifier,
 ) error {
 	b, err := SetBucket(tx, path)
 	if err != nil {
@@ -212,7 +212,7 @@ func ScanWithFilter(
 	c := b.Cursor()
 
 	if valueFilter == nil {
-		valueFilter = func(_ *dsc3.RelationIdentifier) bool { return true }
+		valueFilter = func(_ *dsc.RelationIdentifier) bool { return true }
 	}
 
 	results := *out

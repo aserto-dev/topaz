@@ -12,8 +12,8 @@
             "citadel/citadel_relations.json"
         ],
         "domain_data": [
-            "multi-tenant/multi-tenant-objects.json",
-            "multi-tenant/multi-tenant-relations.json"
+            "multi-tenant/multi-tenant_objects.json",
+            "multi-tenant/multi-tenant_relations.json"
         ],
         "assertions": [
             "multi-tenant/test/multi-tenant_assertions.json",

@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
-	"path"
+	"path/filepath"
 	"strings"
 	"syscall"
 
@@ -37,7 +37,7 @@ func PolicyRoot() string {
 			return ""
 		}
 
-		policyRoot = path.Join(home, defaultPolicyRoot)
+		policyRoot = filepath.Join(home, defaultPolicyRoot)
 	}
 
 	//nolint:gosec // G703

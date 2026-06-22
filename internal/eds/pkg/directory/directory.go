@@ -6,12 +6,12 @@ import (
 	"sync"
 	"time"
 
-	dse3 "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw3 "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	dsa1 "github.com/authzen/access.go/api/access/v1"
+	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/migrate"
@@ -41,12 +41,12 @@ type Directory struct {
 	config    *Config
 	logger    *zerolog.Logger
 	store     *bdb.BoltDB
-	exporter3 dse3.ExporterServer
-	importer3 dsi3.ImporterServer
-	model3    dsm3.ModelServer
-	reader3   dsr3.ReaderServer
-	writer3   dsw3.WriterServer
-	access1   dsa1.AccessServer
+	exporter3 dse.ExporterServer
+	importer3 dsi.ImporterServer
+	model3    dsm.ModelServer
+	reader3   dsr.ReaderServer
+	writer3   dsw.WriterServer
+	access1   dsa.AccessServer
 }
 
 var (
@@ -144,27 +144,27 @@ func (s *Directory) Close() {
 	}
 }
 
-func (s *Directory) Exporter3() dse3.ExporterServer {
+func (s *Directory) Exporter3() dse.ExporterServer {
 	return s.exporter3
 }
 
-func (s *Directory) Importer3() dsi3.ImporterServer {
+func (s *Directory) Importer3() dsi.ImporterServer {
 	return s.importer3
 }
 
-func (s *Directory) Model3() dsm3.ModelServer {
+func (s *Directory) Model3() dsm.ModelServer {
 	return s.model3
 }
 
-func (s *Directory) Reader3() dsr3.ReaderServer {
+func (s *Directory) Reader3() dsr.ReaderServer {
 	return s.reader3
 }
 
-func (s *Directory) Writer3() dsw3.WriterServer {
+func (s *Directory) Writer3() dsw.WriterServer {
 	return s.writer3
 }
 
-func (s *Directory) Access1() dsa1.AccessServer {
+func (s *Directory) Access1() dsa.AccessServer {
 	return s.access1
 }
 

@@ -6,7 +6,7 @@ import (
 
 	"github.com/aserto-dev/azm/model"
 	"github.com/aserto-dev/azm/stats"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 
 	bolt "go.etcd.io/bbolt"
@@ -36,7 +36,7 @@ func NewStats() *Stats {
 }
 
 func (s *Stats) CountObjects(ctx context.Context, tx *bolt.Tx) error {
-	iter, err := bdb.NewScanIterator[dsc3.Object](ctx, tx, bdb.ObjectsPath)
+	iter, err := bdb.NewScanIterator[dsc.Object](ctx, tx, bdb.ObjectsPath)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (s *Stats) CountObjects(ctx context.Context, tx *bolt.Tx) error {
 }
 
 func (s *Stats) CountRelations(ctx context.Context, tx *bolt.Tx) error {
-	iter, err := bdb.NewScanIterator[dsc3.Relation](ctx, tx, bdb.RelationsObjPath)
+	iter, err := bdb.NewScanIterator[dsc.Relation](ctx, tx, bdb.RelationsObjPath)
 	if err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func (s *Stats) CountRelations(ctx context.Context, tx *bolt.Tx) error {
 	return nil
 }
 
-func (s *Stats) incObject(obj *dsc3.Object) {
+func (s *Stats) incObject(obj *dsc.Object) {
 	ot, ok := s.ObjectTypes[model.ObjectName(obj.GetType())]
 	if !ok {
 		ot = &stats.ObjectType{
@@ -75,7 +75,7 @@ func (s *Stats) incObject(obj *dsc3.Object) {
 	atomic.AddInt32(&ot.ObjCount, 1)
 }
 
-func (s *Stats) incRelation(rel *dsc3.Relation) {
+func (s *Stats) incRelation(rel *dsc.Relation) {
 	objType := model.ObjectName(rel.GetObjectType())
 	relation := model.RelationName(rel.GetRelation())
 	subType := model.ObjectName(rel.GetSubjectType())

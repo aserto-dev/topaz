@@ -39,36 +39,53 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		return &authorizer.IsResponse{}, err
 	}
 
-	queryStmt := strings.Builder{}
+	// The Rego query body and its prepared form depend only on the policy
+	// path and the decisions list — both stable for the lifetime of the
+	// active OPA compiler. Cache the PreparedEvalQuery so repeated Is()
+	// calls for the same (path, decisions) skip the parse + plan work and
+	// stop fighting each other on the compiler's internal locks. The cache
+	// is invalidated whenever the compiler is rotated (bundle reload).
+	policyPath := req.GetPolicyContext().GetPath()
+	decisions := req.GetPolicyContext().GetDecisions()
+	preparedKey := cacheKey(policyPath, decisions)
 
-	for i, decision := range req.GetPolicyContext().GetDecisions() {
-		rule := fmt.Sprintf("data.%s.%s\n", req.GetPolicyContext().GetPath(), decision)
+	query, err := s.preparedQueries.getOrPrepare(ctx, rt, preparedKey, func(ctx context.Context) (rego.PreparedEvalQuery, error) {
+		queryStmt := strings.Builder{}
 
-		if ok, err := rt.ValidateRule(rule); !ok {
-			return &authorizer.IsResponse{}, aerr.ErrBadQuery.Err(err).Msgf("invalid rule: %q", rule)
+		for i, decision := range decisions {
+			rule := fmt.Sprintf("data.%s.%s\n", policyPath, decision)
+
+			if ok, err := rt.ValidateRule(rule); !ok {
+				return rego.PreparedEvalQuery{}, aerr.ErrBadQuery.Err(err).Msgf("invalid rule: %q", rule)
+			}
+
+			q := fmt.Sprintf("x%d = %s\n", i, rule)
+
+			if _, err := rt.ValidateQuery(q); err != nil {
+				return rego.PreparedEvalQuery{}, aerr.ErrBadQuery.Err(err).Msgf("invalid query: %q", q)
+			}
+
+			queryStmt.WriteString(q)
 		}
 
-		query := fmt.Sprintf("x%d = %s\n", i, rule)
-
-		if _, err := rt.ValidateQuery(query); err != nil {
-			return &authorizer.IsResponse{}, aerr.ErrBadQuery.Err(err).Msgf("invalid query: %q", query)
+		pq, err := rt.ValidateQuery(queryStmt.String())
+		if err != nil {
+			return rego.PreparedEvalQuery{}, aerr.ErrBadQuery.Err(err).Msgf("invalid query batch: %q", queryStmt.String())
 		}
 
-		queryStmt.WriteString(query)
-	}
+		prepared, err := rego.New(
+			rego.Compiler(rt.GetPluginsManager().GetCompiler()),
+			rego.Store(rt.GetPluginsManager().Store),
+			rego.ParsedQuery(pq),
+		).PrepareForEval(ctx)
+		if err != nil {
+			return rego.PreparedEvalQuery{}, aerr.ErrBadQuery.Err(err).Msg(queryStmt.String())
+		}
 
-	pq, err := rt.ValidateQuery(queryStmt.String())
+		return prepared, nil
+	})
 	if err != nil {
-		return &authorizer.IsResponse{}, aerr.ErrBadQuery.Err(err).Msgf("invalid query batch: %q", queryStmt.String())
-	}
-
-	query, err := rego.New(
-		rego.Compiler(rt.GetPluginsManager().GetCompiler()),
-		rego.Store(rt.GetPluginsManager().Store),
-		rego.ParsedQuery(pq),
-	).PrepareForEval(ctx)
-	if err != nil {
-		return &authorizer.IsResponse{}, aerr.ErrBadQuery.Err(err).Msg(queryStmt.String())
+		return &authorizer.IsResponse{}, err
 	}
 
 	resp := &authorizer.IsResponse{
@@ -77,11 +94,11 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 
 	queryResults, err := query.Eval(ctx, rego.EvalInput(input))
 	if err != nil {
-		return resp, aerr.ErrBadQuery.Err(err).Msgf("query evaluation failed: %q", queryStmt.String())
+		return resp, aerr.ErrBadQuery.Err(err).Msgf("query evaluation failed: path=%s decisions=%v", policyPath, decisions)
 	}
 
 	if len(queryResults) == 0 {
-		return resp, aerr.ErrBadQuery.Err(err).Msgf("undefined results: %q", queryStmt.String())
+		return resp, aerr.ErrBadQuery.Err(err).Msgf("undefined results: path=%s decisions=%v", policyPath, decisions)
 	}
 
 	for i, d := range req.GetPolicyContext().GetDecisions() {

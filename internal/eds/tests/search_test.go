@@ -6,13 +6,13 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 )
 
 func BenchmarkSearchSerial(b *testing.B) {
 	assert := require.New(b)
 
-	checks, err := loadChecks[dsr3.GetGraphRequest]()
+	checks, err := loadChecks[dsr.GetGraphRequest]()
 	assert.NoError(err)
 	assert.NotEmpty(checks)
 
@@ -34,7 +34,7 @@ func BenchmarkSearchSerial(b *testing.B) {
 func BenchmarkSearchParallelChunks(b *testing.B) {
 	assert := require.New(b)
 
-	checks, err := loadChecks[dsr3.GetGraphRequest]()
+	checks, err := loadChecks[dsr.GetGraphRequest]()
 	assert.NoError(err)
 	assert.NotEmpty(checks)
 
@@ -45,7 +45,7 @@ func BenchmarkSearchParallelChunks(b *testing.B) {
 
 	ctx := b.Context()
 
-	var chunks [][]*dsr3.GetGraphRequest
+	var chunks [][]*dsr.GetGraphRequest
 
 	numChunks := runtime.NumCPU()
 	chunkSize := (len(checks) + numChunks - 1) / numChunks

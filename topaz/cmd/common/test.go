@@ -35,18 +35,14 @@ type CheckType int
 const (
 	CheckUnknown CheckType = iota
 	Check
-	CheckRelation
-	CheckPermission
 	CheckDecision
 	Evaluation
 )
 
 const (
-	CheckStr           string = "check"
-	CheckRelationStr   string = "check_relation"
-	CheckPermissionStr string = "check_permission"
-	CheckDecisionStr   string = "check_decision"
-	EvaluationStr      string = "evaluation"
+	CheckStr         string = "check"
+	CheckDecisionStr string = "check_decision"
+	EvaluationStr    string = "evaluation"
 )
 
 type CheckResult struct {
@@ -57,19 +53,15 @@ type CheckResult struct {
 }
 
 var CheckTypeMap = map[string]CheckType{
-	CheckStr:           Check,
-	CheckRelationStr:   CheckRelation,
-	CheckPermissionStr: CheckPermission,
-	CheckDecisionStr:   CheckDecision,
-	EvaluationStr:      Evaluation,
+	CheckStr:         Check,
+	CheckDecisionStr: CheckDecision,
+	EvaluationStr:    Evaluation,
 }
 
 var CheckTypeMapStr = map[CheckType]string{
-	Check:           CheckStr,
-	CheckRelation:   CheckRelationStr,
-	CheckPermission: CheckPermissionStr,
-	CheckDecision:   CheckDecisionStr,
-	Evaluation:      EvaluationStr,
+	Check:         CheckStr,
+	CheckDecision: CheckDecisionStr,
+	Evaluation:    EvaluationStr,
 }
 
 func GetCheckType(msg *structpb.Struct) CheckType {
@@ -217,7 +209,11 @@ func UnmarshalReq(value *structpb.Value, msg proto.Message) error {
 		return err
 	}
 
-	err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(b, msg)
+	err = protojson.UnmarshalOptions{
+		AllowPartial:   true,
+		DiscardUnknown: true,
+		RecursionLimit: 0,
+	}.Unmarshal(b, msg)
 	if err != nil {
 		return err
 	}

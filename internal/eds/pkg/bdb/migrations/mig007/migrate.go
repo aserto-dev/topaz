@@ -1,8 +1,8 @@
 package mig007
 
 import (
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsm3 "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/common"
@@ -108,7 +108,7 @@ func updateManifest(path bdb.Path) func(*zerolog.Logger, *bolt.DB, *bolt.DB) err
 func encodeBody(b *bolt.Bucket, wtx *bolt.Tx, path bdb.Path) error {
 	bodyValue := b.Get(bdb.BodyKey)
 
-	body, err := unmarshal[dsm3.Body](bodyValue)
+	body, err := unmarshal[dsm.Body](bodyValue)
 	if err != nil {
 		return err
 	}
@@ -124,7 +124,7 @@ func encodeBody(b *bolt.Bucket, wtx *bolt.Tx, path bdb.Path) error {
 func encodeMetaData(b *bolt.Bucket, wtx *bolt.Tx, path bdb.Path) error {
 	metadataValue := b.Get(bdb.MetadataKey)
 
-	metadata, err := unmarshal[dsm3.Metadata](metadataValue)
+	metadata, err := unmarshal[dsm.Metadata](metadataValue)
 	if err != nil {
 		return err
 	}
@@ -162,7 +162,7 @@ func updateEncodingObjects() func(*zerolog.Logger, *bolt.DB, *bolt.DB) error {
 
 			c := b.Cursor()
 			for key, value := c.First(); key != nil; key, value = c.Next() {
-				obj, err := unmarshal[dsc3.Object](value)
+				obj, err := unmarshal[dsc.Object](value)
 				if err != nil {
 					return err
 				}
@@ -211,7 +211,7 @@ func updateEncodingRelations() func(*zerolog.Logger, *bolt.DB, *bolt.DB) error {
 
 			c := b.Cursor()
 			for key, value := c.First(); key != nil; key, value = c.Next() {
-				rel, err := unmarshal[dsc3.Relation](value)
+				rel, err := unmarshal[dsc.Relation](value)
 				if err != nil {
 					return err
 				}
@@ -245,7 +245,9 @@ type Message[T any] interface {
 }
 
 var unmarshalOpts = protojson.UnmarshalOptions{
+	AllowPartial:   false,
 	DiscardUnknown: true,
+	RecursionLimit: 0,
 }
 
 func unmarshal[T any, M Message[T]](b []byte) (M, error) {

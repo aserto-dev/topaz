@@ -3,7 +3,7 @@ package directory
 import (
 	"context"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/clients"
@@ -13,7 +13,7 @@ import (
 type RestoreCmd struct {
 	dsc.Config
 
-	File string `arg:""  default:"backup.tar.gz" help:"absolute file path to local backup tarball"`
+	File string `arg:"" default:"backup.tar.gz" help:"path to source backup file"`
 }
 
 func (cmd *RestoreCmd) Run(ctx context.Context) error {
@@ -26,16 +26,22 @@ func (cmd *RestoreCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	if cmd.File == "backup.tar.gz" {
+	if cmd.File == defBackupFileName {
 		currentDir, err := os.Getwd()
 		if err != nil {
 			return err
 		}
 
-		cmd.File = path.Join(currentDir, "backup.tar.gz")
+		cmd.File = filepath.Join(currentDir, defBackupFileName)
 	}
 
-	cc.Con().Info().Msg(">>> restore from %s", cmd.File)
+	r, err := os.Open(cmd.File)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
 
-	return dsClient.Restore(ctx, cmd.File)
+	cc.Con().Info().Msg(">>> restore from %q", cmd.File)
+
+	return dsClient.RestoreFromFile(ctx, r)
 }

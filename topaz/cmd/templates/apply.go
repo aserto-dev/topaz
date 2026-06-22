@@ -3,7 +3,6 @@ package templates
 import (
 	"context"
 	"os"
-	"path"
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/internal/fs"
@@ -12,6 +11,7 @@ import (
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/cmd/common"
 	"github.com/aserto-dev/topaz/topaz/cmd/directory"
+	"github.com/aserto-dev/topaz/topaz/cmd/directory/data"
 	"github.com/pkg/errors"
 )
 
@@ -23,7 +23,7 @@ type ApplyTemplateCmd struct {
 }
 
 func (cmd *ApplyTemplateCmd) Run(ctx context.Context) error {
-	templateDir := path.Join(cc.GetTopazTemplateDir(), cmd.Name)
+	templateDir := filepath.Join(cc.GetTopazTemplateDir(), cmd.Name)
 	if !fs.DirExists(templateDir) {
 		return errors.Errorf("directory %q does not exist", templateDir)
 	}
@@ -65,7 +65,7 @@ func (cmd *ApplyTemplateCmd) deleteManifest(ctx context.Context) error {
 }
 
 func (cmd *ApplyTemplateCmd) setManifest(ctx context.Context) error {
-	manifestDir := path.Join(cc.GetTopazTemplateDir(), cmd.Name, "model")
+	manifestDir := filepath.Join(cc.GetTopazTemplateDir(), cmd.Name, "model")
 	if !fs.DirExists(manifestDir) {
 		return errors.Errorf("directory %q does not exist", manifestDir)
 	}
@@ -76,7 +76,7 @@ func (cmd *ApplyTemplateCmd) setManifest(ctx context.Context) error {
 	}
 
 	command := directory.SetManifestCmd{
-		Path:   manifest,
+		File:   manifest,
 		Config: cmd.Config,
 	}
 
@@ -84,12 +84,12 @@ func (cmd *ApplyTemplateCmd) setManifest(ctx context.Context) error {
 }
 
 func (cmd *ApplyTemplateCmd) importData(ctx context.Context) error {
-	dataDir := path.Join(cc.GetTopazTemplateDir(), cmd.Name, "data")
+	dataDir := filepath.Join(cc.GetTopazTemplateDir(), cmd.Name, "data")
 	if !fs.DirExists(dataDir) {
 		return errors.Errorf("directory %q does not exist", dataDir)
 	}
 
-	command := directory.ImportCmd{
+	command := data.ImportCmd{
 		Directory: dataDir,
 		Config:    cmd.Config,
 	}
@@ -98,7 +98,7 @@ func (cmd *ApplyTemplateCmd) importData(ctx context.Context) error {
 }
 
 func (cmd *ApplyTemplateCmd) execAssertions(ctx context.Context) error {
-	assertionsDir := path.Join(cc.GetTopazTemplateDir(), cmd.Name, "assertions")
+	assertionsDir := filepath.Join(cc.GetTopazTemplateDir(), cmd.Name, "assertions")
 	if !fs.DirExists(assertionsDir) {
 		return errors.Errorf("directory %q does not exist", assertionsDir)
 	}

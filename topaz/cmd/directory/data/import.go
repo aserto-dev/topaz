@@ -1,4 +1,4 @@
-package directory
+package data
 
 import (
 	"context"

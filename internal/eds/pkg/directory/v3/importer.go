@@ -7,8 +7,8 @@ import (
 	"io"
 
 	aerr "github.com/aserto-dev/errors"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi3 "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/go-directory/pkg/validator"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
@@ -20,7 +20,7 @@ import (
 )
 
 type Importer struct {
-	dsi3.UnimplementedImporterServer
+	dsi.UnimplementedImporterServer
 
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
@@ -31,7 +31,7 @@ const (
 	relation string = "relation"
 )
 
-type counters map[string]*dsi3.ImportCounter
+type counters map[string]*dsi.ImportCounter
 
 func NewImporter(logger *zerolog.Logger, store *bdb.BoltDB) *Importer {
 	return &Importer{
@@ -40,7 +40,7 @@ func NewImporter(logger *zerolog.Logger, store *bdb.BoltDB) *Importer {
 	}
 }
 
-func (s *Importer) Import(stream dsi3.Importer_ImportServer) error {
+func (s *Importer) Import(stream dsi.Importer_ImportServer) error {
 	ctx := stream.Context()
 
 	ctr := counters{
@@ -61,11 +61,11 @@ func (s *Importer) Import(stream dsi3.Importer_ImportServer) error {
 				s.logger.Trace().Msg("import stream EOF")
 
 				for _, c := range ctr {
-					_ = stream.Send(&dsi3.ImportResponse{Msg: &dsi3.ImportResponse_Counter{Counter: c}})
+					_ = stream.Send(&dsi.ImportResponse{Msg: &dsi.ImportResponse_Counter{Counter: c}})
 				}
 
 				// backwards compatible response.
-				return stream.Send(&dsi3.ImportResponse{
+				return stream.Send(&dsi.ImportResponse{
 					Object:   ctr[object],
 					Relation: ctr[relation],
 				})
@@ -78,13 +78,13 @@ func (s *Importer) Import(stream dsi3.Importer_ImportServer) error {
 
 			if err := s.handleImportRequest(ctx, tx, req, ctr); err != nil {
 				if stat, ok := status.FromError(err); ok {
-					status := &dsi3.ImportStatus{
+					status := &dsi.ImportStatus{
 						Code: uint32(stat.Code()),
 						Msg:  stat.Message(),
 						Req:  req,
 					}
 
-					if err := stream.Send(&dsi3.ImportResponse{Msg: &dsi3.ImportResponse_Status{Status: status}}); err != nil {
+					if err := stream.Send(&dsi.ImportResponse{Msg: &dsi.ImportResponse_Status{Status: status}}); err != nil {
 						s.logger.Err(err).Msg("failed to send import status")
 					}
 				}
@@ -95,24 +95,24 @@ func (s *Importer) Import(stream dsi3.Importer_ImportServer) error {
 	return importErr
 }
 
-func (s *Importer) handleImportRequest(ctx context.Context, tx *bolt.Tx, req *dsi3.ImportRequest, ctr counters) error {
+func (s *Importer) handleImportRequest(ctx context.Context, tx *bolt.Tx, req *dsi.ImportRequest, ctr counters) error {
 	switch m := req.GetMsg().(type) {
-	case *dsi3.ImportRequest_Object:
-		if req.GetOpCode() == dsi3.Opcode_OPCODE_SET {
+	case *dsi.ImportRequest_Object:
+		if req.GetOpCode() == dsi.Opcode_OPCODE_SET {
 			err := s.objectSetHandler(ctx, tx, m.Object)
 			ctr[object] = updateCounter(ctr[object], req.GetOpCode(), err)
 
 			return err
 		}
 
-		if req.GetOpCode() == dsi3.Opcode_OPCODE_DELETE {
+		if req.GetOpCode() == dsi.Opcode_OPCODE_DELETE {
 			err := s.objectDeleteHandler(ctx, tx, m.Object)
 			ctr[object] = updateCounter(ctr[object], req.GetOpCode(), err)
 
 			return err
 		}
 
-		if req.GetOpCode() == dsi3.Opcode_OPCODE_DELETE_WITH_RELATIONS {
+		if req.GetOpCode() == dsi.Opcode_OPCODE_DELETE_WITH_RELATIONS {
 			err := s.objectDeleteWithRelationsHandler(ctx, tx, m.Object)
 			ctr[object] = updateCounter(ctr[object], req.GetOpCode(), err)
 
@@ -121,22 +121,22 @@ func (s *Importer) handleImportRequest(ctx context.Context, tx *bolt.Tx, req *ds
 
 		return derr.ErrUnknownOpCode.Msgf("%s - %d", req.GetOpCode().String(), int32(req.GetOpCode()))
 
-	case *dsi3.ImportRequest_Relation:
-		if req.GetOpCode() == dsi3.Opcode_OPCODE_SET {
+	case *dsi.ImportRequest_Relation:
+		if req.GetOpCode() == dsi.Opcode_OPCODE_SET {
 			err := s.relationSetHandler(ctx, tx, m.Relation)
 			ctr[relation] = updateCounter(ctr[relation], req.GetOpCode(), err)
 
 			return err
 		}
 
-		if req.GetOpCode() == dsi3.Opcode_OPCODE_DELETE {
+		if req.GetOpCode() == dsi.Opcode_OPCODE_DELETE {
 			err := s.relationDeleteHandler(ctx, tx, m.Relation)
 			ctr[relation] = updateCounter(ctr[relation], req.GetOpCode(), err)
 
 			return err
 		}
 
-		if req.GetOpCode() == dsi3.Opcode_OPCODE_DELETE_WITH_RELATIONS {
+		if req.GetOpCode() == dsi.Opcode_OPCODE_DELETE_WITH_RELATIONS {
 			return derr.ErrInvalidOpCode.Msgf("%s for type relation", req.GetOpCode().String())
 		}
 
@@ -147,7 +147,7 @@ func (s *Importer) handleImportRequest(ctx context.Context, tx *bolt.Tx, req *ds
 	}
 }
 
-func (s *Importer) objectSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Object) error {
+func (s *Importer) objectSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc.Object) error {
 	s.logger.Debug().Interface("object", req).Msg("ImportObject")
 
 	if req == nil {
@@ -177,14 +177,14 @@ func (s *Importer) objectSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.
 
 	updReq.Etag = etag
 
-	if _, err := bdb.Set[dsc3.Object](ctx, tx, bdb.ObjectsPath, ds.Object(updReq).Key(), updReq); err != nil {
+	if _, err := bdb.Set[dsc.Object](ctx, tx, bdb.ObjectsPath, ds.Object(updReq).Key(), updReq); err != nil {
 		return derr.ErrInvalidObject.Msg("set")
 	}
 
 	return nil
 }
 
-func (s *Importer) objectDeleteHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Object) error {
+func (s *Importer) objectDeleteHandler(ctx context.Context, tx *bolt.Tx, req *dsc.Object) error {
 	s.logger.Debug().Interface("object", req).Msg("ImportObject")
 
 	if req == nil {
@@ -207,7 +207,7 @@ func (s *Importer) objectDeleteHandler(ctx context.Context, tx *bolt.Tx, req *ds
 	return nil
 }
 
-func (s *Importer) objectDeleteWithRelationsHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Object) error {
+func (s *Importer) objectDeleteWithRelationsHandler(ctx context.Context, tx *bolt.Tx, req *dsc.Object) error {
 	s.logger.Debug().Interface("object", req).Msg("ImportObject")
 
 	if req == nil {
@@ -240,8 +240,8 @@ func (s *Importer) objectDeleteWithRelationsHandler(ctx context.Context, tx *bol
 	return nil
 }
 
-func (*Importer) deleteObjectRelations(ctx context.Context, tx *bolt.Tx, path bdb.Path, obj *dsc3.Object) error {
-	iter, err := bdb.NewScanIterator[dsc3.Relation](
+func (*Importer) deleteObjectRelations(ctx context.Context, tx *bolt.Tx, path bdb.Path, obj *dsc.Object) error {
+	iter, err := bdb.NewScanIterator[dsc.Relation](
 		ctx, tx, path,
 		bdb.WithKeyFilter(append(ds.Object(obj).Key(), ds.InstanceSeparator)),
 	)
@@ -263,7 +263,7 @@ func (*Importer) deleteObjectRelations(ctx context.Context, tx *bolt.Tx, path bd
 	return nil
 }
 
-func (s *Importer) relationSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Relation) error {
+func (s *Importer) relationSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc.Relation) error {
 	s.logger.Debug().Interface("relation", req).Msg("ImportRelation")
 
 	if req == nil {
@@ -293,18 +293,18 @@ func (s *Importer) relationSetHandler(ctx context.Context, tx *bolt.Tx, req *dsc
 
 	updReq.Etag = etag
 
-	if _, err := bdb.Set[dsc3.Relation](ctx, tx, bdb.RelationsObjPath, ds.Relation(updReq).ObjKey(), updReq); err != nil {
+	if _, err := bdb.Set[dsc.Relation](ctx, tx, bdb.RelationsObjPath, ds.Relation(updReq).ObjKey(), updReq); err != nil {
 		return derr.ErrInvalidRelation.Msg("set")
 	}
 
-	if _, err := bdb.Set[dsc3.Relation](ctx, tx, bdb.RelationsSubPath, ds.Relation(updReq).SubKey(), updReq); err != nil {
+	if _, err := bdb.Set[dsc.Relation](ctx, tx, bdb.RelationsSubPath, ds.Relation(updReq).SubKey(), updReq); err != nil {
 		return derr.ErrInvalidRelation.Msg("set")
 	}
 
 	return nil
 }
 
-func (s *Importer) relationDeleteHandler(ctx context.Context, tx *bolt.Tx, req *dsc3.Relation) error {
+func (s *Importer) relationDeleteHandler(ctx context.Context, tx *bolt.Tx, req *dsc.Relation) error {
 	s.logger.Debug().Interface("relation", req).Msg("ImportRelation")
 
 	if req == nil {
@@ -331,17 +331,17 @@ func (s *Importer) relationDeleteHandler(ctx context.Context, tx *bolt.Tx, req *
 	return nil
 }
 
-func updateCounter(c *dsi3.ImportCounter, opCode dsi3.Opcode, err error) *dsi3.ImportCounter {
+func updateCounter(c *dsi.ImportCounter, opCode dsi.Opcode, err error) *dsi.ImportCounter {
 	c.Recv++
 
 	switch {
 	case err != nil:
 		c.Error++
-	case opCode == dsi3.Opcode_OPCODE_SET:
+	case opCode == dsi.Opcode_OPCODE_SET:
 		c.Set++
-	case opCode == dsi3.Opcode_OPCODE_DELETE:
+	case opCode == dsi.Opcode_OPCODE_DELETE:
 		c.Delete++
-	case opCode == dsi3.Opcode_OPCODE_DELETE_WITH_RELATIONS:
+	case opCode == dsi.Opcode_OPCODE_DELETE_WITH_RELATIONS:
 		c.Delete++
 	}
 
