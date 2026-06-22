@@ -1,0 +1,163 @@
+{
+  "roots": ["access", "directory", "policy"],
+  "metadata": {
+    "required_builtins": {
+      "builtin1": [
+        {
+          "name": "ds.check",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "boolean"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "ds.checks",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "boolean"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "ds.graph",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "ds.object",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "ds.relation",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "ds.relations",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "az.evaluation",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "az.evaluations",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "az.subject_search",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "az.resource_search",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        },
+        {
+          "name": "az.action_search",
+          "decl": {
+            "args": [
+              {
+                "type": "any"
+              }
+            ],
+            "result": {
+              "type": "any"
+            },
+            "type": "function"
+          }
+        }
+      ]
+    }
+  }
+}
