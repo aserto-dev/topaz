@@ -1,4 +1,4 @@
-package config
+package topaz
 
 import (
 	"encoding/json"
@@ -6,22 +6,22 @@ import (
 	"time"
 
 	"github.com/aserto-dev/go-aserto"
-	"github.com/pkg/errors"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
 )
 
 const DefaultRequestTimeout = 5 * time.Second
 
 type Config struct {
-	Enabled                 bool          `json:"enabled"`
-	Connection              aserto.Config `json:"connection"`
-	RequestTimeout          Duration      `json:"request_timeout"`
-	EnableDirectoryBuiltIns bool          `json:"enable_directory_builtins"`
-	EnableAccessBuiltIns    bool          `json:"enable_access_builtins"`
+	Enabled        bool          `json:"enabled"`
+	Connection     aserto.Config `json:"connection"`
+	RequestTimeout Duration      `json:"request_timeout"`
 }
 
 type Duration time.Duration
 
-var ErrInvalidDuration = errors.New("invalid duration format")
+func (c Config) IsEnabled() bool {
+	return c.Enabled
+}
 
 func (d *Duration) UnmarshalJSON(b []byte) error {
 	// attempt the string form
@@ -44,7 +44,7 @@ func (d *Duration) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 
-	return errors.Wrap(ErrInvalidDuration, string(b))
+	return fmt.Errorf("%s %w", string(b), errs.ErrInvalidDuration)
 }
 
 func (d Duration) MarshalJSON() ([]byte, error) {

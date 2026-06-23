@@ -1,8 +1,12 @@
 package ac
 
 import (
+	"errors"
+
 	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
 	"github.com/authzen/access.go/api/access/v1"
+
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
@@ -27,7 +31,7 @@ const azEvaluationsHelp string = `az.evaluations({
 
 // registerEvaluations
 // https://openid.github.io/authzen/#name-access-evaluations-api.
-func registerEvaluations(fnName string, ac func() access.AccessClient) (*rego.Function, rego.Builtin1) {
+func registerEvaluations(fnName string, ac func() (access.AccessClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -36,7 +40,13 @@ func registerEvaluations(fnName string, ac func() access.AccessClient) (*rego.Fu
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 			var args access.EvaluationsRequest
 
+			acr, err := ac()
+			if err != nil && errors.Is(err, errs.ErrTopazPluginDisabled) {
+				return nil, err
+			}
+
 			if err := ast.As(op1.Value, &args); err != nil {
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
@@ -44,7 +54,7 @@ func registerEvaluations(fnName string, ac func() access.AccessClient) (*rego.Fu
 				return ast.StringTerm(azEvaluationsHelp), nil
 			}
 
-			resp, err := ac().Evaluations(bctx.Context, &args)
+			resp, err := acr.Evaluations(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

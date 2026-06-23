@@ -2,10 +2,12 @@ package ds
 
 import (
 	"bytes"
-
-	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"errors"
 
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
+
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
@@ -25,7 +27,7 @@ const dsRelationHelp string = `ds.relation({
 	})`
 
 // registerRelation - ds.relation.
-func registerRelation(fnName string, dr func() reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+func registerRelation(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -33,6 +35,11 @@ func registerRelation(fnName string, dr func() reader.ReaderClient) (*rego.Funct
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 			var args reader.GetRelationRequest
+
+			dsr, err := dr()
+			if err != nil && errors.Is(err, errs.ErrTopazPluginDisabled) {
+				return nil, err
+			}
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				builtins.TraceError(&bctx, fnName, err)
@@ -43,7 +50,7 @@ func registerRelation(fnName string, dr func() reader.ReaderClient) (*rego.Funct
 				return ast.StringTerm(dsRelationHelp), nil
 			}
 
-			resp, err := dr().GetRelation(bctx.Context, &args)
+			resp, err := dsr.GetRelation(bctx.Context, &args)
 
 			switch {
 			case status.Code(err) == codes.NotFound:

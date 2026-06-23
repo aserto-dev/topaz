@@ -1,9 +1,7 @@
-package plugin
+package topaz
 
 import (
 	"sync/atomic"
-
-	"github.com/aserto-dev/topaz/topaz-opa/internal/config"
 
 	"github.com/aserto-dev/go-aserto"
 	"github.com/open-policy-agent/opa/v1/plugins"
@@ -13,20 +11,21 @@ import (
 type PluginFactory struct{}
 
 var (
-	_   plugins.Factory = (*PluginFactory)(nil)
-	cfg atomic.Value
+	_    plugins.Factory = (*PluginFactory)(nil)
+	aCfg atomic.Pointer[Config]
 )
 
-func SetConfig(c config.Config) {
-	cfg.Store(c)
+func SetConfig(c Config) {
+	aCfg.Store(&c)
 }
 
-func GetConfig() config.Config {
-	return cfg.Load().(config.Config) //nolint:forcetypeassert
+func GetConfig() Config {
+	c := aCfg.Load()
+	return *c
 }
 
 func (p *PluginFactory) New(manager *plugins.Manager, cfg any) plugins.Plugin {
-	c, ok := cfg.(config.Config)
+	c, ok := cfg.(Config)
 	if !ok {
 		// panic as the plugins.Factory interface definition of New does ot provide an error return,
 		// nor does the OPA implementation not handle nil plugins.
@@ -41,7 +40,7 @@ func (p *PluginFactory) New(manager *plugins.Manager, cfg any) plugins.Plugin {
 }
 
 func (p *PluginFactory) Validate(manager *plugins.Manager, cfg []byte) (any, error) {
-	var parsedConfig config.Config
+	var parsedConfig Config
 	if err := util.Unmarshal(cfg, &parsedConfig); err != nil {
 		return nil, err
 	}
@@ -52,8 +51,8 @@ func (p *PluginFactory) Validate(manager *plugins.Manager, cfg []byte) (any, err
 }
 
 func Factory(m *plugins.Manager, cfg any) plugins.Plugin {
-	defaultConfig := &config.Config{
-		Enabled: true,
+	defaultConfig := &Config{
+		Enabled: false,
 		Connection: aserto.Config{
 			Address:        "localhost:9292",
 			APIKey:         "",
@@ -66,12 +65,10 @@ func Factory(m *plugins.Manager, cfg any) plugins.Plugin {
 			NoProxy:        false,
 			Headers:        map[string]string{},
 		},
-		RequestTimeout:          config.Duration(config.DefaultRequestTimeout),
-		EnableDirectoryBuiltIns: true,
-		EnableAccessBuiltIns:    true,
+		RequestTimeout: Duration(DefaultRequestTimeout),
 	}
 
-	if c, ok := cfg.(*config.Config); ok {
+	if c, ok := cfg.(*Config); ok {
 		defaultConfig = c
 	}
 

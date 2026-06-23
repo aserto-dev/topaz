@@ -8,7 +8,7 @@ import (
 )
 
 // RegisterAccessBuiltins register the AuthZen Access Service built-ins.
-func RegisterAccessBuiltins(acClient func() access.AccessClient) {
+func RegisterAccessBuiltins(acClient func() (access.AccessClient, error)) {
 	rego.RegisterBuiltin1(registerEvaluation(builtins.AZEvaluation, acClient))
 	rego.RegisterBuiltin1(registerEvaluations(builtins.AZEvaluations, acClient))
 	rego.RegisterBuiltin1(registerSubjectSearch(builtins.AZSubjectSearch, acClient))

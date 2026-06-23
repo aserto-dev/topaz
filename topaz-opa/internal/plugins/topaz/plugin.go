@@ -1,18 +1,21 @@
-package plugin
+package topaz
 
 import (
 	"context"
 
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/topaz/topaz-opa/internal/config"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
 	"github.com/authzen/access.go/api/access/v1"
 	"github.com/open-policy-agent/opa/v1/plugins"
+
 	"google.golang.org/grpc"
 )
 
+const PluginName string = `topaz`
+
 type Plugin struct {
 	manager *plugins.Manager
-	config  *config.Config
+	config  *Config
 }
 
 var _ plugins.Plugin = (*Plugin)(nil)
@@ -28,7 +31,7 @@ func (p *Plugin) Stop(ctx context.Context) {
 }
 
 func (p *Plugin) Reconfigure(ctx context.Context, c any) {
-	if cfg, ok := c.(*config.Config); ok {
+	if cfg, ok := c.(*Config); ok {
 		p.config = cfg
 	}
 }
@@ -36,32 +39,42 @@ func (p *Plugin) Reconfigure(ctx context.Context, c any) {
 func GetDirectoryConn() func() (*grpc.ClientConn, error) {
 	return func() (*grpc.ClientConn, error) {
 		cfg := GetConfig()
+		if !cfg.IsEnabled() {
+			return nil, errs.ErrTopazPluginDisabled
+		}
+
 		return cfg.Connection.Connect()
 	}
 }
 
-func GetAccessClient() func() access.AccessClient {
-	return func() access.AccessClient {
+func GetAccessClient() func() (access.AccessClient, error) {
+	return func() (access.AccessClient, error) {
 		cfg := GetConfig()
+		if !cfg.IsEnabled() {
+			return nil, errs.ErrTopazPluginDisabled
+		}
 
 		conn, err := cfg.Connection.Connect()
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 
-		return access.NewAccessClient(conn)
+		return access.NewAccessClient(conn), nil
 	}
 }
 
-func GetDirectoryClient() func() reader.ReaderClient {
-	return func() reader.ReaderClient {
+func GetDirectoryClient() func() (reader.ReaderClient, error) {
+	return func() (reader.ReaderClient, error) {
 		cfg := GetConfig()
+		if !cfg.IsEnabled() {
+			return nil, errs.ErrTopazPluginDisabled
+		}
 
 		conn, err := cfg.Connection.Connect()
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 
-		return reader.NewReaderClient(conn)
+		return reader.NewReaderClient(conn), nil
 	}
 }

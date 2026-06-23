@@ -2,10 +2,12 @@ package ds
 
 import (
 	"bytes"
-
-	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"errors"
 
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
+
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
@@ -38,7 +40,7 @@ const dsChecksHelp string = `ds.checks({
 })`
 
 // registerChecks - ds.checks.
-func registerChecks(fnName string, dr func() reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+func registerChecks(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -47,7 +49,13 @@ func registerChecks(fnName string, dr func() reader.ReaderClient) (*rego.Functio
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 			var args reader.ChecksRequest
 
+			dsr, err := dr()
+			if err != nil && errors.Is(err, errs.ErrTopazPluginDisabled) {
+				return nil, err
+			}
+
 			if err := ast.As(op1.Value, &args); err != nil {
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
@@ -63,7 +71,7 @@ func registerChecks(fnName string, dr func() reader.ReaderClient) (*rego.Functio
 				args.Checks = []*reader.CheckRequest{}
 			}
 
-			resp, err := dr().Checks(bctx.Context, &args)
+			resp, err := dsr.Checks(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err

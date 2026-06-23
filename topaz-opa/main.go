@@ -16,7 +16,7 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
-	// initialize Topaz builtins & plugin
+	// initialize builtins & plugins
 	plugin.Init()
 
 	if err := cmd.Command(nil, brand).ExecuteContext(ctx); err != nil {

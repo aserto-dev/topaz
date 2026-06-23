@@ -2,14 +2,15 @@ package ds
 
 import (
 	"bytes"
-
-	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"errors"
 
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
+
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
-	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -24,7 +25,7 @@ const dsObjectHelp string = `ds.object({
 })`
 
 // registerObject - ds.object.
-func registerObject(fnName string, dr func() reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+func registerObject(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -40,8 +41,14 @@ func registerObject(fnName string, dr func() reader.ReaderClient) (*rego.Functio
 				req *reader.GetObjectRequest
 			)
 
+			dsr, err := dr()
+			if err != nil && errors.Is(err, errs.ErrTopazPluginDisabled) {
+				return nil, err
+			}
+
 			if err := ast.As(op1.Value, &args); err != nil {
-				return nil, errors.Wrapf(err, "failed to parse ds.object input message")
+				builtins.TraceError(&bctx, fnName, err)
+				return nil, err
 			}
 
 			req = &reader.GetObjectRequest{
@@ -54,7 +61,7 @@ func registerObject(fnName string, dr func() reader.ReaderClient) (*rego.Functio
 				return ast.StringTerm(dsObjectHelp), nil
 			}
 
-			resp, err := dr().GetObject(bctx.Context, req)
+			resp, err := dsr.GetObject(bctx.Context, req)
 
 			switch {
 			case status.Code(err) == codes.NotFound:

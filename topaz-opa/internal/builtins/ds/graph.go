@@ -2,10 +2,12 @@ package ds
 
 import (
 	"bytes"
-
-	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"errors"
 
 	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
+
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
@@ -24,7 +26,7 @@ const dsGraphHelp string = `ds.graph({
 })`
 
 // registerGraph - ds.graph.
-func registerGraph(fnName string, dr func() reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+func registerGraph(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -32,6 +34,11 @@ func registerGraph(fnName string, dr func() reader.ReaderClient) (*rego.Function
 		},
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 			var args reader.GetGraphRequest
+
+			dsr, err := dr()
+			if err != nil && errors.Is(err, errs.ErrTopazPluginDisabled) {
+				return nil, err
+			}
 
 			if err := ast.As(op1.Value, &args); err != nil {
 				builtins.TraceError(&bctx, fnName, err)
@@ -42,7 +49,7 @@ func registerGraph(fnName string, dr func() reader.ReaderClient) (*rego.Function
 				return ast.StringTerm(dsGraphHelp), nil
 			}
 
-			resp, err := dr().GetGraph(bctx.Context, &args)
+			resp, err := dsr.GetGraph(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
