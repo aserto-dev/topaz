@@ -2,15 +2,15 @@ package runtime
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
-	"github.com/hashicorp/go-multierror"
 	"github.com/open-policy-agent/opa/v1/metrics"
 	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/plugins/bundle"
 	"github.com/open-policy-agent/opa/v1/plugins/discovery"
 	"github.com/open-policy-agent/opa/v1/plugins/status"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -45,11 +45,11 @@ func (r *Runtime) WaitForPlugins(timeoutCtx context.Context, maxWaitTime time.Du
 		}
 
 		if len(errs) > 0 {
-			return errors.Wrap(multierror.Append(nil, errs...), "error loading plugins")
+			return fmt.Errorf("errors loading plugins: %w", errors.Join(errs...))
 		}
 
 		if timeoutCtx.Err() != nil {
-			return errors.Wrap(timeoutCtx.Err(), "timeout while waiting for runtime to load")
+			return fmt.Errorf("timeout while waiting for runtime to load %w", timeoutCtx.Err())
 		}
 
 		time.Sleep(pluginWait)
@@ -101,7 +101,7 @@ func (r *Runtime) pluginsLoaded() bool {
 func (r *Runtime) bundlesStatusCallback(status bundle.Status) {
 	errs := status.Errors
 	if status.Code == bundleErrorCode {
-		errs = append(errs, errors.Errorf("bundle error: %s", status.Message))
+		errs = append(errs, fmt.Errorf("bundle error: %s", status.Message))
 	}
 
 	r.bundleStates.Store(status.Name, &bundleState{
