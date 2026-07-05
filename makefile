@@ -33,6 +33,8 @@ RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 
 .DEFAULT_GOAL      := build
 
+export TESTCONTAINERS_RYUK_DISABLED=$(shell docker context inspect --format '{{.Endpoints.docker.Host}}' 2>/dev/null | grep -q ".colima" && echo "true" || echo "false")
+
 .PHONY: deps
 deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
@@ -110,6 +112,7 @@ lint: gover
 .PHONY: test
 test: gover test-snapshot
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@echo -e "$(WARN_COLOR)!!! TESTCONTAINERS_RYUK_DISABLED=${TESTCONTAINERS_RYUK_DISABLED} !!!$(NO_COLOR)"
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./... | grep -v topazd/tests)                     -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./topazd/tests/... | grep -v tests/template)      -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
 	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/${ORG}/${REPO}/topazd/tests/template-no-tls/...   -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
@@ -156,6 +159,7 @@ info:
 	@echo "REGISTRY:    ${REGISTRY}"
 	@echo "ORG:         ${ORG}"
 	@echo "REPO:        ${REPO}"
+	@echo "COLIMA:      ${IS_COLIMA}"
 
 .PHONY: install-svu
 install-svu: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
