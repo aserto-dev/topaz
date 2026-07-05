@@ -1,4 +1,4 @@
-package authzen
+package authzen_service
 
 import (
 	"sync/atomic"
@@ -29,7 +29,7 @@ func (p *PluginFactory) New(manager *plugins.Manager, cfg any) plugins.Plugin {
 		// panic as the plugins.Factory interface definition of New does ot provide an error return,
 		// nor does the OPA implementation not handle nil plugins.
 		// NOTE that Validate() is called before New, mitigating the risk of the panic occurring.
-		panic("failed to parse topaz plugin config")
+		panic("failed to parse authzen service plugin config")
 	}
 
 	return &Plugin{

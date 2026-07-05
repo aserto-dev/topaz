@@ -39,7 +39,7 @@ func (p *Plugin) Reconfigure(ctx context.Context, c any) {
 func GetDirectoryConn() func() (*grpc.ClientConn, error) {
 	return func() (*grpc.ClientConn, error) {
 		cfg := GetConfig()
-		if !cfg.IsEnabled() {
+		if !cfg.Enabled {
 			return nil, errs.ErrTopazPluginDisabled
 		}
 
@@ -50,7 +50,7 @@ func GetDirectoryConn() func() (*grpc.ClientConn, error) {
 func GetAccessClient() func() (access.AccessClient, error) {
 	return func() (access.AccessClient, error) {
 		cfg := GetConfig()
-		if !cfg.IsEnabled() {
+		if !cfg.Enabled {
 			return nil, errs.ErrTopazPluginDisabled
 		}
 
@@ -66,7 +66,7 @@ func GetAccessClient() func() (access.AccessClient, error) {
 func GetDirectoryClient() func() (reader.ReaderClient, error) {
 	return func() (reader.ReaderClient, error) {
 		cfg := GetConfig()
-		if !cfg.IsEnabled() {
+		if !cfg.Enabled {
 			return nil, errs.ErrTopazPluginDisabled
 		}
 

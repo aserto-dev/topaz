@@ -1,10 +1,8 @@
-package topaz
+package authzen_logger
 
 import (
 	"sync/atomic"
 
-	"github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/topaz/topaz-opa/internal/config"
 	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/util"
 )
@@ -31,7 +29,7 @@ func (p *PluginFactory) New(manager *plugins.Manager, cfg any) plugins.Plugin {
 		// panic as the plugins.Factory interface definition of New does ot provide an error return,
 		// nor does the OPA implementation not handle nil plugins.
 		// NOTE that Validate() is called before New, mitigating the risk of the panic occurring.
-		panic("failed to parse topaz plugin config")
+		panic("failed to parse authzen logger plugin config")
 	}
 
 	return &Plugin{
@@ -52,22 +50,7 @@ func (p *PluginFactory) Validate(manager *plugins.Manager, cfg []byte) (any, err
 }
 
 func Factory(m *plugins.Manager, cfg any) plugins.Plugin {
-	defaultConfig := &Config{
-		Enabled: false,
-		Connection: aserto.Config{
-			Address:        "localhost:9292",
-			APIKey:         "",
-			Token:          "",
-			ClientCertPath: "",
-			ClientKeyPath:  "",
-			CACertPath:     "",
-			Insecure:       true,
-			NoTLS:          false,
-			NoProxy:        false,
-			Headers:        map[string]string{},
-		},
-		RequestTimeout: config.Duration(DefaultRequestTimeout),
-	}
+	defaultConfig := defaultConfig()
 
 	if c, ok := cfg.(*Config); ok {
 		defaultConfig = c
