@@ -32,9 +32,6 @@
                 "api": {
                     "$ref": "#definitions/API"
                 },
-                "decision_logger": {
-                    "$ref": "#definitions/DecisionLogger"
-                },
                 "opa": {
                     "$ref": "#definitions/OpenPolicyAgent"
                 }
@@ -509,122 +506,6 @@
         },
         "OpenPolicyAgentConfig": {
             "description": "OPA config block"
-        },
-        "DecisionLogger": {
-            "description": "Decision Logger configuration",
-            "properties": {
-                "type": {
-                    "description": "decision log plugin name",
-                    "type": "string"
-                },
-                "config": {
-                    "description": "decision log plugin configuration",
-                    "type": "object",
-                    "properties": {
-                        "store_directory": {
-                            "description": "path to mount point for decision logs buffer storage",
-                            "type": "string",
-                            "examples": [
-                                "/decisions"
-                            ]
-                        },
-                        "scribe": {
-                            "description": "Scribe configuration",
-                            "type": "object",
-                            "properties": {
-                                "address": {
-                                    "description": "address of scribe service",
-                                    "type": "string",
-                                    "default": ""
-                                },
-                                "client_cert_path": {
-                                    "description": "mTLS scribe cert path",
-                                    "type": "string"
-                                },
-                                "client_key_path": {
-                                    "description": "mTLS scribe key path",
-                                    "type": "string"
-                                },
-                                "headers": {
-                                    "description": "map of additional gRPC headers",
-                                    "type": "object",
-                                    "additionalProperties": {
-                                        "description": "header key : value",
-                                        "type": "string"
-                                    },
-                                    "examples": [
-                                        {
-                                            "aserto-tenant-id": "00000000-1111-2222-3333-444455556666"
-                                        }
-                                    ]
-                                },
-                                "max_inflight_batches": {
-                                    "description": "",
-                                    "type": "integer"
-                                },
-                                "ack_wait_seconds": {
-                                    "description": "",
-                                    "type": "integer",
-                                    "default": 10
-                                },
-                                "disable_tls": {
-                                    "description": "disable TLS verification",
-                                    "type": "boolean"
-                                }
-                            }
-                        },
-                        "shipper": {
-                            "description": "Shipper configuration",
-                            "type": "object",
-                            "$comment": "https://github.com/aserto-dev/self-decision-logger/blob/main/shipper/config.go",
-                            "properties": {
-                                "max_bytes": {
-                                    "description": "max message size 100mb (100*1024*1024)",
-                                    "type": "integer",
-                                    "default": 104857600
-                                },
-                                "max_batch_size": {
-                                    "description": "max batch size in messages",
-                                    "type": "integer",
-                                    "default": 512
-                                },
-                                "publish_timeout_seconds": {
-                                    "description": "publish timeout in seconds",
-                                    "type": "integer",
-                                    "default": 10
-                                },
-                                "max_inflight_batches": {
-                                    "description": "max number of inflight batches",
-                                    "type": "integer",
-                                    "default": 10
-                                },
-                                "ack_wait_seconds": {
-                                    "description": "ack wait time in seconds",
-                                    "type": "integer",
-                                    "default": 60
-                                },
-                                "delete_stream_on_done": {
-                                    "description": "delete stream when done",
-                                    "type": "boolean",
-                                    "default": false
-                                },
-                                "backoff_seconds": {
-                                    "description": "backoff in seconds",
-                                    "type": "array",
-                                    "default": [
-                                        5,
-                                        10,
-                                        30,
-                                        60,
-                                        120,
-                                        300
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 }
