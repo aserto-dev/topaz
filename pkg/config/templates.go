@@ -10,16 +10,6 @@ type templateParams struct {
 	EdgeDirectory     bool
 	SeedMetadata      bool
 	EnableDirectoryV2 bool
-
-	DiscoveryURL    string
-	TenantKey       string
-	DecisionLogging bool
-	DecisionLogger  struct {
-		EMSAddress     string
-		StorePath      string
-		ClientCertPath string
-		ClientKeyPath  string
-	}
 }
 
 const LocalImageTemplate = templatePreamble + `
@@ -38,9 +28,11 @@ opa:
       topaz_file_decision_logger:
         enabled: false
         config:
-          log_file_path: '/tmp/decisions.json'
-          max_file_size_mb: 50
-          max_file_count: 2
+          filename: '/tmp/decisions.json'
+          max_size: 100
+          max_age: 0
+          max_backups: 0
+          local_time: false
           compress: false
         policy_info:
           policy_name: ''
@@ -79,9 +71,11 @@ opa:
       topaz_file_decision_logger:
         enabled: false
         config:
-          log_file_path: '/tmp/decisions.json'
-          max_file_size_mb: 50
-          max_file_count: 2
+          filename: '/tmp/decisions.json'
+          max_size: 100
+          max_age: 0
+          max_backups: 0
+          local_time: false
           compress: false
         policy_info:
           policy_name: ''
