@@ -10,11 +10,11 @@ import (
 )
 
 type Access struct {
-	dsa.UnimplementedAccessServer
-
 	logger *zerolog.Logger
 	reader *Reader
 }
+
+var _ dsa.AccessServer = (*(Access))(nil)
 
 func NewAccess(logger *zerolog.Logger, reader *Reader) *Access {
 	return &Access{
