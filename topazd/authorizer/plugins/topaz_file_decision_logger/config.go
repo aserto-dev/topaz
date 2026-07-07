@@ -8,9 +8,9 @@ import (
 const (
 	default_decision_log_filename string = "decisions.json"
 	defaultFilename               string = ""    // default <processname>-lumberjack.log in os.TempDir().
-	defaultMaxSize                int    = 100   // default 100 megabytes.
+	defaultMaxSize                int    = 50    // default 100 megabytes.
 	defaultMaxAge                 int    = 0     // default is not to remove old log files based on age.
-	defaultMaxBackups             int    = 0     // default is to retain all old log files (though MaxAge may still cause them to get deleted.).
+	defaultMaxBackups             int    = 2     // default is to retain all old log files (though MaxAge may still cause them to get deleted.).
 	defaultLocalTime              bool   = false // default is to use UTC time.
 	defaultCompress               bool   = false // default is not to perform compression.
 )
@@ -70,10 +70,10 @@ func (cfg *Config) SetDefaults() {
 	}
 
 	if cfg.Logger.MaxSize == 0 {
-		cfg.Logger.MaxSize = 50
+		cfg.Logger.MaxSize = defaultMaxSize
 	}
 
 	if cfg.Logger.MaxBackups == 0 {
-		cfg.Logger.MaxBackups = 2
+		cfg.Logger.MaxBackups = defaultMaxBackups
 	}
 }
