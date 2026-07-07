@@ -94,10 +94,6 @@ func NewRuntimeResolver(
 	}, cleanup, err
 }
 
-func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName string) (*runtime.Runtime, error) {
-	return r.GetRuntime(ctx, policyName)
-}
-
-func (r *RuntimeResolver) GetRuntime(ctx context.Context, policyName string) (*runtime.Runtime, error) {
+func (r *RuntimeResolver) GetRuntime(ctx context.Context) (*runtime.Runtime, error) {
 	return r.runtime, nil
 }
