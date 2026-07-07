@@ -17,7 +17,7 @@ const (
 
 type Config struct {
 	Enabled    bool       `json:"enabled"`
-	Logger     *Logger    `json:"logger"`
+	Logger     Logger     `json:"logger"`
 	PolicyInfo PolicyInfo `json:"policy_info"`
 }
 
@@ -41,13 +41,20 @@ type PolicyInfo struct {
 func defaultConfig() *Config {
 	return &Config{
 		Enabled: false,
-		Logger: &Logger{
+		Logger: Logger{
 			Filename:   defaultFilename,
 			MaxSize:    defaultMaxSize,
 			MaxBackups: defaultMaxBackups,
 			MaxAge:     defaultMaxAge,
 			LocalTime:  defaultLocalTime,
 			Compress:   defaultCompress,
+		},
+		PolicyInfo: PolicyInfo{
+			PolicyName:      "",
+			RegistryService: "",
+			RegistryImage:   "",
+			RegistryTag:     "",
+			Digest:          "",
 		},
 	}
 }
