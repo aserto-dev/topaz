@@ -32,11 +32,11 @@ import (
 )
 
 type Model struct {
-	dsm.UnimplementedModelServer
-
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
 }
+
+var _ dsm.ModelServer = (*(Model))(nil)
 
 // NOTES:
 //

@@ -18,11 +18,11 @@ import (
 )
 
 type Writer struct {
-	dsw.UnimplementedWriterServer
-
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
 }
+
+var _ dsw.WriterServer = (*(Writer))(nil)
 
 func NewWriter(logger *zerolog.Logger, store *bdb.BoltDB) *Writer {
 	return &Writer{

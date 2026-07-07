@@ -22,11 +22,11 @@ import (
 )
 
 type Reader struct {
-	dsr.UnimplementedReaderServer
-
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
 }
+
+var _ dsr.ReaderServer = (*(Reader))(nil)
 
 func NewReader(logger *zerolog.Logger, store *bdb.BoltDB) *Reader {
 	return &Reader{
