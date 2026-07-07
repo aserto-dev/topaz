@@ -312,7 +312,11 @@ opa:
     services:
       ghcr:
         url: https://ghcr.io
-        type: "oci"
+        type: oci
+        credentials:
+          bearer:
+            scheme: "Bearer"
+            token: "${GIT_TOKEN}"
         response_header_timeout_seconds: 15
     bundles:
       test:
@@ -326,10 +330,12 @@ opa:
     plugins:
       topaz_file_decision_logger:
         enabled: false
-        config:
-          log_file_path: '/tmp/decisions.json'
-          max_file_size_mb: 50
-          max_file_count: 2
+        logger:
+          filename: '/tmp/decisions.json'
+          max_size: 50
+          max_age: 2
+          max_backups: 2
+          local_time: false
           compress: false
         policy_info:
           policy_name: 'policy-rebac'
