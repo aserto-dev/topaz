@@ -59,7 +59,7 @@ decision_logger:
 
 See https://www.openpolicyagent.org/docs/configuration#decision-logs 
 
-The OPA `config.decision_log` section is not utilized by the current `topaz_file_decision_logger` implementation, as the plugin logs `api.Decisions` instead of `logs.EventV1` instances.
+The OPA `config.decision_logs` section is not utilized by the current `topaz_file_decision_logger` implementation, as the plugin logs `api.Decisions` instead of `logs.EventV1` instances.
 
 ```
 type Decision struct {

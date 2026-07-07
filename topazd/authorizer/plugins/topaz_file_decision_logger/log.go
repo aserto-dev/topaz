@@ -14,7 +14,6 @@ func (plugin *Plugin) LogDecision(ctx context.Context, d *api.Decision) error {
 		return nil
 	}
 
-	d.Policy.PolicyInstance.Name = plugin.config.PolicyInfo.PolicyName //nolint:staticcheck // use deprecated field for compat of decision result.
 	d.Policy.RegistryService = plugin.config.PolicyInfo.RegistryService
 	d.Policy.RegistryImage = plugin.config.PolicyInfo.RegistryImage
 	d.Policy.RegistryTag = plugin.config.PolicyInfo.RegistryTag

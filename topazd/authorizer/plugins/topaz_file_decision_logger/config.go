@@ -31,11 +31,11 @@ type Logger struct {
 }
 
 type PolicyInfo struct {
-	PolicyName      string `json:"policy_name"`
-	RegistryService string `json:"registry_service"`
-	RegistryImage   string `json:"registry_image"`
-	RegistryTag     string `json:"registry_tag"`
-	Digest          string `json:"digest"`
+	PolicyName      string `json:"policy_name"`      // deprecated: always empty
+	RegistryService string `json:"registry_service"` //
+	RegistryImage   string `json:"registry_image"`   //
+	RegistryTag     string `json:"registry_tag"`     //
+	Digest          string `json:"digest"`           //
 }
 
 func defaultConfig() *Config {

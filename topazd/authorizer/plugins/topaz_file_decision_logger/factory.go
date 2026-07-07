@@ -1,27 +1,13 @@
 package topaz_file_decision_logger
 
 import (
-	"sync/atomic"
-
 	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/util"
 )
 
 type PluginFactory struct{}
 
-var (
-	_    plugins.Factory = (*PluginFactory)(nil)
-	aCfg atomic.Pointer[Config]
-)
-
-func SetConfig(c Config) {
-	aCfg.Store(&c)
-}
-
-func GetConfig() Config {
-	c := aCfg.Load()
-	return *c
-}
+var _ plugins.Factory = (*PluginFactory)(nil)
 
 func NewFactory() PluginFactory {
 	return PluginFactory{}
@@ -47,8 +33,6 @@ func (p PluginFactory) Validate(manager *plugins.Manager, cfg []byte) (any, erro
 	if err := util.Unmarshal(cfg, &parsedConfig); err != nil {
 		return nil, err
 	}
-
-	SetConfig(parsedConfig)
 
 	return parsedConfig, nil
 }
