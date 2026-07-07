@@ -58,23 +58,6 @@ func (g *Generator) WithEnableDirectoryV2(enabled bool) *Generator {
 	return g
 }
 
-func (g *Generator) WithDiscovery(url, key string) *Generator {
-	g.DiscoveryURL = url
-	g.TenantKey = key
-
-	return g
-}
-
-func (g *Generator) WithSelfDecisionLogger(emsURL, clientCertPath, clientKeyPath, storePath string) *Generator {
-	g.DecisionLogging = true
-	g.DecisionLogger.EMSAddress = emsURL
-	g.DecisionLogger.ClientCertPath = clientCertPath
-	g.DecisionLogger.ClientKeyPath = clientKeyPath
-	g.DecisionLogger.StorePath = storePath
-
-	return g
-}
-
 func (g *Generator) GenerateConfig(w io.Writer, templateData string) error {
 	return g.writeConfig(w, templateData)
 }

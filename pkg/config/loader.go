@@ -2,7 +2,6 @@ package config
 
 import (
 	"bytes"
-	"fmt"
 	"net"
 	"os"
 	"regexp"
@@ -133,12 +132,6 @@ func (l *Loader) GetPaths() ([]string, error) {
 		paths[servicePaths[i]] = true
 	}
 
-	decisionLogPaths := getDecisionLogPaths(l.Configuration.DecisionLogger)
-
-	for i := range decisionLogPaths {
-		paths[decisionLogPaths[i]] = true
-	}
-
 	return filterPaths(paths), nil
 }
 
@@ -267,16 +260,6 @@ func getUniqueServiceCertPaths(services map[string]*builder.API) []string {
 	}
 
 	return lo.Keys(paths)
-}
-
-func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) []string {
-	switch decisionLogConfig.Type {
-	case "file":
-		logPath := fmt.Sprintf("%s", decisionLogConfig.Config["log_file_path"])
-		return []string{logPath}
-	default:
-		return nil // nop decision logger
-	}
 }
 
 // subEnvVars will look for any environment variables in the passed in string
