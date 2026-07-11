@@ -72,7 +72,7 @@ logging:
 
 # edge directory configuration.
 directory:
-  db_path: '${TOPAZ_DB_DIR}/{{ .PolicyName }}.db'
+  db_path: '${TOPAZ_DB_DIR}/{{ .ConfigName }}.db'
   request_timeout: 5s # set as default, 5 secs.
 
 # remote directory is used to resolve the identity for the authorizer.

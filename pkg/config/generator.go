@@ -9,6 +9,7 @@ import (
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/distribution/reference"
+	"github.com/pkg/errors"
 )
 
 const defaultPolicyRegistry string = "https://ghcr.io"
@@ -108,6 +109,16 @@ func (g *Generator) CreateDataDir() (string, error) {
 }
 
 func (g *Generator) writeConfig(w io.Writer, templ string) error {
+	if g.ConfigName == "" {
+		return errors.Errorf("ConfigName cannot be empty")
+	}
+
+	// Fallback to previous behavior where PolicyName was
+	// used as the config file name and the policy name.
+	if g.PolicyName == "" {
+		g.PolicyName = g.ConfigName
+	}
+
 	t, err := template.New("config").Parse(templ)
 	if err != nil {
 		return err
