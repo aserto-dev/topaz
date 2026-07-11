@@ -93,8 +93,6 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         allowed_headers:
         - "Authorization"
         - "Content-Type"
@@ -136,9 +134,7 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
-        # if no certs are specified, the gateway will have the http flag enabled (http: true)
+s        # if no certs are specified, the gateway will have the http flag enabled (http: true)
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -163,8 +159,6 @@ api:
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -189,8 +183,6 @@ api:
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -215,8 +207,6 @@ api:
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -241,8 +231,6 @@ api:
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -276,8 +264,6 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         allowed_headers:
         - "Authorization"
         - "Content-Type"
@@ -328,18 +314,34 @@ opa:
             min_delay_seconds: 60
             max_delay_seconds: 120
     plugins:
+      # topaz file decision logger plugin configuration
       topaz_file_decision_logger:
         enabled: false
         logger:
-          filename: '/tmp/decisions.json'
-          max_size: 50
-          max_age: 2
-          max_backups: 2
+          filename: '${TOPAZ_DECISIONS_DIR}/my-config.json'
+          max_size: 100
+          max_age: 0
+          max_backups: 0
           local_time: false
           compress: false
         policy_info:
-          policy_name: 'policy-rebac'
+          policy_name: 'rebac'
           registry_service: 'ghcr.io'
           registry_image: 'aserto-policies/policy-rebac'
           registry_tag: 'latest'
           digest: ''
+          
+      # aserto edge directory sync plugin configuration
+      aserto_edge:
+        enabled: false
+        addr: ""                    # gRPC directory service address.
+        apikey: ""                  # directory API key.
+        timeout: 5                  # gRPC connection timeout in seconds.
+        sync_interval: 1            # sync run interval in minutes.
+        insecure: true              # when using TLS connections, skip verification of the server certificate.
+        page_size: 0                # deprecated: no longer used.
+        client_cert_path: ""        # when using mTLS connections, ClientCertPath is the path of the client's certificate file.
+        client_key_path: ""         # when using mTLS connections, ClientKeyPath is the path of the client's private key file.
+        no_tls: false               # disable TLS and use a plaintext connection.
+        no_proxy: false             # bypasses any configured HTTP proxy.
+        headers:                    # additional headers to include in requests to the service.
