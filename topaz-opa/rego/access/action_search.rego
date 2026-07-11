@@ -1,14 +1,20 @@
 package access
 
+import data.access.req
+
 # METADATA
-# description: ActionSearch
+# title: ActionSearch
+# description:
+# custom:
+#   category: AuthZEN
+#   url: https://openid.net/specs/authorization-api-1_0.html#name-action-search-api
 # entrypoint: true
 action_search(
-	subject,
-	action,
-	resource,
-	context,
-	page,
+	subject, # REQUIRED. The subject (or principal) of type Subject.
+	resource, # REQUIRED. The resource of type Resource.
+	action, # OMITTED.  The action key is omitted from the Action Search request payload.
+	context, # OPTIONAL. Contextual data about the request.
+	page, # OPTIONAL. A page object for paginated requests.
 ) := az.action_search({
 	"subject": {
 		"type": subject.type,

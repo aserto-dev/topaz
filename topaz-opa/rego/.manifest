@@ -1,5 +1,5 @@
 {
-  "roots": ["access", "directory", "policy"],
+  "roots": ["access", "directory", "policy", "access_test", "directory_test"],
   "metadata": {
     "required_builtins": {
       "builtin1": [

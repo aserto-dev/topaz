@@ -1,13 +1,15 @@
 package access
 
+import data.access.req
+
 # METADATA
 # description: Evaluation
 # entrypoint: true
 evaluation(
-	subject,
-	action,
-	resource,
-	context,
+	subject, # REQUIRED. The subject (or principal) of type Subject
+	action, # REQUIRED. The action (or verb) of type Action.
+	resource, # REQUIRED. The resource of type Resource.
+	context, # OPTIONAL. The context (or environment) of type Context.
 ) := az.evaluation({
 	"subject": {
 		"type": subject.type,

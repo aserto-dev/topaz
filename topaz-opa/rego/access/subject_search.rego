@@ -1,10 +1,16 @@
 package access
 
+import data.access.req
+
 # METADATA
-# description: SubjectSearch
+# title: SubjectSearch
+# description:
+# custom:
+#   category: AuthZEN
+#   url: https://openid.net/specs/authorization-api-1_0.html#name-subject-search-api
 # entrypoint: true
 subject_search(
-	subject,
+	subject, # REQUIRED. The subject (or principal) of type Subject, MUST contain a type, and SHOULD omit the id.
 	action,
 	resource,
 	context,

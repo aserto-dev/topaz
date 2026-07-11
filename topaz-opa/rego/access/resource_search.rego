@@ -1,14 +1,20 @@
 package access
 
+import data.access.req
+
 # METADATA
-# description: ResourceSearch
+# title: ResourceSearch
+# description:
+# custom:
+#   category: AuthZEN
+#   url: https://openid.net/specs/authorization-api-1_0.html#name-resource-search-api
 # entrypoint: true
 resource_search(
-	subject,
-	action,
-	resource,
-	context,
-	page,
+	subject, # REQUIRED. The subject (or principal) of type Subject.
+	action, # REQUIRED. The action (or verb) of type Action.
+	resource, # REQUIRED. The resource of type Resource, Resource MUST contain a type, and SHOULD omit the id.
+	context, # OPTIONAL. Contextual data about the request.
+	page, # OPTIONAL. A page object for paginated requests.
 ) := az.resource_search({
 	"subject": {
 		"type": subject.type,

@@ -1,4 +1,4 @@
-package access
+package access.req
 
 subject := {
 	type,
@@ -24,4 +24,11 @@ context := {}
 page := {
 	size,
 	next_token,
+}
+
+evaluation := {
+	subject,
+	action,
+	resource,
+	context,
 }
