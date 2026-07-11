@@ -21,7 +21,7 @@ type GenerateCertsCmd struct {
 func (cmd *GenerateCertsCmd) Run(ctx context.Context) error {
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(certsDir, fs.FileModeDirectoryRWX); err != nil {
+		if err := os.MkdirAll(certsDir, fs.FileModeOwnerRWX); err != nil {
 			return err
 		}
 	}

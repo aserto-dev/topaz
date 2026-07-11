@@ -2,6 +2,7 @@ package config
 
 type templateParams struct {
 	Version           int
+	ConfigName        string
 	PolicyRegistry    string
 	PolicyName        string
 	Resource          string
@@ -10,6 +11,9 @@ type templateParams struct {
 	EdgeDirectory     bool
 	SeedMetadata      bool
 	EnableDirectoryV2 bool
+	RegistryService   string
+	RegistryImage     string
+	RegistryTag       string
 }
 
 const LocalImageTemplate = templatePreamble + `
@@ -25,24 +29,9 @@ opa:
     decision_logs:
       console: false
     plugins:
-      topaz_file_decision_logger:
-        enabled: false
-        config:
-          filename: '/tmp/decisions.json'
-          max_size: 100
-          max_age: 0
-          max_backups: 0
-          local_time: false
-          compress: false
-        policy_info:
-          policy_name: ''
-          registry_service: ''
-          registry_image: ''
-          registry_tag: ''
-          digest: ''
-`
+` + topazFileDecisionLoggerPlugin
 
-const Template = templatePreamble + `
+const RemoteImageTemplate = templatePreamble + `
 opa:
   instance_id: "-"
   graceful_shutdown_period_seconds: 2
@@ -68,22 +57,7 @@ opa:
     decision_logs:
       console: false
     plugins:
-      topaz_file_decision_logger:
-        enabled: false
-        config:
-          filename: '/tmp/decisions.json'
-          max_size: 100
-          max_age: 0
-          max_backups: 0
-          local_time: false
-          compress: false
-        policy_info:
-          policy_name: ''
-          registry_service: ''
-          registry_image: ''
-          registry_tag: ''
-          digest: ''
-`
+` + topazFileDecisionLoggerPlugin
 
 const templatePreamble = `# yaml-language-server: $schema=https://topaz.sh/schema/config.json
 ---
@@ -399,4 +373,22 @@ api:
         read_header_timeout: 2s
         write_timeout: 2s
         idle_timeout: 30s
+`
+
+const topazFileDecisionLoggerPlugin = `
+      topaz_file_decision_logger:
+        enabled: false
+        logger:
+          filename: '${TOPAZ_DECISIONS_DIR}/{{ .ConfigName }}.json'
+          max_size: 100
+          max_age: 0
+          max_backups: 0
+          local_time: false
+          compress: false
+        policy_info:
+          policy_name: '{{ .PolicyName }}'
+          registry_service: '{{ .RegistryService }}'
+          registry_image: '{{ .RegistryImage }}'
+          registry_tag: '{{ .RegistryTag }}'
+          digest: ''
 `

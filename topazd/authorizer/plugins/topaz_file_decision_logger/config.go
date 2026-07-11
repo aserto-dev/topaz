@@ -1,15 +1,10 @@
 package topaz_file_decision_logger
 
-import (
-	"os"
-	"path/filepath"
-)
-
 const (
 	default_decision_log_filename string = "decisions.json"
 	defaultFilename               string = ""    // default <processname>-lumberjack.log in os.TempDir().
 	defaultMaxSize                int    = 50    // default 100 megabytes.
-	defaultMaxAge                 int    = 0     // default is not to remove old log files based on age.
+	defaultMaxAge                 int    = 2     // default is not to remove old log files based on age.
 	defaultMaxBackups             int    = 2     // default is to retain all old log files (though MaxAge may still cause them to get deleted.).
 	defaultLocalTime              bool   = false // default is to use UTC time.
 	defaultCompress               bool   = false // default is not to perform compression.
@@ -31,7 +26,7 @@ type Logger struct {
 }
 
 type PolicyInfo struct {
-	PolicyName      string `json:"policy_name"`      // deprecated: always empty
+	PolicyName      string `json:"policy_name"`      //
 	RegistryService string `json:"registry_service"` //
 	RegistryImage   string `json:"registry_image"`   //
 	RegistryTag     string `json:"registry_tag"`     //
@@ -59,21 +54,6 @@ func defaultConfig() *Config {
 	}
 }
 
-func (cfg *Config) SetDefaults() {
-	if cfg.Logger.Filename == "" {
-		pwd, err := os.Getwd()
-		if err != nil {
-			cfg.Logger.Filename = filepath.Join(".", default_decision_log_filename)
-		} else {
-			cfg.Logger.Filename = filepath.Join(pwd, default_decision_log_filename)
-		}
-	}
-
-	if cfg.Logger.MaxSize == 0 {
-		cfg.Logger.MaxSize = defaultMaxSize
-	}
-
-	if cfg.Logger.MaxBackups == 0 {
-		cfg.Logger.MaxBackups = defaultMaxBackups
-	}
+func DefaultDecisionLogFilename() string {
+	return default_decision_log_filename
 }

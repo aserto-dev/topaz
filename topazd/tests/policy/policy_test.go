@@ -3,7 +3,6 @@ package policy_test
 import (
 	"context"
 	"testing"
-	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	azc "github.com/aserto-dev/go-aserto/az"
@@ -31,9 +30,9 @@ func TestPolicy(t *testing.T) {
 		Image:        tc.TestImage(),
 		ExposedPorts: []string{"9292/tcp"},
 		Env: map[string]string{
-			x.EnvTopazCertsDir:  x.DefCertsDir,
-			x.EnvTopazDBDir:     x.DefDBDir,
-			x.EnvTopazDecisions: x.DefDecisionsDir,
+			x.EnvTopazCertsDir:     x.DefCertsDir,
+			x.EnvTopazDBDir:        x.DefDBDir,
+			x.EnvTopazDecisionsDir: x.DefDecisionsDir,
 		},
 		Files: []testcontainers.ContainerFile{
 			{
@@ -50,7 +49,7 @@ func TestPolicy(t *testing.T) {
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
 			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
-		).WithStartupTimeoutDefault(300 * time.Second),
+		).WithStartupTimeoutDefault(tc.DefaultStartupTimeout),
 	}
 
 	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{

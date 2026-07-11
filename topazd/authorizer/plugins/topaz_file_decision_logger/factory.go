@@ -1,16 +1,25 @@
 package topaz_file_decision_logger
 
 import (
+	"context"
+
 	"github.com/open-policy-agent/opa/v1/plugins"
 	"github.com/open-policy-agent/opa/v1/util"
+	"github.com/rs/zerolog"
 )
 
-type PluginFactory struct{}
+type PluginFactory struct {
+	logger *zerolog.Logger
+}
 
 var _ plugins.Factory = (*PluginFactory)(nil)
 
-func NewFactory() PluginFactory {
-	return PluginFactory{}
+func NewFactory(ctx context.Context) PluginFactory {
+	newLogger := zerolog.Ctx(ctx).With().Str("component", PluginName).Logger()
+
+	return PluginFactory{
+		logger: &newLogger,
+	}
 }
 
 func (f PluginFactory) New(manager *plugins.Manager, cfg any) plugins.Plugin {
@@ -24,6 +33,7 @@ func (f PluginFactory) New(manager *plugins.Manager, cfg any) plugins.Plugin {
 
 	return &Plugin{
 		config:  &c,
+		logger:  f.logger,
 		manager: manager,
 	}
 }

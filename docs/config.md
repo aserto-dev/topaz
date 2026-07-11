@@ -1,3 +1,5 @@
+!!! TODO !!!
+
 # Topaz configuration
 
 The main configuration for Topaz can be divided in 3 main sections:
@@ -19,6 +21,7 @@ By default if you run/start the topaz container using the topaz CLI the followin
 - `TOPAZ_CERTS_DIR` - default $HOME/.config/topaz/certs - the directory where topaz will load/generate the certs
 - `TOPAZ_CFG_DIR` - default $HOME/.config/topaz/cfg - the directory from where topaz will load the configuration file
 - `TOPAZ_DB_DIR` - default $HOME/.config/topaz/db - the directory where topaz will store the edge directory DB
+- `TOPAZ_DECISIONS_DIR` - default 
 
 - `TOPAZ_CERTS_DIR` - default $HOME/.config/topaz/certs - the directory where topaz will load/generate the certs
 - `TOPAZ_CFG_DIR` - default $HOME/.config/topaz/cfg - the directory from where topaz will load the configuration file
