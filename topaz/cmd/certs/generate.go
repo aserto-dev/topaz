@@ -12,7 +12,7 @@ import (
 
 type GenerateCertsCmd struct {
 	CertsDir string   `flag:"" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
-	Force    bool     `flag:"" default:"false" help:"force generation of dev certs, overwriting existing cert files"`
+	Force    bool     `flag:"" short:"f" default:"false" help:"force generation of dev certs, overwriting existing cert files"`
 	Trust    bool     `flag:"" default:"false" help:"add generated certs to trust store"`
 	DNSNames []string `flag:"" default:"localhost" help:"list of DNS names used to generate dev certs"`
 }
