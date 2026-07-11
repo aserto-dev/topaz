@@ -72,7 +72,7 @@ func download(src, dir string) (string, error) {
 		return "", err
 	}
 
-	if err := os.MkdirAll(dir, fs.FileModeOwnerRW); err != nil {
+	if err := os.MkdirAll(dir, fs.FileModeOwnerRWX); err != nil {
 		return "", err
 	}
 

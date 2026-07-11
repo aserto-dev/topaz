@@ -97,7 +97,7 @@ func EnsureTopazDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, fs.FileModeOwnerRW)
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazCfgDir() error {
@@ -124,7 +124,7 @@ func EnsureTopazDataDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, fs.FileModeOwnerRW)
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazDecisionsDir() error {
@@ -133,7 +133,7 @@ func EnsureTopazDecisionsDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, fs.FileModeOwnerRW)
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazTemplateDir() error {
@@ -142,5 +142,5 @@ func EnsureTopazTemplateDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, fs.FileModeOwnerRW)
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
 }
