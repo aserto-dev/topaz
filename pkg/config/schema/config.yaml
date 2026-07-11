@@ -134,7 +134,7 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-s        # if no certs are specified, the gateway will have the http flag enabled (http: true)
+        # if no certs are specified, the gateway will have the http flag enabled (http: true)
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'

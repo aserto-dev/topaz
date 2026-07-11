@@ -28,7 +28,7 @@ type SetManifestCmd struct {
 type DeleteManifestCmd struct {
 	dsc.Config
 
-	Force bool `flag:"" short:"f" default:"false" help:"do not ask for conformation to delete manifest"`
+	Force bool `flag:"" short:"f" default:"false" help:"do not ask for confirmation to delete the manifest"`
 }
 
 func (cmd *GetManifestCmd) Run(ctx context.Context) error {
