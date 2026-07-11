@@ -110,7 +110,7 @@ func (g *Generator) CreateDataDir() (string, error) {
 
 func (g *Generator) writeConfig(w io.Writer, templ string) error {
 	if g.ConfigName == "" {
-		return errors.Errorf("ConfigName cannot be empty")
+		return errors.Errorf("config name cannot be empty")
 	}
 
 	// Fallback to previous behavior where PolicyName was
