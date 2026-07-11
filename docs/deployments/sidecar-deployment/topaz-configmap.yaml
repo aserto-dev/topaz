@@ -44,8 +44,6 @@ data:
             - https://localhost
             - https://localhost:*
             - https://0.0.0.0:*
-            - https://*.aserto.com
-            - https://*aserto-console.netlify.app
             # if no certs are specified, the gateway will have the http flag enabled (http: true)
             certs:
               tls_key_path: "/root/.config/topaz/certs/gateway.key"
@@ -68,8 +66,6 @@ data:
             - http://localhost:*
             - https://localhost
             - https://localhost:*
-            - https://*.aserto.com
-            - https://*aserto-console.netlify.app
             # if no certs are specified, the gateway will have the http flag enabled (http: true)
             certs:
               tls_key_path: "/root/.config/topaz/certs/gateway.key"
@@ -96,8 +92,6 @@ data:
             - http://localhost:*
             - https://localhost
             - https://localhost:*
-            - https://*.aserto.com
-            - https://*aserto-console.netlify.app
             # if no certs are specified, the gateway will have the http flag enabled (http: true)
             certs:
               tls_key_path: "/root/.config/topaz/certs/gateway.key"
@@ -122,8 +116,6 @@ data:
             - http://localhost:*
             - https://localhost
             - https://localhost:*
-            - https://*.aserto.com
-            - https://*aserto-console.netlify.app
             certs:
               tls_key_path: "/root/.config/topaz/certs/gateway.key"
               tls_cert_path: "/root/.config/topaz/certs/gateway.crt"
@@ -147,8 +139,6 @@ data:
             - http://localhost:*
             - https://localhost
             - https://localhost:*
-            - https://*.aserto.com
-            - https://*aserto-console.netlify.app
             certs:
               tls_key_path: "/root/.config/topaz/certs/gateway.key"
               tls_cert_path: "/root/.config/topaz/certs/gateway.crt"
@@ -172,8 +162,6 @@ data:
             - http://localhost:*
             - https://localhost
             - https://localhost:*
-            - https://*.aserto.com
-            - https://*aserto-console.netlify.app
             certs:
               tls_key_path: "/root/.config/topaz/certs/gateway.key"
               tls_cert_path: "/root/.config/topaz/certs/gateway.crt"

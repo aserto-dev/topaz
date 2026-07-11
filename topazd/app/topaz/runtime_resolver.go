@@ -12,8 +12,8 @@ import (
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/az"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/ds"
-	decisionlog_plugin "github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/edge"
+	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/topaz_file_decision_logger"
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
 	dsa "github.com/authzen/access.go/api/access/v1"
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -58,7 +58,7 @@ func NewRuntimeResolver(
 		runtime.WithBuiltin1(az.RegisterActionSearch(logger, builtins.AZActionSearch, acClient)),
 
 		// plugins
-		runtime.WithPlugin(decisionlog_plugin.PluginName, decisionlog_plugin.NewFactory()),
+		runtime.WithPlugin(topaz_file_decision_logger.PluginName, topaz_file_decision_logger.NewFactory(logger.WithContext(ctx))),
 		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
 
 		runtime.WithRegoVersion(ast.RegoV0),
@@ -94,10 +94,6 @@ func NewRuntimeResolver(
 	}, cleanup, err
 }
 
-func (r *RuntimeResolver) RuntimeFromContext(ctx context.Context, policyName string) (*runtime.Runtime, error) {
-	return r.GetRuntime(ctx, policyName)
-}
-
-func (r *RuntimeResolver) GetRuntime(ctx context.Context, policyName string) (*runtime.Runtime, error) {
+func (r *RuntimeResolver) GetRuntime(ctx context.Context) (*runtime.Runtime, error) {
 	return r.runtime, nil
 }

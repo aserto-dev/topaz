@@ -13,13 +13,7 @@ const ConfigFileVersion = 2
 type Config struct {
 	Common `json:"common,squash"` //nolint:staticcheck // squash is used by mapstructure
 
-	Auth           AuthnConfig       `json:"auth"`
-	DecisionLogger DecisionLogConfig `json:"decision_logger"`
-}
-
-type DecisionLogConfig struct {
-	Type   string         `json:"type"`
-	Config map[string]any `json:"config"`
+	Auth AuthnConfig `json:"auth"`
 }
 
 type AuthnConfig struct {

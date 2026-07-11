@@ -19,6 +19,8 @@ RUN mkdir /config && \
 
 VOLUME ["/config", "/certs", "/db", "/decisions"]
 
+ENV TOPAZ_RUNNING_IN_CONTAINER=true
+
 WORKDIR /app
 
 COPY \

@@ -7,10 +7,9 @@ import (
 )
 
 const (
-	FileModeOwnerRO      os.FileMode = 0o400 // dr--------
-	FileModeOwnerRW      os.FileMode = 0o600 // drw-------
-	FileModeOwnerRWX     os.FileMode = 0o700 // drwx------
-	FileModeDirectoryRWX os.FileMode = 0o755 // drwxr-xr-x
+	FileModeOwnerRO  os.FileMode = 0o400 // dr--------
+	FileModeOwnerRW  os.FileMode = 0o600 // drw-------
+	FileModeOwnerRWX os.FileMode = 0o700 // drwx------
 )
 
 func FileExists(path string) bool {

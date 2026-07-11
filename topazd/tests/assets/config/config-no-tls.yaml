@@ -84,8 +84,6 @@ api:
         allowed_origins:
         - http://localhost
         - http://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         read_timeout: 2s
         read_header_timeout: 2s
         write_timeout: 2s
@@ -118,8 +116,6 @@ api:
         allowed_origins:
         - http://localhost
         - http://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         read_timeout: 2s
         read_header_timeout: 2s
         write_timeout: 2s
@@ -155,8 +151,6 @@ api:
         allowed_origins:
         - http://localhost
         - http://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         read_timeout: 2s # default 2 seconds
         read_header_timeout: 2s
         write_timeout: 2s
@@ -191,8 +185,6 @@ api:
         allowed_origins:
         - http://localhost
         - http://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         read_timeout: 2s
         read_header_timeout: 2s
         write_timeout: 2s
@@ -240,8 +232,6 @@ api:
         allowed_origins:
         - http://localhost
         - http://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         read_timeout: 2s
         read_header_timeout: 2s
         write_timeout: 2s
@@ -269,3 +259,35 @@ opa:
           polling:
             min_delay_seconds: 60
             max_delay_seconds: 120
+    plugins:
+      # topaz file decision logger plugin configuration
+      topaz_file_decision_logger:
+        enabled: false
+        logger:
+          filename: '${TOPAZ_DECISIONS_DIR}/config-no-tls.json'
+          max_size: 100
+          max_age: 0
+          max_backups: 0
+          local_time: false
+          compress: false
+        policy_info:
+          policy_name: 'rebac'
+          registry_service: 'ghcr.io'
+          registry_image: 'aserto-policies/policy-rebac'
+          registry_tag: 'latest'
+          digest: ''
+          
+      # aserto edge directory sync plugin configuration
+      aserto_edge:
+        enabled: false
+        addr: ""                    # gRPC directory service address.
+        apikey: ""                  # directory API key.
+        timeout: 5                  # gRPC connection timeout in seconds.
+        sync_interval: 1            # sync run interval in minutes.
+        insecure: true              # when using TLS connections, skip verification of the server certificate.
+        page_size: 0                # deprecated: no longer used.
+        client_cert_path: ""        # when using mTLS connections, ClientCertPath is the path of the client's certificate file.
+        client_key_path: ""         # when using mTLS connections, ClientKeyPath is the path of the client's private key file.
+        no_tls: false               # disable TLS and use a plaintext connection.
+        no_proxy: false             # bypasses any configured HTTP proxy.
+        headers:                    # additional headers to include in requests to the service.
