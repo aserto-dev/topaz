@@ -1,65 +1,26 @@
 package config
 
 type templateParams struct {
-	Version           int
-	ConfigName        string
-	PolicyRegistry    string
-	PolicyName        string
-	Resource          string
-	Authorization     string
-	LocalPolicy       bool
-	EdgeDirectory     bool
-	SeedMetadata      bool
-	EnableDirectoryV2 bool
-	RegistryService   string
-	RegistryImage     string
-	RegistryTag       string
+	Version           int    // must be 2
+	ConfigName        string //
+	PolicyRegistry    string //
+	PolicyName        string //
+	Resource          string //
+	Authorization     string //
+	LocalPolicy       bool   //
+	EdgeDirectory     bool   // OBSOLETE
+	SeedMetadata      bool   // OBSOLETE
+	EnableDirectoryV2 bool   // OBSOLETE
+	RegistryService   string //
+	RegistryImage     string //
+	RegistryTag       string //
 }
 
-const LocalImageTemplate = templatePreamble + `
-opa:
-  instance_id: "-"
-  graceful_shutdown_period_seconds: 2
-  # max_plugin_wait_time_seconds: 30 set as default
-  local_bundles:
-    local_policy_image: {{ .Resource }}
-    watch: true
-    skip_verification: true
-  config:
-    decision_logs:
-      console: false
-    plugins:
-` + topazFileDecisionLoggerPlugin
+const LocalImageTemplate string = templatePreamble + opaLocalPolicyImage + topazFileDecisionLoggerPlugin + asertoEdgePlugin
 
-const RemoteImageTemplate = templatePreamble + `
-opa:
-  instance_id: "-"
-  graceful_shutdown_period_seconds: 2
-  # max_plugin_wait_time_seconds: 30 set as default
-  local_bundles:
-    paths: []
-    skip_verification: true
-  config:
-    services:
-      policy-registry:
-        url: "{{ .PolicyRegistry }}"
-        type: "oci"
-        response_header_timeout_seconds: 15
-    bundles:
-      {{ .PolicyName }}:
-        service: policy-registry
-        resource: "{{ .Resource }}"
-        persist: false
-        config:
-          polling:
-            min_delay_seconds: 60
-            max_delay_seconds: 120
-    decision_logs:
-      console: false
-    plugins:
-` + topazFileDecisionLoggerPlugin
+const RemoteImageTemplate string = templatePreamble + opaRemotePolicyImage + topazFileDecisionLoggerPlugin + asertoEdgePlugin
 
-const templatePreamble = `# yaml-language-server: $schema=https://topaz.sh/schema/config.json
+const templatePreamble string = `# yaml-language-server: $schema=https://topaz.sh/schema/config.json
 ---
 # config schema version
 version: {{ .Version }}
@@ -153,8 +114,6 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -198,8 +157,6 @@ api:
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -246,8 +203,6 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -293,8 +248,6 @@ api:
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -362,8 +315,6 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -375,7 +326,51 @@ api:
         idle_timeout: 30s
 `
 
-const topazFileDecisionLoggerPlugin = `
+const opaLocalPolicyImage string = `
+opa:
+  instance_id: "-"
+  graceful_shutdown_period_seconds: 2
+  # max_plugin_wait_time_seconds: 30 set as default
+  local_bundles:
+    local_policy_image: {{ .Resource }}
+    watch: true
+    skip_verification: true
+  config:
+    decision_logs:
+      console: false
+    plugins:
+`
+
+const opaRemotePolicyImage string = `
+opa:
+  instance_id: "-"
+  graceful_shutdown_period_seconds: 2
+  # max_plugin_wait_time_seconds: 30 set as default
+  local_bundles:
+    paths: []
+    skip_verification: true
+  config:
+    services:
+      policy-registry:
+        url: "{{ .PolicyRegistry }}"
+        type: "oci"
+        response_header_timeout_seconds: 15
+    bundles:
+      {{ .PolicyName }}:
+        service: policy-registry
+        resource: "{{ .Resource }}"
+        persist: false
+        config:
+          polling:
+            min_delay_seconds: 60
+            max_delay_seconds: 120
+    decision_logs:
+      console: false
+    plugins:
+`
+
+const topazFileDecisionLoggerPlugin string = `
+      # topaz file decision logger plugin configuration
       topaz_file_decision_logger:
         enabled: false
         logger:
@@ -391,4 +386,21 @@ const topazFileDecisionLoggerPlugin = `
           registry_image: '{{ .RegistryImage }}'
           registry_tag: '{{ .RegistryTag }}'
           digest: ''
+`
+
+const asertoEdgePlugin string = `
+      # aserto edge directory sync plugin configuration
+      aserto_edge:
+        enabled: false 
+        addr: ""                    # gRPC directory service address.
+        apikey: ""                  # directory API key.
+        timeout: 5                  # gRPC connection timeout in seconds.
+        sync_interval: 1            # sync run interval in minutes.
+        insecure: true              # when using TLS connections, skip verification of the server certificate. 
+        page_size: 0                # deprecated: no longer used.
+        client_cert_path: ""        # when using mTLS connections, ClientCertPath is the path of the client's certificate file.
+        client_key_path: ""         # when using mTLS connections, ClientKeyPath is the path of the client's private key file.
+        no_tls: false               # disable TLS and use a plaintext connection.
+        no_proxy: false             # bypasses any configured HTTP proxy.
+        headers:                    # additional headers to include in requests to the service.
 `
