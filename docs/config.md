@@ -189,8 +189,6 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -234,8 +232,6 @@ api:
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -282,8 +278,6 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -329,8 +323,6 @@ api:
         - http://localhost:*
         - https://localhost
         - https://localhost:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -398,8 +390,6 @@ api:
         - https://localhost
         - https://localhost:*
         - https://0.0.0.0:*
-        - https://*.aserto.com
-        - https://*aserto-console.netlify.app
         certs:
           tls_key_path: '${TOPAZ_CERTS_DIR}/gateway.key'
           tls_cert_path: '${TOPAZ_CERTS_DIR}/gateway.crt'
@@ -422,6 +412,10 @@ opa:
       policy-registry:
         url: "https://ghcr.io"
         type: "oci"
+        credentials:
+          bearer:
+            scheme: "Bearer"
+            token: "${GIT_TOKEN}"
         response_header_timeout_seconds: 15
     bundles:
       rebac:
@@ -435,7 +429,7 @@ opa:
     decision_logs:
       console: false
     plugins:
-
+      # topaz file decision logger plugin configuration
       topaz_file_decision_logger:
         enabled: false
         logger:
@@ -451,5 +445,19 @@ opa:
           registry_image: 'aserto-policies/policy-rebac'
           registry_tag: 'latest'
           digest: ''
-
+          
+      # aserto edge directory sync plugin configuration
+      aserto_edge:
+        enabled: false
+        addr: ""                    # gRPC directory service address.
+        apikey: ""                  # directory API key.
+        timeout: 5                  # gRPC connection timeout in seconds.
+        sync_interval: 1            # sync run interval in minutes.
+        insecure: true              # when using TLS connections, skip verification of the server certificate.
+        page_size: 0                # deprecated: no longer used.
+        client_cert_path: ""        # when using mTLS connections, ClientCertPath is the path of the client's certificate file.
+        client_key_path: ""         # when using mTLS connections, ClientKeyPath is the path of the client's private key file.
+        no_tls: false               # disable TLS and use a plaintext connection.
+        no_proxy: false             # bypasses any configured HTTP proxy.
+        headers:                    # additional headers to include in requests to the service.
 ```
