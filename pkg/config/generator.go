@@ -87,7 +87,7 @@ func (g *Generator) CreateConfigDir() (string, error) {
 		return configDir, nil
 	}
 
-	return configDir, os.MkdirAll(configDir, fs.FileModeOwnerRW)
+	return configDir, os.MkdirAll(configDir, fs.FileModeOwnerRWX)
 }
 
 func (g *Generator) CreateCertsDir() (string, error) {
@@ -96,7 +96,7 @@ func (g *Generator) CreateCertsDir() (string, error) {
 		return certsDir, nil
 	}
 
-	return certsDir, os.MkdirAll(certsDir, fs.FileModeOwnerRW)
+	return certsDir, os.MkdirAll(certsDir, fs.FileModeOwnerRWX)
 }
 
 func (g *Generator) CreateDataDir() (string, error) {
@@ -105,7 +105,7 @@ func (g *Generator) CreateDataDir() (string, error) {
 		return dataDir, nil
 	}
 
-	return dataDir, os.MkdirAll(dataDir, fs.FileModeOwnerRW)
+	return dataDir, os.MkdirAll(dataDir, fs.FileModeOwnerRWX)
 }
 
 func (g *Generator) writeConfig(w io.Writer, templ string) error {
