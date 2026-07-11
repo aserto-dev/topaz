@@ -33,14 +33,14 @@ func TestTemplatesNoTLS(t *testing.T) {
 		Files: []testcontainers.ContainerFile{
 			{
 				Reader:            assets_test.ConfigNoTLSReader(),
-				ContainerFilePath: "/config/config.yaml",
+				ContainerFilePath: tc.TestConfigFilePath,
 				FileMode:          int64(fs.FileModeOwnerRWX),
 			},
 		},
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
 			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
-		).WithStartupTimeoutDefault(tc.DefaultStartupTimeout),
+		).WithStartupTimeoutDefault(tc.TestStartupTimeout),
 	}
 
 	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{

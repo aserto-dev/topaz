@@ -27,7 +27,7 @@ func TestDirectory(t *testing.T) {
 
 	req := testcontainers.ContainerRequest{
 		Image:        tc.TestImage(),
-		ExposedPorts: []string{"9292/tcp"},
+		ExposedPorts: tc.TestExposedPorts,
 		Env: map[string]string{
 			x.EnvTopazCertsDir:     x.DefCertsDir,
 			x.EnvTopazDBDir:        x.DefDBDir,
@@ -36,14 +36,14 @@ func TestDirectory(t *testing.T) {
 		Files: []testcontainers.ContainerFile{
 			{
 				Reader:            assets_test.ConfigWithTLSReader(),
-				ContainerFilePath: "/config/config.yaml",
+				ContainerFilePath: tc.TestConfigFilePath,
 				FileMode:          int64(fs.FileModeOwnerRWX),
 			},
 		},
 		WaitingFor: wait.ForAll(
 			wait.ForExposedPort(),
 			wait.ForLog("Starting 0.0.0.0:9292 gRPC server"),
-		).WithStartupTimeoutDefault(tc.DefaultStartupTimeout),
+		).WithStartupTimeoutDefault(tc.TestStartupTimeout),
 	}
 
 	topaz, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
