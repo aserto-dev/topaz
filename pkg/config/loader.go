@@ -2,6 +2,7 @@ package config
 
 import (
 	"bytes"
+	"encoding/json"
 	"net"
 	"os"
 	"regexp"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/x"
+	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/topaz_file_decision_logger"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/samber/lo"
@@ -101,6 +103,22 @@ func (l *Loader) GetPaths() ([]string, error) {
 
 	if l.Configuration.Edge.DBPath != "" {
 		paths[l.Configuration.Edge.DBPath] = true
+	}
+
+	if c, ok := l.Configuration.OPA.Config.Plugins[topaz_file_decision_logger.PluginName]; ok {
+		b, err := json.Marshal(c)
+		if err != nil {
+			return nil, err
+		}
+
+		var pCfg topaz_file_decision_logger.Config
+		if err := json.Unmarshal(b, &pCfg); err != nil {
+			return nil, err
+		}
+
+		if pCfg.Enabled && pCfg.Logger.Filename != "" {
+			paths[pCfg.Logger.Filename] = true
+		}
 	}
 
 	if l.Configuration.APIConfig.Health.Certificates.CA != "" {
@@ -203,6 +221,10 @@ func SetEnvVars(fileContents string) (string, error) {
 	}
 
 	if err := os.Setenv(x.EnvTopazDBDir, cc.GetTopazDataDir()); err != nil {
+		return "", err
+	}
+
+	if err := os.Setenv(x.EnvTopazDecisionsDir, cc.GetTopazDecisionsDir()); err != nil {
 		return "", err
 	}
 

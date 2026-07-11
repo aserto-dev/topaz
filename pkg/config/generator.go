@@ -8,7 +8,11 @@ import (
 
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/cc"
+	"github.com/distribution/reference"
+	"github.com/pkg/errors"
 )
+
+const defaultPolicyRegistry string = "https://ghcr.io"
 
 type Generator struct {
 	templateParams
@@ -25,6 +29,11 @@ func (g *Generator) WithVersion(version int) *Generator {
 	return g
 }
 
+func (g *Generator) WithConfigName(configName string) *Generator {
+	g.ConfigName = configName
+	return g
+}
+
 func (g *Generator) WithLocalPolicy(local bool) *Generator {
 	g.LocalPolicy = local
 	return g
@@ -36,7 +45,7 @@ func (g *Generator) WithPolicyName(policyName string) *Generator {
 }
 
 func (g *Generator) WithResource(resource string) *Generator {
-	g.PolicyRegistry = "https://ghcr.io" // set to original default
+	g.PolicyRegistry = defaultPolicyRegistry // set to original default
 
 	policyRegistry, _, found := strings.Cut(resource, "/")
 	if found && policyRegistry != "" {
@@ -44,6 +53,16 @@ func (g *Generator) WithResource(resource string) *Generator {
 	}
 
 	g.Resource = resource
+
+	ref, err := reference.ParseDockerRef(g.Resource)
+	if err == nil {
+		g.RegistryService = reference.Domain(ref)
+		g.RegistryImage = reference.Path(ref)
+
+		if tagged, ok := ref.(reference.Tagged); ok {
+			g.RegistryTag = tagged.Tag()
+		}
+	}
 
 	return g
 }
@@ -90,6 +109,16 @@ func (g *Generator) CreateDataDir() (string, error) {
 }
 
 func (g *Generator) writeConfig(w io.Writer, templ string) error {
+	if g.ConfigName == "" {
+		return errors.Errorf("config name cannot be empty")
+	}
+
+	// Fallback to previous behavior where PolicyName was
+	// used as the config file name and the policy name.
+	if g.PolicyName == "" {
+		g.PolicyName = g.ConfigName
+	}
+
 	t, err := template.New("config").Parse(templ)
 	if err != nil {
 		return err

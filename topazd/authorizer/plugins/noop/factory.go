@@ -16,13 +16,13 @@ func NewPluginFactory(name string) PluginFactory {
 	}
 }
 
-func (f PluginFactory) New(m *plugins.Manager, config any) plugins.Plugin {
+func (f PluginFactory) New(pm *plugins.Manager, config any) plugins.Plugin {
 	return &Noop{
-		Manager: m,
+		Manager: pm,
 		Name:    f.name,
 	}
 }
 
-func (PluginFactory) Validate(m *plugins.Manager, config []byte) (any, error) {
+func (PluginFactory) Validate(pm *plugins.Manager, config []byte) (any, error) {
 	return map[string]any{}, nil
 }

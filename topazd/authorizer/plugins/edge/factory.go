@@ -30,20 +30,26 @@ func NewPluginFactory(ctx context.Context, cfg *topaz.Config, logger *zerolog.Lo
 	}
 }
 
-func (f PluginFactory) New(m *plugins.Manager, config any) plugins.Plugin {
-	cfg, _ := config.(*Config)
+func (f PluginFactory) New(pm *plugins.Manager, config any) plugins.Plugin {
+	cfg, ok := config.(*Config)
+	if !ok {
+		// panic as the plugins.Factory interface definition of New does ot provide an error return,
+		// nor does the OPA implementation not handle nil plugins.
+		// NOTE that Validate() is called before New, mitigating the risk of the panic occurring.
+		panic("failed to parse authzen logger plugin config")
+	}
 
 	if !cfg.Enabled {
 		return &noop.Noop{
-			Manager: m,
+			Manager: pm,
 			Name:    PluginName,
 		}
 	}
 
-	return newEdgePlugin(f.logger, cfg, f.cfg, m)
+	return newEdgePlugin(f.logger, cfg, f.cfg, pm)
 }
 
-func (PluginFactory) Validate(m *plugins.Manager, config []byte) (any, error) {
+func (PluginFactory) Validate(pm *plugins.Manager, config []byte) (any, error) {
 	parsedConfig := Config{}
 
 	v := viper.New()

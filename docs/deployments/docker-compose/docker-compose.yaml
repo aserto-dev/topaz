@@ -11,12 +11,13 @@ services:
       - TOPAZ_POLICIES_DIR=/policies
       - TOPAZ_CERTS_DIR=/certs
       - TOPAZ_DB_DIR=/db
+      - TOPAZ_DECISIONS_DIR=/decisions
     image: ghcr.io/aserto-dev/topaz:latest
     ports:
       - 8080:8080 # console http
       - 8081:8081 # console grpc
       - 8282:8282 # authorizer grpc
-      - 8383:8383 # authoirzer http
+      - 8383:8383 # authorizer http
       - 9292:9292 # directory grpc
       - 9393:9393 # directory http
       - 9494:9494 # healthcheck
@@ -29,6 +30,7 @@ services:
       - ./certs:/certs
       - ./db:/db
       - ./data:/data
+      - ./decisions:/decisions
 networks:
   my-network:
     driver: bridge
