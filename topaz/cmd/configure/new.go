@@ -102,6 +102,7 @@ func (cmd *NewConfigCmd) Run(ctx context.Context) error {
 		}
 
 		cc.Con().Info().Msg("config name: %s", cmd.Name)
+
 		if cmd.Policy != "" {
 			cc.Con().Info().Msg("policy name: %s", cmd.Policy)
 		}
