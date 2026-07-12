@@ -12,7 +12,7 @@ import (
 
 type GenerateCertsCmd struct {
 	CertsDir string   `flag:"" default:"${topaz_certs_dir}" help:"path to dev certs folder" `
-	Force    bool     `flag:"" default:"false" help:"force generation of dev certs, overwriting existing cert files"`
+	Force    bool     `flag:"" short:"f" default:"false" help:"force generation of dev certs, overwriting existing cert files"`
 	Trust    bool     `flag:"" default:"false" help:"add generated certs to trust store"`
 	DNSNames []string `flag:"" default:"localhost" help:"list of DNS names used to generate dev certs"`
 }
@@ -21,7 +21,7 @@ type GenerateCertsCmd struct {
 func (cmd *GenerateCertsCmd) Run(ctx context.Context) error {
 	certsDir := cmd.CertsDir
 	if _, err := os.Stat(certsDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(certsDir, fs.FileModeDirectoryRWX); err != nil {
+		if err := os.MkdirAll(certsDir, fs.FileModeOwnerRWX); err != nil {
 			return err
 		}
 	}

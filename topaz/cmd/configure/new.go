@@ -19,24 +19,19 @@ const (
 )
 
 type NewConfigCmd struct {
-	Name             ConfigName `short:"n" help:"config name"`
-	Resource         string     `short:"r" help:"policy uri (e.g. ghcr.io/org/policy:tag)"`
-	From             string     `enum:"remote,local" default:"remote" help:"load policy from remote or local image"`
-	Stdout           bool       `short:"p" help:"print to stdout" default:"false"`
-	EdgeDirectory    bool       `short:"d" help:"enable edge directory" default:"false"`
-	Force            bool       `short:"f" flag:"" default:"false" required:"false" help:"skip confirmation prompt"`
-	LocalPolicyImage string     `short:"l" help:"[deprecated: use --local instead] local policy image name"`
+	Name          ConfigName `flag:"" short:"n" required:"" help:"config name"`
+	Resource      string     `flag:"" short:"r" required:"" help:"policy uri (e.g. ghcr.io/org/policy:tag)"`
+	From          string     `flag:"" short:"F" required:"" default:"remote" enum:"remote,local" help:"load policy from remote or local image"`
+	Policy        string     `flag:"" short:"P" help:"policy name"`
+	Stdout        bool       `flag:"" short:"p" default:"false" help:"print to stdout"`
+	EdgeDirectory bool       `flag:"" short:"d" default:"false" hidden:"" help:"enable edge directory"`
+	Force         bool       `flag:"" short:"f" default:"false" help:"skip confirmation prompt"`
 }
 
-//nolint:funlen,nestif
+//nolint:nestif
 func (cmd *NewConfigCmd) Run(ctx context.Context) error {
 	if cmd.Resource == "" {
-		if cmd.LocalPolicyImage == "" {
-			return errors.New("no policy specified. Please provide a policy URI with the --resource (-r) option")
-		} else {
-			cc.Con().Warn().Msg("The --local-policy-image options (-l) is deprecated and will be removed in a future release. " +
-				"Please use the --local flag instead.")
-		}
+		return errors.New("no policy specified. Please provide a policy URI with the --resource (-r) option")
 	}
 
 	cfg := cc.GetConfig()
@@ -51,17 +46,12 @@ func (cmd *NewConfigCmd) Run(ctx context.Context) error {
 		cc.Con().Info().Msg(">>> configure policy\n")
 	}
 
-	// Backward-compatibility with deprecated LocalPolicyImage option.
-	resource, local := cmd.Resource, cmd.From == FromLocal
-	if cmd.LocalPolicyImage != "" {
-		resource, local = cmd.LocalPolicyImage, true
-	}
-
 	configGenerator := config.NewGenerator(cmd.Name.String()).
 		WithVersion(config.ConfigFileVersion).
-		WithPolicyName(cmd.Name.String()).
-		WithResource(resource).
-		WithLocalPolicy(local).
+		WithConfigName(cmd.Name.String()).
+		WithPolicyName(cmd.Policy).
+		WithResource(cmd.Resource).
+		WithLocalPolicy(cmd.From == FromLocal).
 		WithEdgeDirectory(cmd.EdgeDirectory)
 
 	if _, err := configGenerator.CreateConfigDir(); err != nil {
@@ -106,13 +96,17 @@ func (cmd *NewConfigCmd) Run(ctx context.Context) error {
 	}
 
 	if !cmd.Stdout {
-		if local {
-			cc.Con().Info().Msg("using local policy image: %s", resource)
+		if cmd.From == FromLocal {
+			cc.Con().Info().Msg("using local policy image: %s", cmd.Resource)
 			return configGenerator.GenerateConfig(w, config.LocalImageTemplate)
 		}
 
-		cc.Con().Info().Msg("policy name: %s", cmd.Name)
+		cc.Con().Info().Msg("config name: %s", cmd.Name)
+
+		if cmd.Policy != "" {
+			cc.Con().Info().Msg("policy name: %s", cmd.Policy)
+		}
 	}
 
-	return configGenerator.GenerateConfig(w, config.Template)
+	return configGenerator.GenerateConfig(w, config.RemoteImageTemplate)
 }

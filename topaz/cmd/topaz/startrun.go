@@ -192,6 +192,8 @@ func getEnvFromVolumes(volumes []string) []string {
 			envs = append(envs, x.EnvTopazDBDir+"="+mountedPath)
 		case strings.Contains(volumes[i], "cfg"):
 			envs = append(envs, x.EnvTopazCfgDir+"="+mountedPath)
+		case strings.Contains(volumes[i], "decisions"):
+			envs = append(envs, x.EnvTopazDecisionsDir+"="+mountedPath)
 		}
 	}
 

@@ -79,7 +79,7 @@ func (s *AuthorizerServer) Info(ctx context.Context, req *authorizer.InfoRequest
 }
 
 func (s *AuthorizerServer) getRuntime(ctx context.Context) (*runtime.Runtime, error) {
-	rt, err := s.resolver.GetRuntimeResolver().RuntimeFromContext(ctx, "")
+	rt, err := s.resolver.GetRuntimeResolver().GetRuntime(ctx)
 	if err != nil {
 		return nil, aerr.ErrInvalidPolicyID.Msg("undefined policy context")
 	}

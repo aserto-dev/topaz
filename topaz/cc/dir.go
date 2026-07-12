@@ -47,6 +47,15 @@ func GetTopazDataDir() string {
 	return filepath.Clean(filepath.Join(xdg.DataHome, "topaz", "db"))
 }
 
+// GetTopazDecisionsDir returns the topaz decisions log directory ($XDG_DATA_HOME/topaz/decisions).
+func GetTopazDecisionsDir() string {
+	if dataDir := os.Getenv(x.EnvTopazDecisionsDir); dataDir != "" {
+		return dataDir
+	}
+
+	return filepath.Clean(filepath.Join(xdg.DataHome, "topaz", "decisions"))
+}
+
 // GetTopazTemplateDir returns the templates installation directory ($XDG_DATA_HOME/topaz/tmpl).
 func GetTopazTemplateDir() string {
 	if tmplDir := os.Getenv(x.EnvTopazTmplDir); tmplDir != "" {
@@ -66,7 +75,14 @@ func GetTopazTemplateURL() string {
 }
 
 func EnsureDirs() error {
-	for _, f := range []func() error{EnsureTopazDir, EnsureTopazCfgDir, EnsureTopazCertsDir, EnsureTopazDataDir, EnsureTopazTemplateDir} {
+	for _, f := range []func() error{
+		EnsureTopazDir,
+		EnsureTopazCfgDir,
+		EnsureTopazCertsDir,
+		EnsureTopazDataDir,
+		EnsureTopazDecisionsDir,
+		EnsureTopazTemplateDir,
+	} {
 		if err := f(); err != nil {
 			return err
 		}
@@ -99,11 +115,20 @@ func EnsureTopazCertsDir() error {
 		return nil
 	}
 
-	return os.MkdirAll(dir, fs.FileModeDirectoryRWX)
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
 }
 
 func EnsureTopazDataDir() error {
 	dir := GetTopazDataDir()
+	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
+		return nil
+	}
+
+	return os.MkdirAll(dir, fs.FileModeOwnerRWX)
+}
+
+func EnsureTopazDecisionsDir() error {
+	dir := GetTopazDecisionsDir()
 	if fi, err := os.Stat(dir); err == nil && fi.IsDir() {
 		return nil
 	}

@@ -69,7 +69,6 @@ linters:
         - generic
         - proto.Message
         - plugins.Plugin
-        - decisionlog.DecisionLogger
         - resolvers.DirectoryResolver
         - resolvers.RuntimeResolver
         - v3.ReaderClient

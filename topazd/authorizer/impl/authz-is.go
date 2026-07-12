@@ -10,7 +10,7 @@ import (
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/go-directory/pkg/pb"
-	decisionlog_plugin "github.com/aserto-dev/topaz/topazd/authorizer/plugins/decisionlog"
+	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/topaz_file_decision_logger"
 
 	"github.com/google/uuid"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -120,7 +120,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		resp.Decisions = append(resp.GetDecisions(), &decision)
 	}
 
-	dlPlugin := decisionlog_plugin.Lookup(rt.GetPluginsManager())
+	dlPlugin := topaz_file_decision_logger.Lookup(rt.GetPluginsManager())
 	if dlPlugin == nil {
 		return resp, err
 	}
@@ -141,7 +141,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 		Outcomes: getOutcomes(resp.GetDecisions()),
 	}
 
-	if err := dlPlugin.Log(ctx, &d); err != nil {
+	if err := dlPlugin.LogDecision(ctx, &d); err != nil {
 		return resp, err
 	}
 

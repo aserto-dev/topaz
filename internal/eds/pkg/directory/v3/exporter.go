@@ -14,11 +14,11 @@ import (
 )
 
 type Exporter struct {
-	dse.UnimplementedExporterServer
-
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
 }
+
+var _ dse.ExporterServer = (*(Exporter))(nil)
 
 func NewExporter(logger *zerolog.Logger, store *bdb.BoltDB) *Exporter {
 	return &Exporter{

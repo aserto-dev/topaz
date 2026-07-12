@@ -20,11 +20,11 @@ import (
 )
 
 type Importer struct {
-	dsi.UnimplementedImporterServer
-
 	logger *zerolog.Logger
 	store  *bdb.BoltDB
 }
+
+var _ dsi.ImporterServer = (*(Importer))(nil)
 
 const (
 	object   string = "object"

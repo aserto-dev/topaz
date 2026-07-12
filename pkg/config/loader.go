@@ -2,7 +2,7 @@ package config
 
 import (
 	"bytes"
-	"fmt"
+	"encoding/json"
 	"net"
 	"os"
 	"regexp"
@@ -10,6 +10,7 @@ import (
 
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/x"
+	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/topaz_file_decision_logger"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/samber/lo"
@@ -104,6 +105,22 @@ func (l *Loader) GetPaths() ([]string, error) {
 		paths[l.Configuration.Edge.DBPath] = true
 	}
 
+	if c, ok := l.Configuration.OPA.Config.Plugins[topaz_file_decision_logger.PluginName]; ok {
+		b, err := json.Marshal(c)
+		if err != nil {
+			return nil, err
+		}
+
+		var pCfg topaz_file_decision_logger.Config
+		if err := json.Unmarshal(b, &pCfg); err != nil {
+			return nil, err
+		}
+
+		if pCfg.Enabled && pCfg.Logger.Filename != "" {
+			paths[pCfg.Logger.Filename] = true
+		}
+	}
+
 	if l.Configuration.APIConfig.Health.Certificates.CA != "" {
 		paths[l.Configuration.APIConfig.Health.Certificates.CA] = true
 	}
@@ -131,12 +148,6 @@ func (l *Loader) GetPaths() ([]string, error) {
 	servicePaths := getUniqueServiceCertPaths(l.Configuration.APIConfig.Services)
 	for i := range servicePaths {
 		paths[servicePaths[i]] = true
-	}
-
-	decisionLogPaths := getDecisionLogPaths(l.Configuration.DecisionLogger)
-
-	for i := range decisionLogPaths {
-		paths[decisionLogPaths[i]] = true
 	}
 
 	return filterPaths(paths), nil
@@ -213,6 +224,10 @@ func SetEnvVars(fileContents string) (string, error) {
 		return "", err
 	}
 
+	if err := os.Setenv(x.EnvTopazDecisionsDir, cc.GetTopazDecisionsDir()); err != nil {
+		return "", err
+	}
+
 	return subEnvVars(fileContents), nil
 }
 
@@ -267,16 +282,6 @@ func getUniqueServiceCertPaths(services map[string]*builder.API) []string {
 	}
 
 	return lo.Keys(paths)
-}
-
-func getDecisionLogPaths(decisionLogConfig DecisionLogConfig) []string {
-	switch decisionLogConfig.Type {
-	case "file":
-		logPath := fmt.Sprintf("%s", decisionLogConfig.Config["log_file_path"])
-		return []string{logPath}
-	default:
-		return nil // nop decision logger
-	}
 }
 
 // subEnvVars will look for any environment variables in the passed in string
