@@ -1,0 +1,10 @@
+# o1 = data.directory.object("user", "rick@the-citadel.com", false)
+
+# u1 = data.directory.user("rick@the-citadel.com")
+# u2 = data.directory.user("")
+# u3 = data.directory.user()
+
+# r0 = ds.relation({})
+# r1 = data.directory.relation("user", "rick@the-citadel.com", "identifier", "identity", "rick@the-citadel.com", "", false)
+# r2 = data.directory.relation("user", "rick@the-citadel.com", "identifier", "identity", "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs", "", false)
+# r3 = data.directory.relation("user", "rick@the-citadel.com", "identifier", "identity", "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs", "", true)

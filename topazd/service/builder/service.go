@@ -47,6 +47,7 @@ type API struct {
 		Certs                    aserto.TLSConfig `json:"certs"`
 	} `json:"grpc"`
 	Gateway struct {
+		Enabled           bool             `json:"enabled"`
 		FQDN              string           `json:"fqdn"`
 		ListenAddress     string           `json:"listen_address"`
 		AllowedOrigins    []string         `json:"allowed_origins"`
