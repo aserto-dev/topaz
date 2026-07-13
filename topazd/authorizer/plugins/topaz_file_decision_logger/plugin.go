@@ -64,6 +64,8 @@ func (p *Plugin) Stop(ctx context.Context) {
 		p.dlogger = zerolog.Nop()
 	}
 
+	p.manager.UpdatePluginStatus(PluginName, &plugins.Status{State: plugins.StateNotReady})
+
 	p.logger.Info().Bool("enabled", p.config.Enabled).Msg("stopped")
 }
 
