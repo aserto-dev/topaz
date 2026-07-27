@@ -56,6 +56,11 @@ type Common struct {
 		// Specifies the duration in which exp (Expiry) and nbf (Not Before)
 		// claims may differ by. This value should be positive.
 		AcceptableTimeSkewSeconds int `json:"acceptable_time_skew_seconds"`
+
+		// AllowedIssuers restricts JWT validation to tokens whose iss claim
+		// matches one of these values.
+		// NOTE: If empty, any issuer is accepted!
+		AllowedIssuers []string `json:"allowed_issuers"`
 	} `json:"jwt"`
 
 	// Directory configuration

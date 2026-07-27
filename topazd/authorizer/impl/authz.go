@@ -15,7 +15,8 @@ import (
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
 	"github.com/aserto-dev/topaz/topazd/version"
 
-	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/jwx-go/jwkfetch/v4"
+	"github.com/lestrrat-go/httprc/v3"
 	"github.com/open-policy-agent/opa/v1/server/types"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
@@ -34,7 +35,7 @@ type AuthorizerServer struct {
 	cfg      *config.Common
 	logger   *zerolog.Logger
 	issuers  sync.Map
-	jwkCache *jwk.Cache
+	jwkCache *jwkfetch.Cache
 
 	resolver *resolvers.Resolvers
 
@@ -50,10 +51,21 @@ func NewAuthorizerServer(
 	logger *zerolog.Logger,
 	cfg *config.Common,
 	rf *resolvers.Resolvers,
-) *AuthorizerServer {
+) (*AuthorizerServer, error) {
 	newLogger := logger.With().Str("component", "api.grpc").Logger()
 
-	jwkCache := jwk.NewCache(ctx)
+	jwkCache, err := jwkfetch.NewCache(ctx, httprc.NewClient())
+	if err != nil {
+		return nil, err
+	}
+
+	go func() { //nolint:gosec // G118 - cleanup cannot use request context as it is already cancelled.
+		<-ctx.Done()
+
+		cleanupCtx := context.Background()
+
+		_ = jwkCache.Shutdown(cleanupCtx)
+	}()
 
 	return &AuthorizerServer{
 		cfg:             cfg,
@@ -61,7 +73,7 @@ func NewAuthorizerServer(
 		resolver:        rf,
 		jwkCache:        jwkCache,
 		preparedQueries: newPreparedQueryCache(),
-	}
+	}, nil
 }
 
 func (s *AuthorizerServer) Info(ctx context.Context, req *authorizer.InfoRequest) (*authorizer.InfoResponse, error) {
