@@ -23,6 +23,7 @@ type GetCmd struct {
 	Object   GetObjectCmd   `cmd:"" help:"get object"`
 	Relation GetRelationCmd `cmd:"" help:"get relation"`
 	Manifest GetManifestCmd `cmd:"" help:"get manifest"`
+	Model    GetModelCmd    `cmd:"" help:"get model"`
 }
 
 type SetCmd struct {
