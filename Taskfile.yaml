@@ -1,0 +1,254 @@
+version: '3'
+
+vars:
+  NO_COLOR: "\x1b[0m"
+  OK_COLOR: "\x1b[32;01m"
+  ERR_COLOR: "\x1b[31;01m"
+  WARN_COLOR: "\x1b[36;01m"
+  ATTN_COLOR: "\x1b[33;01m"
+
+  REGISTRY: ghcr.io
+  ORG: aserto-dev
+  REPO: topaz
+  DESCRIPTION: '"Topaz Authorization Service"'
+  LICENSE: Apache-2.0
+
+  GOOS:
+    sh: go env GOOS
+  GOARCH:
+    sh: go env GOARCH
+  GOPRIVATE: github.com/aserto-dev
+
+  EXT_DIR: '{{.ROOT_DIR}}/.ext'
+  EXT_BIN_DIR: '{{.EXT_DIR}}/bin'
+  EXT_TMP_DIR: '{{.EXT_DIR}}/tmp'
+
+  GO_VER: '1.26'
+  SVU_VER: '3.3.0'
+  GOTESTSUM_VER: '1.13.0'
+  GOLANGCI_LINT_VER: '2.12.2'
+  GORELEASER_VER: '2.14.1'
+  SYFT_VER: '1.13.0'
+
+  TOPAZ_DIST:
+    sh: echo "{{.ROOT_DIR}}/$(cat dist/artifacts.json 2>/dev/null | jq -r '.[] | select(.name == "topaz").path' | tr '\n' ' ')"
+
+env:
+  GOEXPERIMENT: jsonv2
+  DOCKER_BUILDKIT: '1'
+
+silent: true
+
+tasks:
+  default:
+    cmds:
+      - task: build
+
+  deps:
+    desc: Install all build/dev tool dependencies
+    cmds:
+      - task: info
+      - task: install-svu
+      - task: install-goreleaser
+      - task: install-golangci-lint
+      - task: install-gotestsum
+      - task: install-syft
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+
+  gover:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - (go env GOVERSION | grep "go{{.GO_VER}}") || (echo "go version check failed expected go{{.GO_VER}} got $(go env GOVERSION)"; exit 1)
+
+  build:
+    cmds:
+      - task: gover
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - '{{.EXT_BIN_DIR}}/goreleaser build --config .goreleaser.yml --clean --snapshot --single-target'
+
+  docker-build:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - |
+        docker buildx build \
+          --platform=linux/arm64,linux/amd64 \
+          --tag {{.REGISTRY}}/{{.ORG}}/{{.REPO}}:$(svu current) \
+          --tag {{.REGISTRY}}/{{.ORG}}/{{.REPO}}:latest \
+          --progress=plain \
+          --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+          --build-arg TITLE={{.REPO}} \
+          --build-arg VCS_REF=$(git rev-parse HEAD) \
+          --build-arg VERSION=$(svu current) \
+          --build-arg REPO_URL="https://github.com/{{.ORG}}/{{.REPO}}" \
+          --build-arg DESCRIPTION={{.DESCRIPTION}} \
+          --build-arg LICENSE={{.LICENSE}} \
+          --push .
+
+  docker-build-test:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - |
+        docker buildx build \
+          --platform=linux/{{.GOARCH}} \
+          --tag {{.REGISTRY}}/{{.ORG}}/{{.REPO}}:0.0.0-test-$(git rev-parse --short HEAD)-{{.GOARCH}} \
+          --progress=plain \
+          --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+          --build-arg TITLE={{.REPO}} \
+          --build-arg VCS_REF=$(git rev-parse HEAD) \
+          --build-arg VERSION=$(svu current) \
+          --build-arg REPO_URL="https://github.com/{{.ORG}}/{{.REPO}}" \
+          --build-arg DESCRIPTION={{.DESCRIPTION}} \
+          --build-arg LICENSE={{.LICENSE}} \
+          .
+
+  go-mod-tidy:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - go work edit -json | jq -r '.Use[].DiskPath' | xargs -I{} bash -c 'cd {} && echo "{{.ROOT_DIR}}/go.mod" && go mod tidy -v && cd -'
+
+  release:
+    cmds:
+      - task: gover
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - '{{.EXT_BIN_DIR}}/goreleaser release --config .goreleaser.yml --clean'
+
+  snapshot:
+    cmds:
+      - task: gover
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - '{{.EXT_BIN_DIR}}/goreleaser release --config .goreleaser.yml --clean --snapshot --skip archive,homebrew,sbom'
+
+  generate:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - GOBIN={{.EXT_BIN_DIR}} go generate ./...
+
+  lint:
+    cmds:
+      - task: gover
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - '{{.EXT_BIN_DIR}}/golangci-lint config path'
+      - '{{.EXT_BIN_DIR}}/golangci-lint config verify'
+      - '{{.EXT_BIN_DIR}}/golangci-lint run --config {{.ROOT_DIR}}/.golangci.yaml'
+
+  test:
+    env:
+      TESTCONTAINERS_RYUK_DISABLED:
+        sh: docker context inspect --format '{{"{{"}}.Endpoints.docker.Host{{"}}"}}' 2>/dev/null | grep -q ".colima" && echo "true" || echo "false"
+    cmds:
+      - task: gover
+      - task: test-snapshot
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - echo -e "{{.WARN_COLOR}}!!! TESTCONTAINERS_RYUK_DISABLED=$TESTCONTAINERS_RYUK_DISABLED !!!{{.NO_COLOR}}"
+      - '{{.EXT_BIN_DIR}}/gotestsum --format short-verbose -- $(go list ./... | grep -v topazd/tests) -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...'
+      - '{{.EXT_BIN_DIR}}/gotestsum --format short-verbose -- $(go list ./topazd/tests/... | grep -v tests/template) -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...'
+      - '{{.EXT_BIN_DIR}}/gotestsum --format short-verbose -- github.com/{{.ORG}}/{{.REPO}}/topazd/tests/template-no-tls/... -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...'
+      - '{{.EXT_BIN_DIR}}/gotestsum --format short-verbose -- github.com/{{.ORG}}/{{.REPO}}/topazd/tests/template-with-tls/... -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...'
+
+  test-snapshot:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - 'docker image rm {{.REGISTRY}}/{{.ORG}}/{{.REPO}}:0.0.0-test-$(git rev-parse --short HEAD)-$(uname -m) || true'
+      - '{{.EXT_BIN_DIR}}/goreleaser release --config .goreleaser-test.yml --clean --snapshot --skip archive,homebrew,sbom'
+
+  container-tag:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - scripts/container-tag.sh > .container-tag.env
+
+  write-version:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - git describe --tags > ./VERSION.txt
+
+  topaz-run-test-snapshot:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - echo "topaz run $({{.TOPAZ_DIST}} config info | jq '.runtime.active_configuration_file')"
+      - '{{.TOPAZ_DIST}} run --container-tag=0.0.0-test-$(git rev-parse --short HEAD)-$(uname -m)'
+
+  topaz-start-test-snapshot:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - echo "topaz start $({{.TOPAZ_DIST}} config info | jq '.runtime.active_configuration_name')"
+      - '{{.TOPAZ_DIST}} start --container-tag=0.0.0-test-$(git rev-parse --short HEAD)-$(uname -m)'
+
+  info:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - 'echo "GOOS:        {{.GOOS}}"'
+      - 'echo "GOARCH:      {{.GOARCH}}"'
+      - 'echo "EXT_DIR:     {{.EXT_DIR}}"'
+      - 'echo "EXT_BIN_DIR: {{.EXT_BIN_DIR}}"'
+      - 'echo "EXT_TMP_DIR: {{.EXT_TMP_DIR}}"'
+      - 'echo "TOPAZ_DIST:  {{.TOPAZ_DIST}}"'
+      - 'echo "REGISTRY:    {{.REGISTRY}}"'
+      - 'echo "ORG:         {{.ORG}}"'
+      - 'echo "REPO:        {{.REPO}}"'
+
+  install-svu:
+    deps: [ext-bin-dir, ext-tmp-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - GOBIN={{.EXT_BIN_DIR}} go install github.com/caarlos0/svu/v3@v{{.SVU_VER}}
+      - '{{.EXT_BIN_DIR}}/svu --version'
+
+  install-gotestsum:
+    deps: [ext-tmp-dir, ext-bin-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - gh release download v{{.GOTESTSUM_VER}} --repo https://github.com/gotestyourself/gotestsum --pattern "gotestsum_{{.GOTESTSUM_VER}}_{{.GOOS}}_{{.GOARCH}}.tar.gz" --output "{{.EXT_TMP_DIR}}/gotestsum.tar.gz" --clobber
+      - tar -xvf {{.EXT_TMP_DIR}}/gotestsum.tar.gz --directory {{.EXT_BIN_DIR}} gotestsum &> /dev/null
+      - chmod +x {{.EXT_BIN_DIR}}/gotestsum
+      - '{{.EXT_BIN_DIR}}/gotestsum --version'
+
+  install-golangci-lint:
+    deps: [ext-tmp-dir, ext-bin-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - gh release download v{{.GOLANGCI_LINT_VER}} --repo https://github.com/golangci/golangci-lint --pattern "golangci-lint-{{.GOLANGCI_LINT_VER}}-{{.GOOS}}-{{.GOARCH}}.tar.gz" --output "{{.EXT_TMP_DIR}}/golangci-lint.tar.gz" --clobber
+      - tar --strip=1 -xvf {{.EXT_TMP_DIR}}/golangci-lint.tar.gz --strip-components=1 --directory {{.EXT_TMP_DIR}} &> /dev/null
+      - mv {{.EXT_TMP_DIR}}/golangci-lint {{.EXT_BIN_DIR}}/golangci-lint
+      - chmod +x {{.EXT_BIN_DIR}}/golangci-lint
+      - '{{.EXT_BIN_DIR}}/golangci-lint --version'
+
+  install-goreleaser:
+    deps: [ext-tmp-dir, ext-bin-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - gh release download v{{.GORELEASER_VER}} --repo https://github.com/goreleaser/goreleaser --pattern "goreleaser_$(uname -s)_$(uname -m).tar.gz" --output "{{.EXT_TMP_DIR}}/goreleaser.tar.gz" --clobber
+      - tar -xvf {{.EXT_TMP_DIR}}/goreleaser.tar.gz --directory {{.EXT_BIN_DIR}} goreleaser &> /dev/null
+      - chmod +x {{.EXT_BIN_DIR}}/goreleaser
+      - '{{.EXT_BIN_DIR}}/goreleaser --version'
+
+  install-syft:
+    deps: [ext-tmp-dir, ext-bin-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - gh release download v{{.SYFT_VER}} --repo https://github.com/anchore/syft --pattern "syft_{{.SYFT_VER}}_{{.GOOS}}_{{.GOARCH}}.tar.gz" --output "{{.EXT_TMP_DIR}}/syft.tar.gz" --clobber
+      - tar -xvf {{.EXT_TMP_DIR}}/syft.tar.gz --directory {{.EXT_BIN_DIR}} syft &> /dev/null
+      - chmod +x {{.EXT_BIN_DIR}}/syft
+      - '{{.EXT_BIN_DIR}}/syft --version'
+
+  clean:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - rm -rf {{.EXT_DIR}}
+      - rm -rf ./dist
+      - rm -rf ./test
+
+  ext-bin-dir:
+    internal: true
+    status:
+      - test -d {{.EXT_BIN_DIR}}
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - mkdir -p {{.EXT_BIN_DIR}}
+
+  ext-tmp-dir:
+    internal: true
+    status:
+      - test -d {{.EXT_TMP_DIR}}
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - mkdir -p {{.EXT_TMP_DIR}}
