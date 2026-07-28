@@ -24,6 +24,7 @@ permissions:
 env:
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
   GH_TOKEN: ${{ github.token }}
+  GOEXPERIMENT: "jsonv2"
   GO_RELEASER_VER: "v2.14.1"
   GO_LANGCI_LINT_VER: "v2.12.2"
   SYFT_VER: "v1.13.0"

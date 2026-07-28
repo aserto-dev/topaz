@@ -194,6 +194,14 @@
                     "default": 5,
                     "minimum": 0,
                     "maximum": 60
+                },
+                "allowed_issuers": {
+                    "description": "array of allowed JWT issuers; if empty, any issuer is accepted",
+                    "type": "array",
+                    "items": {
+                        "description": "an accepted issuer",
+                        "type": "string"
+                    }
                 }
             }
         },

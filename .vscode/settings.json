@@ -4,9 +4,22 @@
     "-gcflags=all=-N -l",
     "-count=1"
   ],
+  "go.testEnvVars": {
+    "GOEXPERIMENT": "jsonv2"
+  },
+  "go.buildTags": "jsonv2",
+  "go.delveConfig": {
+    "debugAdapter": "dlv-dap",
+    "env": {
+      "GOEXPERIMENT": "jsonv2"
+    }
+  },
   "go.useLanguageServer": true,
   "go.languageServerFlags": [],
   "gopls": {
+    "buildFlags": [
+      "-tags=jsonv2"
+    ],
     "formatting.gofumpt": true
   },
   "go.lintTool": "golangci-lint",

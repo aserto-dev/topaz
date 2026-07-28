@@ -37,6 +37,8 @@ remote_directory:
 # default jwt validation configuration
 jwt:
   acceptable_time_skew_seconds: 5 # set as default, 5 secs
+  allowed_issuers: # if empty, any issuer is accepted
+  #  - "https://issuer.example.com"
 
 # authentication configuration
 auth:

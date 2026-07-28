@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/url"
 	"path/filepath"
+	"slices"
+	"strings"
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
@@ -16,8 +18,8 @@ import (
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/topazd/directory"
 
-	"github.com/lestrrat-go/jwx/v2/jwk"
-	"github.com/lestrrat-go/jwx/v2/jwt"
+	"github.com/jwx-go/jwkfetch/v4"
+	"github.com/lestrrat-go/jwx/v4/jwt"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -76,7 +78,10 @@ func (s *AuthorizerServer) getIdentityFromJWT(ctx context.Context, bearerJWT str
 		return "", err
 	}
 
-	ident := jwtToken.Subject()
+	ident, ok := jwtToken.Subject()
+	if !ok || ident == "" {
+		return "", errors.Errorf("no sub field present in token")
+	}
 
 	return ident, nil
 }
@@ -87,7 +92,17 @@ func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken j
 		jwt.WithAcceptableSkew(time.Duration(s.cfg.JWT.AcceptableTimeSkewSeconds) * time.Second),
 	}
 
-	jwtKeysURL, err := s.jwksURLFromCache(ctx, jwtToken.Issuer())
+	issuer, ok := jwtToken.Issuer()
+	if !ok {
+		return nil, errors.Errorf("no iss field present in token")
+	}
+
+	// NOTE: if config.jwt.allowed_issuers is empty, there is no enforcement of the issuer URL.
+	if len(s.cfg.JWT.AllowedIssuers) > 0 && !issuerAllowed(s.cfg.JWT.AllowedIssuers, issuer) {
+		return nil, errors.Errorf("issuer %q is not an allowed issuer, see: config.jwt.allowed_issuers", issuer)
+	}
+
+	jwtKeysURL, err := s.jwksURLFromCache(ctx, issuer)
 	if err != nil {
 		return nil, errors.Wrap(err, "token didn't have a JWKS endpoint we could use for verification")
 	} else {
@@ -96,7 +111,7 @@ func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken j
 			return nil, errors.Wrap(err, "failed to register JWKS URL")
 		}
 
-		jwkSet, errX := s.jwkCache.Get(ctx, jwtKeysURL)
+		jwkSet, errX := s.jwkCache.Lookup(ctx, jwtKeysURL)
 		if errX != nil {
 			return nil, errors.Wrap(errX, "failed to fetch JWK set for validation")
 		}
@@ -107,9 +122,25 @@ func (s *AuthorizerServer) jwtParseStringOptions(ctx context.Context, jwtToken j
 	return options, nil
 }
 
-func registerJWKSURL(ctx context.Context, jwkCache *jwk.Cache, jwksURL string) error {
-	if !jwkCache.IsRegistered(jwksURL) {
-		err := jwkCache.Register(jwksURL, jwk.WithMinRefreshInterval(jwtMinRefreshInterval))
+// issuerAllowed reports whether issuer matches one of the configured allowed
+// issuers. A configured entry matches either exactly, or as a path prefix
+// when the entry ends in "/" (e.g. "https://idp.example.com/" matches
+// "https://idp.example.com/tenant-a"). Prefix matching is always anchored at
+// a "/" boundary so an entry can't be defeated by an attacker-chosen suffix
+// such as "https://idp.example.com.attacker.evil".
+func issuerAllowed(allowed []string, issuer string) bool {
+	return slices.ContainsFunc(allowed, func(cfgISS string) bool {
+		if issuer == cfgISS {
+			return true
+		}
+
+		return strings.HasSuffix(cfgISS, "/") && strings.HasPrefix(issuer, cfgISS)
+	})
+}
+
+func registerJWKSURL(ctx context.Context, jwkCache *jwkfetch.Cache, jwksURL string) error {
+	if !jwkCache.IsRegistered(ctx, jwksURL) {
+		err := jwkCache.Register(ctx, jwksURL, jwkfetch.WithMinInterval(jwtMinRefreshInterval))
 		if err != nil {
 			return err
 		}
@@ -141,26 +172,25 @@ func (s *AuthorizerServer) jwksURLFromCache(ctx context.Context, issuer string) 
 	return jwksURL, nil
 }
 
-// jwksURL.
 func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.URL, error) {
 	const (
 		wellknownConfig = `.well-known/openid-configuration`
 		wellknownJWKS   = `.well-known/jwks.json`
 	)
 
-	u, err := url.Parse(baseURL)
+	b, err := url.Parse(baseURL)
 	if err != nil {
 		return nil, err
 	}
 
-	if u.Scheme == "" {
-		return nil, errors.New("no scheme defined for baseURL")
+	if b.Scheme == "" {
+		return nil, errors.New("empty baseURL scheme, must be https or http")
 	}
 
-	originalPath := u.Path
-	u.Path = filepath.Join(originalPath, wellknownConfig)
+	originalPath := b.Path
+	b.Path = filepath.Join(originalPath, wellknownConfig)
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), http.NoBody)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, b.String(), http.NoBody)
 	if err != nil {
 		return nil, err
 	}
@@ -176,18 +206,19 @@ func (s *AuthorizerServer) jwksURL(ctx context.Context, baseURL string) (*url.UR
 		}
 
 		if err := json.NewDecoder(resp.Body).Decode(&config); err == nil {
-			if u, err = url.Parse(config.URI); err == nil {
+			if u, err := url.Parse(config.URI); err == nil {
 				return u, nil
 			}
 		}
 	}
 
-	u.Path = filepath.Join(originalPath, wellknownJWKS)
+	// No usable OIDC discovery document; fall back to the
+	// plain JWKS well-known path.
+	b.Path = filepath.Join(originalPath, wellknownJWKS)
 
-	return u, nil
+	return b, nil
 }
 
-// getUserFromIdentityContext.
 func (s *AuthorizerServer) getUserFromIdentityContext(ctx context.Context, identityContext *api.IdentityContext) (proto.Message, error) {
 	if identityContext == nil {
 		return nil, aerr.ErrInvalidArgument.Msg("identity context not set")
