@@ -93,7 +93,7 @@ func (r *jwtResolver) ResolveSubject(ctx context.Context, token string) (string,
 
 	unverifiedIssuer, ok := unverifiedToken.Issuer()
 	if !ok {
-		return "", err
+		return "", errors.New("unverified token does not have an Issuer field")
 	}
 
 	// if not OIDC config URLs registered, we can only resolve insecurely as there are no JKWS key sets.
@@ -104,7 +104,7 @@ func (r *jwtResolver) ResolveSubject(ctx context.Context, token string) (string,
 	// look up JKWSURI from OIDC config using the unverified issuer value.
 	cfg, ok := r.issuerToConfig[unverifiedIssuer]
 	if !ok {
-		return "", errors.Errorf("No mapping found of issuer %q to JWKS URI", unverifiedIssuer)
+		return "", errors.Errorf("no entry config found for issuer %q", unverifiedIssuer)
 	}
 
 	// fetch JWKS key set from the cache.
@@ -129,7 +129,7 @@ func (r *jwtResolver) ResolveSubject(ctx context.Context, token string) (string,
 	// get the subject used to resolve the to the User object instance.
 	subject, ok := verifiedToken.Subject()
 	if !ok {
-		return "", errors.Errorf("no verified subject found")
+		return "", errors.New("verified token does not have a Subject field")
 	}
 
 	return subject, nil
@@ -151,7 +151,7 @@ func (r *jwtResolver) resolveSubjectInsecure(token string) (string, error) {
 	// get the subject used to resolve the to the User object instance.
 	subject, ok := verifiedToken.Subject()
 	if !ok {
-		return "", errors.Errorf("no verified subject found")
+		return "", errors.New("verified token does not have a Subject field (insecure)")
 	}
 
 	return subject, nil
