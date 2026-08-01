@@ -3,6 +3,7 @@ package config
 import (
 	"io"
 	"os"
+	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/logger"
@@ -40,6 +41,39 @@ type ServicesConfig struct {
 	Services map[string]*builder.API `json:"services"`
 }
 
+type JWT struct {
+	// Specifies the duration in which exp (Expiry) and nbf (Not Before)
+	// claims may differ by. This value should be positive.
+	AcceptableTimeSkewSeconds int `json:"acceptable_time_skew_seconds"`
+	// List of OpenID Connect configuration endpoints `.well-known//openid-configuration`
+	// !!! NOTE: if this list is empty the behavior defaults to InsecureWhitelist !!!
+	AllowedConfigurationEndpoints []string `json:"allowed_configuration_endpoints"`
+	CacheRefreshMinInterval       string   `json:"cache_refresh_min_interval"`
+	CacheRefreshMaxInterval       string   `json:"cache_refresh_max_interval"`
+}
+
+func (j *JWT) AcceptableTimeSkewDuration() time.Duration {
+	return time.Duration(j.AcceptableTimeSkewSeconds) * time.Second
+}
+
+func (j *JWT) CacheRefreshMinIntervalDuration() time.Duration {
+	d, err := time.ParseDuration(j.CacheRefreshMinInterval)
+	if err != nil {
+		panic(err)
+	}
+
+	return d
+}
+
+func (j *JWT) CacheRefreshMaxIntervalDuration() time.Duration {
+	d, err := time.ParseDuration(j.CacheRefreshMaxInterval)
+	if err != nil {
+		panic(err)
+	}
+
+	return d
+}
+
 // Common holds the shared configuration elements.
 type Common struct {
 	Version      int           `json:"version"`
@@ -52,16 +86,7 @@ type Common struct {
 
 	APIConfig ServicesConfig `json:"api"`
 
-	JWT struct {
-		// Specifies the duration in which exp (Expiry) and nbf (Not Before)
-		// claims may differ by. This value should be positive.
-		AcceptableTimeSkewSeconds int `json:"acceptable_time_skew_seconds"`
-
-		// AllowedIssuers restricts JWT validation to tokens whose iss claim
-		// matches one of these values.
-		// NOTE: If empty, any issuer is accepted!
-		AllowedIssuers []string `json:"allowed_issuers"`
-	} `json:"jwt"`
+	JWT JWT `json:"jwt"`
 
 	// Directory configuration
 	Edge directory.Config `json:"directory"`

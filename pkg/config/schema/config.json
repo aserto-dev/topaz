@@ -195,13 +195,23 @@
                     "minimum": 0,
                     "maximum": 60
                 },
-                "allowed_issuers": {
-                    "description": "array of allowed JWT issuers; if empty, any issuer is accepted",
+                "allowed_configuration_endpoints": {
+                    "description": "array of allowed OIDC configuration endpoints (.well-known/openid-configurationJWT) if empty, any issuer is accepted",
                     "type": "array",
                     "items": {
                         "description": "an accepted issuer",
                         "type": "string"
                     }
+                },
+                "cache_refresh_min_interval": {
+                    "description": "duration string defining the minimum cache refresh interval (example 5m)",
+                    "type": "string",
+                    "default": "5m"
+                },
+                "CacheRefreshMaxInterval": {
+                    "description": "duration string defining the maximum cache refresh interval (example 15m)",
+                    "type": "string",
+                    "default": "15m"
                 }
             }
         },

@@ -52,8 +52,10 @@ remote_directory:
 # default jwt validation configuration
 jwt:
   acceptable_time_skew_seconds: 5 # set as default, 5 secs
-  allowed_issuers: # if empty, any issuer is accepted
-    # - "https://issuer.example.com/"
+  allowed_configuration_endpoints: # NOTE: if empty, any issuer is accepted !!!
+  #  - "https://issuer.example.com/.well-known/openid-configuration"
+  cache_refresh_min_interval: 5m  # set as default, 5 minutes
+  cache_refresh_max_interval: 15m # set as default, 15 minutes
 
 # authentication configuration
 auth:
