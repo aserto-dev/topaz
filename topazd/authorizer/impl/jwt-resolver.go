@@ -88,7 +88,7 @@ func (r *jwtResolver) ResolveSubject(ctx context.Context, token string) (string,
 	}
 
 	unverifiedIssuer, ok := unverifiedToken.Issuer()
-	if !ok {
+	if !ok || unverifiedIssuer == "" {
 		return "", errors.Errorf("unverified token does not contain an issuer field")
 	}
 
