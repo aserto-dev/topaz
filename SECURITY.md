@@ -1,6 +1,15 @@
 # Security Policy
 
-## 📞 Reporting a Vulnerability
+## Supported Versions
+
+Until we reach v1.x.y, we only support and patch `latest`.
+
+| Version | Supported          |
+| ------- | ------------------ |
+| latest  | :white_check_mark: |
+
+## Reporting a Vulnerability
+
 If you discover a security vulnerability, please do NOT open a public issue. 
 
 Instead, please report it securely through GitHub's native Private Vulnerability Reporting system:
