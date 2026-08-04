@@ -19,12 +19,13 @@ func TestJWTResolverSecure(t *testing.T) {
 
 	resolver, err := NewJWTResolver(t.Context(), &config.JWT{
 		AcceptableTimeSkewSeconds: 5,
-		AllowedConfigurationEndpoints: []string{
-			"https://trial-3441947-admin.okta.com/oauth2/default/.well-known/openid-configuration",
-			"https://aserto.us.auth0.com/.well-known/openid-configuration",
+		AllowedIssuers: []string{
+			"https://trial-3441947.okta.com/oauth2/default",
+			"https://aserto.us.auth0.com/",
 		},
 		CacheRefreshMinInterval: "5m",
 		CacheRefreshMaxInterval: "15m",
+		ExpectedAudience:        "",
 	})
 	require.NoError(t, err)
 
