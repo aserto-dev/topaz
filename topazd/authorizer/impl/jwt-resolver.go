@@ -89,15 +89,15 @@ func (r *jwtResolver) ResolveSubject(ctx context.Context, token string) (string,
 
 	unverifiedIssuer, ok := unverifiedToken.Issuer()
 	if !ok {
-		return "", err
+		return "", errors.Errorf("unverified token does not contain an issuer field")
 	}
 
-	// if not OIDC config URLs registered, we can only resolve insecurely as there are no JKWS key sets.
+	// if not OIDC config URLs registered, we can only resolve insecurely as there are no JWKS key sets.
 	if len(r.issuerToConfig) == 0 {
 		return r.resolveSubjectInsecure(token)
 	}
 
-	// look up JKWSURI from OIDC config using the unverified issuer value.
+	// look up JKWS URI from OIDC config using the unverified issuer value.
 	cfg, ok := r.issuerToConfig[unverifiedIssuer]
 	if !ok {
 		return "", errors.Errorf("No mapping found of issuer %q to JWKS URI", unverifiedIssuer)
