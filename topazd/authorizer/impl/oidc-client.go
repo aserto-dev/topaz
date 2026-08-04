@@ -125,6 +125,9 @@ func (c *OidcClient) FetchAndValidateConfig(ctx context.Context, targetIssuer st
 		return nil, errors.Errorf("insecure scheme %q: issuer must use https", parsedTarget.Scheme)
 	}
 
+	ctx, cancel := context.WithTimeout(ctx, fetchOidcConfigReqTimeout)
+	defer cancel()
+
 	wellKnownURL := strings.TrimSuffix(targetIssuer, "/") + wellKnownOpenIDConfiguration
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, wellKnownURL, nil)
