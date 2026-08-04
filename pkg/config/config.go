@@ -45,21 +45,27 @@ type JWT struct {
 	// Specifies the duration in which exp (Expiry) and nbf (Not Before)
 	// claims may differ by. This value should be positive.
 	AcceptableTimeSkewSeconds int `json:"acceptable_time_skew_seconds"`
-	// List of OpenID Connect configuration endpoints `.well-known//openid-configuration`
+	// List of allowed issuers
 	// !!! NOTE: if this list is empty the behavior defaults to InsecureWhitelist !!!
-	AllowedConfigurationEndpoints []string `json:"allowed_configuration_endpoints"`
-	CacheRefreshMinInterval       string   `json:"cache_refresh_min_interval"`
-	CacheRefreshMaxInterval       string   `json:"cache_refresh_max_interval"`
+	AllowedIssuers          []string `json:"allowed_issuers"`
+	CacheRefreshMinInterval string   `json:"cache_refresh_min_interval"`
+	CacheRefreshMaxInterval string   `json:"cache_refresh_max_interval"`
+	ExpectedAudience        string   `json:"expected_audience"`
 }
 
 func (j *JWT) AcceptableTimeSkewDuration() time.Duration {
 	return time.Duration(j.AcceptableTimeSkewSeconds) * time.Second
 }
 
+const (
+	defaultCacheRefreshMinInterval = 5 * time.Minute
+	defaultCacheRefreshMaxInterval = 15 * time.Minute
+)
+
 func (j *JWT) CacheRefreshMinIntervalDuration() time.Duration {
 	d, err := time.ParseDuration(j.CacheRefreshMinInterval)
 	if err != nil {
-		panic(err)
+		return defaultCacheRefreshMinInterval
 	}
 
 	return d
@@ -68,7 +74,7 @@ func (j *JWT) CacheRefreshMinIntervalDuration() time.Duration {
 func (j *JWT) CacheRefreshMaxIntervalDuration() time.Duration {
 	d, err := time.ParseDuration(j.CacheRefreshMaxInterval)
 	if err != nil {
-		panic(err)
+		return defaultCacheRefreshMaxInterval
 	}
 
 	return d

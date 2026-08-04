@@ -195,8 +195,8 @@
                     "minimum": 0,
                     "maximum": 60
                 },
-                "allowed_configuration_endpoints": {
-                    "description": "array of allowed OIDC configuration endpoints (.well-known/openid-configurationJWT) if empty, any issuer is accepted",
+                "allowed_issuers": {
+                    "description": "array of allowed issuers, if empty, any issuer is accepted",
                     "type": "array",
                     "items": {
                         "description": "an accepted issuer",
@@ -212,6 +212,11 @@
                     "description": "duration string defining the maximum cache refresh interval (example 15m)",
                     "type": "string",
                     "default": "15m"
+                },
+                "ExpectedAudience": {
+                    "description": "expected Topaz audience value, when empty audience verification is skipped",
+                    "type": "string",
+                    "default": ""
                 }
             }
         },
