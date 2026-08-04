@@ -56,7 +56,7 @@ jwt:
   #  - "https://issuer.example.com/"
   cache_refresh_min_interval: 5m  # set as default, 5 minutes
   cache_refresh_max_interval: 15m # set as default, 15 minutes
-  expected_audience: "" # set ad default, empty
+  expected_audience: "" # set as default, empty
 
 # authentication configuration
 auth:
