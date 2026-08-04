@@ -208,12 +208,12 @@
                     "type": "string",
                     "default": "5m"
                 },
-                "CacheRefreshMaxInterval": {
+                "cache_refresh_max_interval": {
                     "description": "duration string defining the maximum cache refresh interval (example 15m)",
                     "type": "string",
                     "default": "15m"
                 },
-                "ExpectedAudience": {
+                "expected_audience": {
                     "description": "expected Topaz audience value, when empty audience verification is skipped",
                     "type": "string",
                     "default": ""
