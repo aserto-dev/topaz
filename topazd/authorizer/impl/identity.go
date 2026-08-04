@@ -28,7 +28,7 @@ func (s *AuthorizerServer) resolveIdentityContext(ctx context.Context, identityC
 		return nil
 	}
 
-	// context control timeout for end-to-end identity (JTW when used) and directory identity to  user resolution.
+	// context control timeout for end-to-end identity (JWT when used) and directory identity to  user resolution.
 	ctx, cancel := context.WithTimeout(ctx, identityResolutionTimeout)
 	defer cancel()
 
