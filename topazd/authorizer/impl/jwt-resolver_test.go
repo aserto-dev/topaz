@@ -25,7 +25,7 @@ func TestJWTResolverSecure(t *testing.T) {
 		},
 		CacheRefreshMinInterval: "5m",
 		CacheRefreshMaxInterval: "15m",
-		ExpectedAudience:        "",
+		ExpectedAudience:        "98ofxNoUdgVu7vuYAddWW2WpglFM4til",
 	})
 	require.NoError(t, err)
 

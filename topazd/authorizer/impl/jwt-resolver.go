@@ -113,7 +113,10 @@ func (r *jwtResolver) ResolveSubject(ctx context.Context, token string) (string,
 		jwt.WithValidate(true),
 		jwt.WithAcceptableSkew(r.jwtConfig.AcceptableTimeSkewDuration()),
 		jwt.WithKeySet(keySet),
-		jwt.WithAudience(r.jwtConfig.ExpectedAudience), // audience check is skipped when empty (default value)
+	}
+
+	if r.jwtConfig.ExpectedAudience != "" {
+		verifiedOptions = append(verifiedOptions, jwt.WithAudience(r.jwtConfig.ExpectedAudience))
 	}
 
 	// verify JWT using JWKS key set.
