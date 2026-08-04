@@ -1,7 +1,6 @@
 {
   "go.testFlags": [
     "-v",
-    "-gcflags=all=-N -l",
     "-count=1"
   ],
   "go.testEnvVars": {
