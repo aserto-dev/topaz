@@ -15,6 +15,7 @@ type jwtResolver struct {
 	cache          *jwkfetch.Cache
 	jwtConfig      *config.JWT
 	issuerToConfig map[string]*OidcConfiguration
+	oidcClient     *OidcClient
 }
 
 func NewJWTResolver(ctx context.Context, config *config.JWT) (*jwtResolver, error) {
@@ -28,17 +29,16 @@ func NewJWTResolver(ctx context.Context, config *config.JWT) (*jwtResolver, erro
 		cache:          cache,
 		jwtConfig:      config,
 		issuerToConfig: make(map[string]*OidcConfiguration),
+		oidcClient:     NewOidcClient(),
 	}
 
 	return &resolver, nil
 }
 
 func (r *jwtResolver) Start(ctx context.Context) error {
-	client := NewOidcClient()
-
 	// hydrate the configs map for each allowed issuer, registered in config.jwt.allowed_issuers.
 	for _, configAllowedIssuer := range r.jwtConfig.AllowedIssuers {
-		config, err := client.FetchAndValidateConfig(ctx, configAllowedIssuer)
+		config, err := r.oidcClient.FetchAndValidateConfig(ctx, configAllowedIssuer)
 		if err != nil {
 			return err
 		}
