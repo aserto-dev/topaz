@@ -1,2 +1,73 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
+
+tasks:
+  install-svu:
+    internal: true
+    deps: [ext-bin-dir, ext-tmp-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - GOBIN={{.EXT_BIN_DIR}} go install github.com/caarlos0/svu/v3@v{{.SVU_VER}}
+      - '{{.EXT_BIN_DIR}}/svu --version'
+
+  install-gotestsum:
+    internal: true
+    deps: [ext-tmp-dir, ext-bin-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - GOBIN={{.EXT_BIN_DIR}} go install gotest.tools/gotestsum@v{{.GOTESTSUM_VER}}
+      - '{{.EXT_BIN_DIR}}/gotestsum --version'
+
+  install-golangci-lint:
+    internal: true
+    deps: [ext-tmp-dir, ext-bin-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - gh release download v{{.GOLANGCI_LINT_VER}} --repo https://github.com/golangci/golangci-lint --pattern "golangci-lint-{{.GOLANGCI_LINT_VER}}-{{.GOOS}}-{{.GOARCH}}.tar.gz" --output "{{.EXT_TMP_DIR}}/golangci-lint.tar.gz" --clobber
+      - tar --strip=1 -xvf {{.EXT_TMP_DIR}}/golangci-lint.tar.gz --strip-components=1 --directory {{.EXT_TMP_DIR}} &> /dev/null
+      - mv {{.EXT_TMP_DIR}}/golangci-lint {{.EXT_BIN_DIR}}/golangci-lint
+      - chmod +x {{.EXT_BIN_DIR}}/golangci-lint
+      - '{{.EXT_BIN_DIR}}/golangci-lint --version'
+
+  install-goreleaser:
+    internal: true
+    deps: [ext-tmp-dir, ext-bin-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - gh release download v{{.GORELEASER_VER}} --repo https://github.com/goreleaser/goreleaser --pattern "goreleaser_$(uname -s)_$(uname -m).tar.gz" --output "{{.EXT_TMP_DIR}}/goreleaser.tar.gz" --clobber
+      - tar -xvf {{.EXT_TMP_DIR}}/goreleaser.tar.gz --directory {{.EXT_BIN_DIR}} goreleaser &> /dev/null
+      - chmod +x {{.EXT_BIN_DIR}}/goreleaser
+      - '{{.EXT_BIN_DIR}}/goreleaser --version'
+
+  install-syft:
+    internal: true
+    deps: [ext-tmp-dir, ext-bin-dir]
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - gh release download v{{.SYFT_VER}} --repo https://github.com/anchore/syft --pattern "syft_{{.SYFT_VER}}_{{.GOOS}}_{{.GOARCH}}.tar.gz" --output "{{.EXT_TMP_DIR}}/syft.tar.gz" --clobber
+      - tar -xvf {{.EXT_TMP_DIR}}/syft.tar.gz --directory {{.EXT_BIN_DIR}} syft &> /dev/null
+      - chmod +x {{.EXT_BIN_DIR}}/syft
+      - '{{.EXT_BIN_DIR}}/syft --version'
+
+  clean:
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - rm -rf {{.EXT_DIR}}
+      - rm -rf ./dist
+      - rm -rf ./test
+
+  ext-bin-dir:
+    internal: true
+    status:
+      - test -d {{.EXT_BIN_DIR}}
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - mkdir -p {{.EXT_BIN_DIR}}
+
+  ext-tmp-dir:
+    internal: true
+    status:
+      - test -d {{.EXT_TMP_DIR}}
+    cmds:
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
+      - mkdir -p {{.EXT_TMP_DIR}}

@@ -1,30 +1,20 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
-vars:
-  NO_COLOR: "\x1b[0m"
-  OK_COLOR: "\x1b[32;01m"
-  ERR_COLOR: "\x1b[31;01m"
-  WARN_COLOR: "\x1b[36;01m"
-  ATTN_COLOR: "\x1b[33;01m"
+env:
+  GOEXPERIMENT: jsonv2
+  GOPRIVATE: github.com/aserto-dev
+  DOCKER_BUILDKIT: '1'
 
+vars:
+  # repo information
   REGISTRY: ghcr.io
   ORG: aserto-dev
   REPO: topaz
   DESCRIPTION: '"Topaz Authorization Service"'
   LICENSE: Apache-2.0
 
-  GOOS:
-    sh: go env GOOS
-  GOARCH:
-    sh: go env GOARCH
-  
-  GOPRIVATE: github.com/aserto-dev
-
-  EXT_DIR: '{{.ROOT_DIR}}/.ext'
-  EXT_BIN_DIR: '{{.EXT_DIR}}/bin'
-  EXT_TMP_DIR: '{{.EXT_DIR}}/tmp'
-
+  # dependency versions 
   GO_VER: '1.26'
   SVU_VER: '3.3.0'
   GOTESTSUM_VER: '1.13.0'
@@ -32,5 +22,36 @@ vars:
   GORELEASER_VER: '2.14.1'
   SYFT_VER: '1.13.0'
 
+  NO_COLOR: "\x1b[0m"
+  OK_COLOR: "\x1b[32;01m"
+  ERR_COLOR: "\x1b[31;01m"
+  WARN_COLOR: "\x1b[36;01m"
+  ATTN_COLOR: "\x1b[33;01m"
+
+  ROOT_DIR:
+    sh: pwd
+  GOOS:
+    sh: go env GOOS
+  GOARCH:
+    sh: go env GOARCH
+  GOARM64:
+    sh: go env GOARM64
+  GOAMD64:
+    sh: go env GOAMD64
+  GOARCH_EXT:
+    sh: echo {{if (eq .GOARCH `arm64`)}}{{.GOARM64}}{{else}}{{.GOAMD64}}{{end}}
   TOPAZ_DIST:
-    sh: echo "{{.ROOT_DIR}}/$(cat dist/artifacts.json 2>/dev/null | jq -r '.[] | select(.name == "topaz").path' | tr '\n' ' ')"
+    sh: echo {{.PWD}}/dist/topaz_{{.GOOS}}_{{.GOARCH}}_{{.GOARCH_EXT}}/topaz
+  TOPAZD_DIST:
+    sh: echo {{.PWD}}/dist/topazd_{{.GOOS}}_{{.GOARCH}}_{{.GOARCH_EXT}}/topazd
+  
+  EXE: '{{if eq OS "windows"}}.exe{{end}}'
+
+  EXT_DIR: '{{.ROOT_DIR}}/.ext'
+  EXT_BIN_DIR: '{{.EXT_DIR}}/bin'
+  EXT_TMP_DIR: '{{.EXT_DIR}}/tmp'
+
+    
+
+  # TOPAZ_DIST:
+  #   sh: echo "{{.ROOT_DIR}}/$(cat dist/artifacts.json 2>/dev/null | jq -r '.[] | select(.name == "topaz").path' | tr '\n' ' ')"
