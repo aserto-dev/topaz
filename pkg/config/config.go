@@ -3,6 +3,7 @@ package config
 import (
 	"io"
 	"os"
+	"time"
 
 	client "github.com/aserto-dev/go-aserto"
 	"github.com/aserto-dev/logger"
@@ -40,6 +41,41 @@ type ServicesConfig struct {
 	Services map[string]*builder.API `json:"services"`
 }
 
+type JWT struct {
+	AcceptableTimeSkewSeconds int      `json:"acceptable_time_skew_seconds"` // Duration which exp (Expiry) and nbf (Not Before) claims may differ
+	AllowedIssuers            []string `json:"allowed_issuers"`              // NOTE: if this list is empty the behavior defaults to InsecureWhitelist
+	CacheRefreshMinInterval   string   `json:"cache_refresh_min_interval"`
+	CacheRefreshMaxInterval   string   `json:"cache_refresh_max_interval"`
+	ExpectedAudience          string   `json:"expected_audience"`
+}
+
+func (j *JWT) AcceptableTimeSkewDuration() time.Duration {
+	return time.Duration(j.AcceptableTimeSkewSeconds) * time.Second
+}
+
+const (
+	defaultCacheRefreshMinInterval = 5 * time.Minute
+	defaultCacheRefreshMaxInterval = 15 * time.Minute
+)
+
+func (j *JWT) CacheRefreshMinIntervalDuration() time.Duration {
+	d, err := time.ParseDuration(j.CacheRefreshMinInterval)
+	if err != nil {
+		return defaultCacheRefreshMinInterval
+	}
+
+	return d
+}
+
+func (j *JWT) CacheRefreshMaxIntervalDuration() time.Duration {
+	d, err := time.ParseDuration(j.CacheRefreshMaxInterval)
+	if err != nil {
+		return defaultCacheRefreshMaxInterval
+	}
+
+	return d
+}
+
 // Common holds the shared configuration elements.
 type Common struct {
 	Version      int           `json:"version"`
@@ -52,11 +88,7 @@ type Common struct {
 
 	APIConfig ServicesConfig `json:"api"`
 
-	JWT struct {
-		// Specifies the duration in which exp (Expiry) and nbf (Not Before)
-		// claims may differ by. This value should be positive.
-		AcceptableTimeSkewSeconds int `json:"acceptable_time_skew_seconds"`
-	} `json:"jwt"`
+	JWT JWT `json:"jwt"`
 
 	// Directory configuration
 	Edge directory.Config `json:"directory"`

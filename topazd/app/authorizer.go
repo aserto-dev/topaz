@@ -52,7 +52,10 @@ func NewAuthorizer(
 
 	authResolvers := resolvers.New()
 
-	authServer := impl.NewAuthorizerServer(ctx, logger, commonConfig, authResolvers)
+	authServer, err := impl.NewAuthorizerServer(ctx, logger, commonConfig, authResolvers)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create authorizer server")
+	}
 
 	return &Authorizer{
 		cfg:              cfg,
