@@ -1,7 +1,8 @@
 {
   "go.testFlags": [
     "-v",
-    "-gcflags=all=-N -l",
+    "-race",
+    "-gcflags=all=-N",
     "-count=1"
   ],
   "go.useLanguageServer": true,

@@ -18,7 +18,7 @@ import (
 	"github.com/open-policy-agent/opa/v1/loader"
 	"github.com/open-policy-agent/opa/v1/metrics"
 	"github.com/open-policy-agent/opa/v1/plugins"
-	bundleplugin "github.com/open-policy-agent/opa/v1/plugins/bundle"
+	bp "github.com/open-policy-agent/opa/v1/plugins/bundle"
 	"github.com/open-policy-agent/opa/v1/plugins/discovery"
 	opaStatus "github.com/open-policy-agent/opa/v1/plugins/status"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -34,30 +34,26 @@ import (
 
 // Runtime manages the OPA runtime (plugins, store and info data).
 type Runtime struct {
-	Logger          *zerolog.Logger
-	Config          *Config
-	InterQueryCache cache.InterQueryCache
-
-	pluginsManager *plugins.Manager
-	plugins        map[string]plugins.Factory
-
-	builtins1        map[*rego.Function]rego.Builtin1
-	builtins2        map[*rego.Function]rego.Builtin2
-	builtins3        map[*rego.Function]rego.Builtin3
-	builtins4        map[*rego.Function]rego.Builtin4
-	builtinsDyn      map[*rego.Function]rego.BuiltinDyn
-	builtins         []func(*rego.Rego)
-	compilerBuiltins map[string]*ast.Builtin
-	imports          []string
-
+	Logger                      *zerolog.Logger
+	Config                      *Config
+	InterQueryCache             cache.InterQueryCache
+	pluginsManager              *plugins.Manager
+	plugins                     map[string]plugins.Factory
+	builtins1                   map[*rego.Function]rego.Builtin1
+	builtins2                   map[*rego.Function]rego.Builtin2
+	builtins3                   map[*rego.Function]rego.Builtin3
+	builtins4                   map[*rego.Function]rego.Builtin4
+	builtinsDyn                 map[*rego.Function]rego.BuiltinDyn
+	builtins                    []func(*rego.Rego)
+	compilerBuiltins            map[string]*ast.Builtin
+	imports                     []string
+	storage                     storage.Store
+	regoVersion                 ast.RegoVersion
 	pluginStates                *sync.Map
 	bundleStates                *sync.Map
 	bundlesCallbackRegistered   atomic.Bool
 	discoveryCallbackRegistered atomic.Bool
-
-	storage     storage.Store
-	latestState atomic.Pointer[State]
-	regoVersion ast.RegoVersion
+	latestState                 atomic.Pointer[State]
 }
 
 type BundleState struct {
@@ -81,9 +77,9 @@ func New(ctx context.Context, cfg *Config, opts ...Option) (*Runtime, error) {
 	newLogger := zerolog.Ctx(ctx).With().Str("component", "runtime").Str("instance-id", cfg.InstanceID).Logger()
 
 	runtime := &Runtime{
-		Logger: &newLogger,
-		Config: cfg,
-
+		Logger:           &newLogger,
+		Config:           cfg,
+		plugins:          map[string]plugins.Factory{},
 		builtins1:        map[*rego.Function]rego.Builtin1{},
 		builtins2:        map[*rego.Function]rego.Builtin2{},
 		builtins3:        map[*rego.Function]rego.Builtin3{},
@@ -91,14 +87,17 @@ func New(ctx context.Context, cfg *Config, opts ...Option) (*Runtime, error) {
 		builtinsDyn:      map[*rego.Function]rego.BuiltinDyn{},
 		builtins:         []func(*rego.Rego){},
 		compilerBuiltins: map[string]*ast.Builtin{},
-
-		pluginStates: &sync.Map{},
-		bundleStates: &sync.Map{},
-		plugins:      map[string]plugins.Factory{},
-		regoVersion:  DefaultRegoVersion.ToAstRegoVersion(),
+		imports:          []string{},
+		storage:          nil,
+		regoVersion:      DefaultRegoVersion.ToAstRegoVersion(),
+		pluginStates:     &sync.Map{},
+		bundleStates:     &sync.Map{},
 	}
 
-	runtime.latestState.Store(&State{})
+	runtime.setLatestStatus(&State{})
+
+	runtime.bundlesCallbackRegistered.Store(false)
+	runtime.discoveryCallbackRegistered.Store(false)
 
 	for _, opt := range opts {
 		opt(runtime)
@@ -118,9 +117,9 @@ func New(ctx context.Context, cfg *Config, opts ...Option) (*Runtime, error) {
 
 	runtime.InterQueryCache = cache.NewInterQueryCache(runtime.pluginsManager.InterQueryBuiltinCacheConfig())
 
-	if err := runtime.registerDiscovery(); err != nil {
-		return nil, err
-	}
+	// if err := runtime.registerDiscovery(); err != nil {
+	// 	return nil, err
+	// }
 
 	if cfg.LocalBundles.Watch {
 		log.Info().Msg("Will start watching local bundles for changes")
@@ -155,51 +154,51 @@ func (r *Runtime) GetPluginsManager() *plugins.Manager {
 	return r.pluginsManager
 }
 
-func (r *Runtime) BuiltinRequirements() (json.RawMessage, error) {
-	defs := fakeBuiltinDefs{}
+// func (r *Runtime) BuiltinRequirements() (json.RawMessage, error) {
+// 	defs := fakeBuiltinDefs{}
 
-	for f := range r.builtins1 {
-		defs.Builtin1 = append(defs.Builtin1, fakeBuiltin1{
-			Name: f.Name,
-			Decl: *f.Decl,
-		})
-	}
+// 	for f := range r.builtins1 {
+// 		defs.Builtin1 = append(defs.Builtin1, fakeBuiltin1{
+// 			Name: f.Name,
+// 			Decl: *f.Decl,
+// 		})
+// 	}
 
-	for f := range r.builtins2 {
-		defs.Builtin2 = append(defs.Builtin2, fakeBuiltin2{
-			Name: f.Name,
-			Decl: *f.Decl,
-		})
-	}
+// 	for f := range r.builtins2 {
+// 		defs.Builtin2 = append(defs.Builtin2, fakeBuiltin2{
+// 			Name: f.Name,
+// 			Decl: *f.Decl,
+// 		})
+// 	}
 
-	for f := range r.builtins3 {
-		defs.Builtin3 = append(defs.Builtin3, fakeBuiltin3{
-			Name: f.Name,
-			Decl: *f.Decl,
-		})
-	}
+// 	for f := range r.builtins3 {
+// 		defs.Builtin3 = append(defs.Builtin3, fakeBuiltin3{
+// 			Name: f.Name,
+// 			Decl: *f.Decl,
+// 		})
+// 	}
 
-	for f := range r.builtins4 {
-		defs.Builtin4 = append(defs.Builtin4, fakeBuiltin4{
-			Name: f.Name,
-			Decl: *f.Decl,
-		})
-	}
+// 	for f := range r.builtins4 {
+// 		defs.Builtin4 = append(defs.Builtin4, fakeBuiltin4{
+// 			Name: f.Name,
+// 			Decl: *f.Decl,
+// 		})
+// 	}
 
-	for f := range r.builtinsDyn {
-		defs.BuiltinDyn = append(defs.BuiltinDyn, fakeBuiltinDyn{
-			Name: f.Name,
-			Decl: *f.Decl,
-		})
-	}
+// 	for f := range r.builtinsDyn {
+// 		defs.BuiltinDyn = append(defs.BuiltinDyn, fakeBuiltinDyn{
+// 			Name: f.Name,
+// 			Decl: *f.Decl,
+// 		})
+// 	}
 
-	jsonBytes, err := json.Marshal(defs)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to marshal builtin signatures into JSON")
-	}
+// 	jsonBytes, err := json.Marshal(defs)
+// 	if err != nil {
+// 		return nil, errors.Wrap(err, "failed to marshal builtin signatures into JSON")
+// 	}
 
-	return jsonBytes, nil
-}
+// 	return jsonBytes, nil
+// }
 
 func (r *Runtime) registerBuiltins() {
 	// We shouldn't register global builtins, these should be per runtime.
@@ -448,7 +447,7 @@ func (r *Runtime) loadPaths(paths []string) (map[string]*bundle.Bundle, error) {
 			WithSkipBundleVerification(skipVerify).
 			AsBundle(path)
 		if err != nil {
-			errorStatus := bundleplugin.Status{
+			errorStatus := bp.Status{
 				Name: path,
 			}
 			errorStatus.SetError(err)
@@ -459,7 +458,7 @@ func (r *Runtime) loadPaths(paths []string) (map[string]*bundle.Bundle, error) {
 		}
 
 		r.bundlesStatusCallback(
-			bundleplugin.Status{
+			bp.Status{
 				Name:                     path,
 				LastSuccessfulActivation: time.Now(),
 				LastSuccessfulRequest:    time.Now(),

@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/open-policy-agent/opa/v1/metrics"
 	"github.com/open-policy-agent/opa/v1/plugins"
-	"github.com/open-policy-agent/opa/v1/plugins/bundle"
+	bp "github.com/open-policy-agent/opa/v1/plugins/bundle"
 	"github.com/open-policy-agent/opa/v1/plugins/discovery"
 	"github.com/open-policy-agent/opa/v1/plugins/status"
 )
@@ -98,7 +99,7 @@ func (r *Runtime) pluginsLoaded() bool {
 	return true
 }
 
-func (r *Runtime) bundlesStatusCallback(status bundle.Status) {
+func (r *Runtime) bundlesStatusCallback(status bp.Status) {
 	errs := status.Errors
 	if status.Code == bundleErrorCode {
 		errs = append(errs, fmt.Errorf("bundle error: %s", status.Message))
@@ -115,14 +116,52 @@ func (r *Runtime) bundlesStatusCallback(status bundle.Status) {
 	r.setLatestStatus(r.status())
 }
 
+func (r *Runtime) discoveryStatusCallback(status bp.Status) {
+	fmt.Fprintf(os.Stderr, "status code %s\n", status.Code)
+	// errs := status.Errors
+	// if status.Code == bundleErrorCode {
+	// 	errs = append(errs, fmt.Errorf("bundle error: %s", status.Message))
+	// }
+
+	// r.bundleStates.Store(status.Name, &bundleState{
+	// 	revision:       status.ActiveRevision,
+	// 	errors:         errs,
+	// 	message:        status.Message,
+	// 	metrics:        status.Metrics,
+	// 	lastActivation: status.LastSuccessfulActivation,
+	// 	lastDownload:   status.LastSuccessfulDownload,
+	// })
+	// r.setLatestStatus(r.status())
+}
+
 func (r *Runtime) pluginStatusCallback(statusDetails map[string]*plugins.Status) {
 	for n, s := range statusDetails {
 		if n == bundlePluginName && !r.bundlesCallbackRegistered.Load() {
-			r.registerBundlesCallback()
+			// r.registerBundlesCallback()
+			if plugin := r.pluginsManager.Plugin(bundlePluginName); plugin != nil {
+				bundlePlugin, ok := plugin.(*bp.Plugin)
+				if !ok {
+					r.Logger.Error().Type("plugin", plugin).Msg("unexpected bundle plugin type")
+					return
+				}
+
+				bundlePlugin.Register("aserto-error-recorder", r.bundlesStatusCallback)
+				r.bundlesCallbackRegistered.Store(true)
+			}
 		}
 
 		if n == discoveryPluginName && !r.discoveryCallbackRegistered.Load() {
-			r.registerDiscoveryCallback()
+			// r.registerDiscoveryCallback()
+			if plugin := r.pluginsManager.Plugin(discoveryPluginName); plugin != nil {
+				discoveryPlugin, ok := plugin.(*discovery.Discovery)
+				if !ok {
+					r.Logger.Error().Type("plugin", plugin).Msg("unexpected discovery plugin type")
+					return
+				}
+
+				discoveryPlugin.RegisterListener("aserto-error-recorder", r.discoveryStatusCallback)
+				r.discoveryCallbackRegistered.Store(true)
+			}
 		}
 
 		if s == nil {
@@ -153,7 +192,7 @@ func (r *Runtime) pluginStatusCallback(statusDetails map[string]*plugins.Status)
 
 func (r *Runtime) registerBundlesCallback() {
 	if plugin := r.pluginsManager.Plugin(bundlePluginName); plugin != nil {
-		bundlePlugin, ok := plugin.(*bundle.Plugin)
+		bundlePlugin, ok := plugin.(*bp.Plugin)
 		if !ok {
 			r.Logger.Error().Type("plugin", plugin).Msg("unexpected bundle plugin type")
 			return
