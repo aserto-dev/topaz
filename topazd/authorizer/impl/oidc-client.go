@@ -94,7 +94,7 @@ func NewOidcClient() *OidcClient {
 			// Manually initiate secure TLS handshake using pinned IP.
 			tlsConn := tls.Client(rawConn, tlsConfig)
 			if err := tlsConn.HandshakeContext(ctx); err != nil {
-				rawConn.Close()
+				_ = rawConn.Close()
 				return nil, fmt.Errorf("tls handshake failed: %w", err)
 			}
 

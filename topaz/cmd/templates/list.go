@@ -31,8 +31,8 @@ func (cmd *ListTemplatesCmd) Run(ctx context.Context) error {
 	t := table.New(os.Stdout)
 
 	t.Header(colName, colDescription, colDocumentation)
-	t.Bulk(data)
-	t.Render()
+	_ = t.Bulk(data)
+	_ = t.Render()
 
 	return nil
 }

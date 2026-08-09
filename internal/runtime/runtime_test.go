@@ -138,6 +138,7 @@ func TestRemoteBundleV1(t *testing.T) {
 		runtime.WithRegoVersion(ast.RegoV1),
 	}
 
+	//nolint:gosec // G101: Potential hardcoded credentials.
 	r, err := runtime.New(ctx, &runtime.Config{
 		InstanceID:                    "-",
 		PluginsErrorLimit:             5,

@@ -56,9 +56,9 @@ func (cm *ConMsg) Msg(message string, args ...any) {
 	}
 
 	if len(args) == 0 {
-		cm.color.Fprint(color.Error, message)
+		_, _ = cm.color.Fprint(color.Error, message)
 		return
 	}
 
-	cm.color.Fprintf(color.Error, message, args...)
+	_, _ = cm.color.Fprintf(color.Error, message, args...)
 }

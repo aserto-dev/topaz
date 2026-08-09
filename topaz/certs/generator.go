@@ -49,8 +49,8 @@ func GenerateCerts(force bool, dnsNames []string, certPaths ...*CertPaths) error
 				data = append(data, []any{filepath.Base(fqn), "skipped, file already exists"})
 			}
 
-			tab.Bulk(data)
-			tab.Render()
+			_ = tab.Bulk(data)
+			_ = tab.Render()
 
 			return nil
 		}
@@ -89,8 +89,8 @@ func generate(dnsNames []string, certPaths ...*CertPaths) error {
 		data = append(data, []any{filepath.Base(certPaths.Key), generated})
 	}
 
-	tab.Bulk(data)
-	tab.Render()
+	_ = tab.Bulk(data)
+	_ = tab.Render()
 
 	return nil
 }

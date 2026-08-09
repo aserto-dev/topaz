@@ -58,7 +58,7 @@ linters:
 
     gosec:
       excludes:
-        - G104 # Errors unhandled
+        # - G104 # Errors unhandled
         - G304 # Potential file inclusion via variable (see https://github.com/golang/go/issues/67002)
 
     ireturn:

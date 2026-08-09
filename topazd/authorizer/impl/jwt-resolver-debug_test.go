@@ -50,7 +50,7 @@ func TestJWTResolverSecure(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 30*time.Second)
 	defer cancel()
 
-	resolver.Stop(ctx)
+	_ = resolver.Stop(ctx)
 }
 
 func TestJWTResolverInsecure(t *testing.T) {
@@ -79,5 +79,5 @@ func TestJWTResolverInsecure(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 30*time.Second)
 	defer cancel()
 
-	resolver.Stop(ctx)
+	_ = resolver.Stop(ctx)
 }

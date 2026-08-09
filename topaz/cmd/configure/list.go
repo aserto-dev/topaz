@@ -42,8 +42,8 @@ func (cmd ListConfigCmd) Run(ctx context.Context) error {
 		data = append(data, []any{active, name, files[i].Name()})
 	}
 
-	tab.Bulk(data)
-	tab.Render()
+	_ = tab.Bulk(data)
+	_ = tab.Render()
 
 	return nil
 }

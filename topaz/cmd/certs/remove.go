@@ -60,8 +60,8 @@ func (cmd *RemoveCertFileCmd) Run(ctx context.Context) error {
 		data = append(data, []any{filepath.Base(fqn), "deleted"})
 	}
 
-	tab.Bulk(data)
-	tab.Render()
+	_ = tab.Bulk(data)
+	_ = tab.Render()
 
 	return nil
 }

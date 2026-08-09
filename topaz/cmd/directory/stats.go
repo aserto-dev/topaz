@@ -108,8 +108,8 @@ func statsTable(w io.Writer, s *stats.Stats) {
 		}
 	}
 
-	tab.Bulk(data)
-	tab.Render()
+	_ = tab.Bulk(data)
+	_ = tab.Render()
 }
 
 func countStr(c int32) string { return fmt.Sprintf("%8d", c) }

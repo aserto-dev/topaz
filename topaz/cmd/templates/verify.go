@@ -80,8 +80,8 @@ func (cmd *VerifyTemplateCmd) Run(ctx context.Context) error {
 		}
 	}
 
-	tab.Bulk(data)
-	tab.Render()
+	_ = tab.Bulk(data)
+	_ = tab.Render()
 
 	return nil
 }

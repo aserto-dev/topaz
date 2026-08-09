@@ -45,9 +45,9 @@ func (cmd *TrustCertsCmd) Run(ctx context.Context) error {
 	tab := table.New(os.Stdout)
 
 	defer func() {
-		tab.Bulk(data)
-		tab.Render()
-		tab.Close()
+		_ = tab.Bulk(data)
+		_ = tab.Render()
+		_ = tab.Close()
 	}()
 
 	tab.Header("File", "Action")

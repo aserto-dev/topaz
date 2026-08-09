@@ -51,8 +51,8 @@ func (cmd *ListPoliciesCmd) Run(ctx context.Context) error {
 		data = append(data, []any{strings.TrimPrefix(module.GetPackagePath(), "data."), module.GetId()})
 	}
 
-	tab.Bulk(data)
-	tab.Render()
+	_ = tab.Bulk(data)
+	_ = tab.Render()
 
 	return nil
 }

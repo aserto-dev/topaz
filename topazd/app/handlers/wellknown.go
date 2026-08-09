@@ -38,7 +38,7 @@ func WellKnownConfigHandler(endpoint *url.URL) func(w http.ResponseWriter, r *ht
 
 		w.Header().Set("Content-Type", "application/json")
 
-		json.NewEncoder(w).Encode(config)
+		_ = json.NewEncoder(w).Encode(config)
 	}
 }
 

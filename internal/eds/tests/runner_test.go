@@ -48,7 +48,7 @@ func TestMain(m *testing.M) {
 	}
 
 	dbPath := filepath.Join(dirPath, "edge-ds", "test-eds.db")
-	os.Remove(dbPath)
+	_ = os.Remove(dbPath)
 	fmt.Println(dbPath)
 
 	cfg := directory.Config{

@@ -81,7 +81,7 @@ func (s *BoltDB) Open() error {
 func (s *BoltDB) Close() {
 	if s.db != nil {
 		s.logger.Info().Str("db_path", s.config.DBPath).Msg("close")
-		s.db.Close()
+		_ = s.db.Close()
 		s.db = nil
 	}
 }
