@@ -1,6 +1,28 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
+vars:
+  ROOT_DIR:
+    sh: pwd
+  GOOS:
+    sh: go env GOOS
+  GOARCH:
+    sh: go env GOARCH
+  GOARM64:
+    sh: go env GOARM64
+  GOAMD64:
+    sh: go env GOAMD64
+  GOARCH_EXT:
+    sh: echo {{if (eq .GOARCH `arm64`)}}{{.GOARM64}}{{else}}{{.GOAMD64}}{{end}}
+  TOPAZ_DIST:
+    sh: echo {{.PWD}}/dist/topaz_{{.GOOS}}_{{.GOARCH}}_{{.GOARCH_EXT}}/topaz
+  TOPAZD_DIST:
+    sh: echo {{.PWD}}/dist/topazd_{{.GOOS}}_{{.GOARCH}}_{{.GOARCH_EXT}}/topazd
+  
+  EXT_DIR: '{{.ROOT_DIR}}/.ext'
+  EXT_BIN_DIR: '{{.EXT_DIR}}/bin'
+  EXT_TMP_DIR: '{{.EXT_DIR}}/tmp'
+
 tasks:
   install-svu:
     internal: true

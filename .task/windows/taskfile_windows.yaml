@@ -1,53 +1,91 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
+# platform specific variables
+vars:
+  ROOT_DIR:
+    sh: pwd
+  GOVERSION:
+    sh: go env GOVERSION
+  GOOS:
+    sh: go env GOOS
+  GOARCH:
+    sh: go env GOARCH
+  GOARM64:
+    sh: go env GOARM64
+  GOAMD64:
+    sh: go env GOAMD64
+  GOARCH_EXT:
+    sh: echo {{if (eq .GOARCH `arm64`)}}{{.GOARM64}}{{else}}{{.GOAMD64}}{{end}}
+
+  TOPAZ_DIST:
+    sh: echo '{{.ROOT_DIR}}\dist\topaz_{{.GOOS}}_{{.GOARCH}}_{{.GOARCH_EXT}}\topaz.exe'
+  TOPAZD_DIST:
+    sh: echo '{{.ROOT_DIR}}\dist\topazd_{{.GOOS}}_{{.GOARCH}}_{{.GOARCH_EXT}}\topazd.exe'
+  
+  EXT_DIR: '{{.ROOT_DIR}}\.ext'
+  EXT_BIN_DIR: '{{.EXT_DIR}}\bin'
+  EXT_TMP_DIR: '{{.EXT_DIR}}\tmp'
+
 tasks:
   install-svu:
-    internal: true
-    deps: [ext-bin-dir, ext-tmp-dir]
+    desc: install Semantic Version Utility (svu)
+    internal: false
+    deps: [ext-tmp-dir, ext-bin-dir]
     cmds:
       - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
-      - GOBIN={{.EXT_BIN_DIR}} go install github.com/caarlos0/svu/v3@v{{.SVU_VER}}
-      - '{{.EXT_BIN_DIR}}/svu --version'
+      - pwsh -Command '$env:GOBIN="{{.EXT_BIN_DIR}}"; go install "github.com/caarlos0/svu/v3@v{{.SVU_VER}}"'
+      - cmd /c '{{.EXT_BIN_DIR}}\svu.exe --version'
+      - rm -rf '{{.EXT_TMP_DIR}}'
 
   install-gotestsum:
-    internal: true
+    desc: install test runner (gotestsum)
+    internal: false
     deps: [ext-tmp-dir, ext-bin-dir]
     cmds:
       - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
-      - GOBIN={{.EXT_BIN_DIR}} go install gotest.tools/gotestsum@v{{.GOTESTSUM_VER}}
-      - '{{.EXT_BIN_DIR}}/gotestsum --version'
+      - pwsh -Command '$env:GOBIN="{{.EXT_BIN_DIR}}"; go install "gotest.tools/gotestsum@v{{.GOTESTSUM_VER}}"'
+      - cmd /c '{{.EXT_BIN_DIR}}\gotestsum.exe --version'
+      - rm -rf '{{.EXT_TMP_DIR}}'
 
   install-golangci-lint:
-    internal: true
+    desc: install linter (golangci-lint)
+    internal: false
     deps: [ext-tmp-dir, ext-bin-dir]
     cmds:
       - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
-      - gh release download v{{.GOLANGCI_LINT_VER}} --repo https://github.com/golangci/golangci-lint --pattern "golangci-lint-{{.GOLANGCI_LINT_VER}}-{{.GOOS}}-{{.GOARCH}}.tar.gz" --output "{{.EXT_TMP_DIR}}/golangci-lint.tar.gz" --clobber
-      - tar --strip=1 -xvf {{.EXT_TMP_DIR}}/golangci-lint.tar.gz --strip-components=1 --directory {{.EXT_TMP_DIR}} &> /dev/null
-      - mv {{.EXT_TMP_DIR}}/golangci-lint {{.EXT_BIN_DIR}}/golangci-lint
-      - chmod +x {{.EXT_BIN_DIR}}/golangci-lint
-      - '{{.EXT_BIN_DIR}}/golangci-lint --version'
+      - gh release download v{{.GOLANGCI_LINT_VER}} --repo https://github.com/golangci/golangci-lint --pattern "golangci-lint-{{.GOLANGCI_LINT_VER}}-{{.GOOS}}-{{.GOARCH}}.zip" --output "{{.EXT_TMP_DIR}}/golangci-lint.zip" --clobber
+      - pwsh -Command 'tar.exe -xf "{{.EXT_TMP_DIR}}\golangci-lint.zip" -C "{{.EXT_TMP_DIR}}" --strip-components=1'
+      - pwsh -Command 'Move-Item -Path "{{.EXT_TMP_DIR}}\golangci-lint.exe" -Destination "{{.EXT_BIN_DIR}}\golangci-lint.exe" -Force'
+      - cmd /c '{{.EXT_BIN_DIR}}\golangci-lint.exe --version'
+      - rm -rf '{{.EXT_TMP_DIR}}'
 
   install-goreleaser:
-    internal: true
+    desc: install build & release tool (goreleaser)
+    internal: false
     deps: [ext-tmp-dir, ext-bin-dir]
     cmds:
-      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
-      - gh release download v{{.GORELEASER_VER}} --repo https://github.com/goreleaser/goreleaser --pattern "goreleaser_$(uname -s)_$(uname -m).tar.gz" --output "{{.EXT_TMP_DIR}}/goreleaser.tar.gz" --clobber
-      - tar -xvf {{.EXT_TMP_DIR}}/goreleaser.tar.gz --directory {{.EXT_BIN_DIR}} goreleaser &> /dev/null
-      - chmod +x {{.EXT_BIN_DIR}}/goreleaser
-      - '{{.EXT_BIN_DIR}}/goreleaser --version'
+      - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.ZIP_EXT}} {{.NO_COLOR}}"
+      - cmd: gh release download v{{.GORELEASER_VER}} --repo https://github.com/goreleaser/goreleaser --pattern "goreleaser_Windows_x86_64.zip" --output "{{.EXT_TMP_DIR}}/goreleaser_{{.GOARCH}}.zip" --clobber
+        if: '[ "{{.GOARCH}}" = "amd64" ]'
+      - cmd: gh release download v{{.GORELEASER_VER}} --repo https://github.com/goreleaser/goreleaser --pattern "goreleaser_Windows_arm64.zip" --output "{{.EXT_TMP_DIR}}/goreleaser_{{.GOARCH}}.zip" --clobber
+        if: '[ "{{.GOARCH}}" = "arm64" ]'
+      - pwsh -Command 'Expand-Archive -Path "{{.EXT_TMP_DIR}}/goreleaser_{{.GOARCH}}.zip" -Destination "{{.EXT_TMP_DIR}}" -Force'
+      - pwsh -Command 'Move-Item -Path "{{.EXT_TMP_DIR}}\goreleaser.exe" -Destination "{{.EXT_BIN_DIR}}\goreleaser.exe" -Force'
+      - cmd /c '{{.EXT_BIN_DIR}}\goreleaser.exe --version'
+      - rm -rf '{{.EXT_TMP_DIR}}'
 
   install-syft:
-    internal: true
+    desc: install SBOM generator (syft)
+    internal: false
     deps: [ext-tmp-dir, ext-bin-dir]
     cmds:
       - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
-      - gh release download v{{.SYFT_VER}} --repo https://github.com/anchore/syft --pattern "syft_{{.SYFT_VER}}_{{.GOOS}}_{{.GOARCH}}.tar.gz" --output "{{.EXT_TMP_DIR}}/syft.tar.gz" --clobber
-      - tar -xvf {{.EXT_TMP_DIR}}/syft.tar.gz --directory {{.EXT_BIN_DIR}} syft &> /dev/null
-      - chmod +x {{.EXT_BIN_DIR}}/syft
-      - '{{.EXT_BIN_DIR}}/syft --version'
+      - gh release download v{{.SYFT_VER}} --repo https://github.com/anchore/syft --pattern "syft_{{.SYFT_VER}}_{{.GOOS}}_{{.GOARCH}}.zip" --output "{{.EXT_TMP_DIR}}/syft.zip" --clobber
+      - pwsh -Command 'Expand-Archive -Path "{{.EXT_TMP_DIR}}/syft.zip" -Destination "{{.EXT_TMP_DIR}}" -Force'
+      - pwsh -Command 'Move-Item -Path "{{.EXT_TMP_DIR}}\syft.exe" -Destination "{{.EXT_BIN_DIR}}\syft.exe" -Force'
+      - cmd /c '{{.EXT_BIN_DIR}}\syft.exe --version'
+      - rm -rf '{{.EXT_TMP_DIR}}'
 
   clean:
     cmds:
@@ -59,15 +97,46 @@ tasks:
   ext-bin-dir:
     internal: true
     status:
-      - test -d {{.EXT_BIN_DIR}}
+      - test -d '{{.EXT_BIN_DIR}}'
     cmds:
       - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
-      - mkdir -p {{.EXT_BIN_DIR}}
+      - mkdir -p '{{.EXT_BIN_DIR}}'
 
   ext-tmp-dir:
     internal: true
     status:
-      - test -d {{.EXT_TMP_DIR}}
+      - test -d '{{.EXT_TMP_DIR}}'
     cmds:
       - echo -e "{{.ATTN_COLOR}}==> {{.TASK}} {{.NO_COLOR}}"
-      - mkdir -p {{.EXT_TMP_DIR}}
+      - rm -rf '{{.EXT_TMP_DIR}}'
+      - mkdir -p '{{.EXT_TMP_DIR}}'
+
+  build:
+    internal: true
+    cmds:
+      - cmd /c '{{.EXT_BIN_DIR}}\goreleaser.exe build --config .goreleaser.yml --clean --snapshot --single-target'
+
+  release:
+    internal: true
+    cmds:
+      - cmd /c '{{.EXT_BIN_DIR}}\goreleaser.exe release --config .goreleaser.yml --clean'
+
+  snapshot:
+    internal: true
+    cmds:
+      - cmd /c '{{.EXT_BIN_DIR}}\goreleaser.exe release --config .goreleaser.yml --clean --snapshot --skip archive,homebrew,sbom'
+
+  lint:
+    internal: true
+    cmds:
+      - cmd /c '{{.EXT_BIN_DIR}}\golangci-lint.exe config path'
+      - cmd /c '{{.EXT_BIN_DIR}}\golangci-lint.exe config verify'
+      - cmd /c '{{.EXT_BIN_DIR}}\golangci-lint.exe run --config {{.ROOT_DIR}}/.golangci.yaml'
+
+  test:
+    internal: true
+    cmds:
+      - cmd /c '{{.EXT_BIN_DIR}}\gotestsum.exe --format short-verbose -- $(go list ./... | grep -v topazd/tests) -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...'
+      - cmd /c '{{.EXT_BIN_DIR}}\gotestsum.exe --format short-verbose -- $(go list ./topazd/tests/... | grep -v tests/template) -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...'
+      - cmd /c '{{.EXT_BIN_DIR}}\gotestsum.exe --format short-verbose -- github.com/{{.ORG}}/{{.REPO}}/topazd/tests/template-no-tls/... -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...'
+      - cmd /c '{{.EXT_BIN_DIR}}\gotestsum.exe --format short-verbose -- github.com/{{.ORG}}/{{.REPO}}/topazd/tests/template-with-tls/... -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...'
