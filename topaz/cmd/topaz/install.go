@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/aserto-dev/topaz/topaz/cc"
-	"github.com/aserto-dev/topaz/topaz/dockerx"
+	"github.com/aserto-dev/topaz/topaz/container/dockerx"
 )
 
 type InstallCmd struct {

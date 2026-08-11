@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/aserto-dev/topaz/topaz/cc"
-	"github.com/aserto-dev/topaz/topaz/dockerx"
+	"github.com/aserto-dev/topaz/topaz/container/dockerx"
 	"github.com/pkg/errors"
 )
 

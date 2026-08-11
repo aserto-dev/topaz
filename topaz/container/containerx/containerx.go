@@ -1,4 +1,4 @@
-package dockerx
+package containerx
 
 import (
 	"bufio"
@@ -7,11 +7,9 @@ import (
 	"io"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"strings"
 	"syscall"
 
-	"github.com/aserto-dev/topaz/topaz/x"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
@@ -27,33 +25,12 @@ const (
 	status  = "status"
 )
 
-func PolicyRoot() string {
-	const defaultPolicyRoot = ".policy"
-
-	policyRoot := os.Getenv(x.EnvPolicyFileStoreRoot)
-	if policyRoot == "" {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return ""
-		}
-
-		policyRoot = filepath.Join(home, defaultPolicyRoot)
-	}
-
-	//nolint:gosec // G703
-	if fi, err := os.Stat(policyRoot); err == nil && fi.IsDir() {
-		return policyRoot
-	}
-
-	return ""
-}
-
-type DockerClient struct {
+type ContainerClient struct {
 	ctx context.Context
 	cli *client.Client
 }
 
-func New() (*DockerClient, error) {
+func New() (*ContainerClient, error) {
 	cli, err := client.NewClientWithOpts(
 		client.FromEnv,
 		client.WithAPIVersionNegotiation(),
@@ -62,14 +39,14 @@ func New() (*DockerClient, error) {
 		return nil, err
 	}
 
-	return &DockerClient{
+	return &ContainerClient{
 		ctx: context.Background(),
 		cli: cli,
 	}, nil
 }
 
 // PullImage container image.
-func (dc *DockerClient) PullImage(img, platform string) error {
+func (dc *ContainerClient) PullImage(img, platform string) error {
 	out, err := dc.cli.ImagePull(dc.ctx, img, image.PullOptions{
 		Platform: platform,
 	})
@@ -84,7 +61,7 @@ func (dc *DockerClient) PullImage(img, platform string) error {
 }
 
 // RemoveImage removes container image (image-name:tag) from the container store.
-func (dc *DockerClient) RemoveImage(img string) error {
+func (dc *ContainerClient) RemoveImage(img string) error {
 	images, err := dc.cli.ImageList(dc.ctx, image.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
@@ -107,7 +84,7 @@ func (dc *DockerClient) RemoveImage(img string) error {
 }
 
 // ImageExists checks if image exists in local container store.
-func (dc *DockerClient) ImageExists(img string) bool {
+func (dc *ContainerClient) ImageExists(img string) bool {
 	images, err := dc.cli.ImageList(dc.ctx, image.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
@@ -123,7 +100,7 @@ func (dc *DockerClient) ImageExists(img string) bool {
 }
 
 // Stop container instance with `name`.
-func (dc *DockerClient) Stop(name string) error {
+func (dc *ContainerClient) Stop(name string) error {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
@@ -148,7 +125,7 @@ func (dc *DockerClient) Stop(name string) error {
 }
 
 // IsRunning returns if container with `name` is running.
-func (dc *DockerClient) IsRunning(name string) (bool, error) {
+func (dc *ContainerClient) IsRunning(name string) (bool, error) {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
@@ -170,7 +147,7 @@ func (dc *DockerClient) IsRunning(name string) (bool, error) {
 	return rc, nil
 }
 
-func (dc *DockerClient) GetRunningTopazContainers() ([]container.Summary, error) {
+func (dc *ContainerClient) GetRunningTopazContainers() ([]container.Summary, error) {
 	containers, err := dc.cli.ContainerList(dc.ctx, container.ListOptions{
 		Filters: filters.NewArgs(
 			filters.KeyValuePair{
@@ -335,7 +312,7 @@ func WithError(e io.Writer) RunOption {
 }
 
 // Run starts a container like `docker run` using the provided settings.
-func (dc *DockerClient) Run(opts ...RunOption) error {
+func (dc *ContainerClient) Run(opts ...RunOption) error {
 	r := &runner{
 		config: &container.Config{
 			AttachStdin:  true,
@@ -415,7 +392,7 @@ func (dc *DockerClient) Run(opts ...RunOption) error {
 }
 
 // Start starts a container instance like `docker start` using the provided settings.
-func (dc *DockerClient) Start(opts ...RunOption) error {
+func (dc *ContainerClient) Start(opts ...RunOption) error {
 	r := &runner{
 		config:           &container.Config{},
 		hostConfig:       &container.HostConfig{},

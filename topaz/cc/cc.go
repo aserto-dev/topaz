@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/aserto-dev/topaz/internal/fs"
-	"github.com/aserto-dev/topaz/topaz/dockerx"
+	"github.com/aserto-dev/topaz/topaz/container/dockerx"
 	"github.com/docker/docker/api/types/container"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"

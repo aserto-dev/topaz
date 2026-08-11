@@ -8,7 +8,7 @@ import (
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/cmd/common"
-	"github.com/aserto-dev/topaz/topaz/dockerx"
+	"github.com/aserto-dev/topaz/topaz/container/dockerx"
 )
 
 type StopCmd struct {
