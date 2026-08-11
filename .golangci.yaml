@@ -52,6 +52,10 @@ linters:
       disable-all: true
       enabled-checks:
         - commentedOutCode
+    
+    gomoddirectives:
+      replace-allow-list:
+        - github.com/open-policy-agent/opa
 
     gosec:
       excludes:
