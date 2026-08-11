@@ -82,8 +82,11 @@ $ go install github.com/aserto-dev/topaz/topaz@latest
  2. Build and run the executable
 
 ```console
-$ make build && ./dist/build_linux_amd64/topaz
+$ make build
+$ ./dist/topaz_<os>_<arch>/topaz
 ```
+
+`make build` compiles for your host platform by default. To target a different platform, set `GOOS`/`GOARCH`, e.g. `GOOS=linux GOARCH=amd64 make build`. The exact output path is listed in the `building binary=...` build log line, or in `dist/artifacts.json`.
 
 ### Running with Docker
 

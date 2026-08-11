@@ -4,6 +4,7 @@ project_name: topaz
 
 env:
   # https://goreleaser.com/customization/env/
+  - GOEXPERIMENT=jsonv2
   - REGISTRY=ghcr.io
   - ORG=aserto-dev
   - REPO=topaz

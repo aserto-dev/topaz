@@ -2,12 +2,10 @@ package impl
 
 import (
 	"context"
-	"encoding/json"
 	goruntime "runtime"
-	"sync"
+	"time"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	runtime "github.com/aserto-dev/runtime"
 
@@ -15,12 +13,8 @@ import (
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
 	"github.com/aserto-dev/topaz/topazd/version"
 
-	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/open-policy-agent/opa/v1/server/types"
 	"github.com/rs/zerolog"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/proto"
 )
 
 const (
@@ -30,13 +24,13 @@ const (
 	InputResource string = "resource"
 )
 
-type AuthorizerServer struct {
-	cfg      *config.Common
-	logger   *zerolog.Logger
-	issuers  sync.Map
-	jwkCache *jwk.Cache
+const cleanupTimeout = 30 * time.Second
 
-	resolver *resolvers.Resolvers
+type AuthorizerServer struct {
+	cfg         *config.Common
+	logger      *zerolog.Logger
+	jwtResolver *jwtResolver
+	resolver    *resolvers.Resolvers
 
 	// preparedQueries memoizes the rego.PreparedEvalQuery values produced
 	// for each (policy path, decisions) tuple seen via Is(). Without this
@@ -50,18 +44,34 @@ func NewAuthorizerServer(
 	logger *zerolog.Logger,
 	cfg *config.Common,
 	rf *resolvers.Resolvers,
-) *AuthorizerServer {
+) (*AuthorizerServer, error) {
 	newLogger := logger.With().Str("component", "api.grpc").Logger()
 
-	jwkCache := jwk.NewCache(ctx)
+	jwtResolver, err := NewJWTResolver(ctx, &cfg.JWT)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := jwtResolver.Start(ctx); err != nil {
+		return nil, err
+	}
+
+	go func() { //nolint:gosec // G118 - cleanup cannot use request context as it is already cancelled.
+		<-ctx.Done()
+
+		cleanupCtx, cancel := context.WithTimeout(context.Background(), cleanupTimeout)
+		defer cancel()
+
+		_ = jwtResolver.Stop(cleanupCtx)
+	}()
 
 	return &AuthorizerServer{
 		cfg:             cfg,
 		logger:          &newLogger,
+		jwtResolver:     jwtResolver,
 		resolver:        rf,
-		jwkCache:        jwkCache,
 		preparedQueries: newPreparedQueryCache(),
-	}
+	}, nil
 }
 
 func (s *AuthorizerServer) Info(ctx context.Context, req *authorizer.InfoRequest) (*authorizer.InfoResponse, error) {
@@ -87,25 +97,6 @@ func (s *AuthorizerServer) getRuntime(ctx context.Context) (*runtime.Runtime, er
 	return rt, err
 }
 
-func (s *AuthorizerServer) resolveIdentityContext(ctx context.Context, idCtx *api.IdentityContext, input map[string]any) error {
-	log := s.logger.With().Str("api", "authz").Logger()
-
-	if idCtx.GetType() != api.IdentityType_IDENTITY_TYPE_NONE {
-		input[InputIdentity] = convert(idCtx)
-
-		user, err := s.getUserFromIdentityContext(ctx, idCtx)
-		if err != nil || user == nil {
-			log.Error().Err(err).Interface("identity_context", idCtx).Msg("failed to resolve identity context")
-
-			return aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
-		}
-
-		input[InputUser] = convert(user)
-	}
-
-	return nil
-}
-
 func traceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
 	switch t {
 	case authorizer.TraceLevel_TRACE_LEVEL_UNKNOWN:
@@ -121,28 +112,4 @@ func traceLevelToExplainModeV2(t authorizer.TraceLevel) types.ExplainModeV1 {
 	default:
 		return types.ExplainOffV1
 	}
-}
-
-// convert, explicitly converts from proto message any in order
-// to preserve enum values as strings when marshaled to JSON.
-func convert(msg proto.Message) any {
-	b, err := protojson.MarshalOptions{
-		Multiline:         false,
-		Indent:            "  ",
-		AllowPartial:      false,
-		UseProtoNames:     true,
-		UseEnumNumbers:    false,
-		EmitUnpopulated:   true,
-		EmitDefaultValues: false,
-	}.Marshal(msg)
-	if err != nil {
-		return nil
-	}
-
-	var v any
-	if err := json.Unmarshal(b, &v); err != nil {
-		return nil
-	}
-
-	return v
 }
