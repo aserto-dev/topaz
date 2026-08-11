@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+set -eu
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# use the config settings from topaz CLI
+CONTAINER_REGISTRY=$(topaz config info default.container_registry --raw)
+CONTAINER_IMAGE=$(topaz config info default.container_image --raw)
+CONTAINER_TAG=$(topaz config info default.container_tag --raw)
+CONTAINER_PLATFORM=$(topaz config info default.container_platform --raw)
+CONFIG_NAME=$(topaz config info runtime.active_configuration_name --raw)
+CONTAINER_NAME="topaz-${CONFIG_NAME}"
+CONTAINER="${CONTAINER_REGISTRY}/${CONTAINER_IMAGE}:${CONTAINER_TAG}"
+LOCAL_CONFIG_FILE="${HOME}/.config/topaz/cfg/${CONFIG_NAME}"
+
+[ ! -f "${LOCAL_CONFIG_FILE}" ] && echo "Error: local config file ${LOCAL_CONFIG_FILE} not found."
+
+echo "start config ${CONFIG_NAME}"
+
+docker run \
+-d \
+--platform=linux/arm64 \
+--rm \
+--name ${CONTAINER_NAME} \
+-e TOPAZ_CFG_DIR=/config \
+-e TOPAZ_DB_DIR=/db \
+-e TOPAZ_CERTS_DIR=/certs \
+-e TOPAZ_DECISIONS_DIR=/decisions \
+-e GITHUB_TOKEN=${GIT_TOKEN} \
+-p 8080:8080 \
+-p 8081:8081 \
+-p 8282:8282 \
+-p 8383:8383 \
+-p 9292:9292 \
+-p 9393:9393 \
+-p 9494:9494 \
+-p 9696:9696 \
+-v ${HOME}/.config/topaz/cfg:/config:ro \
+-v ${HOME}/.local/share/topaz/certs:/certs:rw \
+-v ${HOME}/.local/share/topaz/db:/db:rw \
+-v ${HOME}/.local/share/topaz/decision:/decisions:rw \
+${CONTAINER} \
+run -c /config/${CONFIG_NAME}.yaml
