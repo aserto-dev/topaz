@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+#!/usr/bin/env bash
+
+set -eu
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# use the config settings from topaz CLI
+CONFIG_NAME=$(topaz config info runtime.active_configuration_name --raw)
+CONTAINER_NAME="topaz-${CONFIG_NAME}"
+
+echo "stop config ${CONFIG_NAME}"
+
+container stop ${CONTAINER_NAME}
