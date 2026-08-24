@@ -14,7 +14,7 @@ type Access struct {
 	reader *Reader
 }
 
-var _ dsa.AccessServer = (*(Access))(nil)
+var _ dsa.AccessServer = (*Access)(nil)
 
 func NewAccess(logger *zerolog.Logger, reader *Reader) *Access {
 	return &Access{

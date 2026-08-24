@@ -114,6 +114,9 @@ var (
 		Merge:          false,
 		AllowPartial:   false,
 		DiscardUnknown: true,
+		Resolver:       nil,
+		RecursionLimit: 0,
+		NoLazyDecoding: false,
 	}
 )
 
