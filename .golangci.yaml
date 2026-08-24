@@ -135,7 +135,7 @@ linters:
           - goconst
       - path: topaz/cmd/certs/
         linters:
-          - staticcheck
+          - staticcheck # See https://github.com/dominikh/go-tools/issues/1737
 
 formatters:
   enable:
