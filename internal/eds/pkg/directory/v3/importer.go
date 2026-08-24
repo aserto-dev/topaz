@@ -24,7 +24,7 @@ type Importer struct {
 	store  *bdb.BoltDB
 }
 
-var _ dsi.ImporterServer = (*(Importer))(nil)
+var _ dsi.ImporterServer = (*Importer)(nil)
 
 const (
 	object   string = "object"

@@ -2,6 +2,7 @@ package impl
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
@@ -12,7 +13,6 @@ import (
 	"github.com/aserto-dev/topaz/pkg/grpcc"
 	"github.com/aserto-dev/topaz/topazd/directory"
 	"github.com/pkg/errors"
-	"google.golang.org/grpc/codes"
 )
 
 const identityResolutionTimeout = 60 * time.Second
@@ -38,7 +38,7 @@ func (s *AuthorizerServer) resolveIdentityContext(ctx context.Context, identityC
 	// Step 2: resolve identity from identity context
 	identity, err := s.resolveSubjectFromIdentityContext(ctx, identityContext)
 	if err != nil {
-		return aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve identity context")
+		return err
 	}
 
 	// if IDENTITY_TYPE_MANUAL, there resulting user object is an empty JSON object.
@@ -50,7 +50,7 @@ func (s *AuthorizerServer) resolveIdentityContext(ctx context.Context, identityC
 	// Step 3: resolve user from identity.
 	user, err := s.resolveUserFromSubject(ctx, identity)
 	if err != nil {
-		return aerr.ErrAuthenticationFailed.WithGRPCStatus(codes.NotFound).Msg("failed to resolve user from identity")
+		return err
 	}
 
 	// Step 4: add user object to input.user.
@@ -61,7 +61,12 @@ func (s *AuthorizerServer) resolveIdentityContext(ctx context.Context, identityC
 
 func (s *AuthorizerServer) resolveSubjectFromIdentityContext(ctx context.Context, identityContext *api.IdentityContext) (string, error) {
 	if identityContext.GetIdentity() == "" {
-		return "", errors.Errorf("identity value not set (type: %s)", identityContext.GetType().String())
+		return "",
+			errors.Wrapf(
+				aerr.ErrResolvingSubjectFromIdentityContext,
+				"identity value not set (type: %s)",
+				identityContext.GetType().String(),
+			)
 	}
 
 	switch identityContext.GetType() {
@@ -78,7 +83,12 @@ func (s *AuthorizerServer) resolveSubjectFromIdentityContext(ctx context.Context
 		fallthrough
 
 	default:
-		return "", errors.Errorf("invalid identity type %s", identityContext.GetType().String())
+		return "",
+			errors.Wrapf(
+				aerr.ErrResolvingSubjectFromIdentityContext,
+				"invalid identity type %s",
+				identityContext.GetType().String(),
+			)
 	}
 }
 
@@ -87,7 +97,7 @@ func (s *AuthorizerServer) resolveUserFromSubject(ctx context.Context, subject s
 
 	objResp, err := directory.ResolveIdentity(ctx, client, subject)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w\n%w", aerr.ErrResolvingUserFromSubject, err)
 	}
 
 	return objResp, nil
