@@ -32,7 +32,7 @@ func (cmd ListConfigCmd) Run(ctx context.Context) error {
 	data := [][]any{}
 
 	for i := range files {
-		name := strings.Split(files[i].Name(), ".")[0]
+		name, _, _ := strings.Cut(files[i].Name(), ".")
 		active := ""
 
 		if files[i].Name() == filepath.Base(cc.GetConfig().Active.ConfigFile) {

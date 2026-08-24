@@ -25,8 +25,8 @@ env:
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'main' || '' }}
   GH_TOKEN: ${{ github.token }}
   GOEXPERIMENT: "jsonv2"
-  GO_RELEASER_VER: "v2.14.1"
-  GO_LANGCI_LINT_VER: "v2.12.2"
+  GO_RELEASER_VER: "v2.17.1"
+  GO_LANGCI_LINT_VER: "v2.13.1"
   SYFT_VER: "v1.13.0"
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v7
       -
         name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
           cache: true
@@ -124,7 +124,7 @@ jobs:
           fetch-depth: 0
       -
         name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
           cache: true
@@ -171,7 +171,7 @@ jobs:
           fetch-depth: 0
       -
         name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
           cache: true

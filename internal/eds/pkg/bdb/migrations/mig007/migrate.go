@@ -247,6 +247,7 @@ type Message[T any] interface {
 var unmarshalOpts = protojson.UnmarshalOptions{
 	AllowPartial:   false,
 	DiscardUnknown: true,
+	Resolver:       nil,
 	RecursionLimit: 0,
 }
 

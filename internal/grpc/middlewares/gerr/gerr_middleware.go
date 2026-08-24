@@ -2,6 +2,7 @@ package gerr
 
 import (
 	"context"
+	"strconv"
 
 	aerr "github.com/aserto-dev/errors"
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
@@ -69,17 +70,17 @@ func (m *ErrorMiddleware) handleError(ctx context.Context, handlerErr error) err
 		asertoErr = aerr.ErrUnknown
 	}
 
-	asertoErr = asertoErr.Int(aerr.HTTPStatusErrorMetadata, asertoErr.HTTPCode)
+	asertoErr = asertoErr.Str(aerr.HTTPStatusErrorMetadata, strconv.Itoa(asertoErr.HTTPCode))
 
 	log.Warn().Stack().Err(handlerErr).
 		Ctx(ctx).
 		Str("error-id", errID.String()).
 		Str("error-code", asertoErr.Code).
-		Int("status-code", int(asertoErr.StatusCode)).
+		Int("status-code", int(asertoErr.GRPCCode)).
 		Fields(asertoErr.Fields()).
 		Msg(asertoErr.Message)
 
-	errResult := status.New(asertoErr.StatusCode, asertoErr.Error())
+	errResult := status.New(asertoErr.GRPCCode, asertoErr.Error())
 
 	errResult, err = errResult.WithDetails(&errdetails.ErrorInfo{
 		Reason:   errID.String(),
