@@ -16,6 +16,7 @@ linters:
     - depguard
     - errcheck
     - exhaustruct
+    - exhaustruct_v5
     - exhaustive
     - forbidigo
     - gochecknoglobals # no configuration options
@@ -42,6 +43,13 @@ linters:
         - fmt.Fprintln
         - os.Close
 
+    # exhaustruct_v5:
+    #   ignore-patterns:
+    #     - '.*/proto.MarshalOptions$'
+    #     - '.*/proto.UnmarshalOptions$'
+    #     - '.*/protojson\.MarshalOptions$'
+    #     - '.*/protojson\.UnmarshalOptions$'
+        
     funlen:
       lines: 80
       statements: 60
@@ -129,6 +137,9 @@ linters:
       - path: topazd/tests
         linters:
           - goconst
+      - path: topaz/cmd/certs/
+        linters:
+          - staticcheck # See https://github.com/dominikh/go-tools/issues/1737
 
 formatters:
   enable:

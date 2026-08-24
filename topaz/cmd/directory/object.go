@@ -90,9 +90,9 @@ func (cmd *SetObjectCmd) template() proto.Message {
 		Object: &common.Object{
 			Type:        "",
 			Id:          "",
-			DisplayName: "",
+			DisplayName: "", //nolint:staticcheck // deprecated
 			Properties:  &structpb.Struct{Fields: map[string]*structpb.Value{}},
-			CreatedAt:   &timestamppb.Timestamp{},
+			CreatedAt:   &timestamppb.Timestamp{}, //nolint:staticcheck // deprecated
 			UpdatedAt:   &timestamppb.Timestamp{},
 			Etag:        "",
 		},

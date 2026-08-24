@@ -30,7 +30,7 @@ var objectTestCasesWithID = []*TestCase{
 			Object: &dsc.Object{
 				Type:        "user",
 				Id:          "test-user@acmecorp.com",
-				DisplayName: "test obj 1",
+				DisplayName: "test obj 1", //nolint:staticcheck // deprecated
 				Properties:  pb.NewStruct(),
 				Etag:        "",
 			},
@@ -91,7 +91,7 @@ var objectTestCasesWithID = []*TestCase{
 			Object: &dsc.Object{
 				Type:        "user",
 				Id:          "test-user-11@acmecorp.com",
-				DisplayName: "test obj 11",
+				DisplayName: "test obj 11", //nolint:staticcheck // deprecated
 				Etag:        "3016620182482667549",
 			},
 		},
@@ -207,7 +207,7 @@ var objectTestCasesWithoutID = []*TestCase{
 			Object: &dsc.Object{
 				Type:        "user",
 				Id:          "test-user-2@acmecorp.com",
-				DisplayName: "test obj 2",
+				DisplayName: "test obj 2", //nolint:staticcheck // deprecated
 				Properties:  pb.NewStruct(),
 				Etag:        "",
 			},
@@ -290,7 +290,7 @@ var objectTestCasesWithoutID = []*TestCase{
 			Object: &dsc.Object{
 				Type:        "user",
 				Id:          "test-user-2@acmecorp.com",
-				DisplayName: "test obj 22",
+				DisplayName: "test obj 22", //nolint:staticcheck // deprecated
 			},
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {

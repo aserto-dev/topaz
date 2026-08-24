@@ -22,7 +22,7 @@ type Writer struct {
 	store  *bdb.BoltDB
 }
 
-var _ dsw.WriterServer = (*(Writer))(nil)
+var _ dsw.WriterServer = (*Writer)(nil)
 
 func NewWriter(logger *zerolog.Logger, store *bdb.BoltDB) *Writer {
 	return &Writer{
@@ -162,7 +162,8 @@ func (s *Writer) SetRelation(ctx context.Context, req *dsw.SetRelationRequest) (
 		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
 		// if the updReq.Etag == "" this means the this is an insert
 		if ifMatchHeader != "" && updRel.GetEtag() != "" && ifMatchHeader != updRel.GetEtag() {
-			return derr.ErrHashMismatch.Msgf("for relation with objectType [%s], objectId [%s], relation [%s], subjectType [%s], SubjectId [%s]",
+			return derr.ErrHashMismatch.Msgf(
+				"for relation with objectType [%s], objectId [%s], relation [%s], subjectType [%s], SubjectId [%s]",
 				updRel.GetObjectType(), updRel.GetObjectId(), updRel.GetRelation(), updRel.GetSubjectType(), updRel.GetSubjectId(),
 			)
 		}
@@ -225,7 +226,8 @@ func (s *Writer) DeleteRelation(ctx context.Context, req *dsw.DeleteRelationRequ
 			}
 
 			if ifMatchHeader != updRel.GetEtag() {
-				return derr.ErrHashMismatch.Msgf("for relation with objectType [%s], objectId [%s], relation [%s], subjectType [%s], SubjectId [%s]",
+				return derr.ErrHashMismatch.Msgf(
+					"for relation with objectType [%s], objectId [%s], relation [%s], subjectType [%s], SubjectId [%s]",
 					rel.GetObjectType(), rel.GetObjectId(), rel.GetRelation(), rel.GetSubjectType(), rel.GetSubjectId(),
 				)
 			}
