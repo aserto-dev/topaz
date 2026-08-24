@@ -16,6 +16,7 @@ linters:
     - depguard
     - errcheck
     - exhaustruct
+    - exhaustruct_v5
     - exhaustive
     - forbidigo
     - gochecknoglobals # no configuration options
