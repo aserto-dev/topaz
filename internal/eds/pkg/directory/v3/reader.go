@@ -26,7 +26,7 @@ type Reader struct {
 	store  *bdb.BoltDB
 }
 
-var _ dsr.ReaderServer = (*(Reader))(nil)
+var _ dsr.ReaderServer = (*Reader)(nil)
 
 func NewReader(logger *zerolog.Logger, store *bdb.BoltDB) *Reader {
 	return &Reader{

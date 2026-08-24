@@ -43,6 +43,13 @@ linters:
         - fmt.Fprintln
         - os.Close
 
+    exhaustruct_v5:
+      ignore-patterns:
+        - '.*/proto.MarshalOptions$'
+        - '.*/proto.UnmarshalOptions$'
+        - '.*/protojson\.MarshalOptions$'
+        - '.*/protojson\.UnmarshalOptions$'
+        
     funlen:
       lines: 80
       statements: 60

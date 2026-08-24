@@ -66,8 +66,8 @@ func (s *Importer) Import(stream dsi.Importer_ImportServer) error {
 
 				// backwards compatible response.
 				return stream.Send(&dsi.ImportResponse{
-					Object:   ctr[object],
-					Relation: ctr[relation],
+					Object:   ctr[object],   //nolint:staticcheck // deprecated
+					Relation: ctr[relation], //nolint:staticcheck // deprecated
 				})
 			}
 

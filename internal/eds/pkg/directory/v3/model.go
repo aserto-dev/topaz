@@ -36,7 +36,7 @@ type Model struct {
 	store  *bdb.BoltDB
 }
 
-var _ dsm.ModelServer = (*(Model))(nil)
+var _ dsm.ModelServer = (*Model)(nil)
 
 // NOTES:
 //

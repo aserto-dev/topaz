@@ -84,7 +84,7 @@ func (cmd *SetRelationCmd) template() proto.Message {
 			SubjectType:     "",
 			SubjectId:       "",
 			SubjectRelation: "",
-			CreatedAt:       timestamppb.Now(),
+			CreatedAt:       timestamppb.Now(), //nolint:staticcheck // deprecated
 			UpdatedAt:       timestamppb.Now(),
 			Etag:            "",
 		},
