@@ -41,18 +41,6 @@ func DefaultMarshalOpts() protojson.MarshalOptions {
 	}
 }
 
-func MaskedMarshalOpts() protojson.MarshalOptions {
-	return protojson.MarshalOptions{
-		Multiline:         false,
-		Indent:            "  ",
-		AllowPartial:      true,
-		UseProtoNames:     true,
-		UseEnumNumbers:    false,
-		EmitUnpopulated:   false,
-		EmitDefaultValues: false,
-	}
-}
-
 func MarshalOpts(multiline bool) protojson.MarshalOptions {
 	return protojson.MarshalOptions{
 		Multiline:         multiline,
