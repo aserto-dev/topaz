@@ -43,6 +43,7 @@ func registerObject(fnName string, dr func() (reader.ReaderClient, error)) (*reg
 
 			dsr, err := dr()
 			if err != nil && errors.Is(err, errs.ErrTopazPluginDisabled) {
+				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 

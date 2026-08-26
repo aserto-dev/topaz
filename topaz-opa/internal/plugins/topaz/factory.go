@@ -11,6 +11,13 @@ import (
 
 type PluginFactory struct{}
 
+func NewFactory() *PluginFactory {
+	// set a default config for the plugin, in case there is no OPA config section for the plugin.
+	SetConfig(Config{Enabled: false})
+
+	return &PluginFactory{}
+}
+
 var (
 	_    plugins.Factory = (*PluginFactory)(nil)
 	aCfg atomic.Pointer[Config]
@@ -26,8 +33,11 @@ func GetConfig() Config {
 }
 
 func (p *PluginFactory) New(manager *plugins.Manager, cfg any) plugins.Plugin {
+	log := manager.Logger()
+
 	c, ok := cfg.(Config)
 	if !ok {
+		log.Error("failed to parse topaz plugin config")
 		// panic as the plugins.Factory interface definition of New does ot provide an error return,
 		// nor does the OPA implementation not handle nil plugins.
 		// NOTE that Validate() is called before New, mitigating the risk of the panic occurring.
@@ -41,12 +51,16 @@ func (p *PluginFactory) New(manager *plugins.Manager, cfg any) plugins.Plugin {
 }
 
 func (p *PluginFactory) Validate(manager *plugins.Manager, cfg []byte) (any, error) {
+	log := manager.Logger()
+
 	var parsedConfig Config
 	if err := util.Unmarshal(cfg, &parsedConfig); err != nil {
+		log.Error("failed to unmarshal topaz plugin config (%v)", err)
 		return nil, err
 	}
 
 	SetConfig(parsedConfig)
+	log.Info("topaz plugin enabled = %t", parsedConfig.Enabled)
 
 	return parsedConfig, nil
 }

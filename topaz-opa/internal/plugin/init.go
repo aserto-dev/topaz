@@ -12,5 +12,5 @@ func Init() {
 	ac.RegisterAccessBuiltins(topaz.GetAccessClient())
 	ds.RegisterDirectoryBuiltins(topaz.GetDirectoryClient())
 
-	runtime.RegisterPlugin(topaz.PluginName, &topaz.PluginFactory{})
+	runtime.RegisterPlugin(topaz.PluginName, topaz.NewFactory())
 }
