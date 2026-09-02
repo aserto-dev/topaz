@@ -57,7 +57,7 @@ func (s *AuthorizerServer) GetPolicy(ctx context.Context, req *authorizer.GetPol
 
 	policy, err := rt.GetPolicy(ctx, req.GetId())
 	if err != nil {
-		return response, errors.Wrapf(err, "failed to get policy with ID [%s]", req.GetId())
+		return response, err
 	}
 
 	if policy == nil {

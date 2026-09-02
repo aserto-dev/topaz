@@ -4,7 +4,8 @@
     "-count=1"
   ],
   "go.testEnvVars": {
-    "GOEXPERIMENT": "jsonv2"
+    "GOEXPERIMENT": "jsonv2",
+    "TESTCONTAINERS_RYUK_DISABLED": "true"
   },
   "go.buildTags": "jsonv2",
   "go.delveConfig": {
