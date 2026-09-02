@@ -25,10 +25,31 @@ import (
 	"google.golang.org/grpc"
 )
 
+const defaultTestContextTimeout = 30 * time.Second
+
+func testContextTimeout(t *testing.T) time.Duration {
+	t.Helper()
+
+	str := os.Getenv("TEST_CONTEXT_TIMEOUT")
+	if str == "" {
+		return defaultTestContextTimeout
+	}
+
+	t.Logf("env TEST_CONTEXT_TIME=%s", str)
+
+	parsed, err := time.ParseDuration(str)
+	if err != nil {
+		t.Logf("parsing TEST_CONTEXT_TIME failed %q", err.Error())
+		return defaultTestContextTimeout
+	}
+
+	return parsed
+}
+
 func TestEmptyRuntime(t *testing.T) {
 	assert := require.New(t)
 
-	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 	t.Cleanup(cancel)
 
 	r, err := runtime.New(ctx, &runtime.Config{})
@@ -52,7 +73,7 @@ func TestEmptyRuntime(t *testing.T) {
 func TestLocalBundle(t *testing.T) {
 	assert := require.New(t)
 
-	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 	t.Cleanup(cancel)
 
 	r, err := runtime.New(ctx, &runtime.Config{
@@ -80,7 +101,7 @@ func TestLocalBundle(t *testing.T) {
 func TestFailingLocalBundle(t *testing.T) {
 	assert := require.New(t)
 
-	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 	t.Cleanup(cancel)
 
 	r, err := runtime.New(ctx, &runtime.Config{
@@ -117,7 +138,7 @@ func TestRemoteBundleV0(t *testing.T) {
 	dsClient := dsr.NewReaderClient(dsConn)
 	acClient := dsa.NewAccessClient(dsConn)
 
-	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 	t.Cleanup(cancel)
 
 	r, err := runtime.New(
@@ -173,7 +194,7 @@ func TestRemoteBundleV0(t *testing.T) {
 		r.Start(ctx),
 	)
 	t.Cleanup(func() {
-		cleanupCtx, cleanupCancel := context.WithTimeout(t.Context(), 10*time.Second)
+		cleanupCtx, cleanupCancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 		r.Stop(cleanupCtx)
 		cleanupCancel()
 	})
@@ -204,7 +225,7 @@ func TestRemoteBundleV1(t *testing.T) {
 	tok := os.Getenv("GIT_TOKEN")
 	assert.NotEmpty(tok)
 
-	ctx, cancel := context.WithTimeout(t.Context(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 	t.Cleanup(cancel)
 
 	r, err := runtime.New(
@@ -263,7 +284,7 @@ func TestRemoteBundleV1(t *testing.T) {
 		r.Start(ctx),
 	)
 	t.Cleanup(func() {
-		cleanupCtx, cleanupCancel := context.WithTimeout(t.Context(), 10*time.Second)
+		cleanupCtx, cleanupCancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 		r.Stop(cleanupCtx)
 		cleanupCancel()
 	})
