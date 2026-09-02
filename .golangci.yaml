@@ -90,6 +90,8 @@ linters:
         - v3.ImporterServer
         - datasync.SyncClient
         - grpc.ServerOption
+        - logging.Logger
+        - ast.Object
 
     lll:
       line-length: 150
@@ -137,9 +139,9 @@ linters:
       - path: topazd/tests
         linters:
           - goconst
-      - path: topaz/cmd/certs/
-        linters:
-          - staticcheck # See https://github.com/dominikh/go-tools/issues/1737
+      # - path: topaz/cmd/certs/
+      #   linters:
+      #     - staticcheck # See https://github.com/dominikh/go-tools/issues/1737
 
 formatters:
   enable:

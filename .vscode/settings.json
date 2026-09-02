@@ -4,20 +4,16 @@
     "-count=1"
   ],
   "go.testEnvVars": {
-    "GOEXPERIMENT": "jsonv2"
+    "TESTCONTAINERS_RYUK_DISABLED": "true"
   },
-  "go.buildTags": "jsonv2",
+  "go.buildTags": "",
   "go.delveConfig": {
-    "debugAdapter": "dlv-dap",
-    "env": {
-      "GOEXPERIMENT": "jsonv2"
-    }
+    "debugAdapter": "dlv-dap"
   },
   "go.useLanguageServer": true,
   "go.languageServerFlags": [],
   "gopls": {
     "buildFlags": [
-      "-tags=jsonv2"
     ],
     "formatting.gofumpt": true
   },
