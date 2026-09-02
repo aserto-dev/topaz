@@ -3,7 +3,7 @@ package resolvers
 import (
 	"context"
 
-	runtime "github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/internal/runtime"
 )
 
 type RuntimeResolver interface {

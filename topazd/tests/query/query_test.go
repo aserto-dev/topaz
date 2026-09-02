@@ -9,8 +9,8 @@ import (
 	azc "github.com/aserto-dev/go-aserto/az"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	rt "github.com/aserto-dev/runtime"
 	"github.com/aserto-dev/topaz/internal/fs"
+	"github.com/aserto-dev/topaz/internal/runtime"
 	"github.com/aserto-dev/topaz/topaz/x"
 	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
 	tc "github.com/aserto-dev/topaz/topazd/tests/common"
@@ -130,7 +130,7 @@ var queryTests = []struct {
 		},
 		validate: validateResult(
 			contains("id"),
-			func(t *testing.T, result *rt.Result) {
+			func(t *testing.T, result *runtime.Result) {
 				binding, _ := result.Result[0].Bindings["x"].(map[string]any)
 				require.Equal(t, "euang@acmecorp.com", binding["id"])
 			},
@@ -158,7 +158,7 @@ var queryTests = []struct {
 		validate: validateResult(
 			contains("identity"),
 			contains("user"),
-			func(t *testing.T, result *rt.Result) {
+			func(t *testing.T, result *runtime.Result) {
 				bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
 				require.Contains(t, bindings["identity"], "type")
 				require.Contains(t, bindings["user"], "id")
@@ -177,7 +177,7 @@ var queryTests = []struct {
 		validate: validateResult(
 			contains("identity"),
 			contains("user"),
-			func(t *testing.T, result *rt.Result) {
+			func(t *testing.T, result *runtime.Result) {
 				bindings, _ := result.Result[0].Bindings["x"].(map[string]any)
 				require.Contains(t, bindings["identity"], "identity")
 				require.Contains(t, bindings["identity"], "type")
@@ -188,13 +188,13 @@ var queryTests = []struct {
 }
 
 func contains(val string) resultValidator {
-	return func(t *testing.T, result *rt.Result) {
+	return func(t *testing.T, result *runtime.Result) {
 		require.Contains(t, result.Result[0].Bindings, "x")
 		require.Contains(t, result.Result[0].Bindings["x"], val)
 	}
 }
 
-type resultValidator func(t *testing.T, result *rt.Result)
+type resultValidator func(t *testing.T, result *runtime.Result)
 
 func validateResult(check ...resultValidator) func(t *testing.T, resp *authorizer.QueryResponse, err error) {
 	return func(t *testing.T, resp *authorizer.QueryResponse, err error) {
@@ -202,12 +202,12 @@ func validateResult(check ...resultValidator) func(t *testing.T, resp *authorize
 		require.NotNil(t, resp)
 		require.NotNil(t, resp.GetResponse())
 
-		var result *rt.Result
+		var result *runtime.Result
 
 		buf, err := resp.GetResponse().MarshalJSON()
 		require.NoError(t, err)
 
-		if err := json.Unmarshal(buf, &result); err != nil {
+		if err := json.Unmarshal(buf, &result); err != nil { //nolint:musttag
 			require.NoError(t, err)
 		}
 
