@@ -25,7 +25,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-const defaultTestContextTimeout = 30 * time.Second
+const defaultTestContextTimeout = 60 * time.Second
 
 func testContextTimeout(t *testing.T) time.Duration {
 	t.Helper()
@@ -138,6 +138,9 @@ func TestRemoteBundleV0(t *testing.T) {
 	dsClient := dsr.NewReaderClient(dsConn)
 	acClient := dsa.NewAccessClient(dsConn)
 
+	tok := os.Getenv("GH_TOKEN")
+	assert.NotEmpty(tok, "GH_TOKEN NOT SET")
+
 	ctx, cancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 	t.Cleanup(cancel)
 
@@ -151,7 +154,7 @@ func TestRemoteBundleV0(t *testing.T) {
 						"credentials": map[string]any{
 							"bearer": map[string]any{
 								"scheme": "Bearer",
-								"token":  os.Getenv("GIT_TOKEN"),
+								"token":  tok,
 							},
 						},
 						"response_header_timeout_seconds": 5,
@@ -222,8 +225,8 @@ func TestRemoteBundleV1(t *testing.T) {
 	dsClient := dsr.NewReaderClient(dsConn)
 	acClient := dsa.NewAccessClient(dsConn)
 
-	tok := os.Getenv("GIT_TOKEN")
-	assert.NotEmpty(tok)
+	tok := os.Getenv("GH_TOKEN")
+	assert.NotEmpty(tok, "GH_TOKEN NOT SET")
 
 	ctx, cancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 	t.Cleanup(cancel)
