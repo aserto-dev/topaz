@@ -4,7 +4,6 @@ project_name: topaz
 
 env:
   # https://goreleaser.com/customization/env/
-  - GOEXPERIMENT=jsonv2
   - REGISTRY=ghcr.io
   - ORG=aserto-dev
   - REPO=topaz
@@ -219,15 +218,16 @@ dockers_v2:
 
     sbom: false # Attestation is not supported for the docker driver.
 
-    retry:
-      attempts: 10
-      delay: 10s
-      max_delay: 2m
-
     extra_files:
     annotations:
     build_args:
     flags:
+
+retry:
+  # https://goreleaser.com/customization/general/retry/
+  attempts: 10
+  delay: 10s
+  max_delay: 5m
 
 sboms:
   # https://goreleaser.com/customization/sbom/
