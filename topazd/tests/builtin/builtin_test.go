@@ -298,7 +298,7 @@ var BuiltinHelpTests = []struct {
 		name:  "az.subject_search",
 		query: "x = az.subject_search({})",
 		expected: `az.subject_search({
-	"subject": {"type": "", "properties": {}},
+	"subject": {"type": "", "id": "", "properties": {}},
 	"action": {"name": "", "properties": {}},
 	"resource": {"type": "", "id": "", "properties": {}},
 	"context": {},
