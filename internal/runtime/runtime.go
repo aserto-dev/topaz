@@ -18,7 +18,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-const instanceID string = "topazd"
+const defaultInstanceID string = "topazd"
 
 type Runtime struct {
 	Logger           *zerolog.Logger
@@ -57,6 +57,10 @@ var builtinsLock sync.Mutex
 
 func New(ctx context.Context, cfg *Config, opts ...Option) (*Runtime, error) {
 	newLogger := zerolog.Ctx(ctx).With().Str("component", "runtime").Str("instance-id", cfg.InstanceID).Logger()
+
+	if cfg.InstanceID == "" {
+		cfg.InstanceID = defaultInstanceID
+	}
 
 	rt := &Runtime{
 		Logger:           &newLogger,
@@ -100,7 +104,7 @@ func (r *Runtime) Start(ctx context.Context) error {
 	}
 
 	sdkOpts := sdk.Options{
-		ID:            instanceID,
+		ID:            r.Config.InstanceID,
 		Config:        opaConfig,
 		Logger:        logger.NewOpaLogger(r.Logger),
 		ConsoleLogger: logger.NewOpaLogger(r.Logger),
@@ -125,7 +129,7 @@ func (r *Runtime) Start(ctx context.Context) error {
 		Ready: readyChannel,
 	}
 
-	opaInstance, err := sdk.New(context.Background(), sdkOpts)
+	opaInstance, err := sdk.New(ctx, sdkOpts)
 	if err != nil {
 		return err
 	}
@@ -135,7 +139,7 @@ func (r *Runtime) Start(ctx context.Context) error {
 	select {
 	case <-readyChannel:
 	case <-ctx.Done():
-		r.Logger.Error().Err(err).Msg("creating opa instance")
+		r.Logger.Error().Err(ctx.Err()).Msg("creating opa instance")
 		return ctx.Err()
 	}
 

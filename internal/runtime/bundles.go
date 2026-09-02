@@ -187,7 +187,7 @@ func (r *Runtime) GetPolicyList(ctx context.Context, id string, fn PathFilterFn)
 				return errors.Wrap(errX, "store.GetPolicy")
 			}
 
-			module, errY := ast.ParseModule("", string(buf))
+			module, errY := ast.ParseModuleWithOpts("", string(buf), ast.ParserOptions{RegoVersion: r.regoVersion})
 			if errY != nil {
 				return errors.Wrap(errY, "ast.ParseModule")
 			}
@@ -343,7 +343,7 @@ func getModule(ctx context.Context, r *Runtime, id string) (*Module, error) {
 			return errors.Wrap(err, "failed to get policy")
 		}
 
-		module, err := ast.ParseModule("", string(policy))
+		module, err := ast.ParseModuleWithOpts("", string(policy), ast.ParserOptions{RegoVersion: r.regoVersion})
 		if err != nil {
 			return errors.Wrap(err, "parse module")
 		}

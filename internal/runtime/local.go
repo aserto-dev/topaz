@@ -9,7 +9,6 @@ import (
 
 	"github.com/open-policy-agent/opa/v1/bundle"
 	"github.com/open-policy-agent/opa/v1/loader"
-	bp "github.com/open-policy-agent/opa/v1/plugins/bundle"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/pkg/errors"
 )
@@ -25,12 +24,12 @@ func (r *Runtime) loadPaths(paths []string) (map[string]*bundle.Bundle, error) {
 	}
 
 	if r.Config.LocalBundles.LocalPolicyImage != "" {
-		tarballpath, err := r.getPolicyTarballPath(r.Config.LocalBundles.LocalPolicyImage)
+		tarballPath, err := r.getPolicyTarballPath(r.Config.LocalBundles.LocalPolicyImage)
 		if err != nil {
 			r.Logger.Warn().Err(err).Msg("Could not load configured local policy image")
+		} else if tarballPath != "" {
+			paths = append(paths, tarballPath)
 		}
-
-		paths = append(paths, tarballpath)
 	}
 
 	result := make(map[string]*bundle.Bundle, len(paths))
@@ -48,12 +47,6 @@ func (r *Runtime) loadPaths(paths []string) (map[string]*bundle.Bundle, error) {
 			WithSkipBundleVerification(skipVerify).
 			AsBundle(path)
 		if err != nil {
-			errorStatus := bp.Status{
-				Name: path,
-			}
-
-			errorStatus.SetError(err)
-
 			return nil, errors.Wrapf(err, "load bundle from local path '%s'", path)
 		}
 	}

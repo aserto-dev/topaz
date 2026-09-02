@@ -91,17 +91,17 @@ func testPolicy(ctx context.Context, addr string) func(*testing.T) {
 			name string
 			test func(*testing.T)
 		}{
-			{"TestListPolicies", ListPolicies(ctx, azClient)},
-			{"TestListPoliciesMasked", ListPoliciesMasked(ctx, azClient)},
-			{"TestListPoliciesMaskedComposed", ListPoliciesMaskedComposed(ctx, azClient)},
-			{"TestListPoliciesInvalidMask", ListPoliciesInvalidMask(ctx, azClient)},
-			{"TestListPoliciesEmptyMask", ListPoliciesEmptyMask(ctx, azClient)},
-			{"TestGetPolicies", GetPolicies(ctx, azClient)},
-			{"TestGetPoliciesMasked", GetPoliciesMasked(ctx, azClient)},
+			{"TestListPolicies", listPolicies(ctx, azClient)},
+			{"TestListPoliciesMasked", listPoliciesMasked(ctx, azClient)},
+			{"TestListPoliciesMaskedComposed", listPoliciesMaskedComposed(ctx, azClient)},
+			{"TestListPoliciesInvalidMask", listPoliciesInvalidMask(ctx, azClient)},
+			{"TestListPoliciesEmptyMask", listPoliciesEmptyMask(ctx, azClient)},
+			{"TestGetPolicies", getPolicies(ctx, azClient)},
+			{"TestGetPoliciesMasked", getPoliciesMasked(ctx, azClient)},
 			{"TestGetPoliciesMaskedComposed", GetPoliciesMaskedComposed(ctx, azClient)},
-			{"TestGetPoliciesInvalidMask", GetPoliciesInvalidMask(ctx, azClient)},
-			{"TestGetPoliciesEmptyMask", GetPoliciesEmptyMask(ctx, azClient)},
-			{"TestGetPoliciesInvalidID", GetPoliciesInvalidID(ctx, azClient)},
+			{"TestGetPoliciesInvalidMask", getPoliciesInvalidMask(ctx, azClient)},
+			{"TestGetPoliciesEmptyMask", getPoliciesEmptyMask(ctx, azClient)},
+			{"TestGetPoliciesInvalidID", getPoliciesInvalidID(ctx, azClient)},
 		}
 
 		for _, testCase := range tests {
@@ -110,7 +110,7 @@ func testPolicy(ctx context.Context, addr string) func(*testing.T) {
 	}
 }
 
-func ListPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func listPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{})
@@ -121,7 +121,7 @@ func ListPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) fun
 	}
 }
 
-func ListPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func listPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
@@ -140,7 +140,7 @@ func ListPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClien
 	}
 }
 
-func ListPoliciesMaskedComposed(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func listPoliciesMaskedComposed(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
@@ -161,7 +161,7 @@ func ListPoliciesMaskedComposed(ctx context.Context, azClient authorizer.Authori
 	}
 }
 
-func ListPoliciesInvalidMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func listPoliciesInvalidMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
@@ -182,7 +182,7 @@ func ListPoliciesInvalidMask(ctx context.Context, azClient authorizer.Authorizer
 	}
 }
 
-func ListPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func listPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 		listPoliciesResponse, err := azClient.ListPolicies(ctx, &authorizer.ListPoliciesRequest{
@@ -201,7 +201,7 @@ func ListPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerCl
 	}
 }
 
-func GetPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func getPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 		apiModule := getOneModule(ctx, azClient, t)
@@ -214,7 +214,7 @@ func GetPolicies(ctx context.Context, azClient authorizer.AuthorizerClient) func
 	}
 }
 
-func GetPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func getPoliciesMasked(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 		apiModule := getOneModule(ctx, azClient, t)
@@ -258,7 +258,7 @@ func GetPoliciesMaskedComposed(ctx context.Context, azClient authorizer.Authoriz
 	}
 }
 
-func GetPoliciesInvalidMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func getPoliciesInvalidMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 
@@ -282,7 +282,7 @@ func GetPoliciesInvalidMask(ctx context.Context, azClient authorizer.AuthorizerC
 	}
 }
 
-func GetPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func getPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 
@@ -304,13 +304,16 @@ func GetPoliciesEmptyMask(ctx context.Context, azClient authorizer.AuthorizerCli
 	}
 }
 
-func GetPoliciesInvalidID(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
+func getPoliciesInvalidID(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		assert := require.New(t)
 
-		_, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
+		p, err := azClient.GetPolicy(ctx, &authorizer.GetPolicyRequest{
 			Id: "doesnotexist",
 		})
+
+		assert.Error(err)
+		assert.Nil(p)
 
 		s := status.Convert(err)
 		assert.Equal(codes.NotFound, s.Code())

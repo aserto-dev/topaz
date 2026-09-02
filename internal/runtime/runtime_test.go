@@ -142,11 +142,7 @@ func TestRemoteBundleV0(t *testing.T) {
 						Resource: "ghcr.io/aserto-policies/policy-peoplefinder-rbac:2",
 						Persist:  false,
 						Config: download.Config{
-							Polling: download.PollingConfig{
-								MinDelaySeconds:           new(int64(60)),
-								MaxDelaySeconds:           new(int64(120)),
-								LongPollingTimeoutSeconds: new(int64(360)),
-							},
+							Polling: testPollingConfig(),
 						},
 					},
 				},
@@ -233,11 +229,7 @@ func TestRemoteBundleV1(t *testing.T) {
 						Resource: "ghcr.io/aserto-policies/policy-rebac:latest",
 						Persist:  false,
 						Config: download.Config{
-							Polling: download.PollingConfig{
-								MinDelaySeconds:           new(int64(60)),
-								MaxDelaySeconds:           new(int64(120)),
-								LongPollingTimeoutSeconds: new(int64(360)),
-							},
+							Polling: testPollingConfig(),
 						},
 					},
 				},
@@ -285,4 +277,12 @@ func TestRemoteBundleV1(t *testing.T) {
 	b, err := r.GetBundles(ctx)
 	assert.NoError(err)
 	assert.Len(b, 1)
+}
+
+func testPollingConfig() download.PollingConfig {
+	return download.PollingConfig{
+		MinDelaySeconds:           func() *int64 { v := int64(60); return &v }(),
+		MaxDelaySeconds:           func() *int64 { v := int64(120); return &v }(),
+		LongPollingTimeoutSeconds: func() *int64 { v := int64(360); return &v }(),
+	}
 }

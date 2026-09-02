@@ -3,6 +3,7 @@ package runtime
 import (
 	"context"
 
+	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/open-policy-agent/opa/v1/server/types"
 	"github.com/open-policy-agent/opa/v1/storage"
 	"github.com/pkg/errors"
@@ -51,5 +52,5 @@ func (r *Runtime) GetPolicy(ctx context.Context, id string) (*types.PolicyV1, er
 		}
 	}
 
-	return nil, err
+	return nil, errors.Wrapf(aerr.ErrPolicyNotFound, "with ID [%s]", id)
 }
