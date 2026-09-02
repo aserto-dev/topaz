@@ -110,12 +110,13 @@ dockers_v2:
 
     sbom: false # Attestation is not supported for the docker driver.
 
-    retry:
-      attempts: 10
-      delay: 10s
-      max_delay: 2m
-
     extra_files:
     annotations:
     build_args:
     flags:
+
+retry:
+  # https://goreleaser.com/customization/general/retry/
+  attempts: 10
+  delay: 10s
+  max_delay: 5m
