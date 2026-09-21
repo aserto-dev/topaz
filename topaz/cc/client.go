@@ -31,6 +31,10 @@ func DirectorySvc() string {
 }
 
 func DirectorySvcHttp() string {
+	if directorySvcHttp := os.Getenv(x.EnvTopazDirectorySvcHttp); directorySvcHttp != "" {
+		return directorySvcHttp
+	}
+
 	return defaultDirectorySvcHttp
 }
 
@@ -59,6 +63,10 @@ func AuthorizerSvc() string {
 }
 
 func AuthorizerSvcHttp() string {
+	if authorizerSvcHttp := os.Getenv(x.EnvTopazAuthorizerSvcHttp); authorizerSvcHttp != "" {
+		return authorizerSvcHttp
+	}
+
 	return defaultAuthorizerSvcHttp
 }
 

@@ -114,9 +114,9 @@ type Info struct {
 		Timeout           string `json:"timeout"`
 	} `json:"authorizer"`
 	OpenAPI struct {
-		Directory  string `json:"topaz_directory_svc"`
-		Access     string `json:"topaz_access_svc"`
-		Authorizer string `json:"topaz_authorizer_svc"`
+		Directory  string `json:"directory_svc"`
+		Access     string `json:"access_svc"`
+		Authorizer string `json:"authorizer_svc"`
 	} `json:"open_api_endpoints"`
 	Access struct {
 		WellKnownConfigURL string `json:"wellknown_config_url"`
