@@ -1,7 +1,6 @@
 package access
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -11,6 +10,8 @@ import (
 	"time"
 
 	"github.com/aserto-dev/topaz/topaz/cmd/configure"
+	"github.com/aserto-dev/topaz/topazd/app/handlers"
+	"github.com/olekukonko/errors"
 )
 
 type WellKnownCmd struct{}
@@ -37,7 +38,7 @@ func (cmd *WellKnownCmd) Run(ctx context.Context) error {
 	}()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("unexpected status: %s\n", resp.Status)
+		return errors.Errorf("unexpected status: %s\n", resp.Status)
 	}
 
 	bodyBytes, err := io.ReadAll(resp.Body)
@@ -45,11 +46,14 @@ func (cmd *WellKnownCmd) Run(ctx context.Context) error {
 		return fmt.Errorf("reading body: %w", err)
 	}
 
-	bodyReader := bytes.NewReader(bodyBytes)
+	var wellknown handlers.WellKnownConfig
+	if err := json.Unmarshal(bodyBytes, &wellknown); err != nil {
+		return err
+	}
 
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	enc.SetEscapeHTML(false)
 
-	return enc.Encode(bodyReader)
+	return enc.Encode(wellknown)
 }
