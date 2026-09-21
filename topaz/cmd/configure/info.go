@@ -213,10 +213,18 @@ func (cmd InfoConfigCmd) svcConfig() *config.Config {
 }
 
 func grpcEndpoint(cfg *builder.API) string {
+	if cfg == nil {
+		return ""
+	}
+
 	return lo.Ternary(cfg.GRPC.FQDN != "", cfg.GRPC.FQDN, cfg.GRPC.ListenAddress)
 }
 
 func httpEndpoint(cfg *builder.API) string {
+	if cfg == nil {
+		return ""
+	}
+
 	strURL := fmt.Sprintf(
 		"%s://%s",
 		lo.Ternary(cfg.Gateway.HTTP, "http", "https"),
