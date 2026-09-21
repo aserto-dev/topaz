@@ -9,15 +9,17 @@ import (
 )
 
 const (
-	defaultDirectorySvc    = "localhost:9292"
-	defaultDirectoryKey    = ""
-	defaultDirectoryToken  = ""
-	defaultAuthorizerSvc   = "localhost:8282"
-	defaultAuthorizerKey   = ""
-	defaultAuthorizerToken = ""
-	defaultInsecure        = false
-	defaultPlaintext       = false
-	defaultTimeout         = 5 * time.Second
+	defaultDirectorySvc      = "localhost:9292"
+	defaultDirectorySvcHttp  = "localhost:9393"
+	defaultDirectoryKey      = ""
+	defaultDirectoryToken    = ""
+	defaultAuthorizerSvc     = "localhost:8282"
+	defaultAuthorizerSvcHttp = "localhost:8383"
+	defaultAuthorizerKey     = ""
+	defaultAuthorizerToken   = ""
+	defaultInsecure          = false
+	defaultPlaintext         = false
+	defaultTimeout           = 5 * time.Second
 )
 
 func DirectorySvc() string {
@@ -26,6 +28,10 @@ func DirectorySvc() string {
 	}
 
 	return defaultDirectorySvc
+}
+
+func DirectorySvcHttp() string {
+	return defaultDirectorySvcHttp
 }
 
 func DirectoryKey() string {
@@ -50,6 +56,10 @@ func AuthorizerSvc() string {
 	}
 
 	return defaultAuthorizerSvc
+}
+
+func AuthorizerSvcHttp() string {
+	return defaultAuthorizerSvcHttp
 }
 
 func AuthorizerKey() string {
