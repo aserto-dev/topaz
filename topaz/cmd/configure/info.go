@@ -19,6 +19,15 @@ import (
 	"github.com/itchyny/gojq"
 )
 
+const (
+	directoryOpenAPISpec  string = "/directory/openapi.json"
+	authorizerOpenAPISpec string = "/authorizer/openapi.json"
+	accessOpenAPISpec     string = "/access/openapi.json"
+	accessWellknown       string = "/.well-known/authzen-configuration"
+	readerSvc             string = "reader"
+	authorizerSvc         string = "authorizer"
+)
+
 type InfoConfigCmd struct {
 	Var string `arg:"" optional:"" help:"configuration variable"`
 	Raw bool   `flag:"" short:"r" help:"output raw strings"`
@@ -138,6 +147,10 @@ func (cmd InfoConfigCmd) GetInfo() *Info {
 	info.Config.TopazDir = cc.GetTopazDir()
 
 	cfg := cc.GetConfig()
+	if cfg == nil {
+		return nil
+	}
+
 	info.Runtime.ActiveConfigurationName = cfg.Active.Config
 	info.Runtime.ActiveConfigurationFile = cfg.Active.ConfigFile
 	info.Runtime.RunningConfigurationName = cfg.Running.Config
@@ -147,8 +160,6 @@ func (cmd InfoConfigCmd) GetInfo() *Info {
 
 	svcCfg := cmd.svcConfig()
 
-	config.GetConfig(cfg.Running.ConfigFile)
-
 	info.Default.ContainerRegistry = cc.ContainerRegistry()
 	info.Default.ContainerImage = cc.ContainerImage()
 	info.Default.ContainerTag = cc.ContainerTag()
@@ -156,27 +167,27 @@ func (cmd InfoConfigCmd) GetInfo() *Info {
 	info.Default.NoCheck = cc.NoCheck()
 	info.Default.NoColor = cc.NoColor()
 
-	info.Directory.DirectorySvc = grpcEndpoint(svcCfg.APIConfig.Services["reader"])
-	info.Directory.DirectorySvcHttp = httpEndpoint(svcCfg.APIConfig.Services["reader"])
+	info.Directory.DirectorySvc = grpcEndpoint(svcCfg.APIConfig.Services[readerSvc], cc.DirectorySvc())
+	info.Directory.DirectorySvcHttp = httpEndpoint(svcCfg.APIConfig.Services[readerSvc], cc.DirectorySvcHttp())
 	info.Directory.DirectoryKey = cc.DirectoryKey()
 	info.Directory.DirectoryToken = cc.DirectoryToken()
 	info.Directory.Insecure = cc.Insecure()
 	info.Directory.Plaintext = cc.Plaintext()
 	info.Directory.Timeout = cc.Timeout().String()
 
-	info.Authorizer.AuthorizerSvc = grpcEndpoint(svcCfg.APIConfig.Services["authorizer"])
-	info.Authorizer.AuthorizerSvcHttp = httpEndpoint(svcCfg.APIConfig.Services["authorizer"])
+	info.Authorizer.AuthorizerSvc = grpcEndpoint(svcCfg.APIConfig.Services[authorizerSvc], cc.AuthorizerSvc())
+	info.Authorizer.AuthorizerSvcHttp = httpEndpoint(svcCfg.APIConfig.Services[authorizerSvc], cc.AuthorizerSvcHttp())
 	info.Authorizer.AuthorizerKey = cc.AuthorizerKey()
 	info.Authorizer.AuthorizerToken = cc.AuthorizerToken()
 	info.Authorizer.Insecure = cc.Insecure()
 	info.Authorizer.Plaintext = cc.Plaintext()
 	info.Authorizer.Timeout = cc.Timeout().String()
 
-	info.OpenAPI.Directory = info.Directory.DirectorySvcHttp + "/directory/openapi.json"
-	info.OpenAPI.Access = info.Directory.DirectorySvcHttp + "/access/openapi.json"
-	info.OpenAPI.Authorizer = info.Authorizer.AuthorizerSvcHttp + "/authorizer/openapi.json"
+	info.OpenAPI.Directory = info.Directory.DirectorySvcHttp + directoryOpenAPISpec
+	info.OpenAPI.Access = "" // DISABLED till AuthZEN Access OpenAPI.json file in included info.Directory.DirectorySvcHttp + accessOpenAPISpec
+	info.OpenAPI.Authorizer = info.Authorizer.AuthorizerSvcHttp + accessOpenAPISpec
 
-	info.Access.WellKnownConfigURL = info.Directory.DirectorySvcHttp + "/.well-known/authzen-configuration"
+	info.Access.WellKnownConfigURL = info.Directory.DirectorySvcHttp + accessWellknown
 
 	return &info
 }
@@ -198,6 +209,9 @@ func (cmd InfoConfigCmd) json() map[string]any {
 
 func (cmd InfoConfigCmd) svcConfig() *config.Config {
 	cfg := cc.GetConfig()
+	if cfg == nil {
+		return nil
+	}
 
 	if cfg.Running.ConfigFile != "" {
 		c := config.GetConfig(cfg.Running.ConfigFile)
@@ -212,17 +226,17 @@ func (cmd InfoConfigCmd) svcConfig() *config.Config {
 	return nil
 }
 
-func grpcEndpoint(cfg *builder.API) string {
+func grpcEndpoint(cfg *builder.API, def string) string {
 	if cfg == nil {
-		return ""
+		return def
 	}
 
 	return lo.Ternary(cfg.GRPC.FQDN != "", cfg.GRPC.FQDN, cfg.GRPC.ListenAddress)
 }
 
-func httpEndpoint(cfg *builder.API) string {
+func httpEndpoint(cfg *builder.API, def string) string {
 	if cfg == nil {
-		return ""
+		return def
 	}
 
 	strURL := fmt.Sprintf(

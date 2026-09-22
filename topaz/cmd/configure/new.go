@@ -34,7 +34,10 @@ func (cmd *NewConfigCmd) Run(ctx context.Context) error {
 		return errors.New("no policy specified. Please provide a policy URI with the --resource (-r) option")
 	}
 
-	cfg := cc.GetConfig()
+	cfg, err := cc.RequireConfig()
+	if err != nil {
+		return err
+	}
 
 	configFile := cmd.Name.String() + ".yaml"
 	if configFile != cfg.Active.ConfigFile {
@@ -71,10 +74,7 @@ func (cmd *NewConfigCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	var (
-		w   io.Writer
-		err error
-	)
+	var w io.Writer
 
 	if cmd.Stdout {
 		w = os.Stdout
