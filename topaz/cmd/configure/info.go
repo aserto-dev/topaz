@@ -184,8 +184,8 @@ func (cmd InfoConfigCmd) GetInfo() *Info {
 	info.Authorizer.Timeout = cc.Timeout().String()
 
 	info.OpenAPI.Directory = info.Directory.DirectorySvcHttp + directoryOpenAPISpec
-	info.OpenAPI.Access = "" // DISABLED till AuthZEN Access OpenAPI.json file in included info.Directory.DirectorySvcHttp + accessOpenAPISpec
-	info.OpenAPI.Authorizer = info.Authorizer.AuthorizerSvcHttp + accessOpenAPISpec
+	info.OpenAPI.Access = info.Directory.DirectorySvcHttp + accessOpenAPISpec
+	info.OpenAPI.Authorizer = info.Authorizer.AuthorizerSvcHttp + authorizerOpenAPISpec
 
 	info.Access.WellKnownConfigURL = info.Directory.DirectorySvcHttp + accessWellknown
 

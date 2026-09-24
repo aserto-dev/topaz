@@ -11,7 +11,7 @@ import (
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/cmd/configure"
 	"github.com/aserto-dev/topaz/topazd/app/handlers"
-	"github.com/olekukonko/errors"
+	"github.com/pkg/errors"
 )
 
 type WellKnownCmd struct{}
