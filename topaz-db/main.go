@@ -19,7 +19,8 @@ func main() {
 
 	cli := cmd.CLI{}
 
-	kongCtx := kong.Parse(&cli,
+	kongCtx := kong.Parse(
+		&cli,
 		kong.Name("topaz-db"),
 		kong.Description("topaz database utility"),
 		kong.UsageOnError(),
@@ -33,13 +34,14 @@ func main() {
 			NoExpandSubcommands: true,
 		}),
 		kong.Vars{
-			"directory_svc":   os.Getenv(x.EnvTopazDirectorySvc),
-			"directory_key":   os.Getenv(x.EnvTopazDirectoryKey),
-			"directory_token": "",
-			"insecure":        strconv.FormatBool(false),
-			"plaintext":       strconv.FormatBool(false),
-			"no_check":        strconv.FormatBool(false),
-			"timeout":         cc.Timeout().String(),
+			"directory_svc":      os.Getenv(x.EnvTopazDirectorySvc),
+			"directory_svc_http": os.Getenv(x.EnvTopazDirectorySvcHttp),
+			"directory_key":      os.Getenv(x.EnvTopazDirectoryKey),
+			"directory_token":    "",
+			"insecure":           strconv.FormatBool(false),
+			"plaintext":          strconv.FormatBool(false),
+			"no_check":           strconv.FormatBool(false),
+			"timeout":            cc.Timeout().String(),
 		},
 	)
 
