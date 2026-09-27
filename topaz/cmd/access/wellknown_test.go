@@ -1,6 +1,8 @@
+//nolint:testpackage
 package access
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -35,7 +37,12 @@ func TestWellKnownClientSupportsInsecureTLS(t *testing.T) {
 	}))
 	defer srv.Close()
 
-	resp, err := wellKnownClient(true).Get(srv.URL)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, srv.URL, nil)
+	if err != nil {
+		t.Fatalf("failed to build request: %v", err)
+	}
+
+	resp, err := wellKnownClient(true).Do(req)
 	if err != nil {
 		t.Fatalf("expected insecure client to connect: %v", err)
 	}
@@ -64,7 +71,12 @@ func TestWellKnownURLMatchesPlaintextServer(t *testing.T) {
 		t.Fatalf("failed to build URL: %v", err)
 	}
 
-	resp, err := wellKnownClient(false).Get(plaintextURL.String())
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, plaintextURL.String(), nil)
+	if err != nil {
+		t.Fatalf("failed to build request: %v", err)
+	}
+
+	resp, err := wellKnownClient(false).Do(req)
 	if err != nil {
 		t.Fatalf("expected plaintext client to connect: %v", err)
 	}
