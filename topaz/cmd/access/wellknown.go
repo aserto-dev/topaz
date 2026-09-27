@@ -85,15 +85,21 @@ func wellKnownClient(insecure bool) *http.Client {
 		return http.DefaultClient
 	}
 
-	transport, ok := http.DefaultTransport.(*http.Transport)
+	client := *http.DefaultClient
+
+	baseTransport := client.Transport
+	if baseTransport == nil {
+		baseTransport = http.DefaultTransport
+	}
+
+	transport, ok := baseTransport.(*http.Transport)
 	if !ok {
-		return http.DefaultClient
+		return &client
 	}
 
 	clone := transport.Clone()
 	clone.TLSClientConfig = &tls.Config{InsecureSkipVerify: true} //nolint:gosec // TOPAZ_INSECURE explicitly requests skipping TLS verification.
 
-	client := *http.DefaultClient
 	client.Transport = clone
 
 	return &client
