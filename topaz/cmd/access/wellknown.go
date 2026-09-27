@@ -2,10 +2,12 @@ package access
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/aserto-dev/topaz/topaz/cc"
@@ -30,7 +32,11 @@ func (cmd *WellKnownCmd) Run(ctx context.Context) error {
 		return fmt.Errorf("creating request: %w", err)
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	if req.URL, err = wellKnownURL(req.URL, info.Directory.Plaintext); err != nil {
+		return fmt.Errorf("building request URL: %w", err)
+	}
+
+	resp, err := wellKnownClient(info.Directory.Insecure).Do(req)
 	if err != nil {
 		return fmt.Errorf("request failed: %w", err)
 	}
@@ -59,4 +65,28 @@ func (cmd *WellKnownCmd) Run(ctx context.Context) error {
 	enc.SetEscapeHTML(false)
 
 	return enc.Encode(wellknown)
+}
+
+func wellKnownURL(reqURL *url.URL, plaintext bool) (*url.URL, error) {
+	u, err := url.Parse(reqURL.String())
+	if err != nil {
+		return nil, err
+	}
+
+	if plaintext {
+		u.Scheme = "http"
+	}
+
+	return u, nil
+}
+
+func wellKnownClient(insecure bool) *http.Client {
+	if !insecure {
+		return http.DefaultClient
+	}
+
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+
+	return &http.Client{Transport: transport}
 }
