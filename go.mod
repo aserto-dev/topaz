@@ -1,8 +1,6 @@
 module github.com/aserto-dev/topaz
 
-go 1.26.3
-
-toolchain go1.27.1
+go 1.27.1
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
@@ -16,7 +14,8 @@ require (
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
 	github.com/aserto-dev/openapi-directory v0.33.5
-	github.com/authzen/access.go v1.0.1
+	github.com/authzen/access.go/api v1.0.2
+	github.com/authzen/access.go/openapi v1.0.2
 	github.com/cli/browser v1.3.0
 	github.com/distribution/reference v0.6.0
 	github.com/docker/docker v28.5.2+incompatible
