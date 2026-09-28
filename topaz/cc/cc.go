@@ -18,6 +18,7 @@ import (
 var (
 	ErrNotRunning = errors.New("topaz is not running, use 'topaz start' or 'topaz run' to start")
 	ErrIsRunning  = errors.New("topaz is already running, use 'topaz stop' to stop")
+	ErrNoConfig   = errors.New("topaz.config is missing or no configuration is active")
 )
 
 type Config struct {
@@ -90,10 +91,20 @@ func NewConfig(ctx context.Context, noCheck bool, configFilePath string) (*Confi
 
 func GetConfig() *Config {
 	if config == nil {
-		panic("config not initialized")
+		return nil
 	}
 
 	return config
+}
+
+// RequireConfig returns the active CLI config, or ErrNoConfig if none is active.
+func RequireConfig() (*Config, error) {
+	cfg := GetConfig()
+	if cfg == nil {
+		return nil, ErrNoConfig
+	}
+
+	return cfg, nil
 }
 
 func (cfg *Config) CheckRunStatus(containerName string, expectedStatus runStatus) bool {

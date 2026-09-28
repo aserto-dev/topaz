@@ -36,7 +36,7 @@ RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 export TESTCONTAINERS_RYUK_DISABLED=$(shell docker context inspect --format '{{.Endpoints.docker.Host}}' 2>/dev/null | grep -q ".colima" && echo "true" || echo "false")
 
 .PHONY: deps
-deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft
+deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft install-air install-templ
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
@@ -204,6 +204,18 @@ install-syft: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@tar -xvf ${EXT_TMP_DIR}/syft.tar.gz --directory ${EXT_BIN_DIR} syft &> /dev/null
 	@chmod +x ${EXT_BIN_DIR}/syft
 	@${EXT_BIN_DIR}/syft --version
+
+.PHONY: install-air
+install-air: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install github.com/air-verse/air@latest
+	@${EXT_BIN_DIR}/air -v
+
+.PHONY: install-templ
+install-templ: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install github.com/a-h/templ/cmd/templ@latest
+	@${EXT_BIN_DIR}/templ --version
 
 .PHONY: clean
 clean:

@@ -1,8 +1,6 @@
 module github.com/aserto-dev/topaz
 
-go 1.26.3
-
-toolchain go1.27.1
+go 1.27.1
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
@@ -16,7 +14,8 @@ require (
 	github.com/aserto-dev/logger v0.0.9
 	github.com/aserto-dev/openapi-authorizer v0.20.6
 	github.com/aserto-dev/openapi-directory v0.33.5
-	github.com/authzen/access.go v1.0.1
+	github.com/authzen/access.go/api v1.0.2
+	github.com/authzen/access.go/openapi v1.0.2
 	github.com/cli/browser v1.3.0
 	github.com/distribution/reference v0.6.0
 	github.com/docker/docker v28.5.2+incompatible
@@ -29,7 +28,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.30.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.31.0
 	github.com/homeport/dyff v1.12.0
 	github.com/itchyny/gojq v0.12.19
 	github.com/jwx-go/jwkfetch/v4 v4.0.4
@@ -93,7 +92,7 @@ require (
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
-	github.com/go-openapi/jsonpointer v1.0.0 // indirect
+	github.com/go-openapi/jsonpointer v1.0.1 // indirect
 	github.com/gobwas/glob v1.0.0 // indirect
 	github.com/goccy/go-json v0.10.6 // indirect
 	github.com/gonvenience/bunt v1.4.3 // indirect
