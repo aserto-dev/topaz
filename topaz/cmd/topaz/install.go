@@ -18,13 +18,17 @@ type InstallCmd struct {
 func (cmd *InstallCmd) Run(ctx context.Context) error {
 	cmd.ContainerTag = cc.ContainerVersionTag(cmd.ContainerVersion, cmd.ContainerTag)
 
-	cfg := cc.GetConfig()
+	cfg, err := cc.RequireConfig()
+	if err != nil {
+		return err
+	}
 
 	if cfg.CheckRunStatus(cc.ContainerName(cfg.Active.Config), cc.StatusRunning) {
 		return cc.ErrIsRunning
 	}
 
-	cc.Con().Info().Msg(">>> installing %s (%s)...",
+	cc.Con().Info().Msg(
+		">>> installing %s (%s)...",
 		cc.Container(
 			cmd.ContainerRegistry, // registry
 			cmd.ContainerImage,    // image name

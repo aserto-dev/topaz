@@ -14,7 +14,10 @@ type StartCmd struct {
 }
 
 func (cmd *StartCmd) Run(ctx context.Context) error {
-	cfg := cc.GetConfig()
+	cfg, err := cc.RequireConfig()
+	if err != nil {
+		return err
+	}
 
 	if err := cmd.run(cfg, modeDaemon); err != nil {
 		return err
