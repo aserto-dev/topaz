@@ -1,13 +1,11 @@
 module github.com/aserto-dev/topaz/topaz-opa
 
-go 1.26.3
-
-toolchain go1.27.1
+go 1.27.1
 
 require (
 	github.com/aserto-dev/go-aserto v0.34.1
 	github.com/aserto-dev/go-directory v0.34.2
-	github.com/authzen/access.go v1.0.1
+	github.com/authzen/access.go/api v1.0.2
 	github.com/open-policy-agent/opa v1.21.0
 	github.com/samber/lo v1.53.0
 	github.com/spf13/cobra v1.10.2
