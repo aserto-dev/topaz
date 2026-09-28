@@ -1,0 +1,2 @@
+capabilities:
+  file: topaz-opa/rego/capabilities.json

@@ -108,6 +108,29 @@ builds:
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
+  - id: topaz-opa
+    main: ./topaz-opa
+    binary: topaz-opa
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
 archives:
   # https://goreleaser.com/customization/archive/
   - formats:
@@ -116,6 +139,7 @@ archives:
       - topaz
       - topazd
       - topaz-backup
+      - topaz-opa
     files:
       - LICENSE
       - README.md
@@ -184,6 +208,36 @@ homebrew_casks:
             system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/topaz"]
           end
 
+  - name: topaz-opa
+
+    repository:
+      owner: "{{ .Env.ORG }}"
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP }}"
+
+    url:
+      verified: "github.com/{{ .Env.ORG }}/{{ .ProjectName }}"
+
+    commit_author:
+      name: Topaz Bot
+      email: info@topaz.sh
+
+    homepage: "https://www.topaz.sh/docs/"
+    description: "Topaz OPA"
+    license: "{{ .Env.LICENSE }}"
+
+    binaries:
+      - topaz-opa
+
+    skip_upload: false
+
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/topaz-opa"]
+          end
+
 dockers_v2:
   # https://goreleaser.com/customization/dockers_v2
   - dockerfile: "Dockerfile"
@@ -244,3 +298,4 @@ sboms:
       - topazd
       - topaz-backup
       - topaz-db
+      - topaz-opa

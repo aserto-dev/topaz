@@ -1,0 +1,17 @@
+services:
+  ghcr-registry:
+    url: https://ghcr.io
+    type: oci
+    credentials:
+      bearer:
+        scheme: "Bearer"
+        token: "${GIT_TOKEN}"
+
+bundles:
+  authz:
+    service: ghcr-registry
+    resource: ghcr.io/aserto-policies/policy-peoplefinder-rbac:2
+    persist: true
+    polling:
+      min_delay_seconds: 30
+      max_delay_seconds: 120
