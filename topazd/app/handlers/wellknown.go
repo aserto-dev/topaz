@@ -4,17 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
-	"strings"
-	"sync"
-
-	"github.com/aserto-dev/topaz/topazd/service/builder"
-	"github.com/pkg/errors"
-	"github.com/samber/lo"
 )
 
 const AuthZENConfiguration string = `/.well-known/authzen-configuration`
-
-var once sync.Once
 
 type WellKnownConfig struct {
 	PolicyDecisionPoint       string `json:"policy_decision_point"`       //nolint:tagliatelle
@@ -25,8 +17,13 @@ type WellKnownConfig struct {
 	SearchActionEndpoint      string `json:"search_action_endpoint"`      //nolint:tagliatelle
 }
 
-func WellKnownConfigHandler(endpoint *url.URL) func(w http.ResponseWriter, r *http.Request) {
+func WellKnownConfigHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		endpoint := &url.URL{
+			Scheme: scheme(r),
+			Host:   r.Host,
+		}
+
 		config := WellKnownConfig{
 			PolicyDecisionPoint:       endpoint.String(),
 			AccessEvaluationEndpoint:  endpoint.String() + "/access/v1/evaluation",
@@ -37,41 +34,27 @@ func WellKnownConfigHandler(endpoint *url.URL) func(w http.ResponseWriter, r *ht
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-
 		json.NewEncoder(w).Encode(config)
 	}
 }
 
-func SetWellKnownConfigHandler(cfg *builder.API, mux *http.ServeMux) error {
-	ep, err := endpoint(cfg)
-	if err != nil {
-		return err
+func WellKnownConfigRuntimeHandler() func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	handler := WellKnownConfigHandler()
+
+	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+		handler(w, r)
 	}
-
-	once.Do(func() {
-		mux.HandleFunc(AuthZENConfiguration, WellKnownConfigHandler(ep))
-	})
-
-	return nil
 }
 
-func endpoint(cfg *builder.API) (*url.URL, error) {
-	if cfg.Gateway.FQDN != "" {
-		return url.Parse(cfg.Gateway.FQDN)
-	}
-
-	if cfg.Gateway.ListenAddress != "" {
-		u := url.URL{
-			Scheme: lo.Ternary(cfg.Gateway.HTTP, "http", "https"),
-			Host:   serviceAddress(cfg.Gateway.ListenAddress),
+func scheme(r *http.Request) string {
+	scheme := r.Header.Get("X-Forwarded-Proto")
+	if scheme == "" {
+		if r.TLS == nil {
+			scheme = "http"
+		} else {
+			scheme = "https"
 		}
-
-		return url.Parse(u.String())
 	}
 
-	return nil, errors.Errorf("no fqdn or listen address")
-}
-
-func serviceAddress(listenAddress string) string {
-	return strings.Replace(listenAddress, "0.0.0.0", "localhost", 1)
+	return scheme
 }
