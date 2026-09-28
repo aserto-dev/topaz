@@ -1,6 +1,8 @@
-go 1.26.7
+go 1.26.3
+
+toolchain go1.27.1
 
 use (
-    .
-    ./topaz-opa
+	.
+	./topaz-opa
 )
