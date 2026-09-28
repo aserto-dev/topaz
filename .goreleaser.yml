@@ -188,9 +188,6 @@ homebrew_casks:
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP }}"
 
-    url:
-      verified: "github.com/{{ .Env.ORG }}/{{ .ProjectName }}"
-
     commit_author:
       name: Topaz Bot
       email: info@topaz.sh

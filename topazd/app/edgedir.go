@@ -14,6 +14,7 @@ import (
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 	dsa "github.com/authzen/access.go/api/access/v1"
+	acOpenAPI "github.com/authzen/access.go/openapi"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/samber/lo"
@@ -79,8 +80,7 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		if lo.Contains(services, modelService) {
-			err := dsm.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
+			if err := dsm.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
 				return err
 			}
 
@@ -90,29 +90,25 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 		}
 
 		if lo.Contains(services, readerService) {
-			{
-				err := dsr.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-				if err != nil {
-					return err
-				}
+			if err := dsr.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
+				return err
 			}
-			{
-				err := dsa.RegisterAccessHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-				if err != nil {
-					return err
-				}
-			}
-		}
 
-		if lo.Contains(services, writerService) {
-			err := dsw.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
-			if err != nil {
+			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler(port, services...)); err != nil {
+				return err
+			}
+
+			if err := dsa.RegisterAccessHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
+				return err
+			}
+
+			if err := mux.HandlePath(http.MethodGet, accessOpenAPISpec, acOpenAPIHandler()); err != nil {
 				return err
 			}
 		}
 
-		if len(services) > 0 {
-			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler(port, services...)); err != nil {
+		if lo.Contains(services, writerService) {
+			if err := dsw.RegisterWriterHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
 				return err
 			}
 		}
@@ -123,6 +119,7 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 
 const (
 	directoryOpenAPISpec string = "/directory/openapi.json"
+	accessOpenAPISpec    string = "/access/openapi.json"
 )
 
 func dsOpenAPIHandler(port string, services ...string) func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
@@ -130,5 +127,11 @@ func dsOpenAPIHandler(port string, services ...string) func(w http.ResponseWrite
 
 	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
 		handler(w, r)
+	}
+}
+
+func acOpenAPIHandler() func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+		acOpenAPI.OpenAPIHandler(w, r)
 	}
 }

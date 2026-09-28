@@ -20,7 +20,10 @@ func (cmd *UseConfigCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	cfg := cc.GetConfig()
+	cfg, err := cc.RequireConfig()
+	if err != nil {
+		return err
+	}
 
 	topazContainers, err := cfg.GetRunningContainers()
 	if err != nil {
