@@ -7,14 +7,14 @@ import (
 	"io"
 	"strconv"
 
-	azmModel "github.com/aserto-dev/azm/model"
-	manifest "github.com/aserto-dev/azm/v3"
 	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	mnfst "github.com/aserto-dev/go-directory/pkg/manifest"
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/go-directory/pkg/validator"
+	azmModel "github.com/aserto-dev/topaz/internal/azm/model"
+	manifest "github.com/aserto-dev/topaz/internal/azm/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
 

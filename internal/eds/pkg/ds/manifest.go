@@ -6,8 +6,8 @@ import (
 	"hash/fnv"
 	"strconv"
 
-	"github.com/aserto-dev/azm/model"
 	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	"github.com/aserto-dev/topaz/internal/azm/model"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 
 	bolt "go.etcd.io/bbolt"

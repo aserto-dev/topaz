@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+types:
+  user:
+    relations:
+      # valid: mutually recursive relations are allowed as long as there is at lease one
+      # direct assignment.
+      parent: user | user#child
+      child: user | user#parent
+
+  group:
+    relations:
+      # valid: mutually recursive relations with a concrete wildcard assignment.
+      member: user:* | group#guest
+      guest: group#member
+
+  team:
+    relations:
+      # invalid: cyclic definition without any concrete type assignment.
+      member: team#member
+
+      # invalid: cyclic definition without any concrete type assignment.
+      owner: project#owner
+
+  project:
+    relations:
+      # invalid: cyclic definition without any concrete type assignment.
+      owner: team#owner
+
+

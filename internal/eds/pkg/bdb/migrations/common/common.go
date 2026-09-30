@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/aserto-dev/azm/model"
-	v3 "github.com/aserto-dev/azm/v3"
 	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	"github.com/aserto-dev/topaz/internal/azm/model"
+	v3 "github.com/aserto-dev/topaz/internal/azm/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/rs/zerolog"
@@ -182,7 +182,8 @@ func BackupFilename(dbPath string, version *semver.Version) string {
 	ext := filepath.Ext(file)
 	base := strings.TrimSuffix(file, ext)
 
-	return filepath.Join(dir, fmt.Sprintf("%s-%s%s",
+	return filepath.Join(dir, fmt.Sprintf(
+		"%s-%s%s",
 		base,
 		version.String(),
 		ext,

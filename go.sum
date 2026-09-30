@@ -24,8 +24,6 @@ github.com/antlr4-go/antlr/v4 v4.13.1 h1:SqQKkuVZ+zWkMMNkjy5FZe5mr5WURWnlpmOuzYW
 github.com/antlr4-go/antlr/v4 v4.13.1/go.mod h1:GKmUxMtwp6ZgGwZSva4eWPC5mS6vUAmOABFgjdkM7Nw=
 github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0 h1:jfIu9sQUG6Ig+0+Ap1h4unLjW6YQJpKZVmUzxsD4E/Q=
 github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0/go.mod h1:t2tdKJDJF9BV14lnkjHmOQgcvEKgtqs5a1N3LNdJhGE=
-github.com/aserto-dev/azm v0.2.26 h1:mlrWvRHF9UBd4DLmsZDY2mvZLY9JPEynh+qdGpVC3Fo=
-github.com/aserto-dev/azm v0.2.26/go.mod h1:Y4Vq/eSy+KL7IQO0VU0x3YQLw/L/2oG+PEAylMN3vNA=
 github.com/aserto-dev/errors v0.34.1 h1:nLLqNdH0WdqXluXoilawT67ZcQYfDFjD17tKcCVn5jA=
 github.com/aserto-dev/errors v0.34.1/go.mod h1:DjH9+A2lmK8q4p+Ml0djJEDwkMVDdRHFabURPPpfM/k=
 github.com/aserto-dev/go-aserto v0.34.1 h1:SwqyVmIAlCMmGpw4D857dKmPwDkHi9dy45ds/Ys40RY=

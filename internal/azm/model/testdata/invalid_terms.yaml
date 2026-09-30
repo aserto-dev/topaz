@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+types:
+  user: {}
+
+  resource:
+    relations:
+      empty:
+      all_symbols: $#@!
+      bad_prefix: -user
+      bad_suffix: user$
+      bad_infix: us!!er
+      num_prefix: 123user
+      arrow: user->user
+      missing_start: "| user"
+      missing_end: user |
+      missing_middle: user | | user:*
+      multiple_errors: -user | user$ | _._
+
+
+    permissions:
+      invalid_operator: this * that
+      bad_arrow_base: bad@base->tip
+      bad_arrow_tip: base->bad$tip

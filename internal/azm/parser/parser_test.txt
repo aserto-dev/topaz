@@ -1,0 +1,9 @@
+user
+user | group
+user | user:* | group#member
+user | user:* | group#member | parent->viewer
+reader | writer
+reader & writer
+reader - writer
+parent_folder->read
+IDENTITY

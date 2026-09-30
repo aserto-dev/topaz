@@ -88,6 +88,8 @@ linters:
         - grpc.ServerOption
         - logging.Logger
         - ast.Object
+        - model.objSet
+        - model.relSet
 
     lll:
       line-length: 150
@@ -106,6 +108,10 @@ linters:
           - pkg: topazd/app/handlers
             rules:
               json: camel
+          - pkg: internal/azm/stats
+            ignored-fields:
+              - Count
+              - ObjCount
 
     wsl_v5:
       allow-first-in-block: true
@@ -135,9 +141,10 @@ linters:
       - path: topazd/tests
         linters:
           - goconst
-      # - path: topaz/cmd/certs/
-      #   linters:
-      #     - staticcheck # See https://github.com/dominikh/go-tools/issues/1737
+      - path: internal/azm/parser/
+        linters:
+          - forcetypeassert
+          - ireturn
 
 formatters:
   enable:
