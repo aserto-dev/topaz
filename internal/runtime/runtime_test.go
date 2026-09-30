@@ -127,6 +127,11 @@ func TestFailingLocalBundle(t *testing.T) {
 }
 
 func TestRemoteBundleV0(t *testing.T) {
+	tok := os.Getenv("GH_TOKEN")
+	if tok == "" {
+		t.Skipf("GH_TOKEN NOT SET")
+	}
+
 	assert := require.New(t)
 
 	var (
@@ -137,9 +142,6 @@ func TestRemoteBundleV0(t *testing.T) {
 
 	dsClient := dsr.NewReaderClient(dsConn)
 	acClient := dsa.NewAccessClient(dsConn)
-
-	tok := os.Getenv("GH_TOKEN")
-	assert.NotEmpty(tok, "GH_TOKEN NOT SET")
 
 	ctx, cancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 	t.Cleanup(cancel)
@@ -214,6 +216,11 @@ func TestRemoteBundleV0(t *testing.T) {
 }
 
 func TestRemoteBundleV1(t *testing.T) {
+	tok := os.Getenv("GH_TOKEN")
+	if tok == "" {
+		t.Skipf("GH_TOKEN NOT SET")
+	}
+
 	assert := require.New(t)
 
 	var (
@@ -224,9 +231,6 @@ func TestRemoteBundleV1(t *testing.T) {
 
 	dsClient := dsr.NewReaderClient(dsConn)
 	acClient := dsa.NewAccessClient(dsConn)
-
-	tok := os.Getenv("GH_TOKEN")
-	assert.NotEmpty(tok, "GH_TOKEN NOT SET")
 
 	ctx, cancel := context.WithTimeout(t.Context(), testContextTimeout(t))
 	t.Cleanup(cancel)
