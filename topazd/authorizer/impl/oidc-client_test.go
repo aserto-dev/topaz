@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	oktaIssuer  = "https://trial-3441947.okta.com/oauth2/default"
+	oktaIssuer  = "https://okta-devok12.okta.com/oauth2/default"
 	auth0Issuer = "https://aserto.us.auth0.com/"
 )
 
