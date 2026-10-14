@@ -9,6 +9,7 @@ import (
 	"github.com/alecthomas/kong"
 	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
 	"github.com/aserto-dev/go-directory/aserto/directory/migrate/v33"
+	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/topaz/js"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -44,10 +45,16 @@ func main() {
 	cli := CLI{}
 
 	kongCtx := kong.Parse(&cli)
-	kongCtx.Run()
+	if err := kongCtx.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "err: %s\n", err.Error())
+	}
 }
 
 func (cmd *CLI) Run() error {
+	if cmd.Output == "" {
+		cmd.Output = cmd.Input + "l"
+	}
+
 	reader, err := os.Open(cmd.Input)
 	if err != nil {
 		return err
@@ -90,6 +97,10 @@ func (cmd *CLI) Run() error {
 			Properties: o33.GetProperties(),
 			UpdatedAt:  o33.GetUpdatedAt(),
 			Etag:       o33.GetEtag(),
+		}
+
+		if x.Properties == nil {
+			x.Properties = pb.NewStruct()
 		}
 
 		if dn := o33.GetDisplayName(); dn != "" {
