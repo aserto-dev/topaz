@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/js"
 
@@ -18,8 +18,8 @@ import (
 )
 
 func (c *Client) Backup(ctx context.Context, file string) error {
-	stream, err := c.Exporter.Export(ctx, &dse.ExportRequest{
-		Options:   uint32(dse.Option_OPTION_DATA),
+	stream, err := c.Reader.Export(ctx, &dsr.ExportRequest{
+		Options:   uint32(dsr.Option_OPTION_DATA),
 		StartFrom: &timestamppb.Timestamp{},
 	})
 	if err != nil {
@@ -79,7 +79,7 @@ func (c *Client) Backup(ctx context.Context, file string) error {
 	return nil
 }
 
-func (c *Client) createBackupFiles(stream dse.Exporter_ExportClient, dirPath string) error {
+func (c *Client) createBackupFiles(stream dsr.Reader_ExportClient, dirPath string) error {
 	objects, err := js.NewWriter(filepath.Join(dirPath, ObjectsFileName), ObjectsStr)
 	if err != nil {
 		return err
@@ -107,12 +107,12 @@ func (c *Client) createBackupFiles(stream dse.Exporter_ExportClient, dirPath str
 		}
 
 		switch m := msg.GetMsg().(type) {
-		case *dse.ExportResponse_Object:
+		case *dsr.ExportResponse_Object:
 			err = objects.Write(m.Object)
 
 			objectsCounter.Incr().Print(os.Stdout)
 
-		case *dse.ExportResponse_Relation:
+		case *dsr.ExportResponse_Relation:
 			err = relations.Write(m.Relation)
 
 			relationsCounter.Incr().Print(os.Stdout)
@@ -236,7 +236,7 @@ func (c *Client) getObjectsFile(ctx context.Context, fqn string) error {
 	}
 	defer objWriter.Close()
 
-	return c.ExportToFile(ctx, objWriter, uint32(dse.Option_OPTION_DATA_OBJECTS))
+	return c.ExportToFile(ctx, objWriter, uint32(dsr.Option_OPTION_DATA_OBJECTS))
 }
 
 func (c *Client) getRelationsFile(ctx context.Context, fqn string) error {
@@ -246,7 +246,7 @@ func (c *Client) getRelationsFile(ctx context.Context, fqn string) error {
 	}
 	defer relWriter.Close()
 
-	return c.ExportToFile(ctx, relWriter, uint32(dse.Option_OPTION_DATA_RELATIONS))
+	return c.ExportToFile(ctx, relWriter, uint32(dsr.Option_OPTION_DATA_RELATIONS))
 }
 
 func addToArchive(tw *tar.Writer, filename string) error {

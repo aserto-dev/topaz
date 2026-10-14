@@ -1,12 +1,12 @@
-{"type":"folder","id":"root","display_name":"Root folder","properties":{}}
-{"type":"folder","id":"rick","display_name":"Rick's home folder","properties":{}}
-{"type":"folder","id":"morty","display_name":"Morty's home folder","properties":{}}
-{"type":"folder","id":"morty.shared","display_name":"Morty's shared folder","properties":{}}
-{"type":"folder","id":"summer","display_name":"Summer's home folder","properties":{}}
-{"type":"folder","id":"jerry","display_name":"Jerry's home folder","properties":{}}
-{"type":"folder","id":"beth","display_name":"Beths's home folder","properties":{}}
-{"type":"doc","id":"secrets","display_name":"Family secrets","properties":{}}
-{"type":"doc","id":"groceries","display_name":"Grocery list","properties":{}}
-{"type":"doc","id":"rick.inventions","display_name":"Rick's inventions","properties":{}}
-{"type":"doc","id":"morty.journal","display_name":"Morty's private journal","properties":{}}
-{"type":"doc","id":"morty.shared.notes","display_name":"Morty's shared notes","properties":{}}
+{"object_type":"folder","object_id":"root","properties":{"display_name":"Root folder"}}
+{"object_type":"folder","object_id":"rick","properties":{"display_name":"Rick's home folder"}}
+{"object_type":"folder","object_id":"morty","properties":{"display_name":"Morty's home folder"}}
+{"object_type":"folder","object_id":"morty.shared","properties":{"display_name":"Morty's shared folder"}}
+{"object_type":"folder","object_id":"summer","properties":{"display_name":"Summer's home folder"}}
+{"object_type":"folder","object_id":"jerry","properties":{"display_name":"Jerry's home folder"}}
+{"object_type":"folder","object_id":"beth","properties":{"display_name":"Beths's home folder"}}
+{"object_type":"doc","object_id":"secrets","properties":{"display_name":"Family secrets"}}
+{"object_type":"doc","object_id":"groceries","properties":{"display_name":"Grocery list"}}
+{"object_type":"doc","object_id":"rick.inventions","properties":{"display_name":"Rick's inventions"}}
+{"object_type":"doc","object_id":"morty.journal","properties":{"display_name":"Morty's private journal"}}
+{"object_type":"doc","object_id":"morty.shared.notes","properties":{"display_name":"Morty's shared notes"}}

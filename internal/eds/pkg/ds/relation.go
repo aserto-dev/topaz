@@ -51,6 +51,11 @@ func GetRelations(i *dsr.GetRelationsRequest) *relations {
 	return &relations{r, relation{r.SafeRelation}}
 }
 
+func ListRelations(i *dsr.ListRelationsRequest) *relations {
+	r := safe.ListRelations(i)
+	return &relations{r, relation{r.SafeRelation}}
+}
+
 func (i *relation) Key() []byte {
 	return i.ObjKey()
 }

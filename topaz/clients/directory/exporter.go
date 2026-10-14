@@ -7,13 +7,13 @@ import (
 	"io"
 	"os"
 
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (c *Client) ExportToFile(ctx context.Context, w io.Writer, options uint32) error {
-	stream, err := c.Exporter.Export(ctx, &dse.ExportRequest{
+	stream, err := c.Reader.Export(ctx, &dsr.ExportRequest{
 		Options:   options,
 		StartFrom: &timestamppb.Timestamp{},
 	})
@@ -34,12 +34,12 @@ func (c *Client) ExportToFile(ctx context.Context, w io.Writer, options uint32) 
 		}
 
 		switch m := msg.GetMsg().(type) {
-		case *dse.ExportResponse_Object:
+		case *dsr.ExportResponse_Object:
 			if err := encoder.Encode(m.Object); err != nil {
 				return err
 			}
 
-		case *dse.ExportResponse_Relation:
+		case *dsr.ExportResponse_Relation:
 			if err := encoder.Encode(m.Relation); err != nil {
 				return err
 			}

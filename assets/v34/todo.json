@@ -8,12 +8,12 @@
             "resource": "ghcr.io/aserto-policies/policy-todo:3.0.0"
         },
         "idp_data": [
-            "citadel/citadel_objects.json",
-            "citadel/citadel_relations.json"
+            "citadel/citadel_objects.jsonl",
+            "citadel/citadel_relations.jsonl"
         ],
         "domain_data": [
-          "todo/todo_objects.json",
-          "todo/todo_relations.json"
+          "todo/todo_objects.jsonl",
+          "todo/todo_relations.jsonl"
         ],
         "assertions": []
     }

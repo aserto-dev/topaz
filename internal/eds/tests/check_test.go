@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"testing"
 
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/server"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sync/errgroup"
@@ -32,7 +32,7 @@ func BenchmarkCheckSerial(b *testing.B) {
 	b.ResetTimer()
 
 	for _, check := range checks {
-		_, err := client.V3.Reader.Check(ctx, check)
+		_, err := client.Client.Reader.Check(ctx, check)
 		assert.NoError(err)
 	}
 }
@@ -56,7 +56,7 @@ func BenchmarkCheckParallel(b *testing.B) {
 	for _, check := range checks {
 		b.RunParallel(func(pb *testing.PB) {
 			for pb.Next() {
-				_, err := client.V3.Reader.Check(ctx, check)
+				_, err := client.Client.Reader.Check(ctx, check)
 				assert.NoError(err)
 			}
 		})
@@ -93,7 +93,7 @@ func BenchmarkCheckParallelChunks(b *testing.B) {
 		b.RunParallel(func(pb *testing.PB) {
 			for _, check := range chunk {
 				for pb.Next() {
-					_, err := client.V3.Reader.Check(ctx, check)
+					_, err := client.Client.Reader.Check(ctx, check)
 					assert.NoError(err)
 				}
 			}
@@ -111,7 +111,7 @@ func setupBenchmark(b *testing.B, client *server.TestEdgeClient) {
 	assert.NoError(setManifest(client, manifest))
 
 	g, iCtx := errgroup.WithContext(b.Context())
-	stream, err := client.V3.Importer.Import(iCtx)
+	stream, err := client.Client.Writer.Import(iCtx)
 	assert.NoError(err)
 
 	g.Go(receiver(stream))
@@ -137,7 +137,7 @@ func loadChecks[T any]() ([]*T, error) {
 	return checks, nil
 }
 
-func receiver(stream dsi.Importer_ImportClient) func() error {
+func receiver(stream dsw.Writer_ImportClient) func() error {
 	return func() error {
 		for {
 			_, err := stream.Recv()

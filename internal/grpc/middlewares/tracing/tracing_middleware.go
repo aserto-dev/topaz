@@ -6,7 +6,7 @@ import (
 
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
 	"github.com/aserto-dev/topaz/internal/header"
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	middleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 )
@@ -60,7 +60,7 @@ func (m *TracingMiddleware) Stream() grpc.StreamServerInterceptor {
 
 		logger.Trace().Msg("grpc stream call")
 
-		wrapped := grpcmiddleware.WrapServerStream(stream)
+		wrapped := middleware.WrapServerStream(stream)
 		wrapped.WrappedContext = ctx
 
 		return handler(srv, wrapped)

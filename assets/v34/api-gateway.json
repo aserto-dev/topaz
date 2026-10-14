@@ -5,19 +5,19 @@
         "manifest": "api-gateway/manifest.yaml",
         "policy": {
             "name": "api-gateway",
-            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+            "resource": "ghcr.io/gertd/policy-rebac:v34"
         },
         "idp_data": [
-            "citadel/citadel_objects.json",
-            "citadel/citadel_relations.json"
+            "citadel/citadel_objects.jsonl",
+            "citadel/citadel_relations.jsonl"
         ],
         "domain_data": [
-            "api-gateway/api-gateway_objects.json",
-            "api-gateway/api-gateway_relations.json"
+            "api-gateway/api-gateway_objects.jsonl",
+            "api-gateway/api-gateway_relations.jsonl"
         ],
         "assertions": [
-            "api-gateway/test/api-gateway_assertions.json",
-            "api-gateway/test/api-gateway_evaluations.json"
+            "api-gateway/test/api-gateway_assertions.jsonl",
+            "api-gateway/test/api-gateway_evaluations.jsonl"
         ]
     }
 }

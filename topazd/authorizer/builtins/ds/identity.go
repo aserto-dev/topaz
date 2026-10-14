@@ -54,7 +54,7 @@ func RegisterIdentity(logger *zerolog.Logger, fnName string, dr reader.ReaderCli
 			case err != nil:
 				return nil, err
 			default:
-				return ast.StringTerm(user.GetId()), nil
+				return ast.StringTerm(user.GetObjectId()), nil
 			}
 		}
 }

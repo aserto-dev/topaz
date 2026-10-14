@@ -1,8 +1,8 @@
 {
   "objects": [
     {
-      "type": "identity",
-      "id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "object_type": "identity",
+      "object_id": "CiRmZDQ2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -10,8 +10,8 @@
       }
     },
     {
-      "type": "identity",
-      "id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "object_type": "identity",
+      "object_id": "CiRmZDI2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -19,14 +19,15 @@
       }
     },
     {
-      "type": "group",
-      "id": "evil_genius",
-      "display_name": "evil_genius-group",
-      "properties": {}
+      "object_type": "group",
+      "object_id": "evil_genius",
+      "properties": {
+        "display_name": "evil_genius-group"
+      }
     },
     {
-      "type": "identity",
-      "id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "object_type": "identity",
+      "object_id": "CiRmZDM2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -34,14 +35,15 @@
       }
     },
     {
-      "type": "group",
-      "id": "admin",
-      "display_name": "admin-group",
-      "properties": {}
+      "object_type": "group",
+      "object_id": "admin",
+      "properties": {
+        "display_name": "admin-group"
+      }
     },
     {
-      "type": "identity",
-      "id": "summer@the-smiths.com",
+      "object_type": "identity",
+      "object_id": "summer@the-smiths.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",
@@ -49,8 +51,8 @@
       }
     },
     {
-      "type": "identity",
-      "id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "object_type": "identity",
+      "object_id": "CiRmZDA2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -58,8 +60,8 @@
       }
     },
     {
-      "type": "identity",
-      "id": "rick@the-citadel.com",
+      "object_type": "identity",
+      "object_id": "rick@the-citadel.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",
@@ -67,8 +69,8 @@
       }
     },
     {
-      "type": "identity",
-      "id": "beth@the-smiths.com",
+      "object_type": "identity",
+      "object_id": "beth@the-smiths.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",
@@ -76,14 +78,15 @@
       }
     },
     {
-      "type": "group",
-      "id": "viewer",
-      "display_name": "viewer-group",
-      "properties": {}
+      "object_type": "group",
+      "object_id": "viewer",
+      "properties": {
+        "display_name": "viewer-group"
+      }
     },
     {
-      "type": "identity",
-      "id": "jerry@the-smiths.com",
+      "object_type": "identity",
+      "object_id": "jerry@the-smiths.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",
@@ -91,10 +94,10 @@
       }
     },
     {
-      "type": "user",
-      "id": "jerry@the-smiths.com",
-      "display_name": "Jerry Smith",
+      "object_type": "user",
+      "object_id": "jerry@the-smiths.com",
       "properties": {
+        "display_name": "Jerry Smith",
         "email": "jerry@the-smiths.com",
         "picture": "https://www.topaz.sh/assets/templates/v34/citadel/img/Jerry%20Smith.jpg",
         "roles": [
@@ -104,10 +107,10 @@
       }
     },
     {
-      "type": "user",
-      "id": "beth@the-smiths.com",
-      "display_name": "Beth Smith",
+      "object_type": "user",
+      "object_id": "beth@the-smiths.com",
       "properties": {
+        "display_name": "Beth Smith",
         "email": "beth@the-smiths.com",
         "picture": "https://www.topaz.sh/assets/templates/v34/citadel/img/Beth%20Smith.jpg",
         "roles": [
@@ -117,8 +120,8 @@
       }
     },
     {
-      "type": "identity",
-      "id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
+      "object_type": "identity",
+      "object_id": "CiRmZDE2MTRkMy1jMzlhLTQ3ODEtYjdiZC04Yjk2ZjVhNTEwMGQSBWxvY2Fs",
       "properties": {
         "kind": "IDENTITY_KIND_PID",
         "provider": "local",
@@ -126,10 +129,10 @@
       }
     },
     {
-      "type": "user",
-      "id": "rick@the-citadel.com",
-      "display_name": "Rick Sanchez",
+      "object_type": "user",
+      "object_id": "rick@the-citadel.com",
       "properties": {
+        "display_name": "Rick Sanchez",
         "email": "rick@the-citadel.com",
         "picture": "https://www.topaz.sh/assets/templates/v34/citadel/img/Rick%20Sanchez.jpg",
         "roles": [
@@ -140,10 +143,10 @@
       }
     },
     {
-      "type": "user",
-      "id": "morty@the-citadel.com",
-      "display_name": "Morty Smith",
+      "object_type": "user",
+      "object_id": "morty@the-citadel.com",
       "properties": {
+        "display_name": "Morty Smith",
         "email": "morty@the-citadel.com",
         "picture": "https://www.topaz.sh/assets/templates/v34/citadel/img/Morty%20Smith.jpg",
         "roles": [
@@ -153,10 +156,10 @@
       }
     },
     {
-      "type": "user",
-      "id": "summer@the-smiths.com",
-      "display_name": "Summer Smith",
+      "object_type": "user",
+      "object_id": "summer@the-smiths.com",
       "properties": {
+        "display_name": "Summer Smith",
         "email": "summer@the-smiths.com",
         "picture": "https://www.topaz.sh/assets/templates/v34/citadel/img/Summer%20Smith.jpg",
         "roles": [
@@ -166,14 +169,15 @@
       }
     },
     {
-      "type": "group",
-      "id": "editor",
-      "display_name": "editor-group",
-      "properties": {}
+      "object_type": "group",
+      "object_id": "editor",
+      "properties": {
+        "display_name": "editor-group"
+      }
     },
     {
-      "type": "identity",
-      "id": "morty@the-citadel.com",
+      "object_type": "identity",
+      "object_id": "morty@the-citadel.com",
       "properties": {
         "kind": "IDENTITY_KIND_EMAIL",
         "provider": "local",

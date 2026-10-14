@@ -100,3 +100,11 @@ func Unmarshal(b []byte, m proto.Message) error {
 		RecursionLimit: 0,
 	}.Unmarshal(b, m)
 }
+
+func UnmarshalLine(b []byte, m proto.Message) error {
+	return protojson.UnmarshalOptions{
+		AllowPartial:   true,
+		DiscardUnknown: false,
+		RecursionLimit: 0,
+	}.Unmarshal(b, m)
+}

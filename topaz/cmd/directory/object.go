@@ -88,13 +88,15 @@ func (cmd *SetObjectCmd) Run(ctx context.Context) error {
 func (cmd *SetObjectCmd) template() proto.Message {
 	return &writer.SetObjectRequest{
 		Object: &common.Object{
-			Type:        "",
-			Id:          "",
-			DisplayName: "", //nolint:staticcheck // deprecated
-			Properties:  &structpb.Struct{Fields: map[string]*structpb.Value{}},
-			CreatedAt:   &timestamppb.Timestamp{}, //nolint:staticcheck // deprecated
-			UpdatedAt:   &timestamppb.Timestamp{},
-			Etag:        "",
+			ObjectType: "",
+			ObjectId:   "",
+			// Type:        "", //nolint:staticcheck // deprecated
+			// Id:          "", //nolint:staticcheck // deprecated
+			// DisplayName: "", //nolint:staticcheck // deprecated
+			Properties: &structpb.Struct{Fields: map[string]*structpb.Value{}},
+			// CreatedAt:   &timestamppb.Timestamp{}, //nolint:staticcheck // deprecated
+			UpdatedAt: &timestamppb.Timestamp{},
+			Etag:      "",
 		},
 	}
 }

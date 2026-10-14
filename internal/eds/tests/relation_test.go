@@ -83,7 +83,7 @@ var relationTestCasesV3 = []*TestCase{
 	},
 	{
 		Name: "list all members of parent group",
-		Req: &dsr.GetRelationsRequest{
+		Req: &dsr.ListRelationsRequest{
 			ObjectType: "group",
 			ObjectId:   "parent-group",
 			Relation:   "member",
@@ -103,7 +103,7 @@ var relationTestCasesV3 = []*TestCase{
 	},
 	{
 		Name: "list member relations of parent group excluding subject relation",
-		Req: &dsr.GetRelationsRequest{
+		Req: &dsr.ListRelationsRequest{
 			ObjectType:               "group",
 			ObjectId:                 "parent-group",
 			Relation:                 "member",

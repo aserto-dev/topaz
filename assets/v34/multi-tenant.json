@@ -5,20 +5,20 @@
         "manifest": "multi-tenant/manifest.yaml",
         "policy": {
             "name": "multi-tenant",
-            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+            "resource": "ghcr.io/gertd/policy-rebac:v34"
         },
         "idp_data": [
-            "citadel/citadel_objects.json",
-            "citadel/citadel_relations.json"
+            "citadel/citadel_objects.jsonl",
+            "citadel/citadel_relations.jsonl"
         ],
         "domain_data": [
-            "multi-tenant/multi-tenant_objects.json",
-            "multi-tenant/multi-tenant_relations.json"
+            "multi-tenant/multi-tenant_objects.jsonl",
+            "multi-tenant/multi-tenant_relations.jsonl"
         ],
         "assertions": [
-            "multi-tenant/test/multi-tenant_assertions.json",
-            "multi-tenant/test/multi-tenant_decisions.json",
-            "multi-tenant/test/multi-tenant_evaluations.json"
+            "multi-tenant/test/multi-tenant_assertions.jsonl",
+            "multi-tenant/test/multi-tenant_decisions.jsonl",
+            "multi-tenant/test/multi-tenant_evaluations.jsonl"
         ]
     }
 }

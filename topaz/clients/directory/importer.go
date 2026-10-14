@@ -8,7 +8,7 @@ import (
 	"io"
 
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc/codes"
@@ -18,7 +18,7 @@ import (
 func (c *Client) ImportFromFile(ctx context.Context, r io.Reader) error {
 	errGrp, errGrpCtx := errgroup.WithContext(ctx)
 
-	stream, err := c.Importer.Import(errGrpCtx)
+	stream, err := c.Writer.Import(errGrpCtx)
 	if err != nil {
 		return err
 	}
@@ -30,7 +30,7 @@ func (c *Client) ImportFromFile(ctx context.Context, r io.Reader) error {
 	return errGrp.Wait()
 }
 
-func (c *Client) recv(stream dsi.Importer_ImportClient) func() error {
+func (c *Client) recv(stream dsw.Writer_ImportClient) func() error {
 	return func() error {
 		for {
 			msg, err := stream.Recv()
@@ -43,10 +43,10 @@ func (c *Client) recv(stream dsi.Importer_ImportClient) func() error {
 			}
 
 			switch m := msg.GetMsg().(type) {
-			case *dsi.ImportResponse_Status:
+			case *dsw.ImportResponse_Status:
 				_ = m.Status
 
-			case *dsi.ImportResponse_Counter:
+			case *dsw.ImportResponse_Counter:
 				_ = m.Counter
 
 			default:
@@ -56,7 +56,7 @@ func (c *Client) recv(stream dsi.Importer_ImportClient) func() error {
 	}
 }
 
-func (c *Client) sender(stream dsi.Importer_ImportClient, r io.Reader) func() error {
+func (c *Client) sender(stream dsw.Writer_ImportClient, r io.Reader) func() error {
 	return func() error {
 		if err := c.importFromReader(stream, r); err != nil {
 			return err
@@ -75,7 +75,7 @@ const (
 	max16Mb int = 16 * 1024 * 1024
 )
 
-func (c *Client) importFromReader(stream dsi.Importer_ImportClient, r io.Reader) error {
+func (c *Client) importFromReader(stream dsw.Writer_ImportClient, r io.Reader) error {
 	scanner := bufio.NewScanner(r)
 	// bufio.Scanner defaults to a 64K token limit, increase scanner to handle the token limit.
 	scanner.Buffer(make([]byte, buf64k), max16Mb)
@@ -84,11 +84,11 @@ func (c *Client) importFromReader(stream dsi.Importer_ImportClient, r io.Reader)
 		obj := &dsc.Object{}
 		rel := &dsc.Relation{}
 
-		if err := jsonx.Unmarshal(scanner.Bytes(), obj); err == nil {
-			if err := stream.Send(&dsi.ImportRequest{
-				OpCode: dsi.Opcode_OPCODE_SET,
-				Msg: &dsi.ImportRequest_Object{
-					Object: obj,
+		if err := jsonx.UnmarshalLine(scanner.Bytes(), rel); err == nil {
+			if err := stream.Send(&dsw.ImportRequest{
+				OpCode: dsw.Opcode_OPCODE_SET,
+				Msg: &dsw.ImportRequest_Relation{
+					Relation: rel,
 				},
 			}); err != nil {
 				return err
@@ -97,11 +97,11 @@ func (c *Client) importFromReader(stream dsi.Importer_ImportClient, r io.Reader)
 			continue
 		}
 
-		if err := jsonx.Unmarshal(scanner.Bytes(), rel); err == nil {
-			if err := stream.Send(&dsi.ImportRequest{
-				OpCode: dsi.Opcode_OPCODE_SET,
-				Msg: &dsi.ImportRequest_Relation{
-					Relation: rel,
+		if err := jsonx.UnmarshalLine(scanner.Bytes(), obj); err == nil {
+			if err := stream.Send(&dsw.ImportRequest{
+				OpCode: dsw.Opcode_OPCODE_SET,
+				Msg: &dsw.ImportRequest_Object{
+					Object: obj,
 				},
 			}); err != nil {
 				return err
@@ -118,14 +118,16 @@ func (c *Client) importFromReader(stream dsi.Importer_ImportClient, r io.Reader)
 }
 
 func ObjStr(obj *dsc.Object) string {
-	return fmt.Sprintf("[%s:%s]",
-		obj.GetType(),
-		obj.GetId(),
+	return fmt.Sprintf(
+		"[%s:%s]",
+		obj.GetObjectType(),
+		obj.GetObjectId(),
 	)
 }
 
 func RelStr(rel *dsc.Relation) string {
-	return fmt.Sprintf("[%s:%s#%s@%s:%s#%s]",
+	return fmt.Sprintf(
+		"[%s:%s#%s@%s:%s#%s]",
 		rel.GetObjectType(),
 		rel.GetObjectId(),
 		rel.GetRelation(),

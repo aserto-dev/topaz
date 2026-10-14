@@ -5,9 +5,6 @@ import (
 	"time"
 
 	client "github.com/aserto-dev/go-aserto"
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/topaz/clients"
@@ -30,24 +27,24 @@ type Config struct {
 var _ clients.Config = &Config{}
 
 type Client struct {
-	conn     *grpc.ClientConn
-	Model    dsm.ModelClient
-	Reader   dsr.ReaderClient
-	Writer   dsw.WriterClient
-	Importer dsi.ImporterClient
-	Exporter dse.ExporterClient
-	Access   dsa.AccessClient
+	conn   *grpc.ClientConn
+	Reader dsr.ReaderClient
+	Writer dsw.WriterClient
+	Access dsa.AccessClient
+	// Model    dsm.ModelClient
+	// Importer dsi.ImporterClient
+	// Exporter dse.ExporterClient
 }
 
 func New(conn *grpc.ClientConn) *Client {
 	return &Client{
-		conn:     conn,
-		Model:    dsm.NewModelClient(conn),
-		Reader:   dsr.NewReaderClient(conn),
-		Writer:   dsw.NewWriterClient(conn),
-		Importer: dsi.NewImporterClient(conn),
-		Exporter: dse.NewExporterClient(conn),
-		Access:   dsa.NewAccessClient(conn),
+		conn:   conn,
+		Reader: dsr.NewReaderClient(conn),
+		Writer: dsw.NewWriterClient(conn),
+		Access: dsa.NewAccessClient(conn),
+		// Model:    dsm.NewModelClient(conn),
+		// Importer: dsi.NewImporterClient(conn),
+		// Exporter: dse.NewExporterClient(conn),
 	}
 }
 

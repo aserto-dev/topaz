@@ -64,12 +64,12 @@ func (s *Stats) CountRelations(ctx context.Context, tx *bolt.Tx) error {
 }
 
 func (s *Stats) incObject(obj *dsc.Object) {
-	ot, ok := s.ObjectTypes[model.ObjectName(obj.GetType())]
+	ot, ok := s.ObjectTypes[model.ObjectName(obj.GetObjectType())]
 	if !ok {
 		ot = &stats.ObjectType{
 			Relations: stats.Relations{},
 		}
-		s.ObjectTypes[model.ObjectName(obj.GetType())] = ot
+		s.ObjectTypes[model.ObjectName(obj.GetObjectType())] = ot
 	}
 
 	atomic.AddInt32(&ot.ObjCount, 1)

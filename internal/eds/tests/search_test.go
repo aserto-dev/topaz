@@ -26,7 +26,7 @@ func BenchmarkSearchSerial(b *testing.B) {
 	b.ResetTimer()
 
 	for _, check := range checks {
-		_, err := client.V3.Reader.GetGraph(ctx, check)
+		_, err := client.Client.Reader.GetGraph(ctx, check)
 		assert.NoError(err)
 	}
 }
@@ -61,7 +61,7 @@ func BenchmarkSearchParallelChunks(b *testing.B) {
 		b.RunParallel(func(pb *testing.PB) {
 			for _, check := range chunk {
 				for pb.Next() {
-					_, err := client.V3.Reader.GetGraph(ctx, check)
+					_, err := client.Client.Reader.GetGraph(ctx, check)
 					assert.NoError(err)
 				}
 			}

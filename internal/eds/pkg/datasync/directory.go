@@ -9,7 +9,7 @@ import (
 	"time"
 
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	bolt "go.etcd.io/bbolt"
 
@@ -106,8 +106,8 @@ func (s *Sync) producer(ctx context.Context, conn *grpc.ClientConn) error {
 
 	s.logger.Debug().Str("start_from", ts.String()).Msg(syncProducer)
 
-	stream, err := dse.NewExporterClient(conn).Export(ctx, &dse.ExportRequest{
-		Options:   uint32(dse.Option_OPTION_DATA),
+	stream, err := dsr.NewReaderClient(conn).Export(ctx, &dsr.ExportRequest{
+		Options:   uint32(dsr.Option_OPTION_DATA),
 		StartFrom: ts,
 	})
 	if err != nil {
@@ -127,13 +127,13 @@ func (s *Sync) producer(ctx context.Context, conn *grpc.ClientConn) error {
 		recvCtr.Add(1)
 
 		switch m := msg.GetMsg().(type) {
-		case *dse.ExportResponse_Object:
+		case *dsr.ExportResponse_Object:
 			objCtr.Add(1)
 
 			if Has(s.options.Mode, Diff) {
 				s.filter.Insert(getObjectKey(m.Object))
 			}
-		case *dse.ExportResponse_Relation:
+		case *dsr.ExportResponse_Relation:
 			relCtr.Add(1)
 
 			if Has(s.options.Mode, Diff) {
@@ -177,7 +177,7 @@ func (s *Sync) subscriber(ctx context.Context) error {
 			recvCtr.Add(1)
 
 			switch m := msg.GetMsg().(type) {
-			case *dse.ExportResponse_Object:
+			case *dsr.ExportResponse_Object:
 				if err := s.objectSetHandler(ctx, tx, m.Object); err == nil {
 					ts = maxTS(ts, m.Object.GetUpdatedAt())
 
@@ -190,7 +190,7 @@ func (s *Sync) subscriber(ctx context.Context) error {
 					s.errChan <- err
 				}
 
-			case *dse.ExportResponse_Relation:
+			case *dsr.ExportResponse_Relation:
 				if err := s.relationSetHandler(ctx, tx, m.Relation); err == nil {
 					ts = maxTS(ts, m.Relation.GetUpdatedAt())
 
@@ -307,7 +307,7 @@ func (s *Sync) diff(ctx context.Context) error {
 }
 
 func getObjectKey(obj *dsc.Object) []byte {
-	return fmt.Appendf([]byte{}, "%s:%s", obj.GetType(), obj.GetId())
+	return fmt.Appendf([]byte{}, "%s:%s", obj.GetObjectType(), obj.GetObjectId())
 }
 
 func getRelationKey(rel *dsc.Relation) []byte {

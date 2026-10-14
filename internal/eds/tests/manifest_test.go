@@ -4,29 +4,23 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"testing"
 
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/server"
 	"github.com/aserto-dev/topaz/internal/fs"
-	"github.com/samber/lo"
 
 	"github.com/gonvenience/ytbx"
 	"github.com/homeport/dyff/pkg/dyff"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
-
-const blockSize = 1024 // test with 1KiB block size to exercise chunking.
 
 func TestManifestV2(t *testing.T) {
 	client, closer := testInit()
@@ -104,58 +98,27 @@ func testSetManifest(client *server.TestEdgeClient, manifest []byte) func(*testi
 }
 
 func setManifest(client *server.TestEdgeClient, manifest []byte) error {
-	stream, err := client.V3.Model.SetManifest(context.Background())
-	if err != nil {
+	if _, err := client.Client.Writer.SetManifest(
+		context.Background(),
+		&dsw.SetManifestRequest{
+			Manifest: &dsc.Manifest{
+				Content: manifest,
+			},
+		},
+	); err != nil {
 		return err
 	}
 
-	for i := 0; i < len(manifest); i += blockSize {
-		end := lo.Min([]int{i + blockSize, len(manifest)})
-		if err := stream.Send(&dsm.SetManifestRequest{
-			Msg: &dsm.SetManifestRequest_Body{
-				Body: &dsm.Body{Data: manifest[i:end]},
-			},
-		}); err != nil {
-			return err
-		}
-	}
-
-	_, err = stream.CloseAndRecv()
-
-	return err
+	return nil
 }
 
 func getManifest(client *server.TestEdgeClient) ([]byte, error) {
-	stream, err := client.V3.Model.GetManifest(context.Background(), &dsm.GetManifestRequest{Empty: &emptypb.Empty{}})
+	resp, err := client.Client.Reader.GetManifest(context.Background(), &dsr.GetManifestRequest{})
 	if err != nil {
 		return nil, err
 	}
 
-	data := bytes.Buffer{}
-
-	bytesRecv := 0
-
-	for {
-		resp, err := stream.Recv()
-		if errors.Is(err, io.EOF) {
-			break
-		}
-
-		if err != nil {
-			return nil, err
-		}
-
-		if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
-			_ = md.Metadata
-		}
-
-		if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
-			data.Write(body.Body.GetData())
-			bytesRecv += len(body.Body.GetData())
-		}
-	}
-
-	return data.Bytes(), nil
+	return resp.GetManifest().GetContent(), nil
 }
 
 func testGetManifest(client *server.TestEdgeClient, manifest string) func(*testing.T) {
@@ -191,43 +154,22 @@ func testGetModel(client *server.TestEdgeClient) func(*testing.T) {
 		hdr := metadata.New(map[string]string{"aserto-model-request": "model-only"})
 		ctx = metadata.NewOutgoingContext(ctx, hdr)
 
-		stream, err := client.V3.Model.GetManifest(ctx, &dsm.GetManifestRequest{Empty: &emptypb.Empty{}})
+		model, err := client.Client.Reader.GetModel(ctx, &dsr.GetModelRequest{})
 		if err != nil {
 			require.NoError(t, err)
 		}
 
-		for {
-			resp, err := stream.Recv()
-			if errors.Is(err, io.EOF) {
-				break
-			}
-
-			if err != nil {
-				require.NoError(t, err)
-			}
-
-			if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
-				_ = md.Metadata
-			}
-
-			if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
-				_ = body
-			}
-
-			if model, ok := resp.GetMsg().(*dsm.GetManifestResponse_Model); ok {
-				buf := new(bytes.Buffer)
-				if err := pb.ProtoToBuf(buf, model.Model); err != nil {
-					require.NoError(t, err)
-				}
-
-				tempModel := filepath.Join(os.TempDir(), "model.json")
-				if err := os.WriteFile(tempModel, buf.Bytes(), fs.FileModeOwnerRW); err != nil {
-					require.NoError(t, err)
-				}
-
-				fmt.Println(tempModel)
-			}
+		buf := new(bytes.Buffer)
+		if err := pb.ProtoToBuf(buf, model.GetModel().GetContent()); err != nil {
+			require.NoError(t, err)
 		}
+
+		tempModel := filepath.Join(os.TempDir(), "model.json")
+		if err := os.WriteFile(tempModel, buf.Bytes(), fs.FileModeOwnerRW); err != nil {
+			require.NoError(t, err)
+		}
+
+		fmt.Println(tempModel)
 	}
 }
 
@@ -238,9 +180,9 @@ func testDeleteManifest(client *server.TestEdgeClient) func(*testing.T) {
 }
 
 func deleteManifest(client *server.TestEdgeClient) error {
-	_, err := client.V3.Model.DeleteManifest(
+	_, err := client.Client.Writer.DeleteManifest(
 		context.Background(),
-		&dsm.DeleteManifestRequest{Empty: &emptypb.Empty{}},
+		&dsw.DeleteManifestRequest{},
 	)
 
 	return err
@@ -265,13 +207,13 @@ func loadData(client *server.TestEdgeClient, dataFile string) error {
 	ctx := context.Background()
 
 	for _, obj := range td.Objects {
-		if _, err := client.V3.Writer.SetObject(ctx, &dsw.SetObjectRequest{Object: obj}); err != nil {
+		if _, err := client.Client.Writer.SetObject(ctx, &dsw.SetObjectRequest{Object: obj}); err != nil {
 			return err
 		}
 	}
 
 	for _, rel := range td.Relations {
-		if _, err := client.V3.Writer.SetRelation(ctx, &dsw.SetRelationRequest{Relation: rel}); err != nil {
+		if _, err := client.Client.Writer.SetRelation(ctx, &dsw.SetRelationRequest{Relation: rel}); err != nil {
 			return err
 		}
 	}

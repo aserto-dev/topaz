@@ -8,8 +8,8 @@ import (
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	"github.com/aserto-dev/topaz/pkg/config"
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	middleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/metadata"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 )
@@ -52,7 +52,7 @@ func (a *APIKeyAuthMiddleware) Stream() grpc.StreamServerInterceptor {
 			return err
 		}
 
-		wrapped := grpc_middleware.WrapServerStream(stream)
+		wrapped := middleware.WrapServerStream(stream)
 		wrapped.WrappedContext = newCtx
 
 		return handler(srv, wrapped)
@@ -109,7 +109,7 @@ func (a *APIKeyAuthMiddleware) grpcAuthenticate(ctx context.Context) (context.Co
 }
 
 func grpcAuthHeader(ctx context.Context) string {
-	return metautils.ExtractIncoming(ctx).Get("Authorization")
+	return metadata.ExtractIncoming(ctx).Get("Authorization")
 }
 
 func httpAuthHeader(r *http.Request) string {

@@ -156,7 +156,7 @@ func getOutcomes(decisions []*authorizer.Decision) map[string]bool {
 
 func getID(v map[string]any) string {
 	if u, ok := v["user"].(map[string]any); ok {
-		if i, ok := u["id"].(string); ok {
+		if i, ok := u["object_id"].(string); ok {
 			return i
 		}
 	}

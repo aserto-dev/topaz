@@ -1,170 +1,169 @@
+//nolint:gocritic,unused,dupword
 package datasync
 
 import (
-	"bytes"
 	"context"
-	"hash/fnv"
-	"io"
-	"strconv"
-	"time"
 
 	"github.com/aserto-dev/azm/model"
-	manifest "github.com/aserto-dev/azm/v3"
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
-	"github.com/aserto-dev/go-directory/pkg/validator"
-	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 
-	"github.com/pkg/errors"
-	bolt "go.etcd.io/bbolt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (s *Sync) syncManifest(ctx context.Context, conn *grpc.ClientConn) error {
-	runStartTime := time.Now().UTC()
+	return status.Error(codes.Unimplemented, "code not updated")
 
-	s.logger.Info().Str(syncStatus, syncStarted).Str("mode", Manifest.String()).Msg(syncManifest)
+	// runStartTime := time.Now().UTC()
 
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	// s.logger.Info().Str(syncStatus, syncStarted).Str("mode", Manifest.String()).Msg(syncManifest)
 
-	remoteMD, remoteBuf, err := s.getManifest(ctx, dsm.NewModelClient(conn))
-	if err != nil {
-		return err
-	}
+	// ctx, cancel := context.WithCancel(ctx)
+	// defer cancel()
 
-	localMD, _, err := func() (*dsm.Metadata, io.Reader, error) {
-		var (
-			localMD     *dsm.Metadata
-			localReader io.Reader
-		)
+	// rc := dsr.NewReaderClient(conn)
+	// resp, err := rc.GetManifest(ctx, &dsr.GetManifestRequest{Empty: &emptypb.Empty{}})
+	// // remoteMD, remoteBuf, err := s.getManifest(ctx, dsr.NewReaderClient(conn))
+	// if err != nil {
+	// 	return err
+	// }
 
-		err := s.store.DB().View(func(tx *bolt.Tx) error {
-			md := &dsm.Metadata{UpdatedAt: timestamppb.Now(), Etag: ""}
-			manifest, err := ds.Manifest(md).Get(ctx, tx)
+	// remoteManifest := resp.GetManifest()
 
-			switch {
-			case status.Code(err) == codes.NotFound:
-				if manifest == nil {
-					manifest = ds.Manifest(&dsm.Metadata{})
-				}
-			case err != nil:
-				return errors.Errorf("failed to get manifest")
-			}
+	// localManifest, err := func() (*dsc.Manifest, error) {
+	// 	var (
+	// 		localMD     *dsm.Metadata
+	// 		localReader io.Reader
+	// 	)
 
-			localMD = manifest.Metadata
-			localReader = bytes.NewReader(manifest.Body.GetData())
+	// 	err := s.store.DB().View(func(tx *bolt.Tx) error {
+	// 		md := &dsm.Metadata{UpdatedAt: timestamppb.Now(), Etag: ""}
+	// 		manifest, err := ds.Manifest(md).Get(ctx, tx)
 
-			return nil
-		})
+	// 		switch {
+	// 		case status.Code(err) == codes.NotFound:
+	// 			if manifest == nil {
+	// 				manifest = ds.Manifest(&dsm.Metadata{})
+	// 			}
+	// 		case err != nil:
+	// 			return errors.Errorf("failed to get manifest")
+	// 		}
 
-		return localMD, localReader, err
-	}()
-	if err != nil {
-		return err
-	}
+	// 		localMD = manifest.Metadata
+	// 		localReader = bytes.NewReader(manifest.Body.GetData())
 
-	s.logger.Debug().
-		Str("local.etag", localMD.GetEtag()).Str("remote.etag", remoteMD.GetEtag()).
-		Bool("identical", localMD.GetEtag() == remoteMD.GetEtag()).Msg(syncManifest)
+	// 		return nil
+	// 	})
 
-	if localMD.GetEtag() == remoteMD.GetEtag() {
-		return nil
-	}
+	// 	return localMD, localReader, err
+	// }()
+	// if err != nil {
+	// 	return err
+	// }
 
-	m, err := s.setManifest(ctx, remoteBuf)
-	if err != nil {
-		return err
-	}
+	// s.logger.Debug().
+	// 	Str("local.etag", localMD.GetEtag()).Str("remote.etag", remoteMD.GetEtag()).
+	// 	Bool("identical", localMD.GetEtag() == remoteMD.GetEtag()).Msg(syncManifest)
 
-	runEndTime := time.Now().UTC()
+	// if localMD.GetEtag() == remoteMD.GetEtag() {
+	// 	return nil
+	// }
 
-	s.logger.Info().
-		Str(syncStatus, syncFinished).Str("mode", Manifest.String()).
-		Str("duration", runEndTime.Sub(runStartTime).String()).Msg(syncManifest)
+	// m, err := s.setManifest(ctx, remoteBuf)
+	// if err != nil {
+	// 	return err
+	// }
 
-	return s.store.MC().UpdateModel(m)
+	// runEndTime := time.Now().UTC()
+
+	// s.logger.Info().
+	// 	Str(syncStatus, syncFinished).Str("mode", Manifest.String()).
+	// 	Str("duration", runEndTime.Sub(runStartTime).String()).Msg(syncManifest)
+
+	// return s.store.MC().UpdateModel(m)
 }
 
 func (s *Sync) setManifest(ctx context.Context, remoteBuf []byte) (*model.Model, error) {
-	// calc new ETag from remote manifest.
-	h := fnv.New64a()
-	h.Reset()
-	_, _ = h.Write(remoteBuf)
+	return nil, status.Error(codes.Unimplemented, "code not updated")
 
-	md := &dsm.Metadata{
-		UpdatedAt: timestamppb.Now(),
-		Etag:      strconv.FormatUint(h.Sum64(), 10),
-	}
+	// // calc new ETag from remote manifest.
+	// h := fnv.New64a()
+	// h.Reset()
+	// _, _ = h.Write(remoteBuf)
 
-	if err := validator.Metadata(md); err != nil {
-		return nil, err
-	}
+	// md := &dsm.Metadata{
+	// 	UpdatedAt: timestamppb.Now(),
+	// 	Etag:      strconv.FormatUint(h.Sum64(), 10),
+	// }
 
-	m, err := manifest.Load(bytes.NewReader(remoteBuf))
-	if err != nil {
-		return nil, derr.ErrInvalidArgument.Msg(err.Error())
-	}
+	// if err := validator.Metadata(md); err != nil {
+	// 	return nil, err
+	// }
 
-	if err := s.store.DB().Update(func(tx *bolt.Tx) error {
-		stats, err := ds.CalculateStats(ctx, tx)
-		if err != nil {
-			return derr.ErrUnknown.Msgf("failed to calculate stats: %s", err.Error())
-		}
+	// m, err := manifest.Load(bytes.NewReader(remoteBuf))
+	// if err != nil {
+	// 	return nil, derr.ErrInvalidArgument.Msg(err.Error())
+	// }
 
-		if err := s.store.MC().CanUpdate(m, stats); err != nil {
-			return err
-		}
+	// if err := s.store.DB().Update(func(tx *bolt.Tx) error {
+	// 	stats, err := ds.CalculateStats(ctx, tx)
+	// 	if err != nil {
+	// 		return derr.ErrUnknown.Msgf("failed to calculate stats: %s", err.Error())
+	// 	}
 
-		if err := ds.Manifest(md).Set(ctx, tx, bytes.NewBuffer(remoteBuf)); err != nil {
-			return derr.ErrUnknown.Msgf("failed to set manifest: %s", err.Error())
-		}
+	// 	if err := s.store.MC().CanUpdate(m, stats); err != nil {
+	// 		return err
+	// 	}
 
-		if err := ds.Manifest(md).SetModel(ctx, tx, m); err != nil {
-			return derr.ErrUnknown.Msgf("failed to set model: %s", err.Error())
-		}
+	// 	if err := ds.Manifest(md).Set(ctx, tx, bytes.NewBuffer(remoteBuf)); err != nil {
+	// 		return derr.ErrUnknown.Msgf("failed to set manifest: %s", err.Error())
+	// 	}
 
-		return nil
-	}); err != nil {
-		return nil, err
-	}
+	// 	if err := ds.Manifest(md).SetModel(ctx, tx, m); err != nil {
+	// 		return derr.ErrUnknown.Msgf("failed to set model: %s", err.Error())
+	// 	}
 
-	return m, nil
+	// 	return nil
+	// }); err != nil {
+	// 	return nil, err
+	// }
+
+	// return m, nil
 }
 
-func (s *Sync) getManifest(ctx context.Context, mc dsm.ModelClient) (*dsm.Metadata, []byte, error) {
-	stream, err := mc.GetManifest(ctx, &dsm.GetManifestRequest{Empty: &emptypb.Empty{}})
-	if err != nil {
-		return nil, nil, err
-	}
+func (s *Sync) getManifest(ctx context.Context, rc dsr.ReaderClient) (*dsc.Manifest, error) {
+	return nil, status.Error(codes.Unimplemented, "code not updated")
 
-	data := bytes.Buffer{}
-	metadata := &dsm.Metadata{}
-	bytesRecv := 0
+	// manifest, err := rc.GetManifest(ctx, &dsr.GetManifestRequest{Empty: &emptypb.Empty{}})
+	// if err != nil {
+	// 	return nil, nil, err
+	// }
 
-	for {
-		resp, err := stream.Recv()
-		if errors.Is(err, io.EOF) {
-			break
-		}
+	// data := bytes.Buffer{}
+	// metadata := &dsm.Metadata{}
+	// bytesRecv := 0
 
-		if err != nil {
-			return nil, nil, err
-		}
+	// for {
+	// 	resp, err := stream.Recv()
+	// 	if errors.Is(err, io.EOF) {
+	// 		break
+	// 	}
 
-		if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
-			metadata = md.Metadata
-		}
+	// 	if err != nil {
+	// 		return nil, nil, err
+	// 	}
 
-		if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
-			data.Write(body.Body.GetData())
-			bytesRecv += len(body.Body.GetData())
-		}
-	}
+	// 	if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
+	// 		metadata = md.Metadata
+	// 	}
 
-	return metadata, data.Bytes(), nil
+	// 	if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
+	// 		data.Write(body.Body.GetData())
+	// 		bytesRecv += len(body.Body.GetData())
+	// 	}
+	// }
+
+	// return metadata, data.Bytes(), nil
 }

@@ -21,10 +21,10 @@ import (
 )
 
 type TestEdgeClient struct {
-	V3 ClientV3
+	Client Client
 }
 
-type ClientV3 struct {
+type Client struct {
 	Model    dsm.ModelClient
 	Reader   dsr.ReaderClient
 	Writer   dsw.WriterClient
@@ -75,7 +75,7 @@ func NewTestEdgeServer(ctx context.Context, logger *zerolog.Logger, cfg *directo
 	}
 
 	client := TestEdgeClient{
-		V3: ClientV3{
+		Client: Client{
 			Model:    dsm.NewModelClient(conn),
 			Reader:   dsr.NewReaderClient(conn),
 			Writer:   dsw.NewWriterClient(conn),

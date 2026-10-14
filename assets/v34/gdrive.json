@@ -5,20 +5,20 @@
         "manifest": "gdrive/manifest.yaml",
         "policy": {
             "name": "gdrive",
-            "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
+            "resource": "ghcr.io/gertd/policy-rebac:v34"
         },
         "idp_data": [
-            "citadel/citadel_objects.json",
-            "citadel/citadel_relations.json"
+            "citadel/citadel_objects.jsonl",
+            "citadel/citadel_relations.jsonl"
         ],
         "domain_data": [
-            "gdrive/gdrive_objects.json",
-            "gdrive/gdrive_relations.json"
+            "gdrive/gdrive_objects.jsonl",
+            "gdrive/gdrive_relations.jsonl"
         ],
         "assertions": [
-            "gdrive/test/gdrive_assertions.json",
-            "gdrive/test/gdrive_decisions.json",
-            "gdrive/test/gdrive_evaluations.json"
+            "gdrive/test/gdrive_assertions.jsonl",
+            "gdrive/test/gdrive_evaluations.jsonl",
+            "gdrive/test/gdrive_decisions.jsonl"
         ]
     }
 }

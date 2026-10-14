@@ -9,8 +9,7 @@ import (
 	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
-	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
+	dsOpenAPI "github.com/aserto-dev/go-directory/openapi"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/topazd/app/handlers"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
@@ -81,22 +80,12 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 //nolint:nestif
 func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
-		if lo.Contains(services, modelService) {
-			if err := dsm.RegisterModelHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
-				return err
-			}
-
-			if err := dsm3stream.RegisterModelStreamHandlersFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
-				return err
-			}
-		}
-
 		if lo.Contains(services, readerService) {
 			if err := dsr.RegisterReaderHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts); err != nil {
 				return err
 			}
 
-			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler(port, services...)); err != nil {
+			if err := mux.HandlePath(http.MethodGet, directoryOpenAPISpec, dsOpenAPIHandler()); err != nil {
 				return err
 			}
 
@@ -128,11 +117,9 @@ const (
 	accessOpenAPISpec    string = "/access/openapi.json"
 )
 
-func dsOpenAPIHandler(port string, services ...string) func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	handler := dsOpenAPI.OpenAPIHandler(port, services...)
-
+func dsOpenAPIHandler() func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
 	return func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-		handler(w, r)
+		dsOpenAPI.OpenAPIHandler(w, r)
 	}
 }
 

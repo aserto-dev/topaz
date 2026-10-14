@@ -1,7 +1,6 @@
 package grpcutil
 
 import (
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 )
 
@@ -33,6 +32,5 @@ func (m Middlewares) AsGRPCOptions() (grpc.ServerOption, grpc.ServerOption) {
 		}
 	}
 
-	return grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(unaryInterceptors...)),
-		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(streamInterceptors...))
+	return grpc.ChainUnaryInterceptor(unaryInterceptors...), grpc.ChainStreamInterceptor(streamInterceptors...)
 }

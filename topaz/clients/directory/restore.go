@@ -14,7 +14,7 @@ import (
 	"strings"
 
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/js"
 	"google.golang.org/grpc/codes"
@@ -40,7 +40,7 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 
 	g, iCtx := errgroup.WithContext(context.Background())
 
-	stream, err := c.Importer.Import(iCtx)
+	stream, err := c.Writer.Import(iCtx)
 	if err != nil {
 		return err
 	}
@@ -52,10 +52,10 @@ func (c *Client) Restore(ctx context.Context, file string) error {
 	return g.Wait()
 }
 
-func (c *Client) receiver(stream dsi.Importer_ImportClient) func() error {
+func (c *Client) receiver(stream dsw.Writer_ImportClient) func() error {
 	return func() error {
-		objCounter := &dsi.ImportCounter{Type: objectsCounter}
-		relCounter := &dsi.ImportCounter{Type: relationsCounter}
+		objCounter := &dsw.ImportCounter{Type: objectsCounter}
+		relCounter := &dsw.ImportCounter{Type: relationsCounter}
 
 		defer func() {
 			printCounter(os.Stderr, objCounter)
@@ -73,30 +73,22 @@ func (c *Client) receiver(stream dsi.Importer_ImportClient) func() error {
 			}
 
 			switch m := msg.GetMsg().(type) {
-			case *dsi.ImportResponse_Status:
+			case *dsw.ImportResponse_Status:
 				printStatus(os.Stderr, m.Status)
 
-			case *dsi.ImportResponse_Counter:
+			case *dsw.ImportResponse_Counter:
 				switch m.Counter.GetType() {
 				case objectsCounter:
 					objCounter = m.Counter
 				case relationsCounter:
 					relCounter = m.Counter
 				}
-
-			// handle obsolete message usage as the default.
-			//nolint:staticcheck // SA1019
-			default:
-				msg.Object.Type = objectsCounter
-				objCounter = msg.GetObject()
-				msg.Relation.Type = relationsCounter
-				relCounter = msg.GetRelation()
 			}
 		}
 	}
 }
 
-func (c *Client) restoreHandler(stream dsi.Importer_ImportClient, tr *tar.Reader) func() error {
+func (c *Client) restoreHandler(stream dsw.Writer_ImportClient, tr *tar.Reader) func() error {
 	return func() error {
 		for {
 			header, err := tr.Next()
@@ -139,7 +131,7 @@ func (c *Client) restoreHandler(stream dsi.Importer_ImportClient, tr *tar.Reader
 	}
 }
 
-func (c *Client) loadObjects(stream dsi.Importer_ImportClient, objects *js.Reader) error {
+func (c *Client) loadObjects(stream dsw.Writer_ImportClient, objects *js.Reader) error {
 	defer objects.Close()
 
 	var m dsc.Object
@@ -158,9 +150,9 @@ func (c *Client) loadObjects(stream dsi.Importer_ImportClient, objects *js.Reade
 			return err
 		}
 
-		if err := stream.Send(&dsi.ImportRequest{
-			OpCode: dsi.Opcode_OPCODE_SET,
-			Msg: &dsi.ImportRequest_Object{
+		if err := stream.Send(&dsw.ImportRequest{
+			OpCode: dsw.Opcode_OPCODE_SET,
+			Msg: &dsw.ImportRequest_Object{
 				Object: &m,
 			},
 		}); err != nil {
@@ -171,7 +163,7 @@ func (c *Client) loadObjects(stream dsi.Importer_ImportClient, objects *js.Reade
 	return nil
 }
 
-func (c *Client) loadRelations(stream dsi.Importer_ImportClient, relations *js.Reader) error {
+func (c *Client) loadRelations(stream dsw.Writer_ImportClient, relations *js.Reader) error {
 	defer relations.Close()
 
 	var m dsc.Relation
@@ -190,9 +182,9 @@ func (c *Client) loadRelations(stream dsi.Importer_ImportClient, relations *js.R
 			return err
 		}
 
-		if err := stream.Send(&dsi.ImportRequest{
-			OpCode: dsi.Opcode_OPCODE_SET,
-			Msg: &dsi.ImportRequest_Relation{
+		if err := stream.Send(&dsw.ImportRequest{
+			OpCode: dsw.Opcode_OPCODE_SET,
+			Msg: &dsw.ImportRequest_Relation{
 				Relation: &m,
 			},
 		}); err != nil {

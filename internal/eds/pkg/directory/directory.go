@@ -14,6 +14,7 @@ import (
 	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
+	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/mig010"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/migrate"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/datasync"
 	v3 "github.com/aserto-dev/topaz/internal/eds/pkg/directory/v3"
@@ -27,7 +28,7 @@ import (
 // required minimum schema version, when the current version is lower,
 // migration will be invoked to update to the minimum schema version required.
 const (
-	schemaVersion string = "0.0.9"
+	schemaVersion string = mig010.Version
 )
 
 type Config struct {
@@ -97,10 +98,11 @@ func newDirectory(_ context.Context, config *Config, logger *zerolog.Logger) (*D
 		}
 	}
 
-	store, err := bdb.New(&bdb.Config{
-		DBPath:         config.DBPath,
-		RequestTimeout: config.RequestTimeout,
-	},
+	store, err := bdb.New(
+		&bdb.Config{
+			DBPath:         config.DBPath,
+			RequestTimeout: config.RequestTimeout,
+		},
 		&newLogger,
 	)
 	if err != nil {

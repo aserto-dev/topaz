@@ -2,18 +2,38 @@ module github.com/aserto-dev/topaz
 
 go 1.27.1
 
+replace github.com/aserto-dev/azm => ../azm // github.com/aserto-dev/azm v0.2.26-0.20261006092228-623dc2f927be
+
+// replace github.com/aserto-dev/errors => github.com/aserto-dev/errors v0.34.2-0.20261006083714-760eef8e0b6c
+
+// replace github.com/aserto-dev/go-authorizer/aserto => ../go-authorizer/aserto // github.com/aserto-dev/go-authorizer/aserto v0.0.0-20261001165020-143136061361
+
+// replace github.com/aserto-dev/go-authorizer/openapi => ../go-authorizer/openapi // github.com/aserto-dev/go-authorizer/openapi v0.0.0-20261001165020-143136061361
+
+// replace github.com/aserto-dev/go-authorizer/pkg => ../go-authorizer/pkg // github.com/aserto-dev/go-authorizer/pkg v0.0.0-20261001165020-143136061361
+
+replace github.com/aserto-dev/go-directory/aserto => ../go-directory/aserto // github.com/aserto-dev/go-directory/aserto v0.0.0-20261006090047-347856b42182
+
+// replace github.com/aserto-dev/go-directory/openapi => github.com/aserto-dev/go-directory/openapi v0.0.0-20261006090047-347856b42182
+
+replace github.com/aserto-dev/go-directory/pkg => ../go-directory/pkg // github.com/aserto-dev/go-directory/pkg v0.0.0-20261006090047-347856b42182
+
+// replace github.com/aserto-dev/go-aserto => ../go-aserto
+
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
 	github.com/alecthomas/kong v1.16.1
-	github.com/aserto-dev/azm v0.2.26
-	github.com/aserto-dev/errors v0.34.1
-	github.com/aserto-dev/go-aserto v0.34.1
-	github.com/aserto-dev/go-authorizer v0.24.1
-	github.com/aserto-dev/go-directory v0.34.2
+	github.com/aserto-dev/azm v0.2.26-0.20261006092228-623dc2f927be
+	github.com/aserto-dev/errors v0.34.2-0.20261006083714-760eef8e0b6c
+	github.com/aserto-dev/go-aserto v0.34.2-0.20261007082652-59a18bd5b056
+	github.com/aserto-dev/go-authorizer/aserto v0.0.0-20261007082105-77475b64f74c
+	github.com/aserto-dev/go-authorizer/openapi v0.0.0-20261007082105-77475b64f74c
+	github.com/aserto-dev/go-authorizer/pkg v0.0.0-20261007082105-77475b64f74c
+	github.com/aserto-dev/go-directory/aserto v0.0.0-20261006150823-e40f74f3b517
+	github.com/aserto-dev/go-directory/openapi v0.0.0-20261006090047-347856b42182
+	github.com/aserto-dev/go-directory/pkg v0.0.0-20261006150823-e40f74f3b517
 	github.com/aserto-dev/go-topaz-ui v0.1.26
 	github.com/aserto-dev/logger v0.0.9
-	github.com/aserto-dev/openapi-authorizer v0.20.6
-	github.com/aserto-dev/openapi-directory v0.33.5
 	github.com/authzen/access.go/api v1.0.2
 	github.com/authzen/access.go/openapi v1.0.2
 	github.com/cli/browser v1.3.0
@@ -27,6 +47,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.0
+	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.4
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.31.0
 	github.com/homeport/dyff v1.12.0
@@ -58,7 +79,7 @@ require (
 	go.etcd.io/bbolt v1.5.0
 	golang.org/x/sync v0.23.0
 	golang.org/x/sys v0.48.0
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260928230214-8a89bd6388cc
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20261005182115-fad411399dd8
 	google.golang.org/grpc v1.84.0
 	google.golang.org/protobuf v1.36.12
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
@@ -81,7 +102,6 @@ require (
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/containerd/platforms v1.0.0-rc.5 // indirect
 	github.com/cpuguy83/dockercfg v0.3.2 // indirect
-	github.com/deckarep/golang-set/v3 v3.0.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.1 // indirect
 	github.com/dgraph-io/ristretto/v2 v2.4.2 // indirect
 	github.com/dgryski/go-metro v0.0.0-20250106013310-edb8663e5e33 // indirect
@@ -90,11 +110,9 @@ require (
 	github.com/ebitengine/purego v0.10.1 // indirect
 	github.com/felixge/httpsnoop v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.10.1 // indirect
-	github.com/getkin/kin-openapi v0.147.0 // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
-	github.com/go-openapi/jsonpointer v1.0.1 // indirect
 	github.com/gobwas/glob v1.0.0 // indirect
 	github.com/goccy/go-json v0.11.2 // indirect
 	github.com/gonvenience/bunt v1.4.3 // indirect
@@ -103,7 +121,6 @@ require (
 	github.com/gonvenience/term v1.0.5 // indirect
 	github.com/gonvenience/text v1.0.10 // indirect
 	github.com/google/flatbuffers v25.12.19+incompatible // indirect
-	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.4 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
@@ -124,7 +141,7 @@ require (
 	github.com/lufia/plan9stats v0.0.0-20260330125221-c963978e514e // indirect
 	github.com/magiconair/properties v1.8.10 // indirect
 	github.com/mattn/go-ciede2000 v0.0.0-20170301095244-782e8c62fec3 // indirect
-	github.com/mattn/go-colorable v0.1.15 // indirect
+	github.com/mattn/go-colorable v0.1.16 // indirect
 	github.com/mattn/go-runewidth v0.0.30 // indirect
 	github.com/mitchellh/go-ps v1.0.0 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
@@ -140,8 +157,6 @@ require (
 	github.com/moby/sys/userns v0.2.0 // indirect
 	github.com/morikuni/aec v1.1.0 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/oasdiff/yaml v0.1.1 // indirect
-	github.com/oasdiff/yaml3 v0.0.14 // indirect
 	github.com/olekukonko/cat v0.0.0-20250911104152-50322a0618f6 // indirect
 	github.com/olekukonko/errors v1.3.0 // indirect
 	github.com/olekukonko/ll v0.1.8 // indirect
@@ -154,7 +169,6 @@ require (
 	github.com/prometheus/procfs v0.22.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 // indirect
 	github.com/sagikazarmark/locafero v0.12.0 // indirect
-	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3 // indirect
 	github.com/segmentio/asm v1.2.1 // indirect
 	github.com/sergi/go-diff v1.4.0 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.6 // indirect
@@ -188,7 +202,7 @@ require (
 	golang.org/x/term v0.46.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/time v0.16.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20260928230214-8a89bd6388cc // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20261005182115-fad411399dd8 // indirect
 	gopkg.in/ini.v1 v1.67.3 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	oras.land/oras-go/v2 v2.6.2 // indirect

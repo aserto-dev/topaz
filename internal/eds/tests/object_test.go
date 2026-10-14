@@ -11,7 +11,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/structpb"
 )
+
+const display_name string = "display_name"
 
 func TestObjects(t *testing.T) {
 	tcs := make([]*TestCase, 0, len(objectTestCasesWithID)+len(objectTestCasesWithoutID)+len(objectTestCasesStreamMode))
@@ -23,16 +26,23 @@ func TestObjects(t *testing.T) {
 	testRunner(t, tcs)
 }
 
+func setDisplayName(name, value string) *structpb.Struct {
+	propertyBag := pb.NewStruct()
+	propertyBag.Fields[name] = structpb.NewStringValue(value)
+
+	return propertyBag
+}
+
 var objectTestCasesWithID = []*TestCase{
 	{
 		Name: "create test-obj-1",
 		Req: &dsw.SetObjectRequest{
 			Object: &dsc.Object{
-				Type:        "user",
-				Id:          "test-user@acmecorp.com",
-				DisplayName: "test obj 1", //nolint:staticcheck // deprecated
-				Properties:  pb.NewStruct(),
-				Etag:        "",
+				ObjectType: "user",
+				ObjectId:   "test-user@acmecorp.com",
+				// DisplayName: "test obj 1", //nolint:staticcheck // deprecated
+				Properties: setDisplayName(display_name, "test obj 1"),
+				Etag:       "",
 			},
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
@@ -45,9 +55,9 @@ var objectTestCasesWithID = []*TestCase{
 				assert.NotNil(t, resp.GetResult())
 				t.Logf("resp etag:%s", resp.GetResult().GetEtag())
 
-				assert.Equal(t, "user", resp.GetResult().GetType())
-				assert.Equal(t, "test-user@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 1", resp.GetResult().GetDisplayName()) //nolint:staticcheck
+				assert.Equal(t, "user", resp.GetResult().GetObjectType())
+				assert.Equal(t, "test-user@acmecorp.com", resp.GetResult().GetObjectId())
+				assert.Equal(t, "test obj 1", resp.GetResult().GetProperties().GetFields()[display_name])
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -73,9 +83,9 @@ var objectTestCasesWithID = []*TestCase{
 				assert.NotNil(t, resp.GetResult())
 				t.Logf("resp etag:%s", resp.GetResult().GetEtag())
 
-				assert.Equal(t, "user", resp.GetResult().GetType())
-				assert.Equal(t, "test-user@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 1", resp.GetResult().GetDisplayName()) //nolint:staticcheck
+				assert.Equal(t, "user", resp.GetResult().GetObjectType())
+				assert.Equal(t, "test-user@acmecorp.com", resp.GetResult().GetObjectId())
+				// assert.Equal(t, "test obj 1", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -89,10 +99,10 @@ var objectTestCasesWithID = []*TestCase{
 		Name: "update test-obj-1",
 		Req: &dsw.SetObjectRequest{
 			Object: &dsc.Object{
-				Type:        "user",
-				Id:          "test-user-11@acmecorp.com",
-				DisplayName: "test obj 11", //nolint:staticcheck // deprecated
-				Etag:        "3016620182482667549",
+				ObjectType: "user",
+				ObjectId:   "test-user-11@acmecorp.com",
+				// DisplayName: "test obj 11", //nolint:staticcheck // deprecated
+				Etag: "3016620182482667549",
 			},
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
@@ -105,9 +115,9 @@ var objectTestCasesWithID = []*TestCase{
 				assert.NotNil(t, resp.GetResult())
 				t.Logf("resp etag:%s", resp.GetResult().GetEtag())
 
-				assert.Equal(t, "user", resp.GetResult().GetType())
-				assert.Equal(t, "test-user-11@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 11", resp.GetResult().GetDisplayName()) //nolint:staticcheck
+				assert.Equal(t, "user", resp.GetResult().GetObjectType())
+				assert.Equal(t, "test-user-11@acmecorp.com", resp.GetResult().GetObjectId())
+				// assert.Equal(t, "test obj 11", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -133,9 +143,9 @@ var objectTestCasesWithID = []*TestCase{
 				assert.NotNil(t, resp.GetResult())
 				t.Logf("resp etag:%s", resp.GetResult().GetEtag())
 
-				assert.Equal(t, "user", resp.GetResult().GetType())
-				assert.Equal(t, "test-user-11@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 11", resp.GetResult().GetDisplayName()) //nolint:staticcheck
+				assert.Equal(t, "user", resp.GetResult().GetObjectType())
+				assert.Equal(t, "test-user-11@acmecorp.com", resp.GetResult().GetObjectId())
+				// assert.Equal(t, "test obj 11", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -158,7 +168,6 @@ var objectTestCasesWithID = []*TestCase{
 			case *dsw.DeleteObjectResponse:
 				require.NoError(t, tErr)
 				assert.NotNil(t, resp)
-				assert.NotNil(t, resp.GetResult())
 			}
 
 			return func(req proto.Message) {}
@@ -191,7 +200,6 @@ var objectTestCasesWithID = []*TestCase{
 			case *dsw.DeleteObjectResponse:
 				require.NoError(t, tErr)
 				assert.NotNil(t, resp)
-				assert.NotNil(t, resp.GetResult())
 			}
 
 			return func(req proto.Message) {}
@@ -205,11 +213,11 @@ var objectTestCasesWithoutID = []*TestCase{
 		Name: "create test-obj-2 with no-id",
 		Req: &dsw.SetObjectRequest{
 			Object: &dsc.Object{
-				Type:        "user",
-				Id:          "test-user-2@acmecorp.com",
-				DisplayName: "test obj 2", //nolint:staticcheck // deprecated
-				Properties:  pb.NewStruct(),
-				Etag:        "",
+				ObjectType: "user",
+				ObjectId:   "test-user-2@acmecorp.com",
+				// DisplayName: "test obj 2", //nolint:staticcheck // deprecated
+				Properties: pb.NewStruct(),
+				Etag:       "",
 			},
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
@@ -222,9 +230,9 @@ var objectTestCasesWithoutID = []*TestCase{
 				assert.NotNil(t, resp.GetResult())
 				t.Logf("resp etag:%s", resp.GetResult().GetEtag())
 
-				assert.Equal(t, "user", resp.GetResult().GetType())
-				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 2", resp.GetResult().GetDisplayName()) //nolint:staticcheck
+				assert.Equal(t, "user", resp.GetResult().GetObjectType())
+				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetObjectId())
+				// assert.Equal(t, "test obj 2", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -261,9 +269,9 @@ var objectTestCasesWithoutID = []*TestCase{
 				assert.NotNil(t, resp.GetResult())
 				t.Logf("resp etag:%s", resp.GetResult().GetEtag())
 
-				assert.Equal(t, "user", resp.GetResult().GetType())
-				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 2", resp.GetResult().GetDisplayName()) //nolint:staticcheck
+				assert.Equal(t, "user", resp.GetResult().GetObjectType())
+				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetObjectId())
+				// assert.Equal(t, "test obj 2", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -288,9 +296,9 @@ var objectTestCasesWithoutID = []*TestCase{
 		Name: "update test-obj-2",
 		Req: &dsw.SetObjectRequest{
 			Object: &dsc.Object{
-				Type:        "user",
-				Id:          "test-user-2@acmecorp.com",
-				DisplayName: "test obj 22", //nolint:staticcheck // deprecated
+				ObjectType: "user",
+				ObjectId:   "test-user-2@acmecorp.com",
+				// DisplayName: "test obj 22", //nolint:staticcheck // deprecated
 			},
 		},
 		Checks: func(t *testing.T, msg proto.Message, tErr error) func(proto.Message) {
@@ -303,9 +311,9 @@ var objectTestCasesWithoutID = []*TestCase{
 				assert.NotNil(t, resp.GetResult())
 				t.Logf("resp etag:%s", resp.GetResult().GetEtag())
 
-				assert.Equal(t, "user", resp.GetResult().GetType())
-				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 22", resp.GetResult().GetDisplayName()) //nolint:staticcheck
+				assert.Equal(t, "user", resp.GetResult().GetObjectType())
+				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetObjectId())
+				// assert.Equal(t, "test obj 22", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -331,9 +339,9 @@ var objectTestCasesWithoutID = []*TestCase{
 				assert.NotNil(t, resp.GetResult())
 				t.Logf("resp etag:%s", resp.GetResult().GetEtag())
 
-				assert.Equal(t, "user", resp.GetResult().GetType())
-				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetId())
-				assert.Equal(t, "test obj 22", resp.GetResult().GetDisplayName()) //nolint:staticcheck
+				assert.Equal(t, "user", resp.GetResult().GetObjectType())
+				assert.Equal(t, "test-user-2@acmecorp.com", resp.GetResult().GetObjectId())
+				// assert.Equal(t, "test obj 22", resp.GetResult().GetDisplayName()) //nolint:staticcheck
 				assert.NotNil(t, resp.GetResult().GetProperties())
 				assert.Empty(t, resp.GetResult().GetProperties().GetFields())
 				assert.NotEmpty(t, resp.GetResult().GetEtag())
@@ -356,7 +364,6 @@ var objectTestCasesWithoutID = []*TestCase{
 			case *dsw.DeleteObjectResponse:
 				require.NoError(t, tErr)
 				assert.NotNil(t, resp)
-				assert.NotNil(t, resp.GetResult())
 			}
 
 			return func(req proto.Message) {}

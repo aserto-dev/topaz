@@ -106,8 +106,8 @@ func resolveIdentityToUser(ctx context.Context, client dsr.ReaderClient, relReq 
 		return nil, aerr.ErrDirectoryObjectNotFound
 	case len(relResp.GetObjects()) == 0:
 		return &dsc.Object{
-			Type: User,
-			Id: lo.Ternary(
+			ObjectType: User,
+			ObjectId: lo.Ternary(
 				relResp.GetResult().GetObjectType() == User,
 				relResp.GetResult().GetObjectId(),
 				relResp.GetResult().GetSubjectId(),

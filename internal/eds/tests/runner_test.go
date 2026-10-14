@@ -11,7 +11,6 @@ import (
 	"time"
 
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
@@ -68,7 +67,7 @@ func TestMain(m *testing.M) {
 	os.Exit(exitVal)
 }
 
-func importFile(stream dsi.Importer_ImportClient, file string) error {
+func importFile(stream dsw.Writer_ImportClient, file string) error {
 	r, err := os.Open(file)
 	if err != nil {
 		return errors.Wrapf(err, "failed to open file: [%s]", file)
@@ -104,7 +103,7 @@ func importFile(stream dsi.Importer_ImportClient, file string) error {
 	return nil
 }
 
-func loadObjects(stream dsi.Importer_ImportClient, objects *Reader) error {
+func loadObjects(stream dsw.Writer_ImportClient, objects *Reader) error {
 	defer objects.Close()
 
 	var m dsc.Object
@@ -123,9 +122,9 @@ func loadObjects(stream dsi.Importer_ImportClient, objects *Reader) error {
 			return err
 		}
 
-		if err := stream.Send(&dsi.ImportRequest{
-			OpCode: dsi.Opcode_OPCODE_SET,
-			Msg: &dsi.ImportRequest_Object{
+		if err := stream.Send(&dsw.ImportRequest{
+			OpCode: dsw.Opcode_OPCODE_SET,
+			Msg: &dsw.ImportRequest_Object{
 				Object: &m,
 			},
 		}); err != nil {
@@ -136,7 +135,7 @@ func loadObjects(stream dsi.Importer_ImportClient, objects *Reader) error {
 	return nil
 }
 
-func loadRelations(stream dsi.Importer_ImportClient, relations *Reader) error {
+func loadRelations(stream dsw.Writer_ImportClient, relations *Reader) error {
 	defer relations.Close()
 
 	var m dsc.Relation
@@ -155,9 +154,9 @@ func loadRelations(stream dsi.Importer_ImportClient, relations *Reader) error {
 			return err
 		}
 
-		if err := stream.Send(&dsi.ImportRequest{
-			OpCode: dsi.Opcode_OPCODE_SET,
-			Msg: &dsi.ImportRequest_Relation{
+		if err := stream.Send(&dsw.ImportRequest{
+			OpCode: dsw.Opcode_OPCODE_SET,
+			Msg: &dsw.ImportRequest_Relation{
 				Relation: &m,
 			},
 		}); err != nil {
@@ -202,31 +201,43 @@ func runTestCase(ctx context.Context, t *testing.T, tc *TestCase) func(proto.Mes
 	// V3
 	///////////////////////////////////////////////////////////////
 	case *dsr.GetObjectRequest:
-		resp, err := client.V3.Reader.GetObject(ctx, req)
+		resp, err := client.Client.Reader.GetObject(ctx, req)
+		return tc.Checks(t, resp, err)
+
+	case *dsr.GetObjectsRequest:
+		resp, err := client.Client.Reader.GetObjects(ctx, req) //nolint:staticcheck
+		return tc.Checks(t, resp, err)
+
+	case *dsr.ListObjectsRequest:
+		resp, err := client.Client.Reader.ListObjects(ctx, req)
 		return tc.Checks(t, resp, err)
 
 	case *dsw.SetObjectRequest:
-		resp, err := client.V3.Writer.SetObject(ctx, req)
+		resp, err := client.Client.Writer.SetObject(ctx, req)
 		return tc.Checks(t, resp, err)
 
 	case *dsw.DeleteObjectRequest:
-		resp, err := client.V3.Writer.DeleteObject(ctx, req)
+		resp, err := client.Client.Writer.DeleteObject(ctx, req)
 		return tc.Checks(t, resp, err)
 
 	case *dsr.GetRelationRequest:
-		resp, err := client.V3.Reader.GetRelation(ctx, req)
-		return tc.Checks(t, resp, err)
-
-	case *dsw.SetRelationRequest:
-		resp, err := client.V3.Writer.SetRelation(ctx, req)
-		return tc.Checks(t, resp, err)
-
-	case *dsw.DeleteRelationRequest:
-		resp, err := client.V3.Writer.DeleteRelation(ctx, req)
+		resp, err := client.Client.Reader.GetRelation(ctx, req)
 		return tc.Checks(t, resp, err)
 
 	case *dsr.GetRelationsRequest:
-		resp, err := client.V3.Reader.GetRelations(ctx, req)
+		resp, err := client.Client.Reader.GetRelations(ctx, req) //nolint:staticcheck
+		return tc.Checks(t, resp, err)
+
+	case *dsr.ListRelationsRequest:
+		resp, err := client.Client.Reader.ListRelations(ctx, req)
+		return tc.Checks(t, resp, err)
+
+	case *dsw.SetRelationRequest:
+		resp, err := client.Client.Writer.SetRelation(ctx, req)
+		return tc.Checks(t, resp, err)
+
+	case *dsw.DeleteRelationRequest:
+		resp, err := client.Client.Writer.DeleteRelation(ctx, req)
 		return tc.Checks(t, resp, err)
 	}
 

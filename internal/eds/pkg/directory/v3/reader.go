@@ -4,6 +4,7 @@ import (
 	"context"
 
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/validator"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
@@ -33,6 +34,42 @@ func NewReader(logger *zerolog.Logger, store *bdb.BoltDB) *Reader {
 		logger: logger,
 		store:  store,
 	}
+}
+
+// GetManifest, returns the manifest document (yaml).
+func (s *Reader) GetManifest(ctx context.Context, req *dsr.GetManifestRequest) (*dsr.GetManifestResponse, error) {
+	resp := &dsr.GetManifestResponse{}
+
+	err := s.store.DB().View(func(tx *bolt.Tx) error {
+		man, err := bdb.Get[dsc.Manifest](ctx, tx, bdb.ManifestPathV3, bdb.ManifestKeyV3)
+		if err != nil {
+			return err
+		}
+
+		resp.Manifest = man
+
+		return nil
+	})
+
+	return resp, err
+}
+
+// GetModel, returns in the model representation of the manifest.
+func (s *Reader) GetModel(ctx context.Context, req *dsr.GetModelRequest) (*dsr.GetModelResponse, error) {
+	resp := &dsr.GetModelResponse{}
+
+	err := s.store.DB().View(func(tx *bolt.Tx) error {
+		mod, err := bdb.Get[dsc.Model](ctx, tx, bdb.ModelPathV3, bdb.ModelKeyV3)
+		if err != nil {
+			return err
+		}
+
+		resp.Model = mod
+
+		return nil
+	})
+
+	return resp, err
 }
 
 // GetObject, get single object instance.
@@ -84,7 +121,7 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr.GetObjectRequest) (*dsr
 			s.logger.Trace().Msg("get object with relations")
 		}
 
-		resp.Result = ds.PatchObjectRead(obj)
+		resp.Result = obj // ds.PatchObjectRead(obj)
 
 		return nil
 	})
@@ -95,39 +132,19 @@ func (s *Reader) GetObject(ctx context.Context, req *dsr.GetObjectRequest) (*dsr
 // GetObjectMany, get multiple object instances by type+id, in a single request.
 func (s *Reader) GetObjectMany(ctx context.Context, req *dsr.GetObjectManyRequest) (*dsr.GetObjectManyResponse, error) {
 	resp := &dsr.GetObjectManyResponse{Results: []*dsc.Object{}}
-
-	if err := validator.GetObjectManyRequest(req); err != nil {
-		return resp, err
-	}
-
-	// validate all object identifiers first.
-	for _, i := range req.GetParam() {
-		if err := ds.ObjectIdentifier(i).Validate(s.store.MC()); err != nil {
-			return resp, err
-		}
-	}
-
-	err := s.store.DB().View(func(tx *bolt.Tx) error {
-		for _, i := range req.GetParam() {
-			obj, err := bdb.Get[dsc.Object](ctx, tx, bdb.ObjectsPath, ds.ObjectIdentifier(i).Key())
-			if err != nil {
-				return err
-			}
-
-			resp.Results = append(resp.GetResults(), ds.PatchObjectRead(obj))
-		}
-
-		return nil
-	})
-
-	return resp, err
+	return resp, status.Error(codes.Unimplemented, "reader.GetObjectMany is deprecated, use reader.Batch instead")
 }
 
 // GetObjects, gets (all) object instances, optionally filtered by object type, as a paginated array of objects.
 func (s *Reader) GetObjects(ctx context.Context, req *dsr.GetObjectsRequest) (*dsr.GetObjectsResponse, error) {
 	resp := &dsr.GetObjectsResponse{Results: []*dsc.Object{}, Page: &dsc.PaginationResponse{}}
+	return resp, status.Error(codes.Unimplemented, "reader.GetObjects is deprecated, use reader.ListObjects instead")
+}
 
-	if err := validator.GetObjectsRequest(req); err != nil {
+func (s *Reader) ListObjects(ctx context.Context, req *dsr.ListObjectsRequest) (*dsr.ListObjectsResponse, error) {
+	resp := &dsr.ListObjectsResponse{Results: []*dsc.Object{}, Page: &dsc.PaginationResponse{}}
+
+	if err := validator.ListObjectsRequest(req); err != nil {
 		return resp, err
 	}
 
@@ -158,7 +175,7 @@ func (s *Reader) GetObjects(ctx context.Context, req *dsr.GetObjectsRequest) (*d
 		iter.Next()
 
 		resp.Results = lo.Map(iter.Value(), func(x *dsc.Object, _ int) *dsc.Object {
-			return ds.PatchObjectRead(x)
+			return x // ds.PatchObjectRead(x)
 		})
 
 		resp.Page = &dsc.PaginationResponse{NextToken: iter.NextToken()}
@@ -230,13 +247,18 @@ func (s *Reader) GetRelation(ctx context.Context, req *dsr.GetRelationRequest) (
 
 // GetRelations, gets paginated set of relation instances based on subject, relation, object filter.
 func (s *Reader) GetRelations(ctx context.Context, req *dsr.GetRelationsRequest) (*dsr.GetRelationsResponse, error) {
-	resp := &dsr.GetRelationsResponse{
+	resp := &dsr.GetRelationsResponse{Results: []*dsc.Relation{}, Objects: map[string]*dsc.Object{}, Page: &dsc.PaginationResponse{}}
+	return resp, status.Error(codes.Unimplemented, "reader.GetRelations is deprecated, use reader.ListRelations instead")
+}
+
+func (s *Reader) ListRelations(ctx context.Context, req *dsr.ListRelationsRequest) (*dsr.ListRelationsResponse, error) {
+	resp := &dsr.ListRelationsResponse{
 		Results: []*dsc.Relation{},
 		Objects: map[string]*dsc.Object{},
 		Page:    &dsc.PaginationResponse{},
 	}
 
-	if err := validator.GetRelationsRequest(req); err != nil {
+	if err := validator.ListRelationsRequest(req); err != nil {
 		return resp, err
 	}
 
@@ -244,7 +266,7 @@ func (s *Reader) GetRelations(ctx context.Context, req *dsr.GetRelationsRequest)
 		req.Page = &dsc.PaginationRequest{Size: x.MaxPageSize}
 	}
 
-	getRelations := ds.GetRelations(req)
+	getRelations := ds.ListRelations(req)
 	if err := getRelations.Validate(s.store.MC()); err != nil {
 		return resp, err
 	}
@@ -392,6 +414,46 @@ func (s *Reader) GetGraph(ctx context.Context, req *dsr.GetGraphRequest) (*dsr.G
 	return resp, err
 }
 
+// Export, exports manifest, objects and relations instances as a stream.
+func (s *Reader) Export(req *dsr.ExportRequest, stream grpc.ServerStreamingServer[dsr.ExportResponse]) error {
+	logger := s.logger.With().Str("method", "Export").Interface("req", req).Logger()
+
+	err := s.store.DB().View(func(tx *bolt.Tx) error {
+		// stats mode, short circuits when enabled
+		if req.GetOptions()&uint32(dse.Option_OPTION_STATS) != 0 {
+			if err := exportStats(tx, stream, req.GetOptions()); err != nil {
+				logger.Error().Err(err).Msg("export_stats")
+				return err
+			}
+
+			return nil
+		}
+
+		if req.GetOptions()&uint32(dse.Option_OPTION_DATA_OBJECTS) != 0 {
+			if err := exportObjects(tx, stream); err != nil {
+				logger.Error().Err(err).Msg("export_objects")
+				return err
+			}
+		}
+
+		if req.GetOptions()&uint32(dse.Option_OPTION_DATA_RELATIONS) != 0 {
+			if err := exportRelations(tx, stream); err != nil {
+				logger.Error().Err(err).Msg("export_relations")
+				return err
+			}
+		}
+
+		return nil
+	})
+
+	return err
+}
+
+// Batch, allows sending multiple reader requests as a single request, executed within a single transaction scope.
+func (s *Reader) Batch(ctx context.Context, req *dsr.BatchRequest) (*dsr.BatchResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "reader.Batch not implemented")
+}
+
 func (*Reader) getWithObjects(ctx context.Context, tx *bolt.Tx, relations []*dsc.Relation) map[string]*dsc.Object {
 	objects := map[string]*dsc.Object{}
 
@@ -400,14 +462,14 @@ func (*Reader) getWithObjects(ctx context.Context, tx *bolt.Tx, relations []*dsc
 
 		sub, err := bdb.Get[dsc.Object](ctx, tx, bdb.ObjectsPath, ds.ObjectIdentifier(rel.Subject()).Key())
 		if err != nil {
-			sub = &dsc.Object{Type: rel.SubjectType, Id: rel.SubjectId}
+			sub = &dsc.Object{ObjectType: rel.SubjectType, ObjectId: rel.SubjectId}
 		}
 
 		objects[ds.Object(sub).StrKey()] = sub
 
 		obj, err := bdb.Get[dsc.Object](ctx, tx, bdb.ObjectsPath, ds.ObjectIdentifier(rel.Object()).Key())
 		if err != nil {
-			obj = &dsc.Object{Type: rel.ObjectType, Id: rel.ObjectId}
+			obj = &dsc.Object{ObjectType: rel.ObjectType, ObjectId: rel.ObjectId}
 		}
 
 		objects[ds.Object(obj).StrKey()] = obj

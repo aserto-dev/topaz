@@ -7,7 +7,7 @@ import (
 	aerr "github.com/aserto-dev/errors"
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
 	"github.com/google/uuid"
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	middleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
 	"github.com/rs/zerolog"
 	zlog "github.com/rs/zerolog/log"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -35,7 +35,7 @@ func (m *ErrorMiddleware) Stream() grpc.StreamServerInterceptor {
 	return func(srv any, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
 
-		wrapped := grpcmiddleware.WrapServerStream(stream)
+		wrapped := middleware.WrapServerStream(stream)
 		wrapped.WrappedContext = ctx
 
 		handlerErr := handler(srv, wrapped)
