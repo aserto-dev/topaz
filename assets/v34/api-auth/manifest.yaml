@@ -2,6 +2,11 @@
 # yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
 ---
 
+### filename: manifest.yaml ###
+### datetime: 2026-10-24T00:00:00-00:00 ###
+### version: v34 ###
+### description: api-auth manifest ###
+
 # model
 model:
   version: 3
