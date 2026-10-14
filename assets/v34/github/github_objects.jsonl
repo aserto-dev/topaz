@@ -1,4 +1,4 @@
-{"type":"organization","id":"smiths","display_name":"The Smiths organization","properties":{}}
-{"type":"organization","id":"citadel","display_name":"The Citadel organization","properties":{}}
-{"type":"repo","id":"smiths.budget","display_name":"The Smith's budget repository","properties":{}}
-{"type":"repo","id":"citadel.missions","display_name":"The citadel missions repository","properties":{}}
+{"object_type":"organization", "object_id":"smiths", "properties":{"display_name":"The Smiths organization"}}
+{"object_type":"organization", "object_id":"citadel", "properties":{"display_name":"The Citadel organization"}}
+{"object_type":"repo", "object_id":"smiths.budget", "properties":{"display_name":"The Smith's budget repository"}}
+{"object_type":"repo", "object_id":"citadel.missions", "properties":{"display_name":"The citadel missions repository"}}

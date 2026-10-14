@@ -1,4 +1,4 @@
-{"type":"workspace","id":"smiths","display_name":"The Smiths workspace","properties":{}}
-{"type":"channel","id":"smiths.general","display_name":"general","properties":{}}
-{"type":"channel","id":"smiths.citadel","display_name":"citadel","properties":{}}
-{"type":"channel","id":"smiths.gossip","display_name":"gossip","properties":{}}
+{"object_type":"workspace", "object_id":"smiths", "properties":{"display_name":"The Smiths workspace"}}
+{"object_type":"channel", "object_id":"smiths.general", "properties":{"display_name":"general"}}
+{"object_type":"channel", "object_id":"smiths.citadel", "properties":{"display_name":"citadel"}}
+{"object_type":"channel", "object_id":"smiths.gossip", "properties":{"display_name":"gossip"}}

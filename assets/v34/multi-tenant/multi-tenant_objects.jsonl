@@ -1,5 +1,5 @@
-{"type":"system","id":"system","display_name":"The entire system"}
-{"type":"tenant","id":"citadel","display_name":"Citadel tenant","properties":{}}
-{"type":"tenant","id":"smiths","display_name":"Smiths tenant","properties":{}}
-{"type":"resource","id":"citadel-adventures","display_name":"The Citadel adventures resource","properties":{}}
-{"type":"resource","id":"smiths-budget","display_name":"The Smiths family's budget","properties":{}}
+{"object_type":"system", "object_id":"system", "properties":{"display_name":"The entire system"}}
+{"object_type":"tenant", "object_id":"citadel", "properties":{"display_name":"Citadel tenant"}}
+{"object_type":"tenant", "object_id":"smiths", "properties":{"display_name":"Smiths tenant"}}
+{"object_type":"resource", "object_id":"citadel-adventures", "properties":{"display_name":"The Citadel adventures resource"}}
+{"object_type":"resource", "object_id":"smiths-budget", "properties":{"display_name":"The Smiths family's budget"}}
