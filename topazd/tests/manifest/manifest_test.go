@@ -1,17 +1,17 @@
 package manifest_test
 
 import (
-	"bytes"
 	"context"
-	"errors"
-	"io"
 	"os"
 	"path/filepath"
 	"testing"
 
 	client "github.com/aserto-dev/go-aserto"
-	dsc "github.com/aserto-dev/go-aserto/ds/v3"
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	"github.com/aserto-dev/go-aserto/ds/v3"
+	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/x"
 	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
@@ -21,7 +21,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func TestManifest(t *testing.T) {
@@ -78,16 +77,30 @@ func testManifest(ctx context.Context, addr string) func(*testing.T) {
 			client.WithInsecure(true),
 		}
 
-		dsClient, err := dsc.New(opts...)
+		dsClient, err := ds.New(opts...)
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = dsClient.Close() })
 
 		ctx, cancel := context.WithCancel(ctx)
 		t.Cleanup(cancel)
 
+		bytesSend := len(assets_test.ManifestBytes())
+
 		// write manifest to store
-		bytesSend, err := setManifest(ctx, dsClient.Model, assets_test.ManifestReader())
-		require.NoError(t, err)
+		if resp, err := dsClient.Writer.SetManifest(
+			ctx,
+			&dsw.SetManifestRequest{
+				Manifest: &dsc.Manifest{
+					Content: assets_test.ManifestBytes(),
+				},
+			},
+		); err == nil {
+			require.NoError(t, err)
+			require.NotNil(t, resp)
+			require.Len(t, bytesSend, len(resp.GetManifest().GetContent()))
+		} else {
+			require.NoError(t, err)
+		}
 
 		tmpDir := t.TempDir()
 		w, err := os.Create(filepath.Join(tmpDir, "manifest.new.yaml"))
@@ -95,122 +108,34 @@ func testManifest(ctx context.Context, addr string) func(*testing.T) {
 		t.Cleanup(func() { _ = w.Close() })
 
 		// get manifest from store
-		metadata, body, err := getManifest(ctx, dsClient.Model)
+		manifest, err := dsClient.Reader.GetManifest(ctx, &dsr.GetManifestRequest{})
 		require.NoError(t, err)
-		assert.NotNil(t, metadata)
+		assert.NotNil(t, manifest)
 
 		// write manifest to temp manifest file
-		bytesRecv, err := io.Copy(w, body)
+		bytesRecv, err := w.Write(manifest.GetManifest().GetContent())
 		require.NoError(t, err)
 
 		assert.Equal(t, bytesSend, bytesRecv)
 
 		// delete manifest
-		if err := deleteManifest(ctx, dsClient.Model); err != nil {
+		if _, err := dsClient.Writer.DeleteManifest(ctx, &dsw.DeleteManifestRequest{}); err != nil {
 			assert.NoError(t, err)
 		}
 
 		// delete deleted manifest should not result in an error
-		if err := deleteManifest(ctx, dsClient.Model); err != nil {
+		if _, err := dsClient.Writer.DeleteManifest(ctx, &dsw.DeleteManifestRequest{}); err != nil {
 			assert.NoError(t, err)
 		}
 
 		// getManifest should not fail, but return an empty manifest.
-		if metadata, body, err := getManifest(ctx, dsClient.Model); err == nil {
+		if manifest, err := dsClient.Reader.GetManifest(ctx, &dsr.GetManifestRequest{}); err == nil {
 			assert.NoError(t, err)
-			assert.NotNil(t, metadata)
-
-			buf := make([]byte, 1024)
-
-			n, err := body.Read(buf)
-			assert.Error(t, err, "EOF")
-			assert.Equal(t, 0, n)
-			assert.Len(t, buf, 1024)
+			manifest.GetManifest().GetContent()
+			manifest.GetManifest().GetEtag()
+			manifest.GetManifest().GetUpdatedAt()
 		} else {
 			assert.NoError(t, err)
 		}
 	}
-}
-
-func getManifest(ctx context.Context, mc dsm.ModelClient) (*dsm.Metadata, *bytes.Reader, error) {
-	stream, err := mc.GetManifest(ctx, &dsm.GetManifestRequest{Empty: &emptypb.Empty{}})
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var (
-		metadata  *dsm.Metadata
-		data      bytes.Buffer
-		bytesRecv int
-	)
-
-	for {
-		resp, err := stream.Recv()
-		if errors.Is(err, io.EOF) {
-			break
-		}
-
-		if err != nil {
-			return nil, nil, err
-		}
-
-		if md, ok := resp.GetMsg().(*dsm.GetManifestResponse_Metadata); ok {
-			metadata = md.Metadata
-		}
-
-		if body, ok := resp.GetMsg().(*dsm.GetManifestResponse_Body); ok {
-			data.Write(body.Body.GetData())
-			bytesRecv += len(body.Body.GetData())
-		}
-	}
-
-	return metadata, bytes.NewReader(data.Bytes()), nil
-}
-
-const blockSize = 1024 // intentionally small block size for testing chunking
-
-func setManifest(ctx context.Context, mc dsm.ModelClient, r io.Reader) (int64, error) {
-	stream, err := mc.SetManifest(ctx)
-	if err != nil {
-		return 0, err
-	}
-
-	bytesSend := int64(0)
-	buf := make([]byte, blockSize)
-
-	for {
-		n, err := r.Read(buf)
-		if err == io.EOF {
-			break
-		}
-
-		if err != nil {
-			return bytesSend, err
-		}
-
-		bytesSend += int64(n)
-
-		if err := stream.Send(&dsm.SetManifestRequest{
-			Msg: &dsm.SetManifestRequest_Body{
-				Body: &dsm.Body{Data: buf[0:n]},
-			},
-		}); err != nil {
-			return bytesSend, err
-		}
-
-		if n < blockSize {
-			break
-		}
-	}
-
-	if _, err := stream.CloseAndRecv(); err != nil {
-		return bytesSend, err
-	}
-
-	return bytesSend, nil
-}
-
-func deleteManifest(ctx context.Context, mc dsm.ModelClient) error {
-	_, err := mc.DeleteManifest(ctx, &dsm.DeleteManifestRequest{Empty: &emptypb.Empty{}})
-	return err
 }

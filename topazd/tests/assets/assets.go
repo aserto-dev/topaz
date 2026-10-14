@@ -29,6 +29,10 @@ func PeoplefinderConfigReader() *bytes.Reader {
 //go:embed gdrive/manifest.yaml
 var manifest []byte
 
+func ManifestBytes() []byte {
+	return manifest
+}
+
 func ManifestReader() *bytes.Reader {
 	return bytes.NewReader(manifest)
 }
