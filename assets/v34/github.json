@@ -17,6 +17,7 @@
         ],
         "assertions": [
             "github/test/github_assertions.jsonl",
+            "github/test/github_evaluations.jsonl",
             "github/test/github_decisions.jsonl"
         ]
     }

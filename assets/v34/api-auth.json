@@ -17,6 +17,7 @@
         ],
         "assertions": [
             "api-auth/test/api-auth_assertions.jsonl",
+            "api-auth/test/api-auth_evaluations.jsonl",
             "api-auth/test/api-auth_decisions.jsonl"
         ]
     }

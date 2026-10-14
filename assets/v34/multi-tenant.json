@@ -17,8 +17,8 @@
         ],
         "assertions": [
             "multi-tenant/test/multi-tenant_assertions.jsonl",
-            "multi-tenant/test/multi-tenant_decisions.jsonl",
-            "multi-tenant/test/multi-tenant_evaluations.jsonl"
+            "multi-tenant/test/multi-tenant_evaluations.jsonl",
+            "multi-tenant/test/multi-tenant_decisions.jsonl"
         ]
     }
 }

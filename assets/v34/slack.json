@@ -17,8 +17,8 @@
       ],
       "assertions": [
           "slack/test/slack_assertions.jsonl",
-          "slack/test/slack_decisions.jsonl",
-          "slack/test/slack_evaluations.jsonl"
+          "slack/test/slack_evaluations.jsonl",
+          "slack/test/slack_decisions.jsonl"
       ]
   }
 }
