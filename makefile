@@ -26,7 +26,7 @@ GO_VER             := 1.27
 SVU_VER            := 3.4.1
 GOTESTSUM_VER      := 1.13.0
 GOLANGCI-LINT_VER  := 2.15.0
-GORELEASER_VER     := 2.18.2
+GORELEASER_VER     := 2.19.0
 SYFT_VER           := 1.13.0
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
