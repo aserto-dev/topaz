@@ -95,7 +95,7 @@ release: gover
 .PHONY: snapshot
 snapshot: gover
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser.yml --clean --snapshot --skip archive,homebrew,sbom
+	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser.yml --clean --snapshot --skip publish
 
 .PHONY: generate
 generate:
