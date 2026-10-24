@@ -1,0 +1,83 @@
+{
+  "version": 5,
+  "types": {
+    "document": {
+      "relations": {
+        "parent_folder": {
+          "union": [{ "object": "folder" }],
+          "subject_types": ["folder"]
+        },
+        "reader": {
+          "union": [
+            { "object": "user" },
+            { "object": "user", "relation": "*" }
+          ],
+          "subject_types": ["user"]
+        },
+        "writer": { "union": [{ "object": "user" }], "subject_types": ["user"] }
+      },
+      "permissions": {
+        "can_only_read": {
+          "exclusion": {
+            "include": { "rel_or_perm": "reader", "subject_types": ["user"] },
+            "exclude": { "rel_or_perm": "writer", "subject_types": ["user"] }
+          },
+          "subject_types": ["user"]
+        },
+        "edit": {
+          "union": [{ "rel_or_perm": "writer", "subject_types": ["user"] }],
+          "subject_types": ["user"]
+        },
+        "read": {
+          "union": [
+            {
+              "base": "parent_folder",
+              "rel_or_perm": "read",
+              "subject_types": ["user"]
+            }
+          ],
+          "subject_types": ["user"]
+        },
+        "read_and_write": {
+          "intersection": [
+            { "rel_or_perm": "reader", "subject_types": ["user"] },
+            { "rel_or_perm": "writer", "subject_types": ["user"] }
+          ],
+          "subject_types": ["user"]
+        },
+        "view": {
+          "union": [
+            { "rel_or_perm": "reader", "subject_types": ["user"] },
+            { "rel_or_perm": "writer", "subject_types": ["user"] }
+          ],
+          "subject_types": ["user"]
+        }
+      }
+    },
+    "folder": {
+      "relations": {
+        "owner": { "union": [{ "object": "user" }], "subject_types": ["user"] }
+      },
+      "permissions": {
+        "read": {
+          "union": [{ "rel_or_perm": "owner", "subject_types": ["user"] }],
+          "subject_types": ["user"]
+        }
+      }
+    },
+    "group": {
+      "relations": {
+        "member": {
+          "union": [
+            { "object": "user" },
+            { "object": "group", "relation": "member" }
+          ],
+          "subject_types": ["user"],
+          "intermediates": [{"object": "group", "relation": "member"}]
+        }
+      }
+    },
+    "user": {}
+  },
+  "metadata": null
+}

@@ -2,10 +2,11 @@ module github.com/aserto-dev/topaz
 
 go 1.27.3
 
+
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
 	github.com/alecthomas/kong v1.16.1
-	github.com/aserto-dev/azm v0.2.27
+	github.com/antlr4-go/antlr/v4 v4.13.1
 	github.com/aserto-dev/errors v0.34.1
 	github.com/aserto-dev/go-aserto v0.34.1
 	github.com/aserto-dev/go-authorizer v0.24.1
@@ -17,6 +18,7 @@ require (
 	github.com/authzen/access.go/api v1.0.2
 	github.com/authzen/access.go/openapi v1.0.2
 	github.com/cli/browser v1.3.0
+	github.com/deckarep/golang-set/v3 v3.0.0
 	github.com/distribution/reference v0.6.0
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.8.2
@@ -29,6 +31,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.1
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.32.0
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/homeport/dyff v1.12.0
 	github.com/itchyny/gojq v0.12.19
 	github.com/jwx-go/jwkfetch/v4 v4.0.4
@@ -39,7 +42,9 @@ require (
 	github.com/mennanov/fmutils v0.4.1
 	github.com/mitchellh/copystructure v1.2.0
 	github.com/mitchellh/go-wordwrap v1.0.1
+	github.com/mitchellh/hashstructure/v2 v2.0.2
 	github.com/moby/term v0.5.2
+	github.com/nsf/jsondiff v0.0.0-20260207060731-8e8d90c4c0ac
 	github.com/olekukonko/tablewriter v1.1.5
 	github.com/open-policy-agent/opa v1.21.4
 	github.com/opencontainers/image-spec v1.1.1
@@ -56,6 +61,7 @@ require (
 	github.com/stretchr/testify v1.12.1
 	github.com/testcontainers/testcontainers-go v0.44.0
 	go.etcd.io/bbolt v1.5.0
+	go.yaml.in/yaml/v3 v3.0.5
 	golang.org/x/sync v0.24.0
 	golang.org/x/sys v0.49.0
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20261019180522-ce908d29299b
@@ -70,7 +76,6 @@ require (
 	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/Microsoft/go-winio v0.6.3-0.20251027160822-ad3df93bed29 // indirect
 	github.com/agnivade/levenshtein v1.2.1 // indirect
-	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -81,7 +86,6 @@ require (
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/containerd/platforms v1.0.0-rc.5 // indirect
 	github.com/cpuguy83/dockercfg v0.3.2 // indirect
-	github.com/deckarep/golang-set/v3 v3.0.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.1 // indirect
 	github.com/dgraph-io/ristretto/v2 v2.4.2 // indirect
 	github.com/dgryski/go-metro v0.0.0-20250106013310-edb8663e5e33 // indirect
@@ -105,7 +109,6 @@ require (
 	github.com/google/flatbuffers v25.12.19+incompatible // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.4 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
-	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/huandu/go-clone v1.7.3 // indirect
 	github.com/huandu/go-sqlbuilder v1.43.0 // indirect
@@ -127,7 +130,6 @@ require (
 	github.com/mattn/go-colorable v0.1.15 // indirect
 	github.com/mattn/go-runewidth v0.0.30 // indirect
 	github.com/mitchellh/go-ps v1.0.0 // indirect
-	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/go-archive v0.3.3 // indirect
@@ -182,7 +184,6 @@ require (
 	go.opentelemetry.io/otel/sdk v1.47.0 // indirect
 	go.opentelemetry.io/otel/trace v1.47.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.4 // indirect
-	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.58.0 // indirect
 	golang.org/x/exp v0.0.0-20261014143641-f0251eb4aa3e // indirect
 	golang.org/x/net v0.61.0 // indirect

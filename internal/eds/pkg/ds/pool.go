@@ -3,7 +3,7 @@ package ds
 import (
 	"bytes"
 
-	"github.com/aserto-dev/azm/mempool"
+	"github.com/aserto-dev/topaz/internal/azm/mempool"
 )
 
 const maxRelationIdentifierSize = 384
