@@ -6,8 +6,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/aserto-dev/azm/model"
-	v3 "github.com/aserto-dev/azm/v3"
+	"github.com/aserto-dev/topaz/internal/azm/model"
+	v3 "github.com/aserto-dev/topaz/internal/azm/v3"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"

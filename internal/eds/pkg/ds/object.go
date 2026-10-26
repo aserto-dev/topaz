@@ -3,8 +3,8 @@ package ds
 import (
 	"bytes"
 
-	"github.com/aserto-dev/azm/safe"
 	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	"github.com/aserto-dev/topaz/internal/azm/safe"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/x"
 	"google.golang.org/protobuf/types/known/structpb"
 )

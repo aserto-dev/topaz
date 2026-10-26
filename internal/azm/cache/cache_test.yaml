@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+types:
+  user: {}
+
+  machine:
+    relations:
+      owner: user
+
+  group:
+    relations:
+      member: user | group#member
+      guest: user | group#member
+
+  tenant:
+    relations:
+      owner: user
+      admin: user | group#member
+      viewer: user | group#member | group#guest
+
+      log_writer: machine#owner
+      data_reader: machine#owner
+    permissions:
+      can_administer: owner | admin
+      can_view: can_administer | viewer
+
+      can_write_logs: admin | log_writer
