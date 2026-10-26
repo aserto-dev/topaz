@@ -1,0 +1,11 @@
+# local file system access requires using the OPA built-in file plugin
+# which is activated by NOT using a service and pointing the bundle.resource
+# directly to the bundle file.
+bundles:
+  authz:
+    resource: file:///Users/gertd/workspace/cur/policy/test-v1.bundle.tar.gz
+    persist: false
+    polling:
+      min_delay_seconds: 10
+      max_delay_seconds: 20
+

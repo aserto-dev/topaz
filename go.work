@@ -1,3 +1,6 @@
 go 1.27.3
 
-use .
+use (
+	.
+	./topaz-opa
+)

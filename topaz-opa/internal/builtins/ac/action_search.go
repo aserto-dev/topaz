@@ -1,0 +1,57 @@
+package ac
+
+import (
+	"errors"
+
+	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
+	"github.com/authzen/access.go/api/access/v1"
+
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/rego"
+	"github.com/open-policy-agent/opa/v1/types"
+	"google.golang.org/protobuf/proto"
+)
+
+const azActionSearchHelp string = `az.action_search({
+	"subject": {"type": "", "id": "", "properties": {}},
+	"action": {"name": "", "properties": {}},
+	"resource": {"type": "", "id": "", "properties": {}},
+	"context": {},
+	"page": {"next_token": ""}
+})`
+
+// registerActionSearch
+// https://openid.github.io/authzen/#name-action-search-api.
+func registerActionSearch(fnName string, ac func() (access.AccessClient, error)) (*rego.Function, rego.Builtin1) {
+	return &rego.Function{
+			Name:    fnName,
+			Decl:    types.NewFunction(types.Args(types.A), types.A),
+			Memoize: true,
+		},
+		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
+			var args access.ActionSearchRequest
+
+			acr, err := ac()
+			if err != nil && errors.Is(err, errs.ErrTopazPluginDisabled) {
+				return nil, err
+			}
+
+			if err := ast.As(op1.Value, &args); err != nil {
+				builtins.TraceError(&bctx, fnName, err)
+				return nil, err
+			}
+
+			if proto.Equal(&args, &access.ActionSearchRequest{}) {
+				return ast.StringTerm(azActionSearchHelp), nil
+			}
+
+			resp, err := acr.ActionSearch(bctx.Context, &args)
+			if err != nil {
+				builtins.TraceError(&bctx, fnName, err)
+				return nil, err
+			}
+
+			return builtins.ResponseToTerm(resp)
+		}
+}

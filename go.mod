@@ -2,6 +2,14 @@ module github.com/aserto-dev/topaz
 
 go 1.27.3
 
+// replace github.com/aserto-dev/go-aserto => /Users/gertd/workspace/cur/go-aserto
+
+// replace github.com/aserto-dev/go-directory => /Users/gertd/workspace/cur/go-directory
+
+// replace github.com/aserto-dev/go-authorizer => /Users/gertd/workspace/cur/go-authorizer
+
+ignore ./topaz-opa
+
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
 	github.com/alecthomas/kong v1.16.1
@@ -98,6 +106,7 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-openapi/jsonpointer v1.0.1 // indirect
+	github.com/go-openapi/testify/v2 v2.8.0 // indirect
 	github.com/gobwas/glob v1.0.0 // indirect
 	github.com/goccy/go-json v0.11.2 // indirect
 	github.com/gonvenience/bunt v1.4.3 // indirect
@@ -166,6 +175,7 @@ require (
 	github.com/tchap/go-patricia/v2 v2.3.3 // indirect
 	github.com/tetratelabs/wazero v1.12.0 // indirect
 	github.com/texttheater/golang-levenshtein v1.0.1 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tklauser/go-sysconf v0.4.0 // indirect
 	github.com/tklauser/numcpus v0.12.0 // indirect
 	github.com/valyala/fastjson v1.6.10 // indirect

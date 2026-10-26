@@ -1,0 +1,7 @@
+bundles:
+  authz:
+    resource: file://${PWD}/workspace/cur/policy/tests/fixtures/policy_v1/rebac/
+    persist: true
+    polling:
+      min_delay_seconds: 10
+      max_delay_seconds: 20
