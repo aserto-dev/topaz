@@ -1,0 +1,119 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Authorization Model YAML Schema",
+    "description": "Schema for authorization manifest files.",
+    "$ref": "#/definitions/v3",
+    "definitions": {
+        "v3": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "model": {
+                    "$ref": "#/definitions/Model"
+                },
+                "types": {
+                    "$ref": "#/definitions/ObjectTypes"
+                }
+            },
+            "required": [
+                "model",
+                "types"
+            ]
+        },
+        "Model": {
+            "title": "Model",
+            "description": "model definition",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "version": {
+                    "description": "schema version",
+                    "$ref": "#/definitions/SchemaVersionValue"
+                }
+            },
+            "required": [
+                "version"
+            ]
+        },
+        "ObjectTypes": {
+            "title": "Object Types",
+            "description": "collection of object type definitions",
+            "type": "object",
+            "additionalProperties": true,
+            "uniqueItems": true,
+            "propertyNames": {
+                "description": "object type name",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9._-]{1,62}[a-zA-Z0-9]$"
+            },
+            "patternProperties": {
+                "^.*$": {
+                    "$ref": "#/definitions/ObjectType"
+                }
+            }
+        },
+        "ObjectType": {
+            "title": "Object Type",
+            "description": "object type name",
+            "type": "object",
+            "properties": {
+                "relations": {
+                    "description": "set of relation definitions of object type",
+                    "$ref": "#/definitions/RelationTypes"
+                },
+                "permissions": {
+                    "description": "set of permission definitions of object type",
+                    "$ref": "#/definitions/Permissions"
+                }
+            }
+        },
+        "RelationTypes": {
+            "title": "Relation Types",
+            "description": "collection of relation type definitions",
+            "type": "object",
+            "additionalProperties": true,
+            "uniqueItems": true,
+            "propertyNames": {
+                "description": "relation type name",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9._-]{1,62}[a-zA-Z0-9]$"
+            },
+            "patternProperties": {
+                "^.*$": {
+                    "$ref": "#/definitions/RelationType"
+                }
+            }
+        },
+        "RelationType": {
+            "title": "Relation Type",
+            "description": "relation type definition",
+            "type": "string"
+        },
+        "Permissions": {
+            "title": "Permissions",
+            "description": "collection of permission definitions",
+            "type": "object",
+            "additionalProperties": true,
+            "uniqueItems": true,
+            "propertyNames": {
+                "description": "permission name",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9._-]{1,62}[a-zA-Z0-9]$"
+            },
+            "patternProperties": {
+                "^.*$": {
+                    "$ref": "#/definitions/Permission"
+                }
+            }
+        },
+        "Permission": {
+            "title": "Permission",
+            "description": "permission definition",
+            "type": "string"
+        },
+        "SchemaVersionValue": {
+            "title": "Schema Version Value",
+            "description": "value of schema version",
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 3
+        }
+    }
+}

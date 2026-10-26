@@ -1,0 +1,12 @@
+---
+
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  user: null
+  admin:
+    relations: null
+    permissions: null

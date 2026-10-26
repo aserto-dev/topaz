@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+# object type definitions
+types:
+  #  user represents a user that can be granted role(s)
+  user: {}
+
+  # group represents a collection of users and/or (nested) groups
+  group:
+    relations:
+      # group member is a direct relation to a user or a subject relation
+      member: user | group#member
+
+  # folder represents a folder that can contain documents and/or other folders
+  folder:
+    # folder relations
+    relations:
+      # owner relation
+      owner: user
+
+    # folder permissions
+    permissions:
+      # list documents permission
+      read: owner
+
+  # document represents a protected document
+  document:
+    # document relations
+    relations:
+      # parent folder relation
+      parent_folder: folder
+      # writer relation
+      writer: user
+      # reader relation
+      reader: |
+        user | user:*
+
+    # document permissions
+    permissions:
+      # edit permission
+      edit: writer
+      # view permission (union)
+      view: reader | writer
+      # read_and_write permission (intersection)
+      read_and_write: reader & writer
+      # can_only_read_permission (exclusion)
+      can_only_read: reader - writer
+      #  read permission (inherited from parent folder)
+      read: parent_folder->read

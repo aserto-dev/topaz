@@ -3,9 +3,9 @@ package ds
 import (
 	"context"
 
-	"github.com/aserto-dev/azm/cache"
-	"github.com/aserto-dev/azm/safe"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/internal/azm/cache"
+	"github.com/aserto-dev/topaz/internal/azm/safe"
 
 	bolt "go.etcd.io/bbolt"
 )

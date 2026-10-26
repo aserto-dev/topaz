@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://www.topaz.sh/schema/manifest.json
+---
+
+model:
+  version: 3
+
+types:
+  identity: {}
+
+  user:
+    relations:
+      identifier: identity
+
+  group:
+    relations:
+      member: user | group#member
+
+  resource:
+    relations:
+      viewer: user | group#member | user:*
+    permissions:
+      can_view: viewer | viewer->identifier
+
+  component:
+    relations:
+      part: component | component#part | component:*
+      maintainer: user | group#member
+
+    permissions:
+      can_repair: maintainer | part->can_repair
