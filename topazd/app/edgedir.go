@@ -12,6 +12,7 @@ import (
 	dsm3stream "github.com/aserto-dev/go-directory/pkg/gateway/model/v3"
 	dsOpenAPI "github.com/aserto-dev/openapi-directory/publish/directory"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
+	"github.com/aserto-dev/topaz/topazd/app/handlers"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 	dsa "github.com/authzen/access.go/api/access/v1"
 	acOpenAPI "github.com/authzen/access.go/openapi"
@@ -77,6 +78,7 @@ func (e *EdgeDir) GetGRPCRegistrations(services ...string) builder.GRPCRegistrat
 	}
 }
 
+//nolint:nestif
 func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builder.HandlerRegistrations {
 	return func(ctx context.Context, mux *runtime.ServeMux, grpcEndpoint string, opts []grpc.DialOption) error {
 		if lo.Contains(services, modelService) {
@@ -103,6 +105,10 @@ func (e *EdgeDir) GetGatewayRegistration(port string, services ...string) builde
 			}
 
 			if err := mux.HandlePath(http.MethodGet, accessOpenAPISpec, acOpenAPIHandler()); err != nil {
+				return err
+			}
+
+			if err := mux.HandlePath(http.MethodGet, handlers.AuthZENConfiguration, handlers.WellKnownConfigRuntimeHandler()); err != nil {
 				return err
 			}
 		}
