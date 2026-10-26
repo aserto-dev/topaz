@@ -2,6 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.27.3
 
+
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
 	github.com/alecthomas/kong v1.16.1
