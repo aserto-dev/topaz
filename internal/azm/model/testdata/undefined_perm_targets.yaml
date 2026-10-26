@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+types:
+  user: {}
+
+  group:
+    relations:
+      member: user | user:* | group#member
+
+  folder:
+    relations:
+      owner: user
+      reader: user | user:* | group#member
+      writer: user | user:* | group#member
+
+    permissions:
+      # invalid: no 'parent' relation
+      read: parent->read
+
+      # invalid: no 'viewer' or 'guest' permissions/relations
+      view: viewer - guest
+
+      # invliad: no 'editor' relation or permission
+      write: owner | editor
+
+      # valid: a permission can reference both relations and other permissions
+      update: writer & write

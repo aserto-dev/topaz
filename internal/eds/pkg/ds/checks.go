@@ -4,11 +4,11 @@ import (
 	"context"
 	"runtime"
 
-	"github.com/aserto-dev/azm/cache"
-	"github.com/aserto-dev/azm/jobpool"
-	"github.com/aserto-dev/azm/safe"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
 	"github.com/aserto-dev/go-directory/pkg/prop"
+	"github.com/aserto-dev/topaz/internal/azm/cache"
+	"github.com/aserto-dev/topaz/internal/azm/jobpool"
+	"github.com/aserto-dev/topaz/internal/azm/safe"
 
 	bolt "go.etcd.io/bbolt"
 	"google.golang.org/protobuf/types/known/structpb"

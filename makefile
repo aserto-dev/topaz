@@ -11,6 +11,7 @@ ORG                := aserto-dev
 REPO               := topaz
 DESCRIPTION        := "Topaz Authorization Service"
 LICENSE            := Apache-2.0
+WINGET_PKG_ID      := Aserto.Topaz
 
 GOOS               := $(shell go env GOOS)
 GOARCH             := $(shell go env GOARCH)
@@ -150,6 +151,13 @@ topaz-start-test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@echo "topaz start $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_name')"
 	@${TOPAZ_DIST} start --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
+
+.PHONY: publish-winget
+publish-winget:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@komac --version
+	@komac token add --token=$$(gh auth token)
+	@komac update ${WINGET_PKG_ID} --version $$(svu current --tag.prefix="") --urls https://github.com/aserto-dev/topaz/releases/download/$$(svu current)/topaz_windows_amd64.zip
 
 .PHONY: info
 info:

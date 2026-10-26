@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+types:
+  user: {}
+
+  folder:
+    relations:
+      owner: user
+
+  file:
+    relations:
+      parent: folder
+      owner: user | file
+      writer: user
+      reader: user
+
+    permissions:
+      # valid union: two relations
+      read: reader | writer
+
+      # valid union: one relation and one permission
+      share: read | parent->owner
+
+      # valid exclusion
+      delete: owner - share
+
+      # invalid: owner may resolve to 'user' which has no `write' relation of permission.`
+      write: writer | owner->write
+
+      # invalid: parent is a folder and doesn't have a `write` permission or relation
+      update: write & parent->write
