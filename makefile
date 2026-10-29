@@ -86,7 +86,59 @@ docker-build-test:
 PHONY: go-mod-tidy
 go-mod-tidy:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@go work edit -json | jq -r '.Use[].DiskPath' | xargs -I{} bash -c 'cd {} && echo "${PWD}/go.mod" && go mod tidy -v && cd -'
+	@go work sync
+	@exit_code=0; \
+	modules=$$(go work edit -json | jq -r '.Use[].DiskPath // empty'); \
+	for mod in $$modules; do \
+		if [ "$$mod" = "." ]; then \
+			mod_dir=$$(pwd); \
+		else \
+			mod_dir=$$(realpath "$$mod" 2>/dev/null || echo "$$mod"); \
+		fi; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod_dir$(NO_COLOR)"; \
+		(cd "$$mod_dir" && go mod tidy) || exit_code=$$?; \
+	done; \
+	exit $$exit_code
+
+.PHONY: lint
+lint: gover
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/golangci-lint config path
+	@${EXT_BIN_DIR}/golangci-lint config verify
+	@exit_code=0; \
+	config=${PWD}/.golangci.yaml; \
+	modules=$$(go work edit -json | jq -r '.Use[].DiskPath // empty'); \
+	for mod in $$modules; do \
+		if [ "$$mod" = "." ]; then \
+			mod_dir=$$(pwd); \
+		else \
+			mod_dir=$$(realpath "$$mod" 2>/dev/null || echo "$$mod"); \
+		fi; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod_dir$(NO_COLOR)"; \
+		(cd "$$mod_dir" && ${EXT_BIN_DIR}/golangci-lint run --config $$config ./...) || exit_code=$$?; \
+	done; \
+	exit $$exit_code
+
+.PHONY: lint-clean
+lint-clean: gover
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/golangci-lint cache clean
+
+.PHONY: test
+test: gover test-snapshot
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@exit_code=0; \
+	modules=$$(go work edit -json | jq -r '.Use[].DiskPath // empty'); \
+	for mod in $$modules; do \
+		if [ "$$mod" = "." ]; then \
+			mod_dir=$$(pwd); \
+		else \
+			mod_dir=$$(realpath "$$mod" 2>/dev/null || echo "$$mod"); \
+		fi; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod_dir$(NO_COLOR)"; \
+		(cd "$$mod_dir" && ${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -v ./... -coverprofile=cover.out -coverpkg=./... ./...) || exit_code=$$?; \
+	done; \
+	exit $$exit_code
 
 .PHONY: release
 release: gover
@@ -102,27 +154,6 @@ snapshot: gover
 generate:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@GOBIN=${EXT_BIN_DIR} go generate ./...
-
-.PHONY: lint
-lint: gover
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/golangci-lint config path
-	@${EXT_BIN_DIR}/golangci-lint config verify
-	@${EXT_BIN_DIR}/golangci-lint run --config ${PWD}/.golangci.yaml
-
-.PHONY: lint-clean
-lint-clean: gover
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/golangci-lint cache clean
-
-.PHONY: test
-test: gover test-snapshot
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@echo -e "$(WARN_COLOR)!!! TESTCONTAINERS_RYUK_DISABLED=${TESTCONTAINERS_RYUK_DISABLED} !!!$(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./... | grep -v topazd/tests)                     -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./topazd/tests/... | grep -v tests/template)      -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/${ORG}/${REPO}/topazd/tests/template-no-tls/...   -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/${ORG}/${REPO}/topazd/tests/template-with-tls/... -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
 	
 .PHONY: test-snapshot
 test-snapshot:
