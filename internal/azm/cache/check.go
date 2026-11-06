@@ -10,7 +10,7 @@ import (
 )
 
 // If true, use a shared memory pool for all requests.
-// Othersise, each call gets its own pool.
+// Otherwise, each call gets its own pool.
 const sharedPool = true
 
 func (c *Cache) Check(req *dsr.CheckRequest, relReader graph.RelationReader) (*dsr.CheckResponse, error) {
