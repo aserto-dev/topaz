@@ -105,6 +105,7 @@ func testAuthZ(ctx context.Context, addr string) func(*testing.T) {
 	}
 }
 
+//nolint:staticcheck
 func DecisionTreeWithMissingPath(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := azClient.DecisionTree(ctx, &authorizer.DecisionTreeRequest{
@@ -133,6 +134,7 @@ func DecisionTreeWithMissingPath(ctx context.Context, azClient authorizer.Author
 	}
 }
 
+//nolint:staticcheck
 func DecisionTreeWithMissingIdentity(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := azClient.DecisionTree(ctx, &authorizer.DecisionTreeRequest{
@@ -161,6 +163,7 @@ func DecisionTreeWithMissingIdentity(ctx context.Context, azClient authorizer.Au
 	}
 }
 
+//nolint:staticcheck
 func DecisionTreeWithUserID(ctx context.Context, azClient authorizer.AuthorizerClient) func(*testing.T) {
 	return func(t *testing.T) {
 		respX, errX := azClient.DecisionTree(ctx, &authorizer.DecisionTreeRequest{

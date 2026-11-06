@@ -24,11 +24,12 @@ EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
 GO_VER             := 1.27
-SVU_VER            := 3.4.1
+SVU_VER            := 3.4.4
 GOTESTSUM_VER      := 1.13.0
 GOLANGCI-LINT_VER  := 2.15.0
-GORELEASER_VER     := 2.19.0
+GORELEASER_VER     := 2.20.0
 SYFT_VER           := 1.13.0
+GOFUMPT_VER        := latest
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 
@@ -44,6 +45,11 @@ deps: info install-svu install-goreleaser install-golangci-lint install-gotestsu
 gover:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@(go env GOVERSION | grep "go${GO_VER}") || (echo "go version check failed expected go${GO_VER} got $$(go env GOVERSION)"; exit 1)
+
+PHONY: go-fmt
+go-fmt: 
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/gofumpt -l -w .
 
 .PHONY: build
 build: gover
@@ -84,9 +90,8 @@ docker-build-test:
   .
 
 PHONY: go-mod-tidy
-go-mod-tidy:
+go-mod-tidy: go-fmt go-work-sync
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@go work sync
 	@exit_code=0; \
 	modules=$$(go work edit -json | jq -r '.Use[].DiskPath // empty'); \
 	for mod in $$modules; do \
@@ -99,6 +104,11 @@ go-mod-tidy:
 		(cd "$$mod_dir" && go mod tidy) || exit_code=$$?; \
 	done; \
 	exit $$exit_code
+
+PHONY: go-work-sync
+go-work-sync:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@go work sync
 
 .PHONY: lint
 lint: gover
@@ -255,6 +265,11 @@ install-templ: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@GOBIN=${EXT_BIN_DIR} go install github.com/a-h/templ/cmd/templ@latest
 	@${EXT_BIN_DIR}/templ --version
+
+.PHONY: install-gofumpt
+install-gofumpt: ${EXT_BIN_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install mvdan.cc/gofumpt@${GOFUMPT_VER}
 
 .PHONY: clean
 clean:
