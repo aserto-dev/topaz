@@ -5,7 +5,7 @@ import (
 	"time"
 
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
-	"github.com/aserto-dev/topaz/internal/header"
+	"github.com/aserto-dev/topaz/internal/headers"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
@@ -20,7 +20,7 @@ type tracingHook struct{}
 func (h tracingHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
 	ctx := e.GetCtx()
 
-	e.Fields(header.KnownContextValueStrings(ctx))
+	e.Fields(headers.KnownContextValueStrings(ctx))
 
 	serviceMethod, ok := grpc.Method(ctx)
 	if ok {

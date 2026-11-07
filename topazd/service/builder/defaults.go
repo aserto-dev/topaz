@@ -3,7 +3,7 @@ package builder
 import (
 	"net/http"
 
-	"github.com/go-http-utils/headers"
+	"github.com/aserto-dev/topaz/internal/headers"
 )
 
 var DefaultGatewayAllowedHeaders = []string{
@@ -11,7 +11,7 @@ var DefaultGatewayAllowedHeaders = []string{
 	headers.ContentType,
 	headers.IfMatch,
 	headers.IfNoneMatch,
-	"Depth",
+	headers.Depth,
 }
 
 var DefaultGatewayAllowedMethods = []string{
