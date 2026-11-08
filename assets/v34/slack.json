@@ -8,12 +8,12 @@
           "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
       },
       "idp_data": [
-        "citadel/citadel_objects.json",
-        "citadel/citadel_relations.json"
+        "citadel/citadel_objects.jsonl",
+        "citadel/citadel_relations.jsonl"
       ],
       "domain_data": [
-          "slack/slack_objects.json",
-          "slack/slack_relations.json"
+          "slack/slack_objects.jsonl",
+          "slack/slack_relations.jsonl"
       ],
       "assertions": [
           "slack/test/slack_assertions.json",

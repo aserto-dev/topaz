@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/aserto-dev/topaz/internal/header"
+	"github.com/aserto-dev/topaz/internal/headers"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -15,5 +15,5 @@ func RequestIDContext(t *testing.T) context.Context {
 	id, err := uuid.NewUUID()
 	assert.NoError(err)
 
-	return context.WithValue(context.Background(), header.HeaderAsertoRequestID, id)
+	return context.WithValue(context.Background(), headers.HeaderAsertoRequestID, id)
 }

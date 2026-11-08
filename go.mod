@@ -7,13 +7,13 @@ require (
 	github.com/alecthomas/kong v1.16.1
 	github.com/antlr4-go/antlr/v4 v4.13.1
 	github.com/aserto-dev/errors v0.34.2-0.20261006083714-760eef8e0b6c
-	github.com/aserto-dev/go-aserto v0.34.2
-	github.com/aserto-dev/go-authorizer/aserto v0.24.3
-	github.com/aserto-dev/go-authorizer/openapi v0.24.3
-	github.com/aserto-dev/go-authorizer/pkg v0.24.3
-	github.com/aserto-dev/go-directory/aserto v0.34.3
-	github.com/aserto-dev/go-directory/openapi v0.34.3
-	github.com/aserto-dev/go-directory/pkg v0.34.3
+	github.com/aserto-dev/go-aserto v0.34.4
+	github.com/aserto-dev/go-authorizer/aserto v0.24.4
+	github.com/aserto-dev/go-authorizer/openapi v0.24.4
+	github.com/aserto-dev/go-authorizer/pkg v0.24.4
+	github.com/aserto-dev/go-directory/aserto v0.34.4
+	github.com/aserto-dev/go-directory/openapi v0.34.4
+	github.com/aserto-dev/go-directory/pkg v0.34.4
 	github.com/aserto-dev/go-topaz-ui v0.1.26
 	github.com/aserto-dev/logger v0.0.9
 	github.com/authzen/access.go/api v1.0.2
@@ -24,7 +24,6 @@ require (
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-connections v0.8.2
 	github.com/fatih/color v1.19.0
-	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/gonvenience/ytbx v1.5.0
 	github.com/google/uuid v1.6.0

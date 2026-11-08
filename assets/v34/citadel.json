@@ -8,8 +8,8 @@
             "resource": "ghcr.io/aserto-policies/policy-rebac:latest"
         },
         "idp_data": [
-            "citadel/citadel_objects.json",
-            "citadel/citadel_relations.json"
+            "citadel/citadel_objects.jsonl",
+            "citadel/citadel_relations.jsonl"
         ],
         "domain_data": [
         ],

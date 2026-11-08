@@ -9,9 +9,9 @@ import (
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/x"
-	"github.com/pkg/errors"
+	"github.com/aserto-dev/topaz/internal/headers"
 
-	"github.com/go-http-utils/headers"
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/samber/lo"
 	bolt "go.etcd.io/bbolt"

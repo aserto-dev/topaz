@@ -1,49 +1,49 @@
 {
   "relations": [
     {
-      "objectType": "route",
-      "objectId": "/users/{userId}",
+      "object_type": "route",
+      "object_id": "/users/{userId}",
       "relation": "service",
-      "subjectType": "service",
-      "subjectId": "todo"
+      "subject_type": "service",
+      "subject_id": "todo"
     },
     {
-      "objectType": "route",
-      "objectId": "/todos/{todoId}",
+      "object_type": "route",
+      "object_id": "/todos/{todoId}",
       "relation": "service",
-      "subjectType": "service",
-      "subjectId": "todo"
+      "subject_type": "service",
+      "subject_id": "todo"
     },
     {
-      "objectType": "route",
-      "objectId": "/todos",
+      "object_type": "route",
+      "object_id": "/todos",
       "relation": "service",
-      "subjectType": "service",
-      "subjectId": "todo"
+      "subject_type": "service",
+      "subject_id": "todo"
     },
     {
-      "objectType": "service",
-      "objectId": "todo",
+      "object_type": "service",
+      "object_id": "todo",
       "relation": "deleter",
-      "subjectType": "group",
-      "subjectId": "admin",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "admin",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "todo",
+      "object_type": "service",
+      "object_id": "todo",
       "relation": "deleter",
-      "subjectType": "group",
-      "subjectId": "editor",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "editor",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "todo",
+      "object_type": "service",
+      "object_id": "todo",
       "relation": "reader",
-      "subjectType": "group",
-      "subjectId": "viewer",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "viewer",
+      "subject_relation": "member"
     }
   ]  
 }
