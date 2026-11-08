@@ -1,449 +1,449 @@
 {
   "relations": [
     {
-      "objectType": "service",
-      "objectId": "petstore",
+      "object_type": "service",
+      "object_id": "petstore",
       "relation": "reader",
-      "subjectType": "group",
-      "subjectId": "petstore-readers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "petstore-readers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "petstore",
+      "object_type": "service",
+      "object_id": "petstore",
       "relation": "writer",
-      "subjectType": "group",
-      "subjectId": "petstore-writers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "petstore-writers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "petstore",
+      "object_type": "service",
+      "object_id": "petstore",
       "relation": "creator",
-      "subjectType": "group",
-      "subjectId": "petstore-creators",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "petstore-creators",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "petstore",
+      "object_type": "service",
+      "object_id": "petstore",
       "relation": "deleter",
-      "subjectType": "group",
-      "subjectId": "petstore-deleters",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "petstore-deleters",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "petstore-readers",
+      "object_type": "group",
+      "object_id": "petstore-readers",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-readers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-readers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "petstore-writers",
+      "object_type": "group",
+      "object_id": "petstore-writers",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-writers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-writers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "petstore-creators",
+      "object_type": "group",
+      "object_id": "petstore-creators",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-creators",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-creators",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "petstore-deleters",
+      "object_type": "group",
+      "object_id": "petstore-deleters",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-deleters",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-deleters",
+      "subject_relation": "member"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:GET:/store/order/{orderId}",
+      "object_type": "endpoint",
+      "object_id": "petstore:GET:/store/order/{orderId}",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:DELETE:/store/order/{orderId}",
+      "object_type": "endpoint",
+      "object_id": "petstore:DELETE:/store/order/{orderId}",
       "relation": "service-deleter",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:POST:/user/createWithList",
+      "object_type": "endpoint",
+      "object_id": "petstore:POST:/user/createWithList",
       "relation": "service-creator",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:GET:/pet/{petId}",
+      "object_type": "endpoint",
+      "object_id": "petstore:GET:/pet/{petId}",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:POST:/pet/{petId}",
+      "object_type": "endpoint",
+      "object_id": "petstore:POST:/pet/{petId}",
       "relation": "service-creator",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:DELETE:/pet/{petId}",
+      "object_type": "endpoint",
+      "object_id": "petstore:DELETE:/pet/{petId}",
       "relation": "service-deleter",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:GET:/user/login",
+      "object_type": "endpoint",
+      "object_id": "petstore:GET:/user/login",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:POST:/pet/{petId}/uploadImage",
+      "object_type": "endpoint",
+      "object_id": "petstore:POST:/pet/{petId}/uploadImage",
       "relation": "service-creator",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:POST:/store/order",
+      "object_type": "endpoint",
+      "object_id": "petstore:POST:/store/order",
       "relation": "service-creator",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:GET:/user/logout",
+      "object_type": "endpoint",
+      "object_id": "petstore:GET:/user/logout",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:GET:/store/inventory",
+      "object_type": "endpoint",
+      "object_id": "petstore:GET:/store/inventory",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:GET:/pet/findByStatus",
+      "object_type": "endpoint",
+      "object_id": "petstore:GET:/pet/findByStatus",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:GET:/user/{username}",
+      "object_type": "endpoint",
+      "object_id": "petstore:GET:/user/{username}",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:PUT:/user/{username}",
+      "object_type": "endpoint",
+      "object_id": "petstore:PUT:/user/{username}",
       "relation": "service-writer",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:DELETE:/user/{username}",
+      "object_type": "endpoint",
+      "object_id": "petstore:DELETE:/user/{username}",
       "relation": "service-deleter",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:GET:/pet/findByTags",
+      "object_type": "endpoint",
+      "object_id": "petstore:GET:/pet/findByTags",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:POST:/pet",
+      "object_type": "endpoint",
+      "object_id": "petstore:POST:/pet",
       "relation": "service-creator",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:PUT:/pet",
+      "object_type": "endpoint",
+      "object_id": "petstore:PUT:/pet",
       "relation": "service-writer",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "petstore:POST:/user",
+      "object_type": "endpoint",
+      "object_id": "petstore:POST:/user",
       "relation": "service-creator",
-      "subjectType": "service",
-      "subjectId": "petstore"
+      "subject_type": "service",
+      "subject_id": "petstore"
     },
     {
-      "objectType": "service",
-      "objectId": "rick-and-morty",
+      "object_type": "service",
+      "object_id": "rick-and-morty",
       "relation": "reader",
-      "subjectType": "group",
-      "subjectId": "rick-and-morty-readers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "rick-and-morty-readers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "rick-and-morty",
+      "object_type": "service",
+      "object_id": "rick-and-morty",
       "relation": "writer",
-      "subjectType": "group",
-      "subjectId": "rick-and-morty-writers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "rick-and-morty-writers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "rick-and-morty",
+      "object_type": "service",
+      "object_id": "rick-and-morty",
       "relation": "creator",
-      "subjectType": "group",
-      "subjectId": "rick-and-morty-creators",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "rick-and-morty-creators",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "rick-and-morty",
+      "object_type": "service",
+      "object_id": "rick-and-morty",
       "relation": "deleter",
-      "subjectType": "group",
-      "subjectId": "rick-and-morty-deleters",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "rick-and-morty-deleters",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "rick-and-morty-readers",
+      "object_type": "group",
+      "object_id": "rick-and-morty-readers",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-readers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-readers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "rick-and-morty-writers",
+      "object_type": "group",
+      "object_id": "rick-and-morty-writers",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-writers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-writers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "rick-and-morty-creators",
+      "object_type": "group",
+      "object_id": "rick-and-morty-creators",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-creators",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-creators",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "rick-and-morty-deleters",
+      "object_type": "group",
+      "object_id": "rick-and-morty-deleters",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-deleters",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-deleters",
+      "subject_relation": "member"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "rick-and-morty:GET:/v1/locations/:locationId",
+      "object_type": "endpoint",
+      "object_id": "rick-and-morty:GET:/v1/locations/:locationId",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "rick-and-morty"
+      "subject_type": "service",
+      "subject_id": "rick-and-morty"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "rick-and-morty:GET:/openapi.json",
+      "object_type": "endpoint",
+      "object_id": "rick-and-morty:GET:/openapi.json",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "rick-and-morty"
+      "subject_type": "service",
+      "subject_id": "rick-and-morty"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "rick-and-morty:GET:/v1/characters",
+      "object_type": "endpoint",
+      "object_id": "rick-and-morty:GET:/v1/characters",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "rick-and-morty"
+      "subject_type": "service",
+      "subject_id": "rick-and-morty"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "rick-and-morty:GET:/v1/characters/:characterId",
+      "object_type": "endpoint",
+      "object_id": "rick-and-morty:GET:/v1/characters/:characterId",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "rick-and-morty"
+      "subject_type": "service",
+      "subject_id": "rick-and-morty"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "rick-and-morty:GET:/v1/episodes/",
+      "object_type": "endpoint",
+      "object_id": "rick-and-morty:GET:/v1/episodes/",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "rick-and-morty"
+      "subject_type": "service",
+      "subject_id": "rick-and-morty"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "rick-and-morty:GET:/v1/episodes/:episodeId",
+      "object_type": "endpoint",
+      "object_id": "rick-and-morty:GET:/v1/episodes/:episodeId",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "rick-and-morty"
+      "subject_type": "service",
+      "subject_id": "rick-and-morty"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "rick-and-morty:GET:/v1/locations",
+      "object_type": "endpoint",
+      "object_id": "rick-and-morty:GET:/v1/locations",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "rick-and-morty"
+      "subject_type": "service",
+      "subject_id": "rick-and-morty"
     },
     {
-      "objectType": "service",
-      "objectId": "todo",
+      "object_type": "service",
+      "object_id": "todo",
       "relation": "reader",
-      "subjectType": "group",
-      "subjectId": "todo-readers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "todo-readers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "todo",
+      "object_type": "service",
+      "object_id": "todo",
       "relation": "writer",
-      "subjectType": "group",
-      "subjectId": "todo-writers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "todo-writers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "todo",
+      "object_type": "service",
+      "object_id": "todo",
       "relation": "creator",
-      "subjectType": "group",
-      "subjectId": "todo-creators",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "todo-creators",
+      "subject_relation": "member"
     },
     {
-      "objectType": "service",
-      "objectId": "todo",
+      "object_type": "service",
+      "object_id": "todo",
       "relation": "deleter",
-      "subjectType": "group",
-      "subjectId": "todo-deleters",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "todo-deleters",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "todo-readers",
+      "object_type": "group",
+      "object_id": "todo-readers",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-readers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-readers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "todo-writers",
+      "object_type": "group",
+      "object_id": "todo-writers",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-writers",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-writers",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "todo-creators",
+      "object_type": "group",
+      "object_id": "todo-creators",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-creators",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-creators",
+      "subject_relation": "member"
     },
     {
-      "objectType": "group",
-      "objectId": "todo-deleters",
+      "object_type": "group",
+      "object_id": "todo-deleters",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "global-deleters",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "global-deleters",
+      "subject_relation": "member"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "todo:PATCH:/v1/todos/{todoId}",
+      "object_type": "endpoint",
+      "object_id": "todo:PATCH:/v1/todos/{todoId}",
       "relation": "service-writer",
-      "subjectType": "service",
-      "subjectId": "todo"
+      "subject_type": "service",
+      "subject_id": "todo"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "todo:DELETE:/v1/todos/{todoId}",
+      "object_type": "endpoint",
+      "object_id": "todo:DELETE:/v1/todos/{todoId}",
       "relation": "service-deleter",
-      "subjectType": "service",
-      "subjectId": "todo"
+      "subject_type": "service",
+      "subject_id": "todo"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "todo:GET:/v1/$todosAndUsers",
+      "object_type": "endpoint",
+      "object_id": "todo:GET:/v1/$todosAndUsers",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "todo"
+      "subject_type": "service",
+      "subject_id": "todo"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "todo:GET:/v1/$todosWithNoUserId",
+      "object_type": "endpoint",
+      "object_id": "todo:GET:/v1/$todosWithNoUserId",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "todo"
+      "subject_type": "service",
+      "subject_id": "todo"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "todo:GET:/v1/todos",
+      "object_type": "endpoint",
+      "object_id": "todo:GET:/v1/todos",
       "relation": "service-reader",
-      "subjectType": "service",
-      "subjectId": "todo"
+      "subject_type": "service",
+      "subject_id": "todo"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "todo:POST:/v1/todos",
+      "object_type": "endpoint",
+      "object_id": "todo:POST:/v1/todos",
       "relation": "service-creator",
-      "subjectType": "service",
-      "subjectId": "todo"
+      "subject_type": "service",
+      "subject_id": "todo"
     },
     {
-      "objectType": "group",
-      "objectId": "global-deleters",
+      "object_type": "group",
+      "object_id": "global-deleters",
       "relation": "member",
-      "subjectType": "user",
-      "subjectId": "rick@the-citadel.com"
+      "subject_type": "user",
+      "subject_id": "rick@the-citadel.com"
     },
     {
-      "objectType": "group",
-      "objectId": "petstore-creators",
+      "object_type": "group",
+      "object_id": "petstore-creators",
       "relation": "member",
-      "subjectType": "user",
-      "subjectId": "morty@the-citadel.com"
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
     },
     {
-      "objectType": "group",
-      "objectId": "todo-readers",
+      "object_type": "group",
+      "object_id": "todo-readers",
       "relation": "member",
-      "subjectType": "group",
-      "subjectId": "viewer",
-      "subjectRelation": "member"
+      "subject_type": "group",
+      "subject_id": "viewer",
+      "subject_relation": "member"
     },
     {
-      "objectType": "endpoint",
-      "objectId": "todo:POST:/v1/todos",
+      "object_type": "endpoint",
+      "object_id": "todo:POST:/v1/todos",
       "relation": "invoker",
-      "subjectType": "user",
-      "subjectId": "morty@the-citadel.com"
+      "subject_type": "user",
+      "subject_id": "morty@the-citadel.com"
     }
   ]  
 }

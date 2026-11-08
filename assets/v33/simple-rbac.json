@@ -16,9 +16,9 @@
             "simple-rbac/simple-rbac_relations.json"
         ],
         "assertions": [
-            "simple-rbac/assertions.json",
-            "simple-rbac/decisions.json",
-            "simple-rbac/evaluations.json"
+            "simple-rbac/test/simple-rbac_assertions.json",
+            "simple-rbac/test/simple-rbac_decisions.json",
+            "simple-rbac/test/simple-rbac_evaluations.json"
         ]
     }
 }

@@ -3,22 +3,22 @@
     {
       "type": "service",
       "id": "todo",
-      "displayName": "Todo List API"
+      "display_name": "Todo List API"
     },
     {
       "type": "route",
       "id": "/todos/{todoId}",
-      "displayName": "/todos/{todoId}"
+      "display_name": "/todos/{todoId}"
     },
     {
       "type": "route",
       "id": "/todos",
-      "displayName": "/todos"
+      "display_name": "/todos"
     },
     {
       "type": "route",
       "id": "/users/{userId}",
-      "displayName": "/todos/{userId}"
+      "display_name": "/todos/{userId}"
     }
   ]  
 }

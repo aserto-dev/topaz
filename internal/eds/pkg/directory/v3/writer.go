@@ -9,8 +9,8 @@ import (
 	"github.com/aserto-dev/go-directory/pkg/validator"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
+	"github.com/aserto-dev/topaz/internal/headers"
 
-	"github.com/go-http-utils/headers"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	"github.com/rs/zerolog"
 	bolt "go.etcd.io/bbolt"
