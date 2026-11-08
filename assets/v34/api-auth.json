@@ -16,9 +16,9 @@
             "api-auth/api-auth_relations.jsonl"
         ],
         "assertions": [
-            "api-auth/test/api-auth_assertions.jsonl",
-            "api-auth/test/api-auth_decisions.jsonl",
-            "api-auth/test/api-auth_evaluations.jsonl"
+            "api-auth/test/api-auth_assertions.json",
+            "api-auth/test/api-auth_decisions.json",
+            "api-auth/test/api-auth_evaluations.json"
         ]
     }
 }

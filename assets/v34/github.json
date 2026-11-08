@@ -16,8 +16,8 @@
             "github/github_relations.jsonl"
         ],
         "assertions": [
-            "github/test/github_assertions.jsonl",
-            "github/test/github_decisions.jsonl"
+            "github/test/github_assertions.json",
+            "github/test/github_decisions.json"
         ]
     }
 }
