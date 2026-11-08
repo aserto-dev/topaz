@@ -7,13 +7,13 @@ require (
 	github.com/alecthomas/kong v1.16.1
 	github.com/antlr4-go/antlr/v4 v4.13.1
 	github.com/aserto-dev/errors v0.34.2-0.20261006083714-760eef8e0b6c
-	github.com/aserto-dev/go-aserto v0.34.2
-	github.com/aserto-dev/go-authorizer/aserto v0.24.3
-	github.com/aserto-dev/go-authorizer/openapi v0.24.3
-	github.com/aserto-dev/go-authorizer/pkg v0.24.3
-	github.com/aserto-dev/go-directory/aserto v0.34.3
-	github.com/aserto-dev/go-directory/openapi v0.34.3
-	github.com/aserto-dev/go-directory/pkg v0.34.3
+	github.com/aserto-dev/go-aserto v0.34.4
+	github.com/aserto-dev/go-authorizer/aserto v0.24.4
+	github.com/aserto-dev/go-authorizer/openapi v0.24.4
+	github.com/aserto-dev/go-authorizer/pkg v0.24.4
+	github.com/aserto-dev/go-directory/aserto v0.34.4
+	github.com/aserto-dev/go-directory/openapi v0.34.4
+	github.com/aserto-dev/go-directory/pkg v0.34.4
 	github.com/aserto-dev/go-topaz-ui v0.1.26
 	github.com/aserto-dev/logger v0.0.9
 	github.com/authzen/access.go/api v1.0.2
@@ -94,7 +94,6 @@ require (
 	github.com/ebitengine/purego v0.10.1 // indirect
 	github.com/felixge/httpsnoop v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.10.1 // indirect
-	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a // indirect
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
