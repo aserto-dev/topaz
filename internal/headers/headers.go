@@ -67,25 +67,6 @@ const (
 	Vary                          = "Vary"
 	WWWAuthenticate               = "WWW-Authenticate"
 	Depth                         = "Depth"
-
-	// Non-Standard
-	// XFrameOptions          = "X-Frame-Options"
-	// XXSSProtection         = "X-XSS-Protection"
-	// ContentSecurityPolicy  = "Content-Security-Policy"
-	// XContentSecurityPolicy = "X-Content-Security-Policy"
-	// XWebKitCSP             = "X-WebKit-CSP"
-	// XContentTypeOptions    = "X-Content-Type-Options"
-	// XPoweredBy             = "X-Powered-By"
-	// XUACompatible          = "X-UA-Compatible"
-	// XForwardedProto        = "X-Forwarded-Proto"
-	// XHTTPMethodOverride    = "X-HTTP-Method-Override"
-	// XForwardedFor          = "X-Forwarded-For"
-	// XRealIP                = "X-Real-IP"
-	// XCSRFToken             = "X-CSRF-Token"
-	// XRatelimitLimit     = "X-Ratelimit-Limit"
-	// XRatelimitRemaining = "X-Ratelimit-Remaining"
-	// XRatelimitReset     = "X-Ratelimit-Reset"
-
 )
 
 // Normalize formats the input header to the formation of "Xxx-Xxx".
