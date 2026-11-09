@@ -44,10 +44,10 @@ github.com/aserto-dev/go-topaz-ui v0.1.26 h1:pndp1j5Gbf5Fl6gE5pkYfZuB4TNi4gIY3aJ
 github.com/aserto-dev/go-topaz-ui v0.1.26/go.mod h1:qQ0kgjgvsLinUFrJtxdbxNl7GF2LJ4naTrRa/gSKPug=
 github.com/aserto-dev/logger v0.0.9 h1:QH11l8937Sw+GAe2yvgpoLg70fqQvPrEufkXAmDUk0g=
 github.com/aserto-dev/logger v0.0.9/go.mod h1:mMXq/bhdIKoOVsIZ2zJOqgjcc/jR2x14FhU0St/8AVQ=
-github.com/authzen/access.go/api v1.0.2 h1:THTRF2KXnhJs3Y7X6EEXzbw1Ft6sZv3APUJDBAvNLW0=
-github.com/authzen/access.go/api v1.0.2/go.mod h1:70KrtiL57Pd3lHFwYqqCTvwf+B3LFXolYfnR6BLsUEU=
-github.com/authzen/access.go/openapi v1.0.2 h1:b/Q2rtwAvf1msBgU67PZfaz4ErLtm4L3ubsvYfvJ5as=
-github.com/authzen/access.go/openapi v1.0.2/go.mod h1:x4CxBpjMfUf7I8d5+wt+ck/5CM3quKPBGfP/lb+D9JE=
+github.com/authzen/access.go/api v1.0.3 h1:77bdFt50mP5Ay5alFEnEXNqOrwdo2L4VSWapRHTTZgM=
+github.com/authzen/access.go/api v1.0.3/go.mod h1:zL4AoescAScYWRgVvvpjSi8maeX65zuNdGe/0kPJVMk=
+github.com/authzen/access.go/openapi v1.0.3 h1:IFBnbdt1mfBXVdUg0t+O03me/QRd7LEYkJpMHJT4ANA=
+github.com/authzen/access.go/openapi v1.0.3/go.mod h1:x4CxBpjMfUf7I8d5+wt+ck/5CM3quKPBGfP/lb+D9JE=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
@@ -503,8 +503,8 @@ golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20201204225414-ed752295db88/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20211025201205-69cdffdb9359/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.1.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.49.0 h1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=
-golang.org/x/sys v0.49.0/go.mod h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og=
+golang.org/x/sys v0.50.0 h1:dkKZEFTEKaLr1sjhs0WiKqoi8Jj5nHbS3Njmx1UoMJs=
+golang.org/x/sys v0.50.0/go.mod h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og=
 golang.org/x/term v0.47.0 h1:cpyOwQkr2Nzxe2p6KnrTG7Ei2wtzjsuSjhpXXepZ/BM=
 golang.org/x/term v0.47.0/go.mod h1:efAfAuG6RKABvg1ArGebRkvX6LXul14SM67o2e4mUCY=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=

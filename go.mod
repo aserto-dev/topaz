@@ -16,8 +16,8 @@ require (
 	github.com/aserto-dev/go-directory/pkg v0.34.4
 	github.com/aserto-dev/go-topaz-ui v0.1.26
 	github.com/aserto-dev/logger v0.0.9
-	github.com/authzen/access.go/api v1.0.2
-	github.com/authzen/access.go/openapi v1.0.2
+	github.com/authzen/access.go/api v1.0.3
+	github.com/authzen/access.go/openapi v1.0.3
 	github.com/cli/browser v1.3.0
 	github.com/deckarep/golang-set/v3 v3.0.0
 	github.com/distribution/reference v0.6.0
@@ -63,7 +63,7 @@ require (
 	go.etcd.io/bbolt v1.5.0
 	go.yaml.in/yaml/v3 v3.0.6
 	golang.org/x/sync v0.24.0
-	golang.org/x/sys v0.49.0
+	golang.org/x/sys v0.50.0
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20261104224025-d1e00e9f33ab
 	google.golang.org/grpc v1.85.0
 	google.golang.org/protobuf v1.36.12
