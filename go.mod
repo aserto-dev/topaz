@@ -1,6 +1,6 @@
 module github.com/aserto-dev/topaz
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
@@ -43,7 +43,7 @@ require (
 	github.com/mitchellh/hashstructure/v2 v2.0.2
 	github.com/moby/term v0.5.2
 	github.com/olekukonko/tablewriter v1.1.5
-	github.com/open-policy-agent/opa v1.22.2
+	github.com/open-policy-agent/opa v1.22.3
 	github.com/opencontainers/image-spec v1.1.1
 	github.com/panmari/cuckoofilter v1.0.6
 	github.com/pkg/errors v0.9.1
@@ -94,7 +94,7 @@ require (
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
-	github.com/gobwas/glob v1.0.0 // indirect
+	github.com/gobwas/glob v1.1.0 // indirect
 	github.com/goccy/go-json v0.11.2 // indirect
 	github.com/google/flatbuffers v25.12.19+incompatible // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -102,16 +102,16 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/huandu/go-clone v1.7.3 // indirect
-	github.com/huandu/go-sqlbuilder v1.43.0 // indirect
+	github.com/huandu/go-sqlbuilder v1.44.1 // indirect
 	github.com/huandu/xstrings v1.6.2 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/itchyny/timefmt-go v0.1.9 // indirect
-	github.com/klauspost/compress v1.20.1 // indirect
+	github.com/klauspost/compress v1.20.3 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.4 // indirect
 	github.com/lestrrat-go/dsig v1.4.0 // indirect
 	github.com/lestrrat-go/dsig-secp256k1 v1.0.0 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
-	github.com/lestrrat-go/jwx/v3 v3.3.0 // indirect
+	github.com/lestrrat-go/jwx/v3 v3.4.0 // indirect
 	github.com/lestrrat-go/option/v2 v2.0.0 // indirect
 	github.com/lestrrat-go/option/v3 v3.0.0-alpha1 // indirect
 	github.com/lufia/plan9stats v0.0.0-20260330125221-c963978e514e // indirect
