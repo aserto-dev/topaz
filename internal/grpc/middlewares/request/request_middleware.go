@@ -29,16 +29,12 @@ var _ grpcutil.Middleware = &RequestIDMiddleware{}
 // GRPC handlers.
 func (m *RequestIDMiddleware) Unary() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
-		id, err := m.requestID(ctx)
-		if err != nil {
-			return nil, err
-		}
+		id := m.requestID(ctx)
 
 		newCtx := headers.ContextWithRequestID(ctx, id)
 
 		if id != "" {
-			err = grpc.SetHeader(newCtx, metadata.Pairs(string(headers.HeaderAsertoRequestID), id))
-			if err != nil {
+			if err := grpc.SetHeader(newCtx, metadata.Pairs(string(headers.HeaderAsertoRequestID), id)); err != nil {
 				return nil, err
 			}
 		}
@@ -60,16 +56,12 @@ func (m *RequestIDMiddleware) Stream() grpc.StreamServerInterceptor {
 	return func(srv any, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
 
-		id, err := m.requestID(ctx)
-		if err != nil {
-			return err
-		}
+		id := m.requestID(ctx)
 
 		newCtx := headers.ContextWithRequestID(ctx, id)
 
 		if id != "" {
-			err = grpc.SetHeader(newCtx, metadata.Pairs(string(headers.HeaderAsertoRequestID), id))
-			if err != nil {
+			if err := grpc.SetHeader(newCtx, metadata.Pairs(string(headers.HeaderAsertoRequestID), id)); err != nil {
 				return err
 			}
 		}
@@ -121,18 +113,18 @@ func (m *RequestIDMiddleware) StreamClient() grpc.StreamClientInterceptor {
 	}
 }
 
-func (m *RequestIDMiddleware) requestID(ctx context.Context) (string, error) {
+func (m *RequestIDMiddleware) requestID(ctx context.Context) string {
 	reqID := uuid.New()
 
 	incomingID := IncomingRequestID(ctx)
 	if incomingID != "" {
 		incomingID = strings.Split(incomingID, ".")[0]
 		if headers.IsValidUUID(incomingID) {
-			return incomingID + "." + reqID.String(), nil
+			return incomingID + "." + reqID.String()
 		}
 	}
 
-	return reqID.String(), nil
+	return reqID.String()
 }
 
 func IncomingRequestID(ctx context.Context) string {

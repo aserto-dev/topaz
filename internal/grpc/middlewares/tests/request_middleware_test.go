@@ -185,7 +185,6 @@ func TestStreamServerWithoutRequestID(t *testing.T) {
 }
 
 func TestStreamServerWithRequestID(t *testing.T) {
-	assert := require.New(t)
 	requestID := uuid.New()
 
 	streamHandler := func(srv any, stream grpc.ServerStream) error {

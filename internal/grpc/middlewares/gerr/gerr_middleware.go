@@ -78,7 +78,7 @@ func (m *ErrorMiddleware) handleError(ctx context.Context, handlerErr error) err
 
 	errResult := status.New(asertoErr.GRPCCode, asertoErr.Error())
 
-	errResult, err = errResult.WithDetails(&errdetails.ErrorInfo{
+	errResult, err := errResult.WithDetails(&errdetails.ErrorInfo{
 		Reason:   errID.String(),
 		Metadata: asertoErr.Data(),
 		Domain:   asertoErr.Code,

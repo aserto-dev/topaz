@@ -74,7 +74,7 @@ func StrToInt32(s string) int32 {
 
 func UUIDToByte(s string) []byte {
 	id, _ := uuid.Parse(s)
-	buf, _ := id.MarshalBinary()
+	buf := id[:]
 
 	return buf
 }
