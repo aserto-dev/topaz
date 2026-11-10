@@ -11,8 +11,7 @@ import (
 	"github.com/aserto-dev/topaz/internal/azm/model"
 	v3 "github.com/aserto-dev/topaz/internal/azm/v3"
 	"github.com/hashicorp/go-multierror"
-	"github.com/nsf/jsondiff"
-	stretch "github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/require"
 )
 
 var m1 = model.Model{
@@ -90,13 +89,13 @@ var m1 = model.Model{
 }
 
 func TestProgrammaticModel(t *testing.T) {
-	stretch.NoError(t, m1.Validate())
+	require.NoError(t, m1.Validate())
 
 	b1, err := json.Marshal(m1)
-	stretch.NoError(t, err)
+	require.NoError(t, err)
 
 	w, err := os.Create("./model_test.json")
-	stretch.NoError(t, err)
+	require.NoError(t, err)
 	t.Cleanup(func() { _ = w.Close() })
 
 	enc := json.NewEncoder(w)
@@ -104,55 +103,43 @@ func TestProgrammaticModel(t *testing.T) {
 	enc.SetIndent("", "  ")
 
 	if err := enc.Encode(m1); err != nil {
-		stretch.NoError(t, err)
+		require.NoError(t, err)
 	}
 
 	b2, err := os.ReadFile("./testdata/model.json")
-	stretch.NoError(t, err)
+	require.NoError(t, err)
 
 	m2 := model.Model{}
 	if err := json.Unmarshal(b2, &m2); err != nil {
-		stretch.NoError(t, err)
+		require.NoError(t, err)
 	}
 
-	opts := jsondiff.DefaultJSONOptions()
-	if diff, str := jsondiff.Compare(b1, b2, &opts); diff != jsondiff.FullMatch {
-		stretch.Equal(t, jsondiff.FullMatch, diff, "diff: %s", str)
-	}
+	require.JSONEq(t, string(b1), string(b2))
 }
 
 func TestModel(t *testing.T) {
 	buf, err := os.ReadFile("./testdata/model.json")
-	stretch.NoError(t, err)
+	require.NoError(t, err)
 
 	m := model.Model{}
 	if err := json.Unmarshal(buf, &m); err != nil {
-		stretch.NoError(t, err)
+		require.NoError(t, err)
 	}
 
 	b1, err := json.Marshal(m)
-	stretch.NoError(t, err)
+	require.NoError(t, err)
 
 	var m2 model.Model
 	if err := json.Unmarshal(b1, &m2); err != nil {
-		stretch.NoError(t, err)
+		require.NoError(t, err)
 	}
 
 	b2, err := json.Marshal(m2)
-	stretch.NoError(t, err)
+	require.NoError(t, err)
 
-	opts := jsondiff.DefaultConsoleOptions()
-	if diff, str := jsondiff.Compare(buf, b1, &opts); diff != jsondiff.FullMatch {
-		stretch.Equal(t, jsondiff.FullMatch, diff, "diff: %s", str)
-	}
-
-	if diff, str := jsondiff.Compare(buf, b2, &opts); diff != jsondiff.FullMatch {
-		stretch.Equal(t, jsondiff.FullMatch, diff, "diff: %s", str)
-	}
-
-	if diff, str := jsondiff.Compare(b1, b2, &opts); diff != jsondiff.FullMatch {
-		stretch.Equal(t, jsondiff.FullMatch, diff, "diff: %s", str)
-	}
+	require.JSONEq(t, string(buf), string(b1))
+	require.JSONEq(t, string(buf), string(b2))
+	require.JSONEq(t, string(b1), string(b2))
 }
 
 func TestValidation(t *testing.T) { //nolint:funlen
@@ -263,7 +250,7 @@ func TestValidation(t *testing.T) { //nolint:funlen
 
 	for _, test := range tests {
 		t.Run(test.name, func(tt *testing.T) {
-			assert := stretch.New(tt)
+			assert := require.New(tt)
 			m, err := v3.LoadFile(test.manifest)
 
 			// Log the model for debugging purposes.
@@ -301,7 +288,7 @@ func TestValidation(t *testing.T) { //nolint:funlen
 }
 
 func TestResolution(t *testing.T) {
-	assert := stretch.New(t)
+	assert := require.New(t)
 	m, err := v3.LoadFile("./testdata/valid.yaml")
 	assert.NoError(err)
 
