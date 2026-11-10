@@ -4,8 +4,7 @@ package ds
 import (
 	"encoding/binary"
 	"strconv"
-
-	"github.com/google/uuid"
+	"uuid"
 )
 
 const DefaultHash string = `0`

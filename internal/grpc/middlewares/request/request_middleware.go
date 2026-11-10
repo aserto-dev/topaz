@@ -3,13 +3,11 @@ package request
 import (
 	"context"
 	"strings"
+	"uuid"
 
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
 	"github.com/aserto-dev/topaz/internal/headers"
-	"github.com/google/uuid"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/pkg/errors"
-	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -124,22 +122,17 @@ func (m *RequestIDMiddleware) StreamClient() grpc.StreamClientInterceptor {
 }
 
 func (m *RequestIDMiddleware) requestID(ctx context.Context) (string, error) {
-	reqid, err := uuid.NewUUID()
-	if err != nil {
-		return "", errors.Wrap(err, "failed to generate new request id")
-	}
+	reqID := uuid.New()
 
 	incomingID := IncomingRequestID(ctx)
 	if incomingID != "" {
 		incomingID = strings.Split(incomingID, ".")[0]
 		if headers.IsValidUUID(incomingID) {
-			return incomingID + "." + reqid.String(), nil
+			return incomingID + "." + reqID.String(), nil
 		}
-
-		log.Debug().Err(err).Msg("invalid request id")
 	}
 
-	return reqid.String(), nil
+	return reqID.String(), nil
 }
 
 func IncomingRequestID(ctx context.Context) string {

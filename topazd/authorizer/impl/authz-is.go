@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"uuid"
 
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
 	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
@@ -12,7 +13,6 @@ import (
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/topaz_file_decision_logger"
 
-	"github.com/google/uuid"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -126,7 +126,7 @@ func (s *AuthorizerServer) Is(ctx context.Context, req *authorizer.IsRequest) (*
 	}
 
 	d := api.Decision{
-		Id:        uuid.NewString(),
+		Id:        uuid.New().String(),
 		Timestamp: timestamppb.New(time.Now().In(time.UTC)),
 		Path:      req.GetPolicyContext().GetPath(),
 		Policy: &api.DecisionPolicy{
