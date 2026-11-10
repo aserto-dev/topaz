@@ -3,17 +3,13 @@ package tests_test
 import (
 	"context"
 	"testing"
+	"uuid"
 
 	"github.com/aserto-dev/topaz/internal/headers"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/require"
 )
 
 func RequestIDContext(t *testing.T) context.Context {
-	assert := require.New(t)
-
-	id, err := uuid.NewUUID()
-	assert.NoError(err)
+	id := uuid.New()
 
 	return context.WithValue(context.Background(), headers.HeaderAsertoRequestID, id)
 }

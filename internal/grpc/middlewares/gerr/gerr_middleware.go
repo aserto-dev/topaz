@@ -3,10 +3,10 @@ package gerr
 import (
 	"context"
 	"strconv"
+	"uuid"
 
 	aerr "github.com/aserto-dev/errors"
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
-	"github.com/google/uuid"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/rs/zerolog"
 	zlog "github.com/rs/zerolog/log"
@@ -59,11 +59,7 @@ func (m *ErrorMiddleware) handleError(ctx context.Context, handlerErr error) err
 		return status.New(codes.Internal, "internal logging error, please contact the administrator").Err()
 	}
 
-	errID, err := uuid.NewUUID()
-	if err != nil {
-		log.Error().Err(handlerErr).Err(err).Msg("failed to create error id")
-		return status.New(codes.Internal, "internal failure to generate an error id, please contact the administrator").Err()
-	}
+	errID := uuid.New()
 
 	asertoErr := aerr.UnwrapAsertoError(handlerErr)
 	if asertoErr == nil {
@@ -82,7 +78,7 @@ func (m *ErrorMiddleware) handleError(ctx context.Context, handlerErr error) err
 
 	errResult := status.New(asertoErr.GRPCCode, asertoErr.Error())
 
-	errResult, err = errResult.WithDetails(&errdetails.ErrorInfo{
+	errResult, err := errResult.WithDetails(&errdetails.ErrorInfo{
 		Reason:   errID.String(),
 		Metadata: asertoErr.Data(),
 		Domain:   asertoErr.Code,
