@@ -38,7 +38,7 @@ RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 export TESTCONTAINERS_RYUK_DISABLED=$(shell docker context inspect --format '{{.Endpoints.docker.Host}}' 2>/dev/null | grep -q ".colima" && echo "true" || echo "false")
 
 .PHONY: deps
-deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft install-air install-templ
+deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft install-air install-templ install-gofumpt
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
