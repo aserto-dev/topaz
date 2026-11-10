@@ -17,11 +17,11 @@ import (
 	"github.com/aserto-dev/go-directory/pkg/pb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/server"
 	"github.com/aserto-dev/topaz/internal/fs"
-	"github.com/samber/lo"
 
-	"github.com/gonvenience/ytbx"
-	"github.com/homeport/dyff/pkg/dyff"
+	"github.com/google/go-cmp/cmp"
+	"github.com/samber/lo"
 	"github.com/stretchr/testify/require"
+	"go.yaml.in/yaml/v4"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -168,20 +168,31 @@ func testGetManifest(client *server.TestEdgeClient, manifest string) func(*testi
 			require.NoError(t, err)
 		}
 
-		input1, err := ytbx.LoadFile(manifest)
-		require.NoError(t, err)
+		var org, res map[string]any
 
-		input2, err := ytbx.LoadFile(tempManifest)
-		require.NoError(t, err)
+		testMarshalManifest(t, manifest, org)
+		testMarshalManifest(t, tempManifest, res)
 
-		// compare
-		opts := []dyff.CompareOption{dyff.IgnoreOrderChanges(true)}
-		report, err := dyff.CompareInputFiles(input1, input2, opts...)
-		require.NoError(t, err)
-
-		for _, diff := range report.Diffs {
-			t.Log(diff.Path.ToDotStyle())
+		if diff := cmp.Diff(org, res); diff != "" {
+			fmt.Printf("Configs mismatch (-left +right):\n%s", diff)
+			t.Log(diff)
 		}
+	}
+}
+
+func testMarshalManifest(t *testing.T, file string, manifest map[string]any) {
+	t.Helper()
+
+	r, err := os.Open(file)
+	require.NoError(t, err)
+
+	left := bytes.Buffer{}
+	if _, err := left.ReadFrom(r); err != nil {
+		require.NoError(t, err)
+	}
+
+	if err := yaml.Unmarshal(left.Bytes(), &manifest); err != nil {
+		require.NoError(t, err)
 	}
 }
 

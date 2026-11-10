@@ -10,7 +10,7 @@ import (
 	v3 "github.com/aserto-dev/topaz/internal/azm/v3"
 	"github.com/nsf/jsondiff"
 	"github.com/stretchr/testify/require"
-	"go.yaml.in/yaml/v3"
+	"go.yaml.in/yaml/v4"
 )
 
 func TestManifestUnmarshal(t *testing.T) {
