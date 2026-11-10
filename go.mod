@@ -42,7 +42,6 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/mitchellh/hashstructure/v2 v2.0.2
 	github.com/moby/term v0.5.2
-	github.com/nsf/jsondiff v0.0.0-20260207060731-8e8d90c4c0ac
 	github.com/olekukonko/tablewriter v1.1.5
 	github.com/open-policy-agent/opa v1.22.2
 	github.com/opencontainers/image-spec v1.1.1

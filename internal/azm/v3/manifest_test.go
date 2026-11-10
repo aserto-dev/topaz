@@ -8,7 +8,6 @@ import (
 
 	"github.com/aserto-dev/topaz/internal/azm/model"
 	v3 "github.com/aserto-dev/topaz/internal/azm/v3"
-	"github.com/nsf/jsondiff"
 	"github.com/stretchr/testify/require"
 	"go.yaml.in/yaml/v4"
 )
@@ -47,10 +46,7 @@ func TestLoadModel(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	opts := jsondiff.DefaultJSONOptions()
-	if diff, str := jsondiff.Compare(b2, b1, &opts); diff != jsondiff.FullMatch {
-		require.Equal(t, jsondiff.FullMatch, diff, "diff: %s", str)
-	}
+	require.JSONEq(t, string(b1), string(b2))
 }
 
 func TestLoadEmptyManifest(t *testing.T) {
