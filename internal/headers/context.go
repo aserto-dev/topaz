@@ -2,8 +2,7 @@ package headers
 
 import (
 	"context"
-
-	"github.com/google/uuid"
+	"uuid"
 )
 
 type CtxKey string
