@@ -1,6 +1,8 @@
 module github.com/aserto-dev/topaz
 
-go 1.27.4
+go 1.26.11
+
+toolchain go1.27.4
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
