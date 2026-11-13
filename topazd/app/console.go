@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/aserto-dev/go-aserto"
+	console "github.com/aserto-dev/go-topaz-ui"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/app/handlers"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
@@ -13,7 +15,9 @@ import (
 )
 
 const (
-	consoleService = "console"
+	consoleService           = "console"
+	defaultAuthorizerAddress = "localhost:8282"
+	defaultDirectoryAddress  = "localhost:9292"
 )
 
 type ConsoleService struct{}
@@ -42,6 +46,59 @@ func (e *ConsoleService) GetGatewayRegistration(port string, services ...string)
 }
 
 func (e *ConsoleService) Close() {
+}
+
+// PrepareUIConfig prepares the UI configuration for the console service. #!
+func (e *ConsoleService) PrepareUIConfig(cfg *config.Config) *console.Config {
+	return &console.Config{
+		Authorizer: uiGRPCClientConfig(cfg.APIConfig.Services[authorizerService], defaultAuthorizerAddress, &cfg.Auth),
+		Directory:  uiGRPCClientConfig(cfg.APIConfig.Services[readerService], defaultDirectoryAddress, &cfg.Auth),
+	}
+}
+
+func uiGRPCClientConfig(service *builder.API, defaultAddress string, auth *config.AuthnConfig) aserto.Config {
+	clientCfg := aserto.Config{
+		Address: defaultAddress,
+		APIKey:  firstAPIKey(auth),
+		NoTLS:   true,
+	}
+
+	if service == nil {
+		return clientCfg
+	}
+
+	clientCfg.Address = service.GRPC.FQDN
+	if clientCfg.Address == "" {
+		clientCfg.Address = service.GRPC.ListenAddress
+	}
+	if clientCfg.Address == "" {
+		clientCfg.Address = defaultAddress
+	}
+
+	clientCfg.Address = serviceAddress(clientCfg.Address)
+	clientCfg.NoTLS = !service.GRPC.Certs.HasCert()
+	if !clientCfg.NoTLS {
+		clientCfg.CACertPath = service.GRPC.Certs.CA
+		clientCfg.Insecure = true
+	}
+
+	return clientCfg
+}
+
+func firstAPIKey(auth *config.AuthnConfig) string {
+	if auth == nil {
+		return ""
+	}
+
+	if len(auth.Keys) > 0 {
+		return auth.Keys[0]
+	}
+
+	for key := range auth.APIKeys {
+		return key
+	}
+
+	return ""
 }
 
 func (e *ConsoleService) PrepareConfig(cfg *config.Config) *handlers.TopazCfg {

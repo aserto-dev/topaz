@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topazd/app"
 	"github.com/aserto-dev/topaz/topazd/app/directory"
 	"github.com/aserto-dev/topaz/topazd/app/topaz"
@@ -20,6 +25,10 @@ var (
 	debugService             *debug.Server
 )
 
+var loadCLIConfig = func(ctx context.Context) (*cc.Config, error) {
+	return cc.NewConfig(ctx, true, filepath.Join(cc.GetTopazDir(), "topaz.json"))
+}
+
 var cmdRun = &cobra.Command{
 	Use:   "run [args]",
 	Short: "Start Topaz authorization service",
@@ -28,7 +37,12 @@ var cmdRun = &cobra.Command{
 }
 
 func run(cmd *cobra.Command, args []string) error {
-	configPath := config.Path(flagRunConfigFile)
+	configFile, err := resolveRunConfigFile(cmd.Context(), flagRunConfigFile, flagRunDebug)
+	if err != nil {
+		return err
+	}
+
+	configPath := config.Path(configFile)
 
 	topazApp, cleanup, err := topaz.BuildApp(os.Stdout, os.Stderr, configPath, configOverrides)
 	if err != nil {
@@ -84,6 +98,30 @@ func run(cmd *cobra.Command, args []string) error {
 	<-topazApp.Context.Done()
 
 	return nil
+}
+
+func resolveRunConfigFile(ctx context.Context, configFile string, debug bool) (string, error) {
+	if configFile != "" {
+		return configFile, nil
+	}
+
+	if !debug {
+		return "", errors.New("config-file is required")
+	}
+
+	cliConfig, err := loadCLIConfig(ctx)
+	if err != nil {
+		return "", fmt.Errorf("load CLI configuration: %w", err)
+	}
+
+	if cliConfig.Running.ConfigFile != "" {
+		return cliConfig.Running.ConfigFile, nil
+	}
+	if cliConfig.Active.ConfigFile != "" {
+		return cliConfig.Active.ConfigFile, nil
+	}
+
+	return "", cc.ErrNoConfig
 }
 
 func configOverrides(cfg *config.Config) {
