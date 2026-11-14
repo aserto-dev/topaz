@@ -17,15 +17,11 @@ import (
 	manifest "github.com/aserto-dev/topaz/internal/azm/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
-	"github.com/aserto-dev/topaz/internal/headers"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
-	"github.com/samber/lo"
 	bolt "go.etcd.io/bbolt"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -84,12 +80,6 @@ func (s *Model) GetManifest(req *dsm.GetManifestRequest, stream dsm.Model_GetMan
 			return err
 		}
 
-		// optimistic concurrency check
-		inMD, _ := metadata.FromIncomingContext(stream.Context())
-		if lo.Contains(inMD.Get(headers.IfNoneMatch), manifest.Metadata.GetEtag()) {
-			return nil
-		}
-
 		amr := mnfst.IncomingManifestRequest(stream.Context())
 		if amr.WithBody() {
 			body := &dsm.Body{}
@@ -124,12 +114,6 @@ func (s *Model) GetManifest(req *dsm.GetManifestRequest, stream dsm.Model_GetMan
 func (s *Model) SetManifest(stream dsm.Model_SetManifestServer) error {
 	logger := s.logger.With().Str("method", "SetManifest").Logger()
 	logger.Trace().Send()
-
-	// optimistic concurrency check
-	etag := metautils.ExtractIncoming(stream.Context()).Get(headers.IfMatch)
-	if etag != "" && etag != s.store.MC().Metadata().ETag {
-		return derr.ErrHashMismatch
-	}
 
 	h := fnv.New64a()
 	h.Reset()
@@ -211,21 +195,6 @@ func (s *Model) DeleteManifest(ctx context.Context, req *dsm.DeleteManifestReque
 	}
 
 	if err := s.store.DB().Update(func(tx *bolt.Tx) error {
-		// optimistic concurrency check
-		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
-		if ifMatchHeader != "" {
-			dbMd := &dsm.Metadata{UpdatedAt: timestamppb.Now(), Etag: ""}
-
-			manifest, err := ds.Manifest(dbMd).Get(ctx, tx)
-			if err != nil {
-				return nil //nolint:nilerr // early return when manifest does not exists, delete should not fail.
-			}
-
-			if ifMatchHeader != manifest.Metadata.GetEtag() {
-				return derr.ErrHashMismatch
-			}
-		}
-
 		if err := ds.Manifest(&dsm.Metadata{}).Delete(ctx, tx); err != nil {
 			return derr.ErrUnknown.Msgf("failed to delete manifest: %s", err.Error())
 		}
