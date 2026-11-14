@@ -7,7 +7,7 @@ import (
 
 	aerr "github.com/aserto-dev/errors"
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
 	"github.com/rs/zerolog"
 	zlog "github.com/rs/zerolog/log"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
