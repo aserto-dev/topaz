@@ -169,9 +169,7 @@ func (cmd *InstallTemplateCmd) installTemplate(ctx context.Context, cfg *cc.Conf
 
 	// 9 - topaz console, launch console so the user start exploring the template artifacts
 	if !cmd.NoConsole {
-		command := topaz.ConsoleCmd{
-			ConsoleAddress: "https://localhost:8080/ui/directory",
-		}
+		command := topaz.ConsoleCmd{}
 		if err := command.Run(ctx); err != nil {
 			return err
 		}

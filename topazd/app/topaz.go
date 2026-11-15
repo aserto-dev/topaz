@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"net/http"
 
 	cerr "github.com/aserto-dev/errors"
 	console "github.com/aserto-dev/go-topaz-ui"
@@ -197,9 +196,18 @@ func (e *Topaz) ConfigServices() error {
 					// config service.
 					server.Gateway.Mux.Handle("/api/v2/config", apiKeyAuthMiddleware.ConfigAuth(handlers.ConfigHandlerV2(consoleConfig), e.Configuration.Auth))
 					server.Gateway.Mux.HandleFunc("/api/v1/authorizers", handlers.AuthorizersHandler(consoleConfig))
-					// console service. depends on config service.
-					server.Gateway.Mux.Handle("/ui/", handlers.UIHandler(http.FS(console.FS)))
-					server.Gateway.Mux.Handle("/assets/", handlers.UIHandler(http.FS(console.FS)))
+
+					// key registration point for the console UI
+					closeConsole, err := console.RegisterHandlers(server.Gateway.Mux, consoleSvc.PrepareUIConfig(e.Configuration))
+					if err != nil {
+						return errors.Wrap(err, "failed to register console handlers")
+					}
+
+					server.Cleanup = append(server.Cleanup, func() {
+						if err := closeConsole(); err != nil {
+							e.Logger.Error().Err(err).Msg("failed to close console clients")
+						}
+					})
 				}
 			}
 		}

@@ -47,8 +47,6 @@ func main() {
 
 	rootCmd.AddCommand(cmdRun)
 
-	_ = cmdRun.MarkFlagRequired("config-file")
-
 	rootCmd.AddCommand(
 		versionCmd,
 	)
