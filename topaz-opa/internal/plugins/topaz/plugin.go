@@ -21,7 +21,7 @@ type Plugin struct {
 var _ plugins.Plugin = (*Plugin)(nil)
 
 func (p *Plugin) Start(ctx context.Context) error {
-	p.manager.Logger().Info("Topaz plugin started: " + p.config.Connection.Address)
+	p.manager.Logger().Info("Topaz plugin started: %s", p.config.Connection.Address)
 
 	return nil
 }
