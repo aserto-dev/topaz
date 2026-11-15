@@ -186,7 +186,7 @@ homebrew_casks:
 
 dockers_v2:
   # https://goreleaser.com/customization/dockers_v2
-  - dockerfile: "Dockerfile"
+  - dockerfile: Dockerfile
 
     platforms:
       - linux/amd64

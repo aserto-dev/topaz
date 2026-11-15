@@ -11,7 +11,8 @@ import (
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
 	"github.com/aserto-dev/topaz/internal/headers"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/metadata"
+
 	"github.com/rs/zerolog"
 	bolt "go.etcd.io/bbolt"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -54,7 +55,7 @@ func (s *Writer) SetObject(ctx context.Context, req *dsw.SetObjectRequest) (*dsw
 		}
 
 		// optimistic concurrency check
-		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
+		ifMatchHeader := metadata.ExtractIncoming(ctx).Get(headers.IfMatch)
 		// if the updReq.Etag == "" this means the this is an insert
 		if ifMatchHeader != "" && updObj.GetEtag() != "" && ifMatchHeader != updObj.GetEtag() {
 			return derr.ErrHashMismatch.Msgf("for object with type [%s] and id [%s]", updObj.GetType(), updObj.GetId())
@@ -100,7 +101,7 @@ func (s *Writer) DeleteObject(ctx context.Context, req *dsw.DeleteObjectRequest)
 		objIdent := ds.ObjectIdentifier(&dsc.ObjectIdentifier{ObjectType: req.GetObjectType(), ObjectId: req.GetObjectId()})
 
 		// optimistic concurrency check
-		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
+		ifMatchHeader := metadata.ExtractIncoming(ctx).Get(headers.IfMatch)
 		if ifMatchHeader != "" {
 			obj := &dsc.Object{Type: req.GetObjectType(), Id: req.GetObjectId()}
 
@@ -159,7 +160,7 @@ func (s *Writer) SetRelation(ctx context.Context, req *dsw.SetRelationRequest) (
 		}
 
 		// optimistic concurrency check
-		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
+		ifMatchHeader := metadata.ExtractIncoming(ctx).Get(headers.IfMatch)
 		// if the updReq.Etag == "" this means the this is an insert
 		if ifMatchHeader != "" && updRel.GetEtag() != "" && ifMatchHeader != updRel.GetEtag() {
 			return derr.ErrHashMismatch.Msgf(
@@ -218,7 +219,7 @@ func (s *Writer) DeleteRelation(ctx context.Context, req *dsw.DeleteRelationRequ
 
 	err := s.store.DB().Update(func(tx *bolt.Tx) error {
 		// optimistic concurrency check
-		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
+		ifMatchHeader := metadata.ExtractIncoming(ctx).Get(headers.IfMatch)
 		if ifMatchHeader != "" {
 			updRel, err := ds.UpdateMetadataRelation(ctx, tx, bdb.RelationsObjPath, rid.ObjKey(), rel)
 			if err != nil {
