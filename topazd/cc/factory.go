@@ -2,8 +2,8 @@ package cc
 
 import (
 	logger "github.com/aserto-dev/logger"
-	runtime_logger "github.com/aserto-dev/runtime/logger"
 	"github.com/aserto-dev/topaz/internal/certs"
+	opalogger "github.com/aserto-dev/topaz/internal/runtime/logger"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/cc/context"
 )
@@ -27,7 +27,7 @@ func buildCC(
 		return nil, nil, err
 	}
 
-	zerologLogger, err := runtime_logger.NewLogger(logOutput, errOutput, loggerConfig)
+	zerologLogger, err := opalogger.NewLogger(logOutput, errOutput, loggerConfig)
 	if err != nil {
 		return nil, nil, err
 	}

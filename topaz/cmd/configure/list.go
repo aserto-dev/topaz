@@ -15,6 +15,11 @@ type ListConfigCmd struct {
 }
 
 func (cmd ListConfigCmd) Run(ctx context.Context) error {
+	cfg, err := cc.RequireConfig()
+	if err != nil {
+		return err
+	}
+
 	tab := table.New(os.Stdout)
 	defer tab.Close()
 
@@ -32,10 +37,10 @@ func (cmd ListConfigCmd) Run(ctx context.Context) error {
 	data := [][]any{}
 
 	for i := range files {
-		name := strings.Split(files[i].Name(), ".")[0]
+		name, _, _ := strings.Cut(files[i].Name(), ".")
 		active := ""
 
-		if files[i].Name() == filepath.Base(cc.GetConfig().Active.ConfigFile) {
+		if files[i].Name() == filepath.Base(cfg.Active.ConfigFile) {
 			active = "*"
 		}
 

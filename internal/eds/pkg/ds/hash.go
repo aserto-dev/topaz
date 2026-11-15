@@ -4,8 +4,7 @@ package ds
 import (
 	"encoding/binary"
 	"strconv"
-
-	"github.com/google/uuid"
+	"uuid"
 )
 
 const DefaultHash string = `0`
@@ -75,7 +74,7 @@ func StrToInt32(s string) int32 {
 
 func UUIDToByte(s string) []byte {
 	id, _ := uuid.Parse(s)
-	buf, _ := id.MarshalBinary()
+	buf := id[:]
 
 	return buf
 }

@@ -2,11 +2,12 @@ package gerr
 
 import (
 	"context"
+	"strconv"
+	"uuid"
 
 	aerr "github.com/aserto-dev/errors"
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
-	"github.com/google/uuid"
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
 	"github.com/rs/zerolog"
 	zlog "github.com/rs/zerolog/log"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -58,30 +59,26 @@ func (m *ErrorMiddleware) handleError(ctx context.Context, handlerErr error) err
 		return status.New(codes.Internal, "internal logging error, please contact the administrator").Err()
 	}
 
-	errID, err := uuid.NewUUID()
-	if err != nil {
-		log.Error().Err(handlerErr).Err(err).Msg("failed to create error id")
-		return status.New(codes.Internal, "internal failure to generate an error id, please contact the administrator").Err()
-	}
+	errID := uuid.New()
 
 	asertoErr := aerr.UnwrapAsertoError(handlerErr)
 	if asertoErr == nil {
 		asertoErr = aerr.ErrUnknown
 	}
 
-	asertoErr = asertoErr.Int(aerr.HTTPStatusErrorMetadata, asertoErr.HTTPCode)
+	asertoErr = asertoErr.Str(aerr.HTTPStatusErrorMetadata, strconv.Itoa(asertoErr.HTTPCode))
 
 	log.Warn().Stack().Err(handlerErr).
 		Ctx(ctx).
 		Str("error-id", errID.String()).
 		Str("error-code", asertoErr.Code).
-		Int("status-code", int(asertoErr.StatusCode)).
+		Int("status-code", int(asertoErr.GRPCCode)).
 		Fields(asertoErr.Fields()).
 		Msg(asertoErr.Message)
 
-	errResult := status.New(asertoErr.StatusCode, asertoErr.Error())
+	errResult := status.New(asertoErr.GRPCCode, asertoErr.Error())
 
-	errResult, err = errResult.WithDetails(&errdetails.ErrorInfo{
+	errResult, err := errResult.WithDetails(&errdetails.ErrorInfo{
 		Reason:   errID.String(),
 		Metadata: asertoErr.Data(),
 		Domain:   asertoErr.Code,

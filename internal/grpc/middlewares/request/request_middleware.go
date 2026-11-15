@@ -3,13 +3,11 @@ package request
 import (
 	"context"
 	"strings"
+	"uuid"
 
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
-	"github.com/aserto-dev/topaz/internal/header"
-	"github.com/google/uuid"
-	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/pkg/errors"
-	"github.com/rs/zerolog/log"
+	"github.com/aserto-dev/topaz/internal/headers"
+	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -31,16 +29,12 @@ var _ grpcutil.Middleware = &RequestIDMiddleware{}
 // GRPC handlers.
 func (m *RequestIDMiddleware) Unary() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
-		id, err := m.requestID(ctx)
-		if err != nil {
-			return nil, err
-		}
+		id := m.requestID(ctx)
 
-		newCtx := header.ContextWithRequestID(ctx, id)
+		newCtx := headers.ContextWithRequestID(ctx, id)
 
 		if id != "" {
-			err = grpc.SetHeader(newCtx, metadata.Pairs(string(header.HeaderAsertoRequestID), id))
-			if err != nil {
+			if err := grpc.SetHeader(newCtx, metadata.Pairs(string(headers.HeaderAsertoRequestID), id)); err != nil {
 				return nil, err
 			}
 		}
@@ -62,16 +56,12 @@ func (m *RequestIDMiddleware) Stream() grpc.StreamServerInterceptor {
 	return func(srv any, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		ctx := stream.Context()
 
-		id, err := m.requestID(ctx)
-		if err != nil {
-			return err
-		}
+		id := m.requestID(ctx)
 
-		newCtx := header.ContextWithRequestID(ctx, id)
+		newCtx := headers.ContextWithRequestID(ctx, id)
 
 		if id != "" {
-			err = grpc.SetHeader(newCtx, metadata.Pairs(string(header.HeaderAsertoRequestID), id))
-			if err != nil {
+			if err := grpc.SetHeader(newCtx, metadata.Pairs(string(headers.HeaderAsertoRequestID), id)); err != nil {
 				return err
 			}
 		}
@@ -94,9 +84,9 @@ func (m *RequestIDMiddleware) UnaryClient() grpc.UnaryClientInterceptor {
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) error {
-		id := header.ExtractRequestID(ctx)
+		id := headers.ExtractRequestID(ctx)
 		if id != "" {
-			ctx = metadata.AppendToOutgoingContext(ctx, string(header.HeaderAsertoRequestID), id)
+			ctx = metadata.AppendToOutgoingContext(ctx, string(headers.HeaderAsertoRequestID), id)
 		}
 
 		return invoker(ctx, method, req, reply, cc, opts...)
@@ -114,32 +104,27 @@ func (m *RequestIDMiddleware) StreamClient() grpc.StreamClientInterceptor {
 		streamer grpc.Streamer,
 		opts ...grpc.CallOption,
 	) (grpc.ClientStream, error) {
-		id := header.ExtractRequestID(ctx)
+		id := headers.ExtractRequestID(ctx)
 		if id != "" {
-			ctx = metadata.AppendToOutgoingContext(ctx, string(header.HeaderAsertoRequestID), id)
+			ctx = metadata.AppendToOutgoingContext(ctx, string(headers.HeaderAsertoRequestID), id)
 		}
 
 		return streamer(ctx, desc, cc, method, opts...)
 	}
 }
 
-func (m *RequestIDMiddleware) requestID(ctx context.Context) (string, error) {
-	reqid, err := uuid.NewUUID()
-	if err != nil {
-		return "", errors.Wrap(err, "failed to generate new request id")
-	}
+func (m *RequestIDMiddleware) requestID(ctx context.Context) string {
+	reqID := uuid.New()
 
 	incomingID := IncomingRequestID(ctx)
 	if incomingID != "" {
 		incomingID = strings.Split(incomingID, ".")[0]
-		if header.IsValidUUID(incomingID) {
-			return incomingID + "." + reqid.String(), nil
+		if headers.IsValidUUID(incomingID) {
+			return incomingID + "." + reqID.String()
 		}
-
-		log.Debug().Err(err).Msg("invalid request id")
 	}
 
-	return reqid.String(), nil
+	return reqID.String()
 }
 
 func IncomingRequestID(ctx context.Context) string {
@@ -161,9 +146,9 @@ func OutgoingRequestID(ctx context.Context) string {
 }
 
 func requestIDFromMetadata(md metadata.MD) string {
-	headerMetaData, ok := md[string(header.HeaderAsertoRequestID)]
+	headerMetaData, ok := md[string(headers.HeaderAsertoRequestID)]
 	if !ok || len(headerMetaData) == 0 {
-		headerMetaData, ok = md[strings.ToLower(string(header.HeaderAsertoRequestID))]
+		headerMetaData, ok = md[strings.ToLower(string(headers.HeaderAsertoRequestID))]
 
 		if !ok || len(headerMetaData) == 0 {
 			return ""

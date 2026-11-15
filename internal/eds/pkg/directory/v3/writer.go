@@ -9,9 +9,10 @@ import (
 	"github.com/aserto-dev/go-directory/pkg/validator"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
+	"github.com/aserto-dev/topaz/internal/headers"
 
-	"github.com/go-http-utils/headers"
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/metadata"
+
 	"github.com/rs/zerolog"
 	bolt "go.etcd.io/bbolt"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -22,7 +23,7 @@ type Writer struct {
 	store  *bdb.BoltDB
 }
 
-var _ dsw.WriterServer = (*(Writer))(nil)
+var _ dsw.WriterServer = (*Writer)(nil)
 
 func NewWriter(logger *zerolog.Logger, store *bdb.BoltDB) *Writer {
 	return &Writer{
@@ -54,7 +55,7 @@ func (s *Writer) SetObject(ctx context.Context, req *dsw.SetObjectRequest) (*dsw
 		}
 
 		// optimistic concurrency check
-		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
+		ifMatchHeader := metadata.ExtractIncoming(ctx).Get(headers.IfMatch)
 		// if the updReq.Etag == "" this means the this is an insert
 		if ifMatchHeader != "" && updObj.GetEtag() != "" && ifMatchHeader != updObj.GetEtag() {
 			return derr.ErrHashMismatch.Msgf("for object with type [%s] and id [%s]", updObj.GetType(), updObj.GetId())
@@ -100,7 +101,7 @@ func (s *Writer) DeleteObject(ctx context.Context, req *dsw.DeleteObjectRequest)
 		objIdent := ds.ObjectIdentifier(&dsc.ObjectIdentifier{ObjectType: req.GetObjectType(), ObjectId: req.GetObjectId()})
 
 		// optimistic concurrency check
-		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
+		ifMatchHeader := metadata.ExtractIncoming(ctx).Get(headers.IfMatch)
 		if ifMatchHeader != "" {
 			obj := &dsc.Object{Type: req.GetObjectType(), Id: req.GetObjectId()}
 
@@ -159,10 +160,11 @@ func (s *Writer) SetRelation(ctx context.Context, req *dsw.SetRelationRequest) (
 		}
 
 		// optimistic concurrency check
-		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
+		ifMatchHeader := metadata.ExtractIncoming(ctx).Get(headers.IfMatch)
 		// if the updReq.Etag == "" this means the this is an insert
 		if ifMatchHeader != "" && updRel.GetEtag() != "" && ifMatchHeader != updRel.GetEtag() {
-			return derr.ErrHashMismatch.Msgf("for relation with objectType [%s], objectId [%s], relation [%s], subjectType [%s], SubjectId [%s]",
+			return derr.ErrHashMismatch.Msgf(
+				"for relation with objectType [%s], objectId [%s], relation [%s], subjectType [%s], SubjectId [%s]",
 				updRel.GetObjectType(), updRel.GetObjectId(), updRel.GetRelation(), updRel.GetSubjectType(), updRel.GetSubjectId(),
 			)
 		}
@@ -217,7 +219,7 @@ func (s *Writer) DeleteRelation(ctx context.Context, req *dsw.DeleteRelationRequ
 
 	err := s.store.DB().Update(func(tx *bolt.Tx) error {
 		// optimistic concurrency check
-		ifMatchHeader := metautils.ExtractIncoming(ctx).Get(headers.IfMatch)
+		ifMatchHeader := metadata.ExtractIncoming(ctx).Get(headers.IfMatch)
 		if ifMatchHeader != "" {
 			updRel, err := ds.UpdateMetadataRelation(ctx, tx, bdb.RelationsObjPath, rid.ObjKey(), rel)
 			if err != nil {
@@ -225,7 +227,8 @@ func (s *Writer) DeleteRelation(ctx context.Context, req *dsw.DeleteRelationRequ
 			}
 
 			if ifMatchHeader != updRel.GetEtag() {
-				return derr.ErrHashMismatch.Msgf("for relation with objectType [%s], objectId [%s], relation [%s], subjectType [%s], SubjectId [%s]",
+				return derr.ErrHashMismatch.Msgf(
+					"for relation with objectType [%s], objectId [%s], relation [%s], subjectType [%s], SubjectId [%s]",
 					rel.GetObjectType(), rel.GetObjectId(), rel.GetRelation(), rel.GetSubjectType(), rel.GetSubjectId(),
 				)
 			}

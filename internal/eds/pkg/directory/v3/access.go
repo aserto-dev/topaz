@@ -3,8 +3,8 @@ package v3
 import (
 	"context"
 
-	"github.com/aserto-dev/azm/cache"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	"github.com/aserto-dev/topaz/internal/azm/cache"
 	dsa "github.com/authzen/access.go/api/access/v1"
 	"github.com/rs/zerolog"
 )
@@ -14,7 +14,7 @@ type Access struct {
 	reader *Reader
 }
 
-var _ dsa.AccessServer = (*(Access))(nil)
+var _ dsa.AccessServer = (*Access)(nil)
 
 func NewAccess(logger *zerolog.Logger, reader *Reader) *Access {
 	return &Access{

@@ -22,21 +22,24 @@ func (cmd *StopCmd) Run(ctx context.Context) error {
 		return err
 	}
 
-	c := cc.GetConfig()
+	cfg, err := cc.RequireConfig()
+	if err != nil {
+		return err
+	}
 
-	c.Defaults.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.
-	if c.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
+	cfg.Defaults.NoCheck = false // enforce that Stop does not bypass CheckRunStatus() to short-circuit.
+	if cfg.CheckRunStatus(cmd.ContainerName, cc.StatusNotRunning) {
 		return nil
 	}
 
-	cc.Con().Info().Msg(">>> stopping topaz %q...", c.Running.Config)
+	cc.Con().Info().Msg(">>> stopping topaz %q...", cfg.Running.Config)
 
 	if err := dc.Stop(cmd.ContainerName); err != nil {
 		return err
 	}
 
 	if cmd.Wait {
-		ports, err := config.GetConfig(c.Running.ConfigFile).Ports()
+		ports, err := config.GetConfig(cfg.Running.ConfigFile).Ports()
 		if err != nil {
 			return err
 		}
@@ -47,9 +50,9 @@ func (cmd *StopCmd) Run(ctx context.Context) error {
 	}
 
 	// empty running config
-	c.Running = cc.RunningConfig{}
+	cfg.Running = cc.RunningConfig{}
 
-	if err := c.SaveContextConfig(common.CLIConfigurationFile); err != nil {
+	if err := cfg.SaveContextConfig(common.CLIConfigurationFile); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}

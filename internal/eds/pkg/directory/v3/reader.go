@@ -9,9 +9,9 @@ import (
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/x"
-	"github.com/pkg/errors"
+	"github.com/aserto-dev/topaz/internal/headers"
 
-	"github.com/go-http-utils/headers"
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/samber/lo"
 	bolt "go.etcd.io/bbolt"
@@ -26,7 +26,7 @@ type Reader struct {
 	store  *bdb.BoltDB
 }
 
-var _ dsr.ReaderServer = (*(Reader))(nil)
+var _ dsr.ReaderServer = (*Reader)(nil)
 
 func NewReader(logger *zerolog.Logger, store *bdb.BoltDB) *Reader {
 	return &Reader{

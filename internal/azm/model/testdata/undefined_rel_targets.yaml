@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=manifest.json
+---
+
+# model
+model:
+  version: 3
+
+types:
+  user: {}
+  group:
+    relations:
+      member: group
+
+  file:
+    relations:
+      # invalid: type 'user' undefined
+      owner: person
+
+      # invalid: types 'team' and 'project' undefined
+      reader: project | team:*
+
+      # invalid: type 'team' undefined
+      writer: team#member | group#member
+
+      # invalid: type 'group' has no 'admin' relation
+      admin: group#admin
+
+      # valid
+      viewer: user

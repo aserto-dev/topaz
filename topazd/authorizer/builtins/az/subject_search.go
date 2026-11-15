@@ -14,7 +14,7 @@ import (
 )
 
 const azSubjectSearchHelp string = `az.subject_search({
-	"subject": {"type": "", "properties": {}},
+	"subject": {"type": "", "id": "", "properties": {}},
 	"action": {"name": "", "properties": {}},
 	"resource": {"type": "", "id": "", "properties": {}},
 	"context": {},

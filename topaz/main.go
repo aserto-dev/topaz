@@ -96,7 +96,8 @@ func run() int {
 }
 
 func kongParse(cfg *cc.Config, cli *cmd.CLI, cwd string) *kong.Context {
-	kongCtx := kong.Parse(cli,
+	kongCtx := kong.Parse(
+		cli,
 		kong.Name(x.AppName),
 		kong.Description(x.AppDescription),
 		kong.UsageOnError(),
@@ -123,9 +124,11 @@ func kongParse(cfg *cc.Config, cli *cmd.CLI, cwd string) *kong.Context {
 			"container_platform":  cc.ContainerPlatform(),
 			"container_name":      cc.ContainerName(cfg.Active.ConfigFile),
 			"directory_svc":       cc.DirectorySvc(),
+			"directory_svc_http":  cc.DirectorySvcHttp(),
 			"directory_key":       cc.DirectoryKey(),
 			"directory_token":     cc.DirectoryToken(),
 			"authorizer_svc":      cc.AuthorizerSvc(),
+			"authorizer_svc_http": cc.AuthorizerSvcHttp(),
 			"authorizer_key":      cc.AuthorizerKey(),
 			"authorizer_token":    cc.AuthorizerToken(),
 			"insecure":            strconv.FormatBool(cc.Insecure()),
@@ -215,7 +218,8 @@ func checkVersion(cfg *cc.Config) error {
 		return nil
 	}
 
-	cc.Con().Warn().Msg("The default container tag configuration setting (%s), is different from the current topaz version (%v).",
+	cc.Con().Warn().Msg(
+		"The default container tag configuration setting (%s), is different from the current topaz version (%v).",
 		cfg.Defaults.ContainerTag,
 		ver.GetInfo().Version,
 	)

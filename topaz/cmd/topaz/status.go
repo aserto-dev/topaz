@@ -11,7 +11,10 @@ type StatusCmd struct {
 }
 
 func (cmd *StatusCmd) Run(ctx context.Context) error {
-	cfg := cc.GetConfig()
+	cfg, err := cc.RequireConfig()
+	if err != nil {
+		return err
+	}
 
 	containerName := cfg.Running.ContainerName
 	if cmd.ContainerName != containerName {

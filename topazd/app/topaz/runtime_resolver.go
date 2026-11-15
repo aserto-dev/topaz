@@ -2,12 +2,10 @@ package topaz
 
 import (
 	"context"
-	"errors"
-	"time"
 
 	"github.com/aserto-dev/go-authorizer/pkg/aerr"
 	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	runtime "github.com/aserto-dev/runtime"
+	"github.com/aserto-dev/topaz/internal/runtime"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/az"
@@ -36,7 +34,8 @@ func NewRuntimeResolver(
 	dsClient := dsr.NewReaderClient(dsConn)
 	acClient := dsa.NewAccessClient(dsConn)
 
-	sidecarRuntime, err := runtime.New(ctx, &cfg.OPA,
+	rt, err := runtime.New(
+		ctx, &cfg.OPA,
 
 		// directory get functions
 		runtime.WithBuiltin1(ds.RegisterIdentity(logger, builtins.DSIdentity, dsClient)),
@@ -68,7 +67,7 @@ func NewRuntimeResolver(
 	}
 
 	cleanupRuntime := func() {
-		sidecarRuntime.Stop(ctx)
+		rt.Stop(ctx)
 	}
 
 	cleanup := func() {
@@ -77,20 +76,16 @@ func NewRuntimeResolver(
 		}
 	}
 
-	if err := sidecarRuntime.Start(ctx); err != nil {
+	if err := rt.Start(ctx); err != nil {
 		return nil, cleanup, err
 	}
 
-	if err := sidecarRuntime.WaitForPlugins(ctx, time.Duration(cfg.OPA.MaxPluginWaitTimeSeconds)*time.Second); err != nil {
-		if errors.Is(err, context.DeadlineExceeded) {
-			return nil, cleanup, aerr.ErrRuntimeLoading.Err(err).Msg("timeout while waiting for runtime to load")
-		}
-
+	if err := rt.CheckPluginsStatus(); err != nil {
 		return nil, cleanup, aerr.ErrBadRuntime.Err(err)
 	}
 
 	return &RuntimeResolver{
-		runtime: sidecarRuntime,
+		runtime: rt,
 	}, cleanup, err
 }
 

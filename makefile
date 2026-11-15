@@ -11,6 +11,7 @@ ORG                := aserto-dev
 REPO               := topaz
 DESCRIPTION        := "Topaz Authorization Service"
 LICENSE            := Apache-2.0
+WINGET_PKG_ID      := Aserto.Topaz
 
 GOOS               := $(shell go env GOOS)
 GOARCH             := $(shell go env GOARCH)
@@ -22,28 +23,33 @@ EXT_DIR            := ${PWD}/.ext
 EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
-GO_VER             := 1.26
-SVU_VER            := 3.3.0
+GO_VER             := 1.27
+SVU_VER            := 3.4.4
 GOTESTSUM_VER      := 1.13.0
-GOLANGCI-LINT_VER  := 2.12.2
-GORELEASER_VER     := 2.14.1
+GOLANGCI-LINT_VER  := 2.15.0
+GORELEASER_VER     := 2.20.0
 SYFT_VER           := 1.13.0
+GOFUMPT_VER        := latest
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
 
 .DEFAULT_GOAL      := build
 
-export GOEXPERIMENT=jsonv2
 export TESTCONTAINERS_RYUK_DISABLED=$(shell docker context inspect --format '{{.Endpoints.docker.Host}}' 2>/dev/null | grep -q ".colima" && echo "true" || echo "false")
 
 .PHONY: deps
-deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft
+deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft install-air install-templ install-gofumpt
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
 gover:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@(go env GOVERSION | grep "go${GO_VER}") || (echo "go version check failed expected go${GO_VER} got $$(go env GOVERSION)"; exit 1)
+
+PHONY: go-fmt
+go-fmt: 
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/gofumpt -l -w .
 
 .PHONY: build
 build: gover
@@ -84,9 +90,65 @@ docker-build-test:
   .
 
 PHONY: go-mod-tidy
-go-mod-tidy:
+go-mod-tidy: go-fmt go-work-sync
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@go work edit -json | jq -r '.Use[].DiskPath' | xargs -I{} bash -c 'cd {} && echo "${PWD}/go.mod" && go mod tidy -v && cd -'
+	@exit_code=0; \
+	modules=$$(go work edit -json | jq -r '.Use[].DiskPath // empty'); \
+	for mod in $$modules; do \
+		if [ "$$mod" = "." ]; then \
+			mod_dir=$$(pwd); \
+		else \
+			mod_dir=$$(realpath "$$mod" 2>/dev/null || echo "$$mod"); \
+		fi; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod_dir$(NO_COLOR)"; \
+		(cd "$$mod_dir" && go mod tidy) || exit_code=$$?; \
+	done; \
+	exit $$exit_code
+
+PHONY: go-work-sync
+go-work-sync:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@go work sync
+
+.PHONY: lint
+lint: gover
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/golangci-lint config path
+	@${EXT_BIN_DIR}/golangci-lint config verify
+	@exit_code=0; \
+	config=${PWD}/.golangci.yaml; \
+	modules=$$(go work edit -json | jq -r '.Use[].DiskPath // empty'); \
+	for mod in $$modules; do \
+		if [ "$$mod" = "." ]; then \
+			mod_dir=$$(pwd); \
+		else \
+			mod_dir=$$(realpath "$$mod" 2>/dev/null || echo "$$mod"); \
+		fi; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod_dir$(NO_COLOR)"; \
+		(cd "$$mod_dir" && ${EXT_BIN_DIR}/golangci-lint run --config $$config ./...) || exit_code=$$?; \
+	done; \
+	exit $$exit_code
+
+.PHONY: lint-clean
+lint-clean: gover
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/golangci-lint cache clean
+
+.PHONY: test
+test: gover test-snapshot
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@exit_code=0; \
+	modules=$$(go work edit -json | jq -r '.Use[].DiskPath // empty'); \
+	for mod in $$modules; do \
+		if [ "$$mod" = "." ]; then \
+			mod_dir=$$(pwd); \
+		else \
+			mod_dir=$$(realpath "$$mod" 2>/dev/null || echo "$$mod"); \
+		fi; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod_dir$(NO_COLOR)"; \
+		(cd "$$mod_dir" && ${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -v ./... -coverprofile=cover.out -coverpkg=./... ./...) || exit_code=$$?; \
+	done; \
+	exit $$exit_code
 
 .PHONY: release
 release: gover
@@ -96,28 +158,12 @@ release: gover
 .PHONY: snapshot
 snapshot: gover
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser.yml --clean --snapshot --skip archive,homebrew,sbom
+	@${EXT_BIN_DIR}/goreleaser release --config .goreleaser.yml --clean --snapshot --skip publish
 
 .PHONY: generate
 generate:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@GOBIN=${EXT_BIN_DIR} go generate ./...
-
-.PHONY: lint
-lint: gover
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/golangci-lint config path
-	@${EXT_BIN_DIR}/golangci-lint config verify
-	@${EXT_BIN_DIR}/golangci-lint run --config ${PWD}/.golangci.yaml
-
-.PHONY: test
-test: gover test-snapshot
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@echo -e "$(WARN_COLOR)!!! TESTCONTAINERS_RYUK_DISABLED=${TESTCONTAINERS_RYUK_DISABLED} !!!$(NO_COLOR)"
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./... | grep -v topazd/tests)                     -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- $$(go list ./topazd/tests/... | grep -v tests/template)      -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/${ORG}/${REPO}/topazd/tests/template-no-tls/...   -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
-	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- github.com/${ORG}/${REPO}/topazd/tests/template-with-tls/... -count=1 -timeout 120s --race -parallel=1 -v -coverprofile=cover.out -coverpkg=./...
 	
 .PHONY: test-snapshot
 test-snapshot:
@@ -146,6 +192,13 @@ topaz-start-test-snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@echo "topaz start $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_name')"
 	@${TOPAZ_DIST} start --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
+
+.PHONY: publish-winget
+publish-winget:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@komac --version
+	@komac token add --token=$$(gh auth token)
+	@komac update ${WINGET_PKG_ID} --version $$(svu current --tag.prefix="") --urls https://github.com/aserto-dev/topaz/releases/download/$$(svu current)/topaz_windows_amd64.zip
 
 .PHONY: info
 info:
@@ -200,6 +253,23 @@ install-syft: ${EXT_TMP_DIR} ${EXT_BIN_DIR}
 	@tar -xvf ${EXT_TMP_DIR}/syft.tar.gz --directory ${EXT_BIN_DIR} syft &> /dev/null
 	@chmod +x ${EXT_BIN_DIR}/syft
 	@${EXT_BIN_DIR}/syft --version
+
+.PHONY: install-air
+install-air: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install github.com/air-verse/air@latest
+	@${EXT_BIN_DIR}/air -v
+
+.PHONY: install-templ
+install-templ: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install github.com/a-h/templ/cmd/templ@latest
+	@${EXT_BIN_DIR}/templ --version
+
+.PHONY: install-gofumpt
+install-gofumpt: ${EXT_BIN_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install mvdan.cc/gofumpt@${GOFUMPT_VER}
 
 .PHONY: clean
 clean:
