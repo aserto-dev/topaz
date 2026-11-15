@@ -2,7 +2,7 @@ module github.com/aserto-dev/topaz
 
 go 1.27.4
 
-replace github.com/aserto-dev/go-topaz-ui => ../../wingmans/go-topaz-ui
+replace github.com/aserto-dev/go-topaz-ui => github.com/wingmans/go-topaz-ui v0.0.0-20261115163309-0a5a8b990ad0
 
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
