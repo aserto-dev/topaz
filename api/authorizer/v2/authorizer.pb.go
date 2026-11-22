@@ -7,10 +7,6 @@
 package authorizer
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	api "github.com/aserto-dev/topaz/api/authorizer/v2/api"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv3/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
@@ -18,6 +14,9 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
 	structpb "google.golang.org/protobuf/types/known/structpb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -1406,38 +1405,35 @@ func file_v2_authorizer_proto_rawDescGZIP() []byte {
 	return file_v2_authorizer_proto_rawDescData
 }
 
-var (
-	file_v2_authorizer_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-	file_v2_authorizer_proto_msgTypes  = make([]protoimpl.MessageInfo, 17)
-	file_v2_authorizer_proto_goTypes   = []any{
-		PathSeparator(0),              // 0: authorizer.v2.PathSeparator
-		TraceLevel(0),                 // 1: authorizer.v2.TraceLevel
-		(*InfoRequest)(nil),           // 2: authorizer.v2.InfoRequest
-		(*InfoResponse)(nil),          // 3: authorizer.v2.InfoResponse
-		(*GetPolicyRequest)(nil),      // 4: authorizer.v2.GetPolicyRequest
-		(*GetPolicyResponse)(nil),     // 5: authorizer.v2.GetPolicyResponse
-		(*ListPoliciesRequest)(nil),   // 6: authorizer.v2.ListPoliciesRequest
-		(*ListPoliciesResponse)(nil),  // 7: authorizer.v2.ListPoliciesResponse
-		(*DecisionTreeRequest)(nil),   // 8: authorizer.v2.DecisionTreeRequest
-		(*DecisionTreeOptions)(nil),   // 9: authorizer.v2.DecisionTreeOptions
-		(*DecisionTreeResponse)(nil),  // 10: authorizer.v2.DecisionTreeResponse
-		(*IsRequest)(nil),             // 11: authorizer.v2.IsRequest
-		(*Decision)(nil),              // 12: authorizer.v2.Decision
-		(*IsResponse)(nil),            // 13: authorizer.v2.IsResponse
-		(*QueryOptions)(nil),          // 14: authorizer.v2.QueryOptions
-		(*QueryRequest)(nil),          // 15: authorizer.v2.QueryRequest
-		(*QueryResponse)(nil),         // 16: authorizer.v2.QueryResponse
-		(*CompileRequest)(nil),        // 17: authorizer.v2.CompileRequest
-		(*CompileResponse)(nil),       // 18: authorizer.v2.CompileResponse
-		(*fieldmaskpb.FieldMask)(nil), // 19: google.protobuf.FieldMask
-		(*api.PolicyInstance)(nil),    // 20: aserto.authorizer.v2.api.PolicyInstance
-		(*api.Module)(nil),            // 21: aserto.authorizer.v2.api.Module
-		(*api.PolicyContext)(nil),     // 22: aserto.authorizer.v2.api.PolicyContext
-		(*api.IdentityContext)(nil),   // 23: aserto.authorizer.v2.api.IdentityContext
-		(*structpb.Struct)(nil),       // 24: google.protobuf.Struct
-	}
-)
-
+var file_v2_authorizer_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_v2_authorizer_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_v2_authorizer_proto_goTypes = []any{
+	(PathSeparator)(0),            // 0: authorizer.v2.PathSeparator
+	(TraceLevel)(0),               // 1: authorizer.v2.TraceLevel
+	(*InfoRequest)(nil),           // 2: authorizer.v2.InfoRequest
+	(*InfoResponse)(nil),          // 3: authorizer.v2.InfoResponse
+	(*GetPolicyRequest)(nil),      // 4: authorizer.v2.GetPolicyRequest
+	(*GetPolicyResponse)(nil),     // 5: authorizer.v2.GetPolicyResponse
+	(*ListPoliciesRequest)(nil),   // 6: authorizer.v2.ListPoliciesRequest
+	(*ListPoliciesResponse)(nil),  // 7: authorizer.v2.ListPoliciesResponse
+	(*DecisionTreeRequest)(nil),   // 8: authorizer.v2.DecisionTreeRequest
+	(*DecisionTreeOptions)(nil),   // 9: authorizer.v2.DecisionTreeOptions
+	(*DecisionTreeResponse)(nil),  // 10: authorizer.v2.DecisionTreeResponse
+	(*IsRequest)(nil),             // 11: authorizer.v2.IsRequest
+	(*Decision)(nil),              // 12: authorizer.v2.Decision
+	(*IsResponse)(nil),            // 13: authorizer.v2.IsResponse
+	(*QueryOptions)(nil),          // 14: authorizer.v2.QueryOptions
+	(*QueryRequest)(nil),          // 15: authorizer.v2.QueryRequest
+	(*QueryResponse)(nil),         // 16: authorizer.v2.QueryResponse
+	(*CompileRequest)(nil),        // 17: authorizer.v2.CompileRequest
+	(*CompileResponse)(nil),       // 18: authorizer.v2.CompileResponse
+	(*fieldmaskpb.FieldMask)(nil), // 19: google.protobuf.FieldMask
+	(*api.PolicyInstance)(nil),    // 20: aserto.authorizer.v2.api.PolicyInstance
+	(*api.Module)(nil),            // 21: aserto.authorizer.v2.api.Module
+	(*api.PolicyContext)(nil),     // 22: aserto.authorizer.v2.api.PolicyContext
+	(*api.IdentityContext)(nil),   // 23: aserto.authorizer.v2.api.IdentityContext
+	(*structpb.Struct)(nil),       // 24: google.protobuf.Struct
+}
 var file_v2_authorizer_proto_depIdxs = []int32{
 	19, // 0: authorizer.v2.GetPolicyRequest.field_mask:type_name -> google.protobuf.FieldMask
 	20, // 1: authorizer.v2.GetPolicyRequest.policy_instance:type_name -> aserto.authorizer.v2.api.PolicyInstance

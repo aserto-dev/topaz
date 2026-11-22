@@ -7,15 +7,14 @@
 package api
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	structpb "google.golang.org/protobuf/types/known/structpb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -662,7 +661,7 @@ const file_v2_api_api_proto_rawDesc = "" +
 	"\x12IDENTITY_TYPE_NONE\x10\x01\x12\x15\n" +
 	"\x11IDENTITY_TYPE_SUB\x10\x02\x12\x15\n" +
 	"\x11IDENTITY_TYPE_JWT\x10\x03\x12\x18\n" +
-	"\x14IDENTITY_TYPE_MANUAL\x10\x04B]Z@github.com/aserto-dev/topaz/api/authorizer/v2/api;api\xaa\x02\x18Aserto.Authorizer.V2.APIb\x06proto3"
+	"\x14IDENTITY_TYPE_MANUAL\x10\x04BRZ5github.com/aserto-dev/topaz/api/authorizer/v2/api;api\xaa\x02\x18Aserto.Authorizer.V2.APIb\x06proto3"
 
 var (
 	file_v2_api_api_proto_rawDescOnce sync.Once
@@ -676,26 +675,23 @@ func file_v2_api_api_proto_rawDescGZIP() []byte {
 	return file_v2_api_api_proto_rawDescData
 }
 
-var (
-	file_v2_api_api_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-	file_v2_api_api_proto_msgTypes  = make([]protoimpl.MessageInfo, 9)
-	file_v2_api_api_proto_goTypes   = []any{
-		IdentityType(0),               // 0: aserto.authorizer.v2.api.IdentityType
-		(*IdentityContext)(nil),       // 1: aserto.authorizer.v2.api.IdentityContext
-		(*PolicyContext)(nil),         // 2: aserto.authorizer.v2.api.PolicyContext
-		(*Decision)(nil),              // 3: aserto.authorizer.v2.api.Decision
-		(*DecisionUser)(nil),          // 4: aserto.authorizer.v2.api.DecisionUser
-		(*DecisionPolicy)(nil),        // 5: aserto.authorizer.v2.api.DecisionPolicy
-		(*Module)(nil),                // 6: aserto.authorizer.v2.api.Module
-		(*PolicyInstance)(nil),        // 7: aserto.authorizer.v2.api.PolicyInstance
-		nil,                           // 8: aserto.authorizer.v2.api.Decision.OutcomesEntry
-		nil,                           // 9: aserto.authorizer.v2.api.Decision.AnnotationsEntry
-		(*timestamppb.Timestamp)(nil), // 10: google.protobuf.Timestamp
-		(*structpb.Struct)(nil),       // 11: google.protobuf.Struct
-		(*structpb.Value)(nil),        // 12: google.protobuf.Value
-	}
-)
-
+var file_v2_api_api_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_v2_api_api_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_v2_api_api_proto_goTypes = []any{
+	(IdentityType)(0),             // 0: aserto.authorizer.v2.api.IdentityType
+	(*IdentityContext)(nil),       // 1: aserto.authorizer.v2.api.IdentityContext
+	(*PolicyContext)(nil),         // 2: aserto.authorizer.v2.api.PolicyContext
+	(*Decision)(nil),              // 3: aserto.authorizer.v2.api.Decision
+	(*DecisionUser)(nil),          // 4: aserto.authorizer.v2.api.DecisionUser
+	(*DecisionPolicy)(nil),        // 5: aserto.authorizer.v2.api.DecisionPolicy
+	(*Module)(nil),                // 6: aserto.authorizer.v2.api.Module
+	(*PolicyInstance)(nil),        // 7: aserto.authorizer.v2.api.PolicyInstance
+	nil,                           // 8: aserto.authorizer.v2.api.Decision.OutcomesEntry
+	nil,                           // 9: aserto.authorizer.v2.api.Decision.AnnotationsEntry
+	(*timestamppb.Timestamp)(nil), // 10: google.protobuf.Timestamp
+	(*structpb.Struct)(nil),       // 11: google.protobuf.Struct
+	(*structpb.Value)(nil),        // 12: google.protobuf.Value
+}
 var file_v2_api_api_proto_depIdxs = []int32{
 	0,  // 0: aserto.authorizer.v2.api.IdentityContext.type:type_name -> aserto.authorizer.v2.api.IdentityType
 	10, // 1: aserto.authorizer.v2.api.Decision.timestamp:type_name -> google.protobuf.Timestamp
