@@ -231,17 +231,14 @@ func (cmd *InstallTemplateCmd) prepareTopaz(ctx context.Context, tmpl *template,
 
 	// 3 - topaz start - start instance using new configuration
 	{
-		//nolint:modernize
 		command := &topaz.StartCmd{
-			StartRunCmd: topaz.StartRunCmd{
-				ContainerRegistry: cmd.ContainerRegistry,
-				ContainerImage:    cmd.ContainerImage,
-				ContainerTag:      cmd.ContainerTag,
-				ContainerPlatform: cmd.ContainerPlatform,
-				ContainerName:     cmd.ContainerName,
-				ContainerHostname: cmd.ContainerHostname,
-			},
-			Wait: true,
+			ContainerRegistry: cmd.ContainerRegistry,
+			ContainerImage:    cmd.ContainerImage,
+			ContainerTag:      cmd.ContainerTag,
+			ContainerPlatform: cmd.ContainerPlatform,
+			ContainerName:     cmd.ContainerName,
+			ContainerHostname: cmd.ContainerHostname,
+			Wait:              true,
 		}
 		if err := command.Run(ctx); err != nil {
 			return err
