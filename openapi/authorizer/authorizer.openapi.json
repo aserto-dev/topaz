@@ -4,14 +4,14 @@
     "title": "Topaz Authorizer Service",
     "contact": {
       "name": "Topaz Authorization Project",
-      "url": "https://github.com/aserto-dev/go-authorizer",
-      "email": "support@aserto.com"
+      "url": "https://github.com/aserto-dev/topaz",
+      "email": "support@topaz.sh"
     },
     "license": {
       "name": "Apache 2.0 License",
-      "url": "https://github.com/aserto-dev/go-authorizer/blob/main/LICENSE"
+      "url": "https://github.com/aserto-dev/topaz/blob/main/LICENSE"
     },
-    "version": "3.1"
+    "version": "3.4"
   },
   "servers": [
     {
@@ -36,22 +36,22 @@
                 "type": "object",
                 "properties": {
                   "identity_context": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityContext",
+                    "$ref": "#/components/schemas/authorizer.v2.api.IdentityContext",
                     "description": "identity context"
                   },
                   "options": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.DecisionTreeOptions",
+                    "$ref": "#/components/schemas/authorizer.v2.DecisionTreeOptions",
                     "description": "decision tree options"
                   },
                   "policy_context": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyContext",
+                    "$ref": "#/components/schemas/authorizer.v2.api.PolicyContext",
                     "description": "policy context"
                   },
                   "policy_instance": {
                     "description": "policy instance",
                     "allOf": [
                       {
-                        "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyInstance"
+                        "$ref": "#/components/schemas/authorizer.v2.api.PolicyInstance"
                       }
                     ],
                     "deprecated": true
@@ -86,7 +86,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.authorizer.v2.DecisionTreeResponse"
+                  "$ref": "#/components/schemas/authorizer.v2.DecisionTreeResponse"
                 }
               }
             }
@@ -111,18 +111,18 @@
                 "type": "object",
                 "properties": {
                   "identity_context": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityContext",
+                    "$ref": "#/components/schemas/authorizer.v2.api.IdentityContext",
                     "description": "identity context"
                   },
                   "policy_context": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyContext",
+                    "$ref": "#/components/schemas/authorizer.v2.api.PolicyContext",
                     "description": "policy context"
                   },
                   "policy_instance": {
                     "description": "policy instance",
                     "allOf": [
                       {
-                        "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyInstance"
+                        "$ref": "#/components/schemas/authorizer.v2.api.PolicyInstance"
                       }
                     ],
                     "deprecated": true
@@ -157,7 +157,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.authorizer.v2.IsResponse"
+                  "$ref": "#/components/schemas/authorizer.v2.IsResponse"
                 }
               }
             }
@@ -181,7 +181,7 @@
                 "type": "object",
                 "properties": {
                   "identity_context": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityContext",
+                    "$ref": "#/components/schemas/authorizer.v2.api.IdentityContext",
                     "description": "identity context"
                   },
                   "input": {
@@ -189,18 +189,18 @@
                     "description": "query input block"
                   },
                   "options": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.QueryOptions",
+                    "$ref": "#/components/schemas/authorizer.v2.QueryOptions",
                     "description": "query options"
                   },
                   "policy_context": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyContext",
+                    "$ref": "#/components/schemas/authorizer.v2.api.PolicyContext",
                     "description": "policy context"
                   },
                   "policy_instance": {
                     "description": "policy instance",
                     "allOf": [
                       {
-                        "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyInstance"
+                        "$ref": "#/components/schemas/authorizer.v2.api.PolicyInstance"
                       }
                     ],
                     "deprecated": true
@@ -238,7 +238,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.authorizer.v2.QueryResponse"
+                  "$ref": "#/components/schemas/authorizer.v2.QueryResponse"
                 }
               }
             }
@@ -269,7 +269,7 @@
                     }
                   },
                   "identity_context": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityContext",
+                    "$ref": "#/components/schemas/authorizer.v2.api.IdentityContext",
                     "description": "identity context"
                   },
                   "input": {
@@ -277,18 +277,18 @@
                     "description": "input block"
                   },
                   "options": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.QueryOptions",
+                    "$ref": "#/components/schemas/authorizer.v2.QueryOptions",
                     "description": "query options"
                   },
                   "policy_context": {
-                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyContext",
+                    "$ref": "#/components/schemas/authorizer.v2.api.PolicyContext",
                     "description": "policy context"
                   },
                   "policy_instance": {
                     "description": "policy instance",
                     "allOf": [
                       {
-                        "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyInstance"
+                        "$ref": "#/components/schemas/authorizer.v2.api.PolicyInstance"
                       }
                     ],
                     "deprecated": true
@@ -333,7 +333,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.authorizer.v2.CompileResponse"
+                  "$ref": "#/components/schemas/authorizer.v2.CompileResponse"
                 }
               }
             }
@@ -393,7 +393,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.authorizer.v2.ListPoliciesResponse"
+                  "$ref": "#/components/schemas/authorizer.v2.ListPoliciesResponse"
                 }
               }
             }
@@ -469,7 +469,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.authorizer.v2.GetPolicyResponse"
+                  "$ref": "#/components/schemas/authorizer.v2.GetPolicyResponse"
                 }
               }
             }
@@ -501,7 +501,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.authorizer.v2.InfoResponse"
+                  "$ref": "#/components/schemas/authorizer.v2.InfoResponse"
                 }
               }
             }
@@ -512,7 +512,7 @@
   },
   "components": {
     "schemas": {
-      "aserto.authorizer.v2.CompileResponse": {
+      "authorizer.v2.CompileResponse": {
         "type": "object",
         "properties": {
           "metrics": {
@@ -539,7 +539,7 @@
           }
         }
       },
-      "aserto.authorizer.v2.Decision": {
+      "authorizer.v2.Decision": {
         "type": "object",
         "properties": {
           "decision": {
@@ -554,15 +554,15 @@
           }
         }
       },
-      "aserto.authorizer.v2.DecisionTreeOptions": {
+      "authorizer.v2.DecisionTreeOptions": {
         "type": "object",
         "properties": {
           "path_separator": {
-            "$ref": "#/components/schemas/aserto.authorizer.v2.PathSeparator"
+            "$ref": "#/components/schemas/authorizer.v2.PathSeparator"
           }
         }
       },
-      "aserto.authorizer.v2.DecisionTreeResponse": {
+      "authorizer.v2.DecisionTreeResponse": {
         "type": "object",
         "properties": {
           "path": {
@@ -577,20 +577,20 @@
           }
         }
       },
-      "aserto.authorizer.v2.GetPolicyResponse": {
+      "authorizer.v2.GetPolicyResponse": {
         "type": "object",
         "properties": {
           "result": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/aserto.authorizer.v2.api.Module"
+                "$ref": "#/components/schemas/authorizer.v2.api.Module"
               }
             ],
             "readOnly": true
           }
         }
       },
-      "aserto.authorizer.v2.InfoResponse": {
+      "authorizer.v2.InfoResponse": {
         "type": "object",
         "properties": {
           "arch": {
@@ -610,32 +610,32 @@
           }
         }
       },
-      "aserto.authorizer.v2.IsResponse": {
+      "authorizer.v2.IsResponse": {
         "type": "object",
         "properties": {
           "decisions": {
             "type": "array",
             "description": "decisions",
             "items": {
-              "$ref": "#/components/schemas/aserto.authorizer.v2.Decision"
+              "$ref": "#/components/schemas/authorizer.v2.Decision"
             },
             "readOnly": true
           }
         }
       },
-      "aserto.authorizer.v2.ListPoliciesResponse": {
+      "authorizer.v2.ListPoliciesResponse": {
         "type": "object",
         "properties": {
           "result": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/aserto.authorizer.v2.api.Module"
+              "$ref": "#/components/schemas/authorizer.v2.api.Module"
             },
             "readOnly": true
           }
         }
       },
-      "aserto.authorizer.v2.PathSeparator": {
+      "authorizer.v2.PathSeparator": {
         "type": "string",
         "enum": [
           "PATH_SEPARATOR_UNKNOWN",
@@ -643,7 +643,7 @@
           "PATH_SEPARATOR_SLASH"
         ]
       },
-      "aserto.authorizer.v2.QueryOptions": {
+      "authorizer.v2.QueryOptions": {
         "type": "object",
         "properties": {
           "instrument": {
@@ -655,7 +655,7 @@
             "description": "metrics (default false)"
           },
           "trace": {
-            "$ref": "#/components/schemas/aserto.authorizer.v2.TraceLevel",
+            "$ref": "#/components/schemas/authorizer.v2.TraceLevel",
             "description": "trace level (default ExplainOffV1)"
           },
           "trace_summary": {
@@ -664,7 +664,7 @@
           }
         }
       },
-      "aserto.authorizer.v2.QueryResponse": {
+      "authorizer.v2.QueryResponse": {
         "type": "object",
         "properties": {
           "metrics": {
@@ -695,7 +695,7 @@
           }
         }
       },
-      "aserto.authorizer.v2.TraceLevel": {
+      "authorizer.v2.TraceLevel": {
         "type": "string",
         "enum": [
           "TRACE_LEVEL_UNKNOWN",
@@ -705,7 +705,7 @@
           "TRACE_LEVEL_FAILS"
         ]
       },
-      "aserto.authorizer.v2.api.IdentityContext": {
+      "authorizer.v2.api.IdentityContext": {
         "type": "object",
         "properties": {
           "identity": {
@@ -713,7 +713,7 @@
             "description": "identity"
           },
           "type": {
-            "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityType",
+            "$ref": "#/components/schemas/authorizer.v2.api.IdentityType",
             "description": "identity type"
           }
         },
@@ -722,7 +722,7 @@
           "type"
         ]
       },
-      "aserto.authorizer.v2.api.IdentityType": {
+      "authorizer.v2.api.IdentityType": {
         "type": "string",
         "description": "Identity types, describes the payload type of the identity field inside the IdentityContext message.",
         "enum": [
@@ -733,7 +733,7 @@
           "IDENTITY_TYPE_MANUAL"
         ]
       },
-      "aserto.authorizer.v2.api.Module": {
+      "authorizer.v2.api.Module": {
         "type": "object",
         "description": "module",
         "properties": {
@@ -763,7 +763,7 @@
           }
         }
       },
-      "aserto.authorizer.v2.api.PolicyContext": {
+      "authorizer.v2.api.PolicyContext": {
         "type": "object",
         "properties": {
           "decisions": {
@@ -783,7 +783,7 @@
           "decisions"
         ]
       },
-      "aserto.authorizer.v2.api.PolicyInstance": {
+      "authorizer.v2.api.PolicyInstance": {
         "type": "object",
         "description": "Deprecated: No longer required.",
         "properties": {
@@ -866,6 +866,6 @@
   ],
   "externalDocs": {
     "description": "Topaz Authorizer API Reference.",
-    "url": "https://github.com/aserto-dev/go-authorizer/blob/main/html/index.html"
+    "url": "https://github.com/aserto-dev/topaz/blob/main/html/index.html"
   }
 }

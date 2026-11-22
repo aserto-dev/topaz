@@ -19,7 +19,7 @@ option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_document) = {
     contact: {
       name: "Topaz Authorization Project"
       url: "https://github.com/aserto-dev/topaz"
-      email: "support@aserto.com"
+      email: "support@topaz.sh"
     }
     license: {
       name: "Apache 2.0 License"
@@ -215,7 +215,7 @@ message GetPolicyRequest {
     (google.api.field_behavior) = OPTIONAL,
     deprecated = false
   ];
-  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 3 [
+  optional authorizer.v2.api.PolicyInstance policy_instance = 3 [
     json_name = "policy_instance",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = true
@@ -223,7 +223,7 @@ message GetPolicyRequest {
 }
 
 message GetPolicyResponse {
-  aserto.authorizer.v2.api.Module result = 1 [
+  authorizer.v2.api.Module result = 1 [
     json_name = "result",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -236,7 +236,7 @@ message ListPoliciesRequest {
     (google.api.field_behavior) = OPTIONAL,
     deprecated = false
   ];
-  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 2 [
+  optional authorizer.v2.api.PolicyInstance policy_instance = 2 [
     json_name = "policy_instance",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = true
@@ -244,7 +244,7 @@ message ListPoliciesRequest {
 }
 
 message ListPoliciesResponse {
-  repeated aserto.authorizer.v2.api.Module result = 1 [
+  repeated authorizer.v2.api.Module result = 1 [
     json_name = "result",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -253,13 +253,13 @@ message ListPoliciesResponse {
 
 message DecisionTreeRequest {
   // policy context
-  aserto.authorizer.v2.api.PolicyContext policy_context = 1 [
+  authorizer.v2.api.PolicyContext policy_context = 1 [
     json_name = "policy_context",
     (google.api.field_behavior) = REQUIRED,
     deprecated = false
   ];
   // identity context
-  aserto.authorizer.v2.api.IdentityContext identity_context = 2 [
+  authorizer.v2.api.IdentityContext identity_context = 2 [
     json_name = "identity_context",
     (google.api.field_behavior) = REQUIRED,
     deprecated = false
@@ -277,7 +277,7 @@ message DecisionTreeRequest {
     deprecated = false
   ];
   // policy instance
-  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 5 [
+  optional authorizer.v2.api.PolicyInstance policy_instance = 5 [
     json_name = "policy_instance",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = true
@@ -319,13 +319,13 @@ message DecisionTreeResponse {
 
 message IsRequest {
   // policy context
-  aserto.authorizer.v2.api.PolicyContext policy_context = 1 [
+  authorizer.v2.api.PolicyContext policy_context = 1 [
     json_name = "policy_context",
     (google.api.field_behavior) = REQUIRED,
     deprecated = false
   ];
   // identity context
-  aserto.authorizer.v2.api.IdentityContext identity_context = 2 [
+  authorizer.v2.api.IdentityContext identity_context = 2 [
     json_name = "identity_context",
     (google.api.field_behavior) = REQUIRED,
     deprecated = false
@@ -337,7 +337,7 @@ message IsRequest {
     deprecated = false
   ];
   // policy instance
-  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 4 [
+  optional authorizer.v2.api.PolicyInstance policy_instance = 4 [
     json_name = "policy_instance",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = true
@@ -415,13 +415,13 @@ message QueryRequest {
     deprecated = false
   ];
   // policy context
-  optional aserto.authorizer.v2.api.PolicyContext policy_context = 4 [
+  optional authorizer.v2.api.PolicyContext policy_context = 4 [
     json_name = "policy_context",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = false
   ];
   // identity context
-  optional aserto.authorizer.v2.api.IdentityContext identity_context = 5 [
+  optional authorizer.v2.api.IdentityContext identity_context = 5 [
     json_name = "identity_context",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = false
@@ -433,7 +433,7 @@ message QueryRequest {
     deprecated = false
   ];
   // policy instance
-  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 7 [
+  optional authorizer.v2.api.PolicyInstance policy_instance = 7 [
     json_name = "policy_instance",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = true
@@ -499,13 +499,13 @@ message CompileRequest {
     deprecated = false
   ];
   // policy context
-  optional aserto.authorizer.v2.api.PolicyContext policy_context = 6 [
+  optional authorizer.v2.api.PolicyContext policy_context = 6 [
     json_name = "policy_context",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = false
   ];
   // identity context
-  optional aserto.authorizer.v2.api.IdentityContext identity_context = 7 [
+  optional authorizer.v2.api.IdentityContext identity_context = 7 [
     json_name = "identity_context",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = false
@@ -517,7 +517,7 @@ message CompileRequest {
     deprecated = false
   ];
   // policy instance
-  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 9 [
+  optional authorizer.v2.api.PolicyInstance policy_instance = 9 [
     json_name = "policy_instance",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = true

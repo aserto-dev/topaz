@@ -1,12 +1,11 @@
 syntax = "proto3";
 
-package aserto.authorizer.v2.api;
+package authorizer.v2.api;
 
 import "google/api/field_behavior.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Aserto.Authorizer.V2.API";
 option go_package = "github.com/aserto-dev/topaz/api/authorizer/v2/api;api";
 
 message IdentityContext {
@@ -111,7 +110,7 @@ message Decision {
 // information about a user on behalf of whom a decision was made
 message DecisionUser {
   // identity context used in the decision
-  aserto.authorizer.v2.api.IdentityContext context = 1 [
+  authorizer.v2.api.IdentityContext context = 1 [
     json_name = "context",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -133,7 +132,7 @@ message DecisionUser {
 // information about a policy used in a decision
 message DecisionPolicy {
   // policy context used in the decision
-  aserto.authorizer.v2.api.PolicyContext context = 1 [
+  authorizer.v2.api.PolicyContext context = 1 [
     json_name = "context",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -163,7 +162,7 @@ message DecisionPolicy {
     deprecated = false
   ];
   // // policy instance used in decision
-  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 6 [
+  optional authorizer.v2.api.PolicyInstance policy_instance = 6 [
     json_name = "policy_instance",
     (google.api.field_behavior) = REQUIRED,
     deprecated = true
