@@ -34,7 +34,7 @@ GOLANGCI-LINT_VER  := 2.15.0
 GORELEASER_VER     := 2.20.0
 SYFT_VER           := 1.13.0
 BUF_VER            := 1.75.0
-MERGE-JSON_VER     := 0.2.0
+MERGE-JSON_VER     := 0.2.1
 GOFUMPT_VER        := latest
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
@@ -311,9 +311,31 @@ ${EXT_TMP_DIR}:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@mkdir -p ${EXT_TMP_DIR}
 
-.PHONY: merge-json
+PROTOS := authorizer directory
+
+.PHONY: proto
+proto: proto-build merge-json
+
+proto-build:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@ROOT=$$PWD; \
+	for mod in $(PROTOS); do \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod $(NO_COLOR)"; \
+		cd $$ROOT/proto/$$mod; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod buf dep update$(NO_COLOR)"; \
+		${EXT_BIN_DIR}/buf dep update; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod buf lint $(NO_COLOR)"; \
+		${EXT_BIN_DIR}/buf lint; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod buf build --output ${TMP_BUF_DIR}/$$mod.openapi.bin$(NO_COLOR)"; \
+		${EXT_BIN_DIR}/buf build --output ${TMP_BUF_DIR}/$$mod.openapi.bin; \
+		echo -e "$(ATTN_COLOR)==> $@ $$mod buf generate ${TMP_BUF_DIR}/$$mod.openapi.bin$(NO_COLOR)"; \
+		${EXT_BIN_DIR}/buf generate ${TMP_BUF_DIR}/$$mod.openapi.bin; \
+	done
+
 merge-json:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/merge-json -output ./openapi/authorizer/authorizer.openapi.json \
+	.tmp/openapi/authorizer/v2/authorizer.openapi.json
 	@${EXT_BIN_DIR}/merge-json -output ./openapi/directory/directory.openapi.json \
 	.tmp/openapi/directory/v3/reader/reader.openapi.json \
 	.tmp/openapi/directory/v3/writer/writer.openapi.json \
