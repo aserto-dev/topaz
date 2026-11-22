@@ -1,10 +1,10 @@
 package cc
 
 import (
-	logger "github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/internal/certs"
 	opalogger "github.com/aserto-dev/topaz/internal/runtime/logger"
 	"github.com/aserto-dev/topaz/pkg/config"
+	"github.com/aserto-dev/topaz/pkg/logger"
 	"github.com/aserto-dev/topaz/topazd/cc/context"
 )
 

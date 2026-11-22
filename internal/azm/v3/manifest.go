@@ -3,8 +3,8 @@ package v3
 import (
 	"strconv"
 
-	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/internal/azm"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
 	"github.com/hashicorp/go-multierror"
 	"go.yaml.in/yaml/v4"
 )

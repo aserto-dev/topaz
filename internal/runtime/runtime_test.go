@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
 	runtime "github.com/aserto-dev/topaz/internal/runtime"
 	"github.com/aserto-dev/topaz/internal/runtime/testutil"
 	"github.com/aserto-dev/topaz/pkg/config"

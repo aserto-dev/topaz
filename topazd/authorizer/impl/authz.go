@@ -5,9 +5,9 @@ import (
 	goruntime "runtime"
 	"time"
 
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+	"github.com/aserto-dev/topaz/api/authorizer/v2"
 	"github.com/aserto-dev/topaz/internal/runtime"
+	"github.com/aserto-dev/topaz/pkg/authorizer/aerr"
 
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"

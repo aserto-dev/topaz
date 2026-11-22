@@ -1,0 +1,556 @@
+syntax = "proto3";
+
+package authorizer.v2;
+
+import "v2/api/api.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "protoc-gen-openapiv3/options/annotations.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/authorizer/v2;authorizer";
+option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_document) = {
+  info: {
+    title: "Topaz Authorizer Service"
+    // summary: ""
+    // description: ""
+    // terms_of_service: ""
+    contact: {
+      name: "Topaz Authorization Project"
+      url: "https://github.com/aserto-dev/topaz"
+      email: "support@aserto.com"
+    }
+    license: {
+      name: "Apache 2.0 License"
+      url: "https://github.com/aserto-dev/topaz/blob/main/LICENSE"
+    }
+    version: "3.4"
+    // extensions: {}
+  }
+
+  servers: [
+    {
+      url: "{{.Scheme}}://{{.Host}}"
+      description: "Topaz Authorizer service"
+    }
+  ]
+
+  tags: [
+    {name: "authorizer"},
+    {name: "policy"},
+    {name: "policies"},
+    {name: "get"},
+    {name: "list"},
+    {name: "is"},
+    {name: "query"},
+    {name: "compile"},
+    {name: "decisiontree"},
+    {name: "info"}
+  ]
+
+  external_docs: {
+    description: "Topaz Authorizer API Reference."
+    url: "https://github.com/aserto-dev/topaz/blob/main/html/index.html"
+  }
+
+  // extensions: {}
+};
+
+service Authorizer {
+  rpc DecisionTree(DecisionTreeRequest) returns (DecisionTreeResponse) {
+    option (google.api.http) = {
+      post: "/api/v2/authz/decisiontree"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "authorizer",
+        "decisiontree"
+      ]
+      summary: "Decision tree"
+      description: "Returns decision tree for given identity context."
+      // external_docs: {}
+      operation_id: "authorizer.decision_tree"
+      deprecated: true
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = true;
+  }
+
+  rpc Is(IsRequest) returns (IsResponse) {
+    option (google.api.http) = {
+      post: "/api/v2/authz/is"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "authorizer",
+        "is"
+      ]
+      summary: "Is (authorized)"
+      description: "Determines if identity context is authorized to access the resource guarded by the given policy."
+      // external_docs: {}
+      operation_id: "authorizer.is"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  rpc Query(QueryRequest) returns (QueryResponse) {
+    option (google.api.http) = {
+      post: "/api/v2/authz/query"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "authorizer",
+        "query"
+      ]
+      summary: "Query"
+      description: "Executes a rego query on the loaded policy runtime."
+      // external_docs: {}
+      operation_id: "authorizer.query"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  rpc Compile(CompileRequest) returns (CompileResponse) {
+    option (google.api.http) = {
+      post: "/api/v2/authz/compile"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "authorizer",
+        "compile"
+      ]
+      summary: "Compile"
+      description: "Executes a partial query on the loaded policy runtime."
+      // external_docs: {}
+      operation_id: "authorizer.compile"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse) {
+    option (google.api.http) = {get: "/api/v2/policies"};
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "policy",
+        "list"
+      ]
+      summary: "List Policies"
+      description: "Lists the policy modules for the policy bundle."
+      // external_docs: {}
+      operation_id: "policies.list"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  rpc GetPolicy(GetPolicyRequest) returns (GetPolicyResponse) {
+    option (google.api.http) = {get: "/api/v2/policies/{id=*/**}"};
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "policy",
+        "get"
+      ]
+      summary: "Get Policy"
+      description: "Gets the policy modules for the given module Id."
+      operation_id: "policies.get"
+      // external_docs: {}
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  rpc Info(InfoRequest) returns (InfoResponse) {
+    option (google.api.http) = {get: "/api/v2/info"};
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: ["info"]
+      summary: "Info"
+      description: "Return version information."
+      // external_docs: {}
+      operation_id: "info.get"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+}
+
+message InfoRequest {}
+
+message InfoResponse {
+  string version = 1;
+  string commit = 2;
+  string date = 3;
+  string os = 4;
+  string arch = 5;
+}
+
+message GetPolicyRequest {
+  string id = 1 [
+    json_name = "id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  google.protobuf.FieldMask field_mask = 2 [
+    json_name = "field_mask",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 3 [
+    json_name = "policy_instance",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = true
+  ];
+}
+
+message GetPolicyResponse {
+  aserto.authorizer.v2.api.Module result = 1 [
+    json_name = "result",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message ListPoliciesRequest {
+  google.protobuf.FieldMask field_mask = 1 [
+    json_name = "field_mask",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 2 [
+    json_name = "policy_instance",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = true
+  ];
+}
+
+message ListPoliciesResponse {
+  repeated aserto.authorizer.v2.api.Module result = 1 [
+    json_name = "result",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message DecisionTreeRequest {
+  // policy context
+  aserto.authorizer.v2.api.PolicyContext policy_context = 1 [
+    json_name = "policy_context",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // identity context
+  aserto.authorizer.v2.api.IdentityContext identity_context = 2 [
+    json_name = "identity_context",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // decision tree options
+  DecisionTreeOptions options = 3 [
+    json_name = "options",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // resource context
+  google.protobuf.Struct resource_context = 4 [
+    json_name = "resource_context",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // policy instance
+  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 5 [
+    json_name = "policy_instance",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = true
+  ];
+}
+
+enum PathSeparator {
+  PATH_SEPARATOR_UNKNOWN = 0; // Value not set.
+  PATH_SEPARATOR_DOT = 1; // Dot "." path separator
+  PATH_SEPARATOR_SLASH = 2; // Slash "/" path separator
+}
+
+message DecisionTreeOptions {
+  reserved 2; // removed "grouping"
+
+  PathSeparator path_separator = 1 [
+    json_name = "path_separator",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message DecisionTreeResponse {
+  reserved 2; // removed "revision"
+
+  // path root
+  string path_root = 1 [
+    json_name = "path_root",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // path
+  google.protobuf.Struct path = 3 [
+    json_name = "path",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message IsRequest {
+  // policy context
+  aserto.authorizer.v2.api.PolicyContext policy_context = 1 [
+    json_name = "policy_context",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // identity context
+  aserto.authorizer.v2.api.IdentityContext identity_context = 2 [
+    json_name = "identity_context",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // resource context
+  google.protobuf.Struct resource_context = 3 [
+    json_name = "resource_context",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // policy instance
+  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 4 [
+    json_name = "policy_instance",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = true
+  ];
+}
+
+message Decision {
+  // decision
+  string decision = 1 [
+    json_name = "decision",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // is (decision outcome)
+  bool is = 2 [
+    json_name = "ise",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message IsResponse {
+  // decisions
+  repeated Decision decisions = 1 [
+    json_name = "decisions",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message QueryOptions {
+  // metrics (default false)
+  bool metrics = 1 [
+    json_name = "metrics",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // instrument (default false)
+  bool instrument = 2 [
+    json_name = "instrument",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ]; // default false
+  // trace level (default ExplainOffV1)
+  TraceLevel trace = 3 [
+    json_name = "trace",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // trace summary (default false)
+  bool trace_summary = 4 [
+    json_name = "trace_summary",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message QueryRequest {
+  // query
+  string query = 1 [
+    json_name = "query",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // query input block
+  string input = 2 [
+    json_name = "input",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // query options
+  optional QueryOptions options = 3 [
+    json_name = "options",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // policy context
+  optional aserto.authorizer.v2.api.PolicyContext policy_context = 4 [
+    json_name = "policy_context",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // identity context
+  optional aserto.authorizer.v2.api.IdentityContext identity_context = 5 [
+    json_name = "identity_context",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // resource context
+  optional google.protobuf.Struct resource_context = 6 [
+    json_name = "resource_context",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // policy instance
+  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 7 [
+    json_name = "policy_instance",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = true
+  ];
+}
+
+message QueryResponse {
+  // query response
+  google.protobuf.Struct response = 1 [
+    json_name = "response",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // metrics
+  google.protobuf.Struct metrics = 2 [
+    json_name = "metrics",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // trace
+  repeated google.protobuf.Struct trace = 3 [
+    json_name = "trace",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // trace summary
+  repeated string trace_summary = 4 [
+    json_name = "trace_summary",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message CompileRequest {
+  // query
+  string query = 1 [
+    json_name = "query",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // input block
+  string input = 2 [
+    json_name = "input",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // unknowns
+  repeated string unknowns = 3 [
+    json_name = "unknowns",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // disable inlining
+  repeated string disable_inlining = 4 [
+    json_name = "disable_inlining",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // query options
+  optional QueryOptions options = 5 [
+    json_name = "options",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // policy context
+  optional aserto.authorizer.v2.api.PolicyContext policy_context = 6 [
+    json_name = "policy_context",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // identity context
+  optional aserto.authorizer.v2.api.IdentityContext identity_context = 7 [
+    json_name = "identity_context",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // resource context
+  optional google.protobuf.Struct resource_context = 8 [
+    json_name = "resource_context",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // policy instance
+  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 9 [
+    json_name = "policy_instance",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = true
+  ];
+}
+
+message CompileResponse {
+  google.protobuf.Struct result = 1 [
+    json_name = "result",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  google.protobuf.Struct metrics = 2 [
+    json_name = "metrics",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  repeated google.protobuf.Struct trace = 3 [
+    json_name = "trace",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  repeated string trace_summary = 4 [
+    json_name = "trace_summary",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+enum TraceLevel {
+  TRACE_LEVEL_UNKNOWN = 0; // Value not set.
+  TRACE_LEVEL_OFF = 1; // ExplainOffV1   ExplainModeV1 = "off"
+  TRACE_LEVEL_FULL = 2; // ExplainFullV1  ExplainModeV1 = "full"
+  TRACE_LEVEL_NOTES = 3; // ExplainNotesV1 ExplainModeV1 = "notes"
+  TRACE_LEVEL_FAILS = 4; // ExplainFailsV1 ExplainModeV1 = "fails"
+}

@@ -4,9 +4,9 @@ import (
 	"context"
 	"os"
 
-	"github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	"github.com/aserto-dev/topaz/api/directory/v3/common"
+	"github.com/aserto-dev/topaz/api/directory/v3/reader"
+	"github.com/aserto-dev/topaz/api/directory/v3/writer"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/jsonx"

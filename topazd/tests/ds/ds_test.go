@@ -10,8 +10,8 @@ import (
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/x"
 
-	client "github.com/aserto-dev/go-aserto"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	client "github.com/aserto-dev/topaz/api/client"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
 	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"
 	tc "github.com/aserto-dev/topaz/topazd/tests/common"
 

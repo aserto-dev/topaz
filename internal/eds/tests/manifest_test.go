@@ -11,12 +11,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
-	"github.com/aserto-dev/go-directory/pkg/pb"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsm "github.com/aserto-dev/topaz/api/directory/v3/model"
+	dsw "github.com/aserto-dev/topaz/api/directory/v3/writer"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/server"
 	"github.com/aserto-dev/topaz/internal/fs"
+	"github.com/aserto-dev/topaz/pkg/directory/pb"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/samber/lo"

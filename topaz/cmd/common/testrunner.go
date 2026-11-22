@@ -9,9 +9,9 @@ import (
 	"os"
 	"time"
 
-	cerr "github.com/aserto-dev/errors"
-	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	az2 "github.com/aserto-dev/topaz/api/authorizer/v2"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
+	cerr "github.com/aserto-dev/topaz/pkg/errors"
 	"github.com/aserto-dev/topaz/topaz/cc"
 	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"

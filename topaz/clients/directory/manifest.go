@@ -6,7 +6,7 @@ import (
 	"errors"
 	"io"
 
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsm "github.com/aserto-dev/topaz/api/directory/v3/model"
 
 	"google.golang.org/protobuf/types/known/emptypb"
 )

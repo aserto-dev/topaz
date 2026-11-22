@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	authz "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	azOpenAPI "github.com/aserto-dev/go-authorizer/openapi"
+	authz "github.com/aserto-dev/topaz/api/authorizer/v2"
+	azOpenAPI "github.com/aserto-dev/topaz/openapi/authorizer"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/impl"
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"

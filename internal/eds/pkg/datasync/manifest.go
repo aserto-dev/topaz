@@ -8,12 +8,12 @@ import (
 	"strconv"
 	"time"
 
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
-	"github.com/aserto-dev/go-directory/pkg/validator"
+	dsm "github.com/aserto-dev/topaz/api/directory/v3/model"
 	"github.com/aserto-dev/topaz/internal/azm/model"
 	manifest "github.com/aserto-dev/topaz/internal/azm/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
+	"github.com/aserto-dev/topaz/pkg/directory/validator"
 
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"

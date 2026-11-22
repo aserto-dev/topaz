@@ -3,13 +3,13 @@ package v3
 import (
 	"context"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/validator"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/x"
 	"github.com/aserto-dev/topaz/internal/headers"
+	"github.com/aserto-dev/topaz/pkg/directory/validator"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"

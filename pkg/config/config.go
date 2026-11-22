@@ -5,11 +5,11 @@ import (
 	"os"
 	"time"
 
-	client "github.com/aserto-dev/go-aserto"
-	"github.com/aserto-dev/logger"
+	client "github.com/aserto-dev/topaz/api/client"
 	"github.com/aserto-dev/topaz/internal/certs"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	"github.com/aserto-dev/topaz/internal/runtime"
+	"github.com/aserto-dev/topaz/pkg/logger"
 	"github.com/aserto-dev/topaz/topazd/debug"
 	"github.com/aserto-dev/topaz/topazd/service/builder"
 	"github.com/pkg/errors"

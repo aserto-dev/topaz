@@ -1,0 +1,221 @@
+syntax = "proto3";
+
+package aserto.authorizer.v2.api;
+
+import "google/api/field_behavior.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Aserto.Authorizer.V2.API";
+option go_package = "github.com/aserto-dev/topaz/api/authorizer/v2/api;api";
+
+message IdentityContext {
+  // identity
+  string identity = 1 [
+    json_name = "identity",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // identity type
+  IdentityType type = 2 [
+    json_name = "type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+}
+
+// Identity types, describes the payload type of the identity field inside the IdentityContext message.
+enum IdentityType {
+  // Unknown, value not set, requests will fail with identity type not set error.
+  IDENTITY_TYPE_UNKNOWN = 0;
+  // None, no explicit identity context set, equals anonymous.
+  IDENTITY_TYPE_NONE = 1;
+  // Sub(ject), identity field contains an oAUTH subject.
+  IDENTITY_TYPE_SUB = 2;
+  // JWT, identity field contains a JWT access token.
+  IDENTITY_TYPE_JWT = 3;
+  // Manual, propagates thw identity field as-is, without validation, into the input object.
+  IDENTITY_TYPE_MANUAL = 4;
+}
+
+message PolicyContext {
+  // policy path aka package name
+  string path = 1 [
+    json_name = "path",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // decisions list (1..N) of policy decisions (aka rules)
+  repeated string decisions = 2 [
+    json_name = "decisions",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+}
+
+// represents a decision that an authorizer performed in the past
+message Decision {
+  reserved 9;
+  reserved "tenant_id";
+
+  // id, unique id, replay a decision starting with this, also useful to de-dup
+  string id = 1 [
+    json_name = "id",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // timestamp, UTC time when the decision was made
+  google.protobuf.Timestamp timestamp = 2 [
+    json_name = "timestamp",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // path, policy path used in decision
+  string path = 3 [
+    json_name = "path",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // user, info about user for whom the decision as made
+  DecisionUser user = 4 [
+    json_name = "user",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // policy, info about policy used for the decision
+  DecisionPolicy policy = 5 [
+    json_name = "policy",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // outcomes of the decisions specified in the policy context
+  map<string, bool> outcomes = 6 [
+    json_name = "outcomes",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // resource context used by the decision
+  google.protobuf.Struct resource = 7 [
+    json_name = "resource",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // annotations that may be added to a decision
+  map<string, string> annotations = 8 [
+    json_name = "annotations",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+// information about a user on behalf of whom a decision was made
+message DecisionUser {
+  // identity context used in the decision
+  aserto.authorizer.v2.api.IdentityContext context = 1 [
+    json_name = "context",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // id of the user the identity resolved to
+  string id = 2 [
+    json_name = "id",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // convenience human-readable identifier
+  string email = 3 [
+    json_name = "email",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+// information about a policy used in a decision
+message DecisionPolicy {
+  // policy context used in the decision
+  aserto.authorizer.v2.api.PolicyContext context = 1 [
+    json_name = "context",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // registry service where policy was retrieved from (e.g. ghcr.io)
+  string registry_service = 2 [
+    json_name = "registry_service",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // registry image of the policy in the registry, including org (e.g. acmecorp/peoplefinder-abac)
+  string registry_image = 3 [
+    json_name = "registry_image",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // registry tag of the policy image (e.g. 0.8.2 or latest)
+  string registry_tag = 4 [
+    json_name = "registry_tag",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // registry digest of the policy image
+  string registry_digest = 5 [
+    json_name = "registry_digest",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // // policy instance used in decision
+  optional aserto.authorizer.v2.api.PolicyInstance policy_instance = 6 [
+    json_name = "policy_instance",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = true
+  ];
+}
+
+// module
+message Module {
+  // id
+  optional string id = 1 [
+    json_name = "id",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // raw
+  optional string raw = 2 [
+    json_name = "raw",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // package path
+  optional string package_path = 3 [
+    json_name = "package_path",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // ast
+  optional google.protobuf.Value ast = 4 [
+    json_name = "ast",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // package root
+  optional string package_root = 5 [
+    json_name = "package_root",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+// Deprecated: No longer required.
+message PolicyInstance {
+  // policy name
+  string name = 1 [
+    json_name = "name",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = true
+  ];
+  // label identifying the instance of the policy
+  string instance_label = 2 [
+    json_name = "instance_label",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = true
+  ];
+}

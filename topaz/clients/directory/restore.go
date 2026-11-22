@@ -13,8 +13,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsi "github.com/aserto-dev/topaz/api/directory/v3/importer"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/js"
 	"google.golang.org/grpc/codes"

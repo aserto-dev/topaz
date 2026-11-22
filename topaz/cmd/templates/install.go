@@ -8,7 +8,7 @@ import (
 	"path"
 	"path/filepath"
 
-	client "github.com/aserto-dev/go-aserto"
+	client "github.com/aserto-dev/topaz/api/client"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topaz/cc"
