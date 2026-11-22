@@ -23,22 +23,29 @@ EXT_DIR            := ${PWD}/.ext
 EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
+TMP_DIR            := ${PWD}/.tmp
+TMP_BUF_DIR        := ${TMP_DIR}/buf
+TMP_OAI_DIR        := ${TMP_DIR}/openapi
+
 GO_VER             := 1.27
 SVU_VER            := 3.4.4
 GOTESTSUM_VER      := 1.13.0
 GOLANGCI-LINT_VER  := 2.15.0
 GORELEASER_VER     := 2.20.0
 SYFT_VER           := 1.13.0
+BUF_VER            := 1.75.0
+MERGE-JSON_VER     := 0.2.0
 GOFUMPT_VER        := latest
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
+NEXT_TAG           := $$(${EXT_BIN_DIR}/svu patch)
 
 .DEFAULT_GOAL      := build
 
 export TESTCONTAINERS_RYUK_DISABLED=$(shell docker context inspect --format '{{.Endpoints.docker.Host}}' 2>/dev/null | grep -q ".colima" && echo "true" || echo "false")
 
 .PHONY: deps
-deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft install-air install-templ install-gofumpt
+deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft install-air install-templ install-gofumpt install-buf install-merge-json
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 
 .PHONY: gover
@@ -203,17 +210,25 @@ publish-winget:
 .PHONY: info
 info:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@echo "GOOS:        ${GOOS}"
-	@echo "GOARCH:      ${GOARCH}"
-	@echo "EXT_DIR:     ${EXT_DIR}"
-	@echo "EXT_BIN_DIR: ${EXT_BIN_DIR}"
-	@echo "EXT_TMP_DIR: ${EXT_TMP_DIR}"
-	@echo "RELEASE_TAG: ${RELEASE_TAG}"
-	@echo "TOPAZ_DIST:  ${TOPAZ_DIST}"
-	@echo "REGISTRY:    ${REGISTRY}"
-	@echo "ORG:         ${ORG}"
-	@echo "REPO:        ${REPO}"
-	@echo "COLIMA:      ${IS_COLIMA}"
+	@echo "REGISTRY:      ${REGISTRY}"
+	@echo "ORG:           ${ORG}"
+	@echo "REPO:          ${REPO}"
+	@echo "GOOS:          ${GOOS}"
+	@echo "GOARCH:        ${GOARCH}"
+	@echo "EXT_BIN_DIR:   ${EXT_BIN_DIR}"
+	@echo "EXT_TMP_DIR:   ${EXT_TMP_DIR}"
+	@echo "EXT_BIN_DIR:   ${EXT_BIN_DIR}"
+	@echo "TMP_BUF_DIR:   ${TMP_BUF_DIR}"
+	@echo "TMP_OAI_DIR:   ${TMP_OAI_DIR}"
+	@echo "TOPAZ_DIST:    ${TOPAZ_DIST}"
+	@echo "RELEASE_TAG:   ${RELEASE_TAG}"
+	@echo "NEXT_TAG:      ${NEXT_TAG}"
+
+.PHONY: install-buf
+install-buf: ${EXT_BIN_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	GOBIN=${EXT_BIN_DIR} go install github.com/bufbuild/buf/cmd/buf@v${BUF_VER}
+	@${EXT_BIN_DIR}/buf --version
 
 .PHONY: install-svu
 install-svu: ${EXT_BIN_DIR} ${EXT_TMP_DIR}
@@ -271,6 +286,11 @@ install-gofumpt: ${EXT_BIN_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@GOBIN=${EXT_BIN_DIR} go install mvdan.cc/gofumpt@${GOFUMPT_VER}
 
+.PHONY: install-merge-json
+install-merge-json: ${EXT_BIN_DIR}
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@GOBIN=${EXT_BIN_DIR} go install github.com/topaz-io/merge-json@v${MERGE-JSON_VER}
+
 .PHONY: clean
 clean:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
@@ -290,3 +310,11 @@ ${EXT_BIN_DIR}:
 ${EXT_TMP_DIR}:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@mkdir -p ${EXT_TMP_DIR}
+
+.PHONY: merge-json
+merge-json:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/merge-json -output ./openapi/directory/directory.openapi.json \
+	.tmp/openapi/directory/v3/reader/reader.openapi.json \
+	.tmp/openapi/directory/v3/writer/writer.openapi.json \
+	.tmp/openapi/directory/v3/model/model.openapi.json
