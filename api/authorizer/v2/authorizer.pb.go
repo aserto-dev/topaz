@@ -532,7 +532,7 @@ func (x *DecisionTreeRequest) GetPolicyInstance() *api.PolicyInstance {
 
 type DecisionTreeOptions struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PathSeparator PathSeparator          `protobuf:"varint,1,opt,name=path_separator,proto3,enum=authorizer.v2.PathSeparator" json:"path_separator,omitempty"`
+	PathSeparator PathSeparator          `protobuf:"varint,1,opt,name=path_separator,proto3,enum=aserto.authorizer.v2.PathSeparator" json:"path_separator,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -809,7 +809,7 @@ type QueryOptions struct {
 	// instrument (default false)
 	Instrument bool `protobuf:"varint,2,opt,name=instrument,proto3" json:"instrument,omitempty"` // default false
 	// trace level (default ExplainOffV1)
-	Trace TraceLevel `protobuf:"varint,3,opt,name=trace,proto3,enum=authorizer.v2.TraceLevel" json:"trace,omitempty"`
+	Trace TraceLevel `protobuf:"varint,3,opt,name=trace,proto3,enum=aserto.authorizer.v2.TraceLevel" json:"trace,omitempty"`
 	// trace summary (default false)
 	TraceSummary  bool `protobuf:"varint,4,opt,name=trace_summary,proto3" json:"trace_summary,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1240,70 +1240,70 @@ var File_v2_authorizer_proto protoreflect.FileDescriptor
 
 const file_v2_authorizer_proto_rawDesc = "" +
 	"\n" +
-	"\x13v2/authorizer.proto\x12\rauthorizer.v2\x1a\x10v2/api/api.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a google/protobuf/field_mask.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a.protoc-gen-openapiv3/options/annotations.proto\"\r\n" +
+	"\x13v2/authorizer.proto\x12\x14aserto.authorizer.v2\x1a\x10v2/api/api.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a google/protobuf/field_mask.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a.protoc-gen-openapiv3/options/annotations.proto\"\r\n" +
 	"\vInfoRequest\"x\n" +
 	"\fInfoResponse\x12\x18\n" +
 	"\aversion\x18\x01 \x01(\tR\aversion\x12\x16\n" +
 	"\x06commit\x18\x02 \x01(\tR\x06commit\x12\x12\n" +
 	"\x04date\x18\x03 \x01(\tR\x04date\x12\x0e\n" +
 	"\x02os\x18\x04 \x01(\tR\x02os\x12\x12\n" +
-	"\x04arch\x18\x05 \x01(\tR\x04arch\"\xdc\x01\n" +
+	"\x04arch\x18\x05 \x01(\tR\x04arch\"\xe3\x01\n" +
 	"\x10GetPolicyRequest\x12\x16\n" +
 	"\x02id\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\x02id\x12B\n" +
 	"\n" +
 	"field_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskB\x06\xe2A\x01\x01\x18\x00R\n" +
-	"field_mask\x12X\n" +
-	"\x0fpolicy_instance\x18\x03 \x01(\v2!.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x00R\x0fpolicy_instance\x88\x01\x01B\x12\n" +
-	"\x10_policy_instance\"N\n" +
-	"\x11GetPolicyResponse\x129\n" +
-	"\x06result\x18\x01 \x01(\v2\x19.authorizer.v2.api.ModuleB\x06\xe2A\x01\x03\x18\x00R\x06result\"\xc7\x01\n" +
+	"field_mask\x12_\n" +
+	"\x0fpolicy_instance\x18\x03 \x01(\v2(.aserto.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x00R\x0fpolicy_instance\x88\x01\x01B\x12\n" +
+	"\x10_policy_instance\"U\n" +
+	"\x11GetPolicyResponse\x12@\n" +
+	"\x06result\x18\x01 \x01(\v2 .aserto.authorizer.v2.api.ModuleB\x06\xe2A\x01\x03\x18\x00R\x06result\"\xce\x01\n" +
 	"\x13ListPoliciesRequest\x12B\n" +
 	"\n" +
 	"field_mask\x18\x01 \x01(\v2\x1a.google.protobuf.FieldMaskB\x06\xe2A\x01\x01\x18\x00R\n" +
-	"field_mask\x12X\n" +
-	"\x0fpolicy_instance\x18\x02 \x01(\v2!.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x00R\x0fpolicy_instance\x88\x01\x01B\x12\n" +
-	"\x10_policy_instance\"Q\n" +
-	"\x14ListPoliciesResponse\x129\n" +
-	"\x06result\x18\x01 \x03(\v2\x19.authorizer.v2.api.ModuleB\x06\xe2A\x01\x03\x18\x00R\x06result\"\xc0\x03\n" +
-	"\x13DecisionTreeRequest\x12P\n" +
-	"\x0epolicy_context\x18\x01 \x01(\v2 .authorizer.v2.api.PolicyContextB\x06\xe2A\x01\x02\x18\x00R\x0epolicy_context\x12V\n" +
-	"\x10identity_context\x18\x02 \x01(\v2\".authorizer.v2.api.IdentityContextB\x06\xe2A\x01\x02\x18\x00R\x10identity_context\x12D\n" +
-	"\aoptions\x18\x03 \x01(\v2\".authorizer.v2.DecisionTreeOptionsB\x06\xe2A\x01\x01\x18\x00R\aoptions\x12K\n" +
-	"\x10resource_context\x18\x04 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x01\x18\x00R\x10resource_context\x12X\n" +
-	"\x0fpolicy_instance\x18\x05 \x01(\v2!.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x00R\x0fpolicy_instance\x88\x01\x01B\x12\n" +
-	"\x10_policy_instance\"i\n" +
-	"\x13DecisionTreeOptions\x12L\n" +
-	"\x0epath_separator\x18\x01 \x01(\x0e2\x1c.authorizer.v2.PathSeparatorB\x06\xe2A\x01\x01\x18\x00R\x0epath_separatorJ\x04\b\x02\x10\x03\"w\n" +
+	"field_mask\x12_\n" +
+	"\x0fpolicy_instance\x18\x02 \x01(\v2(.aserto.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x00R\x0fpolicy_instance\x88\x01\x01B\x12\n" +
+	"\x10_policy_instance\"X\n" +
+	"\x14ListPoliciesResponse\x12@\n" +
+	"\x06result\x18\x01 \x03(\v2 .aserto.authorizer.v2.api.ModuleB\x06\xe2A\x01\x03\x18\x00R\x06result\"\xdc\x03\n" +
+	"\x13DecisionTreeRequest\x12W\n" +
+	"\x0epolicy_context\x18\x01 \x01(\v2'.aserto.authorizer.v2.api.PolicyContextB\x06\xe2A\x01\x02\x18\x00R\x0epolicy_context\x12]\n" +
+	"\x10identity_context\x18\x02 \x01(\v2).aserto.authorizer.v2.api.IdentityContextB\x06\xe2A\x01\x02\x18\x00R\x10identity_context\x12K\n" +
+	"\aoptions\x18\x03 \x01(\v2).aserto.authorizer.v2.DecisionTreeOptionsB\x06\xe2A\x01\x01\x18\x00R\aoptions\x12K\n" +
+	"\x10resource_context\x18\x04 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x01\x18\x00R\x10resource_context\x12_\n" +
+	"\x0fpolicy_instance\x18\x05 \x01(\v2(.aserto.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x00R\x0fpolicy_instance\x88\x01\x01B\x12\n" +
+	"\x10_policy_instance\"p\n" +
+	"\x13DecisionTreeOptions\x12S\n" +
+	"\x0epath_separator\x18\x01 \x01(\x0e2#.aserto.authorizer.v2.PathSeparatorB\x06\xe2A\x01\x01\x18\x00R\x0epath_separatorJ\x04\b\x02\x10\x03\"w\n" +
 	"\x14DecisionTreeResponse\x12$\n" +
 	"\tpath_root\x18\x01 \x01(\tB\x06\xe2A\x01\x03\x18\x00R\tpath_root\x123\n" +
-	"\x04path\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x03\x18\x00R\x04pathJ\x04\b\x02\x10\x03\"\xf0\x02\n" +
-	"\tIsRequest\x12P\n" +
-	"\x0epolicy_context\x18\x01 \x01(\v2 .authorizer.v2.api.PolicyContextB\x06\xe2A\x01\x02\x18\x00R\x0epolicy_context\x12V\n" +
-	"\x10identity_context\x18\x02 \x01(\v2\".authorizer.v2.api.IdentityContextB\x06\xe2A\x01\x02\x18\x00R\x10identity_context\x12K\n" +
-	"\x10resource_context\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x01\x18\x00R\x10resource_context\x12X\n" +
-	"\x0fpolicy_instance\x18\x04 \x01(\v2!.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x00R\x0fpolicy_instance\x88\x01\x01B\x12\n" +
+	"\x04path\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x03\x18\x00R\x04pathJ\x04\b\x02\x10\x03\"\x85\x03\n" +
+	"\tIsRequest\x12W\n" +
+	"\x0epolicy_context\x18\x01 \x01(\v2'.aserto.authorizer.v2.api.PolicyContextB\x06\xe2A\x01\x02\x18\x00R\x0epolicy_context\x12]\n" +
+	"\x10identity_context\x18\x02 \x01(\v2).aserto.authorizer.v2.api.IdentityContextB\x06\xe2A\x01\x02\x18\x00R\x10identity_context\x12K\n" +
+	"\x10resource_context\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x01\x18\x00R\x10resource_context\x12_\n" +
+	"\x0fpolicy_instance\x18\x04 \x01(\v2(.aserto.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x00R\x0fpolicy_instance\x88\x01\x01B\x12\n" +
 	"\x10_policy_instance\"G\n" +
 	"\bDecision\x12\"\n" +
 	"\bdecision\x18\x01 \x01(\tB\x06\xe2A\x01\x03\x18\x00R\bdecision\x12\x17\n" +
-	"\x02is\x18\x02 \x01(\bB\x06\xe2A\x01\x03\x18\x00R\x03ise\"K\n" +
+	"\x02is\x18\x02 \x01(\bB\x06\xe2A\x01\x03\x18\x00R\x03ise\"R\n" +
 	"\n" +
-	"IsResponse\x12=\n" +
-	"\tdecisions\x18\x01 \x03(\v2\x17.authorizer.v2.DecisionB\x06\xe2A\x01\x03\x18\x00R\tdecisions\"\xbf\x01\n" +
+	"IsResponse\x12D\n" +
+	"\tdecisions\x18\x01 \x03(\v2\x1e.aserto.authorizer.v2.DecisionB\x06\xe2A\x01\x03\x18\x00R\tdecisions\"\xc6\x01\n" +
 	"\fQueryOptions\x12 \n" +
 	"\ametrics\x18\x01 \x01(\bB\x06\xe2A\x01\x01\x18\x00R\ametrics\x12&\n" +
 	"\n" +
 	"instrument\x18\x02 \x01(\bB\x06\xe2A\x01\x01\x18\x00R\n" +
-	"instrument\x127\n" +
-	"\x05trace\x18\x03 \x01(\x0e2\x19.authorizer.v2.TraceLevelB\x06\xe2A\x01\x01\x18\x00R\x05trace\x12,\n" +
-	"\rtrace_summary\x18\x04 \x01(\bB\x06\xe2A\x01\x01\x18\x00R\rtrace_summary\"\xcb\x04\n" +
+	"instrument\x12>\n" +
+	"\x05trace\x18\x03 \x01(\x0e2 .aserto.authorizer.v2.TraceLevelB\x06\xe2A\x01\x01\x18\x00R\x05trace\x12,\n" +
+	"\rtrace_summary\x18\x04 \x01(\bB\x06\xe2A\x01\x01\x18\x00R\rtrace_summary\"\xe7\x04\n" +
 	"\fQueryRequest\x12\x1c\n" +
 	"\x05query\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\x05query\x12\x1c\n" +
-	"\x05input\x18\x02 \x01(\tB\x06\xe2A\x01\x01\x18\x00R\x05input\x12B\n" +
-	"\aoptions\x18\x03 \x01(\v2\x1b.authorizer.v2.QueryOptionsB\x06\xe2A\x01\x01\x18\x00H\x00R\aoptions\x88\x01\x01\x12U\n" +
-	"\x0epolicy_context\x18\x04 \x01(\v2 .authorizer.v2.api.PolicyContextB\x06\xe2A\x01\x01\x18\x00H\x01R\x0epolicy_context\x88\x01\x01\x12[\n" +
-	"\x10identity_context\x18\x05 \x01(\v2\".authorizer.v2.api.IdentityContextB\x06\xe2A\x01\x01\x18\x00H\x02R\x10identity_context\x88\x01\x01\x12P\n" +
-	"\x10resource_context\x18\x06 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x01\x18\x00H\x03R\x10resource_context\x88\x01\x01\x12X\n" +
-	"\x0fpolicy_instance\x18\a \x01(\v2!.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x04R\x0fpolicy_instance\x88\x01\x01B\n" +
+	"\x05input\x18\x02 \x01(\tB\x06\xe2A\x01\x01\x18\x00R\x05input\x12I\n" +
+	"\aoptions\x18\x03 \x01(\v2\".aserto.authorizer.v2.QueryOptionsB\x06\xe2A\x01\x01\x18\x00H\x00R\aoptions\x88\x01\x01\x12\\\n" +
+	"\x0epolicy_context\x18\x04 \x01(\v2'.aserto.authorizer.v2.api.PolicyContextB\x06\xe2A\x01\x01\x18\x00H\x01R\x0epolicy_context\x88\x01\x01\x12b\n" +
+	"\x10identity_context\x18\x05 \x01(\v2).aserto.authorizer.v2.api.IdentityContextB\x06\xe2A\x01\x01\x18\x00H\x02R\x10identity_context\x88\x01\x01\x12P\n" +
+	"\x10resource_context\x18\x06 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x01\x18\x00H\x03R\x10resource_context\x88\x01\x01\x12_\n" +
+	"\x0fpolicy_instance\x18\a \x01(\v2(.aserto.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x04R\x0fpolicy_instance\x88\x01\x01B\n" +
 	"\n" +
 	"\b_optionsB\x11\n" +
 	"\x0f_policy_contextB\x13\n" +
@@ -1314,17 +1314,17 @@ const file_v2_authorizer_proto_rawDesc = "" +
 	"\bresponse\x18\x01 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x03\x18\x00R\bresponse\x129\n" +
 	"\ametrics\x18\x02 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x03\x18\x00R\ametrics\x125\n" +
 	"\x05trace\x18\x03 \x03(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x03\x18\x00R\x05trace\x12,\n" +
-	"\rtrace_summary\x18\x04 \x03(\tB\x06\xe2A\x01\x03\x18\x00R\rtrace_summary\"\xa5\x05\n" +
+	"\rtrace_summary\x18\x04 \x03(\tB\x06\xe2A\x01\x03\x18\x00R\rtrace_summary\"\xc1\x05\n" +
 	"\x0eCompileRequest\x12\x1c\n" +
 	"\x05query\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\x05query\x12\x1c\n" +
 	"\x05input\x18\x02 \x01(\tB\x06\xe2A\x01\x01\x18\x00R\x05input\x12\"\n" +
 	"\bunknowns\x18\x03 \x03(\tB\x06\xe2A\x01\x01\x18\x00R\bunknowns\x122\n" +
-	"\x10disable_inlining\x18\x04 \x03(\tB\x06\xe2A\x01\x01\x18\x00R\x10disable_inlining\x12B\n" +
-	"\aoptions\x18\x05 \x01(\v2\x1b.authorizer.v2.QueryOptionsB\x06\xe2A\x01\x01\x18\x00H\x00R\aoptions\x88\x01\x01\x12U\n" +
-	"\x0epolicy_context\x18\x06 \x01(\v2 .authorizer.v2.api.PolicyContextB\x06\xe2A\x01\x01\x18\x00H\x01R\x0epolicy_context\x88\x01\x01\x12[\n" +
-	"\x10identity_context\x18\a \x01(\v2\".authorizer.v2.api.IdentityContextB\x06\xe2A\x01\x01\x18\x00H\x02R\x10identity_context\x88\x01\x01\x12P\n" +
-	"\x10resource_context\x18\b \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x01\x18\x00H\x03R\x10resource_context\x88\x01\x01\x12X\n" +
-	"\x0fpolicy_instance\x18\t \x01(\v2!.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x04R\x0fpolicy_instance\x88\x01\x01B\n" +
+	"\x10disable_inlining\x18\x04 \x03(\tB\x06\xe2A\x01\x01\x18\x00R\x10disable_inlining\x12I\n" +
+	"\aoptions\x18\x05 \x01(\v2\".aserto.authorizer.v2.QueryOptionsB\x06\xe2A\x01\x01\x18\x00H\x00R\aoptions\x88\x01\x01\x12\\\n" +
+	"\x0epolicy_context\x18\x06 \x01(\v2'.aserto.authorizer.v2.api.PolicyContextB\x06\xe2A\x01\x01\x18\x00H\x01R\x0epolicy_context\x88\x01\x01\x12b\n" +
+	"\x10identity_context\x18\a \x01(\v2).aserto.authorizer.v2.api.IdentityContextB\x06\xe2A\x01\x01\x18\x00H\x02R\x10identity_context\x88\x01\x01\x12P\n" +
+	"\x10resource_context\x18\b \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x01\x18\x00H\x03R\x10resource_context\x88\x01\x01\x12_\n" +
+	"\x0fpolicy_instance\x18\t \x01(\v2(.aserto.authorizer.v2.api.PolicyInstanceB\x06\xe2A\x01\x01\x18\x01H\x04R\x0fpolicy_instance\x88\x01\x01B\n" +
 	"\n" +
 	"\b_optionsB\x11\n" +
 	"\x0f_policy_contextB\x13\n" +
@@ -1346,33 +1346,33 @@ const file_v2_authorizer_proto_rawDesc = "" +
 	"\x0fTRACE_LEVEL_OFF\x10\x01\x12\x14\n" +
 	"\x10TRACE_LEVEL_FULL\x10\x02\x12\x15\n" +
 	"\x11TRACE_LEVEL_NOTES\x10\x03\x12\x15\n" +
-	"\x11TRACE_LEVEL_FAILS\x10\x042\xe7\v\n" +
+	"\x11TRACE_LEVEL_FAILS\x10\x042\xc9\f\n" +
 	"\n" +
-	"Authorizer\x12\xfd\x01\n" +
-	"\fDecisionTree\x12\".authorizer.v2.DecisionTreeRequest\x1a#.authorizer.v2.DecisionTreeResponse\"\xa3\x01\xfaPx\n" +
-	"\n" +
-	"authorizer\n" +
-	"\fdecisiontree\x12\rDecision tree\x1a1Returns decision tree for given identity context.*\x18authorizer.decision_tree0\x01\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v2/authz/decisiontree\x88\x02\x01\x12\xf0\x01\n" +
-	"\x02Is\x12\x18.authorizer.v2.IsRequest\x1a\x19.authorizer.v2.IsResponse\"\xb4\x01\xfaP\x92\x01\n" +
+	"Authorizer\x12\x8b\x02\n" +
+	"\fDecisionTree\x12).aserto.authorizer.v2.DecisionTreeRequest\x1a*.aserto.authorizer.v2.DecisionTreeResponse\"\xa3\x01\xfaPx\n" +
 	"\n" +
 	"authorizer\n" +
-	"\x02is\x12\x0fIs (authorized)\x1a`Determines if identity context is authorized to access the resource guarded by the given policy.*\rauthorizer.is\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/api/v2/authz/is\x88\x02\x00\x12\xca\x01\n" +
-	"\x05Query\x12\x1b.authorizer.v2.QueryRequest\x1a\x1c.authorizer.v2.QueryResponse\"\x85\x01\xfaPa\n" +
+	"\fdecisiontree\x12\rDecision tree\x1a1Returns decision tree for given identity context.*\x18authorizer.decision_tree0\x01\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v2/authz/decisiontree\x88\x02\x01\x12\xfe\x01\n" +
+	"\x02Is\x12\x1f.aserto.authorizer.v2.IsRequest\x1a .aserto.authorizer.v2.IsResponse\"\xb4\x01\xfaP\x92\x01\n" +
 	"\n" +
 	"authorizer\n" +
-	"\x05query\x12\x05Query\x1a3Executes a rego query on the loaded policy runtime.*\x10authorizer.query\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v2/authz/query\x88\x02\x00\x12\xdb\x01\n" +
-	"\aCompile\x12\x1d.authorizer.v2.CompileRequest\x1a\x1e.authorizer.v2.CompileResponse\"\x90\x01\xfaPj\n" +
+	"\x02is\x12\x0fIs (authorized)\x1a`Determines if identity context is authorized to access the resource guarded by the given policy.*\rauthorizer.is\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/api/v2/authz/is\x88\x02\x00\x12\xd8\x01\n" +
+	"\x05Query\x12\".aserto.authorizer.v2.QueryRequest\x1a#.aserto.authorizer.v2.QueryResponse\"\x85\x01\xfaPa\n" +
 	"\n" +
 	"authorizer\n" +
-	"\acompile\x12\aCompile\x1a6Executes a partial query on the loaded policy runtime.*\x12authorizer.compile\x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v2/authz/compile\x88\x02\x00\x12\xd4\x01\n" +
-	"\fListPolicies\x12\".authorizer.v2.ListPoliciesRequest\x1a#.authorizer.v2.ListPoliciesResponse\"{\xfaP]\n" +
+	"\x05query\x12\x05Query\x1a3Executes a rego query on the loaded policy runtime.*\x10authorizer.query\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v2/authz/query\x88\x02\x00\x12\xe9\x01\n" +
+	"\aCompile\x12$.aserto.authorizer.v2.CompileRequest\x1a%.aserto.authorizer.v2.CompileResponse\"\x90\x01\xfaPj\n" +
+	"\n" +
+	"authorizer\n" +
+	"\acompile\x12\aCompile\x1a6Executes a partial query on the loaded policy runtime.*\x12authorizer.compile\x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v2/authz/compile\x88\x02\x00\x12\xe2\x01\n" +
+	"\fListPolicies\x12).aserto.authorizer.v2.ListPoliciesRequest\x1a*.aserto.authorizer.v2.ListPoliciesResponse\"{\xfaP]\n" +
 	"\x06policy\n" +
-	"\x04list\x12\rList Policies\x1a/Lists the policy modules for the policy bundle.*\rpolicies.list\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v2/policies\x88\x02\x00\x12\xd2\x01\n" +
-	"\tGetPolicy\x12\x1f.authorizer.v2.GetPolicyRequest\x1a .authorizer.v2.GetPolicyResponse\"\x81\x01\xfaPY\n" +
+	"\x04list\x12\rList Policies\x1a/Lists the policy modules for the policy bundle.*\rpolicies.list\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v2/policies\x88\x02\x00\x12\xe0\x01\n" +
+	"\tGetPolicy\x12&.aserto.authorizer.v2.GetPolicyRequest\x1a'.aserto.authorizer.v2.GetPolicyResponse\"\x81\x01\xfaPY\n" +
 	"\x06policy\n" +
 	"\x03get\x12\n" +
-	"Get Policy\x1a0Gets the policy modules for the given module Id.*\fpolicies.get\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v2/policies/{id=*/**}\x88\x02\x00\x12\x8e\x01\n" +
-	"\x04Info\x12\x1a.authorizer.v2.InfoRequest\x1a\x1b.authorizer.v2.InfoResponse\"M\xfaP3\n" +
+	"Get Policy\x1a0Gets the policy modules for the given module Id.*\fpolicies.get\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v2/policies/{id=*/**}\x88\x02\x00\x12\x9c\x01\n" +
+	"\x04Info\x12!.aserto.authorizer.v2.InfoRequest\x1a\".aserto.authorizer.v2.InfoResponse\"M\xfaP3\n" +
 	"\x04info\x12\x04Info\x1a\x1bReturn version information.*\binfo.get\x82\xd3\xe4\x93\x02\x0e\x12\f/api/v2/info\x88\x02\x00B\xff\x03\xfaP\xc1\x03\n" +
 	"\xc2\x01\n" +
 	"\x18Topaz Authorizer Service*T\n" +
@@ -1408,82 +1408,82 @@ func file_v2_authorizer_proto_rawDescGZIP() []byte {
 var file_v2_authorizer_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_v2_authorizer_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_v2_authorizer_proto_goTypes = []any{
-	(PathSeparator)(0),            // 0: authorizer.v2.PathSeparator
-	(TraceLevel)(0),               // 1: authorizer.v2.TraceLevel
-	(*InfoRequest)(nil),           // 2: authorizer.v2.InfoRequest
-	(*InfoResponse)(nil),          // 3: authorizer.v2.InfoResponse
-	(*GetPolicyRequest)(nil),      // 4: authorizer.v2.GetPolicyRequest
-	(*GetPolicyResponse)(nil),     // 5: authorizer.v2.GetPolicyResponse
-	(*ListPoliciesRequest)(nil),   // 6: authorizer.v2.ListPoliciesRequest
-	(*ListPoliciesResponse)(nil),  // 7: authorizer.v2.ListPoliciesResponse
-	(*DecisionTreeRequest)(nil),   // 8: authorizer.v2.DecisionTreeRequest
-	(*DecisionTreeOptions)(nil),   // 9: authorizer.v2.DecisionTreeOptions
-	(*DecisionTreeResponse)(nil),  // 10: authorizer.v2.DecisionTreeResponse
-	(*IsRequest)(nil),             // 11: authorizer.v2.IsRequest
-	(*Decision)(nil),              // 12: authorizer.v2.Decision
-	(*IsResponse)(nil),            // 13: authorizer.v2.IsResponse
-	(*QueryOptions)(nil),          // 14: authorizer.v2.QueryOptions
-	(*QueryRequest)(nil),          // 15: authorizer.v2.QueryRequest
-	(*QueryResponse)(nil),         // 16: authorizer.v2.QueryResponse
-	(*CompileRequest)(nil),        // 17: authorizer.v2.CompileRequest
-	(*CompileResponse)(nil),       // 18: authorizer.v2.CompileResponse
+	(PathSeparator)(0),            // 0: aserto.authorizer.v2.PathSeparator
+	(TraceLevel)(0),               // 1: aserto.authorizer.v2.TraceLevel
+	(*InfoRequest)(nil),           // 2: aserto.authorizer.v2.InfoRequest
+	(*InfoResponse)(nil),          // 3: aserto.authorizer.v2.InfoResponse
+	(*GetPolicyRequest)(nil),      // 4: aserto.authorizer.v2.GetPolicyRequest
+	(*GetPolicyResponse)(nil),     // 5: aserto.authorizer.v2.GetPolicyResponse
+	(*ListPoliciesRequest)(nil),   // 6: aserto.authorizer.v2.ListPoliciesRequest
+	(*ListPoliciesResponse)(nil),  // 7: aserto.authorizer.v2.ListPoliciesResponse
+	(*DecisionTreeRequest)(nil),   // 8: aserto.authorizer.v2.DecisionTreeRequest
+	(*DecisionTreeOptions)(nil),   // 9: aserto.authorizer.v2.DecisionTreeOptions
+	(*DecisionTreeResponse)(nil),  // 10: aserto.authorizer.v2.DecisionTreeResponse
+	(*IsRequest)(nil),             // 11: aserto.authorizer.v2.IsRequest
+	(*Decision)(nil),              // 12: aserto.authorizer.v2.Decision
+	(*IsResponse)(nil),            // 13: aserto.authorizer.v2.IsResponse
+	(*QueryOptions)(nil),          // 14: aserto.authorizer.v2.QueryOptions
+	(*QueryRequest)(nil),          // 15: aserto.authorizer.v2.QueryRequest
+	(*QueryResponse)(nil),         // 16: aserto.authorizer.v2.QueryResponse
+	(*CompileRequest)(nil),        // 17: aserto.authorizer.v2.CompileRequest
+	(*CompileResponse)(nil),       // 18: aserto.authorizer.v2.CompileResponse
 	(*fieldmaskpb.FieldMask)(nil), // 19: google.protobuf.FieldMask
-	(*api.PolicyInstance)(nil),    // 20: authorizer.v2.api.PolicyInstance
-	(*api.Module)(nil),            // 21: authorizer.v2.api.Module
-	(*api.PolicyContext)(nil),     // 22: authorizer.v2.api.PolicyContext
-	(*api.IdentityContext)(nil),   // 23: authorizer.v2.api.IdentityContext
+	(*api.PolicyInstance)(nil),    // 20: aserto.authorizer.v2.api.PolicyInstance
+	(*api.Module)(nil),            // 21: aserto.authorizer.v2.api.Module
+	(*api.PolicyContext)(nil),     // 22: aserto.authorizer.v2.api.PolicyContext
+	(*api.IdentityContext)(nil),   // 23: aserto.authorizer.v2.api.IdentityContext
 	(*structpb.Struct)(nil),       // 24: google.protobuf.Struct
 }
 var file_v2_authorizer_proto_depIdxs = []int32{
-	19, // 0: authorizer.v2.GetPolicyRequest.field_mask:type_name -> google.protobuf.FieldMask
-	20, // 1: authorizer.v2.GetPolicyRequest.policy_instance:type_name -> authorizer.v2.api.PolicyInstance
-	21, // 2: authorizer.v2.GetPolicyResponse.result:type_name -> authorizer.v2.api.Module
-	19, // 3: authorizer.v2.ListPoliciesRequest.field_mask:type_name -> google.protobuf.FieldMask
-	20, // 4: authorizer.v2.ListPoliciesRequest.policy_instance:type_name -> authorizer.v2.api.PolicyInstance
-	21, // 5: authorizer.v2.ListPoliciesResponse.result:type_name -> authorizer.v2.api.Module
-	22, // 6: authorizer.v2.DecisionTreeRequest.policy_context:type_name -> authorizer.v2.api.PolicyContext
-	23, // 7: authorizer.v2.DecisionTreeRequest.identity_context:type_name -> authorizer.v2.api.IdentityContext
-	9,  // 8: authorizer.v2.DecisionTreeRequest.options:type_name -> authorizer.v2.DecisionTreeOptions
-	24, // 9: authorizer.v2.DecisionTreeRequest.resource_context:type_name -> google.protobuf.Struct
-	20, // 10: authorizer.v2.DecisionTreeRequest.policy_instance:type_name -> authorizer.v2.api.PolicyInstance
-	0,  // 11: authorizer.v2.DecisionTreeOptions.path_separator:type_name -> authorizer.v2.PathSeparator
-	24, // 12: authorizer.v2.DecisionTreeResponse.path:type_name -> google.protobuf.Struct
-	22, // 13: authorizer.v2.IsRequest.policy_context:type_name -> authorizer.v2.api.PolicyContext
-	23, // 14: authorizer.v2.IsRequest.identity_context:type_name -> authorizer.v2.api.IdentityContext
-	24, // 15: authorizer.v2.IsRequest.resource_context:type_name -> google.protobuf.Struct
-	20, // 16: authorizer.v2.IsRequest.policy_instance:type_name -> authorizer.v2.api.PolicyInstance
-	12, // 17: authorizer.v2.IsResponse.decisions:type_name -> authorizer.v2.Decision
-	1,  // 18: authorizer.v2.QueryOptions.trace:type_name -> authorizer.v2.TraceLevel
-	14, // 19: authorizer.v2.QueryRequest.options:type_name -> authorizer.v2.QueryOptions
-	22, // 20: authorizer.v2.QueryRequest.policy_context:type_name -> authorizer.v2.api.PolicyContext
-	23, // 21: authorizer.v2.QueryRequest.identity_context:type_name -> authorizer.v2.api.IdentityContext
-	24, // 22: authorizer.v2.QueryRequest.resource_context:type_name -> google.protobuf.Struct
-	20, // 23: authorizer.v2.QueryRequest.policy_instance:type_name -> authorizer.v2.api.PolicyInstance
-	24, // 24: authorizer.v2.QueryResponse.response:type_name -> google.protobuf.Struct
-	24, // 25: authorizer.v2.QueryResponse.metrics:type_name -> google.protobuf.Struct
-	24, // 26: authorizer.v2.QueryResponse.trace:type_name -> google.protobuf.Struct
-	14, // 27: authorizer.v2.CompileRequest.options:type_name -> authorizer.v2.QueryOptions
-	22, // 28: authorizer.v2.CompileRequest.policy_context:type_name -> authorizer.v2.api.PolicyContext
-	23, // 29: authorizer.v2.CompileRequest.identity_context:type_name -> authorizer.v2.api.IdentityContext
-	24, // 30: authorizer.v2.CompileRequest.resource_context:type_name -> google.protobuf.Struct
-	20, // 31: authorizer.v2.CompileRequest.policy_instance:type_name -> authorizer.v2.api.PolicyInstance
-	24, // 32: authorizer.v2.CompileResponse.result:type_name -> google.protobuf.Struct
-	24, // 33: authorizer.v2.CompileResponse.metrics:type_name -> google.protobuf.Struct
-	24, // 34: authorizer.v2.CompileResponse.trace:type_name -> google.protobuf.Struct
-	8,  // 35: authorizer.v2.Authorizer.DecisionTree:input_type -> authorizer.v2.DecisionTreeRequest
-	11, // 36: authorizer.v2.Authorizer.Is:input_type -> authorizer.v2.IsRequest
-	15, // 37: authorizer.v2.Authorizer.Query:input_type -> authorizer.v2.QueryRequest
-	17, // 38: authorizer.v2.Authorizer.Compile:input_type -> authorizer.v2.CompileRequest
-	6,  // 39: authorizer.v2.Authorizer.ListPolicies:input_type -> authorizer.v2.ListPoliciesRequest
-	4,  // 40: authorizer.v2.Authorizer.GetPolicy:input_type -> authorizer.v2.GetPolicyRequest
-	2,  // 41: authorizer.v2.Authorizer.Info:input_type -> authorizer.v2.InfoRequest
-	10, // 42: authorizer.v2.Authorizer.DecisionTree:output_type -> authorizer.v2.DecisionTreeResponse
-	13, // 43: authorizer.v2.Authorizer.Is:output_type -> authorizer.v2.IsResponse
-	16, // 44: authorizer.v2.Authorizer.Query:output_type -> authorizer.v2.QueryResponse
-	18, // 45: authorizer.v2.Authorizer.Compile:output_type -> authorizer.v2.CompileResponse
-	7,  // 46: authorizer.v2.Authorizer.ListPolicies:output_type -> authorizer.v2.ListPoliciesResponse
-	5,  // 47: authorizer.v2.Authorizer.GetPolicy:output_type -> authorizer.v2.GetPolicyResponse
-	3,  // 48: authorizer.v2.Authorizer.Info:output_type -> authorizer.v2.InfoResponse
+	19, // 0: aserto.authorizer.v2.GetPolicyRequest.field_mask:type_name -> google.protobuf.FieldMask
+	20, // 1: aserto.authorizer.v2.GetPolicyRequest.policy_instance:type_name -> aserto.authorizer.v2.api.PolicyInstance
+	21, // 2: aserto.authorizer.v2.GetPolicyResponse.result:type_name -> aserto.authorizer.v2.api.Module
+	19, // 3: aserto.authorizer.v2.ListPoliciesRequest.field_mask:type_name -> google.protobuf.FieldMask
+	20, // 4: aserto.authorizer.v2.ListPoliciesRequest.policy_instance:type_name -> aserto.authorizer.v2.api.PolicyInstance
+	21, // 5: aserto.authorizer.v2.ListPoliciesResponse.result:type_name -> aserto.authorizer.v2.api.Module
+	22, // 6: aserto.authorizer.v2.DecisionTreeRequest.policy_context:type_name -> aserto.authorizer.v2.api.PolicyContext
+	23, // 7: aserto.authorizer.v2.DecisionTreeRequest.identity_context:type_name -> aserto.authorizer.v2.api.IdentityContext
+	9,  // 8: aserto.authorizer.v2.DecisionTreeRequest.options:type_name -> aserto.authorizer.v2.DecisionTreeOptions
+	24, // 9: aserto.authorizer.v2.DecisionTreeRequest.resource_context:type_name -> google.protobuf.Struct
+	20, // 10: aserto.authorizer.v2.DecisionTreeRequest.policy_instance:type_name -> aserto.authorizer.v2.api.PolicyInstance
+	0,  // 11: aserto.authorizer.v2.DecisionTreeOptions.path_separator:type_name -> aserto.authorizer.v2.PathSeparator
+	24, // 12: aserto.authorizer.v2.DecisionTreeResponse.path:type_name -> google.protobuf.Struct
+	22, // 13: aserto.authorizer.v2.IsRequest.policy_context:type_name -> aserto.authorizer.v2.api.PolicyContext
+	23, // 14: aserto.authorizer.v2.IsRequest.identity_context:type_name -> aserto.authorizer.v2.api.IdentityContext
+	24, // 15: aserto.authorizer.v2.IsRequest.resource_context:type_name -> google.protobuf.Struct
+	20, // 16: aserto.authorizer.v2.IsRequest.policy_instance:type_name -> aserto.authorizer.v2.api.PolicyInstance
+	12, // 17: aserto.authorizer.v2.IsResponse.decisions:type_name -> aserto.authorizer.v2.Decision
+	1,  // 18: aserto.authorizer.v2.QueryOptions.trace:type_name -> aserto.authorizer.v2.TraceLevel
+	14, // 19: aserto.authorizer.v2.QueryRequest.options:type_name -> aserto.authorizer.v2.QueryOptions
+	22, // 20: aserto.authorizer.v2.QueryRequest.policy_context:type_name -> aserto.authorizer.v2.api.PolicyContext
+	23, // 21: aserto.authorizer.v2.QueryRequest.identity_context:type_name -> aserto.authorizer.v2.api.IdentityContext
+	24, // 22: aserto.authorizer.v2.QueryRequest.resource_context:type_name -> google.protobuf.Struct
+	20, // 23: aserto.authorizer.v2.QueryRequest.policy_instance:type_name -> aserto.authorizer.v2.api.PolicyInstance
+	24, // 24: aserto.authorizer.v2.QueryResponse.response:type_name -> google.protobuf.Struct
+	24, // 25: aserto.authorizer.v2.QueryResponse.metrics:type_name -> google.protobuf.Struct
+	24, // 26: aserto.authorizer.v2.QueryResponse.trace:type_name -> google.protobuf.Struct
+	14, // 27: aserto.authorizer.v2.CompileRequest.options:type_name -> aserto.authorizer.v2.QueryOptions
+	22, // 28: aserto.authorizer.v2.CompileRequest.policy_context:type_name -> aserto.authorizer.v2.api.PolicyContext
+	23, // 29: aserto.authorizer.v2.CompileRequest.identity_context:type_name -> aserto.authorizer.v2.api.IdentityContext
+	24, // 30: aserto.authorizer.v2.CompileRequest.resource_context:type_name -> google.protobuf.Struct
+	20, // 31: aserto.authorizer.v2.CompileRequest.policy_instance:type_name -> aserto.authorizer.v2.api.PolicyInstance
+	24, // 32: aserto.authorizer.v2.CompileResponse.result:type_name -> google.protobuf.Struct
+	24, // 33: aserto.authorizer.v2.CompileResponse.metrics:type_name -> google.protobuf.Struct
+	24, // 34: aserto.authorizer.v2.CompileResponse.trace:type_name -> google.protobuf.Struct
+	8,  // 35: aserto.authorizer.v2.Authorizer.DecisionTree:input_type -> aserto.authorizer.v2.DecisionTreeRequest
+	11, // 36: aserto.authorizer.v2.Authorizer.Is:input_type -> aserto.authorizer.v2.IsRequest
+	15, // 37: aserto.authorizer.v2.Authorizer.Query:input_type -> aserto.authorizer.v2.QueryRequest
+	17, // 38: aserto.authorizer.v2.Authorizer.Compile:input_type -> aserto.authorizer.v2.CompileRequest
+	6,  // 39: aserto.authorizer.v2.Authorizer.ListPolicies:input_type -> aserto.authorizer.v2.ListPoliciesRequest
+	4,  // 40: aserto.authorizer.v2.Authorizer.GetPolicy:input_type -> aserto.authorizer.v2.GetPolicyRequest
+	2,  // 41: aserto.authorizer.v2.Authorizer.Info:input_type -> aserto.authorizer.v2.InfoRequest
+	10, // 42: aserto.authorizer.v2.Authorizer.DecisionTree:output_type -> aserto.authorizer.v2.DecisionTreeResponse
+	13, // 43: aserto.authorizer.v2.Authorizer.Is:output_type -> aserto.authorizer.v2.IsResponse
+	16, // 44: aserto.authorizer.v2.Authorizer.Query:output_type -> aserto.authorizer.v2.QueryResponse
+	18, // 45: aserto.authorizer.v2.Authorizer.Compile:output_type -> aserto.authorizer.v2.CompileResponse
+	7,  // 46: aserto.authorizer.v2.Authorizer.ListPolicies:output_type -> aserto.authorizer.v2.ListPoliciesResponse
+	5,  // 47: aserto.authorizer.v2.Authorizer.GetPolicy:output_type -> aserto.authorizer.v2.GetPolicyResponse
+	3,  // 48: aserto.authorizer.v2.Authorizer.Info:output_type -> aserto.authorizer.v2.InfoResponse
 	42, // [42:49] is the sub-list for method output_type
 	35, // [35:42] is the sub-list for method input_type
 	35, // [35:35] is the sub-list for extension type_name

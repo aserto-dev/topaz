@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package directory.v3.common;
+package aserto.directory.v3.common;
 
 import "google/api/field_behavior.proto";
 import "google/protobuf/struct.proto";

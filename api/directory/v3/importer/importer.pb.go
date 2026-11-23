@@ -78,7 +78,7 @@ func (Opcode) EnumDescriptor() ([]byte, []int) {
 type ImportRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// operation Opcode enum value
-	OpCode Opcode `protobuf:"varint,1,opt,name=op_code,proto3,enum=directory.v3.importer.Opcode" json:"op_code,omitempty"`
+	OpCode Opcode `protobuf:"varint,1,opt,name=op_code,proto3,enum=aserto.directory.v3.importer.Opcode" json:"op_code,omitempty"`
 	// Types that are valid to be assigned to Msg:
 	//
 	//	*ImportRequest_Object
@@ -424,36 +424,36 @@ var File_v3_importer_importer_proto protoreflect.FileDescriptor
 
 const file_v3_importer_importer_proto_rawDesc = "" +
 	"\n" +
-	"\x1av3/importer/importer.proto\x12\x15directory.v3.importer\x1a\x16v3/common/common.proto\x1a\x1fgoogle/api/field_behavior.proto\"\xdb\x01\n" +
-	"\rImportRequest\x12?\n" +
-	"\aop_code\x18\x01 \x01(\x0e2\x1d.directory.v3.importer.OpcodeB\x06\xe2A\x01\x02\x18\x00R\aop_code\x12=\n" +
-	"\x06object\x18\x05 \x01(\v2\x1b.directory.v3.common.ObjectB\x06\xe2A\x01\x01\x18\x00H\x00R\x06object\x12C\n" +
-	"\brelation\x18\x06 \x01(\v2\x1d.directory.v3.common.RelationB\x06\xe2A\x01\x01\x18\x00H\x00R\brelationB\x05\n" +
-	"\x03msg\"\xb8\x02\n" +
-	"\x0eImportResponse\x12D\n" +
-	"\x06object\x18\x01 \x01(\v2$.directory.v3.importer.ImportCounterB\x06\xe2A\x01\x03\x18\x01R\x06object\x12H\n" +
-	"\brelation\x18\x02 \x01(\v2$.directory.v3.importer.ImportCounterB\x06\xe2A\x01\x03\x18\x01R\brelation\x12E\n" +
-	"\x06status\x18\x04 \x01(\v2#.directory.v3.importer.ImportStatusB\x06\xe2A\x01\x03\x18\x00H\x00R\x06status\x12H\n" +
-	"\acounter\x18\x05 \x01(\v2$.directory.v3.importer.ImportCounterB\x06\xe2A\x01\x03\x18\x00H\x00R\acounterB\x05\n" +
+	"\x1av3/importer/importer.proto\x12\x1caserto.directory.v3.importer\x1a\x16v3/common/common.proto\x1a\x1fgoogle/api/field_behavior.proto\"\xf0\x01\n" +
+	"\rImportRequest\x12F\n" +
+	"\aop_code\x18\x01 \x01(\x0e2$.aserto.directory.v3.importer.OpcodeB\x06\xe2A\x01\x02\x18\x00R\aop_code\x12D\n" +
+	"\x06object\x18\x05 \x01(\v2\".aserto.directory.v3.common.ObjectB\x06\xe2A\x01\x01\x18\x00H\x00R\x06object\x12J\n" +
+	"\brelation\x18\x06 \x01(\v2$.aserto.directory.v3.common.RelationB\x06\xe2A\x01\x01\x18\x00H\x00R\brelationB\x05\n" +
+	"\x03msg\"\xd4\x02\n" +
+	"\x0eImportResponse\x12K\n" +
+	"\x06object\x18\x01 \x01(\v2+.aserto.directory.v3.importer.ImportCounterB\x06\xe2A\x01\x03\x18\x01R\x06object\x12O\n" +
+	"\brelation\x18\x02 \x01(\v2+.aserto.directory.v3.importer.ImportCounterB\x06\xe2A\x01\x03\x18\x01R\brelation\x12L\n" +
+	"\x06status\x18\x04 \x01(\v2*.aserto.directory.v3.importer.ImportStatusB\x06\xe2A\x01\x03\x18\x00H\x00R\x06status\x12O\n" +
+	"\acounter\x18\x05 \x01(\v2+.aserto.directory.v3.importer.ImportCounterB\x06\xe2A\x01\x03\x18\x00H\x00R\acounterB\x05\n" +
 	"\x03msg\"\x9f\x01\n" +
 	"\rImportCounter\x12\x1a\n" +
 	"\x04recv\x18\x01 \x01(\x04B\x06\xe2A\x01\x03\x18\x00R\x04recv\x12\x18\n" +
 	"\x03set\x18\x02 \x01(\x04B\x06\xe2A\x01\x03\x18\x00R\x03set\x12\x1e\n" +
 	"\x06delete\x18\x03 \x01(\x04B\x06\xe2A\x01\x03\x18\x00R\x06delete\x12\x1c\n" +
 	"\x05error\x18\x04 \x01(\x04B\x06\xe2A\x01\x03\x18\x00R\x05error\x12\x1a\n" +
-	"\x04type\x18\x05 \x01(\tB\x06\xe2A\x01\x03\x18\x00R\x04type\"\x84\x01\n" +
+	"\x04type\x18\x05 \x01(\tB\x06\xe2A\x01\x03\x18\x00R\x04type\"\x8b\x01\n" +
 	"\fImportStatus\x12\x1a\n" +
 	"\x04code\x18\x01 \x01(\rB\x06\xe2A\x01\x03\x18\x00R\x04code\x12\x18\n" +
-	"\x03msg\x18\x02 \x01(\tB\x06\xe2A\x01\x03\x18\x00R\x03msg\x12>\n" +
-	"\x03req\x18\x03 \x01(\v2$.directory.v3.importer.ImportRequestB\x06\xe2A\x01\x03\x18\x00R\x03req*a\n" +
+	"\x03msg\x18\x02 \x01(\tB\x06\xe2A\x01\x03\x18\x00R\x03msg\x12E\n" +
+	"\x03req\x18\x03 \x01(\v2+.aserto.directory.v3.importer.ImportRequestB\x06\xe2A\x01\x03\x18\x00R\x03req*a\n" +
 	"\x06Opcode\x12\x12\n" +
 	"\x0eOPCODE_UNKNOWN\x10\x00\x12\x0e\n" +
 	"\n" +
 	"OPCODE_SET\x10\x01\x12\x11\n" +
 	"\rOPCODE_DELETE\x10\x02\x12 \n" +
-	"\x1cOPCODE_DELETE_WITH_RELATIONS\x10\x032g\n" +
-	"\bImporter\x12[\n" +
-	"\x06Import\x12$.directory.v3.importer.ImportRequest\x1a%.directory.v3.importer.ImportResponse\"\x00(\x010\x01B@Z>github.com/aserto-dev/topaz/api/directory/v3/importer;importerb\x06proto3"
+	"\x1cOPCODE_DELETE_WITH_RELATIONS\x10\x032u\n" +
+	"\bImporter\x12i\n" +
+	"\x06Import\x12+.aserto.directory.v3.importer.ImportRequest\x1a,.aserto.directory.v3.importer.ImportResponse\"\x00(\x010\x01B@Z>github.com/aserto-dev/topaz/api/directory/v3/importer;importerb\x06proto3"
 
 var (
 	file_v3_importer_importer_proto_rawDescOnce sync.Once
@@ -470,25 +470,25 @@ func file_v3_importer_importer_proto_rawDescGZIP() []byte {
 var file_v3_importer_importer_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_v3_importer_importer_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_v3_importer_importer_proto_goTypes = []any{
-	(Opcode)(0),             // 0: directory.v3.importer.Opcode
-	(*ImportRequest)(nil),   // 1: directory.v3.importer.ImportRequest
-	(*ImportResponse)(nil),  // 2: directory.v3.importer.ImportResponse
-	(*ImportCounter)(nil),   // 3: directory.v3.importer.ImportCounter
-	(*ImportStatus)(nil),    // 4: directory.v3.importer.ImportStatus
-	(*common.Object)(nil),   // 5: directory.v3.common.Object
-	(*common.Relation)(nil), // 6: directory.v3.common.Relation
+	(Opcode)(0),             // 0: aserto.directory.v3.importer.Opcode
+	(*ImportRequest)(nil),   // 1: aserto.directory.v3.importer.ImportRequest
+	(*ImportResponse)(nil),  // 2: aserto.directory.v3.importer.ImportResponse
+	(*ImportCounter)(nil),   // 3: aserto.directory.v3.importer.ImportCounter
+	(*ImportStatus)(nil),    // 4: aserto.directory.v3.importer.ImportStatus
+	(*common.Object)(nil),   // 5: aserto.directory.v3.common.Object
+	(*common.Relation)(nil), // 6: aserto.directory.v3.common.Relation
 }
 var file_v3_importer_importer_proto_depIdxs = []int32{
-	0, // 0: directory.v3.importer.ImportRequest.op_code:type_name -> directory.v3.importer.Opcode
-	5, // 1: directory.v3.importer.ImportRequest.object:type_name -> directory.v3.common.Object
-	6, // 2: directory.v3.importer.ImportRequest.relation:type_name -> directory.v3.common.Relation
-	3, // 3: directory.v3.importer.ImportResponse.object:type_name -> directory.v3.importer.ImportCounter
-	3, // 4: directory.v3.importer.ImportResponse.relation:type_name -> directory.v3.importer.ImportCounter
-	4, // 5: directory.v3.importer.ImportResponse.status:type_name -> directory.v3.importer.ImportStatus
-	3, // 6: directory.v3.importer.ImportResponse.counter:type_name -> directory.v3.importer.ImportCounter
-	1, // 7: directory.v3.importer.ImportStatus.req:type_name -> directory.v3.importer.ImportRequest
-	1, // 8: directory.v3.importer.Importer.Import:input_type -> directory.v3.importer.ImportRequest
-	2, // 9: directory.v3.importer.Importer.Import:output_type -> directory.v3.importer.ImportResponse
+	0, // 0: aserto.directory.v3.importer.ImportRequest.op_code:type_name -> aserto.directory.v3.importer.Opcode
+	5, // 1: aserto.directory.v3.importer.ImportRequest.object:type_name -> aserto.directory.v3.common.Object
+	6, // 2: aserto.directory.v3.importer.ImportRequest.relation:type_name -> aserto.directory.v3.common.Relation
+	3, // 3: aserto.directory.v3.importer.ImportResponse.object:type_name -> aserto.directory.v3.importer.ImportCounter
+	3, // 4: aserto.directory.v3.importer.ImportResponse.relation:type_name -> aserto.directory.v3.importer.ImportCounter
+	4, // 5: aserto.directory.v3.importer.ImportResponse.status:type_name -> aserto.directory.v3.importer.ImportStatus
+	3, // 6: aserto.directory.v3.importer.ImportResponse.counter:type_name -> aserto.directory.v3.importer.ImportCounter
+	1, // 7: aserto.directory.v3.importer.ImportStatus.req:type_name -> aserto.directory.v3.importer.ImportRequest
+	1, // 8: aserto.directory.v3.importer.Importer.Import:input_type -> aserto.directory.v3.importer.ImportRequest
+	2, // 9: aserto.directory.v3.importer.Importer.Import:output_type -> aserto.directory.v3.importer.ImportResponse
 	9, // [9:10] is the sub-list for method output_type
 	8, // [8:9] is the sub-list for method input_type
 	8, // [8:8] is the sub-list for extension type_name

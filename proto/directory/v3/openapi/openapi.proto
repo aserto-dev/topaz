@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package directory.v3;
+package aserto.directory.v3;
 
 import "protoc-gen-openapiv3/options/annotations.proto";
 

@@ -314,7 +314,7 @@ func RegisterAuthorizerHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/authorizer.v2.Authorizer/DecisionTree", runtime.WithHTTPPathPattern("/api/v2/authz/decisiontree"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/DecisionTree", runtime.WithHTTPPathPattern("/api/v2/authz/decisiontree"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -334,7 +334,7 @@ func RegisterAuthorizerHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/authorizer.v2.Authorizer/Is", runtime.WithHTTPPathPattern("/api/v2/authz/is"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/Is", runtime.WithHTTPPathPattern("/api/v2/authz/is"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -354,7 +354,7 @@ func RegisterAuthorizerHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/authorizer.v2.Authorizer/Query", runtime.WithHTTPPathPattern("/api/v2/authz/query"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/Query", runtime.WithHTTPPathPattern("/api/v2/authz/query"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -374,7 +374,7 @@ func RegisterAuthorizerHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/authorizer.v2.Authorizer/Compile", runtime.WithHTTPPathPattern("/api/v2/authz/compile"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/Compile", runtime.WithHTTPPathPattern("/api/v2/authz/compile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -394,7 +394,7 @@ func RegisterAuthorizerHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/authorizer.v2.Authorizer/ListPolicies", runtime.WithHTTPPathPattern("/api/v2/policies"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/ListPolicies", runtime.WithHTTPPathPattern("/api/v2/policies"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -414,7 +414,7 @@ func RegisterAuthorizerHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/authorizer.v2.Authorizer/GetPolicy", runtime.WithHTTPPathPattern("/api/v2/policies/{id=*/**}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/GetPolicy", runtime.WithHTTPPathPattern("/api/v2/policies/{id=*/**}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -434,7 +434,7 @@ func RegisterAuthorizerHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/authorizer.v2.Authorizer/Info", runtime.WithHTTPPathPattern("/api/v2/info"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/Info", runtime.WithHTTPPathPattern("/api/v2/info"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -492,7 +492,7 @@ func RegisterAuthorizerHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/authorizer.v2.Authorizer/DecisionTree", runtime.WithHTTPPathPattern("/api/v2/authz/decisiontree"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/DecisionTree", runtime.WithHTTPPathPattern("/api/v2/authz/decisiontree"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -509,7 +509,7 @@ func RegisterAuthorizerHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/authorizer.v2.Authorizer/Is", runtime.WithHTTPPathPattern("/api/v2/authz/is"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/Is", runtime.WithHTTPPathPattern("/api/v2/authz/is"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -526,7 +526,7 @@ func RegisterAuthorizerHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/authorizer.v2.Authorizer/Query", runtime.WithHTTPPathPattern("/api/v2/authz/query"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/Query", runtime.WithHTTPPathPattern("/api/v2/authz/query"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -543,7 +543,7 @@ func RegisterAuthorizerHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/authorizer.v2.Authorizer/Compile", runtime.WithHTTPPathPattern("/api/v2/authz/compile"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/Compile", runtime.WithHTTPPathPattern("/api/v2/authz/compile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -560,7 +560,7 @@ func RegisterAuthorizerHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/authorizer.v2.Authorizer/ListPolicies", runtime.WithHTTPPathPattern("/api/v2/policies"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/ListPolicies", runtime.WithHTTPPathPattern("/api/v2/policies"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -577,7 +577,7 @@ func RegisterAuthorizerHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/authorizer.v2.Authorizer/GetPolicy", runtime.WithHTTPPathPattern("/api/v2/policies/{id=*/**}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/GetPolicy", runtime.WithHTTPPathPattern("/api/v2/policies/{id=*/**}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -594,7 +594,7 @@ func RegisterAuthorizerHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/authorizer.v2.Authorizer/Info", runtime.WithHTTPPathPattern("/api/v2/info"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.authorizer.v2.Authorizer/Info", runtime.WithHTTPPathPattern("/api/v2/info"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

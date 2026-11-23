@@ -25,7 +25,7 @@ var File_v3_openapi_openapi_proto protoreflect.FileDescriptor
 
 const file_v3_openapi_openapi_proto_rawDesc = "" +
 	"\n" +
-	"\x18v3/openapi/openapi.proto\x12\fdirectory.v3\x1a.protoc-gen-openapiv3/options/annotations.protoB\x98\x04\xfaP\xdc\x03\n" +
+	"\x18v3/openapi/openapi.proto\x12\x13aserto.directory.v3\x1a.protoc-gen-openapiv3/options/annotations.protoB\x98\x04\xfaP\xdc\x03\n" +
 	"\xc1\x01\n" +
 	"\x17Topaz Directory Service*T\n" +
 	"\x1bTopaz Authorization Project\x12#https://github.com/aserto-dev/topaz\x1a\x10support@topaz.sh2K\n" +

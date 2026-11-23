@@ -500,7 +500,7 @@ var File_v3_common_common_proto protoreflect.FileDescriptor
 
 const file_v3_common_common_proto_rawDesc = "" +
 	"\n" +
-	"\x16v3/common/common.proto\x12\x13directory.v3.common\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xcd\x02\n" +
+	"\x16v3/common/common.proto\x12\x1aaserto.directory.v3.common\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xcd\x02\n" +
 	"\x06Object\x12\x1a\n" +
 	"\x04type\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\x04type\x12\x16\n" +
 	"\x02id\x18\x02 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\x02id\x12*\n" +
@@ -565,21 +565,21 @@ func file_v3_common_common_proto_rawDescGZIP() []byte {
 
 var file_v3_common_common_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_v3_common_common_proto_goTypes = []any{
-	(*Object)(nil),                // 0: directory.v3.common.Object
-	(*Relation)(nil),              // 1: directory.v3.common.Relation
-	(*ObjectIdentifier)(nil),      // 2: directory.v3.common.ObjectIdentifier
-	(*RelationIdentifier)(nil),    // 3: directory.v3.common.RelationIdentifier
-	(*PaginationRequest)(nil),     // 4: directory.v3.common.PaginationRequest
-	(*PaginationResponse)(nil),    // 5: directory.v3.common.PaginationResponse
+	(*Object)(nil),                // 0: aserto.directory.v3.common.Object
+	(*Relation)(nil),              // 1: aserto.directory.v3.common.Relation
+	(*ObjectIdentifier)(nil),      // 2: aserto.directory.v3.common.ObjectIdentifier
+	(*RelationIdentifier)(nil),    // 3: aserto.directory.v3.common.RelationIdentifier
+	(*PaginationRequest)(nil),     // 4: aserto.directory.v3.common.PaginationRequest
+	(*PaginationResponse)(nil),    // 5: aserto.directory.v3.common.PaginationResponse
 	(*structpb.Struct)(nil),       // 6: google.protobuf.Struct
 	(*timestamppb.Timestamp)(nil), // 7: google.protobuf.Timestamp
 }
 var file_v3_common_common_proto_depIdxs = []int32{
-	6, // 0: directory.v3.common.Object.properties:type_name -> google.protobuf.Struct
-	7, // 1: directory.v3.common.Object.created_at:type_name -> google.protobuf.Timestamp
-	7, // 2: directory.v3.common.Object.updated_at:type_name -> google.protobuf.Timestamp
-	7, // 3: directory.v3.common.Relation.created_at:type_name -> google.protobuf.Timestamp
-	7, // 4: directory.v3.common.Relation.updated_at:type_name -> google.protobuf.Timestamp
+	6, // 0: aserto.directory.v3.common.Object.properties:type_name -> google.protobuf.Struct
+	7, // 1: aserto.directory.v3.common.Object.created_at:type_name -> google.protobuf.Timestamp
+	7, // 2: aserto.directory.v3.common.Object.updated_at:type_name -> google.protobuf.Timestamp
+	7, // 3: aserto.directory.v3.common.Relation.created_at:type_name -> google.protobuf.Timestamp
+	7, // 4: aserto.directory.v3.common.Relation.updated_at:type_name -> google.protobuf.Timestamp
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name

@@ -503,7 +503,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/GetObject", runtime.WithHTTPPathPattern("/api/v3/directory/object/{object_type}/{object_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetObject", runtime.WithHTTPPathPattern("/api/v3/directory/object/{object_type}/{object_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -523,7 +523,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/GetObjectMany", runtime.WithHTTPPathPattern("/directory.v3.reader.Reader/GetObjectMany"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetObjectMany", runtime.WithHTTPPathPattern("/aserto.directory.v3.reader.Reader/GetObjectMany"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -543,7 +543,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/GetObjects", runtime.WithHTTPPathPattern("/api/v3/directory/objects"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetObjects", runtime.WithHTTPPathPattern("/api/v3/directory/objects"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -563,7 +563,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/GetRelation", runtime.WithHTTPPathPattern("/api/v3/directory/relation"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetRelation", runtime.WithHTTPPathPattern("/api/v3/directory/relation"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -583,7 +583,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/GetRelations", runtime.WithHTTPPathPattern("/api/v3/directory/relations"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetRelations", runtime.WithHTTPPathPattern("/api/v3/directory/relations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -603,7 +603,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/Check", runtime.WithHTTPPathPattern("/api/v3/directory/check"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/Check", runtime.WithHTTPPathPattern("/api/v3/directory/check"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -623,7 +623,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/Checks", runtime.WithHTTPPathPattern("/api/v3/directory/checks"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/Checks", runtime.WithHTTPPathPattern("/api/v3/directory/checks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -643,7 +643,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/CheckPermission", runtime.WithHTTPPathPattern("/api/v3/directory/check/permission"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/CheckPermission", runtime.WithHTTPPathPattern("/api/v3/directory/check/permission"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -663,7 +663,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/CheckRelation", runtime.WithHTTPPathPattern("/api/v3/directory/check/relation"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/CheckRelation", runtime.WithHTTPPathPattern("/api/v3/directory/check/relation"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -683,7 +683,7 @@ func RegisterReaderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/directory.v3.reader.Reader/GetGraph", runtime.WithHTTPPathPattern("/api/v3/directory/graph/{object_type}/{relation}/{subject_type}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetGraph", runtime.WithHTTPPathPattern("/api/v3/directory/graph/{object_type}/{relation}/{subject_type}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -741,7 +741,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/GetObject", runtime.WithHTTPPathPattern("/api/v3/directory/object/{object_type}/{object_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetObject", runtime.WithHTTPPathPattern("/api/v3/directory/object/{object_type}/{object_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -758,7 +758,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/GetObjectMany", runtime.WithHTTPPathPattern("/directory.v3.reader.Reader/GetObjectMany"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetObjectMany", runtime.WithHTTPPathPattern("/aserto.directory.v3.reader.Reader/GetObjectMany"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -775,7 +775,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/GetObjects", runtime.WithHTTPPathPattern("/api/v3/directory/objects"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetObjects", runtime.WithHTTPPathPattern("/api/v3/directory/objects"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -792,7 +792,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/GetRelation", runtime.WithHTTPPathPattern("/api/v3/directory/relation"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetRelation", runtime.WithHTTPPathPattern("/api/v3/directory/relation"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -809,7 +809,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/GetRelations", runtime.WithHTTPPathPattern("/api/v3/directory/relations"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetRelations", runtime.WithHTTPPathPattern("/api/v3/directory/relations"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -826,7 +826,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/Check", runtime.WithHTTPPathPattern("/api/v3/directory/check"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/Check", runtime.WithHTTPPathPattern("/api/v3/directory/check"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -843,7 +843,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/Checks", runtime.WithHTTPPathPattern("/api/v3/directory/checks"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/Checks", runtime.WithHTTPPathPattern("/api/v3/directory/checks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -860,7 +860,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/CheckPermission", runtime.WithHTTPPathPattern("/api/v3/directory/check/permission"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/CheckPermission", runtime.WithHTTPPathPattern("/api/v3/directory/check/permission"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -877,7 +877,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/CheckRelation", runtime.WithHTTPPathPattern("/api/v3/directory/check/relation"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/CheckRelation", runtime.WithHTTPPathPattern("/api/v3/directory/check/relation"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -894,7 +894,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/directory.v3.reader.Reader/GetGraph", runtime.WithHTTPPathPattern("/api/v3/directory/graph/{object_type}/{relation}/{subject_type}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.reader.Reader/GetGraph", runtime.WithHTTPPathPattern("/api/v3/directory/graph/{object_type}/{relation}/{subject_type}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -912,7 +912,7 @@ func RegisterReaderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 
 var (
 	pattern_Reader_GetObject_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"api", "v3", "directory", "object", "object_type", "object_id"}, ""))
-	pattern_Reader_GetObjectMany_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"directory.v3.reader.Reader", "GetObjectMany"}, ""))
+	pattern_Reader_GetObjectMany_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"aserto.directory.v3.reader.Reader", "GetObjectMany"}, ""))
 	pattern_Reader_GetObjects_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v3", "directory", "objects"}, ""))
 	pattern_Reader_GetRelation_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v3", "directory", "relation"}, ""))
 	pattern_Reader_GetRelations_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v3", "directory", "relations"}, ""))

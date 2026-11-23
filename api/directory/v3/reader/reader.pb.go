@@ -1388,26 +1388,26 @@ var File_v3_reader_reader_proto protoreflect.FileDescriptor
 
 const file_v3_reader_reader_proto_rawDesc = "" +
 	"\n" +
-	"\x16v3/reader/reader.proto\x12\x13directory.v3.reader\x1a\x16v3/common/common.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a.protoc-gen-openapiv3/options/annotations.proto\"\x9e\x01\n" +
+	"\x16v3/reader/reader.proto\x12\x1aaserto.directory.v3.reader\x1a\x16v3/common/common.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a.protoc-gen-openapiv3/options/annotations.proto\"\x9e\x01\n" +
 	"\x10GetObjectRequest\x12(\n" +
 	"\vobject_type\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\vobject_type\x12$\n" +
 	"\tobject_id\x18\x02 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\tobject_id\x12.\n" +
 	"\x0ewith_relations\x18\x03 \x01(\bB\x06\xe2A\x01\x01\x18\x00R\x0ewith_relationsJ\x04\b\t\x10\n" +
-	"R\x04page\"\xa1\x01\n" +
-	"\x11GetObjectResponse\x12;\n" +
-	"\x06result\x18\x01 \x01(\v2\x1b.directory.v3.common.ObjectB\x06\xe2A\x01\x03\x18\x00R\x06result\x12C\n" +
-	"\trelations\x18\x04 \x03(\v2\x1d.directory.v3.common.RelationB\x06\xe2A\x01\x03\x18\x00R\trelationsJ\x04\b\t\x10\n" +
-	"R\x04page\"[\n" +
-	"\x14GetObjectManyRequest\x12C\n" +
-	"\x05param\x18\x01 \x03(\v2%.directory.v3.common.ObjectIdentifierB\x06\xe2A\x01\x02\x18\x00R\x05param\"V\n" +
-	"\x15GetObjectManyResponse\x12=\n" +
-	"\aresults\x18\x01 \x03(\v2\x1b.directory.v3.common.ObjectB\x06\xe2A\x01\x03\x18\x00R\aresults\"\x81\x01\n" +
+	"R\x04page\"\xaf\x01\n" +
+	"\x11GetObjectResponse\x12B\n" +
+	"\x06result\x18\x01 \x01(\v2\".aserto.directory.v3.common.ObjectB\x06\xe2A\x01\x03\x18\x00R\x06result\x12J\n" +
+	"\trelations\x18\x04 \x03(\v2$.aserto.directory.v3.common.RelationB\x06\xe2A\x01\x03\x18\x00R\trelationsJ\x04\b\t\x10\n" +
+	"R\x04page\"b\n" +
+	"\x14GetObjectManyRequest\x12J\n" +
+	"\x05param\x18\x01 \x03(\v2,.aserto.directory.v3.common.ObjectIdentifierB\x06\xe2A\x01\x02\x18\x00R\x05param\"]\n" +
+	"\x15GetObjectManyResponse\x12D\n" +
+	"\aresults\x18\x01 \x03(\v2\".aserto.directory.v3.common.ObjectB\x06\xe2A\x01\x03\x18\x00R\aresults\"\x88\x01\n" +
 	"\x11GetObjectsRequest\x12(\n" +
-	"\vobject_type\x18\x01 \x01(\tB\x06\xe2A\x01\x01\x18\x00R\vobject_type\x12B\n" +
-	"\x04page\x18\t \x01(\v2&.directory.v3.common.PaginationRequestB\x06\xe2A\x01\x01\x18\x00R\x04page\"\x98\x01\n" +
-	"\x12GetObjectsResponse\x12=\n" +
-	"\aresults\x18\x01 \x03(\v2\x1b.directory.v3.common.ObjectB\x06\xe2A\x01\x03\x18\x00R\aresults\x12C\n" +
-	"\x04page\x18\t \x01(\v2'.directory.v3.common.PaginationResponseB\x06\xe2A\x01\x03\x18\x00R\x04page\"\xbc\x02\n" +
+	"\vobject_type\x18\x01 \x01(\tB\x06\xe2A\x01\x01\x18\x00R\vobject_type\x12I\n" +
+	"\x04page\x18\t \x01(\v2-.aserto.directory.v3.common.PaginationRequestB\x06\xe2A\x01\x01\x18\x00R\x04page\"\xa6\x01\n" +
+	"\x12GetObjectsResponse\x12D\n" +
+	"\aresults\x18\x01 \x03(\v2\".aserto.directory.v3.common.ObjectB\x06\xe2A\x01\x03\x18\x00R\aresults\x12J\n" +
+	"\x04page\x18\t \x01(\v2..aserto.directory.v3.common.PaginationResponseB\x06\xe2A\x01\x03\x18\x00R\x04page\"\xbc\x02\n" +
 	"\x12GetRelationRequest\x12(\n" +
 	"\vobject_type\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\vobject_type\x12$\n" +
 	"\tobject_id\x18\x02 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\tobject_id\x12\"\n" +
@@ -1417,13 +1417,13 @@ const file_v3_reader_reader_proto_rawDesc = "" +
 	"subject_id\x18\x05 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\n" +
 	"subject_id\x122\n" +
 	"\x10subject_relation\x18\x06 \x01(\tB\x06\xe2A\x01\x01\x18\x00R\x10subject_relation\x12*\n" +
-	"\fwith_objects\x18\a \x01(\bB\x06\xe2A\x01\x01\x18\x00R\fwith_objects\"\x86\x02\n" +
-	"\x13GetRelationResponse\x12=\n" +
-	"\x06result\x18\x01 \x01(\v2\x1d.directory.v3.common.RelationB\x06\xe2A\x01\x03\x18\x00R\x06result\x12W\n" +
-	"\aobjects\x18\x02 \x03(\v25.directory.v3.reader.GetRelationResponse.ObjectsEntryB\x06\xe2A\x01\x03\x18\x00R\aobjects\x1aW\n" +
+	"\fwith_objects\x18\a \x01(\bB\x06\xe2A\x01\x01\x18\x00R\fwith_objects\"\x9b\x02\n" +
+	"\x13GetRelationResponse\x12D\n" +
+	"\x06result\x18\x01 \x01(\v2$.aserto.directory.v3.common.RelationB\x06\xe2A\x01\x03\x18\x00R\x06result\x12^\n" +
+	"\aobjects\x18\x02 \x03(\v2<.aserto.directory.v3.reader.GetRelationResponse.ObjectsEntryB\x06\xe2A\x01\x03\x18\x00R\aobjects\x1a^\n" +
 	"\fObjectsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x121\n" +
-	"\x05value\x18\x02 \x01(\v2\x1b.directory.v3.common.ObjectR\x05value:\x028\x01\"\xcb\x03\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x128\n" +
+	"\x05value\x18\x02 \x01(\v2\".aserto.directory.v3.common.ObjectR\x05value:\x028\x01\"\xd2\x03\n" +
 	"\x13GetRelationsRequest\x12(\n" +
 	"\vobject_type\x18\x01 \x01(\tB\x06\xe2A\x01\x01\x18\x00R\vobject_type\x12$\n" +
 	"\tobject_id\x18\x02 \x01(\tB\x06\xe2A\x01\x01\x18\x00R\tobject_id\x12\"\n" +
@@ -1434,15 +1434,15 @@ const file_v3_reader_reader_proto_rawDesc = "" +
 	"subject_id\x122\n" +
 	"\x10subject_relation\x18\x06 \x01(\tB\x06\xe2A\x01\x01\x18\x00R\x10subject_relation\x12*\n" +
 	"\fwith_objects\x18\a \x01(\bB\x06\xe2A\x01\x01\x18\x00R\fwith_objects\x12H\n" +
-	"\x1bwith_empty_subject_relation\x18\b \x01(\bB\x06\xe2A\x01\x01\x18\x00R\x1bwith_empty_subject_relation\x12B\n" +
-	"\x04page\x18\t \x01(\v2&.directory.v3.common.PaginationRequestB\x06\xe2A\x01\x01\x18\x00R\x04page\"\xcf\x02\n" +
-	"\x14GetRelationsResponse\x12?\n" +
-	"\aresults\x18\x01 \x03(\v2\x1d.directory.v3.common.RelationB\x06\xe2A\x01\x03\x18\x00R\aresults\x12X\n" +
-	"\aobjects\x18\x02 \x03(\v26.directory.v3.reader.GetRelationsResponse.ObjectsEntryB\x06\xe2A\x01\x03\x18\x00R\aobjects\x12C\n" +
-	"\x04page\x18\t \x01(\v2'.directory.v3.common.PaginationResponseB\x06\xe2A\x01\x03\x18\x00R\x04page\x1aW\n" +
+	"\x1bwith_empty_subject_relation\x18\b \x01(\bB\x06\xe2A\x01\x01\x18\x00R\x1bwith_empty_subject_relation\x12I\n" +
+	"\x04page\x18\t \x01(\v2-.aserto.directory.v3.common.PaginationRequestB\x06\xe2A\x01\x01\x18\x00R\x04page\"\xeb\x02\n" +
+	"\x14GetRelationsResponse\x12F\n" +
+	"\aresults\x18\x01 \x03(\v2$.aserto.directory.v3.common.RelationB\x06\xe2A\x01\x03\x18\x00R\aresults\x12_\n" +
+	"\aobjects\x18\x02 \x03(\v2=.aserto.directory.v3.reader.GetRelationsResponse.ObjectsEntryB\x06\xe2A\x01\x03\x18\x00R\aobjects\x12J\n" +
+	"\x04page\x18\t \x01(\v2..aserto.directory.v3.common.PaginationResponseB\x06\xe2A\x01\x03\x18\x00R\x04page\x1a^\n" +
 	"\fObjectsEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x121\n" +
-	"\x05value\x18\x02 \x01(\v2\x1b.directory.v3.common.ObjectR\x05value:\x028\x01\"\xf4\x01\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x128\n" +
+	"\x05value\x18\x02 \x01(\v2\".aserto.directory.v3.common.ObjectR\x05value:\x028\x01\"\xf4\x01\n" +
 	"\fCheckRequest\x12(\n" +
 	"\vobject_type\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\vobject_type\x12$\n" +
 	"\tobject_id\x18\x02 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\tobject_id\x12\"\n" +
@@ -1455,12 +1455,12 @@ const file_v3_reader_reader_proto_rawDesc = "" +
 	"\rCheckResponse\x12\x1c\n" +
 	"\x05check\x18\x01 \x01(\bB\x06\xe2A\x01\x03\x18\x00R\x05check\x12\x1c\n" +
 	"\x05trace\x18\x02 \x03(\tB\x06\xe2A\x01\x03\x18\x00R\x05trace\x129\n" +
-	"\acontext\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x03\x18\x00R\acontext\"\x97\x01\n" +
-	"\rChecksRequest\x12C\n" +
-	"\adefault\x18\x01 \x01(\v2!.directory.v3.reader.CheckRequestB\x06\xe2A\x01\x01\x18\x00R\adefault\x12A\n" +
-	"\x06checks\x18\x02 \x03(\v2!.directory.v3.reader.CheckRequestB\x06\xe2A\x01\x01\x18\x00R\x06checks\"T\n" +
-	"\x0eChecksResponse\x12B\n" +
-	"\x06checks\x18\x01 \x03(\v2\".directory.v3.reader.CheckResponseB\x06\xe2A\x01\x03\x18\x00R\x06checks\"\x82\x02\n" +
+	"\acontext\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x03\x18\x00R\acontext\"\xa5\x01\n" +
+	"\rChecksRequest\x12J\n" +
+	"\adefault\x18\x01 \x01(\v2(.aserto.directory.v3.reader.CheckRequestB\x06\xe2A\x01\x01\x18\x00R\adefault\x12H\n" +
+	"\x06checks\x18\x02 \x03(\v2(.aserto.directory.v3.reader.CheckRequestB\x06\xe2A\x01\x01\x18\x00R\x06checks\"[\n" +
+	"\x0eChecksResponse\x12I\n" +
+	"\x06checks\x18\x01 \x03(\v2).aserto.directory.v3.reader.CheckResponseB\x06\xe2A\x01\x03\x18\x00R\x06checks\"\x82\x02\n" +
 	"\x16CheckPermissionRequest\x12(\n" +
 	"\vobject_type\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\vobject_type\x12$\n" +
 	"\tobject_id\x18\x02 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\tobject_id\x12&\n" +
@@ -1498,48 +1498,48 @@ const file_v3_reader_reader_proto_rawDesc = "" +
 	"\x10subject_relation\x18\b \x01(\tB\x06\xe2A\x01\x01\x18\x00R\x10subject_relation\x12 \n" +
 	"\aexplain\x18\t \x01(\bB\x06\xe2A\x01\x01\x18\x00R\aexplain\x12\x1c\n" +
 	"\x05trace\x18\n" +
-	" \x01(\bB\x06\xe2A\x01\x01\x18\x00R\x05traceJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03R\vanchor_typeR\tanchor_id\"\xc2\x01\n" +
-	"\x10GetGraphResponse\x12G\n" +
-	"\aresults\x18\x02 \x03(\v2%.directory.v3.common.ObjectIdentifierB\x06\xe2A\x01\x03\x18\x00R\aresults\x12A\n" +
+	" \x01(\bB\x06\xe2A\x01\x01\x18\x00R\x05traceJ\x04\b\x01\x10\x02J\x04\b\x02\x10\x03R\vanchor_typeR\tanchor_id\"\xc9\x01\n" +
+	"\x10GetGraphResponse\x12N\n" +
+	"\aresults\x18\x02 \x03(\v2,.aserto.directory.v3.common.ObjectIdentifierB\x06\xe2A\x01\x03\x18\x00R\aresults\x12A\n" +
 	"\vexplanation\x18\x03 \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x03\x18\x00R\vexplanation\x12\x1c\n" +
-	"\x05trace\x18\x04 \x03(\tB\x06\xe2A\x01\x03\x18\x00R\x05traceJ\x04\b\x01\x10\x022\xd1\x13\n" +
-	"\x06Reader\x12\xa7\x02\n" +
-	"\tGetObject\x12%.directory.v3.reader.GetObjectRequest\x1a&.directory.v3.reader.GetObjectResponse\"\xca\x01\xfaP\x89\x01\n" +
+	"\x05trace\x18\x04 \x03(\tB\x06\xe2A\x01\x03\x18\x00R\x05traceJ\x04\b\x01\x10\x022\xdd\x14\n" +
+	"\x06Reader\x12\xb5\x02\n" +
+	"\tGetObject\x12,.aserto.directory.v3.reader.GetObjectRequest\x1a-.aserto.directory.v3.reader.GetObjectResponse\"\xca\x01\xfaP\x89\x01\n" +
 	"\tdirectory\n" +
 	"\x03get\n" +
-	"\x06object\x12\x13Get object instance\x1a:Returns single object instance, optionally with relations.*\x1edirectory.reader.v3.object.get\x82\xd3\xe4\x93\x024\x122/api/v3/directory/object/{object_type}/{object_id}\x88\x02\x00\x12k\n" +
-	"\rGetObjectMany\x12).directory.v3.reader.GetObjectManyRequest\x1a*.directory.v3.reader.GetObjectManyResponse\"\x03\x88\x02\x00\x12\xfc\x01\n" +
+	"\x06object\x12\x13Get object instance\x1a:Returns single object instance, optionally with relations.*\x1edirectory.reader.v3.object.get\x82\xd3\xe4\x93\x024\x122/api/v3/directory/object/{object_type}/{object_id}\x88\x02\x00\x12y\n" +
+	"\rGetObjectMany\x120.aserto.directory.v3.reader.GetObjectManyRequest\x1a1.aserto.directory.v3.reader.GetObjectManyResponse\"\x03\x88\x02\x00\x12\x8a\x02\n" +
 	"\n" +
-	"GetObjects\x12&.directory.v3.reader.GetObjectsRequest\x1a'.directory.v3.reader.GetObjectsResponse\"\x9c\x01\xfaPu\n" +
+	"GetObjects\x12-.aserto.directory.v3.reader.GetObjectsRequest\x1a..aserto.directory.v3.reader.GetObjectsResponse\"\x9c\x01\xfaPu\n" +
 	"\tdirectory\n" +
 	"\x04list\n" +
-	"\x06object\x12\x15List object instances\x1a!Returns list of object instances.* directory.reader.v3.objects.list\x82\xd3\xe4\x93\x02\x1b\x12\x19/api/v3/directory/objects\x88\x02\x00\x12\x9b\x02\n" +
-	"\vGetRelation\x12'.directory.v3.reader.GetRelationRequest\x1a(.directory.v3.reader.GetRelationResponse\"\xb8\x01\xfaP\x8f\x01\n" +
+	"\x06object\x12\x15List object instances\x1a!Returns list of object instances.* directory.reader.v3.objects.list\x82\xd3\xe4\x93\x02\x1b\x12\x19/api/v3/directory/objects\x88\x02\x00\x12\xa9\x02\n" +
+	"\vGetRelation\x12..aserto.directory.v3.reader.GetRelationRequest\x1a/.aserto.directory.v3.reader.GetRelationResponse\"\xb8\x01\xfaP\x8f\x01\n" +
 	"\tdirectory\n" +
 	"\x03get\n" +
-	"\brelation\x12\x15Get relation instance\x1a:Returns single relation instance, optionally with objects.* directory.reader.v3.relation.get\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v3/directory/relation\x88\x02\x00\x12\x8d\x02\n" +
-	"\fGetRelations\x12(.directory.v3.reader.GetRelationsRequest\x1a).directory.v3.reader.GetRelationsResponse\"\xa7\x01\xfaP~\n" +
+	"\brelation\x12\x15Get relation instance\x1a:Returns single relation instance, optionally with objects.* directory.reader.v3.relation.get\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v3/directory/relation\x88\x02\x00\x12\x9b\x02\n" +
+	"\fGetRelations\x12/.aserto.directory.v3.reader.GetRelationsRequest\x1a0.aserto.directory.v3.reader.GetRelationsResponse\"\xa7\x01\xfaP~\n" +
 	"\tdirectory\n" +
 	"\x04list\n" +
-	"\brelation\x12\x18List relations instances\x1a#Returns list of relation instances.*\"directory.reader.v3.relations.list\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v3/directory/relations\x88\x02\x00\x12\xce\x01\n" +
-	"\x05Check\x12!.directory.v3.reader.CheckRequest\x1a\".directory.v3.reader.CheckResponse\"~\xfaPV\n" +
+	"\brelation\x12\x18List relations instances\x1a#Returns list of relation instances.*\"directory.reader.v3.relations.list\x82\xd3\xe4\x93\x02\x1d\x12\x1b/api/v3/directory/relations\x88\x02\x00\x12\xdc\x01\n" +
+	"\x05Check\x12(.aserto.directory.v3.reader.CheckRequest\x1a).aserto.directory.v3.reader.CheckResponse\"~\xfaPV\n" +
 	"\tdirectory\n" +
 	"\x05check\n" +
-	"\brelation\x12\x05Check\x1a\x16Returns check outcome.*\x19directory.reader.v3.check\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v3/directory/check\x88\x02\x00\x12\xe0\x01\n" +
-	"\x06Checks\x12\".directory.v3.reader.ChecksRequest\x1a#.directory.v3.reader.ChecksResponse\"\x8c\x01\xfaPc\n" +
+	"\brelation\x12\x05Check\x1a\x16Returns check outcome.*\x19directory.reader.v3.check\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v3/directory/check\x88\x02\x00\x12\xee\x01\n" +
+	"\x06Checks\x12).aserto.directory.v3.reader.ChecksRequest\x1a*.aserto.directory.v3.reader.ChecksResponse\"\x8c\x01\xfaPc\n" +
 	"\tdirectory\n" +
 	"\x06checks\n" +
-	"\brelation\x12\x06Checks\x1a Returns multiple check outcomes.*\x1adirectory.reader.v3.checks\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/v3/directory/checks\x88\x02\x00\x12\x9d\x02\n" +
-	"\x0fCheckPermission\x12+.directory.v3.reader.CheckPermissionRequest\x1a,.directory.v3.reader.CheckPermissionResponse\"\xae\x01\xfaP{\n" +
+	"\brelation\x12\x06Checks\x1a Returns multiple check outcomes.*\x1adirectory.reader.v3.checks\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/v3/directory/checks\x88\x02\x00\x12\xab\x02\n" +
+	"\x0fCheckPermission\x122.aserto.directory.v3.reader.CheckPermissionRequest\x1a3.aserto.directory.v3.reader.CheckPermissionResponse\"\xae\x01\xfaP{\n" +
 	"\tdirectory\n" +
 	"\x05check\n" +
 	"\n" +
-	"permission\x12\x10Check permission\x1a!Returns check permission outcome.*$directory.reader.v3.check.permission0\x01\x82\xd3\xe4\x93\x02':\x01*\"\"/api/v3/directory/check/permission\x88\x02\x01\x12\x8d\x02\n" +
-	"\rCheckRelation\x12).directory.v3.reader.CheckRelationRequest\x1a*.directory.v3.reader.CheckRelationResponse\"\xa4\x01\xfaPs\n" +
+	"permission\x12\x10Check permission\x1a!Returns check permission outcome.*$directory.reader.v3.check.permission0\x01\x82\xd3\xe4\x93\x02':\x01*\"\"/api/v3/directory/check/permission\x88\x02\x01\x12\x9b\x02\n" +
+	"\rCheckRelation\x120.aserto.directory.v3.reader.CheckRelationRequest\x1a1.aserto.directory.v3.reader.CheckRelationResponse\"\xa4\x01\xfaPs\n" +
 	"\tdirectory\n" +
 	"\x05check\n" +
-	"\brelation\x12\x0eCheck relation\x1a\x1fReturns check relation outcome.*\"directory.reader.v3.check.relation0\x01\x82\xd3\xe4\x93\x02%:\x01*\" /api/v3/directory/check/relation\x88\x02\x01\x12\x99\x02\n" +
-	"\bGetGraph\x12$.directory.v3.reader.GetGraphRequest\x1a%.directory.v3.reader.GetGraphResponse\"\xbf\x01\xfaPu\n" +
+	"\brelation\x12\x0eCheck relation\x1a\x1fReturns check relation outcome.*\"directory.reader.v3.check.relation0\x01\x82\xd3\xe4\x93\x02%:\x01*\" /api/v3/directory/check/relation\x88\x02\x01\x12\xa7\x02\n" +
+	"\bGetGraph\x12+.aserto.directory.v3.reader.GetGraphRequest\x1a,.aserto.directory.v3.reader.GetGraphResponse\"\xbf\x01\xfaPu\n" +
 	"\tdirectory\n" +
 	"\x03get\n" +
 	"\x05graph\x12\tGet graph\x1a6Returns object graph from anchor to subject or object.*\x19directory.reader.v3.graph\x82\xd3\xe4\x93\x02A\x12?/api/v3/directory/graph/{object_type}/{relation}/{subject_type}\x1a\x03\x88\x02\x00B\x9c\x04\xfaP\xdc\x03\n" +
@@ -1579,77 +1579,77 @@ func file_v3_reader_reader_proto_rawDescGZIP() []byte {
 
 var file_v3_reader_reader_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_v3_reader_reader_proto_goTypes = []any{
-	(*GetObjectRequest)(nil),          // 0: directory.v3.reader.GetObjectRequest
-	(*GetObjectResponse)(nil),         // 1: directory.v3.reader.GetObjectResponse
-	(*GetObjectManyRequest)(nil),      // 2: directory.v3.reader.GetObjectManyRequest
-	(*GetObjectManyResponse)(nil),     // 3: directory.v3.reader.GetObjectManyResponse
-	(*GetObjectsRequest)(nil),         // 4: directory.v3.reader.GetObjectsRequest
-	(*GetObjectsResponse)(nil),        // 5: directory.v3.reader.GetObjectsResponse
-	(*GetRelationRequest)(nil),        // 6: directory.v3.reader.GetRelationRequest
-	(*GetRelationResponse)(nil),       // 7: directory.v3.reader.GetRelationResponse
-	(*GetRelationsRequest)(nil),       // 8: directory.v3.reader.GetRelationsRequest
-	(*GetRelationsResponse)(nil),      // 9: directory.v3.reader.GetRelationsResponse
-	(*CheckRequest)(nil),              // 10: directory.v3.reader.CheckRequest
-	(*CheckResponse)(nil),             // 11: directory.v3.reader.CheckResponse
-	(*ChecksRequest)(nil),             // 12: directory.v3.reader.ChecksRequest
-	(*ChecksResponse)(nil),            // 13: directory.v3.reader.ChecksResponse
-	(*CheckPermissionRequest)(nil),    // 14: directory.v3.reader.CheckPermissionRequest
-	(*CheckPermissionResponse)(nil),   // 15: directory.v3.reader.CheckPermissionResponse
-	(*CheckRelationRequest)(nil),      // 16: directory.v3.reader.CheckRelationRequest
-	(*CheckRelationResponse)(nil),     // 17: directory.v3.reader.CheckRelationResponse
-	(*GetGraphRequest)(nil),           // 18: directory.v3.reader.GetGraphRequest
-	(*GetGraphResponse)(nil),          // 19: directory.v3.reader.GetGraphResponse
-	nil,                               // 20: directory.v3.reader.GetRelationResponse.ObjectsEntry
-	nil,                               // 21: directory.v3.reader.GetRelationsResponse.ObjectsEntry
-	(*common.Object)(nil),             // 22: directory.v3.common.Object
-	(*common.Relation)(nil),           // 23: directory.v3.common.Relation
-	(*common.ObjectIdentifier)(nil),   // 24: directory.v3.common.ObjectIdentifier
-	(*common.PaginationRequest)(nil),  // 25: directory.v3.common.PaginationRequest
-	(*common.PaginationResponse)(nil), // 26: directory.v3.common.PaginationResponse
+	(*GetObjectRequest)(nil),          // 0: aserto.directory.v3.reader.GetObjectRequest
+	(*GetObjectResponse)(nil),         // 1: aserto.directory.v3.reader.GetObjectResponse
+	(*GetObjectManyRequest)(nil),      // 2: aserto.directory.v3.reader.GetObjectManyRequest
+	(*GetObjectManyResponse)(nil),     // 3: aserto.directory.v3.reader.GetObjectManyResponse
+	(*GetObjectsRequest)(nil),         // 4: aserto.directory.v3.reader.GetObjectsRequest
+	(*GetObjectsResponse)(nil),        // 5: aserto.directory.v3.reader.GetObjectsResponse
+	(*GetRelationRequest)(nil),        // 6: aserto.directory.v3.reader.GetRelationRequest
+	(*GetRelationResponse)(nil),       // 7: aserto.directory.v3.reader.GetRelationResponse
+	(*GetRelationsRequest)(nil),       // 8: aserto.directory.v3.reader.GetRelationsRequest
+	(*GetRelationsResponse)(nil),      // 9: aserto.directory.v3.reader.GetRelationsResponse
+	(*CheckRequest)(nil),              // 10: aserto.directory.v3.reader.CheckRequest
+	(*CheckResponse)(nil),             // 11: aserto.directory.v3.reader.CheckResponse
+	(*ChecksRequest)(nil),             // 12: aserto.directory.v3.reader.ChecksRequest
+	(*ChecksResponse)(nil),            // 13: aserto.directory.v3.reader.ChecksResponse
+	(*CheckPermissionRequest)(nil),    // 14: aserto.directory.v3.reader.CheckPermissionRequest
+	(*CheckPermissionResponse)(nil),   // 15: aserto.directory.v3.reader.CheckPermissionResponse
+	(*CheckRelationRequest)(nil),      // 16: aserto.directory.v3.reader.CheckRelationRequest
+	(*CheckRelationResponse)(nil),     // 17: aserto.directory.v3.reader.CheckRelationResponse
+	(*GetGraphRequest)(nil),           // 18: aserto.directory.v3.reader.GetGraphRequest
+	(*GetGraphResponse)(nil),          // 19: aserto.directory.v3.reader.GetGraphResponse
+	nil,                               // 20: aserto.directory.v3.reader.GetRelationResponse.ObjectsEntry
+	nil,                               // 21: aserto.directory.v3.reader.GetRelationsResponse.ObjectsEntry
+	(*common.Object)(nil),             // 22: aserto.directory.v3.common.Object
+	(*common.Relation)(nil),           // 23: aserto.directory.v3.common.Relation
+	(*common.ObjectIdentifier)(nil),   // 24: aserto.directory.v3.common.ObjectIdentifier
+	(*common.PaginationRequest)(nil),  // 25: aserto.directory.v3.common.PaginationRequest
+	(*common.PaginationResponse)(nil), // 26: aserto.directory.v3.common.PaginationResponse
 	(*structpb.Struct)(nil),           // 27: google.protobuf.Struct
 }
 var file_v3_reader_reader_proto_depIdxs = []int32{
-	22, // 0: directory.v3.reader.GetObjectResponse.result:type_name -> directory.v3.common.Object
-	23, // 1: directory.v3.reader.GetObjectResponse.relations:type_name -> directory.v3.common.Relation
-	24, // 2: directory.v3.reader.GetObjectManyRequest.param:type_name -> directory.v3.common.ObjectIdentifier
-	22, // 3: directory.v3.reader.GetObjectManyResponse.results:type_name -> directory.v3.common.Object
-	25, // 4: directory.v3.reader.GetObjectsRequest.page:type_name -> directory.v3.common.PaginationRequest
-	22, // 5: directory.v3.reader.GetObjectsResponse.results:type_name -> directory.v3.common.Object
-	26, // 6: directory.v3.reader.GetObjectsResponse.page:type_name -> directory.v3.common.PaginationResponse
-	23, // 7: directory.v3.reader.GetRelationResponse.result:type_name -> directory.v3.common.Relation
-	20, // 8: directory.v3.reader.GetRelationResponse.objects:type_name -> directory.v3.reader.GetRelationResponse.ObjectsEntry
-	25, // 9: directory.v3.reader.GetRelationsRequest.page:type_name -> directory.v3.common.PaginationRequest
-	23, // 10: directory.v3.reader.GetRelationsResponse.results:type_name -> directory.v3.common.Relation
-	21, // 11: directory.v3.reader.GetRelationsResponse.objects:type_name -> directory.v3.reader.GetRelationsResponse.ObjectsEntry
-	26, // 12: directory.v3.reader.GetRelationsResponse.page:type_name -> directory.v3.common.PaginationResponse
-	27, // 13: directory.v3.reader.CheckResponse.context:type_name -> google.protobuf.Struct
-	10, // 14: directory.v3.reader.ChecksRequest.default:type_name -> directory.v3.reader.CheckRequest
-	10, // 15: directory.v3.reader.ChecksRequest.checks:type_name -> directory.v3.reader.CheckRequest
-	11, // 16: directory.v3.reader.ChecksResponse.checks:type_name -> directory.v3.reader.CheckResponse
-	24, // 17: directory.v3.reader.GetGraphResponse.results:type_name -> directory.v3.common.ObjectIdentifier
-	27, // 18: directory.v3.reader.GetGraphResponse.explanation:type_name -> google.protobuf.Struct
-	22, // 19: directory.v3.reader.GetRelationResponse.ObjectsEntry.value:type_name -> directory.v3.common.Object
-	22, // 20: directory.v3.reader.GetRelationsResponse.ObjectsEntry.value:type_name -> directory.v3.common.Object
-	0,  // 21: directory.v3.reader.Reader.GetObject:input_type -> directory.v3.reader.GetObjectRequest
-	2,  // 22: directory.v3.reader.Reader.GetObjectMany:input_type -> directory.v3.reader.GetObjectManyRequest
-	4,  // 23: directory.v3.reader.Reader.GetObjects:input_type -> directory.v3.reader.GetObjectsRequest
-	6,  // 24: directory.v3.reader.Reader.GetRelation:input_type -> directory.v3.reader.GetRelationRequest
-	8,  // 25: directory.v3.reader.Reader.GetRelations:input_type -> directory.v3.reader.GetRelationsRequest
-	10, // 26: directory.v3.reader.Reader.Check:input_type -> directory.v3.reader.CheckRequest
-	12, // 27: directory.v3.reader.Reader.Checks:input_type -> directory.v3.reader.ChecksRequest
-	14, // 28: directory.v3.reader.Reader.CheckPermission:input_type -> directory.v3.reader.CheckPermissionRequest
-	16, // 29: directory.v3.reader.Reader.CheckRelation:input_type -> directory.v3.reader.CheckRelationRequest
-	18, // 30: directory.v3.reader.Reader.GetGraph:input_type -> directory.v3.reader.GetGraphRequest
-	1,  // 31: directory.v3.reader.Reader.GetObject:output_type -> directory.v3.reader.GetObjectResponse
-	3,  // 32: directory.v3.reader.Reader.GetObjectMany:output_type -> directory.v3.reader.GetObjectManyResponse
-	5,  // 33: directory.v3.reader.Reader.GetObjects:output_type -> directory.v3.reader.GetObjectsResponse
-	7,  // 34: directory.v3.reader.Reader.GetRelation:output_type -> directory.v3.reader.GetRelationResponse
-	9,  // 35: directory.v3.reader.Reader.GetRelations:output_type -> directory.v3.reader.GetRelationsResponse
-	11, // 36: directory.v3.reader.Reader.Check:output_type -> directory.v3.reader.CheckResponse
-	13, // 37: directory.v3.reader.Reader.Checks:output_type -> directory.v3.reader.ChecksResponse
-	15, // 38: directory.v3.reader.Reader.CheckPermission:output_type -> directory.v3.reader.CheckPermissionResponse
-	17, // 39: directory.v3.reader.Reader.CheckRelation:output_type -> directory.v3.reader.CheckRelationResponse
-	19, // 40: directory.v3.reader.Reader.GetGraph:output_type -> directory.v3.reader.GetGraphResponse
+	22, // 0: aserto.directory.v3.reader.GetObjectResponse.result:type_name -> aserto.directory.v3.common.Object
+	23, // 1: aserto.directory.v3.reader.GetObjectResponse.relations:type_name -> aserto.directory.v3.common.Relation
+	24, // 2: aserto.directory.v3.reader.GetObjectManyRequest.param:type_name -> aserto.directory.v3.common.ObjectIdentifier
+	22, // 3: aserto.directory.v3.reader.GetObjectManyResponse.results:type_name -> aserto.directory.v3.common.Object
+	25, // 4: aserto.directory.v3.reader.GetObjectsRequest.page:type_name -> aserto.directory.v3.common.PaginationRequest
+	22, // 5: aserto.directory.v3.reader.GetObjectsResponse.results:type_name -> aserto.directory.v3.common.Object
+	26, // 6: aserto.directory.v3.reader.GetObjectsResponse.page:type_name -> aserto.directory.v3.common.PaginationResponse
+	23, // 7: aserto.directory.v3.reader.GetRelationResponse.result:type_name -> aserto.directory.v3.common.Relation
+	20, // 8: aserto.directory.v3.reader.GetRelationResponse.objects:type_name -> aserto.directory.v3.reader.GetRelationResponse.ObjectsEntry
+	25, // 9: aserto.directory.v3.reader.GetRelationsRequest.page:type_name -> aserto.directory.v3.common.PaginationRequest
+	23, // 10: aserto.directory.v3.reader.GetRelationsResponse.results:type_name -> aserto.directory.v3.common.Relation
+	21, // 11: aserto.directory.v3.reader.GetRelationsResponse.objects:type_name -> aserto.directory.v3.reader.GetRelationsResponse.ObjectsEntry
+	26, // 12: aserto.directory.v3.reader.GetRelationsResponse.page:type_name -> aserto.directory.v3.common.PaginationResponse
+	27, // 13: aserto.directory.v3.reader.CheckResponse.context:type_name -> google.protobuf.Struct
+	10, // 14: aserto.directory.v3.reader.ChecksRequest.default:type_name -> aserto.directory.v3.reader.CheckRequest
+	10, // 15: aserto.directory.v3.reader.ChecksRequest.checks:type_name -> aserto.directory.v3.reader.CheckRequest
+	11, // 16: aserto.directory.v3.reader.ChecksResponse.checks:type_name -> aserto.directory.v3.reader.CheckResponse
+	24, // 17: aserto.directory.v3.reader.GetGraphResponse.results:type_name -> aserto.directory.v3.common.ObjectIdentifier
+	27, // 18: aserto.directory.v3.reader.GetGraphResponse.explanation:type_name -> google.protobuf.Struct
+	22, // 19: aserto.directory.v3.reader.GetRelationResponse.ObjectsEntry.value:type_name -> aserto.directory.v3.common.Object
+	22, // 20: aserto.directory.v3.reader.GetRelationsResponse.ObjectsEntry.value:type_name -> aserto.directory.v3.common.Object
+	0,  // 21: aserto.directory.v3.reader.Reader.GetObject:input_type -> aserto.directory.v3.reader.GetObjectRequest
+	2,  // 22: aserto.directory.v3.reader.Reader.GetObjectMany:input_type -> aserto.directory.v3.reader.GetObjectManyRequest
+	4,  // 23: aserto.directory.v3.reader.Reader.GetObjects:input_type -> aserto.directory.v3.reader.GetObjectsRequest
+	6,  // 24: aserto.directory.v3.reader.Reader.GetRelation:input_type -> aserto.directory.v3.reader.GetRelationRequest
+	8,  // 25: aserto.directory.v3.reader.Reader.GetRelations:input_type -> aserto.directory.v3.reader.GetRelationsRequest
+	10, // 26: aserto.directory.v3.reader.Reader.Check:input_type -> aserto.directory.v3.reader.CheckRequest
+	12, // 27: aserto.directory.v3.reader.Reader.Checks:input_type -> aserto.directory.v3.reader.ChecksRequest
+	14, // 28: aserto.directory.v3.reader.Reader.CheckPermission:input_type -> aserto.directory.v3.reader.CheckPermissionRequest
+	16, // 29: aserto.directory.v3.reader.Reader.CheckRelation:input_type -> aserto.directory.v3.reader.CheckRelationRequest
+	18, // 30: aserto.directory.v3.reader.Reader.GetGraph:input_type -> aserto.directory.v3.reader.GetGraphRequest
+	1,  // 31: aserto.directory.v3.reader.Reader.GetObject:output_type -> aserto.directory.v3.reader.GetObjectResponse
+	3,  // 32: aserto.directory.v3.reader.Reader.GetObjectMany:output_type -> aserto.directory.v3.reader.GetObjectManyResponse
+	5,  // 33: aserto.directory.v3.reader.Reader.GetObjects:output_type -> aserto.directory.v3.reader.GetObjectsResponse
+	7,  // 34: aserto.directory.v3.reader.Reader.GetRelation:output_type -> aserto.directory.v3.reader.GetRelationResponse
+	9,  // 35: aserto.directory.v3.reader.Reader.GetRelations:output_type -> aserto.directory.v3.reader.GetRelationsResponse
+	11, // 36: aserto.directory.v3.reader.Reader.Check:output_type -> aserto.directory.v3.reader.CheckResponse
+	13, // 37: aserto.directory.v3.reader.Reader.Checks:output_type -> aserto.directory.v3.reader.ChecksResponse
+	15, // 38: aserto.directory.v3.reader.Reader.CheckPermission:output_type -> aserto.directory.v3.reader.CheckPermissionResponse
+	17, // 39: aserto.directory.v3.reader.Reader.CheckRelation:output_type -> aserto.directory.v3.reader.CheckRelationResponse
+	19, // 40: aserto.directory.v3.reader.Reader.GetGraph:output_type -> aserto.directory.v3.reader.GetGraphResponse
 	31, // [31:41] is the sub-list for method output_type
 	21, // [21:31] is the sub-list for method input_type
 	21, // [21:21] is the sub-list for extension type_name

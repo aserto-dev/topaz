@@ -479,16 +479,16 @@ var File_v3_model_model_proto protoreflect.FileDescriptor
 
 const file_v3_model_model_proto_rawDesc = "" +
 	"\n" +
-	"\x14v3/model/model.proto\x12\x12directory.v3.model\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a.protoc-gen-openapiv3/options/annotations.proto\"B\n" +
+	"\x14v3/model/model.proto\x12\x19aserto.directory.v3.model\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a.protoc-gen-openapiv3/options/annotations.proto\"B\n" +
 	"\x12GetManifestRequest\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty\"\xb9\x01\n" +
-	"\x13GetManifestResponse\x12:\n" +
-	"\bmetadata\x18\x01 \x01(\v2\x1c.directory.v3.model.MetadataH\x00R\bmetadata\x12.\n" +
-	"\x04body\x18\x02 \x01(\v2\x18.directory.v3.model.BodyH\x00R\x04body\x12/\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty\"\xc7\x01\n" +
+	"\x13GetManifestResponse\x12A\n" +
+	"\bmetadata\x18\x01 \x01(\v2#.aserto.directory.v3.model.MetadataH\x00R\bmetadata\x125\n" +
+	"\x04body\x18\x02 \x01(\v2\x1f.aserto.directory.v3.model.BodyH\x00R\x04body\x12/\n" +
 	"\x05model\x18\x03 \x01(\v2\x17.google.protobuf.StructH\x00R\x05modelB\x05\n" +
-	"\x03msg\"K\n" +
-	"\x12SetManifestRequest\x12.\n" +
-	"\x04body\x18\x01 \x01(\v2\x18.directory.v3.model.BodyH\x00R\x04bodyB\x05\n" +
+	"\x03msg\"R\n" +
+	"\x12SetManifestRequest\x125\n" +
+	"\x04body\x18\x01 \x01(\v2\x1f.aserto.directory.v3.model.BodyH\x00R\x04bodyB\x05\n" +
 	"\x03msg\"E\n" +
 	"\x13SetManifestResponse\x12.\n" +
 	"\x06result\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x06result\"E\n" +
@@ -501,11 +501,11 @@ const file_v3_model_model_proto_rawDesc = "" +
 	"updated_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampB\x04\xe2A\x01\x03R\tupdatedAt\x12\x18\n" +
 	"\x04etag\x18\x17 \x01(\tB\x04\xe2A\x01\x03R\x04etag\"\x1a\n" +
 	"\x04Body\x12\x12\n" +
-	"\x04data\x18\x02 \x01(\fR\x04data2\xd1\x03\n" +
-	"\x05Model\x12h\n" +
-	"\vGetManifest\x12&.directory.v3.model.GetManifestRequest\x1a'.directory.v3.model.GetManifestResponse\"\x06\x82\xd3\xe4\x93\x02\x000\x01\x12h\n" +
-	"\vSetManifest\x12&.directory.v3.model.SetManifestRequest\x1a'.directory.v3.model.SetManifestResponse\"\x06\x82\xd3\xe4\x93\x02\x00(\x01\x12\xf3\x01\n" +
-	"\x0eDeleteManifest\x12).directory.v3.model.DeleteManifestRequest\x1a*.directory.v3.model.DeleteManifestResponse\"\x89\x01\xfaPd\n" +
+	"\x04data\x18\x02 \x01(\fR\x04data2\xfb\x03\n" +
+	"\x05Model\x12v\n" +
+	"\vGetManifest\x12-.aserto.directory.v3.model.GetManifestRequest\x1a..aserto.directory.v3.model.GetManifestResponse\"\x06\x82\xd3\xe4\x93\x02\x000\x01\x12v\n" +
+	"\vSetManifest\x12-.aserto.directory.v3.model.SetManifestRequest\x1a..aserto.directory.v3.model.SetManifestResponse\"\x06\x82\xd3\xe4\x93\x02\x00(\x01\x12\x81\x02\n" +
+	"\x0eDeleteManifest\x120.aserto.directory.v3.model.DeleteManifestRequest\x1a1.aserto.directory.v3.model.DeleteManifestResponse\"\x89\x01\xfaPd\n" +
 	"\tdirectory\n" +
 	"\x06delete\n" +
 	"\bmanifest\x12\x0fDelete manifest\x1a\x10Delete manifest.*\"directory.model.v3.manifest.delete\x82\xd3\xe4\x93\x02\x1c*\x1a/api/v3/directory/manifestB\x9a\x04\xfaP\xdc\x03\n" +
@@ -545,34 +545,34 @@ func file_v3_model_model_proto_rawDescGZIP() []byte {
 
 var file_v3_model_model_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_v3_model_model_proto_goTypes = []any{
-	(*GetManifestRequest)(nil),     // 0: directory.v3.model.GetManifestRequest
-	(*GetManifestResponse)(nil),    // 1: directory.v3.model.GetManifestResponse
-	(*SetManifestRequest)(nil),     // 2: directory.v3.model.SetManifestRequest
-	(*SetManifestResponse)(nil),    // 3: directory.v3.model.SetManifestResponse
-	(*DeleteManifestRequest)(nil),  // 4: directory.v3.model.DeleteManifestRequest
-	(*DeleteManifestResponse)(nil), // 5: directory.v3.model.DeleteManifestResponse
-	(*Metadata)(nil),               // 6: directory.v3.model.Metadata
-	(*Body)(nil),                   // 7: directory.v3.model.Body
+	(*GetManifestRequest)(nil),     // 0: aserto.directory.v3.model.GetManifestRequest
+	(*GetManifestResponse)(nil),    // 1: aserto.directory.v3.model.GetManifestResponse
+	(*SetManifestRequest)(nil),     // 2: aserto.directory.v3.model.SetManifestRequest
+	(*SetManifestResponse)(nil),    // 3: aserto.directory.v3.model.SetManifestResponse
+	(*DeleteManifestRequest)(nil),  // 4: aserto.directory.v3.model.DeleteManifestRequest
+	(*DeleteManifestResponse)(nil), // 5: aserto.directory.v3.model.DeleteManifestResponse
+	(*Metadata)(nil),               // 6: aserto.directory.v3.model.Metadata
+	(*Body)(nil),                   // 7: aserto.directory.v3.model.Body
 	(*emptypb.Empty)(nil),          // 8: google.protobuf.Empty
 	(*structpb.Struct)(nil),        // 9: google.protobuf.Struct
 	(*timestamppb.Timestamp)(nil),  // 10: google.protobuf.Timestamp
 }
 var file_v3_model_model_proto_depIdxs = []int32{
-	8,  // 0: directory.v3.model.GetManifestRequest.empty:type_name -> google.protobuf.Empty
-	6,  // 1: directory.v3.model.GetManifestResponse.metadata:type_name -> directory.v3.model.Metadata
-	7,  // 2: directory.v3.model.GetManifestResponse.body:type_name -> directory.v3.model.Body
-	9,  // 3: directory.v3.model.GetManifestResponse.model:type_name -> google.protobuf.Struct
-	7,  // 4: directory.v3.model.SetManifestRequest.body:type_name -> directory.v3.model.Body
-	8,  // 5: directory.v3.model.SetManifestResponse.result:type_name -> google.protobuf.Empty
-	8,  // 6: directory.v3.model.DeleteManifestRequest.empty:type_name -> google.protobuf.Empty
-	8,  // 7: directory.v3.model.DeleteManifestResponse.result:type_name -> google.protobuf.Empty
-	10, // 8: directory.v3.model.Metadata.updated_at:type_name -> google.protobuf.Timestamp
-	0,  // 9: directory.v3.model.Model.GetManifest:input_type -> directory.v3.model.GetManifestRequest
-	2,  // 10: directory.v3.model.Model.SetManifest:input_type -> directory.v3.model.SetManifestRequest
-	4,  // 11: directory.v3.model.Model.DeleteManifest:input_type -> directory.v3.model.DeleteManifestRequest
-	1,  // 12: directory.v3.model.Model.GetManifest:output_type -> directory.v3.model.GetManifestResponse
-	3,  // 13: directory.v3.model.Model.SetManifest:output_type -> directory.v3.model.SetManifestResponse
-	5,  // 14: directory.v3.model.Model.DeleteManifest:output_type -> directory.v3.model.DeleteManifestResponse
+	8,  // 0: aserto.directory.v3.model.GetManifestRequest.empty:type_name -> google.protobuf.Empty
+	6,  // 1: aserto.directory.v3.model.GetManifestResponse.metadata:type_name -> aserto.directory.v3.model.Metadata
+	7,  // 2: aserto.directory.v3.model.GetManifestResponse.body:type_name -> aserto.directory.v3.model.Body
+	9,  // 3: aserto.directory.v3.model.GetManifestResponse.model:type_name -> google.protobuf.Struct
+	7,  // 4: aserto.directory.v3.model.SetManifestRequest.body:type_name -> aserto.directory.v3.model.Body
+	8,  // 5: aserto.directory.v3.model.SetManifestResponse.result:type_name -> google.protobuf.Empty
+	8,  // 6: aserto.directory.v3.model.DeleteManifestRequest.empty:type_name -> google.protobuf.Empty
+	8,  // 7: aserto.directory.v3.model.DeleteManifestResponse.result:type_name -> google.protobuf.Empty
+	10, // 8: aserto.directory.v3.model.Metadata.updated_at:type_name -> google.protobuf.Timestamp
+	0,  // 9: aserto.directory.v3.model.Model.GetManifest:input_type -> aserto.directory.v3.model.GetManifestRequest
+	2,  // 10: aserto.directory.v3.model.Model.SetManifest:input_type -> aserto.directory.v3.model.SetManifestRequest
+	4,  // 11: aserto.directory.v3.model.Model.DeleteManifest:input_type -> aserto.directory.v3.model.DeleteManifestRequest
+	1,  // 12: aserto.directory.v3.model.Model.GetManifest:output_type -> aserto.directory.v3.model.GetManifestResponse
+	3,  // 13: aserto.directory.v3.model.Model.SetManifest:output_type -> aserto.directory.v3.model.SetManifestResponse
+	5,  // 14: aserto.directory.v3.model.Model.DeleteManifest:output_type -> aserto.directory.v3.model.DeleteManifestResponse
 	12, // [12:15] is the sub-list for method output_type
 	9,  // [9:12] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name

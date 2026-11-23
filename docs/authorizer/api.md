@@ -4,41 +4,41 @@
 ## Table of Contents
 
 - [v2/api/api.proto](#v2_api_api-proto)
-    - [Decision](#authorizer-v2-api-Decision)
-    - [Decision.AnnotationsEntry](#authorizer-v2-api-Decision-AnnotationsEntry)
-    - [Decision.OutcomesEntry](#authorizer-v2-api-Decision-OutcomesEntry)
-    - [DecisionPolicy](#authorizer-v2-api-DecisionPolicy)
-    - [DecisionUser](#authorizer-v2-api-DecisionUser)
-    - [IdentityContext](#authorizer-v2-api-IdentityContext)
-    - [Module](#authorizer-v2-api-Module)
-    - [PolicyContext](#authorizer-v2-api-PolicyContext)
-    - [PolicyInstance](#authorizer-v2-api-PolicyInstance)
+    - [Decision](#aserto-authorizer-v2-api-Decision)
+    - [Decision.AnnotationsEntry](#aserto-authorizer-v2-api-Decision-AnnotationsEntry)
+    - [Decision.OutcomesEntry](#aserto-authorizer-v2-api-Decision-OutcomesEntry)
+    - [DecisionPolicy](#aserto-authorizer-v2-api-DecisionPolicy)
+    - [DecisionUser](#aserto-authorizer-v2-api-DecisionUser)
+    - [IdentityContext](#aserto-authorizer-v2-api-IdentityContext)
+    - [Module](#aserto-authorizer-v2-api-Module)
+    - [PolicyContext](#aserto-authorizer-v2-api-PolicyContext)
+    - [PolicyInstance](#aserto-authorizer-v2-api-PolicyInstance)
   
-    - [IdentityType](#authorizer-v2-api-IdentityType)
+    - [IdentityType](#aserto-authorizer-v2-api-IdentityType)
   
 - [v2/authorizer.proto](#v2_authorizer-proto)
-    - [CompileRequest](#authorizer-v2-CompileRequest)
-    - [CompileResponse](#authorizer-v2-CompileResponse)
-    - [Decision](#authorizer-v2-Decision)
-    - [DecisionTreeOptions](#authorizer-v2-DecisionTreeOptions)
-    - [DecisionTreeRequest](#authorizer-v2-DecisionTreeRequest)
-    - [DecisionTreeResponse](#authorizer-v2-DecisionTreeResponse)
-    - [GetPolicyRequest](#authorizer-v2-GetPolicyRequest)
-    - [GetPolicyResponse](#authorizer-v2-GetPolicyResponse)
-    - [InfoRequest](#authorizer-v2-InfoRequest)
-    - [InfoResponse](#authorizer-v2-InfoResponse)
-    - [IsRequest](#authorizer-v2-IsRequest)
-    - [IsResponse](#authorizer-v2-IsResponse)
-    - [ListPoliciesRequest](#authorizer-v2-ListPoliciesRequest)
-    - [ListPoliciesResponse](#authorizer-v2-ListPoliciesResponse)
-    - [QueryOptions](#authorizer-v2-QueryOptions)
-    - [QueryRequest](#authorizer-v2-QueryRequest)
-    - [QueryResponse](#authorizer-v2-QueryResponse)
+    - [CompileRequest](#aserto-authorizer-v2-CompileRequest)
+    - [CompileResponse](#aserto-authorizer-v2-CompileResponse)
+    - [Decision](#aserto-authorizer-v2-Decision)
+    - [DecisionTreeOptions](#aserto-authorizer-v2-DecisionTreeOptions)
+    - [DecisionTreeRequest](#aserto-authorizer-v2-DecisionTreeRequest)
+    - [DecisionTreeResponse](#aserto-authorizer-v2-DecisionTreeResponse)
+    - [GetPolicyRequest](#aserto-authorizer-v2-GetPolicyRequest)
+    - [GetPolicyResponse](#aserto-authorizer-v2-GetPolicyResponse)
+    - [InfoRequest](#aserto-authorizer-v2-InfoRequest)
+    - [InfoResponse](#aserto-authorizer-v2-InfoResponse)
+    - [IsRequest](#aserto-authorizer-v2-IsRequest)
+    - [IsResponse](#aserto-authorizer-v2-IsResponse)
+    - [ListPoliciesRequest](#aserto-authorizer-v2-ListPoliciesRequest)
+    - [ListPoliciesResponse](#aserto-authorizer-v2-ListPoliciesResponse)
+    - [QueryOptions](#aserto-authorizer-v2-QueryOptions)
+    - [QueryRequest](#aserto-authorizer-v2-QueryRequest)
+    - [QueryResponse](#aserto-authorizer-v2-QueryResponse)
   
-    - [PathSeparator](#authorizer-v2-PathSeparator)
-    - [TraceLevel](#authorizer-v2-TraceLevel)
+    - [PathSeparator](#aserto-authorizer-v2-PathSeparator)
+    - [TraceLevel](#aserto-authorizer-v2-TraceLevel)
   
-    - [Authorizer](#authorizer-v2-Authorizer)
+    - [Authorizer](#aserto-authorizer-v2-Authorizer)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -51,7 +51,7 @@
 
 
 
-<a name="authorizer-v2-api-Decision"></a>
+<a name="aserto-authorizer-v2-api-Decision"></a>
 
 ### Decision
 represents a decision that an authorizer performed in the past
@@ -62,18 +62,18 @@ represents a decision that an authorizer performed in the past
 | id | [string](#string) |  | id, unique id, replay a decision starting with this, also useful to de-dup |
 | timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | timestamp, UTC time when the decision was made |
 | path | [string](#string) |  | path, policy path used in decision |
-| user | [DecisionUser](#authorizer-v2-api-DecisionUser) |  | user, info about user for whom the decision as made |
-| policy | [DecisionPolicy](#authorizer-v2-api-DecisionPolicy) |  | policy, info about policy used for the decision |
-| outcomes | [Decision.OutcomesEntry](#authorizer-v2-api-Decision-OutcomesEntry) | repeated | outcomes of the decisions specified in the policy context |
+| user | [DecisionUser](#aserto-authorizer-v2-api-DecisionUser) |  | user, info about user for whom the decision as made |
+| policy | [DecisionPolicy](#aserto-authorizer-v2-api-DecisionPolicy) |  | policy, info about policy used for the decision |
+| outcomes | [Decision.OutcomesEntry](#aserto-authorizer-v2-api-Decision-OutcomesEntry) | repeated | outcomes of the decisions specified in the policy context |
 | resource | [google.protobuf.Struct](#google-protobuf-Struct) |  | resource context used by the decision |
-| annotations | [Decision.AnnotationsEntry](#authorizer-v2-api-Decision-AnnotationsEntry) | repeated | annotations that may be added to a decision |
+| annotations | [Decision.AnnotationsEntry](#aserto-authorizer-v2-api-Decision-AnnotationsEntry) | repeated | annotations that may be added to a decision |
 
 
 
 
 
 
-<a name="authorizer-v2-api-Decision-AnnotationsEntry"></a>
+<a name="aserto-authorizer-v2-api-Decision-AnnotationsEntry"></a>
 
 ### Decision.AnnotationsEntry
 
@@ -89,7 +89,7 @@ represents a decision that an authorizer performed in the past
 
 
 
-<a name="authorizer-v2-api-Decision-OutcomesEntry"></a>
+<a name="aserto-authorizer-v2-api-Decision-OutcomesEntry"></a>
 
 ### Decision.OutcomesEntry
 
@@ -105,7 +105,7 @@ represents a decision that an authorizer performed in the past
 
 
 
-<a name="authorizer-v2-api-DecisionPolicy"></a>
+<a name="aserto-authorizer-v2-api-DecisionPolicy"></a>
 
 ### DecisionPolicy
 information about a policy used in a decision
@@ -113,19 +113,19 @@ information about a policy used in a decision
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| context | [PolicyContext](#authorizer-v2-api-PolicyContext) |  | policy context used in the decision |
+| context | [PolicyContext](#aserto-authorizer-v2-api-PolicyContext) |  | policy context used in the decision |
 | registry_service | [string](#string) |  | registry service where policy was retrieved from (e.g. ghcr.io) |
 | registry_image | [string](#string) |  | registry image of the policy in the registry, including org (e.g. acmecorp/peoplefinder-abac) |
 | registry_tag | [string](#string) |  | registry tag of the policy image (e.g. 0.8.2 or latest) |
 | registry_digest | [string](#string) |  | registry digest of the policy image |
-| policy_instance | [PolicyInstance](#authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance used in decision |
+| policy_instance | [PolicyInstance](#aserto-authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance used in decision |
 
 
 
 
 
 
-<a name="authorizer-v2-api-DecisionUser"></a>
+<a name="aserto-authorizer-v2-api-DecisionUser"></a>
 
 ### DecisionUser
 information about a user on behalf of whom a decision was made
@@ -133,7 +133,7 @@ information about a user on behalf of whom a decision was made
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| context | [IdentityContext](#authorizer-v2-api-IdentityContext) |  | identity context used in the decision |
+| context | [IdentityContext](#aserto-authorizer-v2-api-IdentityContext) |  | identity context used in the decision |
 | id | [string](#string) |  | id of the user the identity resolved to |
 | email | [string](#string) |  | convenience human-readable identifier |
 
@@ -142,7 +142,7 @@ information about a user on behalf of whom a decision was made
 
 
 
-<a name="authorizer-v2-api-IdentityContext"></a>
+<a name="aserto-authorizer-v2-api-IdentityContext"></a>
 
 ### IdentityContext
 
@@ -151,14 +151,14 @@ information about a user on behalf of whom a decision was made
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | identity | [string](#string) |  | identity |
-| type | [IdentityType](#authorizer-v2-api-IdentityType) |  | identity type |
+| type | [IdentityType](#aserto-authorizer-v2-api-IdentityType) |  | identity type |
 
 
 
 
 
 
-<a name="authorizer-v2-api-Module"></a>
+<a name="aserto-authorizer-v2-api-Module"></a>
 
 ### Module
 module
@@ -177,7 +177,7 @@ module
 
 
 
-<a name="authorizer-v2-api-PolicyContext"></a>
+<a name="aserto-authorizer-v2-api-PolicyContext"></a>
 
 ### PolicyContext
 
@@ -193,7 +193,7 @@ module
 
 
 
-<a name="authorizer-v2-api-PolicyInstance"></a>
+<a name="aserto-authorizer-v2-api-PolicyInstance"></a>
 
 ### PolicyInstance
 Deprecated: No longer required.
@@ -211,7 +211,7 @@ Deprecated: No longer required.
  
 
 
-<a name="authorizer-v2-api-IdentityType"></a>
+<a name="aserto-authorizer-v2-api-IdentityType"></a>
 
 ### IdentityType
 Identity types, describes the payload type of the identity field inside the IdentityContext message.
@@ -240,7 +240,7 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 
 
-<a name="authorizer-v2-CompileRequest"></a>
+<a name="aserto-authorizer-v2-CompileRequest"></a>
 
 ### CompileRequest
 
@@ -252,18 +252,18 @@ Identity types, describes the payload type of the identity field inside the Iden
 | input | [string](#string) |  | input block |
 | unknowns | [string](#string) | repeated | unknowns |
 | disable_inlining | [string](#string) | repeated | disable inlining |
-| options | [QueryOptions](#authorizer-v2-QueryOptions) | optional | query options |
-| policy_context | [api.PolicyContext](#authorizer-v2-api-PolicyContext) | optional | policy context |
-| identity_context | [api.IdentityContext](#authorizer-v2-api-IdentityContext) | optional | identity context |
+| options | [QueryOptions](#aserto-authorizer-v2-QueryOptions) | optional | query options |
+| policy_context | [api.PolicyContext](#aserto-authorizer-v2-api-PolicyContext) | optional | policy context |
+| identity_context | [api.IdentityContext](#aserto-authorizer-v2-api-IdentityContext) | optional | identity context |
 | resource_context | [google.protobuf.Struct](#google-protobuf-Struct) | optional | resource context |
-| policy_instance | [api.PolicyInstance](#authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance |
+| policy_instance | [api.PolicyInstance](#aserto-authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance |
 
 
 
 
 
 
-<a name="authorizer-v2-CompileResponse"></a>
+<a name="aserto-authorizer-v2-CompileResponse"></a>
 
 ### CompileResponse
 
@@ -281,7 +281,7 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 
 
-<a name="authorizer-v2-Decision"></a>
+<a name="aserto-authorizer-v2-Decision"></a>
 
 ### Decision
 
@@ -297,7 +297,7 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 
 
-<a name="authorizer-v2-DecisionTreeOptions"></a>
+<a name="aserto-authorizer-v2-DecisionTreeOptions"></a>
 
 ### DecisionTreeOptions
 
@@ -305,14 +305,14 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| path_separator | [PathSeparator](#authorizer-v2-PathSeparator) |  |  |
+| path_separator | [PathSeparator](#aserto-authorizer-v2-PathSeparator) |  |  |
 
 
 
 
 
 
-<a name="authorizer-v2-DecisionTreeRequest"></a>
+<a name="aserto-authorizer-v2-DecisionTreeRequest"></a>
 
 ### DecisionTreeRequest
 
@@ -320,18 +320,18 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| policy_context | [api.PolicyContext](#authorizer-v2-api-PolicyContext) |  | policy context |
-| identity_context | [api.IdentityContext](#authorizer-v2-api-IdentityContext) |  | identity context |
-| options | [DecisionTreeOptions](#authorizer-v2-DecisionTreeOptions) |  | decision tree options |
+| policy_context | [api.PolicyContext](#aserto-authorizer-v2-api-PolicyContext) |  | policy context |
+| identity_context | [api.IdentityContext](#aserto-authorizer-v2-api-IdentityContext) |  | identity context |
+| options | [DecisionTreeOptions](#aserto-authorizer-v2-DecisionTreeOptions) |  | decision tree options |
 | resource_context | [google.protobuf.Struct](#google-protobuf-Struct) |  | resource context |
-| policy_instance | [api.PolicyInstance](#authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance |
+| policy_instance | [api.PolicyInstance](#aserto-authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance |
 
 
 
 
 
 
-<a name="authorizer-v2-DecisionTreeResponse"></a>
+<a name="aserto-authorizer-v2-DecisionTreeResponse"></a>
 
 ### DecisionTreeResponse
 
@@ -347,7 +347,7 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 
 
-<a name="authorizer-v2-GetPolicyRequest"></a>
+<a name="aserto-authorizer-v2-GetPolicyRequest"></a>
 
 ### GetPolicyRequest
 
@@ -357,14 +357,14 @@ Identity types, describes the payload type of the identity field inside the Iden
 | ----- | ---- | ----- | ----------- |
 | id | [string](#string) |  |  |
 | field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  |  |
-| policy_instance | [api.PolicyInstance](#authorizer-v2-api-PolicyInstance) | optional | **Deprecated.**  |
+| policy_instance | [api.PolicyInstance](#aserto-authorizer-v2-api-PolicyInstance) | optional | **Deprecated.**  |
 
 
 
 
 
 
-<a name="authorizer-v2-GetPolicyResponse"></a>
+<a name="aserto-authorizer-v2-GetPolicyResponse"></a>
 
 ### GetPolicyResponse
 
@@ -372,14 +372,14 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| result | [api.Module](#authorizer-v2-api-Module) |  |  |
+| result | [api.Module](#aserto-authorizer-v2-api-Module) |  |  |
 
 
 
 
 
 
-<a name="authorizer-v2-InfoRequest"></a>
+<a name="aserto-authorizer-v2-InfoRequest"></a>
 
 ### InfoRequest
 
@@ -389,7 +389,7 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 
 
-<a name="authorizer-v2-InfoResponse"></a>
+<a name="aserto-authorizer-v2-InfoResponse"></a>
 
 ### InfoResponse
 
@@ -408,7 +408,7 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 
 
-<a name="authorizer-v2-IsRequest"></a>
+<a name="aserto-authorizer-v2-IsRequest"></a>
 
 ### IsRequest
 
@@ -416,17 +416,17 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| policy_context | [api.PolicyContext](#authorizer-v2-api-PolicyContext) |  | policy context |
-| identity_context | [api.IdentityContext](#authorizer-v2-api-IdentityContext) |  | identity context |
+| policy_context | [api.PolicyContext](#aserto-authorizer-v2-api-PolicyContext) |  | policy context |
+| identity_context | [api.IdentityContext](#aserto-authorizer-v2-api-IdentityContext) |  | identity context |
 | resource_context | [google.protobuf.Struct](#google-protobuf-Struct) |  | resource context |
-| policy_instance | [api.PolicyInstance](#authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance |
+| policy_instance | [api.PolicyInstance](#aserto-authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance |
 
 
 
 
 
 
-<a name="authorizer-v2-IsResponse"></a>
+<a name="aserto-authorizer-v2-IsResponse"></a>
 
 ### IsResponse
 
@@ -434,14 +434,14 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| decisions | [Decision](#authorizer-v2-Decision) | repeated | decisions |
+| decisions | [Decision](#aserto-authorizer-v2-Decision) | repeated | decisions |
 
 
 
 
 
 
-<a name="authorizer-v2-ListPoliciesRequest"></a>
+<a name="aserto-authorizer-v2-ListPoliciesRequest"></a>
 
 ### ListPoliciesRequest
 
@@ -450,14 +450,14 @@ Identity types, describes the payload type of the identity field inside the Iden
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | field_mask | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  |  |
-| policy_instance | [api.PolicyInstance](#authorizer-v2-api-PolicyInstance) | optional | **Deprecated.**  |
+| policy_instance | [api.PolicyInstance](#aserto-authorizer-v2-api-PolicyInstance) | optional | **Deprecated.**  |
 
 
 
 
 
 
-<a name="authorizer-v2-ListPoliciesResponse"></a>
+<a name="aserto-authorizer-v2-ListPoliciesResponse"></a>
 
 ### ListPoliciesResponse
 
@@ -465,14 +465,14 @@ Identity types, describes the payload type of the identity field inside the Iden
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| result | [api.Module](#authorizer-v2-api-Module) | repeated |  |
+| result | [api.Module](#aserto-authorizer-v2-api-Module) | repeated |  |
 
 
 
 
 
 
-<a name="authorizer-v2-QueryOptions"></a>
+<a name="aserto-authorizer-v2-QueryOptions"></a>
 
 ### QueryOptions
 
@@ -484,7 +484,7 @@ Identity types, describes the payload type of the identity field inside the Iden
 | instrument | [bool](#bool) |  | instrument (default false)
 
 default false |
-| trace | [TraceLevel](#authorizer-v2-TraceLevel) |  | trace level (default ExplainOffV1) |
+| trace | [TraceLevel](#aserto-authorizer-v2-TraceLevel) |  | trace level (default ExplainOffV1) |
 | trace_summary | [bool](#bool) |  | trace summary (default false) |
 
 
@@ -492,7 +492,7 @@ default false |
 
 
 
-<a name="authorizer-v2-QueryRequest"></a>
+<a name="aserto-authorizer-v2-QueryRequest"></a>
 
 ### QueryRequest
 
@@ -502,18 +502,18 @@ default false |
 | ----- | ---- | ----- | ----------- |
 | query | [string](#string) |  | query |
 | input | [string](#string) |  | query input block |
-| options | [QueryOptions](#authorizer-v2-QueryOptions) | optional | query options |
-| policy_context | [api.PolicyContext](#authorizer-v2-api-PolicyContext) | optional | policy context |
-| identity_context | [api.IdentityContext](#authorizer-v2-api-IdentityContext) | optional | identity context |
+| options | [QueryOptions](#aserto-authorizer-v2-QueryOptions) | optional | query options |
+| policy_context | [api.PolicyContext](#aserto-authorizer-v2-api-PolicyContext) | optional | policy context |
+| identity_context | [api.IdentityContext](#aserto-authorizer-v2-api-IdentityContext) | optional | identity context |
 | resource_context | [google.protobuf.Struct](#google-protobuf-Struct) | optional | resource context |
-| policy_instance | [api.PolicyInstance](#authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance |
+| policy_instance | [api.PolicyInstance](#aserto-authorizer-v2-api-PolicyInstance) | optional | **Deprecated.** policy instance |
 
 
 
 
 
 
-<a name="authorizer-v2-QueryResponse"></a>
+<a name="aserto-authorizer-v2-QueryResponse"></a>
 
 ### QueryResponse
 
@@ -533,7 +533,7 @@ default false |
  
 
 
-<a name="authorizer-v2-PathSeparator"></a>
+<a name="aserto-authorizer-v2-PathSeparator"></a>
 
 ### PathSeparator
 
@@ -546,7 +546,7 @@ default false |
 
 
 
-<a name="authorizer-v2-TraceLevel"></a>
+<a name="aserto-authorizer-v2-TraceLevel"></a>
 
 ### TraceLevel
 
@@ -565,20 +565,20 @@ default false |
  
 
 
-<a name="authorizer-v2-Authorizer"></a>
+<a name="aserto-authorizer-v2-Authorizer"></a>
 
 ### Authorizer
 
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| DecisionTree | [DecisionTreeRequest](#authorizer-v2-DecisionTreeRequest) | [DecisionTreeResponse](#authorizer-v2-DecisionTreeResponse) |  |
-| Is | [IsRequest](#authorizer-v2-IsRequest) | [IsResponse](#authorizer-v2-IsResponse) |  |
-| Query | [QueryRequest](#authorizer-v2-QueryRequest) | [QueryResponse](#authorizer-v2-QueryResponse) |  |
-| Compile | [CompileRequest](#authorizer-v2-CompileRequest) | [CompileResponse](#authorizer-v2-CompileResponse) |  |
-| ListPolicies | [ListPoliciesRequest](#authorizer-v2-ListPoliciesRequest) | [ListPoliciesResponse](#authorizer-v2-ListPoliciesResponse) |  |
-| GetPolicy | [GetPolicyRequest](#authorizer-v2-GetPolicyRequest) | [GetPolicyResponse](#authorizer-v2-GetPolicyResponse) |  |
-| Info | [InfoRequest](#authorizer-v2-InfoRequest) | [InfoResponse](#authorizer-v2-InfoResponse) |  |
+| DecisionTree | [DecisionTreeRequest](#aserto-authorizer-v2-DecisionTreeRequest) | [DecisionTreeResponse](#aserto-authorizer-v2-DecisionTreeResponse) |  |
+| Is | [IsRequest](#aserto-authorizer-v2-IsRequest) | [IsResponse](#aserto-authorizer-v2-IsResponse) |  |
+| Query | [QueryRequest](#aserto-authorizer-v2-QueryRequest) | [QueryResponse](#aserto-authorizer-v2-QueryResponse) |  |
+| Compile | [CompileRequest](#aserto-authorizer-v2-CompileRequest) | [CompileResponse](#aserto-authorizer-v2-CompileResponse) |  |
+| ListPolicies | [ListPoliciesRequest](#aserto-authorizer-v2-ListPoliciesRequest) | [ListPoliciesResponse](#aserto-authorizer-v2-ListPoliciesResponse) |  |
+| GetPolicy | [GetPolicyRequest](#aserto-authorizer-v2-GetPolicyRequest) | [GetPolicyResponse](#aserto-authorizer-v2-GetPolicyResponse) |  |
+| Info | [InfoRequest](#aserto-authorizer-v2-InfoRequest) | [InfoResponse](#aserto-authorizer-v2-InfoResponse) |  |
 
  
 

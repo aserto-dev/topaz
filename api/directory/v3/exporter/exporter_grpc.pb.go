@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Exporter_Export_FullMethodName = "/directory.v3.exporter.Exporter/Export"
+	Exporter_Export_FullMethodName = "/aserto.directory.v3.exporter.Exporter/Export"
 )
 
 // ExporterClient is the client API for Exporter service.
@@ -110,7 +110,7 @@ type Exporter_ExportServer = grpc.ServerStreamingServer[ExportResponse]
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Exporter_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "directory.v3.exporter.Exporter",
+	ServiceName: "aserto.directory.v3.exporter.Exporter",
 	HandlerType: (*ExporterServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{

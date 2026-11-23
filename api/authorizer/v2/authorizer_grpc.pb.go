@@ -19,13 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Authorizer_DecisionTree_FullMethodName = "/authorizer.v2.Authorizer/DecisionTree"
-	Authorizer_Is_FullMethodName           = "/authorizer.v2.Authorizer/Is"
-	Authorizer_Query_FullMethodName        = "/authorizer.v2.Authorizer/Query"
-	Authorizer_Compile_FullMethodName      = "/authorizer.v2.Authorizer/Compile"
-	Authorizer_ListPolicies_FullMethodName = "/authorizer.v2.Authorizer/ListPolicies"
-	Authorizer_GetPolicy_FullMethodName    = "/authorizer.v2.Authorizer/GetPolicy"
-	Authorizer_Info_FullMethodName         = "/authorizer.v2.Authorizer/Info"
+	Authorizer_DecisionTree_FullMethodName = "/aserto.authorizer.v2.Authorizer/DecisionTree"
+	Authorizer_Is_FullMethodName           = "/aserto.authorizer.v2.Authorizer/Is"
+	Authorizer_Query_FullMethodName        = "/aserto.authorizer.v2.Authorizer/Query"
+	Authorizer_Compile_FullMethodName      = "/aserto.authorizer.v2.Authorizer/Compile"
+	Authorizer_ListPolicies_FullMethodName = "/aserto.authorizer.v2.Authorizer/ListPolicies"
+	Authorizer_GetPolicy_FullMethodName    = "/aserto.authorizer.v2.Authorizer/GetPolicy"
+	Authorizer_Info_FullMethodName         = "/aserto.authorizer.v2.Authorizer/Info"
 )
 
 // AuthorizerClient is the client API for Authorizer service.
@@ -313,7 +313,7 @@ func _Authorizer_Info_Handler(srv interface{}, ctx context.Context, dec func(int
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Authorizer_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "authorizer.v2.Authorizer",
+	ServiceName: "aserto.authorizer.v2.Authorizer",
 	HandlerType: (*AuthorizerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

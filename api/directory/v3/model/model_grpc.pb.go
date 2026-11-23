@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Model_GetManifest_FullMethodName    = "/directory.v3.model.Model/GetManifest"
-	Model_SetManifest_FullMethodName    = "/directory.v3.model.Model/SetManifest"
-	Model_DeleteManifest_FullMethodName = "/directory.v3.model.Model/DeleteManifest"
+	Model_GetManifest_FullMethodName    = "/aserto.directory.v3.model.Model/GetManifest"
+	Model_SetManifest_FullMethodName    = "/aserto.directory.v3.model.Model/SetManifest"
+	Model_DeleteManifest_FullMethodName = "/aserto.directory.v3.model.Model/DeleteManifest"
 )
 
 // ModelClient is the client API for Model service.
@@ -174,7 +174,7 @@ func _Model_DeleteManifest_Handler(srv interface{}, ctx context.Context, dec fun
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Model_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "directory.v3.model.Model",
+	ServiceName: "aserto.directory.v3.model.Model",
 	HandlerType: (*ModelServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
