@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Importer_Import_FullMethodName = "/aserto.directory.v3.importer.Importer/Import"
+	Importer_Import_FullMethodName = "/aserto.directory.importer.v3.Importer/Import"
 )
 
 // ImporterClient is the client API for Importer service.
@@ -100,7 +100,7 @@ type Importer_ImportServer = grpc.BidiStreamingServer[ImportRequest, ImportRespo
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Importer_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "aserto.directory.v3.importer.Importer",
+	ServiceName: "aserto.directory.importer.v3.Importer",
 	HandlerType: (*ImporterServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package aserto.directory.v3.model;
+package aserto.directory.model.v3;
 
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";

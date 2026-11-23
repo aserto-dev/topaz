@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Writer_SetObject_FullMethodName      = "/aserto.directory.v3.writer.Writer/SetObject"
-	Writer_DeleteObject_FullMethodName   = "/aserto.directory.v3.writer.Writer/DeleteObject"
-	Writer_SetRelation_FullMethodName    = "/aserto.directory.v3.writer.Writer/SetRelation"
-	Writer_DeleteRelation_FullMethodName = "/aserto.directory.v3.writer.Writer/DeleteRelation"
+	Writer_SetObject_FullMethodName      = "/aserto.directory.writer.v3.Writer/SetObject"
+	Writer_DeleteObject_FullMethodName   = "/aserto.directory.writer.v3.Writer/DeleteObject"
+	Writer_SetRelation_FullMethodName    = "/aserto.directory.writer.v3.Writer/SetRelation"
+	Writer_DeleteRelation_FullMethodName = "/aserto.directory.writer.v3.Writer/DeleteRelation"
 )
 
 // WriterClient is the client API for Writer service.
@@ -216,7 +216,7 @@ func _Writer_DeleteRelation_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Writer_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "aserto.directory.v3.writer.Writer",
+	ServiceName: "aserto.directory.writer.v3.Writer",
 	HandlerType: (*WriterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

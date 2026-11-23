@@ -136,7 +136,7 @@ func RegisterImporterHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.importer.Importer/Import", runtime.WithHTTPPathPattern("/aserto.directory.v3.importer.Importer/Import"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.importer.v3.Importer/Import", runtime.WithHTTPPathPattern("/aserto.directory.importer.v3.Importer/Import"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -153,7 +153,7 @@ func RegisterImporterHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 }
 
 var (
-	pattern_Importer_Import_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"aserto.directory.v3.importer.Importer", "Import"}, ""))
+	pattern_Importer_Import_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"aserto.directory.importer.v3.Importer", "Import"}, ""))
 )
 
 var (

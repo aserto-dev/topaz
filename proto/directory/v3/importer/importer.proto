@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package aserto.directory.v3.importer;
+package aserto.directory.importer.v3;
 
 import "v3/common/common.proto";
 import "google/api/field_behavior.proto";
@@ -21,13 +21,13 @@ message ImportRequest {
   ];
   oneof msg {
     // object import message
-    aserto.directory.v3.common.Object object = 5 [
+    aserto.directory.common.v3.Object object = 5 [
       json_name = "object",
       (google.api.field_behavior) = OPTIONAL,
       deprecated = false
     ];
     // relation import message
-    aserto.directory.v3.common.Relation relation = 6 [
+    aserto.directory.common.v3.Relation relation = 6 [
       json_name = "relation",
       (google.api.field_behavior) = OPTIONAL,
       deprecated = false

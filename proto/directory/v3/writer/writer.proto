@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package aserto.directory.v3.writer;
+package aserto.directory.writer.v3;
 
 import "v3/common/common.proto";
 import "google/api/annotations.proto";
@@ -148,7 +148,7 @@ service Writer {
 
 message SetObjectRequest {
   // object instance
-  aserto.directory.v3.common.Object object = 1 [
+  aserto.directory.common.v3.Object object = 1 [
     json_name = "object",
     (google.api.field_behavior) = REQUIRED,
     deprecated = false
@@ -157,7 +157,7 @@ message SetObjectRequest {
 
 message SetObjectResponse {
   // object instance
-  aserto.directory.v3.common.Object result = 1 [
+  aserto.directory.common.v3.Object result = 1 [
     json_name = "result",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -196,7 +196,7 @@ message DeleteObjectResponse {
 
 message SetRelationRequest {
   // relation instance
-  aserto.directory.v3.common.Relation relation = 1 [
+  aserto.directory.common.v3.Relation relation = 1 [
     json_name = "relation",
     (google.api.field_behavior) = REQUIRED,
     deprecated = false
@@ -205,7 +205,7 @@ message SetRelationRequest {
 
 message SetRelationResponse {
   // relation instance
-  aserto.directory.v3.common.Relation result = 1 [
+  aserto.directory.common.v3.Relation result = 1 [
     json_name = "result",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false

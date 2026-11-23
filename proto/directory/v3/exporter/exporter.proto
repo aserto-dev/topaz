@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package aserto.directory.v3.exporter;
+package aserto.directory.exporter.v3;
 
 import "v3/common/common.proto";
 import "google/api/field_behavior.proto";
@@ -32,13 +32,13 @@ message ExportRequest {
 message ExportResponse {
   oneof msg {
     // object instance (data)
-    aserto.directory.v3.common.Object object = 2 [
+    aserto.directory.common.v3.Object object = 2 [
       json_name = "object",
       (google.api.field_behavior) = OUTPUT_ONLY,
       deprecated = false
     ];
     // relation instance (data)
-    aserto.directory.v3.common.Relation relation = 4 [
+    aserto.directory.common.v3.Relation relation = 4 [
       json_name = "relation",
       (google.api.field_behavior) = OUTPUT_ONLY,
       deprecated = false

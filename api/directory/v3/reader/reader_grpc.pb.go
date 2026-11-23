@@ -19,16 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Reader_GetObject_FullMethodName       = "/aserto.directory.v3.reader.Reader/GetObject"
-	Reader_GetObjectMany_FullMethodName   = "/aserto.directory.v3.reader.Reader/GetObjectMany"
-	Reader_GetObjects_FullMethodName      = "/aserto.directory.v3.reader.Reader/GetObjects"
-	Reader_GetRelation_FullMethodName     = "/aserto.directory.v3.reader.Reader/GetRelation"
-	Reader_GetRelations_FullMethodName    = "/aserto.directory.v3.reader.Reader/GetRelations"
-	Reader_Check_FullMethodName           = "/aserto.directory.v3.reader.Reader/Check"
-	Reader_Checks_FullMethodName          = "/aserto.directory.v3.reader.Reader/Checks"
-	Reader_CheckPermission_FullMethodName = "/aserto.directory.v3.reader.Reader/CheckPermission"
-	Reader_CheckRelation_FullMethodName   = "/aserto.directory.v3.reader.Reader/CheckRelation"
-	Reader_GetGraph_FullMethodName        = "/aserto.directory.v3.reader.Reader/GetGraph"
+	Reader_GetObject_FullMethodName       = "/aserto.directory.reader.v3.Reader/GetObject"
+	Reader_GetObjectMany_FullMethodName   = "/aserto.directory.reader.v3.Reader/GetObjectMany"
+	Reader_GetObjects_FullMethodName      = "/aserto.directory.reader.v3.Reader/GetObjects"
+	Reader_GetRelation_FullMethodName     = "/aserto.directory.reader.v3.Reader/GetRelation"
+	Reader_GetRelations_FullMethodName    = "/aserto.directory.reader.v3.Reader/GetRelations"
+	Reader_Check_FullMethodName           = "/aserto.directory.reader.v3.Reader/Check"
+	Reader_Checks_FullMethodName          = "/aserto.directory.reader.v3.Reader/Checks"
+	Reader_CheckPermission_FullMethodName = "/aserto.directory.reader.v3.Reader/CheckPermission"
+	Reader_CheckRelation_FullMethodName   = "/aserto.directory.reader.v3.Reader/CheckRelation"
+	Reader_GetGraph_FullMethodName        = "/aserto.directory.reader.v3.Reader/GetGraph"
 )
 
 // ReaderClient is the client API for Reader service.
@@ -442,7 +442,7 @@ func _Reader_GetGraph_Handler(srv interface{}, ctx context.Context, dec func(int
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Reader_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "aserto.directory.v3.reader.Reader",
+	ServiceName: "aserto.directory.reader.v3.Reader",
 	HandlerType: (*ReaderServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

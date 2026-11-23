@@ -452,11 +452,11 @@ var File_v3_writer_writer_proto protoreflect.FileDescriptor
 
 const file_v3_writer_writer_proto_rawDesc = "" +
 	"\n" +
-	"\x16v3/writer/writer.proto\x12\x1aaserto.directory.v3.writer\x1a\x16v3/common/common.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv3/options/annotations.proto\"V\n" +
+	"\x16v3/writer/writer.proto\x12\x1aaserto.directory.writer.v3\x1a\x16v3/common/common.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv3/options/annotations.proto\"V\n" +
 	"\x10SetObjectRequest\x12B\n" +
-	"\x06object\x18\x01 \x01(\v2\".aserto.directory.v3.common.ObjectB\x06\xe2A\x01\x02\x18\x00R\x06object\"W\n" +
+	"\x06object\x18\x01 \x01(\v2\".aserto.directory.common.v3.ObjectB\x06\xe2A\x01\x02\x18\x00R\x06object\"W\n" +
 	"\x11SetObjectResponse\x12B\n" +
-	"\x06result\x18\x01 \x01(\v2\".aserto.directory.v3.common.ObjectB\x06\xe2A\x01\x03\x18\x00R\x06result\"\x95\x01\n" +
+	"\x06result\x18\x01 \x01(\v2\".aserto.directory.common.v3.ObjectB\x06\xe2A\x01\x03\x18\x00R\x06result\"\x95\x01\n" +
 	"\x13DeleteObjectRequest\x12(\n" +
 	"\vobject_type\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\vobject_type\x12$\n" +
 	"\tobject_id\x18\x02 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\tobject_id\x12.\n" +
@@ -464,9 +464,9 @@ const file_v3_writer_writer_proto_rawDesc = "" +
 	"\x14DeleteObjectResponse\x126\n" +
 	"\x06result\x18\x01 \x01(\v2\x16.google.protobuf.EmptyB\x06\xe2A\x01\x03\x18\x00R\x06result\"^\n" +
 	"\x12SetRelationRequest\x12H\n" +
-	"\brelation\x18\x01 \x01(\v2$.aserto.directory.v3.common.RelationB\x06\xe2A\x01\x02\x18\x00R\brelation\"[\n" +
+	"\brelation\x18\x01 \x01(\v2$.aserto.directory.common.v3.RelationB\x06\xe2A\x01\x02\x18\x00R\brelation\"[\n" +
 	"\x13SetRelationResponse\x12D\n" +
-	"\x06result\x18\x01 \x01(\v2$.aserto.directory.v3.common.RelationB\x06\xe2A\x01\x03\x18\x00R\x06result\"\x93\x02\n" +
+	"\x06result\x18\x01 \x01(\v2$.aserto.directory.common.v3.RelationB\x06\xe2A\x01\x03\x18\x00R\x06result\"\x93\x02\n" +
 	"\x15DeleteRelationRequest\x12(\n" +
 	"\vobject_type\x18\x01 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\vobject_type\x12$\n" +
 	"\tobject_id\x18\x02 \x01(\tB\x06\xe2A\x01\x02\x18\x00R\tobject_id\x12\"\n" +
@@ -479,20 +479,20 @@ const file_v3_writer_writer_proto_rawDesc = "" +
 	"\x16DeleteRelationResponse\x126\n" +
 	"\x06result\x18\x01 \x01(\v2\x16.google.protobuf.EmptyB\x06\xe2A\x01\x03\x18\x00R\x06result2\x85\b\n" +
 	"\x06Writer\x12\xe4\x01\n" +
-	"\tSetObject\x12,.aserto.directory.v3.writer.SetObjectRequest\x1a-.aserto.directory.v3.writer.SetObjectResponse\"z\xfaPQ\n" +
+	"\tSetObject\x12,.aserto.directory.writer.v3.SetObjectRequest\x1a-.aserto.directory.writer.v3.SetObjectResponse\"z\xfaPQ\n" +
 	"\tdirectory\n" +
 	"\x03set\n" +
 	"\x06object\x12\n" +
 	"Set object\x1a\vSet object.*\x1edirectory.writer.v3.object.set\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/v3/directory/object\x88\x02\x00\x12\x91\x02\n" +
-	"\fDeleteObject\x12/.aserto.directory.v3.writer.DeleteObjectRequest\x1a0.aserto.directory.v3.writer.DeleteObjectResponse\"\x9d\x01\xfaP]\n" +
+	"\fDeleteObject\x12/.aserto.directory.writer.v3.DeleteObjectRequest\x1a0.aserto.directory.writer.v3.DeleteObjectResponse\"\x9d\x01\xfaP]\n" +
 	"\tdirectory\n" +
 	"\x06delete\n" +
 	"\x06object\x12\rDelete object\x1a\x0eDelete object.*!directory.writer.v3.object.delete\x82\xd3\xe4\x93\x024*2/api/v3/directory/object/{object_type}/{object_id}\x88\x02\x00\x12\xf5\x01\n" +
-	"\vSetRelation\x12..aserto.directory.v3.writer.SetRelationRequest\x1a/.aserto.directory.v3.writer.SetRelationResponse\"\x84\x01\xfaPY\n" +
+	"\vSetRelation\x12..aserto.directory.writer.v3.SetRelationRequest\x1a/.aserto.directory.writer.v3.SetRelationResponse\"\x84\x01\xfaPY\n" +
 	"\tdirectory\n" +
 	"\x03set\n" +
 	"\brelation\x12\fSet relation\x1a\rSet relation.* directory.writer.v3.relation.set\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v3/directory/relation\x88\x02\x00\x12\x87\x02\n" +
-	"\x0eDeleteRelation\x121.aserto.directory.v3.writer.DeleteRelationRequest\x1a2.aserto.directory.v3.writer.DeleteRelationResponse\"\x8d\x01\xfaPe\n" +
+	"\x0eDeleteRelation\x121.aserto.directory.writer.v3.DeleteRelationRequest\x1a2.aserto.directory.writer.v3.DeleteRelationResponse\"\x8d\x01\xfaPe\n" +
 	"\tdirectory\n" +
 	"\x06delete\n" +
 	"\brelation\x12\x0fDelete relation\x1a\x10Delete relation.*#directory.writer.v3.relation.delete\x82\xd3\xe4\x93\x02\x1c*\x1a/api/v3/directory/relation\x88\x02\x00B\x9c\x04\xfaP\xdc\x03\n" +
@@ -532,33 +532,33 @@ func file_v3_writer_writer_proto_rawDescGZIP() []byte {
 
 var file_v3_writer_writer_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_v3_writer_writer_proto_goTypes = []any{
-	(*SetObjectRequest)(nil),       // 0: aserto.directory.v3.writer.SetObjectRequest
-	(*SetObjectResponse)(nil),      // 1: aserto.directory.v3.writer.SetObjectResponse
-	(*DeleteObjectRequest)(nil),    // 2: aserto.directory.v3.writer.DeleteObjectRequest
-	(*DeleteObjectResponse)(nil),   // 3: aserto.directory.v3.writer.DeleteObjectResponse
-	(*SetRelationRequest)(nil),     // 4: aserto.directory.v3.writer.SetRelationRequest
-	(*SetRelationResponse)(nil),    // 5: aserto.directory.v3.writer.SetRelationResponse
-	(*DeleteRelationRequest)(nil),  // 6: aserto.directory.v3.writer.DeleteRelationRequest
-	(*DeleteRelationResponse)(nil), // 7: aserto.directory.v3.writer.DeleteRelationResponse
-	(*common.Object)(nil),          // 8: aserto.directory.v3.common.Object
+	(*SetObjectRequest)(nil),       // 0: aserto.directory.writer.v3.SetObjectRequest
+	(*SetObjectResponse)(nil),      // 1: aserto.directory.writer.v3.SetObjectResponse
+	(*DeleteObjectRequest)(nil),    // 2: aserto.directory.writer.v3.DeleteObjectRequest
+	(*DeleteObjectResponse)(nil),   // 3: aserto.directory.writer.v3.DeleteObjectResponse
+	(*SetRelationRequest)(nil),     // 4: aserto.directory.writer.v3.SetRelationRequest
+	(*SetRelationResponse)(nil),    // 5: aserto.directory.writer.v3.SetRelationResponse
+	(*DeleteRelationRequest)(nil),  // 6: aserto.directory.writer.v3.DeleteRelationRequest
+	(*DeleteRelationResponse)(nil), // 7: aserto.directory.writer.v3.DeleteRelationResponse
+	(*common.Object)(nil),          // 8: aserto.directory.common.v3.Object
 	(*emptypb.Empty)(nil),          // 9: google.protobuf.Empty
-	(*common.Relation)(nil),        // 10: aserto.directory.v3.common.Relation
+	(*common.Relation)(nil),        // 10: aserto.directory.common.v3.Relation
 }
 var file_v3_writer_writer_proto_depIdxs = []int32{
-	8,  // 0: aserto.directory.v3.writer.SetObjectRequest.object:type_name -> aserto.directory.v3.common.Object
-	8,  // 1: aserto.directory.v3.writer.SetObjectResponse.result:type_name -> aserto.directory.v3.common.Object
-	9,  // 2: aserto.directory.v3.writer.DeleteObjectResponse.result:type_name -> google.protobuf.Empty
-	10, // 3: aserto.directory.v3.writer.SetRelationRequest.relation:type_name -> aserto.directory.v3.common.Relation
-	10, // 4: aserto.directory.v3.writer.SetRelationResponse.result:type_name -> aserto.directory.v3.common.Relation
-	9,  // 5: aserto.directory.v3.writer.DeleteRelationResponse.result:type_name -> google.protobuf.Empty
-	0,  // 6: aserto.directory.v3.writer.Writer.SetObject:input_type -> aserto.directory.v3.writer.SetObjectRequest
-	2,  // 7: aserto.directory.v3.writer.Writer.DeleteObject:input_type -> aserto.directory.v3.writer.DeleteObjectRequest
-	4,  // 8: aserto.directory.v3.writer.Writer.SetRelation:input_type -> aserto.directory.v3.writer.SetRelationRequest
-	6,  // 9: aserto.directory.v3.writer.Writer.DeleteRelation:input_type -> aserto.directory.v3.writer.DeleteRelationRequest
-	1,  // 10: aserto.directory.v3.writer.Writer.SetObject:output_type -> aserto.directory.v3.writer.SetObjectResponse
-	3,  // 11: aserto.directory.v3.writer.Writer.DeleteObject:output_type -> aserto.directory.v3.writer.DeleteObjectResponse
-	5,  // 12: aserto.directory.v3.writer.Writer.SetRelation:output_type -> aserto.directory.v3.writer.SetRelationResponse
-	7,  // 13: aserto.directory.v3.writer.Writer.DeleteRelation:output_type -> aserto.directory.v3.writer.DeleteRelationResponse
+	8,  // 0: aserto.directory.writer.v3.SetObjectRequest.object:type_name -> aserto.directory.common.v3.Object
+	8,  // 1: aserto.directory.writer.v3.SetObjectResponse.result:type_name -> aserto.directory.common.v3.Object
+	9,  // 2: aserto.directory.writer.v3.DeleteObjectResponse.result:type_name -> google.protobuf.Empty
+	10, // 3: aserto.directory.writer.v3.SetRelationRequest.relation:type_name -> aserto.directory.common.v3.Relation
+	10, // 4: aserto.directory.writer.v3.SetRelationResponse.result:type_name -> aserto.directory.common.v3.Relation
+	9,  // 5: aserto.directory.writer.v3.DeleteRelationResponse.result:type_name -> google.protobuf.Empty
+	0,  // 6: aserto.directory.writer.v3.Writer.SetObject:input_type -> aserto.directory.writer.v3.SetObjectRequest
+	2,  // 7: aserto.directory.writer.v3.Writer.DeleteObject:input_type -> aserto.directory.writer.v3.DeleteObjectRequest
+	4,  // 8: aserto.directory.writer.v3.Writer.SetRelation:input_type -> aserto.directory.writer.v3.SetRelationRequest
+	6,  // 9: aserto.directory.writer.v3.Writer.DeleteRelation:input_type -> aserto.directory.writer.v3.DeleteRelationRequest
+	1,  // 10: aserto.directory.writer.v3.Writer.SetObject:output_type -> aserto.directory.writer.v3.SetObjectResponse
+	3,  // 11: aserto.directory.writer.v3.Writer.DeleteObject:output_type -> aserto.directory.writer.v3.DeleteObjectResponse
+	5,  // 12: aserto.directory.writer.v3.Writer.SetRelation:output_type -> aserto.directory.writer.v3.SetRelationResponse
+	7,  // 13: aserto.directory.writer.v3.Writer.DeleteRelation:output_type -> aserto.directory.writer.v3.DeleteRelationResponse
 	10, // [10:14] is the sub-list for method output_type
 	6,  // [6:10] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name

@@ -244,15 +244,15 @@ var File_v3_exporter_exporter_proto protoreflect.FileDescriptor
 
 const file_v3_exporter_exporter_proto_rawDesc = "" +
 	"\n" +
-	"\x1av3/exporter/exporter.proto\x12\x1caserto.directory.v3.exporter\x1a\x16v3/common/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"u\n" +
+	"\x1av3/exporter/exporter.proto\x12\x1caserto.directory.exporter.v3\x1a\x16v3/common/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"u\n" +
 	"\rExportRequest\x12 \n" +
 	"\aoptions\x18\x01 \x01(\rB\x06\xe2A\x01\x02\x18\x00R\aoptions\x12B\n" +
 	"\n" +
 	"start_from\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampB\x06\xe2A\x01\x01\x18\x00R\n" +
 	"start_from\"\xe2\x01\n" +
 	"\x0eExportResponse\x12D\n" +
-	"\x06object\x18\x02 \x01(\v2\".aserto.directory.v3.common.ObjectB\x06\xe2A\x01\x03\x18\x00H\x00R\x06object\x12J\n" +
-	"\brelation\x18\x04 \x01(\v2$.aserto.directory.v3.common.RelationB\x06\xe2A\x01\x03\x18\x00H\x00R\brelation\x127\n" +
+	"\x06object\x18\x02 \x01(\v2\".aserto.directory.common.v3.ObjectB\x06\xe2A\x01\x03\x18\x00H\x00R\x06object\x12J\n" +
+	"\brelation\x18\x04 \x01(\v2$.aserto.directory.common.v3.RelationB\x06\xe2A\x01\x03\x18\x00H\x00R\brelation\x127\n" +
 	"\x05stats\x18\b \x01(\v2\x17.google.protobuf.StructB\x06\xe2A\x01\x03\x18\x00H\x00R\x05statsB\x05\n" +
 	"\x03msg*s\n" +
 	"\x06Option\x12\x12\n" +
@@ -262,7 +262,7 @@ const file_v3_exporter_exporter_proto_rawDesc = "" +
 	"\vOPTION_DATA\x10\x18\x12\x10\n" +
 	"\fOPTION_STATS\x10@2s\n" +
 	"\bExporter\x12g\n" +
-	"\x06Export\x12+.aserto.directory.v3.exporter.ExportRequest\x1a,.aserto.directory.v3.exporter.ExportResponse\"\x000\x01B@Z>github.com/aserto-dev/topaz/api/directory/v3/exporter;exporterb\x06proto3"
+	"\x06Export\x12+.aserto.directory.exporter.v3.ExportRequest\x1a,.aserto.directory.exporter.v3.ExportResponse\"\x000\x01B@Z>github.com/aserto-dev/topaz/api/directory/v3/exporter;exporterb\x06proto3"
 
 var (
 	file_v3_exporter_exporter_proto_rawDescOnce sync.Once
@@ -279,21 +279,21 @@ func file_v3_exporter_exporter_proto_rawDescGZIP() []byte {
 var file_v3_exporter_exporter_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_v3_exporter_exporter_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_v3_exporter_exporter_proto_goTypes = []any{
-	(Option)(0),                   // 0: aserto.directory.v3.exporter.Option
-	(*ExportRequest)(nil),         // 1: aserto.directory.v3.exporter.ExportRequest
-	(*ExportResponse)(nil),        // 2: aserto.directory.v3.exporter.ExportResponse
+	(Option)(0),                   // 0: aserto.directory.exporter.v3.Option
+	(*ExportRequest)(nil),         // 1: aserto.directory.exporter.v3.ExportRequest
+	(*ExportResponse)(nil),        // 2: aserto.directory.exporter.v3.ExportResponse
 	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
-	(*common.Object)(nil),         // 4: aserto.directory.v3.common.Object
-	(*common.Relation)(nil),       // 5: aserto.directory.v3.common.Relation
+	(*common.Object)(nil),         // 4: aserto.directory.common.v3.Object
+	(*common.Relation)(nil),       // 5: aserto.directory.common.v3.Relation
 	(*structpb.Struct)(nil),       // 6: google.protobuf.Struct
 }
 var file_v3_exporter_exporter_proto_depIdxs = []int32{
-	3, // 0: aserto.directory.v3.exporter.ExportRequest.start_from:type_name -> google.protobuf.Timestamp
-	4, // 1: aserto.directory.v3.exporter.ExportResponse.object:type_name -> aserto.directory.v3.common.Object
-	5, // 2: aserto.directory.v3.exporter.ExportResponse.relation:type_name -> aserto.directory.v3.common.Relation
-	6, // 3: aserto.directory.v3.exporter.ExportResponse.stats:type_name -> google.protobuf.Struct
-	1, // 4: aserto.directory.v3.exporter.Exporter.Export:input_type -> aserto.directory.v3.exporter.ExportRequest
-	2, // 5: aserto.directory.v3.exporter.Exporter.Export:output_type -> aserto.directory.v3.exporter.ExportResponse
+	3, // 0: aserto.directory.exporter.v3.ExportRequest.start_from:type_name -> google.protobuf.Timestamp
+	4, // 1: aserto.directory.exporter.v3.ExportResponse.object:type_name -> aserto.directory.common.v3.Object
+	5, // 2: aserto.directory.exporter.v3.ExportResponse.relation:type_name -> aserto.directory.common.v3.Relation
+	6, // 3: aserto.directory.exporter.v3.ExportResponse.stats:type_name -> google.protobuf.Struct
+	1, // 4: aserto.directory.exporter.v3.Exporter.Export:input_type -> aserto.directory.exporter.v3.ExportRequest
+	2, // 5: aserto.directory.exporter.v3.Exporter.Export:output_type -> aserto.directory.exporter.v3.ExportResponse
 	5, // [5:6] is the sub-list for method output_type
 	4, // [4:5] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

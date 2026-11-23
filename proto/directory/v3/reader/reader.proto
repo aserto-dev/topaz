@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package aserto.directory.v3.reader;
+package aserto.directory.reader.v3;
 
 import "v3/common/common.proto";
 import "google/api/annotations.proto";
@@ -287,13 +287,13 @@ message GetObjectResponse {
   reserved 9;
   reserved "page";
   // object instance
-  aserto.directory.v3.common.Object result = 1 [
+  aserto.directory.common.v3.Object result = 1 [
     json_name = "result",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
   ];
   // object relations
-  repeated aserto.directory.v3.common.Relation relations = 4 [
+  repeated aserto.directory.common.v3.Relation relations = 4 [
     json_name = "relations",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -302,7 +302,7 @@ message GetObjectResponse {
 
 message GetObjectManyRequest {
   // object identifier list
-  repeated aserto.directory.v3.common.ObjectIdentifier param = 1 [
+  repeated aserto.directory.common.v3.ObjectIdentifier param = 1 [
     json_name = "param",
     (google.api.field_behavior) = REQUIRED,
     deprecated = false
@@ -311,7 +311,7 @@ message GetObjectManyRequest {
 
 message GetObjectManyResponse {
   // array of object instances
-  repeated aserto.directory.v3.common.Object results = 1 [
+  repeated aserto.directory.common.v3.Object results = 1 [
     json_name = "results",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -326,7 +326,7 @@ message GetObjectsRequest {
     deprecated = false
   ];
   // pagination request (optional)
-  aserto.directory.v3.common.PaginationRequest page = 9 [
+  aserto.directory.common.v3.PaginationRequest page = 9 [
     json_name = "page",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = false
@@ -335,13 +335,13 @@ message GetObjectsRequest {
 
 message GetObjectsResponse {
   // array of object instances
-  repeated aserto.directory.v3.common.Object results = 1 [
+  repeated aserto.directory.common.v3.Object results = 1 [
     json_name = "results",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
   ];
   // pagination response
-  aserto.directory.v3.common.PaginationResponse page = 9 [
+  aserto.directory.common.v3.PaginationResponse page = 9 [
     json_name = "page",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -395,13 +395,13 @@ message GetRelationRequest {
 
 message GetRelationResponse {
   // relation instance
-  aserto.directory.v3.common.Relation result = 1 [
+  aserto.directory.common.v3.Relation result = 1 [
     json_name = "result",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
   ];
   // map of materialized relation objects
-  map<string, aserto.directory.v3.common.Object> objects = 2 [
+  map<string, aserto.directory.common.v3.Object> objects = 2 [
     json_name = "objects",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -458,7 +458,7 @@ message GetRelationsRequest {
     deprecated = false
   ];
   // pagination request (optional)
-  aserto.directory.v3.common.PaginationRequest page = 9 [
+  aserto.directory.common.v3.PaginationRequest page = 9 [
     json_name = "page",
     (google.api.field_behavior) = OPTIONAL,
     deprecated = false
@@ -467,19 +467,19 @@ message GetRelationsRequest {
 
 message GetRelationsResponse {
   // array of relation instances
-  repeated aserto.directory.v3.common.Relation results = 1 [
+  repeated aserto.directory.common.v3.Relation results = 1 [
     json_name = "results",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
   ];
   // map of materialized relation objects
-  map<string, aserto.directory.v3.common.Object> objects = 2 [
+  map<string, aserto.directory.common.v3.Object> objects = 2 [
     json_name = "objects",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
   ];
   // pagination response
-  aserto.directory.v3.common.PaginationResponse page = 9 [
+  aserto.directory.common.v3.PaginationResponse page = 9 [
     json_name = "page",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false
@@ -736,7 +736,7 @@ message GetGraphResponse {
   reserved 1;
 
   // matching object identifiers
-  repeated aserto.directory.v3.common.ObjectIdentifier results = 2 [
+  repeated aserto.directory.common.v3.ObjectIdentifier results = 2 [
     json_name = "results",
     (google.api.field_behavior) = OUTPUT_ONLY,
     deprecated = false

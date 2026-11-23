@@ -1,7 +1,7 @@
 {
   "components": {
     "schemas": {
-      "aserto.directory.v3.common.Object": {
+      "aserto.directory.common.v3.Object": {
         "properties": {
           "created_at": {
             "deprecated": true,
@@ -45,7 +45,7 @@
         ],
         "type": "object"
       },
-      "aserto.directory.v3.common.ObjectIdentifier": {
+      "aserto.directory.common.v3.ObjectIdentifier": {
         "description": "Object identifier",
         "properties": {
           "object_id": {
@@ -63,7 +63,7 @@
         ],
         "type": "object"
       },
-      "aserto.directory.v3.common.PaginationResponse": {
+      "aserto.directory.common.v3.PaginationResponse": {
         "description": "Pagination response",
         "properties": {
           "next_token": {
@@ -74,7 +74,7 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.common.Relation": {
+      "aserto.directory.common.v3.Relation": {
         "properties": {
           "created_at": {
             "deprecated": true,
@@ -128,7 +128,7 @@
         ],
         "type": "object"
       },
-      "aserto.directory.v3.model.DeleteManifestResponse": {
+      "aserto.directory.model.v3.DeleteManifestResponse": {
         "properties": {
           "result": {
             "description": "empty result",
@@ -137,7 +137,7 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.reader.CheckPermissionResponse": {
+      "aserto.directory.reader.v3.CheckPermissionResponse": {
         "properties": {
           "check": {
             "description": "check result",
@@ -155,7 +155,7 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.reader.CheckRelationResponse": {
+      "aserto.directory.reader.v3.CheckRelationResponse": {
         "properties": {
           "check": {
             "description": "check result",
@@ -173,7 +173,7 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.reader.CheckRequest": {
+      "aserto.directory.reader.v3.CheckRequest": {
         "properties": {
           "object_id": {
             "description": "object instance identifier",
@@ -209,7 +209,7 @@
         ],
         "type": "object"
       },
-      "aserto.directory.v3.reader.CheckResponse": {
+      "aserto.directory.reader.v3.CheckResponse": {
         "properties": {
           "check": {
             "description": "check result",
@@ -232,12 +232,12 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.reader.ChecksResponse": {
+      "aserto.directory.reader.v3.ChecksResponse": {
         "properties": {
           "checks": {
             "description": "checks results array",
             "items": {
-              "$ref": "#/components/schemas/aserto.directory.v3.reader.CheckResponse"
+              "$ref": "#/components/schemas/aserto.directory.reader.v3.CheckResponse"
             },
             "readOnly": true,
             "type": "array"
@@ -245,7 +245,7 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.reader.GetGraphResponse": {
+      "aserto.directory.reader.v3.GetGraphResponse": {
         "properties": {
           "explanation": {
             "description": "explanation of results",
@@ -255,7 +255,7 @@
           "results": {
             "description": "matching object identifiers",
             "items": {
-              "$ref": "#/components/schemas/aserto.directory.v3.common.ObjectIdentifier"
+              "$ref": "#/components/schemas/aserto.directory.common.v3.ObjectIdentifier"
             },
             "readOnly": true,
             "type": "array"
@@ -271,12 +271,12 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.reader.GetObjectResponse": {
+      "aserto.directory.reader.v3.GetObjectResponse": {
         "properties": {
           "relations": {
             "description": "object relations",
             "items": {
-              "$ref": "#/components/schemas/aserto.directory.v3.common.Relation"
+              "$ref": "#/components/schemas/aserto.directory.common.v3.Relation"
             },
             "readOnly": true,
             "type": "array"
@@ -284,7 +284,7 @@
           "result": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/aserto.directory.v3.common.Object"
+                "$ref": "#/components/schemas/aserto.directory.common.v3.Object"
               }
             ],
             "description": "object instance",
@@ -293,12 +293,12 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.reader.GetObjectsResponse": {
+      "aserto.directory.reader.v3.GetObjectsResponse": {
         "properties": {
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/aserto.directory.v3.common.PaginationResponse"
+                "$ref": "#/components/schemas/aserto.directory.common.v3.PaginationResponse"
               }
             ],
             "description": "pagination response",
@@ -307,7 +307,7 @@
           "results": {
             "description": "array of object instances",
             "items": {
-              "$ref": "#/components/schemas/aserto.directory.v3.common.Object"
+              "$ref": "#/components/schemas/aserto.directory.common.v3.Object"
             },
             "readOnly": true,
             "type": "array"
@@ -315,11 +315,11 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.reader.GetRelationResponse": {
+      "aserto.directory.reader.v3.GetRelationResponse": {
         "properties": {
           "objects": {
             "additionalProperties": {
-              "$ref": "#/components/schemas/aserto.directory.v3.common.Object"
+              "$ref": "#/components/schemas/aserto.directory.common.v3.Object"
             },
             "description": "map of materialized relation objects",
             "readOnly": true,
@@ -328,7 +328,7 @@
           "result": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/aserto.directory.v3.common.Relation"
+                "$ref": "#/components/schemas/aserto.directory.common.v3.Relation"
               }
             ],
             "description": "relation instance",
@@ -337,11 +337,11 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.reader.GetRelationsResponse": {
+      "aserto.directory.reader.v3.GetRelationsResponse": {
         "properties": {
           "objects": {
             "additionalProperties": {
-              "$ref": "#/components/schemas/aserto.directory.v3.common.Object"
+              "$ref": "#/components/schemas/aserto.directory.common.v3.Object"
             },
             "description": "map of materialized relation objects",
             "readOnly": true,
@@ -350,7 +350,7 @@
           "page": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/aserto.directory.v3.common.PaginationResponse"
+                "$ref": "#/components/schemas/aserto.directory.common.v3.PaginationResponse"
               }
             ],
             "description": "pagination response",
@@ -359,7 +359,7 @@
           "results": {
             "description": "array of relation instances",
             "items": {
-              "$ref": "#/components/schemas/aserto.directory.v3.common.Relation"
+              "$ref": "#/components/schemas/aserto.directory.common.v3.Relation"
             },
             "readOnly": true,
             "type": "array"
@@ -367,7 +367,7 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.writer.DeleteObjectResponse": {
+      "aserto.directory.writer.v3.DeleteObjectResponse": {
         "properties": {
           "result": {
             "description": "empty result",
@@ -377,7 +377,7 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.writer.DeleteRelationResponse": {
+      "aserto.directory.writer.v3.DeleteRelationResponse": {
         "properties": {
           "result": {
             "description": "empty result",
@@ -387,12 +387,12 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.writer.SetObjectResponse": {
+      "aserto.directory.writer.v3.SetObjectResponse": {
         "properties": {
           "result": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/aserto.directory.v3.common.Object"
+                "$ref": "#/components/schemas/aserto.directory.common.v3.Object"
               }
             ],
             "description": "object instance",
@@ -401,12 +401,12 @@
         },
         "type": "object"
       },
-      "aserto.directory.v3.writer.SetRelationResponse": {
+      "aserto.directory.writer.v3.SetRelationResponse": {
         "properties": {
           "result": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/aserto.directory.v3.common.Relation"
+                "$ref": "#/components/schemas/aserto.directory.common.v3.Relation"
               }
             ],
             "description": "relation instance",
@@ -516,7 +516,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.reader.CheckResponse"
+                  "$ref": "#/components/schemas/aserto.directory.reader.v3.CheckResponse"
                 }
               }
             },
@@ -594,7 +594,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.reader.CheckPermissionResponse"
+                  "$ref": "#/components/schemas/aserto.directory.reader.v3.CheckPermissionResponse"
                 }
               }
             },
@@ -672,7 +672,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.reader.CheckRelationResponse"
+                  "$ref": "#/components/schemas/aserto.directory.reader.v3.CheckRelationResponse"
                 }
               }
             },
@@ -709,12 +709,12 @@
                   "checks": {
                     "description": "collection of check requests",
                     "items": {
-                      "$ref": "#/components/schemas/aserto.directory.v3.reader.CheckRequest"
+                      "$ref": "#/components/schemas/aserto.directory.reader.v3.CheckRequest"
                     },
                     "type": "array"
                   },
                   "default": {
-                    "$ref": "#/components/schemas/aserto.directory.v3.reader.CheckRequest",
+                    "$ref": "#/components/schemas/aserto.directory.reader.v3.CheckRequest",
                     "description": "default check parameter values"
                   }
                 },
@@ -729,7 +729,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.reader.ChecksResponse"
+                  "$ref": "#/components/schemas/aserto.directory.reader.v3.ChecksResponse"
                 }
               }
             },
@@ -832,7 +832,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.reader.GetGraphResponse"
+                  "$ref": "#/components/schemas/aserto.directory.reader.v3.GetGraphResponse"
                 }
               }
             },
@@ -876,7 +876,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.model.DeleteManifestResponse"
+                  "$ref": "#/components/schemas/aserto.directory.model.v3.DeleteManifestResponse"
                 }
               }
             },
@@ -911,7 +911,7 @@
               "schema": {
                 "properties": {
                   "object": {
-                    "$ref": "#/components/schemas/aserto.directory.v3.common.Object",
+                    "$ref": "#/components/schemas/aserto.directory.common.v3.Object",
                     "description": "object instance"
                   }
                 },
@@ -929,7 +929,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.writer.SetObjectResponse"
+                  "$ref": "#/components/schemas/aserto.directory.writer.v3.SetObjectResponse"
                 }
               }
             },
@@ -991,7 +991,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.writer.DeleteObjectResponse"
+                  "$ref": "#/components/schemas/aserto.directory.writer.v3.DeleteObjectResponse"
                 }
               }
             },
@@ -1051,7 +1051,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.reader.GetObjectResponse"
+                  "$ref": "#/components/schemas/aserto.directory.reader.v3.GetObjectResponse"
                 }
               }
             },
@@ -1112,7 +1112,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.reader.GetObjectsResponse"
+                  "$ref": "#/components/schemas/aserto.directory.reader.v3.GetObjectsResponse"
                 }
               }
             },
@@ -1201,7 +1201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.writer.DeleteRelationResponse"
+                  "$ref": "#/components/schemas/aserto.directory.writer.v3.DeleteRelationResponse"
                 }
               }
             },
@@ -1296,7 +1296,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.reader.GetRelationResponse"
+                  "$ref": "#/components/schemas/aserto.directory.reader.v3.GetRelationResponse"
                 }
               }
             },
@@ -1329,7 +1329,7 @@
               "schema": {
                 "properties": {
                   "relation": {
-                    "$ref": "#/components/schemas/aserto.directory.v3.common.Relation",
+                    "$ref": "#/components/schemas/aserto.directory.common.v3.Relation",
                     "description": "relation instance"
                   }
                 },
@@ -1347,7 +1347,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.writer.SetRelationResponse"
+                  "$ref": "#/components/schemas/aserto.directory.writer.v3.SetRelationResponse"
                 }
               }
             },
@@ -1464,7 +1464,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/aserto.directory.v3.reader.GetRelationsResponse"
+                  "$ref": "#/components/schemas/aserto.directory.reader.v3.GetRelationsResponse"
                 }
               }
             },

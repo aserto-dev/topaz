@@ -122,7 +122,7 @@ func RegisterExporterHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.v3.exporter.Exporter/Export", runtime.WithHTTPPathPattern("/aserto.directory.v3.exporter.Exporter/Export"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/aserto.directory.exporter.v3.Exporter/Export", runtime.WithHTTPPathPattern("/aserto.directory.exporter.v3.Exporter/Export"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -139,7 +139,7 @@ func RegisterExporterHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 }
 
 var (
-	pattern_Exporter_Export_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"aserto.directory.v3.exporter.Exporter", "Export"}, ""))
+	pattern_Exporter_Export_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"aserto.directory.exporter.v3.Exporter", "Export"}, ""))
 )
 
 var (
