@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	dsm "github.com/aserto-dev/topaz/api/directory/v3/model"
 	"github.com/aserto-dev/topaz/internal/azm/model"
 	v3 "github.com/aserto-dev/topaz/internal/azm/v3"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"

@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
-	client "github.com/aserto-dev/go-aserto"
+	client "github.com/aserto-dev/topaz/api/client"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 
-	az2 "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	az2 "github.com/aserto-dev/topaz/api/authorizer/v2"
 	"github.com/aserto-dev/topaz/topaz/clients"
 )
 

@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"testing"
 
-	aerr "github.com/aserto-dev/errors"
-	"github.com/aserto-dev/logger"
 	"github.com/aserto-dev/topaz/internal/grpc/middlewares/gerr"
+	aerr "github.com/aserto-dev/topaz/pkg/errors"
+	"github.com/aserto-dev/topaz/pkg/logger"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"

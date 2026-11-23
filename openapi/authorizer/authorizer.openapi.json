@@ -1,0 +1,871 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Topaz Authorizer Service",
+    "contact": {
+      "name": "Topaz Authorization Project",
+      "url": "https://github.com/aserto-dev/topaz",
+      "email": "support@topaz.sh"
+    },
+    "license": {
+      "name": "Apache 2.0 License",
+      "url": "https://github.com/aserto-dev/topaz/blob/main/LICENSE"
+    },
+    "version": "3.4"
+  },
+  "servers": [
+    {
+      "url": "{{.Scheme}}://{{.Host}}",
+      "description": "Topaz Authorizer service"
+    }
+  ],
+  "paths": {
+    "/api/v2/authz/decisiontree": {
+      "post": {
+        "tags": [
+          "authorizer",
+          "decisiontree"
+        ],
+        "summary": "Decision tree",
+        "description": "Returns decision tree for given identity context.",
+        "operationId": "authorizer.decision_tree",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "identity_context": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityContext",
+                    "description": "identity context"
+                  },
+                  "options": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.DecisionTreeOptions",
+                    "description": "decision tree options"
+                  },
+                  "policy_context": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyContext",
+                    "description": "policy context"
+                  },
+                  "policy_instance": {
+                    "description": "policy instance",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyInstance"
+                      }
+                    ],
+                    "deprecated": true
+                  },
+                  "resource_context": {
+                    "type": "object",
+                    "description": "resource context"
+                  }
+                },
+                "required": [
+                  "policy_context",
+                  "identity_context"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/aserto.authorizer.v2.DecisionTreeResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/api/v2/authz/is": {
+      "post": {
+        "tags": [
+          "authorizer",
+          "is"
+        ],
+        "summary": "Is (authorized)",
+        "description": "Determines if identity context is authorized to access the resource guarded by the given policy.",
+        "operationId": "authorizer.is",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "identity_context": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityContext",
+                    "description": "identity context"
+                  },
+                  "policy_context": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyContext",
+                    "description": "policy context"
+                  },
+                  "policy_instance": {
+                    "description": "policy instance",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyInstance"
+                      }
+                    ],
+                    "deprecated": true
+                  },
+                  "resource_context": {
+                    "type": "object",
+                    "description": "resource context"
+                  }
+                },
+                "required": [
+                  "policy_context",
+                  "identity_context"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/aserto.authorizer.v2.IsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/authz/query": {
+      "post": {
+        "tags": [
+          "authorizer",
+          "query"
+        ],
+        "summary": "Query",
+        "description": "Executes a rego query on the loaded policy runtime.",
+        "operationId": "authorizer.query",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "identity_context": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityContext",
+                    "description": "identity context"
+                  },
+                  "input": {
+                    "type": "string",
+                    "description": "query input block"
+                  },
+                  "options": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.QueryOptions",
+                    "description": "query options"
+                  },
+                  "policy_context": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyContext",
+                    "description": "policy context"
+                  },
+                  "policy_instance": {
+                    "description": "policy instance",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyInstance"
+                      }
+                    ],
+                    "deprecated": true
+                  },
+                  "query": {
+                    "type": "string",
+                    "description": "query"
+                  },
+                  "resource_context": {
+                    "type": "object",
+                    "description": "resource context"
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/aserto.authorizer.v2.QueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/authz/compile": {
+      "post": {
+        "tags": [
+          "authorizer",
+          "compile"
+        ],
+        "summary": "Compile",
+        "description": "Executes a partial query on the loaded policy runtime.",
+        "operationId": "authorizer.compile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "disable_inlining": {
+                    "type": "array",
+                    "description": "disable inlining",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "identity_context": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityContext",
+                    "description": "identity context"
+                  },
+                  "input": {
+                    "type": "string",
+                    "description": "input block"
+                  },
+                  "options": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.QueryOptions",
+                    "description": "query options"
+                  },
+                  "policy_context": {
+                    "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyContext",
+                    "description": "policy context"
+                  },
+                  "policy_instance": {
+                    "description": "policy instance",
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/aserto.authorizer.v2.api.PolicyInstance"
+                      }
+                    ],
+                    "deprecated": true
+                  },
+                  "query": {
+                    "type": "string",
+                    "description": "query"
+                  },
+                  "resource_context": {
+                    "type": "object",
+                    "description": "resource context"
+                  },
+                  "unknowns": {
+                    "type": "array",
+                    "description": "unknowns",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/aserto.authorizer.v2.CompileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/policies": {
+      "get": {
+        "tags": [
+          "policy",
+          "list"
+        ],
+        "summary": "List Policies",
+        "description": "Lists the policy modules for the policy bundle.",
+        "operationId": "policies.list",
+        "parameters": [
+          {
+            "name": "field_mask",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_instance.name",
+            "in": "query",
+            "description": "policy name",
+            "deprecated": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_instance.instance_label",
+            "in": "query",
+            "description": "label identifying the instance of the policy",
+            "deprecated": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/aserto.authorizer.v2.ListPoliciesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/policies/{id}/{id_1}": {
+      "get": {
+        "tags": [
+          "policy",
+          "get"
+        ],
+        "summary": "Get Policy",
+        "description": "Gets the policy modules for the given module Id.",
+        "operationId": "policies.get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_1",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field_mask",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_instance.name",
+            "in": "query",
+            "description": "policy name",
+            "deprecated": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_instance.instance_label",
+            "in": "query",
+            "description": "label identifying the instance of the policy",
+            "deprecated": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/aserto.authorizer.v2.GetPolicyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/info": {
+      "get": {
+        "tags": [
+          "info"
+        ],
+        "summary": "Info",
+        "description": "Return version information.",
+        "operationId": "info.get",
+        "responses": {
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/google.rpc.Status"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/aserto.authorizer.v2.InfoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "aserto.authorizer.v2.CompileResponse": {
+        "type": "object",
+        "properties": {
+          "metrics": {
+            "type": "object",
+            "readOnly": true
+          },
+          "result": {
+            "type": "object",
+            "readOnly": true
+          },
+          "trace": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "readOnly": true
+          },
+          "trace_summary": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true
+          }
+        }
+      },
+      "aserto.authorizer.v2.Decision": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "type": "string",
+            "description": "decision",
+            "readOnly": true
+          },
+          "ise": {
+            "type": "boolean",
+            "description": "is (decision outcome)",
+            "readOnly": true
+          }
+        }
+      },
+      "aserto.authorizer.v2.DecisionTreeOptions": {
+        "type": "object",
+        "properties": {
+          "path_separator": {
+            "$ref": "#/components/schemas/aserto.authorizer.v2.PathSeparator"
+          }
+        }
+      },
+      "aserto.authorizer.v2.DecisionTreeResponse": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "object",
+            "description": "path",
+            "readOnly": true
+          },
+          "path_root": {
+            "type": "string",
+            "description": "path root",
+            "readOnly": true
+          }
+        }
+      },
+      "aserto.authorizer.v2.GetPolicyResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/aserto.authorizer.v2.api.Module"
+              }
+            ],
+            "readOnly": true
+          }
+        }
+      },
+      "aserto.authorizer.v2.InfoResponse": {
+        "type": "object",
+        "properties": {
+          "arch": {
+            "type": "string"
+          },
+          "commit": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "os": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "aserto.authorizer.v2.IsResponse": {
+        "type": "object",
+        "properties": {
+          "decisions": {
+            "type": "array",
+            "description": "decisions",
+            "items": {
+              "$ref": "#/components/schemas/aserto.authorizer.v2.Decision"
+            },
+            "readOnly": true
+          }
+        }
+      },
+      "aserto.authorizer.v2.ListPoliciesResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/aserto.authorizer.v2.api.Module"
+            },
+            "readOnly": true
+          }
+        }
+      },
+      "aserto.authorizer.v2.PathSeparator": {
+        "type": "string",
+        "enum": [
+          "PATH_SEPARATOR_UNKNOWN",
+          "PATH_SEPARATOR_DOT",
+          "PATH_SEPARATOR_SLASH"
+        ]
+      },
+      "aserto.authorizer.v2.QueryOptions": {
+        "type": "object",
+        "properties": {
+          "instrument": {
+            "type": "boolean",
+            "description": "instrument (default false)"
+          },
+          "metrics": {
+            "type": "boolean",
+            "description": "metrics (default false)"
+          },
+          "trace": {
+            "$ref": "#/components/schemas/aserto.authorizer.v2.TraceLevel",
+            "description": "trace level (default ExplainOffV1)"
+          },
+          "trace_summary": {
+            "type": "boolean",
+            "description": "trace summary (default false)"
+          }
+        }
+      },
+      "aserto.authorizer.v2.QueryResponse": {
+        "type": "object",
+        "properties": {
+          "metrics": {
+            "type": "object",
+            "description": "metrics",
+            "readOnly": true
+          },
+          "response": {
+            "type": "object",
+            "description": "query response",
+            "readOnly": true
+          },
+          "trace": {
+            "type": "array",
+            "description": "trace",
+            "items": {
+              "type": "object"
+            },
+            "readOnly": true
+          },
+          "trace_summary": {
+            "type": "array",
+            "description": "trace summary",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true
+          }
+        }
+      },
+      "aserto.authorizer.v2.TraceLevel": {
+        "type": "string",
+        "enum": [
+          "TRACE_LEVEL_UNKNOWN",
+          "TRACE_LEVEL_OFF",
+          "TRACE_LEVEL_FULL",
+          "TRACE_LEVEL_NOTES",
+          "TRACE_LEVEL_FAILS"
+        ]
+      },
+      "aserto.authorizer.v2.api.IdentityContext": {
+        "type": "object",
+        "properties": {
+          "identity": {
+            "type": "string",
+            "description": "identity"
+          },
+          "type": {
+            "$ref": "#/components/schemas/aserto.authorizer.v2.api.IdentityType",
+            "description": "identity type"
+          }
+        },
+        "required": [
+          "identity",
+          "type"
+        ]
+      },
+      "aserto.authorizer.v2.api.IdentityType": {
+        "type": "string",
+        "description": "Identity types, describes the payload type of the identity field inside the IdentityContext message.",
+        "enum": [
+          "IDENTITY_TYPE_UNKNOWN",
+          "IDENTITY_TYPE_NONE",
+          "IDENTITY_TYPE_SUB",
+          "IDENTITY_TYPE_JWT",
+          "IDENTITY_TYPE_MANUAL"
+        ]
+      },
+      "aserto.authorizer.v2.api.Module": {
+        "type": "object",
+        "description": "module",
+        "properties": {
+          "ast": {
+            "description": "ast",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "description": "id",
+            "readOnly": true
+          },
+          "package_path": {
+            "type": "string",
+            "description": "package path",
+            "readOnly": true
+          },
+          "package_root": {
+            "type": "string",
+            "description": "package root",
+            "readOnly": true
+          },
+          "raw": {
+            "type": "string",
+            "description": "raw",
+            "readOnly": true
+          }
+        }
+      },
+      "aserto.authorizer.v2.api.PolicyContext": {
+        "type": "object",
+        "properties": {
+          "decisions": {
+            "type": "array",
+            "description": "decisions list (1..N) of policy decisions (aka rules)",
+            "items": {
+              "type": "string"
+            }
+          },
+          "path": {
+            "type": "string",
+            "description": "policy path aka package name"
+          }
+        },
+        "required": [
+          "path",
+          "decisions"
+        ]
+      },
+      "aserto.authorizer.v2.api.PolicyInstance": {
+        "type": "object",
+        "description": "Deprecated: No longer required.",
+        "properties": {
+          "instance_label": {
+            "type": "string",
+            "description": "label identifying the instance of the policy",
+            "deprecated": true
+          },
+          "name": {
+            "type": "string",
+            "description": "policy name",
+            "deprecated": true
+          }
+        }
+      },
+      "google.rpc.Status": {
+        "type": "object",
+        "description": "The Status type defines a logical error model suitable for different programming environments.",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The status code, which should be an enum value of google.rpc.Code."
+          },
+          "details": {
+            "type": "array",
+            "description": "A list of messages that carry the error details.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "@type": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "message": {
+            "type": "string",
+            "description": "A developer-facing error message."
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "authorizer"
+    },
+    {
+      "name": "policy"
+    },
+    {
+      "name": "policies"
+    },
+    {
+      "name": "get"
+    },
+    {
+      "name": "list"
+    },
+    {
+      "name": "is"
+    },
+    {
+      "name": "query"
+    },
+    {
+      "name": "compile"
+    },
+    {
+      "name": "decisiontree"
+    },
+    {
+      "name": "info"
+    },
+    {
+      "name": "Authorizer"
+    }
+  ],
+  "externalDocs": {
+    "description": "Topaz Authorizer API Reference.",
+    "url": "https://github.com/aserto-dev/topaz/blob/main/html/index.html"
+  }
+}

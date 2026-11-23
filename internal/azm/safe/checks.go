@@ -3,8 +3,8 @@ package safe
 import (
 	"iter"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v3/reader"
 )
 
 type SafeChecks struct {

@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	client "github.com/aserto-dev/go-aserto"
-	dsc "github.com/aserto-dev/go-aserto/ds/v3"
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
+	client "github.com/aserto-dev/topaz/api/client"
+	dsc "github.com/aserto-dev/topaz/api/client/ds/v3"
+	dsm "github.com/aserto-dev/topaz/api/directory/v3/model"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/x"
 	assets_test "github.com/aserto-dev/topaz/topazd/tests/assets"

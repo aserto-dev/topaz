@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse "github.com/aserto-dev/topaz/api/directory/v3/exporter"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

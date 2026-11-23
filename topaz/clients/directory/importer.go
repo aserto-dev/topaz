@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"io"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsi "github.com/aserto-dev/topaz/api/directory/v3/importer"
 	"github.com/aserto-dev/topaz/topaz/jsonx"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc/codes"

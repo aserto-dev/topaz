@@ -3,7 +3,7 @@ package azm
 import (
 	"net/http"
 
-	cerr "github.com/aserto-dev/errors"
+	cerr "github.com/aserto-dev/topaz/pkg/errors"
 
 	"google.golang.org/grpc/codes"
 )

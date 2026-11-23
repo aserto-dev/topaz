@@ -5,12 +5,12 @@ import (
 	"strconv"
 	"strings"
 
-	cerr "github.com/aserto-dev/errors"
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
-	"github.com/aserto-dev/go-directory/pkg/pb"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v3/common"
 	"github.com/aserto-dev/topaz/internal/azm/cache"
 	"github.com/aserto-dev/topaz/internal/azm/model"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
+	"github.com/aserto-dev/topaz/pkg/directory/pb"
+	cerr "github.com/aserto-dev/topaz/pkg/errors"
 
 	"github.com/mitchellh/hashstructure/v2"
 )

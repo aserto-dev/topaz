@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse "github.com/aserto-dev/topaz/api/directory/v3/exporter"
 	"github.com/aserto-dev/topaz/internal/azm/stats"
 	dsc "github.com/aserto-dev/topaz/topaz/clients/directory"
 	"github.com/aserto-dev/topaz/topaz/jsonx"

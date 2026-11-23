@@ -10,8 +10,8 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	"github.com/aserto-dev/topaz/api/authorizer/v2"
+	"github.com/aserto-dev/topaz/api/authorizer/v2/api"
 )
 
 type DecisionTreeCmd struct {

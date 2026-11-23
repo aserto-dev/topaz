@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package aserto.directory.exporter.v3;
+
+import "v3/common/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v3/exporter;exporter";
+
+service Exporter {
+  // export objects and relations as a stream
+  rpc Export(ExportRequest) returns (stream ExportResponse) {}
+}
+
+message ExportRequest {
+  // data export options mask
+  uint32 options = 1 [
+    json_name = "options",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // start export from timestamp (UTC)
+  google.protobuf.Timestamp start_from = 20 [
+    json_name = "start_from",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message ExportResponse {
+  oneof msg {
+    // object instance (data)
+    aserto.directory.common.v3.Object object = 2 [
+      json_name = "object",
+      (google.api.field_behavior) = OUTPUT_ONLY,
+      deprecated = false
+    ];
+    // relation instance (data)
+    aserto.directory.common.v3.Relation relation = 4 [
+      json_name = "relation",
+      (google.api.field_behavior) = OUTPUT_ONLY,
+      deprecated = false
+    ];
+    // object and/or relation stats (no data)
+    google.protobuf.Struct stats = 8 [
+      json_name = "stats",
+      (google.api.field_behavior) = OUTPUT_ONLY,
+      deprecated = false
+    ];
+  }
+}
+
+enum Option {
+  // nothing selected (default initialization value)
+  OPTION_UNKNOWN = 0x0;
+  // object instances
+  OPTION_DATA_OBJECTS = 0x8;
+  // relation instances
+  OPTION_DATA_RELATIONS = 0x10;
+  // all data = OPTION_DATA_OBJECTS | OPTION_DATA_RELATIONS
+  OPTION_DATA = 0x18;
+  // stats
+  OPTION_STATS = 0x40;
+}

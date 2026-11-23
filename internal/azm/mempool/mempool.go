@@ -19,13 +19,10 @@ func (p *Pool[T]) Put(x T) {
 	p.Pool.Put(x)
 }
 
-//nolint:modernize
 func NewPool[T any](newF func() T) *Pool[T] {
 	return &Pool[T]{
-		Pool: sync.Pool{
-			New: func() any {
-				return newF()
-			},
+		New: func() any {
+			return newF()
 		},
 	}
 }

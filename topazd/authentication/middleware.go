@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+	"github.com/aserto-dev/topaz/pkg/authorizer/aerr"
 	"github.com/aserto-dev/topaz/pkg/config"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/metadata"

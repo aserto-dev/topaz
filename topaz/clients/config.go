@@ -3,7 +3,7 @@ package clients
 import (
 	"time"
 
-	client "github.com/aserto-dev/go-aserto"
+	client "github.com/aserto-dev/topaz/api/client"
 )
 
 type Config interface {

@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/aserto-dev/go-aserto"
+	"github.com/aserto-dev/topaz/api/client"
 	"github.com/aserto-dev/topaz/topazd/x"
 
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
@@ -57,7 +57,7 @@ func (s *ServiceManager) AddGRPCServer(server *Service) error {
 	return nil
 }
 
-func (s *ServiceManager) SetupHealthServer(address string, certCfg *aserto.TLSConfig) error {
+func (s *ServiceManager) SetupHealthServer(address string, certCfg *client.TLSConfig) error {
 	healthServer := newGRPCHealthServer(certCfg)
 	healthServer.Address = address
 
@@ -77,7 +77,7 @@ func (s *ServiceManager) SetupHealthServer(address string, certCfg *aserto.TLSCo
 	return nil
 }
 
-func (s *ServiceManager) SetupMetricsServer(address string, certCfg *aserto.TLSConfig, enableZpages bool) ([]grpc.ServerOption,
+func (s *ServiceManager) SetupMetricsServer(address string, certCfg *client.TLSConfig, enableZpages bool) ([]grpc.ServerOption,
 	error,
 ) {
 	metric := http.Server{

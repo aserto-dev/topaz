@@ -4,9 +4,9 @@ import (
 	"github.com/aserto-dev/topaz/internal/azm/cache"
 	"github.com/aserto-dev/topaz/internal/azm/model"
 
-	dsc3 "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr3 "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
+	dsc3 "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsr3 "github.com/aserto-dev/topaz/api/directory/v3/reader"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
 )
 
 type SafeCheck struct {

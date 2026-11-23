@@ -3,11 +3,11 @@ package v3
 import (
 	"encoding/json"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	"github.com/aserto-dev/go-directory/pkg/pb"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dse "github.com/aserto-dev/topaz/api/directory/v3/exporter"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
+	"github.com/aserto-dev/topaz/pkg/directory/pb"
 
 	"github.com/rs/zerolog"
 	bolt "go.etcd.io/bbolt"

@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/gob"
 
-	"github.com/aserto-dev/go-directory/pkg/derr"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
 )
 
 const (

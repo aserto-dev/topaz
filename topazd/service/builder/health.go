@@ -1,7 +1,7 @@
 package builder
 
 import (
-	"github.com/aserto-dev/go-aserto"
+	"github.com/aserto-dev/topaz/api/client"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -16,7 +16,7 @@ type Health struct {
 }
 
 // newGRPCHealthServer creates a new HealthServer.
-func newGRPCHealthServer(certCfg *aserto.TLSConfig) *Health {
+func newGRPCHealthServer(certCfg *client.TLSConfig) *Health {
 	healthServer := health.NewServer()
 
 	grpcHealthServer, err := prepareGrpcServer(certCfg, nil)

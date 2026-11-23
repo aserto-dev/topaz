@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"io"
 
-	aerr "github.com/aserto-dev/errors"
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
-	"github.com/aserto-dev/go-directory/pkg/validator"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsi "github.com/aserto-dev/topaz/api/directory/v3/importer"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/ds"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
+	"github.com/aserto-dev/topaz/pkg/directory/validator"
+	aerr "github.com/aserto-dev/topaz/pkg/errors"
 
 	"github.com/rs/zerolog"
 	bolt "go.etcd.io/bbolt"

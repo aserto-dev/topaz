@@ -1,7 +1,7 @@
 package paging
 
 import (
-	"github.com/aserto-dev/go-directory/pkg/derr"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )

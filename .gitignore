@@ -15,6 +15,7 @@
 # vendor/
 /.dev/
 /.ext/
+/.tmp/
 
 /bin/
 /dist/

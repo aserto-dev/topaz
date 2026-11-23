@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
 	"github.com/aserto-dev/topaz/internal/azm/graph"
 	"github.com/aserto-dev/topaz/internal/azm/mempool"
 	"github.com/aserto-dev/topaz/internal/azm/model"

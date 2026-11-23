@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	client "github.com/aserto-dev/go-aserto"
+	client "github.com/aserto-dev/topaz/api/client"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/datasync"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/directory"
 	topaz "github.com/aserto-dev/topaz/pkg/config"

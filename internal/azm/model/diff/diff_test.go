@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/internal/azm/model/diff"
 	stts "github.com/aserto-dev/topaz/internal/azm/stats"
 	v3 "github.com/aserto-dev/topaz/internal/azm/v3"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
 	"github.com/hashicorp/go-multierror"
 	"github.com/stretchr/testify/require"
 )

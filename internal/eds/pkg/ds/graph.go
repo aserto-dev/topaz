@@ -3,7 +3,7 @@ package ds
 import (
 	"context"
 
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
 	"github.com/aserto-dev/topaz/internal/azm/cache"
 	"github.com/aserto-dev/topaz/internal/azm/safe"
 

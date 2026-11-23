@@ -3,7 +3,7 @@ package runtime
 import (
 	"context"
 
-	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+	"github.com/aserto-dev/topaz/pkg/authorizer/aerr"
 	"github.com/open-policy-agent/opa/v1/server/types"
 	"github.com/open-policy-agent/opa/v1/storage"
 	"github.com/pkg/errors"

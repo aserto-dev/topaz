@@ -13,8 +13,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsi "github.com/aserto-dev/topaz/api/directory/v3/importer"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/js"
 	"google.golang.org/grpc/codes"
@@ -204,8 +204,8 @@ func (c *Client) loadRelations(stream dsi.Importer_ImportClient, relations *js.R
 }
 
 const (
-	maxManifestSize int64 = 4 * 1024 * 1024        // 4 MB
-	maxJsonlSize    int64 = 4 * 1024 * 1024 * 1024 // 4 GB
+	maxManifestSize int64 = 4 << 20 // 4 MiB
+	maxJsonlSize    int64 = 4 << 30 // 4 GiB
 )
 
 func (c *Client) RestoreFromFile(ctx context.Context, r io.Reader) error {

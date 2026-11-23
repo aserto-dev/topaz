@@ -1,0 +1,186 @@
+syntax = "proto3";
+
+package aserto.directory.model.v3;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv3/options/annotations.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v3/model;model";
+option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_document) = {
+  info: {
+    title: "Topaz Directory Service"
+    // summary: ""
+    // description: ""
+    // terms_of_service: ""
+    contact: {
+      name: "Topaz Authorization Project"
+      url: "https://github.com/aserto-dev/topaz"
+      email: "support@topaz.sh"
+    }
+    license: {
+      name: "Apache 2.0 License"
+      url: "https://github.com/aserto-dev/topaz/blob/main/LICENSE"
+    }
+    version: "3.1"
+    // extensions: {}
+  }
+
+  servers: [
+    {
+      url: "{{.Scheme}}://{{.Host}}"
+      description: "Topaz Directory service"
+    }
+  ]
+
+  tags: [
+    {name: "directory"},
+    {name: "get"},
+    {name: "list"},
+    {name: "set"},
+    {name: "delete"},
+    {name: "graph"},
+    {name: "check"},
+    {name: "checks"},
+    {name: "manifest"},
+    {name: "object"},
+    {name: "permission"},
+    {name: "relation"}
+  ]
+
+  external_docs: {
+    description: "Topaz Directory API Reference."
+    url: "https://github.com/aserto-dev/topaz/blob/main/docs/directory/index.html"
+  }
+
+  // extensions: {}
+};
+
+service Model {
+  // get manifest instance
+  rpc GetManifest(GetManifestRequest) returns (stream GetManifestResponse) {
+    // Disable grpc-gateway for this rpc.
+    option (google.api.http) = {};
+    // Binary file downloads are not supported by grpc-gateway.
+    // This endpoint is defined manually in openapi-directory.
+    // With the options that correspond to the following annotations but the response body
+    // is streamed.
+
+    // option (google.api.http) = {
+    //     get: "/api/v3/directory/manifest"
+    // };
+    // option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    //     tags: "directory"
+    //     summary: "Get manifest"
+    //     description: "Get manifest."
+    //     operation_id: "directory.model.v3.manifest.get"
+    //     deprecated: false
+    //     security: {
+    //         security_requirement: {
+    //             key: "AuthorizationHeader";
+    //             value: {}
+    //         }
+    //     }
+    // };
+  }
+
+  // set manifest instance
+  rpc SetManifest(stream SetManifestRequest) returns (SetManifestResponse) {
+    // Disable grpc-gateway for this rpc.
+    option (google.api.http) = {};
+    // Binary file uploads are not supported by grpc-gateway.
+    // This endpoint is defined manually in openapi-directory.
+    // With the options that correspond to the following annotations but the request body is
+    // streamed.
+
+    // option (google.api.http) = {
+    //     post: "/api/v3/directory/manifest"
+    // };
+    // option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    //     tags: "directory"
+    //     summary: "Set manifest"
+    //     description: "Set manifest."
+    //     operation_id: "directory.model.v3.manifest.set"
+    //     deprecated: false
+    //     security: {
+    //         security_requirement: {
+    //             key: "AuthorizationHeader";
+    //             value: {}
+    //         }
+    //     }
+    // };
+  }
+
+  // delete manifest instance
+  rpc DeleteManifest(DeleteManifestRequest) returns (DeleteManifestResponse) {
+    option (google.api.http) = {delete: "/api/v3/directory/manifest"};
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "delete",
+        "manifest"
+      ]
+      summary: "Delete manifest"
+      description: "Delete manifest."
+      // external_docs: {}
+      operation_id: "directory.model.v3.manifest.delete"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+  }
+}
+
+message GetManifestRequest {
+  // empty request
+  google.protobuf.Empty empty = 1;
+}
+
+message GetManifestResponse {
+  oneof msg {
+    // Manifest metadata
+    Metadata metadata = 1;
+    // Manifest content
+    Body body = 2;
+    // Model
+    google.protobuf.Struct model = 3;
+  }
+}
+
+message SetManifestRequest {
+  // manifest instance
+  oneof msg {
+    // Manifest content
+    Body body = 1;
+  }
+}
+
+message SetManifestResponse {
+  // empty result
+  google.protobuf.Empty result = 1;
+}
+
+message DeleteManifestRequest {
+  // empty request
+  google.protobuf.Empty empty = 1;
+}
+
+message DeleteManifestResponse {
+  // empty result
+  google.protobuf.Empty result = 1;
+}
+
+message Metadata {
+  // last updated timestamp (UTC)
+  google.protobuf.Timestamp updated_at = 21 [(google.api.field_behavior) = OUTPUT_ONLY];
+  // object instance etag (optional)
+  string etag = 23 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
+
+message Body {
+  // manifest content
+  bytes data = 2;
+}

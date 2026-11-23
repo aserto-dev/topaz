@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	api "github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
+	api "github.com/aserto-dev/topaz/api/authorizer/v2/api"
 
 	"github.com/open-policy-agent/opa/v1/plugins/logs"
 	"github.com/pkg/errors"

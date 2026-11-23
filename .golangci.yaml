@@ -76,16 +76,19 @@ linters:
         - plugins.Plugin
         - resolvers.DirectoryResolver
         - resolvers.RuntimeResolver
-        - v3.ReaderClient
+        - reader.ReaderClient
         - v1.AccessClient
         - v1.AccessServer
-        - v3.ModelServer
-        - v3.ReaderServer
-        - v3.WriterServer
-        - v3.ExporterServer
-        - v3.ImporterServer
+        - model.ModelServer
+        - reader.ReaderServer
+        - writer.WriterServer
+        - exporter.ExporterServer
+        - importer.ImporterServer
         - datasync.SyncClient
+        - grpc.ClientConnInterface
+        - grpc.DialOption
         - grpc.ServerOption
+        - credentials.TransportCredentials
         - logging.Logger
         - ast.Object
 

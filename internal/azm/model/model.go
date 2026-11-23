@@ -8,7 +8,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/aserto-dev/go-directory/pkg/derr"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
 	set "github.com/deckarep/golang-set/v3"
 	"github.com/samber/lo"
 )

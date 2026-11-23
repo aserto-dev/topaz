@@ -4,9 +4,9 @@ import (
 	"io"
 	"os"
 
-	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/internal/azm/model"
 	"github.com/aserto-dev/topaz/internal/azm/parser"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
 	"github.com/hashicorp/go-multierror"
 	"github.com/samber/lo"
 
