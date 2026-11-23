@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package aserto.directory.migrate.v3;
+
+import "google/api/field_behavior.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v3/migrate;migrate";
+
+message Object33 {
+  // object type identifier
+  string type = 1 [
+    json_name = "type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // object instance identifier
+  string id = 2 [
+    json_name = "id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // display name object (optional) (DEPRECATED)
+  string display_name = 3 [
+    json_name = "display_name",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = true
+  ];
+  // property bag (optional)
+  google.protobuf.Struct properties = 4 [
+    json_name = "properties",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // created at timestamp (UTC) (DEPRECATED)
+  google.protobuf.Timestamp created_at = 20 [
+    json_name = "created_at",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = true
+  ];
+  // last updated timestamp (UTC)
+  google.protobuf.Timestamp updated_at = 21 [
+    json_name = "updated_at",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // object instance etag (optional)
+  string etag = 23 [
+    json_name = "etag",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}

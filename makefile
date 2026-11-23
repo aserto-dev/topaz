@@ -45,8 +45,12 @@ NEXT_TAG           := $$(${EXT_BIN_DIR}/svu patch)
 export TESTCONTAINERS_RYUK_DISABLED=$(shell docker context inspect --format '{{.Endpoints.docker.Host}}' 2>/dev/null | grep -q ".colima" && echo "true" || echo "false")
 
 .PHONY: deps
-deps: info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft install-air install-templ install-gofumpt install-buf install-merge-json
+deps: clean-deps info install-svu install-goreleaser install-golangci-lint install-gotestsum install-syft install-air install-templ install-gofumpt install-buf install-merge-json
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+
+clean-deps:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@rm -rf ${EXT_DIR}
 
 .PHONY: gover
 gover:
@@ -223,6 +227,7 @@ info:
 	@echo "TOPAZ_DIST:    ${TOPAZ_DIST}"
 	@echo "RELEASE_TAG:   ${RELEASE_TAG}"
 	@echo "NEXT_TAG:      ${NEXT_TAG}"
+	@echo "COLIMA:        ${TESTCONTAINERS_RYUK_DISABLED}"
 
 .PHONY: install-buf
 install-buf: ${EXT_BIN_DIR}
@@ -291,32 +296,12 @@ install-merge-json: ${EXT_BIN_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@GOBIN=${EXT_BIN_DIR} go install github.com/topaz-io/merge-json@v${MERGE-JSON_VER}
 
-.PHONY: clean
-clean:
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@rm -rf ${EXT_DIR}
-	@rm -rf ${BIN_DIR}
-	@rm -rf ./dist
-	@rm -rf ./test
-
-${BIN_DIR}:
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@mkdir -p ${BIN_DIR}
-
-${EXT_BIN_DIR}:
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@mkdir -p ${EXT_BIN_DIR}
-
-${EXT_TMP_DIR}:
-	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@mkdir -p ${EXT_TMP_DIR}
-
 PROTOS := authorizer directory
 
 .PHONY: proto
 proto: proto-build merge-json
 
-proto-build:
+proto-build: ${TMP_BUF_DIR} ${TMP_OAI_DIR}
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@ROOT=$$PWD; \
 	for mod in $(PROTOS); do \
@@ -335,8 +320,32 @@ proto-build:
 merge-json:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@${EXT_BIN_DIR}/merge-json -output ./openapi/authorizer/authorizer.openapi.json \
-	.tmp/openapi/authorizer/v2/authorizer.openapi.json
+	${TMP_OAI_DIR}/authorizer/v2/authorizer.openapi.json
+
 	@${EXT_BIN_DIR}/merge-json -output ./openapi/directory/directory.openapi.json \
-	.tmp/openapi/directory/v3/reader/reader.openapi.json \
-	.tmp/openapi/directory/v3/writer/writer.openapi.json \
-	.tmp/openapi/directory/v3/model/model.openapi.json
+	${TMP_OAI_DIR}/directory/v3/reader/reader.openapi.json \
+	${TMP_OAI_DIR}/directory/v3/writer/writer.openapi.json \
+	${TMP_OAI_DIR}/directory/v3/model/model.openapi.json
+
+.PHONY: clean
+clean:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@rm -rf ${TMP_DIR}
+	@rm -rf ./dist
+	@rm -rf ./dist-test
+
+${EXT_BIN_DIR}:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@mkdir -p ${EXT_BIN_DIR}
+
+${EXT_TMP_DIR}:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@mkdir -p ${EXT_TMP_DIR}
+
+${TMP_BUF_DIR}:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@mkdir -p ${TMP_BUF_DIR}
+
+${TMP_OAI_DIR}:        
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@mkdir -p ${TMP_OAI_DIR}
