@@ -1,3 +1,4 @@
+//nolint:staticcheck // suppress marked as deprecated.
 package main
 
 import (
