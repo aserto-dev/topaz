@@ -1,0 +1,756 @@
+syntax = "proto3";
+
+package aserto.directory.reader.v3;
+
+import "v3/common/common.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/struct.proto";
+import "protoc-gen-openapiv3/options/annotations.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v3/reader;reader";
+option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_document) = {
+  info: {
+    title: "Topaz Directory Service"
+    // summary: ""
+    // description: ""
+    // terms_of_service: ""
+    contact: {
+      name: "Topaz Authorization Project"
+      url: "https://github.com/aserto-dev/topaz"
+      email: "support@topaz.sh"
+    }
+    license: {
+      name: "Apache 2.0 License"
+      url: "https://github.com/aserto-dev/topaz/blob/main/LICENSE"
+    }
+    version: "3.1"
+    // extensions: {}
+  }
+
+  servers: [
+    {
+      url: "{{.Scheme}}://{{.Host}}"
+      description: "Topaz Directory service"
+    }
+  ]
+
+  tags: [
+    {name: "directory"},
+    {name: "get"},
+    {name: "list"},
+    {name: "set"},
+    {name: "delete"},
+    {name: "graph"},
+    {name: "check"},
+    {name: "checks"},
+    {name: "manifest"},
+    {name: "object"},
+    {name: "permission"},
+    {name: "relation"}
+  ]
+
+  external_docs: {
+    description: "Topaz Directory API Reference."
+    url: "https://github.com/aserto-dev/topaz/blob/main/docs/directory/index.html"
+  }
+
+  // extensions: {}
+};
+
+
+service Reader {
+  // get object
+  rpc GetObject(GetObjectRequest) returns (GetObjectResponse) {
+    option (google.api.http) = {get: "/api/v3/directory/object/{object_type}/{object_id}"};
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "get",
+        "object"
+      ]
+      summary: "Get object instance"
+      description: "Returns single object instance, optionally with relations."
+      // external_docs: {}
+      operation_id: "directory.reader.v3.object.get"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  // get multiple objects
+  rpc GetObjectMany(GetObjectManyRequest) returns (GetObjectManyResponse) {
+    option deprecated = false;
+  }
+
+  // list objects
+  rpc GetObjects(GetObjectsRequest) returns (GetObjectsResponse) {
+    option (google.api.http) = {get: "/api/v3/directory/objects"};
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "list",
+        "object"
+      ]
+      summary: "List object instances"
+      description: "Returns list of object instances."
+      // external_docs: {}
+      operation_id: "directory.reader.v3.objects.list"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  // get relation
+  rpc GetRelation(GetRelationRequest) returns (GetRelationResponse) {
+    option (google.api.http) = {get: "/api/v3/directory/relation"};
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "get",
+        "relation"
+      ]
+      summary: "Get relation instance"
+      description: "Returns single relation instance, optionally with objects."
+      // external_docs: {}
+      operation_id: "directory.reader.v3.relation.get"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  // list relations
+  rpc GetRelations(GetRelationsRequest) returns (GetRelationsResponse) {
+    option (google.api.http) = {get: "/api/v3/directory/relations"};
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "list",
+        "relation"
+      ]
+      summary: "List relations instances"
+      description: "Returns list of relation instances."
+      // external_docs: {}
+      operation_id: "directory.reader.v3.relations.list"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  // check if subject has relation or permission with object
+  rpc Check(CheckRequest) returns (CheckResponse) {
+    option (google.api.http) = {
+      post: "/api/v3/directory/check"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "check",
+        "relation"
+      ]
+      summary: "Check"
+      description: "Returns check outcome."
+      // external_docs: {}
+      operation_id: "directory.reader.v3.check"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  // checks validates a set of check requests in a single roundtrip
+  rpc Checks(ChecksRequest) returns (ChecksResponse) {
+    option (google.api.http) = {
+      post: "/api/v3/directory/checks"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "checks",
+        "relation"
+      ]
+      summary: "Checks"
+      description: "Returns multiple check outcomes."
+      // external_docs: {}
+      operation_id: "directory.reader.v3.checks"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = false;
+  }
+
+  // check permission (deprecated, use the check method)
+  // Deprecated: use directory.reader.v3.Check()
+  rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse) {
+    option (google.api.http) = {
+      post: "/api/v3/directory/check/permission"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "check",
+        "permission"
+      ]
+      summary: "Check permission"
+      description: "Returns check permission outcome."
+      // external_docs: {}
+      operation_id: "directory.reader.v3.check.permission"
+      deprecated: true
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = true;
+  }
+
+  // check relation (deprecated, use the check method)
+  // Deprecated: use directory.reader.v3.Check()
+  rpc CheckRelation(CheckRelationRequest) returns (CheckRelationResponse) {
+    option (google.api.http) = {
+      post: "/api/v3/directory/check/relation"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "check",
+        "relation"
+      ]
+      summary: "Check relation"
+      description: "Returns check relation outcome."
+      // external_docs: {}
+      operation_id: "directory.reader.v3.check.relation"
+      deprecated: true
+      // servers: {}
+      // extensions: {}
+    };
+    option deprecated = true;
+  }
+
+  // get object relationship graph
+  rpc GetGraph(GetGraphRequest) returns (GetGraphResponse) {
+    option (google.api.http) = {get: "/api/v3/directory/graph/{object_type}/{relation}/{subject_type}"};
+    option (grpc.gateway.protoc_gen_openapiv3.options.openapiv3_operation) = {
+      tags: [
+        "directory",
+        "get",
+        "graph"
+      ]
+      summary: "Get graph"
+      description: "Returns object graph from anchor to subject or object."
+      // external_docs: {}
+      operation_id: "directory.reader.v3.graph"
+      deprecated: false
+      // servers: {}
+      // extensions: {}
+    };
+  }
+  option deprecated = false;
+}
+
+message GetObjectRequest {
+  reserved 9;
+  reserved "page";
+  // object type identifier
+  string object_type = 1 [
+    json_name = "object_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // object instance identifier
+  string object_id = 2 [
+    json_name = "object_id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // materialize the object relations objects (optional)
+  bool with_relations = 3 [
+    json_name = "with_relations",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message GetObjectResponse {
+  reserved 9;
+  reserved "page";
+  // object instance
+  aserto.directory.common.v3.Object result = 1 [
+    json_name = "result",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // object relations
+  repeated aserto.directory.common.v3.Relation relations = 4 [
+    json_name = "relations",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message GetObjectManyRequest {
+  // object identifier list
+  repeated aserto.directory.common.v3.ObjectIdentifier param = 1 [
+    json_name = "param",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+}
+
+message GetObjectManyResponse {
+  // array of object instances
+  repeated aserto.directory.common.v3.Object results = 1 [
+    json_name = "results",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message GetObjectsRequest {
+  // object type identifier (optional)
+  string object_type = 1 [
+    json_name = "object_type",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // pagination request (optional)
+  aserto.directory.common.v3.PaginationRequest page = 9 [
+    json_name = "page",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message GetObjectsResponse {
+  // array of object instances
+  repeated aserto.directory.common.v3.Object results = 1 [
+    json_name = "results",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // pagination response
+  aserto.directory.common.v3.PaginationResponse page = 9 [
+    json_name = "page",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message GetRelationRequest {
+  // object type identifier
+  string object_type = 1 [
+    json_name = "object_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // object instance identifier
+  string object_id = 2 [
+    json_name = "object_id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // relation name
+  string relation = 3 [
+    json_name = "relation",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject type identifier
+  string subject_type = 4 [
+    json_name = "subject_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject instance identifier
+  string subject_id = 5 [
+    json_name = "subject_id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject relation name (optional)
+  string subject_relation = 6 [
+    json_name = "subject_relation",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // materialize relation objects (optional)
+  bool with_objects = 7 [
+    json_name = "with_objects",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message GetRelationResponse {
+  // relation instance
+  aserto.directory.common.v3.Relation result = 1 [
+    json_name = "result",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // map of materialized relation objects
+  map<string, aserto.directory.common.v3.Object> objects = 2 [
+    json_name = "objects",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message GetRelationsRequest {
+  // object type identifier (optional)
+  string object_type = 1 [
+    json_name = "object_type",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // object instance identifier (optional)
+  string object_id = 2 [
+    json_name = "object_id",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // relation name (optional)
+  string relation = 3 [
+    json_name = "relation",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // subject type identifier (optional)
+  string subject_type = 4 [
+    json_name = "subject_type",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // subject instance identifier (optional)
+  string subject_id = 5 [
+    json_name = "subject_id",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // subject relation name (optional)
+  string subject_relation = 6 [
+    json_name = "subject_relation",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // materialize relation objects (optional)
+  bool with_objects = 7 [
+    json_name = "with_objects",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // only return relations that do not have a subject relation  (optional)
+  bool with_empty_subject_relation = 8 [
+    json_name = "with_empty_subject_relation",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // pagination request (optional)
+  aserto.directory.common.v3.PaginationRequest page = 9 [
+    json_name = "page",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message GetRelationsResponse {
+  // array of relation instances
+  repeated aserto.directory.common.v3.Relation results = 1 [
+    json_name = "results",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // map of materialized relation objects
+  map<string, aserto.directory.common.v3.Object> objects = 2 [
+    json_name = "objects",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // pagination response
+  aserto.directory.common.v3.PaginationResponse page = 9 [
+    json_name = "page",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message CheckRequest {
+  // object type identifier
+  string object_type = 1 [
+    json_name = "object_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // object instance identifier
+  string object_id = 2 [
+    json_name = "object_id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // relation name
+  string relation = 3 [
+    json_name = "relation",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject type identifier
+  string subject_type = 4 [
+    json_name = "subject_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject instance identifier
+  string subject_id = 5 [
+    json_name = "subject_id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // collect trace information (optional)
+  bool trace = 7 [
+    json_name = "trace",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message CheckResponse {
+  // check result
+  bool check = 1 [
+    json_name = "check",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // trace information
+  repeated string trace = 2 [
+    json_name = "trace",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // context
+  google.protobuf.Struct context = 3 [
+    json_name = "context",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message ChecksRequest {
+  // default check parameter values
+  CheckRequest default = 1 [
+    json_name = "default",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // collection of check requests
+  repeated CheckRequest checks = 2 [
+    json_name = "checks",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message ChecksResponse {
+  // checks results array
+  repeated CheckResponse checks = 1 [
+    json_name = "checks",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message CheckPermissionRequest {
+  // object type identifier
+  string object_type = 1 [
+    json_name = "object_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // object instance identifier
+  string object_id = 2 [
+    json_name = "object_id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // permission name
+  string permission = 3 [
+    json_name = "permission",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject type identifier
+  string subject_type = 4 [
+    json_name = "subject_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject instance identifier
+  string subject_id = 5 [
+    json_name = "subject_id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // collect trace information (optional)
+  bool trace = 7 [
+    json_name = "trace",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message CheckPermissionResponse {
+  // check result
+  bool check = 1 [
+    json_name = "check",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // trace information
+  repeated string trace = 2 [
+    json_name = "trace",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message CheckRelationRequest {
+  // object type identifier
+  string object_type = 1 [
+    json_name = "object_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // object instance identifier
+  string object_id = 2 [
+    json_name = "object_id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // relation name
+  string relation = 3 [
+    json_name = "relation",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject type identifier
+  string subject_type = 4 [
+    json_name = "subject_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject instance identifier
+  string subject_id = 5 [
+    json_name = "subject_id",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // collect trace information (optional)
+  bool trace = 7 [
+    json_name = "trace",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message CheckRelationResponse {
+  // check result
+  bool check = 1 [
+    json_name = "check",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // trace information
+  repeated string trace = 2 [
+    json_name = "trace",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+message GetGraphRequest {
+  reserved 1, 2;
+  reserved "anchor_type", "anchor_id";
+
+  // object type identifier
+  string object_type = 3 [
+    json_name = "object_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // object instance identifier (optional)
+  string object_id = 4 [
+    json_name = "object_id",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // relation name
+  string relation = 5 [
+    json_name = "relation",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject type identifier
+  string subject_type = 6 [
+    json_name = "subject_type",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  // subject instance identifier (optional)
+  string subject_id = 7 [
+    json_name = "subject_id",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // subject relation name (optional)
+  string subject_relation = 8 [
+    json_name = "subject_relation",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // return graph paths for each result (optional)
+  bool explain = 9 [
+    json_name = "explain",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+  // collect trace information (optional)
+  bool trace = 10 [
+    json_name = "trace",
+    (google.api.field_behavior) = OPTIONAL,
+    deprecated = false
+  ];
+}
+
+message GetGraphResponse {
+  reserved 1;
+
+  // matching object identifiers
+  repeated aserto.directory.common.v3.ObjectIdentifier results = 2 [
+    json_name = "results",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // explanation of results
+  google.protobuf.Struct explanation = 3 [
+    json_name = "explanation",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // trace information
+  repeated string trace = 4 [
+    json_name = "trace",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}

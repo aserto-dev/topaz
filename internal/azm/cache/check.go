@@ -1,11 +1,11 @@
 package cache
 
 import (
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	"github.com/aserto-dev/go-directory/pkg/pb"
-	"github.com/aserto-dev/go-directory/pkg/prop"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
 	"github.com/aserto-dev/topaz/internal/azm/graph"
 	"github.com/aserto-dev/topaz/internal/azm/mempool"
+	"github.com/aserto-dev/topaz/pkg/directory/pb"
+	"github.com/aserto-dev/topaz/pkg/directory/prop"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 

@@ -3,9 +3,9 @@ package topaz
 import (
 	"context"
 
-	"github.com/aserto-dev/go-authorizer/pkg/aerr"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
 	"github.com/aserto-dev/topaz/internal/runtime"
+	"github.com/aserto-dev/topaz/pkg/authorizer/aerr"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
 	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/az"

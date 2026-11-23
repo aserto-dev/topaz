@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
-	dsm "github.com/aserto-dev/go-directory/aserto/directory/model/v3"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dse "github.com/aserto-dev/topaz/api/directory/v3/exporter"
+	dsi "github.com/aserto-dev/topaz/api/directory/v3/importer"
+	dsm "github.com/aserto-dev/topaz/api/directory/v3/model"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
+	dsw "github.com/aserto-dev/topaz/api/directory/v3/writer"
 	dsa "github.com/authzen/access.go/api/access/v1"
 
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"

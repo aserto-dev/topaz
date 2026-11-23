@@ -1,7 +1,7 @@
 package directory
 
 import (
-	client "github.com/aserto-dev/go-aserto"
+	client "github.com/aserto-dev/topaz/api/client"
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
 
 	"github.com/rs/zerolog"

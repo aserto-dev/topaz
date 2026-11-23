@@ -3,9 +3,9 @@ package tests_test
 import (
 	"testing"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
-	dsw "github.com/aserto-dev/go-directory/aserto/directory/writer/v3"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
+	dsw "github.com/aserto-dev/topaz/api/directory/v3/writer"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

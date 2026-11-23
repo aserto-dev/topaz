@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	dsi "github.com/aserto-dev/go-directory/aserto/directory/importer/v3"
+	dsi "github.com/aserto-dev/topaz/api/directory/v3/importer"
 	"github.com/aserto-dev/topaz/topaz/js"
 
 	"github.com/pkg/errors"

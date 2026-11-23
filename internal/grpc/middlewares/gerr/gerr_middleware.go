@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"uuid"
 
-	aerr "github.com/aserto-dev/errors"
 	grpcutil "github.com/aserto-dev/topaz/internal/grpc"
+	aerr "github.com/aserto-dev/topaz/pkg/errors"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
 	"github.com/rs/zerolog"
 	zlog "github.com/rs/zerolog/log"

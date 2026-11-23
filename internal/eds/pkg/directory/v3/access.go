@@ -3,7 +3,7 @@ package v3
 import (
 	"context"
 
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
 	"github.com/aserto-dev/topaz/internal/azm/cache"
 	dsa "github.com/authzen/access.go/api/access/v1"
 	"github.com/rs/zerolog"

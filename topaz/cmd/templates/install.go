@@ -8,7 +8,7 @@ import (
 	"path"
 	"path/filepath"
 
-	client "github.com/aserto-dev/go-aserto"
+	client "github.com/aserto-dev/topaz/api/client"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/pkg/config"
 	"github.com/aserto-dev/topaz/topaz/cc"
@@ -231,17 +231,14 @@ func (cmd *InstallTemplateCmd) prepareTopaz(ctx context.Context, tmpl *template,
 
 	// 3 - topaz start - start instance using new configuration
 	{
-		//nolint:modernize
 		command := &topaz.StartCmd{
-			StartRunCmd: topaz.StartRunCmd{
-				ContainerRegistry: cmd.ContainerRegistry,
-				ContainerImage:    cmd.ContainerImage,
-				ContainerTag:      cmd.ContainerTag,
-				ContainerPlatform: cmd.ContainerPlatform,
-				ContainerName:     cmd.ContainerName,
-				ContainerHostname: cmd.ContainerHostname,
-			},
-			Wait: true,
+			ContainerRegistry: cmd.ContainerRegistry,
+			ContainerImage:    cmd.ContainerImage,
+			ContainerTag:      cmd.ContainerTag,
+			ContainerPlatform: cmd.ContainerPlatform,
+			ContainerName:     cmd.ContainerName,
+			ContainerHostname: cmd.ContainerHostname,
+			Wait:              true,
 		}
 		if err := command.Run(ctx); err != nil {
 			return err

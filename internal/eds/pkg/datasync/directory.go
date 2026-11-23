@@ -8,8 +8,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dse "github.com/aserto-dev/topaz/api/directory/v3/exporter"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	bolt "go.etcd.io/bbolt"
 

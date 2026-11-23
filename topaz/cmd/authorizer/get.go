@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
+	"github.com/aserto-dev/topaz/api/authorizer/v2"
 	"github.com/aserto-dev/topaz/topaz/cc"
 	"github.com/aserto-dev/topaz/topaz/clients"
 	azc "github.com/aserto-dev/topaz/topaz/clients/authorizer"

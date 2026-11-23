@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package aserto.directory.importer.v3;
+
+import "v3/common/common.proto";
+import "google/api/field_behavior.proto";
+
+option go_package = "github.com/aserto-dev/topaz/api/directory/v3/importer;importer";
+
+service Importer {
+  // import stream of objects and relations
+  rpc Import(stream ImportRequest) returns (stream ImportResponse) {}
+}
+
+message ImportRequest {
+  // operation Opcode enum value
+  Opcode op_code = 1 [
+    json_name = "op_code",
+    (google.api.field_behavior) = REQUIRED,
+    deprecated = false
+  ];
+  oneof msg {
+    // object import message
+    aserto.directory.common.v3.Object object = 5 [
+      json_name = "object",
+      (google.api.field_behavior) = OPTIONAL,
+      deprecated = false
+    ];
+    // relation import message
+    aserto.directory.common.v3.Relation relation = 6 [
+      json_name = "relation",
+      (google.api.field_behavior) = OPTIONAL,
+      deprecated = false
+    ];
+  }
+}
+
+message ImportResponse {
+  // object import counter
+  ImportCounter object = 1 [
+    json_name = "object",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = true
+  ];
+  // relation import counter
+  ImportCounter relation = 2 [
+    json_name = "relation",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = true
+  ];
+
+  oneof msg {
+    // import status message
+    ImportStatus status = 4 [
+      json_name = "status",
+      (google.api.field_behavior) = OUTPUT_ONLY,
+      deprecated = false
+    ];
+    // import counter per type
+    ImportCounter counter = 5 [
+      json_name = "counter",
+      (google.api.field_behavior) = OUTPUT_ONLY,
+      deprecated = false
+    ];
+  }
+}
+
+message ImportCounter {
+  // number of messages received
+  uint64 recv = 1 [
+    json_name = "recv",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // number of messages with OPCODE_SET
+  uint64 set = 2 [
+    json_name = "set",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // number of messages with OPCODE_DELETE
+  uint64 delete = 3 [
+    json_name = "delete",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // number of messages resulting in error
+  uint64 error = 4 [
+    json_name = "error",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // counter of type (object|relation)
+  string type = 5 [
+    json_name = "type",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}
+
+enum Opcode {
+  OPCODE_UNKNOWN = 0;
+  OPCODE_SET = 1;
+  OPCODE_DELETE = 2;
+  OPCODE_DELETE_WITH_RELATIONS = 3;
+}
+
+message ImportStatus {
+  // gRPC status code (google.golang.org/grpc/codes)
+  uint32 code = 1 [
+    json_name = "code",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // gRPC status message (google.golang.org/grpc/status)
+  string msg = 2 [
+    json_name = "msg",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+  // req contains the original import request message
+  ImportRequest req = 3 [
+    json_name = "req",
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    deprecated = false
+  ];
+}

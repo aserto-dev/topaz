@@ -3,12 +3,12 @@ package cache
 import (
 	"sync/atomic"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	"github.com/aserto-dev/go-directory/pkg/derr"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
 	"github.com/aserto-dev/topaz/internal/azm/mempool"
 	"github.com/aserto-dev/topaz/internal/azm/model"
 	"github.com/aserto-dev/topaz/internal/azm/model/diff"
 	stts "github.com/aserto-dev/topaz/internal/azm/stats"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
 	"github.com/samber/lo"
 )
 

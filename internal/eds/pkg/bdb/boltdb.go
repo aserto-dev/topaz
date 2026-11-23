@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"time"
 
-	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/topaz/internal/azm/cache"
 	"github.com/aserto-dev/topaz/internal/azm/model"
 	"github.com/aserto-dev/topaz/internal/fs"
+	cerr "github.com/aserto-dev/topaz/pkg/errors"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"

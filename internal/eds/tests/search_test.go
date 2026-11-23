@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
 )
 
 func BenchmarkSearchSerial(b *testing.B) {

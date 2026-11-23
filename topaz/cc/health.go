@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	client "github.com/aserto-dev/go-aserto"
+	client "github.com/aserto-dev/topaz/api/client"
 	"github.com/pkg/errors"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )

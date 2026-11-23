@@ -6,16 +6,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.5.0
 	github.com/alecthomas/kong v1.17.0
 	github.com/antlr4-go/antlr/v4 v4.13.1
-	github.com/aserto-dev/errors v0.34.2-0.20261006083714-760eef8e0b6c
-	github.com/aserto-dev/go-aserto v0.34.4
-	github.com/aserto-dev/go-authorizer/aserto v0.24.4
-	github.com/aserto-dev/go-authorizer/openapi v0.24.4
-	github.com/aserto-dev/go-authorizer/pkg v0.24.4
-	github.com/aserto-dev/go-directory/aserto v0.34.4
-	github.com/aserto-dev/go-directory/openapi v0.34.4
-	github.com/aserto-dev/go-directory/pkg v0.34.4
 	github.com/aserto-dev/go-topaz-ui v0.1.26
-	github.com/aserto-dev/logger v0.0.9
 	github.com/authzen/access.go/api v1.0.3
 	github.com/authzen/access.go/openapi v1.0.3
 	github.com/cli/browser v1.3.0
@@ -29,7 +20,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.1.1
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.4
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.33.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.34.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/itchyny/gojq v0.12.20
 	github.com/jwx-go/jwkfetch/v4 v4.0.4
@@ -47,6 +38,7 @@ require (
 	github.com/opencontainers/image-spec v1.1.1
 	github.com/panmari/cuckoofilter v1.0.6
 	github.com/pkg/errors v0.9.1
+	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10
 	github.com/prometheus/client_golang v1.25.0
 	github.com/rs/cors v1.11.1
 	github.com/rs/zerolog v1.35.1
@@ -61,7 +53,8 @@ require (
 	go.yaml.in/yaml/v4 v4.0.0
 	golang.org/x/sync v0.25.0
 	golang.org/x/sys v0.50.0
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20261110000943-09e21b237f2c
+	google.golang.org/genproto/googleapis/api v0.0.0-20261118221215-c8830f628b3f
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20261118221215-c8830f628b3f
 	google.golang.org/grpc v1.85.0
 	google.golang.org/protobuf v1.36.12
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
@@ -135,7 +128,6 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/pandatix/go-abnf v0.5.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.4.3 // indirect
-	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/prometheus/client_model v0.6.3 // indirect
 	github.com/prometheus/common v0.74.0 // indirect
@@ -164,14 +156,12 @@ require (
 	go.opentelemetry.io/otel/sdk v1.47.0 // indirect
 	go.opentelemetry.io/otel/trace v1.47.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.6 // indirect
-	golang.org/x/crypto v0.58.0 // indirect
-	golang.org/x/exp v0.0.0-20261109185158-a52e3aef5920 // indirect
-	golang.org/x/net v0.62.0 // indirect
-	golang.org/x/term v0.48.0 // indirect
+	golang.org/x/crypto v0.59.0 // indirect
+	golang.org/x/exp v0.0.0-20261121134650-e1094eeca1b5 // indirect
+	golang.org/x/net v0.63.0 // indirect
 	golang.org/x/text v0.44.0 // indirect
 	golang.org/x/time v0.16.0 // indirect
-	google.golang.org/genproto v0.0.0-20261110000943-09e21b237f2c // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20261110000943-09e21b237f2c // indirect
+	google.golang.org/genproto v0.0.0-20261118221215-c8830f628b3f // indirect
 	gopkg.in/ini.v1 v1.68.0 // indirect
 	oras.land/oras-go/v2 v2.7.0 // indirect
 )

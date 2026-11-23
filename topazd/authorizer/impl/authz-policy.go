@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2"
-	"github.com/aserto-dev/go-authorizer/aserto/authorizer/v2/api"
-	"github.com/aserto-dev/go-authorizer/pkg/aerr"
+	"github.com/aserto-dev/topaz/api/authorizer/v2"
+	"github.com/aserto-dev/topaz/api/authorizer/v2/api"
+	"github.com/aserto-dev/topaz/pkg/authorizer/aerr"
 
 	"github.com/mennanov/fmutils"
 	"github.com/open-policy-agent/opa/v1/server/types"

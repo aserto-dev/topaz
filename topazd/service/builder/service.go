@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/aserto-dev/go-aserto"
+	"github.com/aserto-dev/topaz/api/client"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -33,7 +33,7 @@ type Service struct {
 type Gateway struct {
 	Server *http.Server
 	Mux    *http.ServeMux
-	Certs  *aserto.TLSConfig
+	Certs  *client.TLSConfig
 }
 
 type API struct {
@@ -44,7 +44,7 @@ type API struct {
 		// Default connection timeout is 120 seconds
 		// https://godoc.org/google.golang.org/grpc#ConnectionTimeout
 		ConnectionTimeoutSeconds uint32           `json:"connection_timeout_seconds"`
-		Certs                    aserto.TLSConfig `json:"certs"`
+		Certs                    client.TLSConfig `json:"certs"`
 	} `json:"grpc"`
 	Gateway struct {
 		FQDN              string           `json:"fqdn"`
@@ -52,7 +52,7 @@ type API struct {
 		AllowedOrigins    []string         `json:"allowed_origins"`
 		AllowedHeaders    []string         `json:"allowed_headers"`
 		AllowedMethods    []string         `json:"allowed_methods"`
-		Certs             aserto.TLSConfig `json:"certs"`
+		Certs             client.TLSConfig `json:"certs"`
 		HTTP              bool             `json:"http"`
 		ReadTimeout       time.Duration    `json:"read_timeout"`
 		ReadHeaderTimeout time.Duration    `json:"read_header_timeout"`

@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"testing"
 
-	dsc "github.com/aserto-dev/go-directory/aserto/directory/common/v3"
-	dsr "github.com/aserto-dev/go-directory/aserto/directory/reader/v3"
+	dsc "github.com/aserto-dev/topaz/api/directory/v3/common"
+	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
 	"github.com/aserto-dev/topaz/internal/azm/graph"
 	"github.com/aserto-dev/topaz/internal/azm/model"
 	"github.com/samber/lo"

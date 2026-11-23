@@ -1,10 +1,10 @@
 package diff
 
 import (
-	"github.com/aserto-dev/go-directory/pkg/derr"
 	"github.com/aserto-dev/topaz/internal/azm/internal/lox"
 	"github.com/aserto-dev/topaz/internal/azm/model"
 	stts "github.com/aserto-dev/topaz/internal/azm/stats"
+	"github.com/aserto-dev/topaz/pkg/directory/derr"
 	"github.com/hashicorp/go-multierror"
 	"github.com/samber/lo"
 )

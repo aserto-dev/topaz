@@ -3,7 +3,7 @@ package logger
 import (
 	"io"
 
-	"github.com/aserto-dev/logger"
+	"github.com/aserto-dev/topaz/pkg/logger"
 	"github.com/rs/zerolog"
 	"github.com/sirupsen/logrus"
 )

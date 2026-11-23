@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	dse "github.com/aserto-dev/go-directory/aserto/directory/exporter/v3"
+	dse "github.com/aserto-dev/topaz/api/directory/v3/exporter"
 	"github.com/aserto-dev/topaz/internal/fs"
 	"github.com/aserto-dev/topaz/topaz/js"
 

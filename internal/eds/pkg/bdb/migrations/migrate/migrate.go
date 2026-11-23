@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"os"
 
-	cerr "github.com/aserto-dev/errors"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/common"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/mig004"
@@ -15,6 +14,7 @@ import (
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/mig009"
 	"github.com/aserto-dev/topaz/internal/eds/pkg/bdb/migrations/mig010"
 	"github.com/aserto-dev/topaz/internal/fs"
+	cerr "github.com/aserto-dev/topaz/pkg/errors"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/rs/zerolog"

@@ -8,7 +8,7 @@ import (
 	goruntime "runtime"
 	"strconv"
 
-	"github.com/aserto-dev/go-aserto"
+	"github.com/aserto-dev/topaz/api/client"
 	"github.com/samber/lo"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -256,7 +256,7 @@ func httpResponseModifier(ctx context.Context, w http.ResponseWriter, p proto.Me
 // NumStreamWorkers is marked Experimental in grpc-go (server.go:609)
 // but has been stable since 2022; the option is what production gRPC
 // servers use to bound goroutine creation under high RPS.
-func prepareGrpcServer(certCfg *aserto.TLSConfig, opts []grpc.ServerOption) (*grpc.Server, error) {
+func prepareGrpcServer(certCfg *client.TLSConfig, opts []grpc.ServerOption) (*grpc.Server, error) {
 	opts = append(opts, grpc.NumStreamWorkers(numCPU()))
 
 	// NoTLS path.
