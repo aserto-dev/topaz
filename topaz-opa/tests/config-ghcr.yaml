@@ -10,7 +10,7 @@ services:
 bundles:
   authz:
     service: ghcr-registry
-    resource: ghcr.io/aserto-policies/policy-rebac:latest
+    resource: ghcr.io/gertd/policy-rebac:latest
     persist: true
     polling:
       min_delay_seconds: 30
