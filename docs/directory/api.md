@@ -29,6 +29,9 @@
   
     - [Importer](#aserto-directory-importer-v3-Importer)
   
+- [v3/migrate/migrate.proto](#v3_migrate_migrate-proto)
+    - [Object33](#aserto-directory-migrate-v3-Object33)
+  
 - [v3/model/model.proto](#v3_model_model-proto)
     - [Body](#aserto-directory-model-v3-Body)
     - [DeleteManifestRequest](#aserto-directory-model-v3-DeleteManifestRequest)
@@ -391,6 +394,43 @@ Relation identifier
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | Import | [ImportRequest](#aserto-directory-importer-v3-ImportRequest) stream | [ImportResponse](#aserto-directory-importer-v3-ImportResponse) stream | import stream of objects and relations |
+
+ 
+
+
+
+<a name="v3_migrate_migrate-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## v3/migrate/migrate.proto
+
+
+
+<a name="aserto-directory-migrate-v3-Object33"></a>
+
+### Object33
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| type | [string](#string) |  | object type identifier |
+| id | [string](#string) |  | object instance identifier |
+| display_name | [string](#string) |  | **Deprecated.** display name object (optional) (DEPRECATED) |
+| properties | [google.protobuf.Struct](#google-protobuf-Struct) |  | property bag (optional) |
+| created_at | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | **Deprecated.** created at timestamp (UTC) (DEPRECATED) |
+| updated_at | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | last updated timestamp (UTC) |
+| etag | [string](#string) |  | object instance etag (optional) |
+
+
+
+
+
+ 
+
+ 
+
+ 
 
  
 
