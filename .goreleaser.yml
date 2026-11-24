@@ -16,6 +16,29 @@ before:
 
 builds:
   # https://goreleaser.com/customization/build/
+  - id: topaz
+    main: ./topaz
+    binary: topaz
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
   - id: topazd
     main: ./topazd
     binary: topazd
@@ -39,9 +62,9 @@ builds:
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
-  - id: topaz
-    main: ./topaz
-    binary: topaz
+  - id: topaz-opa
+    main: ./topaz-opa
+    binary: topaz-opa
     goos:
       - darwin
       - linux
@@ -57,9 +80,9 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.ver={{.Version}}
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.commit={{.ShortCommit}}
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.date={{.Date}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz-opa/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz-opa/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz-opa/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: topaz-db
@@ -196,6 +219,7 @@ dockers_v2:
       - topaz
       - topazd
       - topaz-backup
+      - topaz-opa
 
     images:
       - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}"

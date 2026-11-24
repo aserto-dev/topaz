@@ -22,7 +22,7 @@ import (
 const dsObjectHelp string = `ds.object({
 	"object_type": "",
 	"object_id": "",
-	"with_relation": false
+	"with_relations": false
 })`
 
 // RegisterObject - ds.object.

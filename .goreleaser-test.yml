@@ -19,9 +19,9 @@ dist: dist-test
 
 builds:
   # https://goreleaser.com/customization/build/
-  - id: topazd
-    main: ./topazd
-    binary: topazd
+  - id: topaz
+    main: ./topaz
+    binary: topaz
     goos:
       - linux
     goarch:
@@ -39,9 +39,27 @@ builds:
     hooks:
       post: make container-tag
 
-  - id: topaz
-    main: ./topaz
-    binary: topaz
+  - id: topazd
+    main: ./topazd
+    binary: topazd
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: topaz-opa
+    main: ./topaz-opa
+    binary: topaz-opa
     goos:
       - linux
     goarch:
@@ -92,6 +110,7 @@ dockers_v2:
       - topaz
       - topazd
       - topaz-backup
+      - topaz-opa
 
     images:
       - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}"

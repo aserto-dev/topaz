@@ -27,6 +27,7 @@ COPY \
 ${TARGETPLATFORM}/topaz \
 ${TARGETPLATFORM}/topazd \
 ${TARGETPLATFORM}/topaz-backup \
+${TARGETPLATFORM}/topaz-opa \
 /app/
 
 ENTRYPOINT ["./topazd"]
