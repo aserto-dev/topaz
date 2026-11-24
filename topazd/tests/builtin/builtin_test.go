@@ -207,7 +207,7 @@ var BuiltinHelpTests = []struct {
 		expected: `ds.object({
 	"object_type": "",
 	"object_id": "",
-	"with_relation": false
+	"with_relations": false
 })`,
 	},
 	{
