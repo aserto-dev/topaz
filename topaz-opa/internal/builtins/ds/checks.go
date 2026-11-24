@@ -2,11 +2,9 @@ package ds
 
 import (
 	"bytes"
-	"errors"
 
 	"github.com/aserto-dev/topaz/api/directory/v3/reader"
 	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
-	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -50,7 +48,7 @@ func registerChecks(fnName string, dr func() (reader.ReaderClient, error)) (*reg
 			var args reader.ChecksRequest
 
 			dsr, err := dr()
-			if err != nil && errors.Is(err, errs.ErrTopazPluginDisabled) {
+			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}

@@ -21,11 +21,16 @@ var (
 )
 
 func SetConfig(c Config) {
+	closeConn()
 	aCfg.Store(&c)
 }
 
 func GetConfig() Config {
 	c := aCfg.Load()
+	if c == nil {
+		return Config{RequestTimeout: config.Duration(defRequestTimeout)}
+	}
+
 	return *c
 }
 
@@ -58,32 +63,5 @@ func (p *PluginFactory) Validate(manager *plugins.Manager, cfg []byte) (any, err
 		return nil, err
 	}
 
-	SetConfig(parsedConfig)
-
 	return parsedConfig, nil
-}
-
-func Factory(m *plugins.Manager, cfg any) plugins.Plugin {
-	defaultConfig := &Config{
-		Enabled: false,
-		Connection: client.Config{
-			Address:        "localhost:9292",
-			APIKey:         "",
-			Token:          "",
-			ClientCertPath: "",
-			ClientKeyPath:  "",
-			CACertPath:     "",
-			Insecure:       true,
-			NoTLS:          false,
-			NoProxy:        false,
-			Headers:        map[string]string{},
-		},
-		RequestTimeout: config.Duration(DefaultRequestTimeout),
-	}
-
-	if c, ok := cfg.(*Config); ok {
-		defaultConfig = c
-	}
-
-	return &Plugin{manager: m, config: defaultConfig}
 }

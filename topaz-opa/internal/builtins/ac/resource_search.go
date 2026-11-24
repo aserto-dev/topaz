@@ -1,10 +1,7 @@
 package ac
 
 import (
-	"errors"
-
 	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
-	"github.com/aserto-dev/topaz/topaz-opa/internal/errs"
 	"github.com/authzen/access.go/api/access/v1"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -33,7 +30,7 @@ func registerResourceSearch(fnName string, ac func() (access.AccessClient, error
 			var args access.ResourceSearchRequest
 
 			acr, err := ac()
-			if err != nil && errors.Is(err, errs.ErrTopazPluginDisabled) {
+			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}

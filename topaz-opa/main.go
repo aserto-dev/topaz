@@ -27,6 +27,7 @@ func main() {
 	}
 
 	if err := cmd.Command(rootCommand, brand).ExecuteContext(ctx); err != nil {
-		panic(err)
+		stop()
+		os.Exit(1)
 	}
 }

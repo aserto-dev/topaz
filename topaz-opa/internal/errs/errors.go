@@ -7,7 +7,6 @@ func (e BuiltinError) Error() string {
 }
 
 const (
-	ErrAuthZENPluginDisabled = BuiltinError("authzen plugin is disabled")
-	ErrTopazPluginDisabled   = BuiltinError("topaz plugin is disabled")
-	ErrInvalidDuration       = BuiltinError("invalid duration format")
+	ErrTopazPluginDisabled = BuiltinError("topaz plugin is disabled")
+	ErrInvalidDuration     = BuiltinError("invalid duration format")
 )

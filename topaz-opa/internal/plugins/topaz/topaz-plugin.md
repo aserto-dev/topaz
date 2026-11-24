@@ -20,6 +20,4 @@ plugins:
           "key1": "val1"
           "key2": "val2"
       request_timeout: 10s
-      enable_directory_builtins: true
-      enable_access_builtins: true
 ```
