@@ -1,7 +1,7 @@
 package plugin
 
 import (
-	"github.com/aserto-dev/topaz/internal/builtins/ac"
+	"github.com/aserto-dev/topaz/internal/builtins/az"
 	"github.com/aserto-dev/topaz/internal/builtins/ds"
 	"github.com/aserto-dev/topaz/topaz-opa/internal/plugins/topaz"
 
@@ -9,7 +9,7 @@ import (
 )
 
 func Init() {
-	ac.RegisterAccessBuiltins(topaz.GetAccessClient())
+	az.RegisterAccessBuiltins(topaz.GetAccessClient())
 	ds.RegisterDirectoryBuiltins(topaz.GetDirectoryClient())
 
 	runtime.RegisterPlugin(topaz.PluginName, &topaz.PluginFactory{})

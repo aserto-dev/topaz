@@ -209,12 +209,28 @@ topaz-start-test-snapshot:
 	@echo "topaz start $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_name')"
 	@${TOPAZ_DIST} start --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
 
+.PHONY: topaz-restart-test-snapshot
+topaz-restart-test-snapshot:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@echo "topaz restart $$(${TOPAZ_DIST} config info | jq '.runtime.active_configuration_name')"
+	@${TOPAZ_DIST} restart --container-tag=0.0.0-test-$$(git rev-parse --short HEAD)-$$(uname -m)
+
 .PHONY: publish-winget
 publish-winget:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
 	@komac --version
 	@komac token add --token=$$(gh auth token)
 	@komac update ${WINGET_PKG_ID} --version $$(svu current --tag.prefix="") --urls https://github.com/aserto-dev/topaz/releases/download/$$(svu current)/topaz_windows_amd64.zip
+
+.PHONY: grpcui-ds
+grpcui-ds:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@grpcui -insecure -port=59292 -open-browser :9292 &
+
+.PHONY: grpcui-az
+grpcui-az:
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@grpcui -insecure -port=58282 -open-browser :8282 &
 
 .PHONY: info
 info:

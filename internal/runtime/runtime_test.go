@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/aserto-dev/topaz/internal/builtins"
-	"github.com/aserto-dev/topaz/internal/builtins/ac"
+	"github.com/aserto-dev/topaz/internal/builtins/az"
 	"github.com/aserto-dev/topaz/internal/builtins/ds"
 	runtime "github.com/aserto-dev/topaz/internal/runtime"
 	"github.com/aserto-dev/topaz/internal/runtime/testutil"
@@ -180,11 +180,11 @@ func TestRemoteBundleV0(t *testing.T) {
 		runtime.WithBuiltin1(ds.RegisterGraph(builtins.DSGraph, dsClient)),
 		runtime.WithBuiltin1(ds.RegisterCheck(builtins.DSCheck, dsClient)),
 		runtime.WithBuiltin1(ds.RegisterChecks(builtins.DSChecks, dsClient)),
-		runtime.WithBuiltin1(ac.RegisterEvaluation(builtins.AZEvaluation, acClient)),
-		runtime.WithBuiltin1(ac.RegisterEvaluations(builtins.AZEvaluations, acClient)),
-		runtime.WithBuiltin1(ac.RegisterSubjectSearch(builtins.AZSubjectSearch, acClient)),
-		runtime.WithBuiltin1(ac.RegisterResourceSearch(builtins.AZResourceSearch, acClient)),
-		runtime.WithBuiltin1(ac.RegisterActionSearch(builtins.AZActionSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluation(builtins.AZEvaluation, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluations(builtins.AZEvaluations, acClient)),
+		runtime.WithBuiltin1(az.RegisterSubjectSearch(builtins.AZSubjectSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterResourceSearch(builtins.AZResourceSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterActionSearch(builtins.AZActionSearch, acClient)),
 		runtime.WithPlugin(topaz_file_decision_logger.PluginName, topaz_file_decision_logger.NewFactory(ctx)),
 		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
 		runtime.WithRegoVersion(ast.RegoV0),
@@ -269,11 +269,11 @@ func TestRemoteBundleV1(t *testing.T) {
 		runtime.WithBuiltin1(ds.RegisterGraph(builtins.DSGraph, dsClient)),
 		runtime.WithBuiltin1(ds.RegisterCheck(builtins.DSCheck, dsClient)),
 		runtime.WithBuiltin1(ds.RegisterChecks(builtins.DSChecks, dsClient)),
-		runtime.WithBuiltin1(ac.RegisterEvaluation(builtins.AZEvaluation, acClient)),
-		runtime.WithBuiltin1(ac.RegisterEvaluations(builtins.AZEvaluations, acClient)),
-		runtime.WithBuiltin1(ac.RegisterSubjectSearch(builtins.AZSubjectSearch, acClient)),
-		runtime.WithBuiltin1(ac.RegisterResourceSearch(builtins.AZResourceSearch, acClient)),
-		runtime.WithBuiltin1(ac.RegisterActionSearch(builtins.AZActionSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluation(builtins.AZEvaluation, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluations(builtins.AZEvaluations, acClient)),
+		runtime.WithBuiltin1(az.RegisterSubjectSearch(builtins.AZSubjectSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterResourceSearch(builtins.AZResourceSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterActionSearch(builtins.AZActionSearch, acClient)),
 		runtime.WithPlugin(topaz_file_decision_logger.PluginName, topaz_file_decision_logger.NewFactory(ctx)),
 		runtime.WithPlugin(edge.PluginName, edge.NewPluginFactory(ctx, cfg, logger)),
 		runtime.WithRegoVersion(ast.RegoV1),

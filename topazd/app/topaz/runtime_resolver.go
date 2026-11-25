@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/aserto-dev/topaz/internal/builtins"
-	"github.com/aserto-dev/topaz/internal/builtins/ac"
+	"github.com/aserto-dev/topaz/internal/builtins/az"
 	"github.com/aserto-dev/topaz/internal/builtins/ds"
 	"github.com/aserto-dev/topaz/internal/runtime"
 	"github.com/aserto-dev/topaz/pkg/authorizer/aerr"
@@ -48,11 +48,11 @@ func NewRuntimeResolver(
 		runtime.WithBuiltin1(ds.RegisterChecks(builtins.DSChecks, dsClient)),
 
 		// authZen built-ins
-		runtime.WithBuiltin1(ac.RegisterEvaluation(builtins.AZEvaluation, acClient)),
-		runtime.WithBuiltin1(ac.RegisterEvaluations(builtins.AZEvaluations, acClient)),
-		runtime.WithBuiltin1(ac.RegisterSubjectSearch(builtins.AZSubjectSearch, acClient)),
-		runtime.WithBuiltin1(ac.RegisterResourceSearch(builtins.AZResourceSearch, acClient)),
-		runtime.WithBuiltin1(ac.RegisterActionSearch(builtins.AZActionSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluation(builtins.AZEvaluation, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluations(builtins.AZEvaluations, acClient)),
+		runtime.WithBuiltin1(az.RegisterSubjectSearch(builtins.AZSubjectSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterResourceSearch(builtins.AZResourceSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterActionSearch(builtins.AZActionSearch, acClient)),
 
 		// plugins
 		runtime.WithPlugin(topaz_file_decision_logger.PluginName, topaz_file_decision_logger.NewFactory(logger.WithContext(ctx))),
