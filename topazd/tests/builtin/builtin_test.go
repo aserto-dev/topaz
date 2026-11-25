@@ -132,181 +132,76 @@ func testBuiltins(ctx context.Context, addr string) func(*testing.T) {
 	}
 }
 
+//nolint:lll
 var BuiltinHelpTests = []struct {
 	name     string
 	query    string
 	expected any
 }{
 	{
-		name:  "ds.identity",
-		query: "x = ds.identity({})",
-		expected: `ds.identity({
-	"id": ""
-})`,
+		name:     "ds.identity",
+		query:    "x = ds.identity({})",
+		expected: map[string]any{"id": ""},
 	},
 	{
-		name:  "ds.user",
-		query: "x = ds.user({})",
-		expected: `ds.user({
-	"id": ""
-})`,
+		name:     "ds.user",
+		query:    "x = ds.user({})",
+		expected: map[string]any{"id": ""},
 	},
 	{
-		name:  "ds.check",
-		query: "x = ds.check({})",
-		expected: `ds.check({
-	"object_type": "",
-	"object_id": "",
-	"relation": "",
-	"subject_type": "",
-	"subject_id": "",
-	"trace": false
-})`,
+		name:     "ds.check",
+		query:    "x = ds.check({})",
+		expected: map[string]any{"object_id": "", "object_type": "", "relation": "", "subject_id": "", "subject_type": "", "trace": false},
 	},
 	{
-		name:  "ds.checks",
-		query: "x = ds.checks({})",
-		expected: `ds.checks({
-	"default": {
-		"object_id": "",
-		"object_type": "",
-		"relation": "",
-		"subject_id": "",
-		"subject_type": "",
-		"trace": false
-	},
-	"checks": [
-		{
-			"object_id": "",
-			"object_type": "",
-			"relation": "",
-			"subject_id": "",
-			"subject_type": "",
-			"trace": false
-		}
-	]
-})`,
+		name:     "ds.checks",
+		query:    "x = ds.checks({})",
+		expected: map[string]any{"checks": []any{map[string]any{"object_id": "", "object_type": "", "relation": "", "subject_id": "", "subject_type": "", "trace": false}}, "default": map[string]any{"object_id": "", "object_type": "", "relation": "", "subject_id": "", "subject_type": "", "trace": false}},
 	},
 	{
-		name:  "ds.graph",
-		query: "x = ds.graph({})",
-		expected: `ds.graph({
-	"object_type": "",
-	"object_id": "",
-	"relation": "",
-	"subject_type": "",
-	"subject_id": "",
-	"subject_relation": "",
-	"explain": false,
-	"trace": false
-})`,
+		name:     "ds.graph",
+		query:    "x = ds.graph({})",
+		expected: map[string]any{"explain": false, "object_id": "", "object_type": "", "relation": "", "subject_id": "", "subject_relation": "", "subject_type": "", "trace": false},
 	},
 	{
-		name:  "ds.object",
-		query: "x = ds.object({})",
-		expected: `ds.object({
-	"object_type": "",
-	"object_id": "",
-	"with_relations": false
-})`,
+		name:     "ds.object",
+		query:    "x = ds.object({})",
+		expected: map[string]any{"object_id": "", "object_type": "", "with_relations": false},
 	},
 	{
-		name:  "ds.relation",
-		query: "x = ds.relation({})",
-		expected: `ds.relation({
-	"object_id": "",
-	"object_type": "",
-	"relation": "",
-	"subject_id": "",
-	"subject_relation": "",
-	"subject_type": "",
-	"with_objects": false
-	})`,
+		name:     "ds.relation",
+		query:    "x = ds.relation({})",
+		expected: map[string]any{"object_id": "", "object_type": "", "relation": "", "subject_id": "", "subject_relation": "", "subject_type": "", "with_objects": false},
 	},
 	{
-		name:  "ds.relations",
-		query: "x = ds.relations({})",
-		expected: `ds.relations({
-	"object_type": "",
-	"object_id": "",
-	"relation": "",
-	"subject_type": "",
-	"subject_id": "",
-	"subject_relation": "",
-	"with_objects": false,
-	"with_empty_subject_relation": false
-})`,
+		name:     "ds.relations",
+		query:    "x = ds.relations({})",
+		expected: map[string]any{"object_id": "", "object_type": "", "relation": "", "subject_id": "", "subject_relation": "", "subject_type": "", "with_empty_subject_relation": false, "with_objects": false},
 	},
 	{
-		name:  "az.evaluation",
-		query: "x = az.evaluation({})",
-		expected: `az.evaluation({
-  "subject": {"type": "", "id": "", "properties": {}}, 
-  "action": {"name": "", "properties": {}}, 
-  "resource": {"type": "", "id": "", "properties": {}}, 
-  "context": {}
-})`,
+		name:     "az.evaluation",
+		query:    "x = az.evaluation({})",
+		expected: map[string]any{"action": map[string]any{"name": "", "properties": map[string]any{}}, "context": map[string]any{}, "resource": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}, "subject": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}},
 	},
 	{
-		name:  "az.evaluations",
-		query: "x = az.evaluations({})",
-		expected: `az.evaluations({
-	"subject": {"type": "", "id": "", "properties": {}},
-	"action": {"name": "", "properties": {}},
-	"resource": {"type": "", "id": "", "properties": {}},
-  "context": {},
-	"options": {},
-	"evaluations": [
-		{
-			"subject": {"type": "", "id": "", "properties": {}},
-			"action": {"name": "", "properties": {}},
-			"resource": {"type": "", "id": "", "properties": {}},
-			"context": {}
-		}
-	]
-})`,
+		name:     "az.evaluations",
+		query:    "x = az.evaluations({})",
+		expected: map[string]any{"action": map[string]any{"name": "", "properties": map[string]any{}}, "context": map[string]any{}, "evaluations": []any{map[string]any{"action": map[string]any{"name": "", "properties": map[string]any{}}, "context": map[string]any{}, "resource": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}, "subject": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}}}, "options": map[string]any{}, "resource": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}, "subject": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}},
 	},
 	{
-		name:  "az.action_search",
-		query: "x = az.action_search({})",
-		expected: `az.action_search({
-	"subject": {"type": "", "id": "", "properties": {}},
-	"action": {"name": "", "properties": {}},
-	"resource": {"type": "", "id": "", "properties": {}},
-	"context": {},
-	"page": {
-		"limit": 100,
-		"token": ""
-	}
-})`,
+		name:     "az.action_search",
+		query:    "x = az.action_search({})",
+		expected: map[string]any{"action": map[string]any{"name": "", "properties": map[string]any{}}, "context": map[string]any{}, "page": map[string]any{"limit": float64(100), "token": ""}, "resource": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}, "subject": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}},
 	},
 	{
-		name:  "az.resource_search",
-		query: "x = az.resource_search({})",
-		expected: `az.resource_search({
-	"subject": {"type": "", "id": "", "properties": {}},
-	"action": {"name": "", "properties": {}},
-	"resource": {"type": "", "id": "", "properties": {}},
-	"context": {},
-	"page": {
-		"limit": 100,
-		"token": ""
-	}
-})`,
+		name:     "az.resource_search",
+		query:    "x = az.resource_search({})",
+		expected: map[string]any{"action": map[string]any{"name": "", "properties": map[string]any{}}, "context": map[string]any{}, "page": map[string]any{"limit": float64(100), "token": ""}, "resource": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}, "subject": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}},
 	},
 	{
-		name:  "az.subject_search",
-		query: "x = az.subject_search({})",
-		expected: `az.subject_search({
-	"subject": {"type": "", "id": "", "properties": {}},
-	"action": {"name": "", "properties": {}},
-	"resource": {"type": "", "id": "", "properties": {}},
-	"context": {},
-	"page": {
-		"limit": 100,
-		"token": ""
-	}
-})`,
+		name:     "az.subject_search",
+		query:    "x = az.subject_search({})",
+		expected: map[string]any{"action": map[string]any{"name": "", "properties": map[string]any{}}, "context": map[string]any{}, "page": map[string]any{"limit": float64(100), "token": ""}, "resource": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}, "subject": map[string]any{"id": "", "properties": map[string]any{}, "type": ""}},
 	},
 }
 

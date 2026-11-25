@@ -1,7 +1,7 @@
 package ac
 
 import (
-	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"github.com/aserto-dev/topaz/internal/builtins"
 	"github.com/authzen/access.go/api/access/v1"
 
 	"github.com/open-policy-agent/opa/v1/ast"
@@ -10,17 +10,9 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-const azResourceSearchHelp string = `az.resource_search({
-	"subject": {"type": "", "id": "", "properties": {}},
-	"action": {"name": "", "properties": {}},
-	"resource": {"type": "", "id": "", "properties": {}},
-	"context": {},
-	"page": {"next_token": ""}
-})`
-
-// registerResourceSearch.
+// RegisterResourceSearch.
 // https://openid.github.io/authzen/#name-resource-search-api
-func registerResourceSearch(fnName string, ac func() (access.AccessClient, error)) (*rego.Function, rego.Builtin1) {
+func RegisterResourceSearch(fnName string, ac func() (access.AccessClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -41,7 +33,7 @@ func registerResourceSearch(fnName string, ac func() (access.AccessClient, error
 			}
 
 			if proto.Equal(&args, &access.ResourceSearchRequest{}) {
-				return ast.StringTerm(azResourceSearchHelp), nil
+				return resourceSearchTemplate()
 			}
 
 			resp, err := acr.ResourceSearch(bctx.Context, &args)
@@ -52,4 +44,25 @@ func registerResourceSearch(fnName string, ac func() (access.AccessClient, error
 
 			return builtins.ResponseToTerm(resp)
 		}
+}
+
+//nolint:goconst
+func resourceSearchTemplate() (*ast.Term, error) {
+	t := map[string]any{
+		"subject":  map[string]any{"type": "", "id": "", "properties": map[string]any{}},
+		"action":   map[string]any{"name": "", "properties": map[string]any{}},
+		"resource": map[string]any{"type": "", "id": "", "properties": map[string]any{}},
+		"context":  map[string]any{},
+		"page": map[string]any{
+			"limit": defPageLimit,
+			"token": "",
+		},
+	}
+
+	val, err := ast.InterfaceToValue(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.NewTerm(val), nil
 }

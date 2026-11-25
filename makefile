@@ -161,6 +161,11 @@ test: gover test-snapshot
 	done; \
 	exit $$exit_code
 
+.PHONY: tt
+tt: gover test-snapshot
+	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
+	@${EXT_BIN_DIR}/gotestsum --format short-verbose -- -count=1 -v ./... -coverprofile=cover.out -coverpkg=./... ./...
+
 .PHONY: release
 release: gover
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"

@@ -48,9 +48,6 @@ func requireDisabled(t *testing.T) {
 
 	_, err = topaz.GetAccessClient()()
 	require.ErrorIs(t, err, errs.ErrTopazPluginDisabled)
-
-	_, err = topaz.GetDirectoryConn()()
-	require.ErrorIs(t, err, errs.ErrTopazPluginDisabled)
 }
 
 // No plugins section: OPA never calls the factory, so the plugin must

@@ -4,29 +4,20 @@ import (
 	"bytes"
 
 	"github.com/aserto-dev/topaz/api/directory/v3/reader"
-	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
-	"google.golang.org/protobuf/encoding/protojson"
+	"github.com/aserto-dev/topaz/internal/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
-
-	"github.com/pkg/errors"
-	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-const dsObjectHelp string = `ds.object({
-	"object_type": "",
-	"object_id": "",
-	"with_relations": false
-})`
-
 // RegisterObject - ds.object.
-func RegisterObject(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+func RegisterObject(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -42,8 +33,15 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr reader.ReaderClien
 				req *reader.GetObjectRequest
 			)
 
+			dsr, err := dr()
+			if err != nil {
+				builtins.TraceError(&bctx, fnName, err)
+				return nil, err
+			}
+
 			if err := ast.As(op1.Value, &args); err != nil {
-				return nil, errors.Wrapf(err, "failed to parse ds.object input message")
+				builtins.TraceError(&bctx, fnName, err)
+				return nil, err
 			}
 
 			req = &reader.GetObjectRequest{
@@ -53,10 +51,10 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr reader.ReaderClien
 			}
 
 			if proto.Equal(req, &reader.GetObjectRequest{}) {
-				return ast.StringTerm(dsObjectHelp), nil
+				return objectTemplate()
 			}
 
-			resp, err := dr.GetObject(bctx.Context, req)
+			resp, err := dsr.GetObject(bctx.Context, req)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
@@ -98,4 +96,20 @@ func RegisterObject(logger *zerolog.Logger, fnName string, dr reader.ReaderClien
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+//nolint:goconst
+func objectTemplate() (*ast.Term, error) {
+	t := map[string]any{
+		"object_type":    "",
+		"object_id":      "",
+		"with_relations": false,
+	}
+
+	val, err := ast.InterfaceToValue(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.NewTerm(val), nil
 }

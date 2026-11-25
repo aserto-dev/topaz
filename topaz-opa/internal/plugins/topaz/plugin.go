@@ -101,11 +101,11 @@ func (p *Plugin) Reconfigure(ctx context.Context, c any) {
 	}
 }
 
-func GetDirectoryConn() func() (*grpc.ClientConn, error) {
-	return func() (*grpc.ClientConn, error) {
-		return getConn()
-	}
-}
+// func GetDirectoryConn() func() (*grpc.ClientConn, error) {
+// 	return func() (*grpc.ClientConn, error) {
+// 		return getConn()
+// 	}
+// }
 
 func GetAccessClient() func() (access.AccessClient, error) {
 	return func() (access.AccessClient, error) {

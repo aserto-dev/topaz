@@ -4,7 +4,7 @@ import (
 	"bytes"
 
 	"github.com/aserto-dev/topaz/api/directory/v3/reader"
-	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins"
+	"github.com/aserto-dev/topaz/internal/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
@@ -16,29 +16,8 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-const dsChecksHelp string = `ds.checks({
-	"default": {
-		"object_id": "",
-		"object_type": "",
-		"relation": "",
-		"subject_id": "",
-		"subject_type": "",
-		"trace": false
-	},
-	"checks": [
-		{
-			"object_id": "",
-			"object_type": "",
-			"relation": "",
-			"subject_id": "",
-			"subject_type": "",
-			"trace": false
-		}
-	]
-})`
-
-// registerChecks - ds.checks.
-func registerChecks(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
+// RegisterChecks - ds.checks.
+func RegisterChecks(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -59,7 +38,7 @@ func registerChecks(fnName string, dr func() (reader.ReaderClient, error)) (*reg
 			}
 
 			if proto.Equal(&args, &reader.ChecksRequest{}) {
-				return ast.StringTerm(dsChecksHelp), nil
+				return checksTemplate()
 			}
 
 			if args.GetDefault() == nil {
@@ -98,4 +77,35 @@ func registerChecks(fnName string, dr func() (reader.ReaderClient, error)) (*reg
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+//nolint:goconst
+func checksTemplate() (*ast.Term, error) {
+	t := map[string]any{
+		"default": map[string]any{
+			"object_id":    "",
+			"object_type":  "",
+			"relation":     "",
+			"subject_id":   "",
+			"subject_type": "",
+			"trace":        false,
+		},
+		"checks": []map[string]any{
+			{
+				"object_id":    "",
+				"object_type":  "",
+				"relation":     "",
+				"subject_id":   "",
+				"subject_type": "",
+				"trace":        false,
+			},
+		},
+	}
+
+	val, err := ast.InterfaceToValue(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.NewTerm(val), nil
 }

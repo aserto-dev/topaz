@@ -6,7 +6,8 @@ import (
 	"testing"
 
 	"github.com/aserto-dev/topaz/api/directory/v3/reader"
-	"github.com/aserto-dev/topaz/topaz-opa/internal/builtins/ds"
+	"github.com/aserto-dev/topaz/internal/builtins/ds"
+
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/stretchr/testify/assert"
@@ -22,7 +23,7 @@ func TestCheckReturnsClientError(t *testing.T) {
 		return nil, errConnect
 	})
 
-	args := ast.MustParseTerm(`{"object_type": "doc", "object_id": "1", "relation": "viewer", "subject_type": "user", "subject_id": "u1"}`)
+	args := ast.MustParseTerm(`{"object_type": "doc", "object_id": "o1", "relation": "viewer", "subject_type": "user", "subject_id": "u1"}`)
 
 	var (
 		term *ast.Term
@@ -32,6 +33,7 @@ func TestCheckReturnsClientError(t *testing.T) {
 	require.NotPanics(t, func() {
 		term, err = fn(rego.BuiltinContext{Context: context.Background()}, args)
 	})
+
 	assert.Nil(t, term)
 	assert.ErrorIs(t, err, errConnect)
 }
