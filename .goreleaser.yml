@@ -270,7 +270,7 @@ dockers_v2:
       "org.opencontainers.image.name": "{{.ProjectName}}"
       "org.opencontainers.image.revision": "{{.FullCommit}}"
       "org.opencontainers.image.version": "{{.Version}}"
-      "org.opencontainers.image.source": "https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      "org.opencontainers.image.source": "https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd"
       "org.opencontainers.image.description": "{{ .Env.DESCRIPTION }}"
       "org.opencontainers.image.licenses": "{{ .Env.LICENSE }}"
 
