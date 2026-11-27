@@ -100,7 +100,7 @@ snapshot:
 
 dockers_v2:
   # https://goreleaser.com/customization/dockers_v2
-  - dockerfile: "Dockerfile"
+  - dockerfile: Dockerfile.topaz
 
     platforms:
       - linux/arm64
@@ -110,7 +110,6 @@ dockers_v2:
       - topaz
       - topazd
       - topaz-backup
-      - topaz-opa
 
     images:
       - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}"
