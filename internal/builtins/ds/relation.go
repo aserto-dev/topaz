@@ -4,30 +4,18 @@ import (
 	"bytes"
 
 	"github.com/aserto-dev/topaz/api/directory/v3/reader"
-	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
+	"github.com/aserto-dev/topaz/internal/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
-
-	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 )
 
-const dsRelationHelp string = `ds.relation({
-	"object_id": "",
-	"object_type": "",
-	"relation": "",
-	"subject_id": "",
-	"subject_relation": "",
-	"subject_type": "",
-	"with_objects": false
-	})`
-
 // RegisterRelation - ds.relation.
-func RegisterRelation(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+func RegisterRelation(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -36,16 +24,22 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr reader.ReaderCli
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 			var args reader.GetRelationRequest
 
+			dsr, err := dr()
+			if err != nil {
+				builtins.TraceError(&bctx, fnName, err)
+				return nil, err
+			}
+
 			if err := ast.As(op1.Value, &args); err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			if proto.Equal(&args, &reader.GetRelationRequest{}) {
-				return ast.StringTerm(dsRelationHelp), nil
+				return relationTemplate()
 			}
 
-			resp, err := dr.GetRelation(bctx.Context, &args)
+			resp, err := dsr.GetRelation(bctx.Context, &args)
 
 			switch {
 			case status.Code(err) == codes.NotFound:
@@ -80,4 +74,24 @@ func RegisterRelation(logger *zerolog.Logger, fnName string, dr reader.ReaderCli
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+//nolint:goconst
+func relationTemplate() (*ast.Term, error) {
+	t := map[string]any{
+		"object_id":        "",
+		"object_type":      "",
+		"relation":         "",
+		"subject_id":       "",
+		"subject_relation": "",
+		"subject_type":     "",
+		"with_objects":     false,
+	}
+
+	val, err := ast.InterfaceToValue(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.NewTerm(val), nil
 }

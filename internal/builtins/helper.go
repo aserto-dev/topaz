@@ -6,11 +6,16 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/aserto-dev/topaz/api/directory/v3/reader"
+	"github.com/authzen/access.go/api/access/v1"
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/topdown"
+	"google.golang.org/grpc"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
+
+const MaxPaginationSize = 1000
 
 // ProtoToBuf, marshal proto message to buffer.
 func ProtoToBuf(w io.Writer, msg proto.Message) error {
@@ -70,4 +75,16 @@ func ResponseToTerm[T any, M Message[T]](resp M) (*ast.Term, error) {
 	}
 
 	return ast.NewTerm(v), nil
+}
+
+func GetAccessClient(conn *grpc.ClientConn) func() (access.AccessClient, error) {
+	return func() (access.AccessClient, error) {
+		return access.NewAccessClient(conn), nil
+	}
+}
+
+func GetDirectoryClient(conn *grpc.ClientConn) func() (reader.ReaderClient, error) {
+	return func() (reader.ReaderClient, error) {
+		return reader.NewReaderClient(conn), nil
+	}
 }

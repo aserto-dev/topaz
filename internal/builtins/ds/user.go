@@ -4,24 +4,19 @@ import (
 	"bytes"
 
 	"github.com/aserto-dev/topaz/api/directory/v3/reader"
-	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
+	"github.com/aserto-dev/topaz/internal/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
 
-	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 )
 
-const dsUserHelp string = `ds.user({
-	"id": ""
-})`
-
 // RegisterUser - ds.user.
-func RegisterUser(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+func RegisterUser(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -32,15 +27,21 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr reader.ReaderClient)
 				ID string `json:"id"`
 			}
 
+			dsr, err := dr()
+			if err != nil {
+				builtins.TraceError(&bctx, fnName, err)
+				return nil, err
+			}
+
 			if err := ast.As(op1.Value, &args); err != nil {
 				return nil, err
 			}
 
 			if args.ID == "" {
-				return ast.StringTerm(dsUserHelp), nil
+				return userTemplate()
 			}
 
-			resp, err := dr.GetObject(bctx.Context, &reader.GetObjectRequest{
+			resp, err := dsr.GetObject(bctx.Context, &reader.GetObjectRequest{
 				ObjectType:    "user",
 				ObjectId:      args.ID,
 				WithRelations: false,
@@ -79,4 +80,17 @@ func RegisterUser(logger *zerolog.Logger, fnName string, dr reader.ReaderClient)
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+func userTemplate() (*ast.Term, error) {
+	t := map[string]any{
+		"id": "",
+	}
+
+	val, err := ast.InterfaceToValue(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.NewTerm(val), nil
 }
