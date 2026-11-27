@@ -16,6 +16,29 @@ before:
 
 builds:
   # https://goreleaser.com/customization/build/
+  - id: topaz
+    main: ./topaz
+    binary: topaz
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
   - id: topazd
     main: ./topazd
     binary: topazd
@@ -39,9 +62,9 @@ builds:
       - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
-  - id: topaz
-    main: ./topaz
-    binary: topaz
+  - id: topaz-opa
+    main: ./topaz-opa
+    binary: topaz-opa
     goos:
       - darwin
       - linux
@@ -57,9 +80,9 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.ver={{.Version}}
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.commit={{.ShortCommit}}
-      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz/version.date={{.Date}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz-opa/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz-opa/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz-opa/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: topaz-db
@@ -116,6 +139,7 @@ archives:
       - topaz
       - topazd
       - topaz-backup
+      - topaz-opa
     files:
       - LICENSE
       - README.md
@@ -182,11 +206,48 @@ homebrew_casks:
         install_steps: |
           on_macos do
             run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ .StagedPath }}/topaz"]
+            run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ .StagedPath }}/topazd"]
+            run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ .StagedPath }}/topaz-backup"]
           end
+
+    url:
+      template: "https://github.com/aserto-dev/topaz/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+  - name: topaz-opa
+
+    repository:
+      owner: "{{ .Env.ORG }}"
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP }}"
+
+    commit_author:
+      name: Topaz Bot
+      email: info@topaz.sh
+
+    homepage: "https://www.topaz.sh/docs/"
+    description: "Topaz OPA"
+    license: "{{ .Env.LICENSE }}"
+
+    binaries:
+      - topaz-opa
+
+    skip_upload: false
+
+    hooks:
+      post:
+        install_steps: |
+          on_macos do
+            run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ .StagedPath }}/topaz-opa"]
+          end
+
+    url:
+      template: "https://github.com/aserto-dev/topaz/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
 dockers_v2:
   # https://goreleaser.com/customization/dockers_v2
-  - dockerfile: Dockerfile
+  - id: topaz
+
+    dockerfile: Dockerfile.topaz
 
     platforms:
       - linux/amd64
@@ -209,7 +270,41 @@ dockers_v2:
       "org.opencontainers.image.name": "{{.ProjectName}}"
       "org.opencontainers.image.revision": "{{.FullCommit}}"
       "org.opencontainers.image.version": "{{.Version}}"
-      "org.opencontainers.image.source": "https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      "org.opencontainers.image.source": "https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topazd"
+      "org.opencontainers.image.description": "{{ .Env.DESCRIPTION }}"
+      "org.opencontainers.image.licenses": "{{ .Env.LICENSE }}"
+
+    sbom: false # Attestation is not supported for the docker driver.
+
+    extra_files:
+    annotations:
+    build_args:
+    flags:
+
+  - id: topaz-opa
+
+    dockerfile: Dockerfile.topaz-opa
+
+    platforms:
+      - linux/amd64
+      - linux/arm64
+
+    ids:
+      - topaz-opa
+
+    images:
+      - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}-opa"
+
+    tags:
+      - "{{ .Version }}"
+      - "{{ if not .IsSnapshot }}latest{{ end }}"
+
+    labels:
+      "org.opencontainers.image.created": "{{.Date}}"
+      "org.opencontainers.image.name": "{{.ProjectName}}-opa"
+      "org.opencontainers.image.revision": "{{.FullCommit}}"
+      "org.opencontainers.image.version": "{{.Version}}"
+      "org.opencontainers.image.source": "https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz-opa"
       "org.opencontainers.image.description": "{{ .Env.DESCRIPTION }}"
       "org.opencontainers.image.licenses": "{{ .Env.LICENSE }}"
 
@@ -244,3 +339,4 @@ sboms:
       - topazd
       - topaz-backup
       - topaz-db
+      - topaz-opa

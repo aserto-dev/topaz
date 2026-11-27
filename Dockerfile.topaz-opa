@@ -1,0 +1,30 @@
+FROM alpine:3.24.4
+
+ARG TARGETPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
+ARG BUILDPLATFORM
+
+RUN echo "BUILDPLATFORM=$BUILDPLATFORM" \
+ && echo "TARGETPLATFORM=$TARGETPLATFORM" \
+ && echo "TARGETOS=$TARGETOS" \
+ && echo "TARGETARCH=$TARGETARCH"
+
+RUN apk add --no-cache bash tzdata ca-certificates
+
+RUN mkdir /config && \
+    mkdir /certs && \
+    mkdir /decisions
+
+VOLUME ["/config", "/certs", "/decisions"]
+
+ENV TOPAZ_RUNNING_IN_CONTAINER=true
+
+WORKDIR /app
+
+COPY \
+${TARGETPLATFORM}/topaz-opa \
+/app/
+
+ENTRYPOINT ["./topaz-opa"]
+CMD []

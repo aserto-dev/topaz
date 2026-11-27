@@ -3,17 +3,15 @@ package topaz
 import (
 	"context"
 
-	dsr "github.com/aserto-dev/topaz/api/directory/v3/reader"
+	"github.com/aserto-dev/topaz/internal/builtins"
+	"github.com/aserto-dev/topaz/internal/builtins/az"
+	"github.com/aserto-dev/topaz/internal/builtins/ds"
 	"github.com/aserto-dev/topaz/internal/runtime"
 	"github.com/aserto-dev/topaz/pkg/authorizer/aerr"
 	"github.com/aserto-dev/topaz/pkg/config"
-	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
-	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/az"
-	"github.com/aserto-dev/topaz/topazd/authorizer/builtins/ds"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/edge"
 	"github.com/aserto-dev/topaz/topazd/authorizer/plugins/topaz_file_decision_logger"
 	"github.com/aserto-dev/topaz/topazd/authorizer/resolvers"
-	dsa "github.com/authzen/access.go/api/access/v1"
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
@@ -31,30 +29,30 @@ func NewRuntimeResolver(
 	cfg *config.Config,
 	dsConn *grpc.ClientConn,
 ) (resolvers.RuntimeResolver, func(), error) {
-	dsClient := dsr.NewReaderClient(dsConn)
-	acClient := dsa.NewAccessClient(dsConn)
+	dsClient := builtins.GetDirectoryClient(dsConn)
+	acClient := builtins.GetAccessClient(dsConn)
 
 	rt, err := runtime.New(
 		ctx, &cfg.OPA,
 
 		// directory get functions
-		runtime.WithBuiltin1(ds.RegisterIdentity(logger, builtins.DSIdentity, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterUser(logger, builtins.DSUser, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterObject(logger, builtins.DSObject, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterRelation(logger, builtins.DSRelation, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterRelations(logger, builtins.DSRelations, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterGraph(logger, builtins.DSGraph, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterIdentity(builtins.DSIdentity, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterUser(builtins.DSUser, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterObject(builtins.DSObject, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterRelation(builtins.DSRelation, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterRelations(builtins.DSRelations, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterGraph(builtins.DSGraph, dsClient)),
 
 		// authorization check functions
-		runtime.WithBuiltin1(ds.RegisterCheck(logger, builtins.DSCheck, dsClient)),
-		runtime.WithBuiltin1(ds.RegisterChecks(logger, builtins.DSChecks, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterCheck(builtins.DSCheck, dsClient)),
+		runtime.WithBuiltin1(ds.RegisterChecks(builtins.DSChecks, dsClient)),
 
 		// authZen built-ins
-		runtime.WithBuiltin1(az.RegisterEvaluation(logger, builtins.AZEvaluation, acClient)),
-		runtime.WithBuiltin1(az.RegisterEvaluations(logger, builtins.AZEvaluations, acClient)),
-		runtime.WithBuiltin1(az.RegisterSubjectSearch(logger, builtins.AZSubjectSearch, acClient)),
-		runtime.WithBuiltin1(az.RegisterResourceSearch(logger, builtins.AZResourceSearch, acClient)),
-		runtime.WithBuiltin1(az.RegisterActionSearch(logger, builtins.AZActionSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluation(builtins.AZEvaluation, acClient)),
+		runtime.WithBuiltin1(az.RegisterEvaluations(builtins.AZEvaluations, acClient)),
+		runtime.WithBuiltin1(az.RegisterSubjectSearch(builtins.AZSubjectSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterResourceSearch(builtins.AZResourceSearch, acClient)),
+		runtime.WithBuiltin1(az.RegisterActionSearch(builtins.AZActionSearch, acClient)),
 
 		// plugins
 		runtime.WithPlugin(topaz_file_decision_logger.PluginName, topaz_file_decision_logger.NewFactory(logger.WithContext(ctx))),

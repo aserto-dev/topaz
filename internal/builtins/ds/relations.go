@@ -5,31 +5,17 @@ import (
 
 	"github.com/aserto-dev/topaz/api/directory/v3/common"
 	"github.com/aserto-dev/topaz/api/directory/v3/reader"
-	"github.com/aserto-dev/topaz/topaz/x"
-	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
-	"github.com/samber/lo"
+	"github.com/aserto-dev/topaz/internal/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
-
-	"github.com/rs/zerolog"
+	"github.com/samber/lo"
 	"google.golang.org/protobuf/proto"
 )
 
-const dsRelationsHelp string = `ds.relations({
-	"object_type": "",
-	"object_id": "",
-	"relation": "",
-	"subject_type": "",
-	"subject_id": "",
-	"subject_relation": "",
-	"with_objects": false,
-	"with_empty_subject_relation": false
-})`
-
 // RegisterRelations - ds.relations.
-func RegisterRelations(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+func RegisterRelations(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -38,21 +24,27 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr reader.ReaderCl
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 			var args reader.GetRelationsRequest
 
+			dsr, err := dr()
+			if err != nil {
+				builtins.TraceError(&bctx, fnName, err)
+				return nil, err
+			}
+
 			if err := ast.As(op1.Value, &args); err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			if proto.Equal(&args, &reader.GetRelationsRequest{}) {
-				return ast.StringTerm(dsRelationsHelp), nil
+				return relationsTemplate()
 			}
 
-			args.Page = &common.PaginationRequest{Size: x.MaxPaginationSize, Token: ""}
+			args.Page = &common.PaginationRequest{Size: builtins.MaxPaginationSize, Token: ""}
 
 			resp := &reader.GetRelationsResponse{}
 
 			for {
-				r, err := dr.GetRelations(bctx.Context, &args)
+				r, err := dsr.GetRelations(bctx.Context, &args)
 				if err != nil {
 					builtins.TraceError(&bctx, fnName, err)
 					return nil, err
@@ -86,4 +78,25 @@ func RegisterRelations(logger *zerolog.Logger, fnName string, dr reader.ReaderCl
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+//nolint:goconst
+func relationsTemplate() (*ast.Term, error) {
+	t := map[string]any{
+		"object_type":                 "",
+		"object_id":                   "",
+		"relation":                    "",
+		"subject_type":                "",
+		"subject_id":                  "",
+		"subject_relation":            "",
+		"with_objects":                false,
+		"with_empty_subject_relation": false,
+	}
+
+	val, err := ast.InterfaceToValue(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.NewTerm(val), nil
 }

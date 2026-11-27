@@ -4,29 +4,16 @@ import (
 	"bytes"
 
 	"github.com/aserto-dev/topaz/api/directory/v3/reader"
-	"github.com/aserto-dev/topaz/topazd/authorizer/builtins"
+	"github.com/aserto-dev/topaz/internal/builtins"
 
 	"github.com/open-policy-agent/opa/v1/ast"
 	"github.com/open-policy-agent/opa/v1/rego"
 	"github.com/open-policy-agent/opa/v1/types"
-
-	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/proto"
 )
 
-const dsGraphHelp string = `ds.graph({
-	"object_type": "",
-	"object_id": "",
-	"relation": "",
-	"subject_type": "",
-	"subject_id": "",
-	"subject_relation": "",
-	"explain": false,
-	"trace": false
-})`
-
 // RegisterGraph - ds.graph.
-func RegisterGraph(logger *zerolog.Logger, fnName string, dr reader.ReaderClient) (*rego.Function, rego.Builtin1) {
+func RegisterGraph(fnName string, dr func() (reader.ReaderClient, error)) (*rego.Function, rego.Builtin1) {
 	return &rego.Function{
 			Name:    fnName,
 			Decl:    types.NewFunction(types.Args(types.A), types.A),
@@ -35,16 +22,22 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr reader.ReaderClient
 		func(bctx rego.BuiltinContext, op1 *ast.Term) (*ast.Term, error) {
 			var args reader.GetGraphRequest
 
+			dsr, err := dr()
+			if err != nil {
+				builtins.TraceError(&bctx, fnName, err)
+				return nil, err
+			}
+
 			if err := ast.As(op1.Value, &args); err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
 			}
 
 			if proto.Equal(&args, &reader.GetGraphRequest{}) {
-				return ast.StringTerm(dsGraphHelp), nil
+				return graphTemplate()
 			}
 
-			resp, err := dr.GetGraph(bctx.Context, &args)
+			resp, err := dsr.GetGraph(bctx.Context, &args)
 			if err != nil {
 				builtins.TraceError(&bctx, fnName, err)
 				return nil, err
@@ -64,4 +57,25 @@ func RegisterGraph(logger *zerolog.Logger, fnName string, dr reader.ReaderClient
 
 			return ast.NewTerm(v), nil
 		}
+}
+
+//nolint:goconst
+func graphTemplate() (*ast.Term, error) {
+	t := map[string]any{
+		"object_type":      "",
+		"object_id":        "",
+		"relation":         "",
+		"subject_type":     "",
+		"subject_id":       "",
+		"subject_relation": "",
+		"explain":          false,
+		"trace":            false,
+	}
+
+	val, err := ast.InterfaceToValue(t)
+	if err != nil {
+		return nil, err
+	}
+
+	return ast.NewTerm(val), nil
 }
