@@ -208,6 +208,9 @@ homebrew_casks:
             run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ .StagedPath }}/topaz"]
           end
 
+    url:
+      template: "https://github.com/aserto-dev/topaz/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
   - name: topaz-opa
 
     repository:
@@ -235,9 +238,14 @@ homebrew_casks:
             run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ .StagedPath }}/topaz-opa"]
           end
 
+    url:
+      template: "https://github.com/aserto-dev/topaz/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
 dockers_v2:
   # https://goreleaser.com/customization/dockers_v2
-  - dockerfile: Dockerfile
+  - id: topaz
+
+    dockerfile: Dockerfile.topaz
 
     platforms:
       - linux/amd64
@@ -247,7 +255,6 @@ dockers_v2:
       - topaz
       - topazd
       - topaz-backup
-      - topaz-opa
 
     images:
       - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}"
@@ -262,6 +269,40 @@ dockers_v2:
       "org.opencontainers.image.revision": "{{.FullCommit}}"
       "org.opencontainers.image.version": "{{.Version}}"
       "org.opencontainers.image.source": "https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      "org.opencontainers.image.description": "{{ .Env.DESCRIPTION }}"
+      "org.opencontainers.image.licenses": "{{ .Env.LICENSE }}"
+
+    sbom: false # Attestation is not supported for the docker driver.
+
+    extra_files:
+    annotations:
+    build_args:
+    flags:
+
+  - id: topaz-opa
+
+    dockerfile: Dockerfile.topaz-opa
+
+    platforms:
+      - linux/amd64
+      - linux/arm64
+
+    ids:
+      - topaz-opa
+
+    images:
+      - "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}-opa"
+
+    tags:
+      - "{{ .Version }}"
+      - "{{ if not .IsSnapshot }}latest{{ end }}"
+
+    labels:
+      "org.opencontainers.image.created": "{{.Date}}"
+      "org.opencontainers.image.name": "{{.ProjectName}}-opa"
+      "org.opencontainers.image.revision": "{{.FullCommit}}"
+      "org.opencontainers.image.version": "{{.Version}}"
+      "org.opencontainers.image.source": "https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/topaz-opa"
       "org.opencontainers.image.description": "{{ .Env.DESCRIPTION }}"
       "org.opencontainers.image.licenses": "{{ .Env.LICENSE }}"
 
